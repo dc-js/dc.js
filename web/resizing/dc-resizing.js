@@ -28,7 +28,9 @@ function apply_resizing(chart, adjustX, adjustY, onresize) {
             .width(window.innerWidth-adjustX)
             .height(window.innerHeight-adjustY);
         window.onresize = function() {
-            onresize(chart);
+            if(onresize) {
+                onresize(chart);
+            }
             chart
                 .width(window.innerWidth-20)
                 .height(window.innerHeight-20)

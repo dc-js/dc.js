@@ -84,7 +84,7 @@
         var posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
 
         var N = 20;
-        var gen = d3.random.normal();
+        var gen = d3.randomNormal();
         function distribute(vals, min, max) {
             var ext = d3.extent(vals);
             return vals.map(function(x) {
@@ -110,8 +110,8 @@
             return ldist.map(function(v, i) { return {key: i, lvalue: v, rvalue: rdist[i]}; });
         }
 
-        var line = d3.svg.line()
-            .interpolate('linear');
+        var line = d3.line()
+            .curve(d3.curveLinear);
 
         function draw_horizontals(chart, hz) {
             chart.g().select('g.chart-body')
@@ -157,7 +157,7 @@
                                 .width(200)
                                 .height(200)
                                 .margins({left: 25, top: 20, right: 30, bottom: 20})
-                                .x(d3.scale.linear())
+                                .x(d3.scaleLinear())
                                 .brushOn(false)
                                 .alignYAxes(true)
                                 .elasticX(true)
@@ -166,7 +166,7 @@
                                     dc.lineChart(chart)
                                         .dimension(dim)
                                         .group(lgroup)
-                                        .x(d3.scale.linear())
+                                        .x(d3.scaleLinear())
                                         .elasticX(true)
                                         .elasticY(true)
                                         .yAxisPadding(1)
@@ -180,7 +180,7 @@
                                     dc.lineChart(chart)
                                         .dimension(dim)
                                         .group(rgroup)
-                                        .x(d3.scale.linear())
+                                        .x(d3.scaleLinear())
                                         .ordinalColors(["darkorange"])
                                         .elasticX(true)
                                         .elasticY(true)

@@ -31,8 +31,8 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .x(d3.scale.linear().domain([0,20]))
-    .interpolate('step-before')
+    .x(d3.scaleLinear().domain([0,20]))
+    .interpolate(d3.curveStepBefore)
     .renderArea(true)
     .brushOn(false)
     .renderDataPoints(true)

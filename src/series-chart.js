@@ -14,7 +14,7 @@
  * // create a series chart under #chart-container2 element using chart group A
  * var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -138,8 +138,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method seriesSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.seriesSort(d3.descending);
      * @param {Function} [sortFunction=d3.ascending]
@@ -161,8 +161,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method valueSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * // Default value sort
      * _chart.valueSort(function keySort (a, b) {

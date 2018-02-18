@@ -22,7 +22,7 @@ describe('dc.seriesChart', function () {
         chart
             .width(210)
             .height(210)
-            .x(d3.scale.linear().domain([1,2]))
+            .x(d3.scaleLinear().domain([1,2]))
             .dimension(dimensionColorData)
             .group(groupColorData)
             .ordinalColors(['#000001', '#000002'])
@@ -45,22 +45,22 @@ describe('dc.seriesChart', function () {
         it('should position generated lineCharts using the data', function () {
             var lines = chart.selectAll('path.line');
 
-            expect(d3.select(lines[0][0]).attr('d')).toMatchPath('M0,128L130,85');
-            expect(d3.select(lines[0][1]).attr('d')).toMatchPath('M0,43L130,0');
+            expect(d3.select(lines.nodes()[0]).attr('d')).toMatchPath('M0,128L130,85');
+            expect(d3.select(lines.nodes()[1]).attr('d')).toMatchPath('M0,43L130,0');
         });
 
         it('should color lines using the colors in the data', function () {
             var lines = chart.selectAll('path.line');
 
-            expect(d3.select(lines[0][0]).attr('stroke')).toMatch(/#000001/i);
-            expect(d3.select(lines[0][1]).attr('stroke')).toMatch(/#000002/i);
+            expect(d3.select(lines.nodes()[0]).attr('stroke')).toMatch(/#000001/i);
+            expect(d3.select(lines.nodes()[1]).attr('stroke')).toMatch(/#000002/i);
         });
 
         describe('with brush off', function () {
             it('should create line chart dots', function () {
                 chart.brushOn(false).render();
                 var dots = chart.selectAll('circle.dot');
-                expect(dots[0].length).toEqual(4);
+                expect(dots.nodes().length).toEqual(4);
                 chart.brushOn(true);
             });
         });
@@ -76,8 +76,8 @@ describe('dc.seriesChart', function () {
         it('should order lineCharts in the order specified', function () {
             var lines = chart.selectAll('path.line');
 
-            expect(d3.select(lines[0][1]).attr('d')).toMatchPath('M0,128L130,85');
-            expect(d3.select(lines[0][0]).attr('d')).toMatchPath('M0,43L130,0');
+            expect(d3.select(lines.nodes()[1]).attr('d')).toMatchPath('M0,128L130,85');
+            expect(d3.select(lines.nodes()[0]).attr('d')).toMatchPath('M0,43L130,0');
         });
     });
 
@@ -90,11 +90,11 @@ describe('dc.seriesChart', function () {
             var lines = chart.selectAll('path.line');
             var areas = chart.selectAll('path.area');
 
-            expect(d3.select(lines[0][0]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
-            expect(d3.select(lines[0][1]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
+            expect(d3.select(lines.nodes()[0]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
+            expect(d3.select(lines.nodes()[1]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
 
-            expect(d3.select(areas[0][0]).attr('fill')).toMatch(/#000001/i);
-            expect(d3.select(areas[0][1]).attr('fill')).toMatch(/#000002/i);
+            expect(d3.select(areas.nodes()[0]).attr('fill')).toMatch(/#000001/i);
+            expect(d3.select(areas.nodes()[1]).attr('fill')).toMatch(/#000002/i);
         });
     });
 
@@ -127,7 +127,7 @@ describe('dc.seriesChart', function () {
 
         it('is redrawn with dots', function () {
             var dots = chart.selectAll('circle.dot');
-            expect(dots[0].length).toEqual(6);
+            expect(dots.nodes().length).toEqual(6);
         });
     });
 });

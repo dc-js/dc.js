@@ -15,7 +15,7 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.scatterPlot(compositeChart);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -23,7 +23,7 @@
  */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
-    var _symbol = d3.svg.symbol();
+    var _symbol = d3.symbol();
 
     var _existenceAccessor = function (d) { return d.value; };
 
@@ -55,6 +55,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _emptyColor = null;
     var _filtered = [];
 
+    // Use a 2 dimensional brush
+    _chart.brush(d3.brush());
+
     function elementSize (d, i) {
         if (!_existenceAccessor(d)) {
             return Math.pow(_emptySize, 2);
@@ -78,13 +81,14 @@ dc.scatterPlot = function (parent, chartGroup) {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
             .data(_chart.data());
 
-        symbols
+        symbols = symbols
             .enter()
-        .append('path')
-            .attr('class', 'symbol')
-            .attr('opacity', 0)
-            .attr('fill', _chart.getColor)
-            .attr('transform', _locator);
+                .append('path')
+                .attr('class', 'symbol')
+                .attr('opacity', 0)
+                .attr('fill', _chart.getColor)
+                .attr('transform', _locator)
+            .merge(symbols);
 
         symbols.call(renderTitles, _chart.data());
 
@@ -153,19 +157,19 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the symbol type used for each point. By default the symbol is a circle.
+     * Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
      * Type can be a constant or an accessor.
      * @method symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.svg.symbol.type}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_type symbol.type}
      * @example
      * // Circle type
-     * chart.symbol('circle');
+     * chart.symbol(d3.symbolCircle);
      * // Square type
-     * chart.symbol('square');
-     * @param {String|Function} [type='circle']
-     * @returns {String|Function|dc.scatterPlot}
+     * chart.symbol(d3.symbolSquare);
+     * @param {Function} [type=d3.symbolCircle]
+     * @returns {Function|dc.scatterPlot}
      */
     _chart.symbol = function (type) {
         if (!arguments.length) {
@@ -177,16 +181,16 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the symbol generator. By default `dc.scatterPlot` will use
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol()}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol()}
      * to generate symbols. `dc.scatterPlot` will set the
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size size accessor}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size symbol size accessor}
      * on the symbol generator.
      * @method customSymbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol}
      * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
-     * @param {String|Function} [customSymbol=d3.svg.symbol()]
+     * @param {String|Function} [customSymbol=d3.symbol()]
      * @returns {String|Function|dc.scatterPlot}
      */
     _chart.customSymbol = function (customSymbol) {
@@ -203,7 +207,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [symbolSize=3]
      * @returns {Number|dc.scatterPlot}
      */
@@ -220,7 +224,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [highlightedSize=5]
      * @returns {Number|dc.scatterPlot}
      */
@@ -238,7 +242,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [excludedSize=null]
      * @returns {Number|dc.scatterPlot}
      */
@@ -288,7 +292,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method emptySize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [emptySize=0]
      * @returns {Number|dc.scatterPlot}
      */
@@ -388,35 +392,49 @@ dc.scatterPlot = function (parent, chartGroup) {
         // no handle paths for poly-brushes
     };
 
-    _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
+    _chart.extendBrush = function (selection) {
         if (_chart.round()) {
-            extent[0] = extent[0].map(_chart.round());
-            extent[1] = extent[1].map(_chart.round());
-
-            _chart.g().select('.brush')
-                .call(_chart.brush().extent(extent));
+            selection[0] = selection[0].map(_chart.round());
+            selection[1] = selection[1].map(_chart.round());
         }
-        return extent;
+        return selection;
     };
 
-    _chart.brushIsEmpty = function (extent) {
-        return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
+    _chart.brushIsEmpty = function (selection) {
+        return !selection || selection[0][0] === selection[1][0] || selection[0][1] === selection[1][1];
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        var event = d3.event;
+        // Avoids infinite recursion
+        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
+        d3.event = null;
+        if (!event.sourceEvent) return;
+        var selection = event.selection;
 
-        _chart.redrawBrush(_chart.g());
+        // Testing with pixels is more reliable
+        var brushIsEmpty = _chart.brushIsEmpty(selection);
 
-        if (_chart.brushIsEmpty(extent)) {
+        if (selection) {
+            selection = selection.map(function (point) {
+                return point.map(function (coord, i) {
+                    var scale = i === 0 ? _chart.x() : _chart.y();
+                    return scale.invert(coord);
+                });
+            })
+        }
+        selection = _chart.extendBrush(selection);
+
+        _chart.redrawBrush(selection);
+
+        if (brushIsEmpty) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
             });
 
         } else {
-            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
+            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(selection);
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);
@@ -424,6 +442,27 @@ dc.scatterPlot = function (parent, chartGroup) {
             }, dc.constants.EVENT_DELAY);
 
         }
+    };
+
+    _chart.redrawBrush = function (selection) {
+        // override default x axis brush from parent chart
+        var _brush = _chart.brush();
+        var _gBrush = _chart.gBrush();
+
+        if (_brush && _gBrush) {
+            if (selection) {
+                selection = selection.map(function (point) {
+                    return point.map(function (coord, i) {
+                        var scale = i === 0 ? _chart.x() : _chart.y();
+                        return scale(coord);
+                    });
+                })
+            }
+
+            _brush.move(_gBrush, selection);
+        }
+
+        _chart.fadeDeselectedArea(selection);
     };
 
     _chart.setBrushY = function (gBrush) {

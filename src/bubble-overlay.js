@@ -16,7 +16,7 @@
  * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
  * var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -81,7 +81,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
         initializeBubbles();
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
 
         return _chart;
     };
@@ -149,7 +149,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
     _chart._doRedraw = function () {
         updateBubbles();
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
 
         return _chart;
     };

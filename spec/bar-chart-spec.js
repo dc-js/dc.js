@@ -5,7 +5,7 @@ describe('dc.barChart', function () {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         group = dimension.group();
 
         id = 'bar-chart';
@@ -14,7 +14,7 @@ describe('dc.barChart', function () {
         chart = dc.barChart('#' + id);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
-            .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
+            .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
             .transitionDuration(0)
             .controlsUseVisibility(true);
     });
@@ -125,13 +125,13 @@ describe('dc.barChart', function () {
 
                 var domain = [makeDate(2012, 4, 20), makeDate(2012, 7, 15)];
 
-                chart.x(d3.time.scale.utc().domain(domain))
+                chart.x(d3.scaleUtc().domain(domain))
                     .group(dimension.group().reduceSum(function (d) {
                         return +d.nvalue;
                     }))
                     .elasticY(true)
                     .centerBar(false)
-                    .xUnits(d3.time.days.utc)
+                    .xUnits(d3.utcDays)
                     .yAxis().ticks(5);
 
                 chart.render();
@@ -147,7 +147,7 @@ describe('dc.barChart', function () {
                 });
             });
             function nthYAxisText (n) {
-                return d3.select(chart.selectAll('g.y text')[0][n]);
+                return d3.select(chart.selectAll('g.y text').nodes()[n]);
             }
             it('should generate bars with positions corresponding to their data', function () {
                 expect(nthStack(0).nthBar(0).attr('x')).toBeWithinDelta(58, 1);
@@ -184,7 +184,7 @@ describe('dc.barChart', function () {
                 chart.dimension(stateDimension)
                     .group(stateGroup)
                     .xUnits(dc.units.ordinal)
-                    .x(d3.scale.ordinal().domain(ordinalDomainValues))
+                    .x(d3.scaleOrdinal().domain(ordinalDomainValues))
                     .barPadding(0)
                     .outerPadding(0.1)
                     .render();
@@ -240,7 +240,7 @@ describe('dc.barChart', function () {
 
             describe('with an unspecified domain', function () {
                 beforeEach(function () {
-                    chart.x(d3.scale.ordinal()).render();
+                    chart.x(d3.scaleOrdinal()).render();
                 });
 
                 it('should use alphabetical ordering', function () {
@@ -305,7 +305,7 @@ describe('dc.barChart', function () {
                 chart.dimension(linearDimension)
                     .group(linearGroup)
                     .xUnits(dc.units.integers)
-                    .x(d3.scale.linear().domain([20, 70]))
+                    .x(d3.scaleLinear().domain([20, 70]))
                     .render();
             });
 
@@ -350,7 +350,7 @@ describe('dc.barChart', function () {
 
                     chart
                         .brushOn(false)
-                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+                        .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                         .group(idGroup, 'stack 0')
                         .title('stack 0', function (d) { return 'stack 0: ' + d.value; })
                         .stack(sumGroup, 'stack 1')
@@ -404,7 +404,7 @@ describe('dc.barChart', function () {
 
                 it('should have titles rendered for extra stacks', function () {
                     nthStack(1).forEachBar(function (bar, datum) {
-                        expect(bar.selectAll('title')[0].length).toBe(1);
+                        expect(bar.selectAll('title').nodes().length).toBe(1);
                         expect(bar.select('title').text()).toBe('stack 1: ' + datum.data.value);
                     });
                 });
@@ -423,7 +423,7 @@ describe('dc.barChart', function () {
 
                     it('should not create extra title elements', function () {
                         nthStack(1).forEachBar(function (bar, datum) {
-                            expect(bar.selectAll('title')[0].length).toBe(1);
+                            expect(bar.selectAll('title').nodes().length).toBe(1);
                         });
                     });
                 });
@@ -500,12 +500,12 @@ describe('dc.barChart', function () {
                     var mixedGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
 
                     chart.group(mixedGroup).stack(mixedGroup).stack(mixedGroup);
-                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                    chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .yAxisPadding(5)
                         .elasticY(true)
-                        .xUnits(d3.time.days.utc)
+                        .xUnits(d3.utcDays)
                         .yAxis().ticks(5);
 
                     chart.rescale(); // BUG: barWidth cannot change after initial rendering
@@ -552,7 +552,7 @@ describe('dc.barChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
 
                     expect(nthText(0).text()).toBe('-20');
                     expect(nthText(1).text()).toBe('0');
@@ -565,18 +565,18 @@ describe('dc.barChart', function () {
                     var negativeGroup = dimension.group().reduceSum(function (d) { return -Math.abs(d.nvalue); });
 
                     chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
-                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                    chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .elasticY(true)
-                        .xUnits(d3.time.days.utc)
+                        .xUnits(d3.utcDays)
                         .yAxis().ticks(3);
 
                     chart.render();
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
 
                     expect(nthText(0).text()).toBe('-30');
                     expect(nthText(1).text()).toBe('-20');
@@ -592,7 +592,7 @@ describe('dc.barChart', function () {
 
         describe('when focused', function () {
             beforeEach(function () {
-                chart.elasticY(true).gap(1).xUnits(d3.time.days.utc);
+                chart.elasticY(true).gap(1).xUnits(d3.utcDays);
                 chart.focus([makeDate(2012, 5, 11), makeDate(2012, 6, 9)]);
             });
 
@@ -634,7 +634,7 @@ describe('dc.barChart', function () {
             }
 
             function xAxisText () {
-                return chart.selectAll('g.x text')[0].map(function (x) { return d3.select(x).text(); });
+                return chart.selectAll('g.x text').nodes().map(function (x) { return d3.select(x).text(); });
             }
         });
 
@@ -686,7 +686,7 @@ describe('dc.barChart', function () {
                 d3.select('#' + id).append('span').attr('class', 'filter').style('visibility', 'hidden');
                 d3.select('#' + id).append('a').attr('class', 'reset').style('visibility', 'hidden');
                 chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
-                dc.dateFormat = d3.time.format.utc('%m/%d/%Y');
+                dc.dateFormat = d3.utcFormat('%m/%d/%Y');
                 chart.redraw();
             });
 
@@ -716,31 +716,32 @@ describe('dc.barChart', function () {
                 });
 
                 it('should create a fancy brush resize handle', function () {
-                    chart.select('g.brush').selectAll('.resize path').each(function (d, i) {
+                    var selectAll = chart.select('g.brush').selectAll('path.handle--custom');
+                    selectAll.each(function (d, i) {
                         if (i === 0) {
                             expect(d3.select(this).attr('d'))
-                                .toMatchPath('M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98');
+                                .toMatchPath('M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98');
                         } else {
                             expect(d3.select(this).attr('d'))
-                                .toMatchPath('M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98');
+                                .toMatchPath('M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98');
                         }
                     });
                 });
 
                 it('should stretch the background', function () {
-                    expect(+chart.select('g.brush rect.background').attr('width')).toBe(1020);
+                    expect(+chart.select('g.brush rect.overlay').attr('width')).toBe(1020);
                 });
 
                 it('should set the background height to the chart height', function () {
-                    expect(+chart.select('g.brush rect.background').attr('height')).toBe(160);
+                    expect(+chart.select('g.brush rect.overlay').attr('height')).toBe(160);
                 });
 
                 it('should set extent height to the chart height', function () {
-                    expect(+chart.select('g.brush rect.extent').attr('height')).toBe(160);
+                    expect(+chart.select('g.brush rect.selection').attr('height')).toBe(160);
                 });
 
                 it('should set extent width based on filter set', function () {
-                    expect(chart.select('g.brush rect.extent').attr('width')).toBeWithinDelta(81, 1);
+                    expect(chart.select('g.brush rect.selection').attr('width')).toBeWithinDelta(81, 1);
                 });
 
                 it('should push unselected bars to the background', function () {
@@ -771,7 +772,7 @@ describe('dc.barChart', function () {
 
         describe('a chart with a large domain', function () {
             beforeEach(function () {
-                chart.x(d3.time.scale.utc().domain([makeDate(2000, 0, 1), makeDate(2012, 11, 31)]));
+                chart.x(d3.scaleUtc().domain([makeDate(2000, 0, 1), makeDate(2012, 11, 31)]));
             });
 
             describe('when filters are applied', function () {
@@ -798,14 +799,14 @@ describe('dc.barChart', function () {
             beforeEach(function () {
                 var numericalDimension = data.dimension(function (d) { return +d.value; });
                 chart.dimension(numericalDimension).group(numericalDimension.group());
-                chart.x(d3.scale.linear().domain([10, 80])).elasticY(true);
+                chart.x(d3.scaleLinear().domain([10, 80])).elasticY(true);
                 chart.render();
             });
 
             it('should base the y-axis height on the maximum value in the data', function () {
                 var yAxisMax = 3.0;
                 var ticks = chart.selectAll('g.y g.tick');
-                var tickValues = ticks[0].map(function (tick) { return +d3.select(tick).text(); });
+                var tickValues = ticks.nodes().map(function (tick) { return +d3.select(tick).text(); });
                 var maxTickValue = Math.max.apply(this, tickValues);
                 expect(maxTickValue).toBe(yAxisMax);
             });
@@ -819,7 +820,7 @@ describe('dc.barChart', function () {
                 it('should rescale the y-axis after applying a filter', function () {
                     var yAxisMax = 1.0;
                     var ticks = chart.selectAll('g.y g.tick');
-                    var tickValues = ticks[0].map(function (tick) { return +d3.select(tick).text(); });
+                    var tickValues = ticks.nodes().map(function (tick) { return +d3.select(tick).text(); });
                     var maxTickValue = Math.max.apply(this, tickValues);
                     expect(maxTickValue).toBe(yAxisMax);
                 });
@@ -838,7 +839,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.xUnits(dc.units.ordinal)
-                .x(d3.scale.ordinal())
+                .x(d3.scaleOrdinal())
                 .transitionDuration(0)
                 .dimension(dimension)
                 .group(group, 'Population');
@@ -890,7 +891,7 @@ describe('dc.barChart', function () {
                 .outerPadding(0)
                 .dimension(dimension)
                 .group(group)
-                .x(d3.scale.ordinal())
+                .x(d3.scaleOrdinal())
                 .xUnits(dc.units.ordinal);
             chart.render();
         });
@@ -920,7 +921,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scale.linear().domain([0,7]))
+                .x(d3.scaleLinear().domain([0,7]))
                 .elasticY(true)
                 .dimension(dimension)
                 .group(group);
@@ -965,7 +966,7 @@ describe('dc.barChart', function () {
             chart = dc.barChart('#' + id);
             chart.width(500)
                 .transitionDuration(0)
-                .x(d3.time.scale())
+                .x(d3.scaleTime())
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
                 .group(group);
@@ -980,8 +981,8 @@ describe('dc.barChart', function () {
         it('should render the right xAxisMax/Min when 10 day padding', function () {
             chart.xAxisPadding(10)
                 .render();
-            var expectedStartDate = d3.time.day.offset(date, -10);
-            var expectedEndDate = d3.time.day.offset(date, 10);
+            var expectedStartDate = d3.timeDay.offset(date, -10);
+            var expectedEndDate = d3.timeDay.offset(date, 10);
             expect(chart.xAxisMin()).toEqual(expectedStartDate);
             expect(chart.xAxisMax()).toEqual(expectedEndDate);
         });
@@ -989,8 +990,8 @@ describe('dc.barChart', function () {
             chart.xAxisPaddingUnit('month')
                 .xAxisPadding(2)
                 .render();
-            var expectedStartDate = d3.time.month.offset(date, -2);
-            var expectedEndDate = d3.time.month.offset(date, 2);
+            var expectedStartDate = d3.timeMonth.offset(date, -2);
+            var expectedEndDate = d3.timeMonth.offset(date, 2);
             expect(chart.xAxisMin()).toEqual(expectedStartDate);
             expect(chart.xAxisMax()).toEqual(expectedEndDate);
         });
@@ -1014,7 +1015,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scale.linear())
+                .x(d3.scaleLinear())
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
                 .group(group);
@@ -1062,7 +1063,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scale.ordinal())
+                .x(d3.scaleOrdinal())
                 .xUnits(dc.units.ordinal)
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
@@ -1096,7 +1097,7 @@ describe('dc.barChart', function () {
         beforeEach(function () {
             chart
                 .brushOn(true)
-                .round(d3.time.month.utc.round)
+                .round(d3.utcMonth.round)
                 .centerBar(true);
         });
 
@@ -1107,8 +1108,11 @@ describe('dc.barChart', function () {
                 chart.alwaysUseRounding(false);
                 consoleWarnSpy = spyOn(console, 'warn');
                 chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
-                chart.brush().event(chart.root());
+
+                // Setup a dummy event - just enough for the handler to get fooled
+                setupEventForBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
+                // Directly call the handler
+                chart._brushing();
             });
 
             it('should log a warning indicating that brush rounding was disabled', function () {
@@ -1126,13 +1130,16 @@ describe('dc.barChart', function () {
             beforeEach(function () {
                 chart.alwaysUseRounding(true);
                 chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
-                chart.brush().event(chart.root());
+                // Setup a dummy event - just enough for the handler to get fooled
+                setupEventForBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
+                // Directly call the handler
+                chart._brushing();
             });
 
             it('should round the brush', function () {
                 jasmine.clock().tick(100);
-                expect(chart.brush().extent()).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 1)]);
+                var filter = cleanDateRange(chart.filter());
+                expect(filter).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 1)]);
             });
         });
     });
@@ -1158,7 +1165,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scale.ordinal())
+                .x(d3.scaleOrdinal())
                 .xUnits(dc.units.ordinal)
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
@@ -1191,7 +1198,7 @@ describe('dc.barChart', function () {
         });
 
         function xAxisText () {
-            return chart.selectAll('g.x text')[0].map(function (x) { return d3.select(x).text(); });
+            return chart.selectAll('g.x text').nodes().map(function (x) { return d3.select(x).text(); });
         }
     });
 
@@ -1219,7 +1226,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scale.ordinal())
+                .x(d3.scaleOrdinal())
                 .xUnits(dc.units.ordinal)
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
@@ -1255,19 +1262,19 @@ describe('dc.barChart', function () {
         });
 
         function xAxisText () {
-            return chart.selectAll('g.x text')[0].map(function (x) { return d3.select(x).text(); });
+            return chart.selectAll('g.x text').nodes().map(function (x) { return d3.select(x).text(); });
         }
     });
 
     function nthStack (n) {
-        var stack = d3.select(chart.selectAll('.stack')[0][n]);
+        var stack = d3.select(chart.selectAll('.stack').nodes()[n]);
 
         stack.nthBar = function (n) {
-            return d3.select(this.selectAll('rect.bar')[0][n]);
+            return d3.select(this.selectAll('rect.bar').nodes()[n]);
         };
 
         stack.nthLabel = function (n) {
-            return d3.select(this.selectAll('text.barLabel')[0][n]);
+            return d3.select(this.selectAll('text.barLabel').nodes()[n]);
         };
 
         stack.forEachBar = function (assertions) {

@@ -48,14 +48,14 @@ describe('Dynamic data addition in crossfilter', function () {
             expect(chart.selectAll('svg g g.pie-slice path').data().length).toEqual(7);
         });
         it('default function should be used to dynamically generate label', function () {
-            expect(d3.select(chart.selectAll('text.pie-slice')[0][0]).text()).toEqual('11');
+            expect(d3.select(chart.selectAll('text.pie-slice').nodes()[0]).text()).toEqual('11');
         });
         it('pie chart slices should be in numerical order', function () {
             expect(chart.selectAll('text.pie-slice').data().map(function (slice) { return slice.data.key; }))
                 .toEqual(['11','22','33','44','55','66','76']);
         });
         it('default function should be used to dynamically generate title', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice title')[0][0]).text()).toEqual('11: 1');
+            expect(d3.select(chart.selectAll('g.pie-slice title').nodes()[0]).text()).toEqual('11: 1');
         });
         afterEach(function () {
             valueDimension.filterAll();
@@ -69,9 +69,9 @@ describe('Dynamic data addition in crossfilter', function () {
             var chart = dc.lineChart('#' + id);
             chart.dimension(timeDimension).group(timeGroup)
                 .width(width).height(height)
-                .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+                .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                 .transitionDuration(0)
-                .xUnits(d3.time.days.utc)
+                .xUnits(d3.utcDays)
                 .brushOn(false)
                 .renderArea(true)
                 .renderTitle(true);
@@ -89,7 +89,7 @@ describe('Dynamic data addition in crossfilter', function () {
             chart.render();
         });
         it('number of dots should equal the size of the group', function () {
-            expect(chart.selectAll('circle.dot')[0].length).toEqual(timeGroup.size());
+            expect(chart.selectAll('circle.dot').nodes().length).toEqual(timeGroup.size());
         });
         it('number of line segments should equal the size of the group', function () {
             var path = chart.selectAll('path.line').attr('d');

@@ -5,7 +5,7 @@ describe('dc.compositeChart', function () {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dateDimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dateDimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         dateValueSumGroup = dateDimension.group().reduceSum(function (d) { return d.value; });
         dateValueNegativeSumGroup = dateDimension.group().reduceSum(function (d) { return -d.value; });
         dateIdSumGroup = dateDimension.group().reduceSum(function (d) { return d.id; });
@@ -21,9 +21,9 @@ describe('dc.compositeChart', function () {
             .group(dateIdSumGroup)
             .width(500)
             .height(150)
-            .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+            .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
             .transitionDuration(0)
-            .xUnits(d3.time.days.utc)
+            .xUnits(d3.utcDays)
             .shareColors(true)
             .compose([
                 dc.barChart(chart)
@@ -78,7 +78,7 @@ describe('dc.compositeChart', function () {
     });
 
     it('should set the x units', function () {
-        expect(chart.xUnits()).toBe(d3.time.days.utc);
+        expect(chart.xUnits()).toBe(d3.utcDays);
     });
 
     it('should create the x axis', function () {
@@ -98,7 +98,7 @@ describe('dc.compositeChart', function () {
     });
 
     it('can change round', function () {
-        chart.round(d3.time.day.utc.round);
+        chart.round(d3.utcDay.round);
         expect(chart.round()).not.toBeNull();
     });
 
@@ -156,8 +156,8 @@ describe('dc.compositeChart', function () {
         });
 
         it('should index each subchart g by css class', function () {
-            expect(d3.select(chart.selectAll('g.sub')[0][0]).attr('class')).toBe('sub _0');
-            expect(d3.select(chart.selectAll('g.sub')[0][1]).attr('class')).toBe('sub _1');
+            expect(d3.select(chart.selectAll('g.sub').nodes()[0]).attr('class')).toBe('sub _0');
+            expect(d3.select(chart.selectAll('g.sub').nodes()[1]).attr('class')).toBe('sub _1');
         });
 
         it('should generate sub line chart paths', function () {
@@ -236,32 +236,28 @@ describe('dc.compositeChart', function () {
             });
 
             it('should have a resize handle', function () {
-                expect(chart.selectAll('g.brush .resize path').size()).not.toBe(0);
-                chart.selectAll('g.brush .resize path').each(function (d, i) {
+                expect(chart.selectAll('g.brush path.handle--custom').size()).not.toBe(0);
+                chart.selectAll('g.brush path.handle--custom').each(function (d, i) {
                     if (i === 0) {
                         expect(d3.select(this).attr('d'))
-                            .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,' +
-                            '6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,' +
-                            '44.666666666666664V65.33333333333333');
-                    } else {
-                        expect(d3.select(this).attr('d'))
                             .toMatchPath('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,' +
-                            '6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,' +
-                            '44.666666666666664V65.33333333333333');
+                                '6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,' +
+                                '44.666666666666664V65.33333333333333');
+                     } else {
+                        expect(d3.select(this).attr('d'))
+                            .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,' +
+                                '6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,' +
+                                '44.666666666666664V65.33333333333333');
                     }
                 });
             });
 
             it('should stretch the background', function () {
-                expect(chart.select('g.brush rect.background').attr('width')).toBe('420');
+                expect(chart.select('g.brush rect.overlay').attr('width')).toBe('420');
             });
 
             it('should set the height of background to height of chart', function () {
-                expect(chart.select('g.brush rect.background').attr('height')).toBe('110');
-            });
-
-            it('should set the extent height to chart height', function () {
-                expect(chart.select('g.brush rect.extent').attr('height')).toBe('110');
+                expect(chart.select('g.brush rect.overlay').attr('height')).toBe('110');
             });
 
             describe('when filtering the chart', function () {
@@ -269,8 +265,12 @@ describe('dc.compositeChart', function () {
                     chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
                 });
 
+                it('should set the extent height to chart height', function () {
+                    expect(chart.select('g.brush rect.selection').attr('height')).toBe('110');
+                });
+
                 it('should set extent width to chart width based on filter set', function () {
-                    expect(chart.select('g.brush rect.extent').attr('width')).toBe('140');
+                    expect(chart.select('g.brush rect.selection').attr('width')).toBe('140');
                 });
 
                 it('should fade filtered bars into the background', function () {
@@ -311,7 +311,7 @@ describe('dc.compositeChart', function () {
 
             it('should generate legend labels with their associated group text', function () {
                 function legendText (n) {
-                    return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]).text();
+                    return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text').nodes()[n]).text();
                 }
                 expect(legendText(0)).toBe('Date Value Group Bar');
                 expect(legendText(1)).toBe('Date ID Group');
@@ -332,11 +332,11 @@ describe('dc.compositeChart', function () {
             });
 
             it('should hide hidable child stacks', function () {
-                var dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]);
+                var dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[3]);
 
                 dateValueGroupLine2.on('click')(dateValueGroupLine2.datum());
                 expect(dateValueGroupLine2.text()).toBe('Date Value Group Line 2');
-                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed('fadeout')).toBeTruthy();
+                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[3]).classed('fadeout')).toBeTruthy();
                 expect(chart.selectAll('path.line').size()).toEqual(3);
             });
         });
@@ -344,7 +344,7 @@ describe('dc.compositeChart', function () {
 
     describe('no elastic', function () {
         beforeEach(function () {
-            chart.y(d3.scale.linear().domain([-200, 200]));
+            chart.y(d3.scaleLinear().domain([-200, 200]));
             chart.render();
         });
 
@@ -384,7 +384,7 @@ describe('dc.compositeChart', function () {
         });
 
         it('should trigger the sub-chart renderlet', function () {
-            expect(d3.select(chart.selectAll('rect')[0][0]).attr('width')).toBe('10');
+            expect(d3.select(chart.selectAll('rect').nodes()[0]).attr('width')).toBe('10');
         });
     });
 
@@ -412,7 +412,7 @@ describe('dc.compositeChart', function () {
                 .brushOn(false)
                 .dimension(dimension)
                 .shareTitle(false)
-                .x(d3.scale.ordinal())
+                .x(d3.scaleOrdinal())
                 .xUnits(dc.units.ordinal)
                 .compose([
                     dc.lineChart(chart)
@@ -547,10 +547,11 @@ describe('dc.compositeChart', function () {
 
         describe('when composing charts with just a right axis', function () {
             beforeEach(function () {
-                chart.yAxis().ticks(7);
                 chart.compose([
                     dc.lineChart(chart).group(dateGroup).useRightYAxis(true)
-                ]).renderHorizontalGridLines(true).render();
+                ]).renderHorizontalGridLines(true);
+                chart.rightYAxis().ticks(7);
+                chart.render();
             });
 
             it('should only render a right y axis', function () {
@@ -683,7 +684,7 @@ describe('dc.compositeChart', function () {
             chart
                 .dimension(scatterDimension)
                 .group(scatterGroup)
-                .x(d3.scale.linear().domain([0,70]))
+                .x(d3.scaleLinear().domain([0,70]))
                 .brushOn(true)
                 .compose([
                     dc.scatterPlot(chart),
@@ -697,8 +698,10 @@ describe('dc.compositeChart', function () {
 
             beforeEach(function () {
                 otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
-                chart.brush().extent([22, 35]);
-                chart.brush().on('brush')();
+                // Setup a dummy event - just enough for the handler to get fooled
+                setupEventForBrushing(chart, [22, 35]);
+                // Directly call the handler
+                chart._brushing();
                 chart.redraw();
             });
 
@@ -708,8 +711,10 @@ describe('dc.compositeChart', function () {
 
             describe('brush decreases in size', function () {
                 beforeEach(function () {
-                    chart.brush().extent([22, 33]);
-                    chart.brush().on('brush')();
+                    // Setup a dummy event - just enough for the handler to get fooled
+                    setupEventForBrushing(chart, [22, 33]);
+                    // Directly call the handler
+                    chart._brushing();
                     chart.redraw();
                 });
 
@@ -721,8 +726,10 @@ describe('dc.compositeChart', function () {
 
             describe('brush disappears', function () {
                 beforeEach(function () {
-                    chart.brush().extent([22, 22]);
-                    chart.brush().on('brush')();
+                    // Setup a dummy event - just enough for the handler to get fooled
+                    setupEventForBrushing(chart, [22, 22]);
+                    // Directly call the handler
+                    chart._brushing();
                     chart.redraw();
                 });
 

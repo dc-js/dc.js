@@ -35,12 +35,12 @@
                     d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n)) : d3.range(n);
 
                 // Compute the new x-scale.
-                var x1 = d3.scale.linear()
+                var x1 = d3.scaleLinear()
                     .domain(domain && domain.call(this, d, i) || [min, max])
                     .range([height, 0]);
 
                 // Retrieve the old x-scale, if this is an update.
-                var x0 = this.__chart__ || d3.scale.linear()
+                var x0 = this.__chart__ || d3.scaleLinear()
                     .domain([0, Infinity])
                     .range(x1.range());
 
@@ -261,7 +261,7 @@
                     .style('opacity', 1e-6)
                     .remove();
             });
-            d3.timer.flush();
+            d3.timerFlush();
         }
 
         box.width = function (x) {

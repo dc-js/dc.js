@@ -9,7 +9,7 @@ describe('dc.dataGrid', function () {
         dateFixture = loadDateFixture();
         data = crossfilter(dateFixture);
         dimension = data.dimension(function (d) {
-            return d3.time.day.utc(d.dd);
+            return d3.utcDay(d.dd);
         });
         countryDimension = data.dimension(function (d) {
             return d.countrycode;
@@ -49,17 +49,17 @@ describe('dc.dataGrid', function () {
             expect(chart.order()).toBe(d3.descending);
         });
         it('sets the group label', function () {
-            expect(chart.selectAll('.dc-grid-group h1.dc-grid-label')[0][0].innerHTML).toEqual('Data Grid');
+            expect(chart.selectAll('.dc-grid-group h1.dc-grid-label').nodes()[0].innerHTML).toEqual('Data Grid');
         });
         it('creates id div', function () {
-            expect(chart.selectAll('.dc-grid-item div#id_9')[0].length).toEqual(1);
-            expect(chart.selectAll('.dc-grid-item div#id_8')[0].length).toEqual(1);
-            expect(chart.selectAll('.dc-grid-item div#id_3')[0].length).toEqual(1);
+            expect(chart.selectAll('.dc-grid-item div#id_9').nodes().length).toEqual(1);
+            expect(chart.selectAll('.dc-grid-item div#id_8').nodes().length).toEqual(1);
+            expect(chart.selectAll('.dc-grid-item div#id_3').nodes().length).toEqual(1);
         });
         it('creates div content', function () {
-            expect(chart.selectAll('.dc-grid-item div')[0][0].innerHTML).toEqual('Mississippi:44');
-            expect(chart.selectAll('.dc-grid-item div')[0][1].innerHTML).toEqual('Mississippi:33');
-            expect(chart.selectAll('.dc-grid-item div')[0][2].innerHTML).toEqual('Delaware:33');
+            expect(chart.selectAll('.dc-grid-item div').nodes()[0].innerHTML).toEqual('Mississippi:44');
+            expect(chart.selectAll('.dc-grid-item div').nodes()[1].innerHTML).toEqual('Mississippi:33');
+            expect(chart.selectAll('.dc-grid-item div').nodes()[2].innerHTML).toEqual('Delaware:33');
         });
     });
 
@@ -70,14 +70,14 @@ describe('dc.dataGrid', function () {
         });
 
         it('slice beginning', function () {
-            expect(chart.selectAll('.dc-grid-item')[0].length).toEqual(2);
+            expect(chart.selectAll('.dc-grid-item').nodes().length).toEqual(2);
         });
 
         it('slice beginning and end', function () {
             chart.endSlice(2);
             chart.redraw();
 
-            expect(chart.selectAll('.dc-grid-item')[0].length).toEqual(1);
+            expect(chart.selectAll('.dc-grid-item').nodes().length).toEqual(1);
         });
     });
 
@@ -87,11 +87,11 @@ describe('dc.dataGrid', function () {
             chart.redraw();
         });
         it('renders only filtered data set', function () {
-            expect(chart.selectAll('.dc-grid-item div')[0].length).toEqual(2);
+            expect(chart.selectAll('.dc-grid-item div').nodes().length).toEqual(2);
         });
         it('renders the correctly filtered records', function () {
-            expect(chart.selectAll('.dc-grid-item div')[0][0].innerHTML).toEqual('Ontario:22');
-            expect(chart.selectAll('.dc-grid-item div')[0][1].innerHTML).toEqual('Ontario:55');
+            expect(chart.selectAll('.dc-grid-item div').nodes()[0].innerHTML).toEqual('Ontario:22');
+            expect(chart.selectAll('.dc-grid-item div').nodes()[1].innerHTML).toEqual('Ontario:55');
         });
     });
 

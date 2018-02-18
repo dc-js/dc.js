@@ -35,7 +35,7 @@ describe('dc.numberDisplay', function () {
                 .formatNumber(d3.format('.3s'))
                 .valueAccessor(average);
         chart.render();
-        d3.timer.flush();
+        d3.timerFlush();
         return chart;
     }
 
@@ -62,7 +62,7 @@ describe('dc.numberDisplay', function () {
             beforeEach(function () {
                 countryDimension.filterAll();
                 chart.redraw();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should update value', function () {
                 expect(chart.select('span.number-display').text()).toEqual('41.8');
@@ -72,7 +72,7 @@ describe('dc.numberDisplay', function () {
             beforeEach(function () {
                 chart.html({one: '%number number',none: 'no number',some: '%number numbers'});
                 chart.redraw();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should use some for some', function () {
                 expect(chart.select('span.number-display').text()).toEqual('38.5 numbers');
@@ -83,7 +83,7 @@ describe('dc.numberDisplay', function () {
                 chart.html({one: '%number number',none: 'no number',some: '%number numbers'});
                 chart.valueAccessor(function (d) {return 1;});
                 chart.redraw();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should use one for one', function () {
                 expect(chart.select('span.number-display').text()).toEqual('1.00 number');
@@ -94,7 +94,7 @@ describe('dc.numberDisplay', function () {
                 chart.html({one: '%number number',none: 'no number',some: '%number numbers'});
                 chart.valueAccessor(function (d) {return 0;});
                 chart.redraw();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should use zero for zero', function () {
                 expect(chart.select('span.number-display').text()).toEqual('no number');
@@ -104,7 +104,7 @@ describe('dc.numberDisplay', function () {
             beforeEach(function () {
                 chart.html({one: '%number number'});
                 chart.redraw();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should use one for showing some', function () {
                 expect(chart.select('span.number-display').text()).toEqual('38.5 number');
@@ -114,7 +114,7 @@ describe('dc.numberDisplay', function () {
             beforeEach(function () {
                 chart.html({some: '%number numbers'});
                 chart.redraw();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should use some for showing one', function () {
                 expect(chart.select('span.number-display').text()).toEqual('38.5 numbers');
@@ -124,7 +124,7 @@ describe('dc.numberDisplay', function () {
             beforeEach(function () {
                 chart.html({});
                 chart.redraw();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should just show the number in case of some and one', function () {
                 expect(chart.select('span.number-display').text()).toEqual('38.5');
@@ -177,7 +177,7 @@ describe('dc.numberDisplay', function () {
                 .group(group)
                 .valueAccessor(function (kv) { return kv.value; })
                 .render();
-            d3.timer.flush();
+            d3.timerFlush();
         });
 
         it('should show the largest value', function () {
@@ -188,7 +188,7 @@ describe('dc.numberDisplay', function () {
             beforeEach(function () {
                 chart.ordering(function (kv) { return -kv.value; })
                     .render();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should show the smallest value', function () {
                 expect(chart.select('span.number-display').text()).toEqual('77.0');
@@ -206,7 +206,7 @@ describe('dc.numberDisplay', function () {
                 .group({value: function () { return Infinity; }})
                 .formatNumber(function (d) { return d; })
                 .render();
-            d3.timer.flush();
+            d3.timerFlush();
         });
         it('should display as Infinity', function () {
             expect(chart.root().text()).toEqual('Infinity');
@@ -215,7 +215,7 @@ describe('dc.numberDisplay', function () {
             beforeEach(function () {
                 chart.group({value: function () { return 17; }})
                     .render();
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('should display finite', function () {
                 expect(chart.root().text()).toEqual('17');

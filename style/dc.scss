@@ -96,17 +96,15 @@ div.dc-chart {
     }
     .brush {
         rect {
-            &.background {
-                z-index: -999;
-            }
-            &.extent {
+            &.selection {
                 fill: $color_steel_blue;
                 fill-opacity: .125;
             }
         }
-        .resize path {
+        .handle--custom {
             fill: $color_gallery;
             stroke: $color_storm_dust;
+            cursor: ew-resize;
         }
     }
     path {

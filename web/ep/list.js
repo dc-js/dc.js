@@ -35,7 +35,7 @@ function list (selector,path,data) {
   .width(200)
   .height(200)
   .dimension(group)
-  .colors(d3.scale.category10())
+  .colors(d3.scaleOrdinal(d3.schemeCategory10))
   .group(groupGroup)
   .on('renderlet', function (chart) {
   });
@@ -46,7 +46,7 @@ function list (selector,path,data) {
   .outerPadding(0)
   .gap(1)
   .margins({top: 0, right: 0, bottom: 95, left: 30})
-  .x(d3.scale.ordinal())
+  .x(d3.scaleOrdinal())
   .xUnits(dc.units.ordinal)
   .brushOn(false)
   .elasticY(true)
