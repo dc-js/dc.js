@@ -157,10 +157,10 @@ describe('dc.pieChart', function () {
             });
         });
         it('slice path fill should be set correctly', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][0]).attr('fill')).toMatch(/#3182bd/i);
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][1]).attr('fill')).toMatch(/#6baed6/i);
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][2]).attr('fill')).toMatch(/#9ecae1/i);
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][3]).attr('fill')).toMatch(/#c6dbef/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[0]).attr('fill')).toMatch(/#3182bd/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[1]).attr('fill')).toMatch(/#6baed6/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[2]).attr('fill')).toMatch(/#9ecae1/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[3]).attr('fill')).toMatch(/#c6dbef/i);
         });
         it('slice label should be created', function () {
             expect(chart.selectAll('svg text.pie-slice').data().length).toEqual(5);
@@ -227,7 +227,7 @@ describe('dc.pieChart', function () {
                 return chart;
             });
             it('multiple invocation of render should update chart', function () {
-                expect(d3.selectAll('#pie-chart-age svg')[0].length).toEqual(1);
+                expect(d3.selectAll('#pie-chart-age svg').nodes().length).toEqual(1);
             });
         });
         describe('filter', function () {
@@ -236,8 +236,8 @@ describe('dc.pieChart', function () {
                 chart.render();
             });
             it('label should be hidden if filtered out', function () {
-                expect(chart.selectAll('svg g text.pie-slice')[0][0].textContent).toEqual('22');
-                expect(chart.selectAll('svg g text.pie-slice')[0][1].textContent).toEqual('');
+                expect(chart.selectAll('svg g text.pie-slice').nodes()[0].textContent).toEqual('22');
+                expect(chart.selectAll('svg g text.pie-slice').nodes()[1].textContent).toEqual('');
             });
             afterEach(function () {
                 regionDimension.filterAll();
@@ -253,7 +253,7 @@ describe('dc.pieChart', function () {
                 expect(chart.select('g').classed('empty-chart')).toBeTruthy();
             });
             it('should have one slice', function () {
-                expect(chart.selectAll('svg g text.pie-slice').length).toBe(1);
+                expect(chart.selectAll('svg g text.pie-slice').nodes().length).toBe(1);
             });
             afterEach(function () {
                 statusDimension.filterAll();
@@ -456,14 +456,14 @@ describe('dc.pieChart', function () {
         });
         it('label should not be generated if the slice is too small', function () {
             // slice '66'
-            expect(d3.select(chart.selectAll('text.pie-slice')[0][4]).text()).toEqual('');
+            expect(d3.select(chart.selectAll('text.pie-slice').nodes()[4]).text()).toEqual('');
         });
         describe('selected', function () {
             beforeEach(function () {
                 chart.filter('66').redraw();
             });
             it('a small slice should be labelled if it is selected', function () {
-                expect(d3.select(chart.selectAll('text.pie-slice')[0][4]).text()).toEqual('66');
+                expect(d3.select(chart.selectAll('text.pie-slice').nodes()[4]).text()).toEqual('66');
             });
             afterEach(function () {
                 chart.filter(null);
@@ -486,17 +486,17 @@ describe('dc.pieChart', function () {
             chart.render();
         });
         it('should render correct number of text', function () {
-            expect(chart.selectAll('text.pie-slice')[0].length).toEqual(5);
+            expect(chart.selectAll('text.pie-slice').nodes().length).toEqual(5);
         });
         it('custom function should be used to dynamically generate label', function () {
-            expect(d3.select(chart.selectAll('text.pie-slice')[0][0]).text()).toEqual('custom');
+            expect(d3.select(chart.selectAll('text.pie-slice').nodes()[0]).text()).toEqual('custom');
         });
         it('label should not be generated if the slice is too small', function () {
             // slice '66'
-            expect(d3.select(chart.selectAll('text.pie-slice')[0][4]).text()).toEqual('');
+            expect(d3.select(chart.selectAll('text.pie-slice').nodes()[4]).text()).toEqual('');
         });
         it('should render correct number of title', function () {
-            expect(chart.selectAll('g.pie-slice title')[0].length).toEqual(5);
+            expect(chart.selectAll('g.pie-slice title').nodes().length).toEqual(5);
         });
         it('custom function should be used to dynamically generate title', function () {
             chart.selectAll('g.pie-slice title').each(function (p) {
@@ -525,10 +525,10 @@ describe('dc.pieChart', function () {
                     .render();
             });
             it('produce expected number of slices', function () {
-                expect(chart.selectAll('text.pie-slice')[0].length).toEqual(3);
+                expect(chart.selectAll('text.pie-slice').nodes().length).toEqual(3);
             });
             it('others slice should use custom name', function () {
-                expect(d3.select(chart.selectAll('text.pie-slice')[0][2]).text()).toEqual('small');
+                expect(d3.select(chart.selectAll('text.pie-slice').nodes()[2]).text()).toEqual('small');
             });
             it('remaining slices should be in descending value order', function () {
                 expect(chart.selectAll('text.pie-slice').data().map(dc.pluck('value')))
@@ -539,14 +539,14 @@ describe('dc.pieChart', function () {
                 beforeEach(function () {
                     event = document.createEvent('MouseEvents');
                     event.initEvent('click', true, true);
-                    chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
+                    chart.selectAll('.pie-slice path').nodes()[2].dispatchEvent(event);
                 });
                 it('should filter three smallest', function () {
                     expect(chart.filters()).toEqual(['33', '55', '66','small']);
                 });
                 describe('clicking again', function () {
                     beforeEach(function () {
-                        chart.selectAll('.pie-slice path')[0][2].dispatchEvent(event);
+                        chart.selectAll('.pie-slice path').nodes()[2].dispatchEvent(event);
                     });
                     it('should reset filter', function () {
                         expect(chart.filters()).toEqual([]);
@@ -577,7 +577,7 @@ describe('dc.pieChart', function () {
                     chart.cap(1).render();
                 });
                 it('correct values, others row', function () {
-                    expect(chart.selectAll('title')[0].map(function (t) {return d3.select(t).text();}))
+                    expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
                         .toEqual(['F: 220', 'small: 198']);
                 });
             });
@@ -632,10 +632,10 @@ describe('dc.pieChart', function () {
             return chart;
         });
         it('default function should be used to dynamically generate label', function () {
-            expect(d3.select(chart.selectAll('text.pie-slice')[0][0]).text()).toEqual('F');
+            expect(d3.select(chart.selectAll('text.pie-slice').nodes()[0]).text()).toEqual('F');
         });
         it('default function should be used to dynamically generate title', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice title')[0][0]).text()).toEqual('F: 5');
+            expect(d3.select(chart.selectAll('g.pie-slice title').nodes()[0]).text()).toEqual('F: 5');
         });
         describe('with n/a filter', function () {
             beforeEach(function () {
@@ -647,17 +647,17 @@ describe('dc.pieChart', function () {
                 expect(chart.select('g').classed('empty-chart')).toBeTruthy();
             });
             it('should have one slice', function () {
-                expect(chart.selectAll('svg g text.pie-slice').length).toBe(1);
+                expect(chart.selectAll('svg g text.pie-slice').nodes().length).toBe(1);
             });
             it('should have slice labeled empty', function () {
-                expect(d3.select(chart.selectAll('text.pie-slice')[0][0]).text()).toEqual('empty');
+                expect(d3.select(chart.selectAll('text.pie-slice').nodes()[0]).text()).toEqual('empty');
             });
             describe('with emptyTitle', function () {
                 beforeEach(function () {
                     chart.emptyTitle('nothing').render();
                 });
                 it('should respect the emptyTitle', function () {
-                    expect(d3.select(chart.selectAll('text.pie-slice')[0][0]).text()).toEqual('nothing');
+                    expect(d3.select(chart.selectAll('text.pie-slice').nodes()[0]).text()).toEqual('nothing');
                 });
                 afterEach(function () {
                     chart.emptyTitle('empty');
