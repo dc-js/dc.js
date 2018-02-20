@@ -29,6 +29,14 @@ module.exports = function (grunt) {
                     banner: '<%= conf.banner %>'
                 }
             },
+            d3compat: {
+                src: '<%= conf.src %>/d3-compat/*.js',
+                dest: 'd3-compat.js',
+                options: {
+                    process: true,
+                    sourceMap: true
+                }
+            },
             welcome: {
                 src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
                 dest: 'welcome.md',
@@ -159,9 +167,7 @@ module.exports = function (grunt) {
                 },
                 src: [
                     '<%= conf.web %>/js/d3.js',
-                    '<%= conf.src %>/d3-compat/d3-compat00.js',
-                    '<%= conf.src %>/d3-compat/d3-compat01.js',
-                    '<%= conf.src %>/d3-compat/d3-compat02.js',
+                    '<%= conf.web %>/js/d3-compat.js',
                     '<%= conf.web %>/js/crossfilter.js',
                     '<%= conf.web %>/js/colorbrewer.js',
                     '<%= conf.pkg.name %>.js'
@@ -292,6 +298,8 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.js.map',
                             '<%= conf.pkg.name %>.min.js',
                             '<%= conf.pkg.name %>.min.js.map',
+                            'd3-compat.js',
+                            'd3-compat.js.map',
                             'node_modules/d3/build/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/queue-async/build/queue.js',
