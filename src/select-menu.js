@@ -85,7 +85,7 @@ dc.selectMenu = function (parent, chartGroup) {
         var options = _select.selectAll('option.' + OPTION_CSS_CLASS)
           .data(_chart.data(), function (d) { return _chart.keyAccessor()(d); });
 
-        options = options.enter()
+        options.enter()
               .append('option')
               .classed(OPTION_CSS_CLASS, true)
               .attr('value', function (d) { return _chart.keyAccessor()(d); })
@@ -96,7 +96,9 @@ dc.selectMenu = function (parent, chartGroup) {
         _select.selectAll('option.' + OPTION_CSS_CLASS).sort(_order);
 
         _select.on('change', onChange);
-        return options;
+
+        // indicate that no one should use return value
+        return null;
     }
 
     function onChange (d, i) {
