@@ -156,8 +156,8 @@ describe('dc.compositeChart', function () {
         });
 
         it('should index each subchart g by css class', function () {
-            expect(d3.select(chart.selectAll('g.sub')[0][0]).attr('class')).toBe('sub _0');
-            expect(d3.select(chart.selectAll('g.sub')[0][1]).attr('class')).toBe('sub _1');
+            expect(d3.select(chart.selectAll('g.sub').nodes()[0]).attr('class')).toBe('sub _0');
+            expect(d3.select(chart.selectAll('g.sub').nodes()[1]).attr('class')).toBe('sub _1');
         });
 
         it('should generate sub line chart paths', function () {
@@ -311,7 +311,7 @@ describe('dc.compositeChart', function () {
 
             it('should generate legend labels with their associated group text', function () {
                 function legendText (n) {
-                    return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]).text();
+                    return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text').nodes()[n]).text();
                 }
                 expect(legendText(0)).toBe('Date Value Group Bar');
                 expect(legendText(1)).toBe('Date ID Group');
@@ -332,11 +332,11 @@ describe('dc.compositeChart', function () {
             });
 
             it('should hide hidable child stacks', function () {
-                var dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]);
+                var dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[3]);
 
                 dateValueGroupLine2.on('click')(dateValueGroupLine2.datum());
                 expect(dateValueGroupLine2.text()).toBe('Date Value Group Line 2');
-                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][3]).classed('fadeout')).toBeTruthy();
+                expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[3]).classed('fadeout')).toBeTruthy();
                 expect(chart.selectAll('path.line').size()).toEqual(3);
             });
         });
@@ -384,7 +384,7 @@ describe('dc.compositeChart', function () {
         });
 
         it('should trigger the sub-chart renderlet', function () {
-            expect(d3.select(chart.selectAll('rect')[0][0]).attr('width')).toBe('10');
+            expect(d3.select(chart.selectAll('rect').nodes()[0]).attr('width')).toBe('10');
         });
     });
 

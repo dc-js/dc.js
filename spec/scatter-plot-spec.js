@@ -127,7 +127,7 @@ describe('dc.scatterPlot', function () {
         });
 
         function nthSymbol (i) {
-            return d3.select(chart.selectAll('path.symbol')[0][i]);
+            return d3.select(chart.selectAll('path.symbol').nodes()[i]);
         }
 
         describe('filtering the chart', function () {
@@ -430,7 +430,7 @@ describe('dc.scatterPlot', function () {
         });
 
         function nthChart (n) {
-            var subChart = d3.select(compositeChart.selectAll('g.sub')[0][n]);
+            var subChart = d3.select(compositeChart.selectAll('g.sub').nodes()[n]);
 
             subChart.expectPlotSymbolsToHaveClass = function (className) {
                 subChart.selectAll('path.symbol').each(function () {

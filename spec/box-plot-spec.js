@@ -196,7 +196,7 @@ describe('dc.boxPlot', function () {
     });
 
     function box (n) {
-        var nthBox = d3.select(chart.selectAll('g.box')[0][n]);
+        var nthBox = d3.select(chart.selectAll('g.box').nodes()[n]);
         nthBox.boxText = function (n) {
             return d3.select(this.selectAll('text.box')[0][n]);
         };

@@ -53,16 +53,16 @@ describe('dc.selectMenu', function () {
             expect(chart.selectAll('select').attr('size')).toEqual('10');
         });
         it('creates prompt option with empty value', function () {
-            var option = chart.selectAll('option')[0][0];
+            var option = chart.selectAll('option').nodes()[0];
             expect(option).not.toBeNull();
             expect(option.value).toEqual('');
         });
         it('creates prompt option with default prompt text', function () {
-            var option = chart.selectAll('option')[0][0];
+            var option = chart.selectAll('option').nodes()[0];
             expect(option.text).toEqual('Select all');
         });
         it('creates correct number of options', function () {
-            expect(chart.selectAll('option.dc-select-option')[0].length).toEqual(stateGroup.all().length);
+            expect(chart.selectAll('option.dc-select-option').nodes().length).toEqual(stateGroup.all().length);
         });
     });
 
@@ -121,7 +121,7 @@ describe('dc.selectMenu', function () {
             it('selects option corresponding to active filter', function () {
                 chart.onChange(stateGroup.all()[0].key);
                 chart.redraw();
-                expect(chart.selectAll('select')[0][0].value).toEqual('California');
+                expect(chart.selectAll('select').nodes()[0].value).toEqual('California');
             });
         });
 
@@ -176,13 +176,13 @@ describe('dc.selectMenu', function () {
         it('only displays options whose value > 0 by default', function () {
             regionDimension.filter('South');
             chart.redraw();
-            expect(chart.selectAll('option.dc-select-option')[0].length).toEqual(1);
+            expect(chart.selectAll('option.dc-select-option').nodes().length).toEqual(1);
             expect(getOption(chart, 0).text).toEqual('California: 2');
         });
         it('can be overridden', function () {
             regionDimension.filter('South');
             chart.filterDisplayed(function (d) { return true; }).redraw();
-            expect(chart.selectAll('option.dc-select-option')[0].length).toEqual(stateGroup.all().length);
+            expect(chart.selectAll('option.dc-select-option').nodes().length).toEqual(stateGroup.all().length);
             expect(getOption(chart, stateGroup.all().length - 1).text).toEqual('Ontario: 0');
         });
         it('retains order with filtered options', function () {
@@ -197,6 +197,6 @@ describe('dc.selectMenu', function () {
     });
 
     function getOption (chart, i) {
-        return chart.selectAll('option.dc-select-option')[0][i];
+        return chart.selectAll('option.dc-select-option').nodes()[i];
     }
 });

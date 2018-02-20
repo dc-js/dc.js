@@ -565,7 +565,7 @@ describe('dc.heatmap', function () {
         }
 
         function testRectFillsBubble12 (chart) {
-            var rects = chart.selectAll('rect')[0];
+            var rects = chart.selectAll('rect').nodes();
             expect(d3.select(rects[0]).attr('fill')).toMatch(/#f8f8f8/i);
             expect(d3.select(rects[3]).attr('fill')).toMatch(/#377eb8/i);
             expect(d3.select(rects[4]).attr('fill')).toMatch(/#377eb8/i);
@@ -576,7 +576,7 @@ describe('dc.heatmap', function () {
             expect(d3.select(rects[12]).attr('fill')).toMatch(/#f8f8f8/i);
         }
         function testRectTitlesBubble12 (chart) {
-            var titles = chart.selectAll('g.box-group title')[0];
+            var titles = chart.selectAll('g.box-group title').nodes();
             expect(JSON.parse(d3.select(titles[0]).text()).total).toBe(0);
             expect(JSON.parse(d3.select(titles[2]).text()).total).toBe(0);
             expect(JSON.parse(d3.select(titles[3]).text()).total).toBe(2);

@@ -117,11 +117,11 @@ describe('dc.rowChart', function () {
                 });
 
                 it('should fill each row rect with pre-defined colors', function () {
-                    expect(d3.select(chart.selectAll('g.row rect')[0][0]).attr('fill')).toMatch(/#3182bd/i);
-                    expect(d3.select(chart.selectAll('g.row rect')[0][1]).attr('fill')).toMatch(/#6baed6/i);
-                    expect(d3.select(chart.selectAll('g.row rect')[0][2]).attr('fill')).toMatch(/#9ecae1/i);
-                    expect(d3.select(chart.selectAll('g.row rect')[0][3]).attr('fill')).toMatch(/#c6dbef/i);
-                    expect(d3.select(chart.selectAll('g.row rect')[0][4]).attr('fill')).toMatch(/#e6550d/i);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[0]).attr('fill')).toMatch(/#3182bd/i);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[1]).attr('fill')).toMatch(/#6baed6/i);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[2]).attr('fill')).toMatch(/#9ecae1/i);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[3]).attr('fill')).toMatch(/#c6dbef/i);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[4]).attr('fill')).toMatch(/#e6550d/i);
                 });
 
                 it('should create a row label from the data for each row', function () {
@@ -381,7 +381,7 @@ describe('dc.rowChart', function () {
                     });
 
                     it('should generate x axis domain dynamically', function () {
-                        var nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text')[0][n]); };
+                        var nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text').nodes()[n]); };
 
                         for (var i = 0; i < xAxisTicks.length; i++) {
                             expect(nthText(i).text()).toBe(xAxisTicks[i]);

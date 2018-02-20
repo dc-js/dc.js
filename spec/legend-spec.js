@@ -260,7 +260,7 @@ describe('dc.legend', function () {
 
             it('disable hover highlighting for that legend item', function () {
                 legendItem(0).on('mouseover')(legendItem(0).datum());
-                expect(d3.select(chart.selectAll('path.line')[0][1]).classed('fadeout')).toBeFalsy();
+                expect(d3.select(chart.selectAll('path.line').nodes()[1]).classed('fadeout')).toBeFalsy();
             });
 
             describe('clicking on a faded out legend item', function () {
@@ -280,16 +280,16 @@ describe('dc.legend', function () {
     });
 
     function legendItem (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[n]);
     }
     function legendLabel (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text').nodes()[n]);
     }
     function legendIcon (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item rect')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item rect').nodes()[n]);
     }
     function legendLine (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item line')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item line').nodes()[n]);
     }
 });
 

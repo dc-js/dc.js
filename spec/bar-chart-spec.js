@@ -147,7 +147,7 @@ describe('dc.barChart', function () {
                 });
             });
             function nthYAxisText (n) {
-                return d3.select(chart.selectAll('g.y text')[0][n]);
+                return d3.select(chart.selectAll('g.y text').nodes()[n]);
             }
             it('should generate bars with positions corresponding to their data', function () {
                 expect(nthStack(0).nthBar(0).attr('x')).toBeWithinDelta(58, 1);
@@ -552,7 +552,7 @@ describe('dc.barChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
 
                     expect(nthText(0).text()).toBe('-20');
                     expect(nthText(1).text()).toBe('0');
@@ -576,7 +576,7 @@ describe('dc.barChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
 
                     expect(nthText(0).text()).toBe('-30');
                     expect(nthText(1).text()).toBe('-20');
@@ -634,7 +634,7 @@ describe('dc.barChart', function () {
             }
 
             function xAxisText () {
-                return chart.selectAll('g.x text')[0].map(function (x) { return d3.select(x).text(); });
+                return chart.selectAll('g.x text').nodes().map(function (x) { return d3.select(x).text(); });
             }
         });
 
@@ -1191,7 +1191,7 @@ describe('dc.barChart', function () {
         });
 
         function xAxisText () {
-            return chart.selectAll('g.x text')[0].map(function (x) { return d3.select(x).text(); });
+            return chart.selectAll('g.x text').nodes().map(function (x) { return d3.select(x).text(); });
         }
     });
 
@@ -1255,12 +1255,12 @@ describe('dc.barChart', function () {
         });
 
         function xAxisText () {
-            return chart.selectAll('g.x text')[0].map(function (x) { return d3.select(x).text(); });
+            return chart.selectAll('g.x text').nodes().map(function (x) { return d3.select(x).text(); });
         }
     });
 
     function nthStack (n) {
-        var stack = d3.select(chart.selectAll('.stack')[0][n]);
+        var stack = d3.select(chart.selectAll('.stack').nodes()[n]);
 
         stack.nthBar = function (n) {
             return d3.select(this.selectAll('rect.bar')[0][n]);

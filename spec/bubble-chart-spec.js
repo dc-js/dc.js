@@ -98,7 +98,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of bubbles', function () {
-            expect(chart.selectAll('circle.bubble')[0].length).toBe(2);
+            expect(chart.selectAll('circle.bubble').nodes().length).toBe(2);
         });
 
         it('calculates right cx for each bubble', function () {
@@ -142,7 +142,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of labels', function () {
-            expect(chart.selectAll('g.node text')[0].length).toBe(2);
+            expect(chart.selectAll('g.node text').nodes().length).toBe(2);
         });
 
         it('creates correct label for each bubble', function () {
@@ -157,7 +157,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of titles', function () {
-            expect(chart.selectAll('g.node title')[0].length).toBe(2);
+            expect(chart.selectAll('g.node title').nodes().length).toBe(2);
         });
 
         it('creates correct title for each bubble', function () {
@@ -189,11 +189,11 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of labels', function () {
-            expect(chart.selectAll('g.node text')[0].length).toBe(0);
+            expect(chart.selectAll('g.node text').nodes().length).toBe(0);
         });
 
         it('generates right number of titles', function () {
-            expect(chart.selectAll('g.node title')[0].length).toBe(0);
+            expect(chart.selectAll('g.node title').nodes().length).toBe(0);
         });
     });
 
@@ -375,7 +375,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of bubbles', function () {
-            expect(chart.selectAll('circle.bubble')[0].length).toBe(10);
+            expect(chart.selectAll('circle.bubble').nodes().length).toBe(10);
         });
 
         it('auto calculates x range based on width', function () {
@@ -659,14 +659,14 @@ describe('dc.bubbleChart', function () {
         }
 
         function testBubbleRadiiCol3 (chart) {
-            var bubbles = chart.selectAll('circle.bubble')[0];
+            var bubbles = chart.selectAll('circle.bubble').nodes();
             var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34.5, 16.1, 0, 0, 16.1, 59.1, 34.5, 16.1, 96, 0, 22.2, 0, 0, 0, 0];
             bubbles.forEach(function (b, i) {
                 expect(+d3.select(b).attr('r')).toBeWithinDelta(expected[i], 0.1);
             });
         }
         function testBubbleTitlesCol3 (chart) {
-            var titles = chart.selectAll('g.node title')[0];
+            var titles = chart.selectAll('g.node title').nodes();
             var expected = [
                 {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
                 {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
@@ -687,7 +687,7 @@ describe('dc.bubbleChart', function () {
             });
         }
         function testBubbleLabelsCol3 (chart) {
-            var labels = chart.selectAll('g.node text')[0];
+            var labels = chart.selectAll('g.node text').nodes();
             var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 8, 4, 1, 14, 0, 2, 0, 0, 0, 0];
             labels.forEach(function (l, i) {
                 expect(+d3.select(l).text()).toBe(expected[i]);

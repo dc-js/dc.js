@@ -315,7 +315,7 @@ describe('dc.coordinateGridChart', function () {
 
                 describe('horizontal grid lines', function () {
                     it('should draw lines associated with the data shown on the right y-axis', function () {
-                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line')[0][n]); };
+                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line').nodes()[n]); };
 
                         expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(7);
                         expect(nthGridLine(0).attr('y2')).toBe('130');
@@ -338,7 +338,7 @@ describe('dc.coordinateGridChart', function () {
                         });
 
                         it('should draws lines associated with the data using the custom ticks', function () {
-                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line')[0][n]); };
+                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line').nodes()[n]); };
 
                             expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(3);
                             expect(nthGridLine(0).attr('y2')).toBe('130');
@@ -351,7 +351,7 @@ describe('dc.coordinateGridChart', function () {
 
                 describe('vertical grid lines', function () {
                     it('should draw lines associated with the data shown on the x-axis', function () {
-                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line')[0][n]); };
+                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line').nodes()[n]); };
 
                         expect(chart.selectAll('.grid-line.vertical line').size()).toBe(13);
                         expect(nthGridLine(0).attr('x2')).toBe('0');
@@ -374,7 +374,7 @@ describe('dc.coordinateGridChart', function () {
                         });
 
                         it('should draw lines associated with the data using the custom ticks', function () {
-                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line')[0][n]); };
+                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line').nodes()[n]); };
 
                             expect(chart.selectAll('.grid-line.vertical line').size()).toBe(3);
                             expect(nthGridLine(0).attr('x2')).toBeWithinDelta(6, 1);
