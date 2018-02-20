@@ -36,7 +36,7 @@ describe('dc.selectMenu', function () {
             expect(chart.promptText()).toBe('Select all');
         });
         it('creates select tag', function () {
-            expect(chart.selectAll('select').length).toEqual(1);
+            expect(chart.selectAll('select').nodes().length).toEqual(1);
         });
         it('select tag is not a multiple select by default', function () {
             expect(chart.selectAll('select').attr('multiple')).toBeNull();
@@ -149,7 +149,7 @@ describe('dc.selectMenu', function () {
             expect(regionGroup.all()[0].value).toEqual(1);
         });
         it('selects all options corresponding to active filters on redraw', function () {
-            var selectedOptions = chart.selectAll('select').selectAll('option')[0].filter(function (d) {
+            var selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(function (d) {
                 // IE returns an extra option with value '', not sure what it means
                 return d.value && d.selected;
             });
@@ -159,7 +159,7 @@ describe('dc.selectMenu', function () {
         it('does not deselect previously filtered options when new option is added', function () {
             chart.onChange([stateGroup.all()[0].key, stateGroup.all()[1].key, stateGroup.all()[5].key]);
 
-            var selectedOptions = chart.selectAll('select').selectAll('option')[0].filter(function (d) {
+            var selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(function (d) {
                 // IE returns an extra option with value '', not sure what it means
                 return d.value && d.selected;
             });
