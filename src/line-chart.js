@@ -39,7 +39,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _dataPointRadius = null;
     var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
     var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
-    var _interpolate = 'linear';
+    var _interpolate = d3.curveLinear;
     var _tension = 0.7;
     var _defined;
     var _dashStyle;
@@ -187,6 +187,12 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
+    // Behavior of interpolator has changed in D3v4
+    var _interpolateWithTension = function () {
+        return typeof _interpolate.tension === "function" ?
+            _interpolate.tension(_tension) : _interpolate;
+    };
+
     function drawLine (layersEnter, layers) {
         var line = d3.svg.line()
             .x(function (d) {
@@ -195,8 +201,7 @@ dc.lineChart = function (parent, chartGroup) {
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
             })
-            .interpolate(_interpolate)
-            .tension(_tension);
+            .curve(_interpolateWithTension());
         if (_defined) {
             line.defined(_defined);
         }
@@ -228,8 +233,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y0(function (d) {
                     return _chart.y()(d.y0);
                 })
-                .interpolate(_interpolate)
-                .tension(_tension);
+                .curve(_interpolateWithTension());
             if (_defined) {
                 area.defined(_defined);
             }
