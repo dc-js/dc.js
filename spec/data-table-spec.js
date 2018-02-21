@@ -189,10 +189,10 @@ describe('dc.dataTable', function () {
         });
         it('should produce correct table header with single column', function () {
             var thead = chart.selectAll('thead');
-            expect(thead.length).toBe(1);
+            expect(thead.nodes().length).toBe(1);
             var tr = thead.selectAll('tr');
-            expect(tr.length).toBe(1);
-            var colheader = tr.selectAll('th.dc-table-head')[0].map(function (d) {return d.textContent;});
+            expect(tr.nodes().length).toBe(1);
+            var colheader = tr.selectAll('th.dc-table-head').nodes().map(function (d) {return d.textContent;});
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('Test ID');
         });
@@ -224,10 +224,10 @@ describe('dc.dataTable', function () {
         });
         it('should produce correct table header with single column', function () {
             var thead = chart.selectAll('thead');
-            expect(thead.length).toBe(1);
+            expect(thead.nodes().length).toBe(1);
             var tr = thead.selectAll('tr');
-            expect(tr.length).toBe(1);
-            var colheader = tr.selectAll('th.dc-table-head')[0].map(function (d) {return d.textContent;});
+            expect(tr.nodes().length).toBe(1);
+            var colheader = tr.selectAll('th.dc-table-head').nodes().map(function (d) {return d.textContent;});
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('Test ID');
         });

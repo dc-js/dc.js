@@ -37,6 +37,8 @@ d3.axisRight = d3v4.axisRight;
 d3.layout.stack = d3v4.stack;
 d3.curveLinear = d3v4.curveLinear;
 
+d3.geo.mercator = d3v4.geoMercator;
+
 // Selection behavior have changed significantly, need manual changes for
 // each invocation of .enter()
 d3.selectAll = d3v4.selectAll;

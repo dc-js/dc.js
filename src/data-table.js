@@ -110,25 +110,27 @@ dc.dataTable = function (parent, chartGroup) {
         if (!bAllFunctions) {
             // ensure one thead
             var thead = _chart.selectAll('thead').data([0]);
-            thead.enter().append('thead');
             thead.exit().remove();
+            thead = thead.enter()
+                    .append('thead')
+                .merge(thead);
 
             // with one tr
             var headrow = thead.selectAll('tr').data([0]);
-            headrow.enter().append('tr');
             headrow.exit().remove();
+            headrow = headrow.enter()
+                    .append('tr')
+                .merge(headrow);
 
             // with a th for each column
             var headcols = headrow.selectAll('th')
                 .data(_columns);
-            headcols.enter().append('th');
             headcols.exit().remove();
-
-            headcols
-                .attr('class', HEAD_CSS_CLASS)
+            headcols.enter().append('th')
+                .merge(headcols)
+                    .attr('class', HEAD_CSS_CLASS)
                     .html(function (d) {
                         return (_chart._doColumnHeaderFormat(d));
-
                     });
         }
 
