@@ -358,7 +358,7 @@ describe('dc.baseMixin', function () {
         beforeEach(function () {
             dimdiv = appendChartID('dimensionTest');
             chart.anchor('#dimensionTest');
-            bodyWidth = d3.select('body')[0][0].getBoundingClientRect().width;
+            bodyWidth = d3.select('body').nodes()[0].getBoundingClientRect().width;
         });
 
         describe('when set to a falsy on a sized div', function () {

@@ -12,7 +12,8 @@ describe('dc.bubbleOverlay', function () {
         var parent = appendChartID(id);
         var width = 600, height = 400;
         var svg = parent.append('svg')
-                .attr({width: width, height: height});
+            .attr('width', width)
+            .attr('height', height);
 
         chart = dc.bubbleOverlay('#' + id)
             .svg(svg)
