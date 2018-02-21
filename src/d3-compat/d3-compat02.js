@@ -28,6 +28,10 @@ d3.time.days.utc = d3v4.utcDays;
 d3.time.scale = {};
 d3.time.scale.utc = d3v4.scaleUtc;
 
+d3.easeQuadIn = d3v4.easeQuadIn;
+
+d3.scale.log = d3v4.scaleLog;
+
 d3.timer.flush = d3v4.timerFlush;
 
 d3.axisBottom = d3v4.axisBottom;

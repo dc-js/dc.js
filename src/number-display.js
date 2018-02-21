@@ -102,19 +102,23 @@ dc.numberDisplay = function (parent, chartGroup) {
         if (span.empty()) {
             span = span.data([0])
                 .enter()
-                .append('span')
-                .attr('class', SPAN_CLASS);
+                    .append('span')
+                    .attr('class', SPAN_CLASS)
+                .merge(span);
         }
 
         span.transition()
             .duration(_chart.transitionDuration())
             .delay(_chart.transitionDelay())
-            .ease('quad-out-in')
+            .ease(d3.easeQuadIn)
             .tween('text', function () {
                 // [XA] don't try and interpolate from Infinity, else this breaks.
                 var interpStart = isFinite(_lastValue) ? _lastValue : 0;
                 var interp = d3.interpolateNumber(interpStart || 0, newValue);
                 _lastValue = newValue;
+
+                // need to save it in D3v4
+                var node = this;
                 return function (t) {
                     var html = null, num = _chart.formatNumber()(interp(t));
                     if (newValue === 0 && (_html.none !== '')) {
@@ -124,7 +128,7 @@ dc.numberDisplay = function (parent, chartGroup) {
                     } else if (_html.some !== '') {
                         html = _html.some;
                     }
-                    this.innerHTML = html ? html.replace('%number', num) : num;
+                    node.innerHTML = html ? html.replace('%number', num) : num;
                 };
             });
     };

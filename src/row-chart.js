@@ -44,7 +44,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _elasticX;
 
-    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxis = d3.axisBottom();
 
     var _rowData;
 
@@ -140,8 +140,9 @@ dc.rowChart = function (parent, chartGroup) {
         var rows = _g.selectAll('g.' + _rowCssClass)
             .data(_rowData);
 
-        createElements(rows);
         removeElements(rows);
+        rows = createElements(rows)
+            .merge(rows);
         updateElements(rows);
     }
 
@@ -155,6 +156,8 @@ dc.rowChart = function (parent, chartGroup) {
         rowEnter.append('rect').attr('width', 0);
 
         createLabels(rowEnter);
+
+        return rowEnter;
     }
 
     function removeElements (rows) {

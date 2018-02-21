@@ -141,8 +141,8 @@ describe('dc.rowChart', function () {
 
                     function itShouldVerticallyCenterLabelWithinRow (i) {
                         it('should place label ' + i + ' within row ' + i, function () {
-                            var rowpos = rows[0][i].getBoundingClientRect(),
-                                textpos = labels[0][i].getBoundingClientRect();
+                            var rowpos = rows.nodes()[i].getBoundingClientRect(),
+                                textpos = labels.nodes()[i].getBoundingClientRect();
                             expect((textpos.top + textpos.bottom) / 2)
                                 .toBeWithinDelta((rowpos.top + rowpos.bottom) / 2, 2);
                         });
