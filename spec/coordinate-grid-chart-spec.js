@@ -406,9 +406,10 @@ describe('dc.coordinateGridChart', function () {
                     expect(chart.selectAll('.axis.y').size()).toBe(1);
                 });
 
-                it('should orient the y-axis text to the left by default', function () {
+                // No longer valid in D3v4
+                /*it('should orient the y-axis text to the left by default', function () {
                     expect(chart.yAxis().orient()).toBe('left');
-                });
+                });*/
 
                 it('should place the y axis to the left', function () {
                     expect(chart.select('g.y').attr('transform')).toMatchTranslate(0, 20);
@@ -453,9 +454,10 @@ describe('dc.coordinateGridChart', function () {
                     expect(chart.selectAll('.axis.y').size()).toBe(1);
                 });
 
-                it('should orient the y-axis text to the right', function () {
+                // Not applicable in D3v4
+                /*it('should orient the y-axis text to the right', function () {
                     expect(chart.yAxis().orient()).toBe('right');
-                });
+                });*/
 
                 it('should position the axis to the right of the chart', function () {
                     expect(chart.select('.axis.y').attr('transform')).toMatchTranslate(490, 20);

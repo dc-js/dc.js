@@ -28,7 +28,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _x;
     var _xOriginalDomain;
-    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxis = d3.axisBottom();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
     var _xAxisPaddingUnit = 'day';
@@ -38,7 +38,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _lastXDomain;
 
     var _y;
-    var _yAxis = d3.svg.axis().orient('left');
+    var _yAxis;
     var _yAxisPadding = 0;
     var _yElasticity = false;
     var _yAxisLabel;
@@ -459,6 +459,9 @@ dc.coordinateGridMixin = function (_chart) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
             }
         } else { // _chart.isOrdinal()
+            // D3v4 - find better place to put it
+            // It is special subclass that support rangeBands
+            _x = d3.scaleBand();
             if (_chart.elasticX() || _x.domain().length === 0) {
                 _x.domain(_chart._ordinalXDomain());
             }
@@ -473,8 +476,9 @@ dc.coordinateGridMixin = function (_chart) {
 
         // please can't we always use rangeBands for bar charts?
         if (_chart.isOrdinal()) {
-            _x.rangeBands([0, _chart.xAxisLength()], _rangeBandPadding,
-                          _chart._useOuterPadding() ? _outerRangeBandPadding : 0);
+            _x.range([0, _chart.xAxisLength()])
+                .paddingInner(_rangeBandPadding)
+                .paddingOuter(_chart._useOuterPadding() ? _outerRangeBandPadding : 0);
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -545,7 +549,8 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+            var linesGEnterUpdate = linesGEnter.merge(lines);
+            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -592,6 +597,13 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._prepareYAxis = function (g) {
+        // D3v4 - consider dropping _useRightYAxis
+        if (_useRightYAxis) {
+            _yAxis = d3.axisRight();
+        } else {
+            _yAxis = d3.axisLeft();
+        }
+
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
                 _y = d3.scale.linear();
@@ -603,10 +615,6 @@ dc.coordinateGridMixin = function (_chart) {
 
         _y.range([_chart.yAxisHeight(), 0]);
         _yAxis = _yAxis.scale(_y);
-
-        if (_useRightYAxis) {
-            _yAxis.orient('right');
-        }
 
         _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
@@ -682,7 +690,8 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+            var linesGEnterUpdate = linesGEnter.merge(lines);
+            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
