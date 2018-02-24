@@ -355,6 +355,25 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
+    // properties passed through in compose()
+    ['height', 'width', 'margins'].forEach(function (prop) {
+        var _prop = '_' + prop;
+        dc.override(_chart, prop, function (value) {
+            if (!arguments.length) {
+                return _chart[_prop]();
+            }
+
+            _chart[_prop](value);
+
+            var _children = _chart.children();
+            _children.forEach(function (child) {
+                child[prop](value);
+            });
+
+            return _chart;
+        });
+    });
+
     /**
      * Returns the child charts which are composed into the composite chart.
      * @method children

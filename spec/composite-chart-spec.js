@@ -54,10 +54,18 @@ describe('dc.compositeChart', function () {
 
     it('should set a width on the chart', function () {
         expect(chart.width()).toBe(500);
+
+        chart.children().forEach(function (child) {
+            expect(child.width()).toBe(500);
+        });
     });
 
     it('should set a height on the chart', function () {
         expect(chart.height()).toBe(150);
+
+        chart.children().forEach(function (child) {
+            expect(child.height()).toBe(150);
+        });
     });
 
     it('should have zero transition duration', function () {
@@ -66,6 +74,10 @@ describe('dc.compositeChart', function () {
 
     it('should set the margins of the chart', function () {
         expect(chart.margins()).not.toBeNull();
+
+        chart.children().forEach(function (child) {
+            expect(child.margins()).toBe(chart.margins());
+        });
     });
 
     it('should set a domain', function () {
@@ -785,6 +797,42 @@ describe('dc.compositeChart', function () {
                 for (var i = 0; i < chart.children().length; ++i) {
                     expect(chart.children()[i].filter()).toEqual(null);
                 }
+            });
+        });
+    });
+
+    describe('composite property', function () {
+        var originalMargins;
+        beforeEach(function () {
+            originalMargins = chart.margins();
+
+            chart.width(1000);
+            chart.height(500);
+            chart.margins({top: 100, right: 100, bottom: 100, left: 100});
+        });
+
+        it('should set width on child charts', function () {
+            expect(chart.width()).toBe(1000);
+
+            chart.children().forEach(function (child) {
+                expect(child.width()).toBe(1000);
+            });
+        });
+
+        it('should set height on child charts', function () {
+            expect(chart.height()).toBe(500);
+
+            chart.children().forEach(function (child) {
+                expect(child.height()).toBe(500);
+            });
+        });
+
+        it('should set margins of child charts', function () {
+            expect(chart.margins()).not.toBeNull();
+            expect(chart.margins()).not.toBe(originalMargins);
+
+            chart.children().forEach(function (child) {
+                expect(child.margins()).toBe(chart.margins());
             });
         });
     });
