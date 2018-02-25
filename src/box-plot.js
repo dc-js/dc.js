@@ -56,7 +56,7 @@ dc.boxPlot = function (parent, chartGroup) {
     _chart.yAxisPadding(12);
 
     // default to ordinal
-    _chart.x(d3.scale.ordinal());
+    _chart.x(d3.scaleBand());
     _chart.xUnits(dc.units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
@@ -190,9 +190,9 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                var extent = _chart.brush().extent();
-                var start = extent[0];
-                var end = extent[1];
+                var selection = _chart.getBrushSelection();;
+                var start = selection[0];
+                var end = selection[1];
                 var keyAccessor = _chart.keyAccessor();
                 _chart.g().selectAll('g.box').each(function (d) {
                     var key = keyAccessor(d);

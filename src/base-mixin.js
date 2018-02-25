@@ -709,7 +709,7 @@ dc.baseMixin = function (_chart) {
         _listeners.pretransition(_chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
-                .each('end', function () {
+                .on('end', function () {
                     _listeners.renderlet(_chart);
                     if (event) {
                         _listeners[event](_chart);

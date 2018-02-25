@@ -389,15 +389,14 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
+        var selection = _chart.getBrushSelection();
         if (_chart.round()) {
-            extent[0] = extent[0].map(_chart.round());
-            extent[1] = extent[1].map(_chart.round());
+            selection[0] = selection[0].map(_chart.round());
+            selection[1] = selection[1].map(_chart.round());
 
-            _chart.g().select('.brush')
-                .call(_chart.brush().extent(extent));
+            _chart.brushSelection(selection);
         }
-        return extent;
+        return selection;
     };
 
     _chart.brushIsEmpty = function (extent) {

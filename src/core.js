@@ -319,7 +319,7 @@ dc.afterTransition = function (transition, callback) {
         var n = 0;
         transition
             .each(function () { ++n; })
-            .each('end', function () {
+            .on('end', function () {
                 if (!--n) {
                     callback.call(transition);
                 }

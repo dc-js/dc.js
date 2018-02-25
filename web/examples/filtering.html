@@ -87,6 +87,18 @@ spenderRowChart
       var data = is_empty ? [1] : [];
       var empty = chart.svg().selectAll('.empty-message').data(data);
       empty.exit().remove();
+      empty = empty
+          .enter()
+              .append('text')
+              .text('NO DATA!')
+              .attr('text-anchor', 'middle')
+              .attr('alignment-baseline', 'middle')
+              .attr('class', 'empty-message')
+              .attr('x', chart.margins().left + chart.effectiveWidth()/2)
+              .attr('y', chart.margins().top + chart.effectiveHeight()/2)
+              .style('opacity', 0)
+          .merge(empty);
+      empty.transition().duration(1000).style('opacity', 1);
   }
 
   spendHistChart.on('pretransition', show_empty_message);

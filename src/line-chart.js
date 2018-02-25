@@ -327,12 +327,14 @@ dc.lineChart = function (parent, chartGroup) {
             var labels = layer.selectAll('text.lineLabel')
                 .data(d.values, dc.pluck('x'));
 
-            labels.enter()
-                .append('text')
-                .attr('class', 'lineLabel')
-                .attr('text-anchor', 'middle');
+            var labelsEnterModify = labels
+                .enter()
+                    .append('text')
+                    .attr('class', 'lineLabel')
+                    .attr('text-anchor', 'middle')
+                .merge(labels);
 
-            dc.transition(labels, _chart.transitionDuration())
+            dc.transition(labelsEnterModify, _chart.transitionDuration())
                 .attr('x', function (d) {
                     return dc.utils.safeNumber(_chart.x()(d.x));
                 })

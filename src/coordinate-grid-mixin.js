@@ -38,13 +38,14 @@ dc.coordinateGridMixin = function (_chart) {
     var _lastXDomain;
 
     var _y;
-    var _yAxis;
+    var _yAxis = d3.axisLeft();
     var _yAxisPadding = 0;
     var _yElasticity = false;
     var _yAxisLabel;
     var _yAxisLabelPadding = 0;
 
-    var _brush = d3.svg.brush();
+    var _brush = d3.brushX();
+    var _gBrush;
     var _brushOn = true;
     var _round;
 
@@ -423,6 +424,13 @@ dc.coordinateGridMixin = function (_chart) {
             return _useRightYAxis;
         }
         _useRightYAxis = useRightYAxis;
+
+        if (_useRightYAxis) {
+            _yAxis = d3.axisRight();
+        } else {
+            _yAxis = d3.axisLeft();
+        }
+
         return _chart;
     };
 
@@ -597,13 +605,6 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._prepareYAxis = function (g) {
-        // D3v4 - consider dropping _useRightYAxis
-        if (_useRightYAxis) {
-            _yAxis = d3.axisRight();
-        } else {
-            _yAxis = d3.axisLeft();
-        }
-
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
                 _y = d3.scale.linear();
@@ -956,11 +957,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._filter(_);
 
-        if (_) {
-            _chart.brush().extent(_);
-        } else {
-            _chart.brush().clear();
-        }
+        _chart.updateBrushSelection(_);
 
         return _chart;
     });
@@ -973,22 +970,64 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    // D3v4 rework needed
     function brushHeight () {
         return _chart._xAxisY() - _chart.margins().top;
     }
 
+    // D3v4 rework needed
+    function brushWidth () {
+        return _chart.xAxisLength();
+    }
+
+    _chart.getBrushSelection = function () {
+        var selection = d3.brushSelection(_gBrush.node());
+
+        // Empty selection
+        if (!selection) {
+            return null
+        }
+
+        return selection.map(_x.invert);
+    };
+
+    _chart.updateBrushSelection = function (selection) {
+        if (_brush !== null && _gBrush !== null) {
+
+            if (selection !== null) {
+                selection = [_x(selection[0]), _x(selection[1])];
+            }
+
+            _brush.move(_gBrush, selection);
+
+            // Redraw handles
+        }
+    };
+
     _chart.renderBrush = function (g) {
         if (_brushOn) {
-            _brush.on('brush', _chart._brushing);
-            _brush.on('brushstart', _chart._disableMouseZoom);
-            _brush.on('brushend', configureMouseZoom);
+            // _brush.on('brush', _chart._brushing);
+            // _brush.on('brushstart', _chart._disableMouseZoom);
+            // _brush.on('brushend', configureMouseZoom);
+            //_brush.on('end', _chart._brush_tmp_end);
 
-            var gBrush = g.append('g')
+            // To retrieve selection we need _gBrush
+            _gBrush = g.append('g')
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
-                .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush, false);
-            _chart.setHandlePaths(gBrush);
+                .call(_brush);
+
+            // Set boundaries of the brush
+            _brush.extent([0,0], [brushWidth(), brushHeight()]);
+
+            _brush.on('end', function() {
+                var evt = d3v4.event;
+                if (!evt.sourceEvent) return;
+                console.log('sel: ', _chart.getBrushSelection());
+                _chart._brushing();
+            });
+            // _chart.setBrushY(gBrush, false);
+            // _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
                 _chart.redrawBrush(g, false);
@@ -1000,6 +1039,8 @@ dc.coordinateGridMixin = function (_chart) {
         gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
     };
 
+
+    // D3v4 rework needed
     _chart.setBrushY = function (gBrush) {
         gBrush.selectAll('rect')
             .attr('height', brushHeight());
@@ -1008,33 +1049,33 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.extendBrush = function () {
-        var extent = _brush.extent();
-        if (_chart.round()) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
+        var selection = _chart.getBrushSelection();
 
-            _g.select('.brush')
-                .call(_brush.extent(extent));
+        if (_chart.round()) {
+            selection[0] = _chart.round(selection[0]);
+            selection[1] = _chart.round(selection[1]);
+
+            _chart.brushSelection(selection);
         }
-        return extent;
+        return selection;
     };
 
-    _chart.brushIsEmpty = function (extent) {
-        return _brush.empty() || !extent || extent[1] <= extent[0];
+    _chart.brushIsEmpty = function (selection) {
+        return !selection || selection[1] <= selection[0];
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        var selection = _chart.extendBrush();
 
         _chart.redrawBrush(_g, false);
 
-        if (_chart.brushIsEmpty(extent)) {
+        if (_chart.brushIsEmpty(selection)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
         } else {
-            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+            var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
@@ -1044,6 +1085,8 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.redrawBrush = function (g, doTransition) {
+        // fix for D3v4
+/*
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty()) {
                 _chart.brush().extent(_chart.filter());
@@ -1055,7 +1098,7 @@ dc.coordinateGridMixin = function (_chart) {
                       .x(_chart.x())
                       .extent(_chart.brush().extent()));
         }
-
+*/
         _chart.fadeDeselectedArea();
     };
 

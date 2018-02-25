@@ -62,12 +62,13 @@ dc.barChart = function (parent, chartGroup) {
 
         calculateBarWidth();
 
-        layers
+        layers = layers
             .enter()
-            .append('g')
-            .attr('class', function (d, i) {
-                return 'stack ' + '_' + i;
-            });
+                .append('g')
+                .attr('class', function (d, i) {
+                    return 'stack ' + '_' + i;
+                })
+            .merge(layers);
 
         var last = layers.size() - 1;
         layers.each(function (d, i) {
@@ -89,10 +90,12 @@ dc.barChart = function (parent, chartGroup) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
-        labels.enter()
-            .append('text')
-            .attr('class', 'barLabel')
-            .attr('text-anchor', 'middle');
+        labels
+            .enter()
+                .append('text')
+                .attr('class', 'barLabel')
+                .attr('text-anchor', 'middle')
+            .merge(labels);
 
         if (_chart.isOrdinal()) {
             labels.on('click', _chart.onClick);
@@ -135,6 +138,8 @@ dc.barChart = function (parent, chartGroup) {
             .attr('fill', dc.pluck('data', _chart.getColor))
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
+
+        bars = enter.merge(bars);
 
         if (_chart.renderTitle()) {
             enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
@@ -198,7 +203,7 @@ dc.barChart = function (parent, chartGroup) {
 
     _chart.fadeDeselectedArea = function () {
         var bars = _chart.chartBodyG().selectAll('rect.bar');
-        var extent = _chart.brush().extent();
+        var selection = _chart.getBrushSelection();
 
         if (_chart.isOrdinal()) {
             if (_chart.hasFilter()) {
@@ -213,9 +218,9 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
         } else {
-            if (!_chart.brushIsEmpty(extent)) {
-                var start = extent[0];
-                var end = extent[1];
+            if (!_chart.brushIsEmpty(selection)) {
+                var start = selection[0];
+                var end = selection[1];
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
                     return d.x < start || d.x >= end;
@@ -300,16 +305,15 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
+        var selection = _chart.getBrushSelection();
+
         if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
+            selection[0] = _chart.round(selection[0]);
+            selection[1] = _chart.round(selection[1]);
 
-            _chart.chartBodyG().select('.brush')
-                .call(_chart.brush().extent(extent));
+            _chart.brushSelection(selection);
         }
-
-        return extent;
+        return selection;
     };
 
     /**
