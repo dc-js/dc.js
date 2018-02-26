@@ -69,6 +69,31 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
+
+        var _children = _chart.children();
+        _children.forEach(function (child) {
+            child.rescale();
+        });
+
+        return _chart;
+    });
+
+    dc.override(_chart, 'resizing', function (resizing) {
+        if (!arguments.length) {
+            return _chart._resizing();
+        }
+        _chart._resizing(resizing);
+
+        var _children = _chart.children();
+        _children.forEach(function (child) {
+            child.resizing(resizing);
+        });
+
+        return _chart;
+    });
+
     _chart.on('filtered.dcjs-composite-chart', function (chart) {
         // Propagate the filters onto the children
         // Notice that on children the call is .replaceFilter and not .filter
@@ -339,6 +364,8 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child.options(_childOptions);
         });
+
+        _chart.rescale();
         return _chart;
     };
 

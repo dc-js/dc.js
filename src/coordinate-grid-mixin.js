@@ -92,8 +92,12 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.resizing = function () {
-        return _resizing;
+    _chart.resizing = function (resizing) {
+        if (!arguments.length) {
+            return _resizing;
+        }
+        _resizing = resizing;
+        return _chart;
     };
 
     /**
@@ -1247,7 +1251,7 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.redrawBrush(_chart.filter(), _resizing);
         }
         _chart.fadeDeselectedArea(_chart.filter());
-        _resizing = false;
+        _chart.resizing(false);
     }
 
     function configureMouseZoom () {
