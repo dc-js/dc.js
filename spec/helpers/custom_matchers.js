@@ -186,9 +186,13 @@ beforeEach(function () {
             };
         },
         toMatchUrl: function () {
+            // From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+            function escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+            }
             return {
                 compare: function (actual, url) {
-                    var regexp = new RegExp('url\\("?' + url + '"?\\)');
+                    var regexp = new RegExp('url\\("?' + escapeRegExp(url) + '"?\\)');
                     expect(actual).toMatch(regexp);
                     return {pass: true};
                 }
