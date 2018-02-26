@@ -828,4 +828,49 @@ describe('dc.compositeChart', function () {
             });
         });
     });
+
+    describe('rescale', function () {
+        beforeEach(function () {
+            expect(chart.resizing()).toBe(true);
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(true);
+            });
+
+            chart.render();
+
+            expect(chart.resizing()).toBe(false);
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(false);
+            });
+
+            chart.rescale();
+        });
+
+        it('should rescale child charts', function () {
+            expect(chart.resizing()).toBe(true);
+
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(true);
+            });
+        });
+    });
+
+    describe('re-compose rendered chart', function() {
+        beforeEach(function () {
+            chart.render();
+            expect(chart.resizing()).toBe(false);
+
+            chart.compose([
+                dc.lineChart(chart).group(dateGroup)
+            ]);
+        });
+
+        it('should rescale child charts', function () {
+            expect(chart.resizing()).toBe(true);
+
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(true);
+            });
+        });
+    });
 });
