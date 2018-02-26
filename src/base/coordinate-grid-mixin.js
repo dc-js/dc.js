@@ -108,8 +108,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
         return this;
     }
 
-    resizing () {
-        return this._resizing;
+    resizing (resizing) {
+        if (!arguments.length) {
+            return this._resizing;
+        }
+        this._resizing = resizing;
+        return this;
     }
 
     /**
@@ -1240,7 +1244,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
             this.redrawBrush(this.filter(), this._resizing);
         }
         this.fadeDeselectedArea(this.filter());
-        this._resizing = false;
+        this.resizing(false);
     }
 
     _configureMouseZoom () {

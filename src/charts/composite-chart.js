@@ -87,6 +87,29 @@ export class CompositeChart extends CoordinateGridMixin {
         return g;
     }
 
+    rescale () {
+        super.rescale();
+
+        this._children.forEach(function (child) {
+            child.rescale();
+        });
+
+        return this;
+    }
+
+    resizing (resizing) {
+        if (!arguments.length) {
+            return super.resizing();
+        }
+        super.resizing(resizing);
+
+        this._children.forEach(function (child) {
+            child.resizing(resizing);
+        });
+
+        return this;
+    }
+
     _prepareYAxis () {
         const left = (this._leftYAxisChildren().length !== 0);
         const right = (this._rightYAxisChildren().length !== 0);
@@ -352,27 +375,43 @@ export class CompositeChart extends CoordinateGridMixin {
 
             child.options(this._childOptions);
         });
+        this.rescale();
         return this;
     }
 
-    // properties passed through in compose()
-    ['height', 'width', 'margins'].forEach(function (prop) {
-        var _prop = '_' + prop;
-        dc.override(_chart, prop, function (value) {
-            if (!arguments.length) {
-                return _chart[_prop]();
-            }
-
-            _chart[_prop](value);
-
-            var _children = _chart.children();
-            _children.forEach(function (child) {
-                child[prop](value);
-            });
-
-            return _chart;
+    _setChildrenProperty (prop, value) {
+        this._children.forEach(function (child) {
+            child[prop](value);
         });
-    });
+    }
+
+    // properties passed through in compose()
+    height (height) {
+        if(!arguments.length) {
+            return super.height();
+        }
+        super.height(height);
+        this._setChildrenProperty('height', height);
+        return this;
+    }
+
+    width (width) {
+        if(!arguments.length) {
+            return super.width();
+        }
+        super.width(width);
+        this._setChildrenProperty('width', width);
+        return this;
+    }
+
+    margins (margins) {
+        if(!arguments.length) {
+            return super.margins();
+        }
+        super.margins(margins);
+        this._setChildrenProperty('margins', margins);
+        return this;
+    }
 
     /**
      * Returns the child charts which are composed into the composite chart.

@@ -570,7 +570,10 @@ describe('dc.coordinateGridChart', function () {
     describe('rescaling', function () {
         var originalUnitCount;
         beforeEach(function () {
+            expect(chart.resizing()).toBe(true);
             chart.render();
+            expect(chart.resizing()).toBe(false);
+
             originalUnitCount = chart.xUnitCount();
             chart.x().domain([makeDate(2012, 4, 20), makeDate(2012, 6, 15)]);
             chart.rescale();
@@ -578,6 +581,12 @@ describe('dc.coordinateGridChart', function () {
 
         it('should reset x unit count to reflect updated x domain', function () {
             expect(chart.xUnitCount()).not.toEqual(originalUnitCount);
+        });
+
+        it('should be resizing until render', function () {
+            expect(chart.resizing()).toBe(true);
+            chart.render();
+            expect(chart.resizing()).toBe(false);
         });
     });
 
