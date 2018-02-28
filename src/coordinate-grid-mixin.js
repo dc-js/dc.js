@@ -27,6 +27,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _chartBodyG;
 
     var _x;
+    var _origX; // Will hold orginial scale in case of zoom
     var _xOriginalDomain;
     var _xAxis = d3.axisBottom();
     var _xUnits = dc.units.integers;
@@ -58,7 +59,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
 
-    var _zoom = d3.behavior.zoom().on('zoom', zoomHandler);
+    var _zoom = d3.behavior.zoom().on('zoom', onZoom);
     var _nullZoom = d3.behavior.zoom().on('zoom', null);
     var _hasBeenMouseZoomable = false;
 
@@ -1214,6 +1215,9 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function configureMouseZoom () {
+        // Save a copy of original x scale
+        _origX = _x.copy();
+
         if (_mouseZoomable) {
             _chart._enableMouseZoom();
         } else if (_hasBeenMouseZoomable) {
@@ -1224,12 +1228,12 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
         // Needs reimplementation for D3v4
-/*
-        _zoom.x(_chart.x())
+
+        _zoom
             .scaleExtent(_zoomScale)
-            .size([_chart.width(), _chart.height()])
+            .extent([[0 ,0], [_chart.width(), _chart.height()]])
             .duration(_chart.transitionDuration());
-*/
+
         _chart.root().call(_zoom);
     };
 
@@ -1271,6 +1275,14 @@ dc.coordinateGridMixin = function (_chart) {
         }, dc.constants.EVENT_DELAY);
 
         _refocused = !rangesEqual(domain, _xOriginalDomain);
+    }
+
+    function onZoom () {
+        if (!d3v4.event.sourceEvent && d3v4.event.sourceEvent.type !== "zoom") return;
+
+        _chart.x(d3v4.event.transform.rescaleX(_origX));
+
+        zoomHandler();
     }
 
     function intersectExtents (ext1, ext2) {
@@ -1316,7 +1328,6 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.x().domain(_xOriginalDomain);
         }
 
-        _zoom.x(_chart.x());
         zoomHandler();
     };
 

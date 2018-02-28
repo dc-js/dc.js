@@ -28,7 +28,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return d || 0;
     });
 
-    var _geoPath = d3.geo.path();
+    var _geoPath = d3.geoPath();
     var _projectionFlag;
 
     var _geoJsons = [];
@@ -105,6 +105,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 }
                 return baseClasses;
             });
+
         return regionG;
     }
 

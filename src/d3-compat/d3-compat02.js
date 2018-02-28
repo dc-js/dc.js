@@ -7,6 +7,7 @@ d3.time.format.iso.parse = d3v4.isoParse;
 d3.timeParse = d3v4.timeParse;
 
 d3.scaleTime = d3v4.scaleTime;
+d3.scaleQuantize = d3v4.scaleQuantize;
 
 d3.time.second = d3v4.timeSecond;
 d3.time.minute = d3v4.timeMinute;
@@ -51,6 +52,8 @@ d3.symbolTypes = d3v4.symbolTypes;
 d3.symbols = d3v4.symbols;
 
 d3.geo.mercator = d3v4.geoMercator;
+d3.geoPath = d3v4.geoPath;
+d3.geoAlbersUsa = d3.geoAlbersUsa;
 
 d3.csv = d3v4.csv;
 d3.json = d3v4.json;

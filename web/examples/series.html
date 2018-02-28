@@ -32,7 +32,7 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .chart(function(c) { return dc.lineChart(c).interpolate('cardinal'); })
+    .chart(function(c) { return dc.lineChart(c).interpolate(d3.curveCardinal); })
     .x(d3.scale.linear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")

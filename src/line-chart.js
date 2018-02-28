@@ -40,7 +40,7 @@ dc.lineChart = function (parent, chartGroup) {
     var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
     var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
     var _interpolate = d3.curveLinear;
-    var _tension = 0.7;
+    var _tension = 0;
     var _defined;
     var _dashStyle;
     var _xyTipsOn = true;
