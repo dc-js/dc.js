@@ -11,7 +11,7 @@ dc.stackMixin = function (_chart) {
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
-        layer.values = layer.group.all().map(function (d, i) {
+        var allValues = layer.group.all().map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
@@ -21,7 +21,8 @@ dc.stackMixin = function (_chart) {
             };
         });
 
-        layer.values = layer.values.filter(domainFilter());
+        layer.domainValues = allValues.filter(domainFilter());
+        layer.values = _chart.evadeDomainFilter() ? allValues : layer.domainValues;
         return layer.values;
     }
 
@@ -35,7 +36,7 @@ dc.stackMixin = function (_chart) {
     var _evadeDomainFilter = false;
 
     function domainFilter () {
-        if (!_chart.x() || _evadeDomainFilter) {
+        if (!_chart.x()) {
             return d3.functor(true);
         }
         var xDomain = _chart.x().domain();
@@ -188,7 +189,7 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack () {
-        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var valueses = _chart.data().map(function (layer) { return layer.domainValues; });
         return Array.prototype.concat.apply([], valueses);
     }
 
