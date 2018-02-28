@@ -311,7 +311,7 @@ dc.barChart = function (parent, chartGroup) {
             selection[0] = _chart.round(selection[0]);
             selection[1] = _chart.round(selection[1]);
 
-            _chart.brushSelection(selection);
+            // _chart.updateBrushSelection(selection);
         }
         return selection;
     };

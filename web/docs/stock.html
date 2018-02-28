@@ -231,11 +231,13 @@ jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-f
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> dateFormat = d3.time.format(<span class="hljs-string">'%m/%d/%Y'</span>);
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> dateFormatSpecifier = <span class="hljs-string">'%m/%d/%Y'</span>;
+    <span class="hljs-keyword">var</span> dateFormat = d3.time.format(dateFormatSpecifier);
+    <span class="hljs-keyword">var</span> dateFormatParser = d3.timeParse(dateFormatSpecifier);
     <span class="hljs-keyword">var</span> numberFormat = d3.format(<span class="hljs-string">'.2f'</span>);
 
     data.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d</span>) </span>{
-        d.dd = dateFormat.parse(d.date);
+        d.dd = dateFormatParser(d.date);
         d.month = d3.time.month(d.dd); <span class="hljs-comment">// pre-calculate month for better performance</span>
         d.close = +d.close; <span class="hljs-comment">// coerce to number</span>
         d.open = +d.open;
@@ -1433,7 +1435,7 @@ on other charts within the same chart group.
             </div>
             
             <div class="content"><div class='highlight'><pre>        .rangeChart(volumeChart)
-        .x(d3.time.scale().domain([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1985</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2012</span>, <span class="hljs-number">11</span>, <span class="hljs-number">31</span>)]))
+        .x(d3.scaleTime().domain([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1985</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2012</span>, <span class="hljs-number">11</span>, <span class="hljs-number">31</span>)]))
         .round(d3.time.month.round)
         .xUnits(d3.time.months)
         .elasticY(<span class="hljs-literal">true</span>)
@@ -1561,7 +1563,7 @@ will always match the zoom of the area chart.</p>
         .group(volumeByMonthGroup)
         .centerBar(<span class="hljs-literal">true</span>)
         .gap(<span class="hljs-number">1</span>)
-        .x(d3.time.scale().domain([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1985</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2012</span>, <span class="hljs-number">11</span>, <span class="hljs-number">31</span>)]))
+        .x(d3.scaleTime().domain([<span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">1985</span>, <span class="hljs-number">0</span>, <span class="hljs-number">1</span>), <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-number">2012</span>, <span class="hljs-number">11</span>, <span class="hljs-number">31</span>)]))
         .round(d3.time.month.round)
         .alwaysUseRounding(<span class="hljs-literal">true</span>)
         .xUnits(d3.time.months);</pre></div></div>

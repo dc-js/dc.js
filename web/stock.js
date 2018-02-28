@@ -61,11 +61,13 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 //```
 d3.csv('ndx.csv', function (data) {
     // Since its a csv file we need to format the data a bit.
-    var dateFormat = d3.time.format('%m/%d/%Y');
+    var dateFormatSpecifier = '%m/%d/%Y';
+    var dateFormat = d3.time.format(dateFormatSpecifier);
+    var dateFormatParser = d3.timeParse(dateFormatSpecifier);
     var numberFormat = d3.format('.2f');
 
     data.forEach(function (d) {
-        d.dd = dateFormat.parse(d.date);
+        d.dd = dateFormatParser(d.date);
         d.month = d3.time.month(d.dd); // pre-calculate month for better performance
         d.close = +d.close; // coerce to number
         d.open = +d.open;
@@ -417,7 +419,7 @@ d3.csv('ndx.csv', function (data) {
         .mouseZoomable(true)
     // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
         .rangeChart(volumeChart)
-        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+        .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
         .round(d3.time.month.round)
         .xUnits(d3.time.months)
         .elasticY(true)
@@ -459,7 +461,7 @@ d3.csv('ndx.csv', function (data) {
         .group(volumeByMonthGroup)
         .centerBar(true)
         .gap(1)
-        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+        .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
         .round(d3.time.month.round)
         .alwaysUseRounding(true)
         .xUnits(d3.time.months);
