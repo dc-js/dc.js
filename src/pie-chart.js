@@ -113,11 +113,14 @@ dc.pieChart = function (parent, chartGroup) {
                 .selectAll('text.' + _labelCssClass)
                 .data(pieData);
 
-            createElements(slices, labels, arc, pieData);
+            removeElements(slices, labels);
+
+            // Uglify does not like array assignments
+            var t = createElements(slices, labels, arc, pieData);
+            slices = t[0];
+            labels = t[1];
 
             updateElements(pieData, arc);
-
-            removeElements(slices, labels);
 
             highlightFilter();
 
@@ -127,13 +130,19 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function createElements (slices, labels, arc, pieData) {
-        var slicesEnter = createSliceNodes(slices);
+
+        // Uglify does not like array assignments
+        var t = createSliceNodes(slices);
+        var slicesEnter = t[0];
+        slices = t[1];
 
         createSlicePath(slicesEnter, arc);
 
         createTitles(slicesEnter);
 
-        createLabels(labels, pieData, arc);
+        labels = createLabels(labels, pieData, arc);
+
+        return [slices, labels];
     }
 
     function createSliceNodes (slices) {
@@ -143,7 +152,9 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('class', function (d, i) {
                 return _sliceCssClass + ' _' + i;
             });
-        return slicesEnter;
+
+        slices = slicesEnter.merge(slices);
+        return [slicesEnter, slices];
     }
 
     function createSlicePath (slicesEnter, arc) {
@@ -216,28 +227,34 @@ dc.pieChart = function (parent, chartGroup) {
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
             }
+
+            labels = labelsEnter.merge(labels);
         }
+
+        return labels;
     }
 
     function updateLabelPaths (pieData, arc) {
         var polyline = _g.selectAll('polyline.' + _sliceCssClass)
-                .data(pieData);
-
-        polyline
-                .enter()
-                .append('polyline')
-                .attr('class', function (d, i) {
-                    return 'pie-path _' + i + ' ' + _sliceCssClass;
-                })
-                .on('click', onClick)
-                .on('mouseover', function (d, i) {
-                    highlightSlice(i, true);
-                })
-                .on('mouseout', function (d, i) {
-                    highlightSlice(i, false);
-                });
+            .data(pieData);
 
         polyline.exit().remove();
+
+        polyline = polyline
+            .enter()
+            .append('polyline')
+            .attr('class', function (d, i) {
+                return 'pie-path _' + i + ' ' + _sliceCssClass;
+            })
+            .on('click', onClick)
+            .on('mouseover', function (d, i) {
+                highlightSlice(i, true);
+            })
+            .on('mouseout', function (d, i) {
+                highlightSlice(i, false);
+            })
+            .merge(polyline);
+
         var arc2 = d3.svg.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding);

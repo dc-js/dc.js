@@ -78,13 +78,14 @@ dc.scatterPlot = function (parent, chartGroup) {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
             .data(_chart.data());
 
-        symbols
+        symbols = symbols
             .enter()
-        .append('path')
-            .attr('class', 'symbol')
-            .attr('opacity', 0)
-            .attr('fill', _chart.getColor)
-            .attr('transform', _locator);
+                .append('path')
+                .attr('class', 'symbol')
+                .attr('opacity', 0)
+                .attr('fill', _chart.getColor)
+                .attr('transform', _locator)
+            .merge(symbols);
 
         symbols.call(renderTitles, _chart.data());
 
@@ -394,7 +395,7 @@ dc.scatterPlot = function (parent, chartGroup) {
             selection[0] = selection[0].map(_chart.round());
             selection[1] = selection[1].map(_chart.round());
 
-            _chart.brushSelection(selection);
+            // _chart.brushSelection(selection);
         }
         return selection;
     };

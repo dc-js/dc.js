@@ -143,7 +143,7 @@ d3.select('#download')
                 return row;
             });
         }
-        var blob = new Blob([d3.csv.format(data)], {type: "text/csv;charset=utf-8"});
+        var blob = new Blob([d3.csvFormat(data)], {type: "text/csv;charset=utf-8"});
         saveAs(blob, 'data.csv');
     });
 

@@ -90,7 +90,7 @@ dc.barChart = function (parent, chartGroup) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
-        labels
+        var labelsEnterUpdate = labels
             .enter()
                 .append('text')
                 .attr('class', 'barLabel')
@@ -98,11 +98,11 @@ dc.barChart = function (parent, chartGroup) {
             .merge(labels);
 
         if (_chart.isOrdinal()) {
-            labels.on('click', _chart.onClick);
-            labels.attr('cursor', 'pointer');
+            labelsEnterUpdate.on('click', _chart.onClick);
+            labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
+        dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (!_centerBar) {
@@ -139,17 +139,17 @@ dc.barChart = function (parent, chartGroup) {
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
-        bars = enter.merge(bars);
+        var barsEnterUpdate = enter.merge(bars);
 
         if (_chart.renderTitle()) {
             enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
 
         if (_chart.isOrdinal()) {
-            bars.on('click', _chart.onClick);
+            barsEnterUpdate.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
+        dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) {
@@ -188,7 +188,7 @@ dc.barChart = function (parent, chartGroup) {
 
             // please can't we always use rangeBands for bar charts?
             if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().rangeBand());
+                _barWidth = Math.floor(_chart.x().bandwidth());
             } else if (_gap) {
                 _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
             } else {

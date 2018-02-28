@@ -85,7 +85,7 @@
                     dateDim.dispose();
                     group.dispose();
                 }
-                var interval = intervals[d3.select('#interval')[0][0].value];
+                var interval = intervals[d3.select('#interval').nodes()[0].value];
                 dateDim = ndx.dimension(function(d) {return interval(d[date_col]);});
                 chart.xUnits(interval.range);
                 group = dateDim
@@ -127,7 +127,7 @@
             chart
                 .width(768)
                 .height(480)
-                .x(d3.time.scale())
+                .x(d3.scaleTime())
                 .xUnits(d3.time.weeks)
                 .margins({left: 50, top: 0, right: 0, bottom: 20})
                 .elasticY(true)

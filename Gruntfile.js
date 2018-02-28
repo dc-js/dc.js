@@ -154,17 +154,17 @@ module.exports = function (grunt) {
                     display: 'short',
                     summary: true,
                     specs:  [
-                        // '<%= conf.spec %>/bar-chart-spec.js',
+                        /*// '<%= conf.spec %>/bar-chart-spec.js',
                         // '<%= conf.spec %>/base-mixin-spec.js',
                         // '<%= conf.spec %>/biggish-data-spec.js',
                         // '<%= conf.spec %>/box-plot-spec.js',
                         // '<%= conf.spec %>/bubble-chart-spec.js',
-                        // '<%= conf.spec %>/bubble-overlay-spec.js',
+                        '<%= conf.spec %>/bubble-overlay-spec.js',
                         '<%= conf.spec %>/cap-mixin-spec.js',
                         // '<%= conf.spec %>/color-spec.js', // Need proper color matcher
-                        // '<%= conf.spec %>/composite-chart-spec.js',
-                        // '<%= conf.spec %>/coordinate-grid-chart-spec.js',
-                        '<%= conf.spec %>/core-spec.js',
+                        // '<%= conf.spec %>/composite-chart-spec.js',*/
+                        '<%= conf.spec %>/coordinate-grid-chart-spec.js',
+                        /*'<%= conf.spec %>/core-spec.js',
                         // '<%= conf.spec %>/data-addition-spec.js',
                         '<%= conf.spec %>/data-count-spec.js',
                         '<%= conf.spec %>/data-grid-spec.js',
@@ -174,8 +174,8 @@ module.exports = function (grunt) {
                         '<%= conf.spec %>/filters-spec.js',
                         '<%= conf.spec %>/geo-choropleth-chart-spec.js',
                         // '<%= conf.spec %>/heatmap-spec.js',
-                        // '<%= conf.spec %>/legend-spec.js',
-                        // '<%= conf.spec %>/line-chart-spec.js',
+                        // '<%= conf.spec %>/legend-spec.js',*/
+                        '<%= conf.spec %>/line-chart-spec.js'/*,
                         '<%= conf.spec %>/logger-spec.js',
                         '<%= conf.spec %>/number-display-spec.js',
                         '<%= conf.spec %>/pie-chart-spec.js',
@@ -183,7 +183,7 @@ module.exports = function (grunt) {
                         // '<%= conf.spec %>/scatter-plot-spec.js',
                         '<%= conf.spec %>/select-menu-spec.js',
                         // '<%= conf.spec %>/series-chart-spec.js',
-                        '<%= conf.spec %>/utils-spec.js'
+                        '<%= conf.spec %>/utils-spec.js'*/
                     ],
                     helpers: [
                         '<%= conf.web %>/js/jasmine-jsreporter.js',

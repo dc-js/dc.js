@@ -40,10 +40,12 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 .attr('class', 'layer' + layerIndex);
 
             var regionG = states.selectAll('g.' + geoJson(layerIndex).name)
-                .data(geoJson(layerIndex).data)
-                .enter()
-                .append('g')
-                .attr('class', geoJson(layerIndex).name);
+                .data(geoJson(layerIndex).data);
+
+            regionG = regionG.enter()
+                    .append('g')
+                    .attr('class', geoJson(layerIndex).name)
+                .merge(regionG);
 
             regionG
                 .append('path')

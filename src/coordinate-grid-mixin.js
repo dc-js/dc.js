@@ -972,27 +972,27 @@ dc.coordinateGridMixin = function (_chart) {
 
     // D3v4 rework needed
     function brushHeight () {
-        return _chart._xAxisY() - _chart.margins().top;
+        return _chart.effectiveHeight();
     }
 
     // D3v4 rework needed
     function brushWidth () {
-        return _chart.xAxisLength();
+        return _chart.effectiveWidth();
     }
 
     _chart.getBrushSelection = function () {
+        if (!_gBrush) return null;
+
         var selection = d3.brushSelection(_gBrush.node());
 
         // Empty selection
-        if (!selection) {
-            return null
-        }
+        if (!selection) return null;
 
         return selection.map(_x.invert);
     };
 
     _chart.updateBrushSelection = function (selection) {
-        if (_brush !== null && _gBrush !== null) {
+        if (_brush && _gBrush) {
 
             if (selection !== null) {
                 selection = [_x(selection[0]), _x(selection[1])];
@@ -1023,7 +1023,7 @@ dc.coordinateGridMixin = function (_chart) {
             _brush.on('end', function() {
                 var evt = d3v4.event;
                 if (!evt.sourceEvent) return;
-                console.log('sel: ', _chart.getBrushSelection());
+
                 _chart._brushing();
             });
             // _chart.setBrushY(gBrush, false);
@@ -1055,7 +1055,7 @@ dc.coordinateGridMixin = function (_chart) {
             selection[0] = _chart.round(selection[0]);
             selection[1] = _chart.round(selection[1]);
 
-            _chart.brushSelection(selection);
+            // _chart.updateBrushSelection(selection);
         }
         return selection;
     };
@@ -1065,6 +1065,9 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._brushing = function () {
+        var evt = d3v4.event;
+        if (!d3v4.event.sourceEvent) return;
+
         var selection = _chart.extendBrush();
 
         _chart.redrawBrush(_g, false);
@@ -1220,10 +1223,13 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
+        // Needs reimplementation for D3v4
+/*
         _zoom.x(_chart.x())
             .scaleExtent(_zoomScale)
             .size([_chart.width(), _chart.height()])
             .duration(_chart.transitionDuration());
+*/
         _chart.root().call(_zoom);
     };
 

@@ -4,6 +4,9 @@ d3.time.format.iso = d3v4.isoFormat;
 d3.time.format.utc = d3v4.utcFormat;
 
 d3.time.format.iso.parse = d3v4.isoParse;
+d3.timeParse = d3v4.timeParse;
+
+d3.scaleTime = d3v4.scaleTime;
 
 d3.time.second = d3v4.timeSecond;
 d3.time.minute = d3v4.timeMinute;
@@ -41,17 +44,29 @@ d3.axisRight = d3v4.axisRight;
 
 d3.layout.stack = d3v4.stack;
 d3.curveLinear = d3v4.curveLinear;
+d3.curveStepBefore = d3v4.curveStepBefore;
+d3.curveCardinal = d3v4.curveCardinal;
+
+d3.symbolTypes = d3v4.symbolTypes;
+d3.symbols = d3v4.symbols;
 
 d3.geo.mercator = d3v4.geoMercator;
 
 d3.csv = d3v4.csv;
+d3.json = d3v4.json;
+d3.csvFormat = d3v4.csvFormat;
+d3.csvParse = d3v4.csvParse;
 d3.brushX = d3v4.brushX;
 d3.brushSelection = d3v4.brushSelection;
+
+d3.bisector = d3v4.bisector;
+d3.median = d3v4.median;
+
+d3.randomNormal = d3v4.randomNormal;
 
 // Selection behavior have changed significantly, need manual changes for
 // each invocation of .enter()
 d3.selectAll = d3v4.selectAll;
-
 
 
 // Semantic change

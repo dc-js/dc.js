@@ -87,14 +87,16 @@ dc.dataGrid = function (parent, chartGroup) {
                     return d.values;
                 });
 
-        items.enter()
-            .append('div')
-            .attr('class', ITEM_CSS_CLASS)
-            .html(function (d) {
-                return _html(d);
-            });
-
         items.exit().remove();
+
+        items = items
+            .enter()
+                .append('div')
+                .attr('class', ITEM_CSS_CLASS)
+                .html(function (d) {
+                    return _html(d);
+                })
+            .merge(items);
 
         return items;
     }

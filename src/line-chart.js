@@ -66,6 +66,8 @@ dc.lineChart = function (parent, chartGroup) {
                 return 'stack ' + '_' + i;
             });
 
+        layers = layersEnter.merge(layers);
+
         drawLine(layersEnter, layers);
 
         drawArea(layersEnter, layers);
@@ -283,27 +285,29 @@ dc.lineChart = function (parent, chartGroup) {
                 var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
                     .data(points, dc.pluck('x'));
 
-                dots.enter()
-                    .append('circle')
-                    .attr('class', DOT_CIRCLE_CLASS)
-                    .attr('r', getDotRadius())
-                    .style('fill-opacity', _dataPointFillOpacity)
-                    .style('stroke-opacity', _dataPointStrokeOpacity)
-                    .attr('fill', _chart.getColor)
-                    .on('mousemove', function () {
-                        var dot = d3.select(this);
-                        showDot(dot);
-                        showRefLines(dot, g);
-                    })
-                    .on('mouseout', function () {
-                        var dot = d3.select(this);
-                        hideDot(dot);
-                        hideRefLines(g);
-                    });
+                var dotsEnterModify = dots
+                    .enter()
+                        .append('circle')
+                        .attr('class', DOT_CIRCLE_CLASS)
+                        .attr('r', getDotRadius())
+                        .style('fill-opacity', _dataPointFillOpacity)
+                        .style('stroke-opacity', _dataPointStrokeOpacity)
+                        .attr('fill', _chart.getColor)
+                        .on('mousemove', function () {
+                            var dot = d3.select(this);
+                            showDot(dot);
+                            showRefLines(dot, g);
+                        })
+                        .on('mouseout', function () {
+                            var dot = d3.select(this);
+                            hideDot(dot);
+                            hideRefLines(g);
+                        })
+                    .merge(dots);
 
-                dots.call(renderTitle, d);
+                dotsEnterModify.call(renderTitle, d);
 
-                dc.transition(dots, _chart.transitionDuration())
+                dc.transition(dotsEnterModify, _chart.transitionDuration())
                     .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })

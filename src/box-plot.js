@@ -46,7 +46,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
-            return _chart.x().rangeBand();
+            return _chart.x().bandwidth();
         } else {
             return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
         }
@@ -146,7 +146,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
-        renderBoxes(boxesG);
+        boxesG = renderBoxes(boxesG);
         updateBoxes(boxesG);
         removeBoxes(boxesG);
 
@@ -164,6 +164,8 @@ dc.boxPlot = function (parent, chartGroup) {
                 _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
+
+        return boxesGEnter.merge(boxesG);
     }
 
     function updateBoxes (boxesG) {

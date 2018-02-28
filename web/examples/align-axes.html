@@ -84,7 +84,7 @@
         var posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
 
         var N = 20;
-        var gen = d3.random.normal();
+        var gen = d3.randomNormal();
         function distribute(vals, min, max) {
             var ext = d3.extent(vals);
             return vals.map(function(x) {
@@ -111,7 +111,7 @@
         }
 
         var line = d3.svg.line()
-            .interpolate('linear');
+            .curve(d3.curveLinear);
 
         function draw_horizontals(chart, hz) {
             chart.g().select('g.chart-body')

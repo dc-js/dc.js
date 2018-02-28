@@ -48,7 +48,7 @@ dc.bubbleChart = function (parent, chartGroup) {
             bubbleG.order();
         }
 
-        renderNodes(bubbleG);
+        bubbleG = renderNodes(bubbleG);
 
         updateNodes(bubbleG);
 
@@ -69,6 +69,9 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
+
+        bubbleG = bubbleGEnter.merge(bubbleG);
+
         dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
@@ -81,6 +84,8 @@ dc.bubbleChart = function (parent, chartGroup) {
         _chart._doRenderLabel(bubbleGEnter);
 
         _chart._doRenderTitles(bubbleGEnter);
+
+        return bubbleG;
     }
 
     function updateNodes (bubbleG) {

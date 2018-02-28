@@ -54,7 +54,7 @@ d3.csv("monthly-move.csv", function(error, data) {
     .margins({top: 10, right: 50, bottom: 30, left: 50})
     .dimension(monthDimension)
     .group(closeGroup)
-    .x(d3.time.scale())
+    .x(d3.scaleTime())
     .round(d3.time.month.round)
     .xUnits(d3.time.months)
     .elasticY(true);

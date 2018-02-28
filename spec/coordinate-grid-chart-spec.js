@@ -641,7 +641,7 @@ describe('dc.coordinateGridChart', function () {
         });
 
         it('should update the brush extent', function () {
-            expect(chart.brush().extent()).toEqual(filter);
+            expect(chart.getBrushSelection()).toEqual(filter);
         });
     });
 
@@ -649,12 +649,12 @@ describe('dc.coordinateGridChart', function () {
         beforeEach(function () {
             chart.brushOn(true);
             chart.render();
-            chart.brush().extent([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
+            chart.updateBrushSelection([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
             chart.filter(null);
         });
 
         it('should clear the brush extent', function () {
-            expect(chart.brush().empty()).toBeTruthy();
+            expect(chart.brushIsEmpty(chart.getBrushSelection()));
         });
     });
 
@@ -794,38 +794,7 @@ describe('dc.coordinateGridChart', function () {
             chart.brushOn(true);
         });
 
-        describe('with mouse zoom enabled', function () {
-            beforeEach(function () {
-                spyOn(chart, '_disableMouseZoom');
-                spyOn(chart, '_enableMouseZoom');
-                chart.mouseZoomable(true);
-                chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 6, 15)]);
-                chart.brush().event(chart.root());
-            });
-
-            it('should disable mouse zooming on brush start, and re-enables it afterwards', function () {
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 6, 15)]);
-                chart.brush().event(chart.root());
-                expect(chart._disableMouseZoom).toHaveBeenCalled();
-                expect(chart._enableMouseZoom).toHaveBeenCalled();
-            });
-        });
-
-        describe('with mouse zoom disabled', function () {
-            beforeEach(function () {
-                spyOn(chart, '_enableMouseZoom');
-                chart.mouseZoomable(false);
-                chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 6, 15)]);
-                chart.brush().event(chart.root());
-            });
-
-            it('should not enable mouse zooming', function () {
-                expect(chart._enableMouseZoom).not.toHaveBeenCalled();
-            });
-        });
-
+        // D3v4 needs reimplementation, APIs have changed
         describe('with equal dates', function () {
             beforeEach(function () {
                 spyOn(chart, 'filter');

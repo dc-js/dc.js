@@ -26,7 +26,7 @@ d3.csv("morley.csv", function(error, experiments) {
   runDimension = ndx.dimension(function(d) {return [+d.Expt, +d.Run]; });
   runGroup = runDimension.group().reduceSum(function(d) { return +d.Speed; });
 
-  var symbolScale = d3.scale.ordinal().range(d3.svg.symbolTypes);
+  var symbolScale = d3.scale.ordinal().range(d3.symbols);
   var symbolAccessor = function(d) { return symbolScale(d.key[0]); };
   var subChart = function(c) {
     return dc.scatterPlot(c)

@@ -52,15 +52,18 @@ any items whose intervals overlap with it.</p>
           }
       };
   }
-  var timeFormat = d3.time.format('%x');
+
+  var dateFormatSpecifier = '%x';
+  var timeFormat = d3.time.format(dateFormatSpecifier);
+  var dateFormatParser = d3.timeParse(dateFormatSpecifier);
   var monthChart = dc.barChart("#month");
   var costChart = dc.barChart("#cost");
   // data from http://stackoverflow.com/questions/22603788/crossfilter-how-to-extract-time-information-from-start-date-and-end-date-column
   d3.csv("intervals.csv", function(error, projects) {
 
       projects.forEach(function(x) {
-          x['Start Date'] = timeFormat.parse(x['Start Date']);
-          x['End Date'] = timeFormat.parse(x['End Date']);
+          x['Start Date'] = dateFormatParser(x['Start Date']);
+          x['End Date'] = dateFormatParser(x['End Date']);
           // the library uses object identity so we have to cache the interval arrays
           x.interval = [x['Start Date'].getTime(), x['End Date'].getTime()];
           x.Cost = +x.Cost;
@@ -91,7 +94,7 @@ any items whose intervals overlap with it.</p>
       monthChart
           .width(400)
           .height(300)
-          .x(d3.time.scale())
+          .x(d3.scaleTime())
           .y(d3.scale.linear().domain([0,25]))
           .xUnits(d3.time.months)
           .gap(5)

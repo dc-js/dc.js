@@ -27,10 +27,12 @@
 
     d3.csv("../ndx.csv", function(error, data) {
 
-        var dateFormat = d3.time.format("%m/%d/%Y");
+        var dateFormatSpecifier = "%m/%d/%Y";
+        var dateFormat = d3.time.format(dateFormatSpecifier);
+        var dateFormatParser = d3.timeParse(dateFormatSpecifier);
 
         data.forEach(function (d) {
-            d.dd = dateFormat.parse(d.date);
+            d.dd = dateFormatParser(d.date);
             d.month = d3.time.month(d.dd).getMonth(); // pre-calculate month for better performance
             d.year = d3.time.year(d.dd).getFullYear();
             d.close = +d.close; // coerce to number

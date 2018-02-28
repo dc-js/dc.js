@@ -31,7 +31,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _shareTitle = true,
         _alignYAxes = false;
 
-    var _rightYAxis = d3.svg.axis(),
+    var _rightYAxis = d3.axisRight(),
         _rightYAxisLabel = 0,
         _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
         _rightY,
@@ -165,7 +165,8 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
         _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
 
-        _chart.rightYAxis().orient('right');
+        // In D3v4 create a RightAxis
+        // _chart.rightYAxis().orient('right');
     }
 
     function prepareLeftYAxis (ranges) {
@@ -184,7 +185,8 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.y().range([_chart.yAxisHeight(), 0]);
         _chart.yAxis(_chart.yAxis().scale(_chart.y()));
 
-        _chart.yAxis().orient('left');
+        // In D3v4 create a LeftAxis
+        // _chart.yAxis().orient('left');
     }
 
     function generateChildG (child, i) {

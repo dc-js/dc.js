@@ -85,6 +85,8 @@ dc.selectMenu = function (parent, chartGroup) {
         var options = _select.selectAll('option.' + OPTION_CSS_CLASS)
           .data(_chart.data(), function (d) { return _chart.keyAccessor()(d); });
 
+        options.exit().remove();
+
         options.enter()
               .append('option')
               .classed(OPTION_CSS_CLASS, true)
@@ -92,7 +94,6 @@ dc.selectMenu = function (parent, chartGroup) {
             .merge(options)
               .text(_chart.title());
 
-        options.exit().remove();
         _select.selectAll('option.' + OPTION_CSS_CLASS).sort(_order);
 
         _select.on('change', onChange);
@@ -103,7 +104,7 @@ dc.selectMenu = function (parent, chartGroup) {
 
     function onChange (d, i) {
         var values;
-        var target = d3.event.target;
+        var target = d3v4.event.target;
         if (target.selectedOptions) {
             var selectedOptions = Array.prototype.slice.call(target.selectedOptions);
             values = selectedOptions.map(function (d) {
@@ -111,7 +112,7 @@ dc.selectMenu = function (parent, chartGroup) {
             });
         } else { // IE and other browsers do not support selectedOptions
             // adapted from this polyfill: https://gist.github.com/brettz9/4212217
-            var options = [].slice.call(d3.event.target.options);
+            var options = [].slice.call(d3v4.event.target.options);
             values = options.filter(function (option) {
                 return option.selected;
             }).map(function (option) {
