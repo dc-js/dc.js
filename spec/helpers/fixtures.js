@@ -79,7 +79,7 @@ function loadColorFixture2 () {
 }
 
 function loadIrisFixture () {
-    return d3.csv.parse(
+    return d3.csvParse(
         "sepal_length,sepal_width,petal_length,petal_width,species\n" +
             "5.1,3.5,1.4,0.2,setosa\n" +
             "4.9,3,1.4,0.2,setosa\n" +

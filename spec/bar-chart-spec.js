@@ -404,7 +404,7 @@ describe('dc.barChart', function () {
 
                 it('should have titles rendered for extra stacks', function () {
                     nthStack(1).forEachBar(function (bar, datum) {
-                        expect(bar.selectAll('title')[0].length).toBe(1);
+                        expect(bar.selectAll('title').nodes().length).toBe(1);
                         expect(bar.select('title').text()).toBe('stack 1: ' + datum.data.value);
                     });
                 });
@@ -423,7 +423,7 @@ describe('dc.barChart', function () {
 
                     it('should not create extra title elements', function () {
                         nthStack(1).forEachBar(function (bar, datum) {
-                            expect(bar.selectAll('title')[0].length).toBe(1);
+                            expect(bar.selectAll('title').nodes().length).toBe(1);
                         });
                     });
                 });
@@ -805,7 +805,7 @@ describe('dc.barChart', function () {
             it('should base the y-axis height on the maximum value in the data', function () {
                 var yAxisMax = 3.0;
                 var ticks = chart.selectAll('g.y g.tick');
-                var tickValues = ticks[0].map(function (tick) { return +d3.select(tick).text(); });
+                var tickValues = ticks.nodes().map(function (tick) { return +d3.select(tick).text(); });
                 var maxTickValue = Math.max.apply(this, tickValues);
                 expect(maxTickValue).toBe(yAxisMax);
             });
@@ -819,7 +819,7 @@ describe('dc.barChart', function () {
                 it('should rescale the y-axis after applying a filter', function () {
                     var yAxisMax = 1.0;
                     var ticks = chart.selectAll('g.y g.tick');
-                    var tickValues = ticks[0].map(function (tick) { return +d3.select(tick).text(); });
+                    var tickValues = ticks.nodes().map(function (tick) { return +d3.select(tick).text(); });
                     var maxTickValue = Math.max.apply(this, tickValues);
                     expect(maxTickValue).toBe(yAxisMax);
                 });
@@ -965,7 +965,7 @@ describe('dc.barChart', function () {
             chart = dc.barChart('#' + id);
             chart.width(500)
                 .transitionDuration(0)
-                .x(d3.time.scale())
+                .x(d3.scaleTime())
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
                 .group(group);
@@ -1263,11 +1263,11 @@ describe('dc.barChart', function () {
         var stack = d3.select(chart.selectAll('.stack').nodes()[n]);
 
         stack.nthBar = function (n) {
-            return d3.select(this.selectAll('rect.bar')[0][n]);
+            return d3.select(this.selectAll('rect.bar').nodes()[n]);
         };
 
         stack.nthLabel = function (n) {
-            return d3.select(this.selectAll('text.barLabel')[0][n]);
+            return d3.select(this.selectAll('text.barLabel').nodes()[n]);
         };
 
         stack.forEachBar = function (assertions) {

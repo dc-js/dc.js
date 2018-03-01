@@ -46,26 +46,26 @@ describe('dc.heatmap', function () {
         it('should position the heatboxes in a matrix', function () {
             var heatBoxes = chart.selectAll('rect.heat-box');
 
-            expect(+heatBoxes[0][0].getAttribute('x')).toEqual(0);
-            expect(+heatBoxes[0][0].getAttribute('y')).toEqual(100);
+            expect(+heatBoxes.nodes()[0].getAttribute('x')).toEqual(0);
+            expect(+heatBoxes.nodes()[0].getAttribute('y')).toEqual(100);
 
-            expect(+heatBoxes[0][1].getAttribute('x')).toEqual(0);
-            expect(+heatBoxes[0][1].getAttribute('y')).toEqual(0);
+            expect(+heatBoxes.nodes()[1].getAttribute('x')).toEqual(0);
+            expect(+heatBoxes.nodes()[1].getAttribute('y')).toEqual(0);
 
-            expect(+heatBoxes[0][2].getAttribute('x')).toEqual(100);
-            expect(+heatBoxes[0][2].getAttribute('y')).toEqual(100);
+            expect(+heatBoxes.nodes()[2].getAttribute('x')).toEqual(100);
+            expect(+heatBoxes.nodes()[2].getAttribute('y')).toEqual(100);
 
-            expect(+heatBoxes[0][3].getAttribute('x')).toEqual(100);
-            expect(+heatBoxes[0][3].getAttribute('y')).toEqual(0);
+            expect(+heatBoxes.nodes()[3].getAttribute('x')).toEqual(100);
+            expect(+heatBoxes.nodes()[3].getAttribute('y')).toEqual(0);
         });
 
         it('should color heatboxes using the provided color option', function () {
             var heatBoxes = chart.selectAll('rect.heat-box');
 
-            expect(heatBoxes[0][0].getAttribute('fill')).toMatch(/#000001/i);
-            expect(heatBoxes[0][1].getAttribute('fill')).toMatch(/#000002/i);
-            expect(heatBoxes[0][2].getAttribute('fill')).toMatch(/#000003/i);
-            expect(heatBoxes[0][3].getAttribute('fill')).toMatch(/#000004/i);
+            expect(heatBoxes.nodes()[0].getAttribute('fill')).toMatch(/#000001/i);
+            expect(heatBoxes.nodes()[1].getAttribute('fill')).toMatch(/#000002/i);
+            expect(heatBoxes.nodes()[2].getAttribute('fill')).toMatch(/#000003/i);
+            expect(heatBoxes.nodes()[3].getAttribute('fill')).toMatch(/#000004/i);
         });
 
         it('should size heatboxes based on the size of the matrix', function () {
@@ -77,30 +77,30 @@ describe('dc.heatmap', function () {
 
         it('should position the y-axis labels with their associated rows', function () {
             var yaxisTexts = chart.selectAll('.rows.axis text');
-            expect(+yaxisTexts[0][0].getAttribute('y')).toEqual(150);
-            expect(+yaxisTexts[0][0].getAttribute('x')).toEqual(0);
-            expect(+yaxisTexts[0][1].getAttribute('y')).toEqual(50);
-            expect(+yaxisTexts[0][1].getAttribute('x')).toEqual(0);
+            expect(+yaxisTexts.nodes()[0].getAttribute('y')).toEqual(150);
+            expect(+yaxisTexts.nodes()[0].getAttribute('x')).toEqual(0);
+            expect(+yaxisTexts.nodes()[1].getAttribute('y')).toEqual(50);
+            expect(+yaxisTexts.nodes()[1].getAttribute('x')).toEqual(0);
         });
 
         it('should have labels on the y-axis corresponding to the row values', function () {
             var yaxisTexts = chart.selectAll('.rows.axis text');
-            expect(yaxisTexts[0][0].textContent).toEqual('1');
-            expect(yaxisTexts[0][1].textContent).toEqual('2');
+            expect(yaxisTexts.nodes()[0].textContent).toEqual('1');
+            expect(yaxisTexts.nodes()[1].textContent).toEqual('2');
         });
 
         it('should position the x-axis labels with their associated columns', function () {
             var xaxisTexts = chart.selectAll('.cols.axis text');
-            expect(+xaxisTexts[0][0].getAttribute('y')).toEqual(200);
-            expect(+xaxisTexts[0][0].getAttribute('x')).toEqual(50);
-            expect(+xaxisTexts[0][1].getAttribute('y')).toEqual(200);
-            expect(+xaxisTexts[0][1].getAttribute('x')).toEqual(150);
+            expect(+xaxisTexts.nodes()[0].getAttribute('y')).toEqual(200);
+            expect(+xaxisTexts.nodes()[0].getAttribute('x')).toEqual(50);
+            expect(+xaxisTexts.nodes()[1].getAttribute('y')).toEqual(200);
+            expect(+xaxisTexts.nodes()[1].getAttribute('x')).toEqual(150);
         });
 
         it('should have labels on the x-axis corresponding to the row values', function () {
             var xaxisTexts = chart.selectAll('.cols.axis text');
-            expect(xaxisTexts[0][0].textContent).toEqual('1');
-            expect(xaxisTexts[0][1].textContent).toEqual('2');
+            expect(xaxisTexts.nodes()[0].textContent).toEqual('1');
+            expect(xaxisTexts.nodes()[1].textContent).toEqual('2');
         });
 
         describe('with custom labels', function () {
@@ -111,13 +111,13 @@ describe('dc.heatmap', function () {
             });
             it('should display the custom labels on the x axis', function () {
                 var xaxisTexts = chart.selectAll('.cols.axis text');
-                expect(xaxisTexts[0][0].textContent).toEqual('col 1');
-                expect(xaxisTexts[0][1].textContent).toEqual('col 2');
+                expect(xaxisTexts.nodes()[0].textContent).toEqual('col 1');
+                expect(xaxisTexts.nodes()[1].textContent).toEqual('col 2');
             });
             it('should display the custom labels on the y axis', function () {
                 var yaxisTexts = chart.selectAll('.rows.axis text');
-                expect(yaxisTexts[0][0].textContent).toEqual('row 1');
-                expect(yaxisTexts[0][1].textContent).toEqual('row 2');
+                expect(yaxisTexts.nodes()[0].textContent).toEqual('row 1');
+                expect(yaxisTexts.nodes()[1].textContent).toEqual('row 2');
             });
         });
 
@@ -164,32 +164,32 @@ describe('dc.heatmap', function () {
 
         it('should only have 1 row on the y axis', function () {
             var yaxisTexts = chart.selectAll('.rows.axis text');
-            expect(yaxisTexts[0].length).toEqual(1);
-            expect(yaxisTexts[0][0].textContent).toEqual('1');
+            expect(yaxisTexts.nodes().length).toEqual(1);
+            expect(yaxisTexts.nodes()[0].textContent).toEqual('1');
         });
 
         it('should only have 1 col on the x axis', function () {
             var xaxisTexts = chart.selectAll('.cols.axis text');
-            expect(xaxisTexts[0].length).toEqual(1);
-            expect(xaxisTexts[0][0].textContent).toEqual('1');
+            expect(xaxisTexts.nodes().length).toEqual(1);
+            expect(xaxisTexts.nodes()[0].textContent).toEqual('1');
         });
 
         it('should reset the rows to using the chart data on the y axis', function () {
             chart.rows(null);
             chart.redraw();
             var yaxisTexts = chart.selectAll('.rows.axis text');
-            expect(yaxisTexts[0].length).toEqual(2);
-            expect(yaxisTexts[0][0].textContent).toEqual('1');
-            expect(yaxisTexts[0][1].textContent).toEqual('2');
+            expect(yaxisTexts.nodes().length).toEqual(2);
+            expect(yaxisTexts.nodes()[0].textContent).toEqual('1');
+            expect(yaxisTexts.nodes()[1].textContent).toEqual('2');
         });
 
         it('should reset the cols to using the chart data on the y axis', function () {
             chart.cols(null);
             chart.redraw();
             var xaxisTexts = chart.selectAll('.cols.axis text');
-            expect(xaxisTexts[0].length).toEqual(2);
-            expect(xaxisTexts[0][0].textContent).toEqual('1');
-            expect(xaxisTexts[0][1].textContent).toEqual('2');
+            expect(xaxisTexts.nodes().length).toEqual(2);
+            expect(xaxisTexts.nodes()[0].textContent).toEqual('1');
+            expect(xaxisTexts.nodes()[1].textContent).toEqual('2');
         });
     });
 
@@ -202,14 +202,14 @@ describe('dc.heatmap', function () {
 
         it('should have descending rows', function () {
             var yaxisTexts = chart.selectAll('.rows.axis text');
-            expect(yaxisTexts[0][0].textContent).toEqual('2');
-            expect(yaxisTexts[0][1].textContent).toEqual('1');
+            expect(yaxisTexts.nodes()[0].textContent).toEqual('2');
+            expect(yaxisTexts.nodes()[1].textContent).toEqual('1');
         });
 
         it('should have descending cols', function () {
             var yaxisTexts = chart.selectAll('.rows.axis text');
-            expect(yaxisTexts[0][0].textContent).toEqual('2');
-            expect(yaxisTexts[0][1].textContent).toEqual('1');
+            expect(yaxisTexts.nodes()[0].textContent).toEqual('2');
+            expect(yaxisTexts.nodes()[1].textContent).toEqual('1');
         });
     });
 
@@ -371,8 +371,8 @@ describe('dc.heatmap', function () {
             });
             describe('with one cell on that axis already filtered', function () {
                 it('should filter all cells on that axis (and the original cell should remain filtered)', function () {
-                    var boxes = chart.selectAll('.box-group');
-                    var box = d3.select(boxes[0][Math.floor(Math.random() * boxes.length)]);
+                    var boxNodes = chart.selectAll('.box-group').nodes();
+                    var box = d3.select(boxNodes[Math.floor(Math.random() * boxNodes.length)]);
 
                     box.select('rect').on('click')(box.datum());
 
