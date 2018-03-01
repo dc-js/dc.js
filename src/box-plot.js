@@ -150,7 +150,7 @@ dc.boxPlot = function (parent, chartGroup) {
         updateBoxes(boxesG);
         removeBoxes(boxesG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderBoxes (boxesG) {
@@ -181,7 +181,7 @@ dc.boxPlot = function (parent, chartGroup) {
         boxesG.exit().remove().call(_box);
     }
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         if (_chart.hasFilter()) {
             if (_chart.isOrdinal()) {
                 _chart.g().selectAll('g.box').each(function (d) {
@@ -192,7 +192,6 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                var selection = _chart.getBrushSelection();;
                 var start = selection[0];
                 var end = selection[1];
                 var keyAccessor = _chart.keyAccessor();

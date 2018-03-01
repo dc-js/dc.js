@@ -389,13 +389,10 @@ dc.scatterPlot = function (parent, chartGroup) {
         // no handle paths for poly-brushes
     };
 
-    _chart.extendBrush = function () {
-        var selection = _chart.getBrushSelection();
+    _chart.extendBrush = function (selection) {
         if (_chart.round()) {
             selection[0] = selection[0].map(_chart.round());
             selection[1] = selection[1].map(_chart.round());
-
-            // _chart.brushSelection(selection);
         }
         return selection;
     };
@@ -405,18 +402,27 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        var event = d3v4.event;
+        // Avoids infinite recursion
+        // To ensure that when it is called because of brush.move there is no d3v4.event.sourceEvent
+        d3v4.event = null;
+        if (!event.sourceEvent) return;
+        var selection = event.selection;
+        if (selection) {
+            selection = selection.map(_chart.x().invert);
+        }
+        selection = _chart.extendBrush(selection);
 
-        _chart.redrawBrush(_chart.g());
+        _chart.redrawBrush(_chart.g(), selection);
 
-        if (_chart.brushIsEmpty(extent)) {
+        if (_chart.brushIsEmpty(selection)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
             });
 
         } else {
-            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
+            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(selection);
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.filter(ranged2DFilter);

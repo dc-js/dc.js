@@ -201,9 +201,8 @@ dc.barChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         var bars = _chart.chartBodyG().selectAll('rect.bar');
-        var selection = _chart.getBrushSelection();
 
         if (_chart.isOrdinal()) {
             if (_chart.hasFilter()) {
@@ -304,14 +303,10 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function () {
-        var selection = _chart.getBrushSelection();
-
-        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            selection[0] = _chart.round(selection[0]);
-            selection[1] = _chart.round(selection[1]);
-
-            // _chart.updateBrushSelection(selection);
+    _chart.extendBrush = function (selection) {
+        if (selection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            selection[0] = _chart.round()(selection[0]);
+            selection[1] = _chart.round()(selection[1]);
         }
         return selection;
     };

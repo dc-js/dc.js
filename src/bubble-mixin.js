@@ -255,7 +255,7 @@ dc.bubbleMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         if (_chart.hasFilter()) {
             _chart.selectAll('g.' + _chart.BUBBLE_NODE_CLASS).each(function (d) {
                 if (_chart.isSelectedNode(d)) {

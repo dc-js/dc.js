@@ -54,7 +54,7 @@ dc.bubbleChart = function (parent, chartGroup) {
 
         removeNodes(bubbleG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderNodes (bubbleG) {
@@ -128,9 +128,9 @@ dc.bubbleChart = function (parent, chartGroup) {
         // override default x axis brush from parent chart
     };
 
-    _chart.redrawBrush = function () {
+    _chart.redrawBrush = function (g, selection, doTransition) {
         // override default x axis brush from parent chart
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(selection);
     };
 
     return _chart.anchor(parent, chartGroup);

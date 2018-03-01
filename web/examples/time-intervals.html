@@ -16,12 +16,12 @@ tree</a> to plot items which span from a begin date to an end date. The brush wi
 any items whose intervals overlap with it.</p>
   <div id="month">
     <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
-      <a href="javascript:monthChart.filterAll().redrawGroup();">reset</a>
+      <a href="javascript:monthChart.filterAll();dc.redrawAll();">reset</a>
     </div>
   </div>
   <div id="cost">
     <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
-      <a href="javascript:costChart.filterAll().redrawGroup();">reset</a>
+      <a href="javascript:costChart.filterAll();dc.redrawAll();">reset</a>
     </div>
   </div>
 

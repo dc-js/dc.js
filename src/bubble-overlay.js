@@ -81,7 +81,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
         initializeBubbles();
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
 
         return _chart;
     };
@@ -149,7 +149,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
     _chart._doRedraw = function () {
         updateBubbles();
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
 
         return _chart;
     };

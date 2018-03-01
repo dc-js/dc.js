@@ -981,17 +981,6 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart.effectiveWidth();
     }
 
-    _chart.getBrushSelection = function () {
-        if (!_gBrush) return null;
-
-        var selection = d3.brushSelection(_gBrush.node());
-
-        // Empty selection
-        if (!selection) return null;
-
-        return selection.map(_x.invert);
-    };
-
     _chart.updateBrushSelection = function (selection) {
         if (_brush && _gBrush) {
 
@@ -1021,17 +1010,12 @@ dc.coordinateGridMixin = function (_chart) {
             // Set boundaries of the brush
             _brush.extent([0,0], [brushWidth(), brushHeight()]);
 
-            _brush.on('end', function() {
-                var evt = d3v4.event;
-                if (!evt.sourceEvent) return;
-
-                _chart._brushing();
-            });
+            _brush.on('start brush end', _chart._brushing);
             // _chart.setBrushY(gBrush, false);
             // _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
-                _chart.redrawBrush(g, false);
+                _chart.redrawBrush(g, _chart.filter(), false);
             }
         }
     };
@@ -1049,14 +1033,10 @@ dc.coordinateGridMixin = function (_chart) {
             .attr('d', _chart.resizeHandlePath);
     };
 
-    _chart.extendBrush = function () {
-        var selection = _chart.getBrushSelection();
-
-        if (_chart.round()) {
-            selection[0] = _chart.round(selection[0]);
-            selection[1] = _chart.round(selection[1]);
-
-            // _chart.updateBrushSelection(selection);
+    _chart.extendBrush = function (selection) {
+        if (selection && _chart.round()) {
+            selection[0] = _chart.round()(selection[0]);
+            selection[1] = _chart.round()(selection[1]);
         }
         return selection;
     };
@@ -1066,12 +1046,18 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._brushing = function () {
-        var evt = d3v4.event;
-        if (!d3v4.event.sourceEvent) return;
+        var event = d3v4.event;
+        // Avoids infinite recursion
+        // To ensure that when it is called because of brush.move there is no d3v4.event.sourceEvent
+        d3v4.event = null;
+        if (!event.sourceEvent) return;
+        var selection = event.selection;
+        if (selection) {
+            selection = selection.map(_chart.x().invert);
+        }
+        selection = _chart.extendBrush(selection);
 
-        var selection = _chart.extendBrush();
-
-        _chart.redrawBrush(_g, false);
+        _chart.redrawBrush(_g, selection, false);
 
         if (_chart.brushIsEmpty(selection)) {
             dc.events.trigger(function () {
@@ -1088,8 +1074,9 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g, doTransition) {
+    _chart.redrawBrush = function (g, selection, doTransition) {
         // fix for D3v4
+        _chart.updateBrushSelection(selection);
 /*
         if (_brushOn) {
             if (_chart.filter() && _chart.brush().empty()) {
@@ -1103,10 +1090,10 @@ dc.coordinateGridMixin = function (_chart) {
                       .extent(_chart.brush().extent()));
         }
 */
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(selection);
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         // do nothing, sub-chart should override this function
     };
 
@@ -1208,9 +1195,9 @@ dc.coordinateGridMixin = function (_chart) {
         if (render) {
             _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g(), _resizing);
+            _chart.redrawBrush(_chart.g(), _chart.filter(), _resizing);
         }
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;
     }
 

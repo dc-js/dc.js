@@ -69,11 +69,21 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
-        var brushIsEmpty = _chart.brushIsEmpty(extent);
+        var event = d3v4.event;
+        // Avoids infinite recursion
+        // To ensure that when it is called because of brush.move there is no d3v4.event.sourceEvent
+        d3v4.event = null;
+        if (!event.sourceEvent) return;
+        var selection = event.selection;
+        if (selection) {
+            selection = selection.map(_chart.x().invert);
+        }
+        selection = _chart.extendBrush(selection);
+
+        var brushIsEmpty = _chart.brushIsEmpty(selection);
 
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(brushIsEmpty ? null : extent);
+            _children[i].replaceFilter(brushIsEmpty ? null : selection);
         }
     };
 
@@ -263,11 +273,11 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
-            child.fadeDeselectedArea();
+            child.fadeDeselectedArea(selection);
         }
     };
 

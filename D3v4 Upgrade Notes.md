@@ -20,5 +20,12 @@ Non working examples:
 - http://localhost:8888/web/examples/scatter-brushing.html (brush not working)
 - http://localhost:8888/web/examples/splom.html (brush not working)
 - http://localhost:8888/web/examples/time-intervals.html 
-  (bar width, some warnings, brushing not working)
+  (bar width, brushing not working)
+- http://localhost:8888/web/examples/switching-time-intervals.html (warnings)
 
+
+
+._brushing
+.extendBrush
+.redrawBrush
+.fadeDeselectedArea
