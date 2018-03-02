@@ -53,12 +53,14 @@ d3.symbols = d3v4.symbols;
 
 d3.geo.mercator = d3v4.geoMercator;
 d3.geoPath = d3v4.geoPath;
-d3.geoAlbersUsa = d3.geoAlbersUsa;
+d3.geoAlbersUsa = d3v4.geoAlbersUsa;
+
 
 d3.csv = d3v4.csv;
 d3.json = d3v4.json;
 d3.csvFormat = d3v4.csvFormat;
 d3.csvParse = d3v4.csvParse;
+d3.brush = d3v4.brush;
 d3.brushX = d3v4.brushX;
 d3.brushSelection = d3v4.brushSelection;
 

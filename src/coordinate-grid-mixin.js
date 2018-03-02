@@ -999,7 +999,8 @@ dc.coordinateGridMixin = function (_chart) {
             // _brush.on('brush', _chart._brushing);
             // _brush.on('brushstart', _chart._disableMouseZoom);
             // _brush.on('brushend', configureMouseZoom);
-            //_brush.on('end', _chart._brush_tmp_end);
+
+            _brush.on('start brush end', _chart._brushing);
 
             // To retrieve selection we need _gBrush
             _gBrush = g.append('g')
@@ -1010,7 +1011,6 @@ dc.coordinateGridMixin = function (_chart) {
             // Set boundaries of the brush
             _brush.extent([0,0], [brushWidth(), brushHeight()]);
 
-            _brush.on('start brush end', _chart._brushing);
             // _chart.setBrushY(gBrush, false);
             // _chart.setHandlePaths(gBrush);
 
@@ -1374,6 +1374,28 @@ dc.coordinateGridMixin = function (_chart) {
         }
         _brushOn = brushOn;
         return _chart;
+    };
+
+    /**
+     * Get or set the brush. Brush must be an instance of d3 brushes
+     * https://github.com/d3/d3-brush/blob/master/README.md
+     * @method brush
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {d3.brush} [brush]
+     * @returns {d3.brush|dc.coordinateGridMixin}
+     */
+    _chart.brush = function (_) {
+        if (!arguments.length) {
+            return _brush;
+        }
+        _brush = _;
+        return _chart;
+    };
+
+    // Get the SVG rendered brush
+    _chart.gBrush = function() {
+        return _gBrush;
     };
 
     function hasRangeSelected (range) {

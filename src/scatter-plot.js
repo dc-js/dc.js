@@ -55,6 +55,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _emptyColor = null;
     var _filtered = [];
 
+    // Use a 2 dimensional brush
+    _chart.brush(d3.brush());
+
     function elementSize (d, i) {
         if (!_existenceAccessor(d)) {
             return Math.pow(_emptySize, 2);
@@ -385,6 +388,27 @@ dc.scatterPlot = function (parent, chartGroup) {
         _symbol.size(oldSize);
     }
 
+    _chart.updateBrushSelection = function (selection) {
+        var _brush = _chart.brush();
+        var _gBrush = _chart.gBrush();
+
+        if (_brush && _gBrush) {
+
+            if (selection) {
+                selection = selection.map(function (point) {
+                    return point.map(function (coord, i) {
+                        var scale = i === 0 ? _chart.x() : _chart.y();
+                        return scale(coord);
+                    });
+                })
+            }
+
+            _brush.move(_gBrush, selection);
+
+            // Redraw handles
+        }
+    };
+
     _chart.setHandlePaths = function () {
         // no handle paths for poly-brushes
     };
@@ -397,8 +421,8 @@ dc.scatterPlot = function (parent, chartGroup) {
         return selection;
     };
 
-    _chart.brushIsEmpty = function (extent) {
-        return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
+    _chart.brushIsEmpty = function (selection) {
+        return !selection || selection[0][0] === selection[1][0] || selection[0][1] === selection[1][1];
     };
 
     _chart._brushing = function () {
@@ -408,14 +432,23 @@ dc.scatterPlot = function (parent, chartGroup) {
         d3v4.event = null;
         if (!event.sourceEvent) return;
         var selection = event.selection;
+
+        // Testing with pixels is more reliable
+        var brushIsEmpty = _chart.brushIsEmpty(selection);
+
         if (selection) {
-            selection = selection.map(_chart.x().invert);
+            selection = selection.map(function (point) {
+                return point.map(function (coord, i) {
+                    var scale = i === 0 ? _chart.x() : _chart.y();
+                    return scale.invert(coord);
+                });
+            })
         }
         selection = _chart.extendBrush(selection);
 
         _chart.redrawBrush(_chart.g(), selection);
 
-        if (_chart.brushIsEmpty(selection)) {
+        if (brushIsEmpty) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
