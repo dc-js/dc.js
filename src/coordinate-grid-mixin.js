@@ -1002,16 +1002,15 @@ dc.coordinateGridMixin = function (_chart) {
 
             _brush.on('start brush end', _chart._brushing);
 
+            // Set boundaries of the brush, must set it before applying to _gBrush
+            _brush.extent([[0,0], [brushWidth(), brushHeight()]]);
+
             // To retrieve selection we need _gBrush
             _gBrush = g.append('g')
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush);
 
-            // Set boundaries of the brush
-            _brush.extent([0,0], [brushWidth(), brushHeight()]);
-
-            // _chart.setBrushY(gBrush, false);
             // _chart.setHandlePaths(gBrush);
 
             if (_chart.hasFilter()) {
@@ -1020,18 +1019,11 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
+/*
     _chart.setHandlePaths = function (gBrush) {
         gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
     };
-
-
-    // D3v4 rework needed
-    _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect')
-            .attr('height', brushHeight());
-        gBrush.selectAll('.resize path')
-            .attr('d', _chart.resizeHandlePath);
-    };
+*/
 
     _chart.extendBrush = function (selection) {
         if (selection && _chart.round()) {
@@ -1097,6 +1089,7 @@ dc.coordinateGridMixin = function (_chart) {
         // do nothing, sub-chart should override this function
     };
 
+/*
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
         var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
@@ -1110,6 +1103,7 @@ dc.coordinateGridMixin = function (_chart) {
             'M' + (4.5 * x) + ',' + (y + 8) +
             'V' + (2 * y - 8);
     };
+*/
 
     function getClipPathId () {
         return _chart.anchorName().replace(/[ .#=\[\]"]/g, '-') + '-clip';

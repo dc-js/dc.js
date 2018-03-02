@@ -96,10 +96,7 @@ div.dc-chart {
     }
     .brush {
         rect {
-            &.background {
-                z-index: -999;
-            }
-            &.extent {
+            &.selection {
                 fill: $color_steel_blue;
                 fill-opacity: .125;
             }
