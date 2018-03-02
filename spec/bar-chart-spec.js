@@ -728,19 +728,19 @@ describe('dc.barChart', function () {
                 });
 
                 it('should stretch the background', function () {
-                    expect(+chart.select('g.brush rect.background').attr('width')).toBe(1020);
+                    expect(+chart.select('g.brush rect.overlay').attr('width')).toBe(1020);
                 });
 
                 it('should set the background height to the chart height', function () {
-                    expect(+chart.select('g.brush rect.background').attr('height')).toBe(160);
+                    expect(+chart.select('g.brush rect.overlay').attr('height')).toBe(160);
                 });
 
                 it('should set extent height to the chart height', function () {
-                    expect(+chart.select('g.brush rect.extent').attr('height')).toBe(160);
+                    expect(+chart.select('g.brush rect.selection').attr('height')).toBe(160);
                 });
 
                 it('should set extent width based on filter set', function () {
-                    expect(chart.select('g.brush rect.extent').attr('width')).toBeWithinDelta(81, 1);
+                    expect(chart.select('g.brush rect.selection').attr('width')).toBeWithinDelta(81, 1);
                 });
 
                 it('should push unselected bars to the background', function () {
