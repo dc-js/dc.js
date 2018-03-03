@@ -105,7 +105,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 }
                 return baseClasses;
             });
-
         return regionG;
     }
 

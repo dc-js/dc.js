@@ -6,11 +6,10 @@
 
 ##Issues to be fixed
 
-- geoChoroplethChart
-- Peculiar fading in filter-stacks.html
+- Peculiar fading in filter-stacks.html (Low)
 - Need proper color matcher for Jasmine (Low)
 - Need proper URL matcher for Jasmine (Low)
-- Update/fix test cases
+- Update/fix test cases (High)
 
 
 ##Before release
