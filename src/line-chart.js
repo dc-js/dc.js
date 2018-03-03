@@ -229,7 +229,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .x(function (d) {
                     return _chart.x()(d.x);
                 })
-                .y(function (d) {
+                .y1(function (d) {
                     return _chart.y()(d.y + d.y0);
                 })
                 .y0(function (d) {

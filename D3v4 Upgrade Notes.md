@@ -1,14 +1,11 @@
 ##Non working examples
 
-- http://localhost:8888/web/examples/area.html (lines ok, area missing)
-- http://localhost:8888/web/examples/line.html (lines ok, area missing)
 - http://localhost:8888/web/examples/filter-stacks.html 
  (fading is peculiar)
  
 
 ##Issues to be fixed
 
-- Lines chart - Area is not working
 - geoChoroplethChart
 - Peculiar fading in filter-stacks.html
 - Need proper color matcher for Jasmine (Low)
