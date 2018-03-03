@@ -399,7 +399,7 @@ dc.coordinateGridMixin = function (_chart) {
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
-            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
+            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
 
             if (units instanceof Array) {
                 _unitCount = units.length;
