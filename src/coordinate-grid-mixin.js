@@ -47,6 +47,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _brush = d3.brushX();
     var _gBrush;
+    var _brushHandles;
     var _brushOn = true;
     var _round;
 
@@ -963,6 +964,15 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     });
 
+    /**
+     * Get or set the brush. Brush must be an instance of d3 brushes
+     * https://github.com/d3/d3-brush/blob/master/README.md
+     * @method brush
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {d3.brush} [brush]
+     * @returns {d3.brush|dc.coordinateGridMixin}
+     */
     _chart.brush = function (_) {
         if (!arguments.length) {
             return _brush;
@@ -971,13 +981,11 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    // D3v4 rework needed
-    function brushHeight () {
+    function brushHeight() {
         return _chart.effectiveHeight();
     }
 
-    // D3v4 rework needed
-    function brushWidth () {
+    function brushWidth() {
         return _chart.effectiveWidth();
     }
 
@@ -989,21 +997,15 @@ dc.coordinateGridMixin = function (_chart) {
             }
 
             _brush.move(_gBrush, selection);
-
-            // Redraw handles
         }
     };
 
     _chart.renderBrush = function (g) {
         if (_brushOn) {
-            // _brush.on('brush', _chart._brushing);
-            // _brush.on('brushstart', _chart._disableMouseZoom);
-            // _brush.on('brushend', configureMouseZoom);
-
             _brush.on('start brush end', _chart._brushing);
 
             // Set boundaries of the brush, must set it before applying to _gBrush
-            _brush.extent([[0,0], [brushWidth(), brushHeight()]]);
+            _brush.extent([[0, 0], [brushWidth(), brushHeight()]]);
 
             // To retrieve selection we need _gBrush
             _gBrush = g.append('g')
@@ -1011,19 +1013,22 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
                 .call(_brush);
 
-            // _chart.setHandlePaths(gBrush);
+            _chart.setHandlePaths(_gBrush);
 
-            if (_chart.hasFilter()) {
-                _chart.redrawBrush(g, _chart.filter(), false);
-            }
+            _chart.redrawBrush(g, _chart.filter(), false);
         }
     };
 
-/*
     _chart.setHandlePaths = function (gBrush) {
-        gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
+        _brushHandles = gBrush.selectAll('.handle--custom').data([{type: "w"}, {type: "e"}]);
+
+        _brushHandles = _brushHandles
+            .enter()
+            .append('path')
+            .attr("class", "handle--custom")
+            .attr('d', _chart.resizeHandlePath)
+            .merge(_brushHandles);
     };
-*/
 
     _chart.extendBrush = function (selection) {
         if (selection && _chart.round()) {
@@ -1067,21 +1072,20 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.redrawBrush = function (g, selection, doTransition) {
-        // fix for D3v4
         _chart.updateBrushSelection(selection);
-/*
-        if (_brushOn) {
-            if (_chart.filter() && _chart.brush().empty()) {
-                _chart.brush().extent(_chart.filter());
-            }
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
-            _chart.setBrushY(gBrush);
-            gBrush.call(_chart.brush()
-                      .x(_chart.x())
-                      .extent(_chart.brush().extent()));
+        if (_brushOn) {
+            if (!selection) {
+                _brushHandles
+                    .attr("display", "none");
+            } else {
+                _brushHandles
+                    .attr("display", null)
+                    .attr("transform", function (d, i) {
+                        return "translate(" + _x(selection[i]) + ", 0)";
+                    });
+            }
         }
-*/
         _chart.fadeDeselectedArea(selection);
     };
 
@@ -1089,9 +1093,9 @@ dc.coordinateGridMixin = function (_chart) {
         // do nothing, sub-chart should override this function
     };
 
-/*
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
+        d = d.type;
         var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
         return 'M' + (0.5 * x) + ',' + y +
             'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
@@ -1103,7 +1107,6 @@ dc.coordinateGridMixin = function (_chart) {
             'M' + (4.5 * x) + ',' + (y + 8) +
             'V' + (2 * y - 8);
     };
-*/
 
     function getClipPathId () {
         return _chart.anchorName().replace(/[ .#=\[\]"]/g, '-') + '-clip';
@@ -1212,7 +1215,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _zoom
             .scaleExtent(_zoomScale)
-            .extent([[0 ,0], [_chart.width(), _chart.height()]])
+            .extent([[0, 0], [_chart.width(), _chart.height()]])
             .duration(_chart.transitionDuration());
 
         _chart.root().call(_zoom);
@@ -1335,7 +1338,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function rangesEqual (range1, range2) {
+    function rangesEqual(range1, range2) {
         if (!range1 && !range2) {
             return true;
         } else if (!range1 || !range2) {
@@ -1370,25 +1373,8 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    /**
-     * Get or set the brush. Brush must be an instance of d3 brushes
-     * https://github.com/d3/d3-brush/blob/master/README.md
-     * @method brush
-     * @memberof dc.coordinateGridMixin
-     * @instance
-     * @param {d3.brush} [brush]
-     * @returns {d3.brush|dc.coordinateGridMixin}
-     */
-    _chart.brush = function (_) {
-        if (!arguments.length) {
-            return _brush;
-        }
-        _brush = _;
-        return _chart;
-    };
-
     // Get the SVG rendered brush
-    _chart.gBrush = function() {
+    _chart.gBrush = function () {
         return _gBrush;
     };
 

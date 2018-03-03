@@ -465,6 +465,12 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     };
 
+    _chart.redrawBrush = function (g, selection, doTransition) {
+        // override default x axis brush from parent chart
+        _chart.updateBrushSelection(selection);
+        _chart.fadeDeselectedArea(selection);
+    };
+
     _chart.setBrushY = function (gBrush) {
         gBrush.call(_chart.brush().y(_chart.y()));
     };
