@@ -32,6 +32,8 @@ d3.time.days.utc = d3v4.utcDays;
 d3.time.scale = {};
 d3.time.scale.utc = d3v4.scaleUtc;
 
+d3.timeout = d3v4.timeout;
+
 d3.easeQuadIn = d3v4.easeQuadIn;
 
 d3.scale.log = d3v4.scaleLog;
@@ -90,35 +92,6 @@ d3.functor = function (v) {
         return v;
     };
 };
-
-
-// Behavior of d3.dispatch has changed, ultimately changes will
-// be applied to code directly - thankfully used in code only once
-d3._dispatch_tmp_fn_gen = function (_dispatch, event) {
-    return function () {
-        _dispatch.apply(event, this, arguments);
-    };
-};
-
-d3.dispatch = function () {
-    var _out = {};
-    var _dispatch = d3v4.dispatch.apply(this, arguments);
-
-    for (var i = 0; i < arguments.length; i++) {
-        var event = arguments[i];
-        _out[event] = this._dispatch_tmp_fn_gen(_dispatch, event);
-    }
-
-    _out.on = function (event, callback) {
-        _dispatch.on(event, callback);
-    };
-
-    return _out;
-};
-
-
-// Brushes - used only once, significant changes
-//
 
 
 // Significant changes in d3.layout.stack - copying from D3v3 for now

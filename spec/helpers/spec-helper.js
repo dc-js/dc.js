@@ -45,9 +45,6 @@ function cleanDateRange (range) {
 
 // http://stackoverflow.com/questions/20068497/d3-transition-in-unit-testing
 function flushAllD3Transitions () {
-    var now = Date.now;
-    Date.now = function () { return Infinity; };
     d3.timer.flush();
-    Date.now = now;
 }
 /* jshint +W098 */

@@ -28,116 +28,159 @@ describe('dc.baseMixin', function () {
     });
 
     describe('renderlets', function () {
-        var firstRenderlet, secondRenderlet, thirdRenderlet,
-            pretransition;
-        beforeEach(function () {
-            var expectedCallbackSignature = function (callbackChart) {
+        it('should not execute a renderlet until after the render transitions', function (done) {
+            var firstRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
-            };
-            firstRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-            secondRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-            thirdRenderlet = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-            pretransition = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-            chart.renderlet(firstRenderlet); // still testing renderlet event-namespace generation here
-            chart.renderlet(secondRenderlet);
-            chart.on('renderlet.third', thirdRenderlet);
-            chart.on('pretransition.pret', pretransition);
-        });
-
-        it('should not execute a renderlet until after the render transitions', function () {
+                done();
+            });
+            chart.renderlet(firstRenderlet);
             chart.render();
             expect(firstRenderlet).not.toHaveBeenCalled();
             flushAllD3Transitions();
-            expect(firstRenderlet).toHaveBeenCalled();
+            // Test will wait until firstRenderlet has been called
         });
 
-        it('should not execute a renderlet until after the redraw transitions', function () {
+        it('should not execute a renderlet until after the redraw transitions', function (done) {
+            var firstRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+                expect(callbackChart).toBe(chart);
+                done();
+            });
+            chart.renderlet(firstRenderlet);
             chart.redraw();
             expect(firstRenderlet).not.toHaveBeenCalled();
             flushAllD3Transitions();
-            expect(firstRenderlet).toHaveBeenCalled();
+            // Test will wait until firstRenderlet has been called
         });
 
         it('should execute pretransition event before the render transitions', function () {
+            var pretransition = jasmine.createSpy();
+            chart.on('pretransition.pret', pretransition);
             chart.render();
-            expect(pretransition).toHaveBeenCalled();
+            expect(pretransition).toHaveBeenCalledWith(chart);
             flushAllD3Transitions();
         });
 
         it('should execute pretransition event before the redraw transitions', function () {
+            var pretransition = jasmine.createSpy();
+            chart.on('pretransition.pret', pretransition);
             chart.redraw();
-            expect(pretransition).toHaveBeenCalled();
+            expect(pretransition).toHaveBeenCalledWith(chart);
             flushAllD3Transitions();
         });
 
-        it('should execute each renderlet after a render', function () {
+        it('should execute each renderlet after a render', function (done) {
+            var count = 0;
+            var renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+                expect(callbackChart).toBe(chart);
+                count++;
+                if(count === 2){
+                    done();
+                }
+            });
+            var firstRenderlet = renderlet,
+                secondRenderlet = firstRenderlet;
+            chart.renderlet(firstRenderlet);
+            chart.renderlet(firstRenderlet);
             chart.render();
             flushAllD3Transitions();
-            expect(firstRenderlet).toHaveBeenCalled();
-            expect(secondRenderlet).toHaveBeenCalled();
+            // Test will wait till firstRenderlet and secondRenderlet both have been called
         });
 
-        it('should execute each renderlet after a redraw', function () {
+        it('should execute each renderlet after a redraw', function (done) {
+            var count = 0;
+            var renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+                expect(callbackChart).toBe(chart);
+                count++;
+                if(count === 2){
+                    done();
+                }
+            });
+            var firstRenderlet = renderlet,
+                secondRenderlet = firstRenderlet;
+            chart.renderlet(firstRenderlet);
+            chart.renderlet(firstRenderlet);
             chart.redraw();
             flushAllD3Transitions();
-            expect(firstRenderlet).toHaveBeenCalled();
-            expect(secondRenderlet).toHaveBeenCalled();
+            // Test will wait till firstRenderlet and secondRenderlet both have been called
         });
 
-        it('should execute a named renderlet after a render', function () {
+        it('should execute a named renderlet after a render', function (done) {
+            var thirdRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+                expect(callbackChart).toBe(chart);
+                done();
+            });
+            chart.on('renderlet.third', thirdRenderlet);
             chart.render();
+            expect(thirdRenderlet).not.toHaveBeenCalled();
             flushAllD3Transitions();
-            expect(thirdRenderlet).toHaveBeenCalled();
+            // Test will wait until thirdRenderlet has been called
         });
 
-        it('should execute a named renderlet after a redraw', function () {
+        it('should execute a named renderlet after a redraw', function (done) {
+            var thirdRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+                expect(callbackChart).toBe(chart);
+                done();
+            });
+            chart.on('renderlet.third', thirdRenderlet);
             chart.redraw();
             flushAllD3Transitions();
-            expect(thirdRenderlet).toHaveBeenCalled();
+            // Test will wait until thirdRenderlet has been called
         });
 
-        it('should remove a named renderlet expect no call after a redraw', function () {
+        it('should remove a named renderlet expect no call after a redraw', function (done) {
+            var secondRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+                expect(thirdRenderlet).not.toHaveBeenCalled();
+                done();
+            });
+            var thirdRenderlet = jasmine.createSpy();
+            chart.on('renderlet.third' , secondRenderlet);
+            chart.renderlet(secondRenderlet);
             chart.on('renderlet.third');
             chart.redraw();
             flushAllD3Transitions();
-            expect(secondRenderlet).toHaveBeenCalled();
-            expect(thirdRenderlet).not.toHaveBeenCalled();
+            // Test will wait until secondRenderlet has been called
         });
 
-        it('should remove a named renderlet and expect no call after a redraw', function () {
+        it('should remove a named renderlet and expect no call after a render', function (done) {
+            var secondRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+                expect(thirdRenderlet).not.toHaveBeenCalled();
+                done();
+            });
+            var thirdRenderlet = jasmine.createSpy();
+            chart.on('renderlet.third' , secondRenderlet);
+            chart.renderlet(secondRenderlet);
             chart.on('renderlet.third');
             chart.render();
             flushAllD3Transitions();
-            expect(secondRenderlet).toHaveBeenCalled();
-            expect(thirdRenderlet).not.toHaveBeenCalled();
+            // Test will wait until secondRenderlet has been called
         });
     });
 
     describe('event listeners', function () {
         describe('on render', function () {
-            var preRenderSpy, postRenderSpy;
-            beforeEach(function () {
-                var expectedCallbackSignature = function (callbackChart) {
+            it('should execute the preRender callback', function () {
+                var preRenderSpy = jasmine.createSpy();
+                chart.on('preRender', preRenderSpy);
+                chart.render();
+                flushAllD3Transitions();
+                expect(preRenderSpy).toHaveBeenCalledWith(chart);
+            });
+
+            it('should execute the postRender callback', function (done) {
+                var preRenderSpy = jasmine.createSpy();
+                var postRender = function (callbackChart) {
+                    // By now preRender must have been called
+                    expect(preRenderSpy).toHaveBeenCalledWith(chart);
+
                     expect(callbackChart).toBe(chart);
+                    done();
                 };
 
-                preRenderSpy = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-                postRenderSpy = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-
                 chart.on('preRender', preRenderSpy);
-                chart.on('postRender', postRenderSpy);
-            });
-
-            it('should execute the preRender callback', function () {
+                chart.on('postRender', postRender);
                 chart.render();
                 flushAllD3Transitions();
-                expect(preRenderSpy).toHaveBeenCalled();
-            });
-
-            it('should execute the postRender callback', function () {
-                chart.render();
-                flushAllD3Transitions();
-                expect(postRenderSpy).toHaveBeenCalled();
+                // Test case will wait until postRender has been called
             });
         });
 
@@ -199,30 +242,30 @@ describe('dc.baseMixin', function () {
         });
 
         describe('on redraw', function () {
-            var preRedrawSpy, postRedrawSpy;
-            beforeEach(function () {
-                var expectedCallbackSignature = function (callbackChart) {
-                    expect(callbackChart).toBe(chart);
-                };
-
-                preRedrawSpy = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-                postRedrawSpy = jasmine.createSpy().and.callFake(expectedCallbackSignature);
-
-                chart.on('preRedraw', preRedrawSpy);
-                chart.on('postRedraw', postRedrawSpy);
-            });
-
             it('should execute the preRedraw callback before transitions', function () {
+                var preRedrawSpy = jasmine.createSpy();
+                chart.on('preRedraw', preRedrawSpy);
                 chart.redraw();
-                expect(preRedrawSpy).toHaveBeenCalled();
+                expect(preRedrawSpy).toHaveBeenCalledWith(chart);
                 flushAllD3Transitions();
             });
 
-            it('should execute the postRedraw callback after transitions', function () {
+            it('should execute the postRedraw callback after transitions', function (done) {
+                var preRedrawSpy = jasmine.createSpy();
+                var postRedraw = function (callbackChart) {
+                    // By now preRedraw must have been called
+                    expect(preRedrawSpy).toHaveBeenCalledWith(chart);
+
+                    expect(callbackChart).toBe(chart);
+                    done();
+                };
+                var postRedrawSpy = jasmine.createSpy().and.callFake(postRedraw);
+                chart.on('preRedraw', preRedrawSpy);
+                chart.on('postRedraw', postRedraw);
                 chart.redraw();
                 expect(postRedrawSpy).not.toHaveBeenCalled();
                 flushAllD3Transitions();
-                expect(postRedrawSpy).toHaveBeenCalled();
+                // The test case will wait till postRedraw has been called
             });
         });
     });
@@ -364,10 +407,9 @@ describe('dc.baseMixin', function () {
         describe('when set to a falsy on a sized div', function () {
             var h0, w0;
             beforeEach(function () {
-                dimdiv.style({
-                    height: '220px',
-                    width: '230px'
-                });
+                dimdiv
+                    .style('height', '220px')
+                    .style('width', '230px');
                 chart.width(null).height(null).render();
                 w0 = chart.width();
                 h0 = chart.height();

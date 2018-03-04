@@ -688,7 +688,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.render = function () {
         _height = _width = undefined; // force recalculate
-        _listeners.preRender(_chart);
+        _listeners.call('preRender', _chart, _chart);
 
         if (_mandatoryAttributes) {
             _mandatoryAttributes.forEach(checkForMandatoryAttributes);
@@ -706,19 +706,19 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
-        _listeners.pretransition(_chart);
+        _listeners.call('pretransition', _chart, _chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
                 .on('end', function () {
-                    _listeners.renderlet(_chart);
+                    _listeners.call('renderlet', _chart, _chart);
                     if (event) {
-                        _listeners[event](_chart);
+                        _listeners.call(event, _chart, _chart);
                     }
                 });
         } else {
-            _listeners.renderlet(_chart);
+            _listeners.call('renderlet', _chart, _chart);
             if (event) {
-                _listeners[event](_chart);
+                _listeners.call(event, _chart, _chart);
             }
         }
     };
@@ -738,7 +738,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.redraw = function () {
         sizeSvg();
-        _listeners.preRedraw(_chart);
+        _listeners.call('preRedraw', _chart, _chart);
 
         var result = _chart._doRedraw();
 
@@ -821,12 +821,12 @@ dc.baseMixin = function (_chart) {
 
     _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) {
-            _listeners.filtered(_chart, f);
+            _listeners.call('filtered', _chart, _chart, f);
         }
     };
 
     _chart._invokeZoomedListener = function () {
-        _listeners.zoomed(_chart);
+        _listeners.call('zoomed', _chart, _chart);
     };
 
     var _hasFilterHandler = function (filters, filter) {
