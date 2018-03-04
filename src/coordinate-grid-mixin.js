@@ -399,7 +399,13 @@ dc.coordinateGridMixin = function (_chart) {
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
-            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
+            var units;
+            if(_chart.xUnits() === dc.units.ordinal) {
+                // In this case it number of items in domain
+                units = _chart.x().domain();
+            } else {
+                units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
+            }
 
             if (units instanceof Array) {
                 _unitCount = units.length;
@@ -426,13 +432,6 @@ dc.coordinateGridMixin = function (_chart) {
             return _useRightYAxis;
         }
         _useRightYAxis = useRightYAxis;
-
-        if (_useRightYAxis) {
-            _yAxis = d3.axisRight();
-        } else {
-            _yAxis = d3.axisLeft();
-        }
-
         return _chart;
     };
 
@@ -469,9 +468,14 @@ dc.coordinateGridMixin = function (_chart) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
             }
         } else { // _chart.isOrdinal()
-            // D3v4 - find better place to put it
-            // It is special subclass that support rangeBands
-            _x = d3.scaleBand();
+            // D3v4 - Ordinal charts would need scaleBand
+            // bandwidth is a method in scaleBand
+            // (https://github.com/d3/d3-scale/blob/master/README.md#scaleBand)
+            if (!_x.bandwidth) {
+                // copy the original domain to the new scale
+                _x = d3.scaleBand().domain(_x.domain());
+            }
+
             if (_chart.elasticX() || _x.domain().length === 0) {
                 _x.domain(_chart._ordinalXDomain());
             }
@@ -617,6 +621,17 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
+
+        // Ideally we should update the API so that if someone uses Right Y Axis
+        // they would need to pass _yAxis as well
+        if (!_yAxis) {
+            if (_useRightYAxis) {
+                _yAxis = d3.axisRight();
+            } else {
+                _yAxis = d3.axisLeft();
+            }
+        }
+
         _yAxis = _yAxis.scale(_y);
 
         _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
@@ -666,7 +681,8 @@ dc.coordinateGridMixin = function (_chart) {
         var gridLineG = g.select('g.' + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
-            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
+            // Last part copied from https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
+            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks.apply(scale, axis.tickArguments());
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')

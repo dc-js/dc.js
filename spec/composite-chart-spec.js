@@ -236,32 +236,28 @@ describe('dc.compositeChart', function () {
             });
 
             it('should have a resize handle', function () {
-                expect(chart.selectAll('g.brush .resize path').size()).not.toBe(0);
-                chart.selectAll('g.brush .resize path').each(function (d, i) {
+                expect(chart.selectAll('g.brush path.handle--custom').size()).not.toBe(0);
+                chart.selectAll('g.brush path.handle--custom').each(function (d, i) {
                     if (i === 0) {
                         expect(d3.select(this).attr('d'))
-                            .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,' +
-                            '6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,' +
-                            '44.666666666666664V65.33333333333333');
-                    } else {
-                        expect(d3.select(this).attr('d'))
                             .toMatchPath('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,' +
-                            '6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,' +
-                            '44.666666666666664V65.33333333333333');
+                                '6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,' +
+                                '44.666666666666664V65.33333333333333');
+                     } else {
+                        expect(d3.select(this).attr('d'))
+                            .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,' +
+                                '6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,' +
+                                '44.666666666666664V65.33333333333333');
                     }
                 });
             });
 
             it('should stretch the background', function () {
-                expect(chart.select('g.brush rect.background').attr('width')).toBe('420');
+                expect(chart.select('g.brush rect.overlay').attr('width')).toBe('420');
             });
 
             it('should set the height of background to height of chart', function () {
-                expect(chart.select('g.brush rect.background').attr('height')).toBe('110');
-            });
-
-            it('should set the extent height to chart height', function () {
-                expect(chart.select('g.brush rect.extent').attr('height')).toBe('110');
+                expect(chart.select('g.brush rect.overlay').attr('height')).toBe('110');
             });
 
             describe('when filtering the chart', function () {
@@ -269,8 +265,12 @@ describe('dc.compositeChart', function () {
                     chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
                 });
 
+                it('should set the extent height to chart height', function () {
+                    expect(chart.select('g.brush rect.selection').attr('height')).toBe('110');
+                });
+
                 it('should set extent width to chart width based on filter set', function () {
-                    expect(chart.select('g.brush rect.extent').attr('width')).toBe('140');
+                    expect(chart.select('g.brush rect.selection').attr('width')).toBe('140');
                 });
 
                 it('should fade filtered bars into the background', function () {
@@ -547,10 +547,11 @@ describe('dc.compositeChart', function () {
 
         describe('when composing charts with just a right axis', function () {
             beforeEach(function () {
-                chart.yAxis().ticks(7);
                 chart.compose([
                     dc.lineChart(chart).group(dateGroup).useRightYAxis(true)
-                ]).renderHorizontalGridLines(true).render();
+                ]).renderHorizontalGridLines(true);
+                chart.rightYAxis().ticks(7);
+                chart.render();
             });
 
             it('should only render a right y axis', function () {
@@ -697,8 +698,10 @@ describe('dc.compositeChart', function () {
 
             beforeEach(function () {
                 otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
-                chart.brush().extent([22, 35]);
-                chart.brush().on('brush')();
+                // Setup a dummy event - just enough for the handler to get fooled
+                setupEventForBrushing(chart, [22, 35]);
+                // Directly call the handler
+                chart._brushing();
                 chart.redraw();
             });
 
@@ -708,8 +711,10 @@ describe('dc.compositeChart', function () {
 
             describe('brush decreases in size', function () {
                 beforeEach(function () {
-                    chart.brush().extent([22, 33]);
-                    chart.brush().on('brush')();
+                    // Setup a dummy event - just enough for the handler to get fooled
+                    setupEventForBrushing(chart, [22, 33]);
+                    // Directly call the handler
+                    chart._brushing();
                     chart.redraw();
                 });
 
@@ -721,8 +726,10 @@ describe('dc.compositeChart', function () {
 
             describe('brush disappears', function () {
                 beforeEach(function () {
-                    chart.brush().extent([22, 22]);
-                    chart.brush().on('brush')();
+                    // Setup a dummy event - just enough for the handler to get fooled
+                    setupEventForBrushing(chart, [22, 22]);
+                    // Directly call the handler
+                    chart._brushing();
                     chart.redraw();
                 });
 

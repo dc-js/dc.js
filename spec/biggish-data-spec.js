@@ -89,7 +89,7 @@ describe('dc.barChart.biggish', function () {
             .margins({top: 30, right: 50, bottom: 25, left: 40})
             .renderArea(true)
             .height(200)
-            .x(d3.time.scale().domain(extentDay))
+            .x(d3.scaleTime().domain(extentDay))
             .renderHorizontalGridLines(true)
             .rangeChart(chartRange)
             .transitionDuration(1000)
@@ -116,7 +116,7 @@ describe('dc.barChart.biggish', function () {
             .xUnits(d3.time.hours)
             .round(d3.time.hour.round)
             .alwaysUseRounding(true)
-            .x(d3.time.scale().domain(extentDay))
+            .x(d3.scaleTime().domain(extentDay))
 
         // hide the range chart's y axis
         // note: breaks function chaining by returning the yAxis

@@ -695,7 +695,7 @@ describe('dc.bubbleChart', function () {
         }
         describe('column filtering with straight crossfilter', function () {
             beforeEach(function () {
-                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
+                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
                 d3.timer.flush();
             });
@@ -713,7 +713,7 @@ describe('dc.bubbleChart', function () {
             beforeEach(function () {
                 chart.group(clone_group(sepalGroup));
                 chart.render();
-                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
+                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
                 d3.timer.flush();
             });

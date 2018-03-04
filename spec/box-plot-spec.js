@@ -198,13 +198,13 @@ describe('dc.boxPlot', function () {
     function box (n) {
         var nthBox = d3.select(chart.selectAll('g.box').nodes()[n]);
         nthBox.boxText = function (n) {
-            return d3.select(this.selectAll('text.box')[0][n]);
+            return d3.select(this.selectAll('text.box').nodes()[n]);
         };
         nthBox.whiskerLine = function (n) {
-            return d3.select(this.selectAll('line.whisker')[0][n]);
+            return d3.select(this.selectAll('line.whisker').nodes()[n]);
         };
         nthBox.whiskerText = function (n) {
-            return d3.select(this.selectAll('text.whisker')[0][n]);
+            return d3.select(this.selectAll('text.whisker').nodes()[n]);
         };
         return nthBox;
     }

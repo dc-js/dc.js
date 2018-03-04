@@ -69,7 +69,7 @@ describe('dc.legend', function () {
         });
 
         it('not allow hiding stacks be default', function () {
-            legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+            legendItem(0).on('click').call(legendItem(0).nodes()[0], legendItem(0).datum());
             expect(chart.selectAll('path.line').size()).toBe(3);
         });
 
@@ -247,7 +247,7 @@ describe('dc.legend', function () {
 
         describe('clicking on a legend item', function () {
             beforeEach(function () {
-                legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+                legendItem(0).on('click').call(legendItem(0).nodes()[0], legendItem(0).datum());
             });
 
             it('should fade out the legend item', function () {
@@ -265,7 +265,7 @@ describe('dc.legend', function () {
 
             describe('clicking on a faded out legend item', function () {
                 beforeEach(function () {
-                    legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+                    legendItem(0).on('click').call(legendItem(0).nodes()[0], legendItem(0).datum());
                 });
 
                 it('should unfade the legend item', function () {

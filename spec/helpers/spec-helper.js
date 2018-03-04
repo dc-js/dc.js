@@ -47,4 +47,32 @@ function cleanDateRange (range) {
 function flushAllD3Transitions () {
     d3.timer.flush();
 }
+
+// Setup a dummy event - just enough for the handler to get fooled
+var setupEventForBrushing = function (chart, domainSelection) {
+    // D3v4 needs scaled coordinates for the event
+    var scaledSelection = domainSelection.map(function (coord) {
+        return chart.x()(coord);
+    });
+    d3v4.event = {
+        sourceEvent: true,
+        selection: scaledSelection
+    };
+};
+
+// Setup a dummy event - just enough for the handler to get fooled
+var setupEventFor2DBrushing = function (chart, domainSelection) {
+    // D3v4 needs scaled coordinates for the event
+    var scaledSelection = domainSelection.map(function (point) {
+        return point.map(function (coord, i) {
+            var scale = i === 0 ? chart.x() : chart.y();
+            return scale(coord);
+        });
+    });
+    d3v4.event = {
+        sourceEvent: true,
+        selection: scaledSelection
+    };
+};
+
 /* jshint +W098 */

@@ -716,13 +716,14 @@ describe('dc.barChart', function () {
                 });
 
                 it('should create a fancy brush resize handle', function () {
-                    chart.select('g.brush').selectAll('.resize path').each(function (d, i) {
+                    var selectAll = chart.select('g.brush').selectAll('path.handle--custom');
+                    selectAll.each(function (d, i) {
                         if (i === 0) {
                             expect(d3.select(this).attr('d'))
-                                .toMatchPath('M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98');
+                                .toMatchPath('M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98');
                         } else {
                             expect(d3.select(this).attr('d'))
-                                .toMatchPath('M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98');
+                                .toMatchPath('M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98');
                         }
                     });
                 });
@@ -1107,8 +1108,11 @@ describe('dc.barChart', function () {
                 chart.alwaysUseRounding(false);
                 consoleWarnSpy = spyOn(console, 'warn');
                 chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
-                chart.brush().event(chart.root());
+
+                // Setup a dummy event - just enough for the handler to get fooled
+                setupEventForBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
+                // Directly call the handler
+                chart._brushing();
             });
 
             it('should log a warning indicating that brush rounding was disabled', function () {
@@ -1126,13 +1130,16 @@ describe('dc.barChart', function () {
             beforeEach(function () {
                 chart.alwaysUseRounding(true);
                 chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
-                chart.brush().event(chart.root());
+                // Setup a dummy event - just enough for the handler to get fooled
+                setupEventForBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
+                // Directly call the handler
+                chart._brushing();
             });
 
             it('should round the brush', function () {
                 jasmine.clock().tick(100);
-                expect(chart.brush().extent()).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 1)]);
+                var filter = cleanDateRange(chart.filter());
+                expect(filter).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 1)]);
             });
         });
     });

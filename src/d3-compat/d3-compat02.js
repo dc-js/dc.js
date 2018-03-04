@@ -28,6 +28,8 @@ d3.time.years = d3v4.timeYears;
 
 d3.time.day.utc = d3v4.utcDay;
 d3.time.days.utc = d3v4.utcDays;
+d3.time.month.utc = d3v4.utcMonth;
+
 
 d3.time.scale = {};
 d3.time.scale.utc = d3v4.scaleUtc;
@@ -56,6 +58,8 @@ d3.symbols = d3v4.symbols;
 d3.geo.mercator = d3v4.geoMercator;
 d3.geoPath = d3v4.geoPath;
 d3.geoAlbersUsa = d3v4.geoAlbersUsa;
+
+d3.color = d3v4.color;
 
 
 d3.csv = d3v4.csv;

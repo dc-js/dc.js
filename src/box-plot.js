@@ -146,8 +146,8 @@ dc.boxPlot = function (parent, chartGroup) {
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
-        boxesG = renderBoxes(boxesG);
-        updateBoxes(boxesG);
+        var boxesGEnterUpdate = renderBoxes(boxesG);
+        updateBoxes(boxesGEnterUpdate);
         removeBoxes(boxesG);
 
         _chart.fadeDeselectedArea(_chart.filter());

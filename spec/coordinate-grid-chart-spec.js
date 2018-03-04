@@ -307,6 +307,10 @@ describe('dc.coordinateGridChart', function () {
         describe('y-axes', function () {
             describe('grid lines', function () {
                 beforeEach(function () {
+                    // The calculations have changed internally for tick count from D3v3 to D3v4
+                    // By default it guesses 10 ticks and computes from there. In v3 it ends up with 7 in v4
+                    // it is 16. For 9 as well as 11 both the versions agree.
+                    chart.yAxis().ticks(9);
                     chart
                         .renderHorizontalGridLines(true)
                         .renderVerticalGridLines(true)
@@ -314,7 +318,7 @@ describe('dc.coordinateGridChart', function () {
                 });
 
                 describe('horizontal grid lines', function () {
-                    it('should draw lines associated with the data shown on the right y-axis', function () {
+                    it('should draw lines associated with the data shown on the y-axis', function () {
                         var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line').nodes()[n]); };
 
                         expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(7);
@@ -640,8 +644,12 @@ describe('dc.coordinateGridChart', function () {
             chart.filter(filter);
         });
 
-        it('should update the brush extent', function () {
-            expect(chart.getBrushSelection()).toEqual(filter);
+        it('should update the brush selection', function () {
+            // expect(chart.getBrushSelection()).toEqual(filter);
+            var brushSelectionRect = chart.select('g.brush rect.selection');
+            expect(brushSelectionRect.attr('x')).toBeCloseTo(chart.x()(filter[0]), 1);
+            expect(+brushSelectionRect.attr('x') + +brushSelectionRect.attr('width'))
+                .toBeCloseTo(chart.x()(filter[1]), 1);
         });
     });
 
@@ -653,8 +661,9 @@ describe('dc.coordinateGridChart', function () {
             chart.filter(null);
         });
 
-        it('should clear the brush extent', function () {
-            expect(chart.brushIsEmpty(chart.getBrushSelection()));
+        it('should clear the brush selection', function () {
+            var brushSelectionRect = chart.select('g.brush rect.selection');
+            expect(+brushSelectionRect.attr('width')).toEqual(0);
         });
     });
 
@@ -792,19 +801,20 @@ describe('dc.coordinateGridChart', function () {
     describe('brushing', function () {
         beforeEach(function () {
             chart.brushOn(true);
+            chart.render();
         });
 
         // D3v4 needs reimplementation, APIs have changed
         describe('with equal dates', function () {
             beforeEach(function () {
-                spyOn(chart, 'filter');
-                chart.brush().clear();
-                chart.render();
-                chart.brush().event(chart.root());
+                // Setup a dummy event - just enough for the handler to get fooled
+                setupEventForBrushing(chart, [22, 22]);
+                // Directly call the handler
+                chart._brushing();
             });
 
             it('should clear the chart filter', function () {
-                expect(chart.filter()).toEqual(undefined);
+                expect(chart.filter()).toBeFalsy();
             });
         });
     });
@@ -822,17 +832,20 @@ describe('dc.coordinateGridChart', function () {
 
         it('should zoom the focus chart when range chart is brushed', function () {
             spyOn(chart, 'focus').and.callThrough();
-            rangeChart.brush().extent(selectedRange);
-            rangeChart.brush().event(rangeChart.g());
+            // Setup a dummy event - just enough for the handler to get fooled
+            setupEventForBrushing(rangeChart, selectedRange);
+            // Directly call the handler
+            rangeChart._brushing();
             jasmine.clock().tick(100);
-            // expect(chart.focus).toHaveBeenCalledWith(selectedRange);
             var focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
             expect(focus).toEqual(selectedRange);
         });
 
         it('should zoom the focus chart back out when range chart is un-brushed', function () {
-            rangeChart.brush().extent(selectedRange);
-            rangeChart.brush().event(rangeChart.g());
+            // Setup a dummy event - just enough for the handler to get fooled
+            setupEventForBrushing(rangeChart, selectedRange);
+            // Directly call the handler
+            rangeChart._brushing();
             jasmine.clock().tick(100);
 
             expect(chart.x().domain()).toEqual(selectedRange);
