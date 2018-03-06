@@ -7,9 +7,6 @@
 ##Issues to be fixed
 
 - Peculiar fading in filter-stacks.html (Medium)
-- Need proper color matcher for Jasmine (Low)
-- Need proper URL matcher for Jasmine (Low)
-- Update/fix test cases (High)
 - Remove D3v3 compat (High)
     
     - Apply renames
