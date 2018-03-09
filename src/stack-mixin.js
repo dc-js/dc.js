@@ -1,5 +1,5 @@
 /**
- * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
+ * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stackD3v3.
  * @name stackMixin
  * @memberof dc
  * @mixin
@@ -25,7 +25,7 @@ dc.stackMixin = function (_chart) {
         return layer.values;
     }
 
-    var _stackLayout = d3.layout.stack()
+    var _stackLayout = d3.stackD3v3()
         .values(prepareValues);
 
     var _stack = [];
@@ -249,8 +249,8 @@ dc.stackMixin = function (_chart) {
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.layout.stack}
-     * @param {Function} [stack=d3.layout.stack]
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.stackD3v3}
+     * @param {Function} [stack=d3.stackD3v3]
      * @returns {Function|dc.stackMixin}
      */
     _chart.stackLayout = function (stack) {
@@ -258,7 +258,7 @@ dc.stackMixin = function (_chart) {
             return _stackLayout;
         }
         _stackLayout = stack;
-        if (_stackLayout.values() === d3.layout.stack().values()) {
+        if (_stackLayout.values() === d3.stackD3v3().values()) {
             _stackLayout.values(prepareValues);
         }
         return _chart;

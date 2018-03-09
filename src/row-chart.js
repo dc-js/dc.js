@@ -59,7 +59,7 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[1] < 0) {
                 extent[1] = 0;
             }
-            _x = d3.scale.linear().domain(extent)
+            _x = d3.scaleLinear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
         }
         _xAxis.scale(_x);

@@ -5,7 +5,7 @@ describe('dc.compositeChart', function () {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dateDimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dateDimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         dateValueSumGroup = dateDimension.group().reduceSum(function (d) { return d.value; });
         dateValueNegativeSumGroup = dateDimension.group().reduceSum(function (d) { return -d.value; });
         dateIdSumGroup = dateDimension.group().reduceSum(function (d) { return d.id; });
@@ -21,9 +21,9 @@ describe('dc.compositeChart', function () {
             .group(dateIdSumGroup)
             .width(500)
             .height(150)
-            .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+            .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
             .transitionDuration(0)
-            .xUnits(d3.time.days.utc)
+            .xUnits(d3.utcDays)
             .shareColors(true)
             .compose([
                 dc.barChart(chart)
@@ -78,7 +78,7 @@ describe('dc.compositeChart', function () {
     });
 
     it('should set the x units', function () {
-        expect(chart.xUnits()).toBe(d3.time.days.utc);
+        expect(chart.xUnits()).toBe(d3.utcDays);
     });
 
     it('should create the x axis', function () {
@@ -98,7 +98,7 @@ describe('dc.compositeChart', function () {
     });
 
     it('can change round', function () {
-        chart.round(d3.time.day.utc.round);
+        chart.round(d3.utcDay.round);
         expect(chart.round()).not.toBeNull();
     });
 
@@ -344,7 +344,7 @@ describe('dc.compositeChart', function () {
 
     describe('no elastic', function () {
         beforeEach(function () {
-            chart.y(d3.scale.linear().domain([-200, 200]));
+            chart.y(d3.scaleLinear().domain([-200, 200]));
             chart.render();
         });
 
@@ -412,7 +412,7 @@ describe('dc.compositeChart', function () {
                 .brushOn(false)
                 .dimension(dimension)
                 .shareTitle(false)
-                .x(d3.scale.ordinal())
+                .x(d3.scaleOrdinal())
                 .xUnits(dc.units.ordinal)
                 .compose([
                     dc.lineChart(chart)
@@ -684,7 +684,7 @@ describe('dc.compositeChart', function () {
             chart
                 .dimension(scatterDimension)
                 .group(scatterGroup)
-                .x(d3.scale.linear().domain([0,70]))
+                .x(d3.scaleLinear().domain([0,70]))
                 .brushOn(true)
                 .compose([
                     dc.scatterPlot(chart),

@@ -56,9 +56,9 @@ describe('dc.bubbleChart', function () {
             .radiusValueAccessor(function (p) {
                 return p.value.count;
             })
-            .x(d3.scale.linear().domain([0, 300]))
-            .y(d3.scale.linear().domain([0, 10]))
-            .r(d3.scale.linear().domain([0, 30]))
+            .x(d3.scaleLinear().domain([0, 300]))
+            .y(d3.scaleLinear().domain([0, 10]))
+            .r(d3.scaleLinear().domain([0, 30]))
             .maxBubbleRelativeSize(0.3)
             .transitionDuration(0)
             .renderLabel(true)
@@ -415,8 +415,8 @@ describe('dc.bubbleChart', function () {
                 .valueAccessor(function (kv) {
                     return 0;
                 })
-                .x(d3.scale.log().domain([1, 300]))
-                .y(d3.scale.log().domain([1, 10]))
+                .x(d3.scaleLog().domain([1, 300]))
+                .y(d3.scaleLog().domain([1, 10]))
                 .elasticX(false)
                 .elasticY(false);
             chart.render();
@@ -431,13 +431,13 @@ describe('dc.bubbleChart', function () {
 
     describe('with a date-based scale', function () {
         beforeEach(function () {
-            dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+            dimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
             group = dimension.group();
 
             chart
                 .dimension(dimension)
                 .group(group)
-                .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
+                .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
                 .elasticX(true)
                 .elasticY(true)
                 .keyAccessor(function (kv) {
@@ -449,7 +449,7 @@ describe('dc.bubbleChart', function () {
                 .radiusValueAccessor(function (kv) {
                     return kv.value;
                 })
-                .colors(d3.scale.ordinal().range(['#a60000', '#ff0000', '#ff4040', '#ff7373', '#67e667', '#39e639', '#00cc00']))
+                .colors(d3.scaleOrdinal().range(['#a60000', '#ff0000', '#ff4040', '#ff7373', '#67e667', '#39e639', '#00cc00']))
                 .colorAccessor(function (kv) {
                     return kv.key;
                 })
@@ -587,15 +587,15 @@ describe('dc.bubbleChart', function () {
                     .transitionDuration(0)
                     .width(400)
                     .height(400)
-                    .x(d3.scale.linear()).xAxisPadding(0.5)
-                    .y(d3.scale.linear()).yAxisPadding(0.5)
+                    .x(d3.scaleLinear()).xAxisPadding(0.5)
+                    .y(d3.scaleLinear()).yAxisPadding(0.5)
                     .elasticX(true)
                     .elasticY(true)
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
                     .radiusValueAccessor(function (kv) { return kv.value.total; })
                     .elasticRadius(true)
-                    .colors(d3.scale.ordinal()
+                    .colors(d3.scaleOrdinal()
                             .domain(species.concat('none'))
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
                     .colorAccessor(function (d) {
@@ -616,7 +616,7 @@ describe('dc.bubbleChart', function () {
                     .xBorderRadius(15).yBorderRadius(15)
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
-                    .colors(d3.scale.ordinal()
+                    .colors(d3.scaleOrdinal()
                             .domain(species.concat('none'))
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
                     .colorAccessor(function (d) {
@@ -697,7 +697,7 @@ describe('dc.bubbleChart', function () {
             beforeEach(function () {
                 var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('updates bubble radii correctly', function () {
                 testBubbleRadiiCol3(chart);
@@ -715,7 +715,7 @@ describe('dc.bubbleChart', function () {
                 chart.render();
                 var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('updates bubble radii correctly', function () {
                 testBubbleRadiiCol3(chart);

@@ -3,9 +3,9 @@
  * @name dateFormat
  * @memberof dc
  * @type {Function}
- * @default d3.time.format('%m/%d/%Y')
+ * @default d3.timeFormat('%m/%d/%Y')
  */
-dc.dateFormat = d3.time.format('%m/%d/%Y');
+dc.dateFormat = d3.timeFormat('%m/%d/%Y');
 
 /**
  * @namespace printers
@@ -120,6 +120,11 @@ dc.utils.printSingleValue = function (filter) {
 };
 dc.utils.printSingleValue.fformat = d3.format('.2f');
 
+// convert 'day' to 'timeDay' and similar
+dc.utils.toTimeFunc = function (t) {
+    return 'time' + t.charAt(0).toUpperCase() + t.slice(1);
+};
+
 /**
  * Arbitrary add one value to another.
  * @method add
@@ -147,7 +152,7 @@ dc.utils.add = function (l, r, t) {
             return new Date(l.getTime() + r);
         }
         t = t || 'day';
-        return d3.time[t].offset(l, r);
+        return d3[dc.utils.toTimeFunc(t)].offset(l, r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -183,7 +188,7 @@ dc.utils.subtract = function (l, r, t) {
             return new Date(l.getTime() - r);
         }
         t = t || 'day';
-        return d3.time[t].offset(l, -r);
+        return d3[dc.utils.toTimeFunc(t)].offset(l, -r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);

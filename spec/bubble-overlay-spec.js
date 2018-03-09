@@ -23,7 +23,7 @@ describe('dc.bubbleOverlay', function () {
             .height(height)
             .transitionDuration(0)
             .title(function (d) {return 'Title: ' + d.key;})
-            .r(d3.scale.linear().domain([0, 100]))
+            .r(d3.scaleLinear().domain([0, 100]))
             .maxBubbleRelativeSize(0.1)
             .ordinalColors(['blue'])
             .point('California', 100, 120)

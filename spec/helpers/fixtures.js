@@ -1,7 +1,7 @@
 /* jscs:disable validateQuoteMarks, maximumLineLength */
 /* jshint -W109, -W101, -W098 */
 function dateCleaner (e) {
-    e.dd = d3.time.format.iso.parse(e.date);
+    e.dd = d3.isoParse(e.date);
 }
 
 function loadDateFixture () {

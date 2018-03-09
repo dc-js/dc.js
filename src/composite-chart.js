@@ -69,10 +69,10 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     _chart._brushing = function () {
-        var event = d3v4.event;
+        var event = d3.event;
         // Avoids infinite recursion
-        // To ensure that when it is called because of brush.move there is no d3v4.event.sourceEvent
-        d3v4.event = null;
+        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
+        d3.event = null;
         if (!event.sourceEvent) return;
         var selection = event.selection;
         if (selection) {
@@ -163,7 +163,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var needDomain = _chart.rightY() === undefined || _chart.elasticY(),
             needRange = needDomain || _chart.resizing();
         if (_chart.rightY() === undefined) {
-            _chart.rightY(d3.scale.linear());
+            _chart.rightY(d3.scaleLinear());
         }
         if (needDomain) {
             _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
@@ -183,7 +183,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var needDomain = _chart.y() === undefined || _chart.elasticY(),
             needRange = needDomain || _chart.resizing();
         if (_chart.y() === undefined) {
-            _chart.y(d3.scale.linear());
+            _chart.y(d3.scaleLinear());
         }
         if (needDomain) {
             _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);

@@ -26,7 +26,7 @@ describe('dc.boxPlot', function () {
             .boxPadding(0)
             .transitionDuration(0)
             .transitionDelay(0)
-            .y(d3.scale.linear().domain([0, 144]))
+            .y(d3.scaleLinear().domain([0, 144]))
             .ordinalColors(['#01','#02']);
     });
 

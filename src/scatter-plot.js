@@ -23,7 +23,7 @@
  */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
-    var _symbol = d3.svg.symbol();
+    var _symbol = d3.symbol();
 
     var _existenceAccessor = function (d) { return d.value; };
 
@@ -162,7 +162,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.svg.symbol.type}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.symbol.type}
      * @example
      * // Circle type
      * chart.symbol('circle');
@@ -181,16 +181,16 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the symbol generator. By default `dc.scatterPlot` will use
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol()}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.symbol()}
      * to generate symbols. `dc.scatterPlot` will set the
      * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size size accessor}
      * on the symbol generator.
      * @method customSymbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.symbol}
      * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
-     * @param {String|Function} [customSymbol=d3.svg.symbol()]
+     * @param {String|Function} [customSymbol=d3.symbol()]
      * @returns {String|Function|dc.scatterPlot}
      */
     _chart.customSymbol = function (customSymbol) {
@@ -207,7 +207,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
      * @param {Number} [symbolSize=3]
      * @returns {Number|dc.scatterPlot}
      */
@@ -224,7 +224,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
      * @param {Number} [highlightedSize=5]
      * @returns {Number|dc.scatterPlot}
      */
@@ -242,7 +242,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
      * @param {Number} [excludedSize=null]
      * @returns {Number|dc.scatterPlot}
      */
@@ -292,7 +292,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method emptySize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
      * @param {Number} [emptySize=0]
      * @returns {Number|dc.scatterPlot}
      */
@@ -426,10 +426,10 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart._brushing = function () {
-        var event = d3v4.event;
+        var event = d3.event;
         // Avoids infinite recursion
-        // To ensure that when it is called because of brush.move there is no d3v4.event.sourceEvent
-        d3v4.event = null;
+        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
+        d3.event = null;
         if (!event.sourceEvent) return;
         var selection = event.selection;
 

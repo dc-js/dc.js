@@ -82,14 +82,14 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
      * functions, splines, and cubic interpolation.  This is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate} and
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate},
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.line.interpolate} and
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.area.interpolate},
      * where you can find a complete list of valid arguments.
      * @method interpolate
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.line.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.area.interpolate}
      * @param  {String} [interpolate='linear']
      * @returns {String|dc.lineChart}
      */
@@ -104,13 +104,13 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      * This parameter further customizes the interpolation behavior.  It is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension d3.svg.line.tension} and
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension d3.svg.area.tension}.
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension d3.line.tension} and
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension d3.area.tension}.
      * @method tension
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.line.interpolate}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.area.interpolate}
      * @param  {Number} [tension=0.7]
      * @returns {Number|dc.lineChart}
      */
@@ -126,7 +126,7 @@ dc.lineChart = function (parent, chartGroup) {
      * Gets or sets a function that will determine discontinuities in the line which should be
      * skipped: the path will be broken into separate subpaths if some points are undefined.
      * This function is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
+     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.line.defined}
      *
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
@@ -135,7 +135,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @method defined
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.line.defined}
      * @param  {Function} [defined]
      * @returns {Function|dc.lineChart}
      */
@@ -196,7 +196,7 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     function drawLine (layersEnter, layers) {
-        var line = d3.svg.line()
+        var line = d3.line()
             .x(function (d) {
                 return _chart.x()(d.x);
             })
@@ -225,7 +225,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     function drawArea (layersEnter, layers) {
         if (_renderArea) {
-            var area = d3.svg.area()
+            var area = d3.area()
                 .x(function (d) {
                     return _chart.x()(d.x);
                 })

@@ -9,7 +9,7 @@ describe('dc.dataGrid', function () {
         dateFixture = loadDateFixture();
         data = crossfilter(dateFixture);
         dimension = data.dimension(function (d) {
-            return d3.time.day.utc(d.dd);
+            return d3.utcDay(d.dd);
         });
         countryDimension = data.dimension(function (d) {
             return d.countrycode;

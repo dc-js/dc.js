@@ -22,7 +22,7 @@ describe('dc.seriesChart', function () {
         chart
             .width(210)
             .height(210)
-            .x(d3.scale.linear().domain([1,2]))
+            .x(d3.scaleLinear().domain([1,2]))
             .dimension(dimensionColorData)
             .group(groupColorData)
             .ordinalColors(['#000001', '#000002'])

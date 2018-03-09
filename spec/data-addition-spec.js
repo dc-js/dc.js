@@ -69,9 +69,9 @@ describe('Dynamic data addition in crossfilter', function () {
             var chart = dc.lineChart('#' + id);
             chart.dimension(timeDimension).group(timeGroup)
                 .width(width).height(height)
-                .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+                .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                 .transitionDuration(0)
-                .xUnits(d3.time.days.utc)
+                .xUnits(d3.utcDays)
                 .brushOn(false)
                 .renderArea(true)
                 .renderTitle(true);

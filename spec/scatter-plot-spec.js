@@ -15,7 +15,7 @@ describe('dc.scatterPlot', function () {
         chart.dimension(dimension)
             .group(group)
             .width(500).height(180)
-            .x(d3.scale.linear().domain([0, 70]))
+            .x(d3.scaleLinear().domain([0, 70]))
             .symbolSize(10)
             .nonemptyOpacity(0.9)
             .excludedSize(2)
@@ -81,7 +81,7 @@ describe('dc.scatterPlot', function () {
                 // native size is 3 square pixels, so to get size N, multiply by sqrt(N)/3
                 var m = size.call(this, d, i);
                 m = Math.sqrt(m) / 3;
-                var path = d3.svg.line()
+                var path = d3.line()
                         .x(function (d) {
                             return d[0] * m;
                         })
@@ -346,7 +346,7 @@ describe('dc.scatterPlot', function () {
         return function () {
             var symbol = d3.select(this);
             var size = Math.pow(r, 2);
-            var path = d3.svg.symbol().size(size)();
+            var path = d3.symbol().size(size)();
             var result = comparePaths(symbol.attr('d'), path);
             return result.pass;
         };
@@ -387,7 +387,7 @@ describe('dc.scatterPlot', function () {
             compositeChart = dc.compositeChart('#' + id);
             compositeChart
                 .dimension(dimension)
-                .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
+                .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
                 .transitionDuration(0)
                 .legend(dc.legend())
                 .compose([

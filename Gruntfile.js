@@ -29,14 +29,6 @@ module.exports = function (grunt) {
                     banner: '<%= conf.banner %>'
                 }
             },
-            d3compat: {
-                src: '<%= conf.src %>/d3-compat/*.js',
-                dest: 'd3-compat.js',
-                options: {
-                    process: true,
-                    sourceMap: true
-                }
-            },
             welcome: {
                 src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
                 dest: 'welcome.md',
@@ -153,39 +145,7 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  [
-                        '<%= conf.spec %>/*-spec.js'
-                        // '<%= conf.spec %>/bar-chart-spec.js',
-                        // '<%= conf.spec %>/base-mixin-spec.js',
-                        // '<%= conf.spec %>/biggish-data-spec.js',
-                        // '<%= conf.spec %>/box-plot-spec.js',
-                        // '<%= conf.spec %>/bubble-chart-spec.js',
-                        // '<%= conf.spec %>/bubble-overlay-spec.js',
-                        // '<%= conf.spec %>/cap-mixin-spec.js',
-                        // '<%= conf.spec %>/color-spec.js',
-                        // '<%= conf.spec %>/composite-chart-spec.js',
-                        // '<%= conf.spec %>/coordinate-grid-chart-spec.js',
-                        // '<%= conf.spec %>/core-spec.js',
-                        // '<%= conf.spec %>/data-addition-spec.js',
-                        // '<%= conf.spec %>/data-count-spec.js',
-                        // '<%= conf.spec %>/data-grid-spec.js',
-                        // '<%= conf.spec %>/data-table-spec.js',
-                        // '<%= conf.spec %>/event-spec.js',
-                        // '<%= conf.spec %>/filter-dates-spec.js',
-                        // '<%= conf.spec %>/filters-spec.js',
-                        // '<%= conf.spec %>/geo-choropleth-chart-spec.js',
-                        // '<%= conf.spec %>/heatmap-spec.js',
-                        // '<%= conf.spec %>/legend-spec.js',
-                        // '<%= conf.spec %>/line-chart-spec.js',
-                        // '<%= conf.spec %>/logger-spec.js',
-                        // '<%= conf.spec %>/number-display-spec.js',
-                        // '<%= conf.spec %>/pie-chart-spec.js',
-                        // '<%= conf.spec %>/row-chart-spec.js',
-                        // '<%= conf.spec %>/scatter-plot-spec.js',
-                        // '<%= conf.spec %>/select-menu-spec.js',
-                        // '<%= conf.spec %>/series-chart-spec.js',
-                        // '<%= conf.spec %>/utils-spec.js'
-                    ],
+                    specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
                         '<%= conf.web %>/js/jasmine-jsreporter.js',
                         '<%= conf.spec %>/helpers/*.js'
@@ -199,7 +159,6 @@ module.exports = function (grunt) {
                 },
                 src: [
                     '<%= conf.web %>/js/d3.js',
-                    '<%= conf.web %>/js/d3-compat.js',
                     '<%= conf.web %>/js/crossfilter.js',
                     '<%= conf.web %>/js/colorbrewer.js',
                     '<%= conf.pkg.name %>.js'
@@ -330,8 +289,6 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.js.map',
                             '<%= conf.pkg.name %>.min.js',
                             '<%= conf.pkg.name %>.min.js.map',
-                            'd3-compat.js',
-                            'd3-compat.js.map',
                             'node_modules/d3/build/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/queue-async/build/queue.js',
@@ -495,6 +452,7 @@ module.exports = function (grunt) {
 
 module.exports.jsFiles = [
     'src/banner.js',   // NOTE: keep this first
+    'src/d3v3-compat.js',
     'src/core.js',
     'src/errors.js',
     'src/utils.js',

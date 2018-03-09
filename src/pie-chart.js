@@ -255,7 +255,7 @@ dc.pieChart = function (parent, chartGroup) {
             })
             .merge(polyline);
 
-        var arc2 = d3.svg.arc()
+        var arc2 = d3.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding);
         var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
@@ -430,7 +430,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs () {
-        return d3.svg.arc()
+        return d3.arc()
             .outerRadius(_radius - _externalRadiusPadding)
             .innerRadius(_innerRadius);
     }
@@ -462,7 +462,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function pieLayout () {
-        return d3.layout.pie().sort(null).value(_chart.cappedValueAccessor);
+        return d3.pie().sort(null).value(_chart.cappedValueAccessor);
     }
 
     function sliceTooSmall (d) {
@@ -570,7 +570,7 @@ dc.pieChart = function (parent, chartGroup) {
     function labelPosition (d, arc) {
         var centroid;
         if (_externalLabelRadius) {
-            centroid = d3.svg.arc()
+            centroid = d3.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .centroid(d);

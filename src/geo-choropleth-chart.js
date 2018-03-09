@@ -241,14 +241,14 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Returns the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path} object used to
+     * Returns the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geoPath} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @method geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path}
-     * @returns {d3.geo.path}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geoPath}
+     * @returns {d3.geoPath}
      */
     _chart.geoPath = function () {
         return _geoPath;

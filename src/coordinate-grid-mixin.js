@@ -20,7 +20,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
-    _chart.colors(d3.scale.category10());
+    _chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
     _chart._mandatoryAttributes().push('x');
     var _parent;
     var _g;
@@ -60,8 +60,8 @@ dc.coordinateGridMixin = function (_chart) {
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
 
-    var _zoom = d3.behavior.zoom().on('zoom', onZoom);
-    var _nullZoom = d3.behavior.zoom().on('zoom', null);
+    var _zoom = d3.zoom().on('zoom', onZoom);
+    var _nullZoom = d3.zoom().on('zoom', null);
     var _hasBeenMouseZoomable = false;
 
     var _rangeChart;
@@ -236,7 +236,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
      * @example
      * // set x to a linear scale
-     * chart.x(d3.scale.linear().domain([-2500, 2500]))
+     * chart.x(d3.scaleLinear().domain([-2500, 2500]))
      * // set x to a time scale to generate histogram
      * chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
      * @param {d3.scale} [xScale]
@@ -261,8 +261,8 @@ dc.coordinateGridMixin = function (_chart) {
      * the number of data projections on x axis such as the number of bars for a bar chart or the
      * number of dots for a line chart. This function is expected to return a Javascript array of all
      * data points on x axis, or the number of points on the axis. [d3 time range functions
-     * d3.time.days, d3.time.months, and
-     * d3.time.years](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
+     * d3.timeDays, d3.time.months, and
+     * d3.timeYears](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
      * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
      * @method xUnits
@@ -271,7 +271,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @todo Add docs for utilities
      * @example
      * // set x units to count days
-     * chart.xUnits(d3.time.days);
+     * chart.xUnits(d3.timeDays);
      * // set x units to count months
      * chart.xUnits(d3.time.months);
      *
@@ -613,7 +613,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
-                _y = d3.scale.linear();
+                _y = d3.scaleLinear();
             }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
@@ -940,7 +940,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @example
      * // set x unit round to by month, this will make sure range selection brush will
      * // select whole months
-     * chart.round(d3.time.month.round);
+     * chart.round(d3.timeMonth.round);
      * @param {Function} [round]
      * @returns {Function|dc.coordinateGridMixin}
      */
@@ -1059,10 +1059,10 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._brushing = function () {
-        var event = d3v4.event;
+        var event = d3.event;
         // Avoids infinite recursion
-        // To ensure that when it is called because of brush.move there is no d3v4.event.sourceEvent
-        d3v4.event = null;
+        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
+        d3.event = null;
         if (!event.sourceEvent) return;
         var selection = event.selection;
         if (selection) {
@@ -1278,9 +1278,9 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function onZoom () {
-        if (!d3v4.event.sourceEvent && d3v4.event.sourceEvent.type !== "zoom") return;
+        if (!d3.event.sourceEvent && d3.event.sourceEvent.type !== "zoom") return;
 
-        _chart.x(d3v4.event.transform.rescaleX(_origX));
+        _chart.x(d3.event.transform.rescaleX(_origX));
 
         zoomHandler();
     }

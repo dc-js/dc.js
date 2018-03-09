@@ -355,17 +355,17 @@ dc.units.integers = function (start, end) {
 /**
  * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
  * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal} to
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scaleOrdinal} to
  * {@link dc.coordinateGridMixin#x .x}.
  * It just returns the domain passed to it, which for ordinal charts is an array of all values.
  * @method ordinal
  * @memberof dc.units
- * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal}
+ * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scaleOrdinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
  * chart.xUnits(dc.units.ordinal)
- *      .x(d3.scale.ordinal())
+ *      .x(d3.scaleOrdinal())
  * @param {*} start
  * @param {*} end
  * @param {Array<String>} domain

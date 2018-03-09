@@ -52,7 +52,7 @@ describe('dc.rowChart', function () {
         beforeEach(function () {
             chart.group(positiveGroupHolder.group);
             chart.elasticX(false);
-            chart.x(d3.scale.log());
+            chart.x(d3.scaleLog());
             chart.render();
         });
 
@@ -65,7 +65,7 @@ describe('dc.rowChart', function () {
         beforeEach(function () {
             chart.group(positiveGroupHolder.group);
             chart.elasticX(false);
-            chart.x(d3.scale.log());
+            chart.x(d3.scaleLog());
             chart.fixedBarHeight(10);
             chart.render();
         });
@@ -78,7 +78,7 @@ describe('dc.rowChart', function () {
     describe('with renderTitleLabel', function () {
         beforeEach(function () {
             chart.group(positiveGroupHolder.group);
-            chart.x(d3.scale.linear());
+            chart.x(d3.scaleLinear());
             chart.title(function () {
                 return 'test title';
             });

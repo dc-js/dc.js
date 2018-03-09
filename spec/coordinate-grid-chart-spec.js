@@ -5,7 +5,7 @@ describe('dc.coordinateGridChart', function () {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         group = dimension.group();
 
         id = 'coordinate-grid-chart';
@@ -20,7 +20,7 @@ describe('dc.coordinateGridChart', function () {
             .transitionDelay(0)
             .brushOn(false)
             .margins({top: 20, bottom: 0, right: 10, left: 0})
-            .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+            .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
     });
 
     describe('rendering', function () {
@@ -108,7 +108,7 @@ describe('dc.coordinateGridChart', function () {
         });
 
         it('should be able to change round', function () {
-            chart.round(d3.time.day.utc.round);
+            chart.round(d3.utcDay.round);
             expect(chart.round()).not.toBeNull();
         });
 
@@ -205,7 +205,7 @@ describe('dc.coordinateGridChart', function () {
                         .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
-                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                        .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
                     chart.render();
                 });
                 it('should generate a valid clippath id', function () {
@@ -226,7 +226,7 @@ describe('dc.coordinateGridChart', function () {
                         .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
-                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                        .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
                     chart.render();
                 });
                 it('should generate a valid clippath id', function () {
@@ -390,7 +390,7 @@ describe('dc.coordinateGridChart', function () {
 
                     describe('with an ordinal x axis', function () {
                         beforeEach(function () {
-                            chart.x(d3.scale.ordinal())
+                            chart.x(d3.scaleOrdinal())
                                 .xUnits(dc.units.ordinal)
                                 .render();
                         });
@@ -593,7 +593,7 @@ describe('dc.coordinateGridChart', function () {
     describe('setting x', function () {
         var newDomain = [1,10];
         beforeEach(function () {
-            chart.x(d3.scale.linear().domain(newDomain));
+            chart.x(d3.scaleLinear().domain(newDomain));
         });
 
         it('should reset the original x domain', function () {
@@ -940,7 +940,7 @@ describe('dc.coordinateGridChart', function () {
         return dc.lineChart('#' + rangeId)
             .dimension(dimension)
             .group(dimension.group().reduceSum(function (d) { return d.id; }))
-            .x(d3.time.scale.utc().domain([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]));
+            .x(d3.scaleUtc().domain([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]));
     }
 
     function doubleClick (chart) {

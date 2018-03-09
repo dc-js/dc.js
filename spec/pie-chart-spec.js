@@ -27,7 +27,7 @@ describe('dc.pieChart', function () {
         });
         countryGroup = countryDimension.group();
         dateDimension = data.dimension(function (d) {
-            return d3.time.day.utc(d.dd);
+            return d3.utcDay(d.dd);
         });
         statusGroup = statusDimension.group();
         statusMultiGroup = statusGroup.reduce(
@@ -699,7 +699,7 @@ describe('dc.pieChart', function () {
         it('should place labels outside of pie offset by given radius', function () {
             var label = d3.select('#pie-chart-external-labeling svg g text.pie-slice');
 
-            var centroid = d3.svg.arc()
+            var centroid = d3.arc()
                 .outerRadius(chart.radius() + 10)
                 .innerRadius(chart.radius() + 10)
                 .centroid(label.datum());
@@ -720,7 +720,7 @@ describe('dc.pieChart', function () {
             d3.selectAll('#pie-chart-external-labeling svg g text.pie-slice').each(function () {
                 var label = d3.select(this);
 
-                var centroid = d3.svg.arc()
+                var centroid = d3.arc()
                     .outerRadius(chart.radius())
                     .innerRadius(chart.innerRadius())
                     .centroid(label.datum());

@@ -45,7 +45,7 @@ function cleanDateRange (range) {
 
 // http://stackoverflow.com/questions/20068497/d3-transition-in-unit-testing
 function flushAllD3Transitions () {
-    d3.timer.flush();
+    d3.timerFlush();
 }
 
 // Setup a dummy event - just enough for the handler to get fooled
@@ -54,7 +54,7 @@ var setupEventForBrushing = function (chart, domainSelection) {
     var scaledSelection = domainSelection.map(function (coord) {
         return chart.x()(coord);
     });
-    d3v4.event = {
+    d3.event = {
         sourceEvent: true,
         selection: scaledSelection
     };
@@ -69,7 +69,7 @@ var setupEventFor2DBrushing = function (chart, domainSelection) {
             return scale(coord);
         });
     });
-    d3v4.event = {
+    d3.event = {
         sourceEvent: true,
         selection: scaledSelection
     };

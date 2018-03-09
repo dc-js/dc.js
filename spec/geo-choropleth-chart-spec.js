@@ -52,7 +52,7 @@ describe('dc.geoChoropleth', function () {
         var chart = dc.geoChoroplethChart('#' + id);
         chart.dimension(districtDimension)
             .group(districtValueEnrollGroup)
-            .projection(d3.geo.mercator()
+            .projection(d3.geoMercator()
                         .scale(26778)
                         .translate([8227, 3207]))
             .width(990)
@@ -79,7 +79,7 @@ describe('dc.geoChoropleth', function () {
         it('should return not null', function () {
             expect(chart).not.toBeNull();
         });
-        it('should have a d3.geo.path', function () {
+        it('should have a d3.geoPath', function () {
             expect(chart.geoPath()).not.toBeNull();
         });
         it('svg is created', function () {

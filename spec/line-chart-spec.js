@@ -5,7 +5,7 @@ describe('dc.lineChart', function () {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         group = dimension.group();
 
         id = 'line-chart';
@@ -14,7 +14,7 @@ describe('dc.lineChart', function () {
         chart = dc.lineChart('#' + id);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
-            .x(d3.time.scale.utc().domain([makeDate(2012, 1, 1), makeDate(2012, 11, 31)]))
+            .x(d3.scaleUtc().domain([makeDate(2012, 1, 1), makeDate(2012, 11, 31)]))
             .transitionDuration(0);
     });
 
@@ -337,7 +337,7 @@ describe('dc.lineChart', function () {
                 chart.dimension(stateDimension)
                     .group(stateGroup)
                     .xUnits(dc.units.ordinal)
-                    .x(d3.scale.ordinal().domain(['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario']))
+                    .x(d3.scaleOrdinal().domain(['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario']))
                     .render();
             });
 
@@ -358,7 +358,7 @@ describe('dc.lineChart', function () {
 
                     chart.dimension(dimension)
                         .brushOn(false)
-                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+                        .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                         .group(idGroup, 'stack 0')
                         .title('stack 0', function (d) { return 'stack 0: ' + d.value; })
                         .stack(valueGroup, 'stack 1')
@@ -529,7 +529,7 @@ describe('dc.lineChart', function () {
                     var mixedGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
 
                     chart.group(mixedGroup).stack(mixedGroup).stack(mixedGroup);
-                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                    chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .renderArea(true)
@@ -581,11 +581,11 @@ describe('dc.lineChart', function () {
                     var negativeGroup = dimension.group().reduceSum(function (d) { return -Math.abs(d.nvalue); });
 
                     chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
-                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                    chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .elasticY(true)
-                        .xUnits(d3.time.days.utc)
+                        .xUnits(d3.utcDays)
                         .yAxis().ticks(3);
 
                     chart.render();

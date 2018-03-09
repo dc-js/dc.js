@@ -21,7 +21,7 @@ describe('dc.colorMixin', function () {
         });
 
         it('custom', function () {
-            chart.colors(d3.scale.category10());
+            chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
             expect(colorTest(chart, domain)).toMatchColors(['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd']);
         });
 
@@ -52,7 +52,7 @@ describe('dc.colorMixin', function () {
         });
 
         it('custom', function () {
-            chart.colors(d3.scale.category10());
+            chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
             expect(colorTest(chart, domain, test)).toMatchColors(['#2ca02c', '#1f77b4', '#d62728', '#ff7f0e', '#9467bd', '#1f77b4']);
         });
 

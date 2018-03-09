@@ -79,7 +79,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scale.ordinal.rangeBands}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scaleOrdinal.rangeBands}
      * @param {Number} [padding=0.8]
      * @returns {Number|dc.boxPlot}
      */
