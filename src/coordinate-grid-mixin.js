@@ -472,6 +472,7 @@ dc.coordinateGridMixin = function (_chart) {
             // bandwidth is a method in scaleBand
             // (https://github.com/d3/d3-scale/blob/master/README.md#scaleBand)
             if (!_x.bandwidth) {
+                // If _x is not a scaleBand create a new scale and
                 // copy the original domain to the new scale
                 _x = d3.scaleBand().domain(_x.domain());
             }
@@ -1227,7 +1228,6 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
-        // Needs reimplementation for D3v4
 
         _zoom
             .scaleExtent(_zoomScale)

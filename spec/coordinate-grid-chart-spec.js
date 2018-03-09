@@ -804,7 +804,6 @@ describe('dc.coordinateGridChart', function () {
             chart.render();
         });
 
-        // D3v4 needs reimplementation, APIs have changed
         describe('with equal dates', function () {
             beforeEach(function () {
                 // Setup a dummy event - just enough for the handler to get fooled
