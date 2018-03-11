@@ -15,7 +15,7 @@
 <button class="btn" onclick="button2()">2</button>
 <button class="btn" onclick="button3()">3</button>
 
-<script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
@@ -33,7 +33,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .width(768)
     .height(480)
     .chart(function(c) { return dc.lineChart(c).interpolate(d3.curveCardinal); })
-    .x(d3.scale.linear().domain([0,20]))
+    .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")
     .xAxisLabel("Run")

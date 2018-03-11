@@ -2,16 +2,17 @@
 
 - http://localhost:8888/web/examples/filter-stacks.html 
  (fading is peculiar)
- 
+- http://localhost:8888/web/zoom/restrict-panning.html
+  Inconsistent with previous version
+- http://localhost:8888/web/  
+  Range brushing inconsistent with previous version
+  If the range chart is brushed first it works correctly
+  If the Focus chart is zoomed first, brushing range chart fails.
+
 
 ##Issues to be fixed
 
 - Peculiar fading in filter-stacks.html (Medium)
-- Remove D3v3 compat (High)
-    
-    - Apply renames
-    - Apply d3.dispatch changes
-    - Move remaining compat functions inside dc namespace
 
 
 ##Before release

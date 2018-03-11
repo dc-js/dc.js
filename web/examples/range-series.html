@@ -15,7 +15,7 @@
 <div id="test"></div>
 <div id="test-overview"></div>
 
-<script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
@@ -36,7 +36,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .width(768)
     .height(480)
     .chart(function(c) { return dc.lineChart(c).interpolate(d3.curveCardinal).evadeDomainFilter(true); })
-    .x(d3.scale.linear().domain([0,20]))
+    .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")
     .xAxisLabel("Run")
@@ -90,7 +90,7 @@ d3.csv("morley.csv", function(error, experiments) {
         });
     return chart;
     })
-    .x(d3.scale.linear().domain([0,20]))
+    .x(d3.scaleLinear().domain([0,20]))
     .brushOn(true)
     .xAxisLabel("Run")
     .clipPadding(10)

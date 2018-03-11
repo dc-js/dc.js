@@ -15,7 +15,7 @@
 </div>
 <div id="monthly-move-chart"></div>
 
-<script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
@@ -23,13 +23,13 @@
 
     d3.csv("monthly-move.csv", function (error, data) {
         var dateFormatSpecifier = "%m/%d/%Y";
-        var dateFormat = d3.time.format(dateFormatSpecifier);
+        var dateFormat = d3.timeFormat(dateFormatSpecifier);
         var dateFormatParser = d3.timeParse(dateFormatSpecifier);
         var numberFormat = d3.format(".2f");
 
         data.forEach(function (e) {
             e.dd = dateFormatParser(e.date);
-            e.month = d3.time.month(e.dd); // pre-calculate month for better performance
+            e.month = d3.timeMonth(e.dd); // pre-calculate month for better performance
         });
 
         var ndx = crossfilter(data);
@@ -66,8 +66,8 @@
                 .mouseZoomable(true)
                 .shareTitle(false)
                 .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                .round(d3.time.month.round)
-                .xUnits(d3.time.months)
+                .round(d3.timeMonth.round)
+                .xUnits(d3.timeMonths)
                 .elasticY(true)
                 .renderHorizontalGridLines(true)
                 .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))

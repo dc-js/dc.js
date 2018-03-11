@@ -18,7 +18,7 @@ wanted in order to show e.g. a regression line.</p>
 <p>It would be nice to have better support in
 dc.js for such "derived" values, but this example is here to tide folks over until that happens.</p>
 
-<script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
@@ -37,7 +37,7 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .x(d3.scale.linear().domain([6,20]))
+    .x(d3.scaleLinear().domain([6,20]))
     .brushOn(false)
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
@@ -49,7 +49,7 @@ d3.csv("morley.csv", function(error, experiments) {
         });
         var left_y = 10, right_y = 70; // use real statistics here!
         var extra_data = [{x: chart.x().range()[0], y: chart.y()(left_y)}, {x: chart.x().range()[1], y: chart.y()(right_y)}];
-        var line = d3.svg.line()
+        var line = d3.line()
             .x(function(d) { return d.x; })
             .y(function(d) { return d.y; })
             .curve(d3.curveLinear);

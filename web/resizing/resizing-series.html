@@ -13,7 +13,7 @@
     <button class="btn" onclick="button2()">2</button>
     <button class="btn" onclick="button3()">3</button>
 
-    <script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+    <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript" src="dc-resizing.js"></script>
@@ -32,8 +32,8 @@
           chart
               .width(window.innerWidth-adjustX)
               .height(window.innerHeight-adjustY)
-              .chart(function(c) { return dc.lineChart(c).interpolate('cardinal'); })
-              .x(d3.scale.linear().domain([0,20]))
+              .chart(function(c) { return dc.lineChart(c).interpolate(d3.curveCardinal); })
+              .x(d3.scaleLinear().domain([0,20]))
               .brushOn(false)
               .yAxisLabel("Measured Speed km/s")
               .xAxisLabel("Run")

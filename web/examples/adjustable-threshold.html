@@ -4,7 +4,7 @@
     <title>dc.js - Adjustable Threshold Example</title>
     <link type="text/css" rel="stylesheet" href="../css/dc.css"/>
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <script type="text/javascript" src="../js/d3.js" ></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+    <script type="text/javascript" src="../js/d3.js" ></script>
     <script type="text/javascript" src="../js/crossfilter.js"  ></script>
     <script type="text/javascript" src="../js/dc.js"></script>
 </head>
@@ -55,7 +55,7 @@
         .dimension(bookDimension)
         .group(bookscoresGroup)
         .elasticY(true)
-        .x(d3.scale.ordinal())
+        .x(d3.scaleOrdinal())
         .xUnits(dc.units.ordinal)
         .colors(["orange"])
         .yAxis().ticks(5);

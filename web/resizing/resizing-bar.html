@@ -10,7 +10,7 @@
 
 <div id="test"></div>
 
-<script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript" src="dc-resizing.js"></script>
@@ -28,7 +28,7 @@ d3.csv("../examples/morley.csv", function(error, experiments) {
       speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
 
   chart
-    .x(d3.scale.linear().domain([6,20]))
+    .x(d3.scaleLinear().domain([6,20]))
     .brushOn(true)
     .xAxisLabel("This is the X Axis!!")
     .yAxisLabel("This is the Y Axis!")

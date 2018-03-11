@@ -14,7 +14,7 @@
   <div id="test1"></div>
   <div id="test2"></div>
 
-  <script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+  <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
   <script type="text/javascript">
@@ -52,7 +52,7 @@ var ndx = crossfilter(data),
 
 chart1.width(300)
     .height(300)
-    .x(d3.scale.linear().domain([0, 20]))
+    .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("y")
     .xAxisLabel("x")
     .clipPadding(10)
@@ -62,7 +62,7 @@ chart1.width(300)
 
 chart2.width(300)
     .height(300)
-    .x(d3.scale.linear().domain([0, 20]))
+    .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("z")
     .xAxisLabel("y")
     .clipPadding(10)

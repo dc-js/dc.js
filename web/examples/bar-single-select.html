@@ -18,7 +18,7 @@
   </div>
 </div>
 
-<script type="text/javascript" src="../js/d3.js"></script><script type="text/javascript" src="../js/d3-compat.js"></script>
+<script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
@@ -37,7 +37,7 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .x(d3.scale.ordinal())
+    .x(d3.scaleOrdinal())
     .xUnits(dc.units.ordinal)
     .brushOn(true)
     .yAxisLabel("This is the Y Axis!")
