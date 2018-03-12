@@ -976,7 +976,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._filter(_);
 
-        _chart.updateBrushSelection(_);
+        _chart.redrawBrush(_);
 
         return _chart;
     });
@@ -1006,17 +1006,6 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart.effectiveWidth();
     }
 
-    _chart.updateBrushSelection = function (selection) {
-        if (_brush && _gBrush) {
-
-            if (selection !== null) {
-                selection = [_x(selection[0]), _x(selection[1])];
-            }
-
-            _brush.move(_gBrush, selection);
-        }
-    };
-
     _chart.renderBrush = function (g) {
         if (_brushOn) {
             _brush.on('start brush end', _chart._brushing);
@@ -1032,7 +1021,7 @@ dc.coordinateGridMixin = function (_chart) {
 
             _chart.setHandlePaths(_gBrush);
 
-            _chart.redrawBrush(g, _chart.filter(), false);
+            _chart.redrawBrush(_chart.filter());
         }
     };
 
@@ -1069,9 +1058,10 @@ dc.coordinateGridMixin = function (_chart) {
         if (selection) {
             selection = selection.map(_chart.x().invert);
         }
+
         selection = _chart.extendBrush(selection);
 
-        _chart.redrawBrush(_g, selection, false);
+        _chart.redrawBrush(selection);
 
         if (_chart.brushIsEmpty(selection)) {
             dc.events.trigger(function () {
@@ -1088,14 +1078,17 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g, selection, doTransition) {
-        _chart.updateBrushSelection(selection);
-
-        if (_brushOn) {
+    _chart.redrawBrush = function (selection) {
+        if (_brushOn && _gBrush) {
             if (!selection) {
+                _brush.move(_gBrush, null);
+
                 _brushHandles
                     .attr("display", "none");
             } else {
+                var scaledSelection = [_x(selection[0]), _x(selection[1])];
+                _brush.move(_gBrush, scaledSelection);
+
                 _brushHandles
                     .attr("display", null)
                     .attr("transform", function (d, i) {
@@ -1209,7 +1202,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (render) {
             _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g(), _chart.filter(), _resizing);
+            _chart.redrawBrush(_chart.filter());
         }
         _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;

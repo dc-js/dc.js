@@ -388,27 +388,6 @@ dc.scatterPlot = function (parent, chartGroup) {
         _symbol.size(oldSize);
     }
 
-    _chart.updateBrushSelection = function (selection) {
-        var _brush = _chart.brush();
-        var _gBrush = _chart.gBrush();
-
-        if (_brush && _gBrush) {
-
-            if (selection) {
-                selection = selection.map(function (point) {
-                    return point.map(function (coord, i) {
-                        var scale = i === 0 ? _chart.x() : _chart.y();
-                        return scale(coord);
-                    });
-                })
-            }
-
-            _brush.move(_gBrush, selection);
-
-            // Redraw handles
-        }
-    };
-
     _chart.setHandlePaths = function () {
         // no handle paths for poly-brushes
     };
@@ -446,7 +425,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
         selection = _chart.extendBrush(selection);
 
-        _chart.redrawBrush(_chart.g(), selection);
+        _chart.redrawBrush(selection);
 
         if (brushIsEmpty) {
             dc.events.trigger(function () {
@@ -465,9 +444,24 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     };
 
-    _chart.redrawBrush = function (g, selection, doTransition) {
+    _chart.redrawBrush = function (selection) {
         // override default x axis brush from parent chart
-        _chart.updateBrushSelection(selection);
+        var _brush = _chart.brush();
+        var _gBrush = _chart.gBrush();
+
+        if (_brush && _gBrush) {
+            if (selection) {
+                selection = selection.map(function (point) {
+                    return point.map(function (coord, i) {
+                        var scale = i === 0 ? _chart.x() : _chart.y();
+                        return scale(coord);
+                    });
+                })
+            }
+
+            _brush.move(_gBrush, selection);
+        }
+
         _chart.fadeDeselectedArea(selection);
     };
 
