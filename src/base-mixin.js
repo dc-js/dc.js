@@ -1031,6 +1031,18 @@ dc.baseMixin = function (_chart) {
     };
 
     /**
+     * Set the chart filters, without an update to the chart.  This can be useful,
+     * if you wish to delay the updates caused by filtering.
+     * @method setFilter
+     * @memberof dc.baseMixin
+     * @instance
+     * @param {*} [filter]
+     */
+    _chart.setFilter = function (filter) {
+        _filters = filter ? [filter] : [];
+    };
+
+    /**
      * Filter the chart by the given parameter, or return the current filter if no input parameter
      * is given.
      *
