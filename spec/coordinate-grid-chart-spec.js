@@ -657,7 +657,10 @@ describe('dc.coordinateGridChart', function () {
         beforeEach(function () {
             chart.brushOn(true);
             chart.render();
-            chart.updateBrushSelection([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
+            // Setup a dummy event - just enough for the handler to get fooled
+            setupEventForBrushing(chart, [makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
+            // Directly call the handler
+            chart._brushing();
             chart.filter(null);
         });
 
