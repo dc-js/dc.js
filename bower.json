@@ -19,6 +19,6 @@
   ],
   "dependencies": {
     "d3": "3.x",
-    "crossfilter2": "~1.3"
+    "crossfilter2": "~1.4"
   }
 }

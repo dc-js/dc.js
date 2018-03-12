@@ -1,3 +1,7 @@
+## 2.1.10
+* Update dependencies, including crossfilter2 v1.4
+* Example of adding a vertical line to a row chart
+
 ## 2.1.9
 * Fix selectMenu crashing IE11 on Windows 8 and below, by Victor Parpoil ([#1338](https://github.com/dc-js/dc.js/pull/1338) / [#1334](https://github.com/dc-js/dc.js/issues/1334))
 
