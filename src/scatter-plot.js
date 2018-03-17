@@ -15,7 +15,7 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.scatterPlot(compositeChart);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -157,19 +157,19 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the symbol type used for each point. By default the symbol is a circle.
+     * Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
      * Type can be a constant or an accessor.
      * @method symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.symbol.type}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_type symbol.type}
      * @example
      * // Circle type
-     * chart.symbol('circle');
+     * chart.symbol(d3.symbolCircle);
      * // Square type
-     * chart.symbol('square');
-     * @param {String|Function} [type='circle']
-     * @returns {String|Function|dc.scatterPlot}
+     * chart.symbol(d3.symbolSquare);
+     * @param {Function} [type=d3.symbolCircle]
+     * @returns {Function|dc.scatterPlot}
      */
     _chart.symbol = function (type) {
         if (!arguments.length) {
@@ -181,14 +181,14 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the symbol generator. By default `dc.scatterPlot` will use
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.symbol()}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol()}
      * to generate symbols. `dc.scatterPlot` will set the
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size size accessor}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size symbol size accessor}
      * on the symbol generator.
      * @method customSymbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.symbol}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol}
      * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
      * @param {String|Function} [customSymbol=d3.symbol()]
      * @returns {String|Function|dc.scatterPlot}
@@ -207,7 +207,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [symbolSize=3]
      * @returns {Number|dc.scatterPlot}
      */
@@ -224,7 +224,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [highlightedSize=5]
      * @returns {Number|dc.scatterPlot}
      */
@@ -242,7 +242,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [excludedSize=null]
      * @returns {Number|dc.scatterPlot}
      */
@@ -292,7 +292,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method emptySize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [emptySize=0]
      * @returns {Number|dc.scatterPlot}
      */

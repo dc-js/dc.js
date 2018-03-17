@@ -11,7 +11,7 @@
  * // create a composite chart under #chart-container2 element using chart group A
  * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -396,7 +396,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method rightY
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.compositeChart}
      */
@@ -520,15 +520,21 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
      * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis) therefore it supports any valid
+     * object](https://github.com/d3/d3-axis/blob/master/README.md) therefore it supports any valid
      * d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
-     * unexpected results.
+     * unexpected results.  Note also that when used as a getter, this function is not chainable: it
+     * returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+     * so attempting to call chart functions after calling `.yAxis()` will fail}.
+     * In addition, depending on whether you are going to use the axis on left or right
+     * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
+     * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});

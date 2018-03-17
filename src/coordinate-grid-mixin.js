@@ -228,17 +228,17 @@ dc.coordinateGridMixin = function (_chart) {
      * **mandatory**
      *
      * Get or set the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale} or
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md ordinal scale}.
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale} or
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales ordinal scale}
      * @method x
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
      * // set x to a linear scale
      * chart.x(d3.scaleLinear().domain([-2500, 2500]))
      * // set x to a time scale to generate histogram
-     * chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+     * chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
      * @param {d3.scale} [xScale]
      * @returns {d3.scale|dc.coordinateGridMixin}
      */
@@ -261,8 +261,8 @@ dc.coordinateGridMixin = function (_chart) {
      * the number of data projections on x axis such as the number of bars for a bar chart or the
      * number of dots for a line chart. This function is expected to return a Javascript array of all
      * data points on x axis, or the number of points on the axis. [d3 time range functions
-     * d3.timeDays, d3.time.months, and
-     * d3.timeYears](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
+     * d3.timeDays, d3.timeMonths, and
+     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid xUnits
      * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
      * @method xUnits
@@ -273,7 +273,7 @@ dc.coordinateGridMixin = function (_chart) {
      * // set x units to count days
      * chart.xUnits(d3.timeDays);
      * // set x units to count months
-     * chart.xUnits(d3.time.months);
+     * chart.xUnits(d3.timeMonths);
      *
      * // A custom xUnits function can be used as long as it follows the following interface:
      * // units in integer
@@ -300,8 +300,8 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
      * useful when x axis customization is required. The x axis in dc.js is an instance of a
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object};
-     * therefore it supports any valid d3 axis manipulation.
+     * {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3 bottom axis object};
+     * therefore it supports any valid d3 axisBottom manipulation.
      *
      * **Caution**: The x axis is usually generated internally by dc; resetting it may cause
      * unexpected results. Note also that when used as a getter, this function is not chainable:
@@ -311,14 +311,14 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [xAxis=d3.svg.axis().orient('bottom')]
-     * @returns {d3.svg.axis|dc.coordinateGridMixin}
+     * @param {d3.axisBottom} [xAxis=d3.axisBottom]
+     * @returns {d3.axisBottom|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -374,7 +374,7 @@ dc.coordinateGridMixin = function (_chart) {
      *
      * Padding unit is a string that will be used when the padding is calculated. Available parameters are
      * the available d3 time intervals; see
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}.
+     * {@link https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval}.
      * @method xAxisPaddingUnit
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -759,7 +759,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method y
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.coordinateGridMixin}
      */
@@ -775,7 +775,7 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
      * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis); therefore it supports any
+     * object](https://github.com/d3/d3-axis/blob/master/README.md); therefore it supports any
      * valid d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -783,10 +783,13 @@ dc.coordinateGridMixin = function (_chart) {
      * returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
+     * In addition, depending on whether you are going to use the axis on left or right
+     * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
+     * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * @example
      * // customize y axis tick format
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
@@ -984,6 +987,12 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Get or set the brush. Brush must be an instance of d3 brushes
      * https://github.com/d3/d3-brush/blob/master/README.md
+     * You will use this only if you are writing a new chart type that supports brushing.
+     *
+     * **Caution**: dc creates and manages brushes internally. Go through and understand the source code
+     * if you want to pass a new brush object. Even if you are only using the getter,
+     * the brush object may not behave the way you expect.
+     *
      * @method brush
      * @memberof dc.coordinateGridMixin
      * @instance

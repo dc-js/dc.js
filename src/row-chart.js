@@ -15,7 +15,7 @@
  * // create a row chart under #chart-container2 element using chart group A
  * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -99,11 +99,11 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}.
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}.
      * @method x
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [scale]
      * @returns {d3.scale|dc.rowChart}
      */
@@ -294,12 +294,12 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object}
+     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});

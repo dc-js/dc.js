@@ -9,7 +9,7 @@
  * // create a number display under #chart-container1 element using the default global chart group
  * var display1 = dc.numberDisplay('#chart-container1');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -142,7 +142,7 @@ dc.numberDisplay = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.numberDisplay
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
+     * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
      * @param {Function} [formatter=d3.format('.2s')]
      * @returns {Function|dc.numberDisplay}
      */

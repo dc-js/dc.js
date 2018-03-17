@@ -16,7 +16,7 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.barChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
@@ -253,7 +253,7 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
      * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      * @method barPadding
      * @memberof dc.barChart

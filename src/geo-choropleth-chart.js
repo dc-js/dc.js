@@ -15,7 +15,7 @@
  * // create a choropleth chart under '#us-chart2' element using chart group A
  * var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -212,13 +212,13 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     /**
      * Set custom geo projection function. See the available
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3 geo projection functions}.
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3 geo projection functions}.
      * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3.geo.projection}
-     * @see {@link https://github.com/d3/d3-geo-projection Extended d3.geo.projection}
-     * @param {d3.projection} [projection=d3.geo.albersUsa()]
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
+     * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
+     * @param {d3.projection} [projection=d3.geoAlbersUsa()]
      * @returns {dc.geoChoroplethChart}
      */
     _chart.projection = function (projection) {
@@ -241,13 +241,13 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Returns the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geoPath} object used to
+     * Returns the {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @method geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geoPath}
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath}
      * @returns {d3.geoPath}
      */
     _chart.geoPath = function () {

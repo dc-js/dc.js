@@ -129,15 +129,20 @@ dc.utils.toTimeFunc = function (t) {
  * Arbitrary add one value to another.
  * @method add
  * @memberof dc.utils
- * @todo
- * These assume than any string r is a percentage (whether or not it includes %).
+ *
+ * If the value l is of type Date, adds r units to it. t becomes the unit.
+ * For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
+ *
+ * If l is of type numeric, t is ignored. In this case if r is of type string,
+ * it is assumed to be percentage (whether or not it includes %). For example
+ * dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.
+ *
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l the value to modify
- * @param {Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, the
- * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
- * the `d3.time` namespace
- * @returns {String|Date|Number}
+ * @param {Date|Number} l the value to modify
+ * @param {String|Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, then possible values are
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', and 'year'
+ * @returns {Date|Number}
  */
 dc.utils.add = function (l, r, t) {
     if (typeof r === 'string') {
@@ -165,15 +170,19 @@ dc.utils.add = function (l, r, t) {
  * Arbitrary subtract one value from another.
  * @method subtract
  * @memberof dc.utils
- * @todo
- * These assume than any string r is a percentage (whether or not it includes %).
+ * If the value l is of type Date, subtracts r units from it. t becomes the unit.
+ * For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
+ *
+ * If l is of type numeric, t is ignored. In this case if r is of type string,
+ * it is assumed to be percentage (whether or not it includes %). For example
+ * dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.
+ *
  * They also generate strange results if l is a string.
- * @param {String|Date|Number} l the value to modify
- * @param {Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, the
- * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
- * the `d3.time` namespace
- * @returns {String|Date|Number}
+ * @param {Date|Number} l the value to modify
+ * @param {String|Number} r the amount by which to modify the value
+ * @param {String} [t] if `l` is a `Date`, then possible values are
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', and 'year'
+ * @returns {Date|Number}
  */
 dc.utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {

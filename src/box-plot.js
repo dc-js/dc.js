@@ -14,7 +14,7 @@
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -74,12 +74,12 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
+     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scaleOrdinal.rangeBands}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
      * @param {Number} [padding=0.8]
      * @returns {Number|dc.boxPlot}
      */

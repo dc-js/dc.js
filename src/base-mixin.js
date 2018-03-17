@@ -385,7 +385,7 @@ dc.baseMixin = function (_chart) {
      * @method select
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_select d3.select}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3.select}
      * @example
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
@@ -403,7 +403,7 @@ dc.baseMixin = function (_chart) {
      * @method selectAll
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_selectAll d3.selectAll}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll d3.selectAll}
      * @example
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
@@ -415,7 +415,7 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
-     * selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom
+     * selector](https://github.com/d3/d3-selection/blob/master/README.md#selecting-elements) specifying a dom
      * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.
@@ -1544,7 +1544,7 @@ dc.baseMixin = function (_chart) {
      * @method on
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Internals.md#dispatch_on d3.dispatch.on}
+     * @see {@link https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on d3.dispatch.on}
      * @example
      * .on('renderlet', function(chart, filter){...})
      * .on('pretransition', function(chart, filter){...})

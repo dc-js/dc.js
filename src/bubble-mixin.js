@@ -39,12 +39,12 @@ dc.bubbleMixin = function (_chart) {
 
     /**
      * Get or set the bubble radius scale. By default the bubble chart uses
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md#linear d3.scaleLinear().domain([0, 100])}
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
      * as its radius scale.
      * @method r
      * @memberof dc.bubbleMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
      * @returns {d3.scale|dc.bubbleMixin}
      */
