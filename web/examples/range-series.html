@@ -34,7 +34,8 @@ d3.csv("morley.csv", function(error, experiments) {
 
   focusChart
     .width(768)
-    .height(480)
+        .height(480)
+        .transitionDuration(0)
     .chart(function(c) { return dc.lineChart(c).interpolate(d3.curveCardinal).evadeDomainFilter(true); })
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)

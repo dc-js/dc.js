@@ -6,18 +6,20 @@
 
 // ### Create Chart Objects
 
+          dc.constants.EVENT_DELAY = 0;
 // Create chart objects associated with the container elements identified by the css selector.
 // Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or
 // filtered by other page controls.
-var gainOrLossChart = dc.pieChart('#gain-loss-chart');
-var fluctuationChart = dc.barChart('#fluctuation-chart');
-var quarterChart = dc.pieChart('#quarter-chart');
-var dayOfWeekChart = dc.rowChart('#day-of-week-chart');
-var moveChart = dc.lineChart('#monthly-move-chart');
-var volumeChart = dc.barChart('#monthly-volume-chart');
-var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
-var nasdaqCount = dc.dataCount('.dc-data-count');
-var nasdaqTable = dc.dataTable('.dc-data-table');
+var gainOrLossChart = dc.pieChart('#gain-loss-chart')
+.transitionDuration(100)
+var fluctuationChart = dc.barChart('#fluctuation-chart').transitionDuration(100)
+var quarterChart = dc.pieChart('#quarter-chart').transitionDuration(100)
+var dayOfWeekChart = dc.rowChart('#day-of-week-chart').transitionDuration(100)
+var moveChart = dc.lineChart('#monthly-move-chart').transitionDuration(100)
+var volumeChart = dc.barChart('#monthly-volume-chart').transitionDuration(100)
+var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart').transitionDuration(100)
+var nasdaqCount = dc.dataCount('.dc-data-count').transitionDuration(100)
+var nasdaqTable = dc.dataTable('.dc-data-table').transitionDuration(100)
 
 // ### Anchor Div for Charts
 /*
@@ -213,7 +215,6 @@ d3.csv('ndx.csv', function (data) {
         // (_optional_) define chart height, `default = 200`
         .height(250)
         // (_optional_) define chart transition duration, `default = 750`
-        .transitionDuration(1500)
         .margins({top: 10, right: 50, bottom: 30, left: 40})
         .dimension(yearlyDimension)
         //The bubble chart expects the groups are reduced to multiple values which are used
@@ -413,7 +414,6 @@ d3.csv('ndx.csv', function (data) {
         .renderArea(true)
         .width(990)
         .height(200)
-        .transitionDuration(1000)
         .margins({top: 30, right: 50, bottom: 25, left: 40})
         .dimension(moveMonths)
         .mouseZoomable(true)
