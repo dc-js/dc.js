@@ -3,7 +3,8 @@
 - http://localhost:8888/web/examples/filter-stacks.html 
  (fading is peculiar)
 - http://localhost:8888/web/zoom/restrict-panning.html
-  Inconsistent with previous version
+  Need to increase height of range chart - currently height of
+  brushable area is zero. New implementation needs it be more than zero.
 - http://localhost:8888/web/  
   Range brushing inconsistent with previous version
   If the range chart is brushed first it works correctly
@@ -19,10 +20,14 @@
 
 - All High priority issues
 - Possibly Medium priority issues
-- Update documentation
+- Prepare upgrade guide (Initial version ready)
 
-    - setters for `xAxis` and `yAxis` update docs for D3v4. 
-    - Update docs for `yAxis` or `_useRightYAxis`. These are now related.
-    - `.tension` can now be dropped, it can be handled by `.interpolate` itself
 
-- Prepare upgrade guide
+### Next set of pull requests
+
+- Cleanup of zoom behavior. Testing of restrict panning etc.
+- dc.event.trigger
+- exit/enter/update sequence
+- Additional test cases for dc.util.add and dc.util.subtract
+- One for each new chart type
+- Consider removing transitions for zooming and brushing
