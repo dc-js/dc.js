@@ -82,7 +82,7 @@ dc.lineChart = function (parent, chartGroup) {
     /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
      * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
-     * provided by d3 {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
+     * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
      * Please note that d3 version 4 has renamed interpolate to curve.
      * This is passed to
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
