@@ -29,5 +29,7 @@
 - dc.event.trigger
 - exit/enter/update sequence
 - Additional test cases for dc.util.add and dc.util.subtract
-- One for each new chart type
+- One for each new chart type - original PRs from community
 - Consider removing transitions for zooming and brushing
+- d3 stack to D3v4
+- Changing .tension call in lineChart
