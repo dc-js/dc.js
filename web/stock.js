@@ -61,12 +61,14 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 //```
 d3.csv('ndx.csv', function (data) {
     // Since its a csv file we need to format the data a bit.
-    var dateFormat = d3.time.format('%m/%d/%Y');
+    var dateFormatSpecifier = '%m/%d/%Y';
+    var dateFormat = d3.timeFormat(dateFormatSpecifier);
+    var dateFormatParser = d3.timeParse(dateFormatSpecifier);
     var numberFormat = d3.format('.2f');
 
     data.forEach(function (d) {
-        d.dd = dateFormat.parse(d.date);
-        d.month = d3.time.month(d.dd); // pre-calculate month for better performance
+        d.dd = dateFormatParser(d.date);
+        d.month = d3.timeMonth(d.dd); // pre-calculate month for better performance
         d.close = +d.close; // coerce to number
         d.open = +d.open;
     });
@@ -79,7 +81,7 @@ d3.csv('ndx.csv', function (data) {
 
     // Dimension by year
     var yearlyDimension = ndx.dimension(function (d) {
-        return d3.time.year(d.dd).getFullYear();
+        return d3.timeYear(d.dd).getFullYear();
     });
     // Maintain running tallies by year as filters are applied or removed
     var yearlyPerformanceGroup = yearlyDimension.group().reduce(
@@ -243,9 +245,9 @@ d3.csv('ndx.csv', function (data) {
             return p.value.fluctuationPercentage;
         })
         .maxBubbleRelativeSize(0.3)
-        .x(d3.scale.linear().domain([-2500, 2500]))
-        .y(d3.scale.linear().domain([-100, 100]))
-        .r(d3.scale.linear().domain([0, 4000]))
+        .x(d3.scaleLinear().domain([-2500, 2500]))
+        .y(d3.scaleLinear().domain([-100, 100]))
+        .r(d3.scaleLinear().domain([0, 4000]))
         //##### Elastic Scaling
 
         //`.elasticY` and `.elasticX` determine whether the chart should rescale each axis to fit the data.
@@ -388,7 +390,7 @@ d3.csv('ndx.csv', function (data) {
         // (_optional_) set filter brush rounding
         .round(dc.round.floor)
         .alwaysUseRounding(true)
-        .x(d3.scale.linear().domain([-25, 25]))
+        .x(d3.scaleLinear().domain([-25, 25]))
         .renderHorizontalGridLines(true)
         // Customize the filter displayed in the control span
         .filterPrinter(function (filters) {
@@ -417,9 +419,9 @@ d3.csv('ndx.csv', function (data) {
         .mouseZoomable(true)
     // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
         .rangeChart(volumeChart)
-        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-        .round(d3.time.month.round)
-        .xUnits(d3.time.months)
+        .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+        .round(d3.timeMonth.round)
+        .xUnits(d3.timeMonths)
         .elasticY(true)
         .renderHorizontalGridLines(true)
     //##### Legend
@@ -459,10 +461,10 @@ d3.csv('ndx.csv', function (data) {
         .group(volumeByMonthGroup)
         .centerBar(true)
         .gap(1)
-        .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-        .round(d3.time.month.round)
+        .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+        .round(d3.timeMonth.round)
         .alwaysUseRounding(true)
-        .xUnits(d3.time.months);
+        .xUnits(d3.timeMonths);
 
     //#### Data Count
 
@@ -635,7 +637,7 @@ d3.csv('ndx.csv', function (data) {
             // Closure used to retrieve radius value from multi-value group
             .radiusValueAccessor(function(p) {return p.value.fluctuationPercentage;})
             // set radius scale
-            .r(d3.scale.linear().domain([0, 3]))
+            .r(d3.scaleLinear().domain([0, 3]))
             // (_optional_) whether chart should render labels, `default = true`
             .renderLabel(true)
             // (_optional_) closure to generate label per bubble, `default = group.key`

@@ -16,7 +16,7 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.barChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
@@ -62,12 +62,13 @@ dc.barChart = function (parent, chartGroup) {
 
         calculateBarWidth();
 
-        layers
+        layers = layers
             .enter()
-            .append('g')
-            .attr('class', function (d, i) {
-                return 'stack ' + '_' + i;
-            });
+                .append('g')
+                .attr('class', function (d, i) {
+                    return 'stack ' + '_' + i;
+                })
+            .merge(layers);
 
         var last = layers.size() - 1;
         layers.each(function (d, i) {
@@ -89,17 +90,19 @@ dc.barChart = function (parent, chartGroup) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
-        labels.enter()
-            .append('text')
-            .attr('class', 'barLabel')
-            .attr('text-anchor', 'middle');
+        var labelsEnterUpdate = labels
+            .enter()
+                .append('text')
+                .attr('class', 'barLabel')
+                .attr('text-anchor', 'middle')
+            .merge(labels);
 
         if (_chart.isOrdinal()) {
-            labels.on('click', _chart.onClick);
-            labels.attr('cursor', 'pointer');
+            labelsEnterUpdate.on('click', _chart.onClick);
+            labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
+        dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (!_centerBar) {
@@ -136,15 +139,17 @@ dc.barChart = function (parent, chartGroup) {
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
+        var barsEnterUpdate = enter.merge(bars);
+
         if (_chart.renderTitle()) {
             enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
 
         if (_chart.isOrdinal()) {
-            bars.on('click', _chart.onClick);
+            barsEnterUpdate.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
+        dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) {
                 var x = _chart.x()(d.x);
                 if (_centerBar) {
@@ -183,7 +188,7 @@ dc.barChart = function (parent, chartGroup) {
 
             // please can't we always use rangeBands for bar charts?
             if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().rangeBand());
+                _barWidth = Math.floor(_chart.x().bandwidth());
             } else if (_gap) {
                 _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
             } else {
@@ -196,9 +201,8 @@ dc.barChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         var bars = _chart.chartBodyG().selectAll('rect.bar');
-        var extent = _chart.brush().extent();
 
         if (_chart.isOrdinal()) {
             if (_chart.hasFilter()) {
@@ -213,9 +217,9 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
         } else {
-            if (!_chart.brushIsEmpty(extent)) {
-                var start = extent[0];
-                var end = extent[1];
+            if (!_chart.brushIsEmpty(selection)) {
+                var start = selection[0];
+                var end = selection[1];
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
                     return d.x < start || d.x >= end;
@@ -249,7 +253,7 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
      * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      * @method barPadding
      * @memberof dc.barChart
@@ -299,17 +303,12 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
-        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
-
-            _chart.chartBodyG().select('.brush')
-                .call(_chart.brush().extent(extent));
+    _chart.extendBrush = function (selection) {
+        if (selection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            selection[0] = _chart.round()(selection[0]);
+            selection[1] = _chart.round()(selection[1]);
         }
-
-        return extent;
+        return selection;
     };
 
     /**

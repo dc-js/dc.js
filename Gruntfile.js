@@ -289,7 +289,7 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.js.map',
                             '<%= conf.pkg.name %>.min.js',
                             '<%= conf.pkg.name %>.min.js.map',
-                            'node_modules/d3/d3.js',
+                            'node_modules/d3/build/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/queue-async/build/queue.js',
                             'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
@@ -452,6 +452,7 @@ module.exports = function (grunt) {
 
 module.exports.jsFiles = [
     'src/banner.js',   // NOTE: keep this first
+    'src/d3v3-compat.js',
     'src/core.js',
     'src/errors.js',
     'src/utils.js',

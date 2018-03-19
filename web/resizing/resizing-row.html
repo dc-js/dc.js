@@ -30,7 +30,7 @@ d3.csv("../examples/morley.csv", function(error, experiments) {
   chart
     .width(window.innerWidth-20)
     .height(window.innerHeight-20)
-    .x(d3.scale.linear().domain([6,20]))
+    .x(d3.scaleLinear().domain([6,20]))
     .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)

@@ -11,7 +11,7 @@
  * // create a composite chart under #chart-container2 element using chart group A
  * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -31,7 +31,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _shareTitle = true,
         _alignYAxes = false;
 
-    var _rightYAxis = d3.svg.axis(),
+    var _rightYAxis = d3.axisRight(),
         _rightYAxisLabel = 0,
         _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
         _rightY,
@@ -69,11 +69,21 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
-        var brushIsEmpty = _chart.brushIsEmpty(extent);
+        var event = d3.event;
+        // Avoids infinite recursion
+        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
+        d3.event = null;
+        if (!event.sourceEvent) return;
+        var selection = event.selection;
+        if (selection) {
+            selection = selection.map(_chart.x().invert);
+        }
+        selection = _chart.extendBrush(selection);
+
+        var brushIsEmpty = _chart.brushIsEmpty(selection);
 
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(brushIsEmpty ? null : extent);
+            _children[i].replaceFilter(brushIsEmpty ? null : selection);
         }
     };
 
@@ -153,7 +163,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var needDomain = _chart.rightY() === undefined || _chart.elasticY(),
             needRange = needDomain || _chart.resizing();
         if (_chart.rightY() === undefined) {
-            _chart.rightY(d3.scale.linear());
+            _chart.rightY(d3.scaleLinear());
         }
         if (needDomain) {
             _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
@@ -165,14 +175,15 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
         _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
 
-        _chart.rightYAxis().orient('right');
+        // In D3v4 create a RightAxis
+        // _chart.rightYAxis().orient('right');
     }
 
     function prepareLeftYAxis (ranges) {
         var needDomain = _chart.y() === undefined || _chart.elasticY(),
             needRange = needDomain || _chart.resizing();
         if (_chart.y() === undefined) {
-            _chart.y(d3.scale.linear());
+            _chart.y(d3.scaleLinear());
         }
         if (needDomain) {
             _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
@@ -184,7 +195,8 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.y().range([_chart.yAxisHeight(), 0]);
         _chart.yAxis(_chart.yAxis().scale(_chart.y()));
 
-        _chart.yAxis().orient('left');
+        // In D3v4 create a LeftAxis
+        // _chart.yAxis().orient('left');
     }
 
     function generateChildG (child, i) {
@@ -261,11 +273,11 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
-            child.fadeDeselectedArea();
+            child.fadeDeselectedArea(selection);
         }
     };
 
@@ -384,7 +396,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method rightY
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.compositeChart}
      */
@@ -508,15 +520,21 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
      * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis) therefore it supports any valid
+     * object](https://github.com/d3/d3-axis/blob/master/README.md) therefore it supports any valid
      * d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
-     * unexpected results.
+     * unexpected results.  Note also that when used as a getter, this function is not chainable: it
+     * returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+     * so attempting to call chart functions after calling `.yAxis()` will fail}.
+     * In addition, depending on whether you are going to use the axis on left or right
+     * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
+     * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});

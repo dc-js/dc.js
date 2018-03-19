@@ -4,7 +4,7 @@ describe('dc.legend', function () {
 
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
-        dateDimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dateDimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         dateValueSumGroup = dateDimension.group().reduceSum(function (d) { return d.value; });
         dateIdSumGroup = dateDimension.group().reduceSum(function (d) { return d.id; });
 
@@ -17,7 +17,7 @@ describe('dc.legend', function () {
             .group(dateIdSumGroup, 'Id Sum')
             .stack(dateValueSumGroup, 'Value Sum')
             .stack(dateValueSumGroup, 'Fixed', function () {})
-            .x(d3.time.scale.utc().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+            .x(d3.scaleUtc().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
             .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5));
     });
 
@@ -69,7 +69,7 @@ describe('dc.legend', function () {
         });
 
         it('not allow hiding stacks be default', function () {
-            legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+            legendItem(0).on('click').call(legendItem(0).nodes()[0], legendItem(0).datum());
             expect(chart.selectAll('path.line').size()).toBe(3);
         });
 
@@ -228,7 +228,7 @@ describe('dc.legend', function () {
                 .dashStyle([2,1]);
 
             chart
-                .x(d3.scale.linear().domain([0,20]))
+                .x(d3.scaleLinear().domain([0,20]))
                 .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
                 .compose([subChart1, subChart2])
                 .render();
@@ -247,7 +247,7 @@ describe('dc.legend', function () {
 
         describe('clicking on a legend item', function () {
             beforeEach(function () {
-                legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+                legendItem(0).on('click').call(legendItem(0).nodes()[0], legendItem(0).datum());
             });
 
             it('should fade out the legend item', function () {
@@ -260,12 +260,12 @@ describe('dc.legend', function () {
 
             it('disable hover highlighting for that legend item', function () {
                 legendItem(0).on('mouseover')(legendItem(0).datum());
-                expect(d3.select(chart.selectAll('path.line')[0][1]).classed('fadeout')).toBeFalsy();
+                expect(d3.select(chart.selectAll('path.line').nodes()[1]).classed('fadeout')).toBeFalsy();
             });
 
             describe('clicking on a faded out legend item', function () {
                 beforeEach(function () {
-                    legendItem(0).on('click').call(legendItem(0)[0][0], legendItem(0).datum());
+                    legendItem(0).on('click').call(legendItem(0).nodes()[0], legendItem(0).datum());
                 });
 
                 it('should unfade the legend item', function () {
@@ -280,16 +280,16 @@ describe('dc.legend', function () {
     });
 
     function legendItem (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[n]);
     }
     function legendLabel (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item text').nodes()[n]);
     }
     function legendIcon (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item rect')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item rect').nodes()[n]);
     }
     function legendLine (n) {
-        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item line')[0][n]);
+        return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item line').nodes()[n]);
     }
 });
 

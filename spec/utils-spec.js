@@ -20,7 +20,7 @@ describe('dc utils', function () {
         var printer;
         beforeEach(function () {
             printer = dc.printers.filter;
-            dc.dateFormat = d3.time.format.utc('%m/%d/%Y');
+            dc.dateFormat = d3.utcFormat('%m/%d/%Y');
         });
         it('print simple string', function () {
             expect(printer('a')).toEqual('a');

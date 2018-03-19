@@ -45,9 +45,34 @@ function cleanDateRange (range) {
 
 // http://stackoverflow.com/questions/20068497/d3-transition-in-unit-testing
 function flushAllD3Transitions () {
-    var now = Date.now;
-    Date.now = function () { return Infinity; };
-    d3.timer.flush();
-    Date.now = now;
+    d3.timerFlush();
 }
+
+// Setup a dummy event - just enough for the handler to get fooled
+var setupEventForBrushing = function (chart, domainSelection) {
+    // D3v4 needs scaled coordinates for the event
+    var scaledSelection = domainSelection.map(function (coord) {
+        return chart.x()(coord);
+    });
+    d3.event = {
+        sourceEvent: true,
+        selection: scaledSelection
+    };
+};
+
+// Setup a dummy event - just enough for the handler to get fooled
+var setupEventFor2DBrushing = function (chart, domainSelection) {
+    // D3v4 needs scaled coordinates for the event
+    var scaledSelection = domainSelection.map(function (point) {
+        return point.map(function (coord, i) {
+            var scale = i === 0 ? chart.x() : chart.y();
+            return scale(coord);
+        });
+    });
+    d3.event = {
+        sourceEvent: true,
+        selection: scaledSelection
+    };
+};
+
 /* jshint +W098 */

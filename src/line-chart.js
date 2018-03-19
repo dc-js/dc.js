@@ -16,7 +16,7 @@
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.lineChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
@@ -39,8 +39,8 @@ dc.lineChart = function (parent, chartGroup) {
     var _dataPointRadius = null;
     var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
     var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
-    var _interpolate = 'linear';
-    var _tension = 0.7;
+    var _interpolate = d3.curveLinear;
+    var _tension = 0;
     var _defined;
     var _dashStyle;
     var _xyTipsOn = true;
@@ -66,6 +66,8 @@ dc.lineChart = function (parent, chartGroup) {
                 return 'stack ' + '_' + i;
             });
 
+        layers = layersEnter.merge(layers);
+
         drawLine(layersEnter, layers);
 
         drawArea(layersEnter, layers);
@@ -79,17 +81,20 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
-     * functions, splines, and cubic interpolation.  This is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate} and
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate},
+     * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
+     * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
+     * Please note that d3 version 4 has renamed interpolate to curve.
+     * This is passed to
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve},
      * where you can find a complete list of valid arguments.
      * @method interpolate
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
-     * @param  {String} [interpolate='linear']
-     * @returns {String|dc.lineChart}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     * @param  {d3.curve} [interpolate=d3.curveLinear()]
+     * @returns {d3.curve|dc.lineChart}
      */
     _chart.interpolate = function (interpolate) {
         if (!arguments.length) {
@@ -101,16 +106,25 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-     * This parameter further customizes the interpolation behavior.  It is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension d3.svg.line.tension} and
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension d3.svg.area.tension}.
+     * Some interpolate (curve) functions {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}
+     * support additional customization using tension. Example:
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
+     * It is passed to the interpolate (d3 curve) function if it supports concept of tension.
+     * See individual {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve functions}
+     * documentation for their support of tension.
      * @method tension
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
-     * @param  {Number} [tension=0.7]
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     * @param  {Number} [tension=0]
      * @returns {Number|dc.lineChart}
+     *
+     *
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     * @param  {d3.curve} [interpolate=d3.curveLinear()]
+     * @returns {d3.curve|dc.lineChart}
      */
     _chart.tension = function (tension) {
         if (!arguments.length) {
@@ -124,7 +138,7 @@ dc.lineChart = function (parent, chartGroup) {
      * Gets or sets a function that will determine discontinuities in the line which should be
      * skipped: the path will be broken into separate subpaths if some points are undefined.
      * This function is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined line.defined}
      *
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
@@ -133,7 +147,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @method defined
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined line.defined}
      * @param  {Function} [defined]
      * @returns {Function|dc.lineChart}
      */
@@ -187,16 +201,21 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
+    // Behavior of interpolator has changed in D3v4
+    var _interpolateWithTension = function () {
+        return typeof _interpolate.tension === "function" ?
+            _interpolate.tension(_tension) : _interpolate;
+    };
+
     function drawLine (layersEnter, layers) {
-        var line = d3.svg.line()
+        var line = d3.line()
             .x(function (d) {
                 return _chart.x()(d.x);
             })
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
             })
-            .interpolate(_interpolate)
-            .tension(_tension);
+            .curve(_interpolateWithTension());
         if (_defined) {
             line.defined(_defined);
         }
@@ -218,18 +237,17 @@ dc.lineChart = function (parent, chartGroup) {
 
     function drawArea (layersEnter, layers) {
         if (_renderArea) {
-            var area = d3.svg.area()
+            var area = d3.area()
                 .x(function (d) {
                     return _chart.x()(d.x);
                 })
-                .y(function (d) {
+                .y1(function (d) {
                     return _chart.y()(d.y + d.y0);
                 })
                 .y0(function (d) {
                     return _chart.y()(d.y0);
                 })
-                .interpolate(_interpolate)
-                .tension(_tension);
+                .curve(_interpolateWithTension());
             if (_defined) {
                 area.defined(_defined);
             }
@@ -279,27 +297,29 @@ dc.lineChart = function (parent, chartGroup) {
                 var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
                     .data(points, dc.pluck('x'));
 
-                dots.enter()
-                    .append('circle')
-                    .attr('class', DOT_CIRCLE_CLASS)
-                    .attr('r', getDotRadius())
-                    .style('fill-opacity', _dataPointFillOpacity)
-                    .style('stroke-opacity', _dataPointStrokeOpacity)
-                    .attr('fill', _chart.getColor)
-                    .on('mousemove', function () {
-                        var dot = d3.select(this);
-                        showDot(dot);
-                        showRefLines(dot, g);
-                    })
-                    .on('mouseout', function () {
-                        var dot = d3.select(this);
-                        hideDot(dot);
-                        hideRefLines(g);
-                    });
+                var dotsEnterModify = dots
+                    .enter()
+                        .append('circle')
+                        .attr('class', DOT_CIRCLE_CLASS)
+                        .attr('r', getDotRadius())
+                        .style('fill-opacity', _dataPointFillOpacity)
+                        .style('stroke-opacity', _dataPointStrokeOpacity)
+                        .attr('fill', _chart.getColor)
+                        .on('mousemove', function () {
+                            var dot = d3.select(this);
+                            showDot(dot);
+                            showRefLines(dot, g);
+                        })
+                        .on('mouseout', function () {
+                            var dot = d3.select(this);
+                            hideDot(dot);
+                            hideRefLines(g);
+                        })
+                    .merge(dots);
 
-                dots.call(renderTitle, d);
+                dotsEnterModify.call(renderTitle, d);
 
-                dc.transition(dots, _chart.transitionDuration())
+                dc.transition(dotsEnterModify, _chart.transitionDuration())
                     .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })
@@ -323,12 +343,14 @@ dc.lineChart = function (parent, chartGroup) {
             var labels = layer.selectAll('text.lineLabel')
                 .data(d.values, dc.pluck('x'));
 
-            labels.enter()
-                .append('text')
-                .attr('class', 'lineLabel')
-                .attr('text-anchor', 'middle');
+            var labelsEnterModify = labels
+                .enter()
+                    .append('text')
+                    .attr('class', 'lineLabel')
+                    .attr('text-anchor', 'middle')
+                .merge(labels);
 
-            dc.transition(labels, _chart.transitionDuration())
+            dc.transition(labelsEnterModify, _chart.transitionDuration())
                 .attr('x', function (d) {
                     return dc.utils.safeNumber(_chart.x()(d.x));
                 })

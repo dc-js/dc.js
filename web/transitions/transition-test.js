@@ -44,7 +44,7 @@ var transitionTest = (function() {
             _magnitude = 1, // maximum change in y per observation
             _reverse = false; // whether to regress instead of progress
         var _data = [];
-        var rand = d3.random.normal();
+        var rand = d3.randomNormal();
         function startval() { // .fill() (when can we drop ie?)
             var a = new Array(N);
             for(var i = 0; i<N; ++i) {
