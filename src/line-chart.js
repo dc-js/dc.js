@@ -203,7 +203,7 @@ dc.lineChart = function (parent, chartGroup) {
 
     // Behavior of interpolator has changed in D3v4
     var _interpolateWithTension = function () {
-        return typeof _interpolate.tension === "function" ?
+        return typeof _interpolate.tension === 'function' ?
             _interpolate.tension(_tension) : _interpolate;
     };
 

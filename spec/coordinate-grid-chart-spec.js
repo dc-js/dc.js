@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate, cleanDateRange */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, setupEventForBrushing */
 describe('dc.coordinateGridChart', function () {
     var chart, id;
     var data, dimension, group;
@@ -648,7 +648,7 @@ describe('dc.coordinateGridChart', function () {
             // expect(chart.getBrushSelection()).toEqual(filter);
             var brushSelectionRect = chart.select('g.brush rect.selection');
             expect(brushSelectionRect.attr('x')).toBeCloseTo(chart.x()(filter[0]), 1);
-            expect(+brushSelectionRect.attr('x') + +brushSelectionRect.attr('width'))
+            expect((+brushSelectionRect.attr('x')) + (+brushSelectionRect.attr('width')))
                 .toBeCloseTo(chart.x()(filter[1]), 1);
         });
     });

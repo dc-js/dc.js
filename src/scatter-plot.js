@@ -409,7 +409,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         // Avoids infinite recursion
         // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
         d3.event = null;
-        if (!event.sourceEvent) return;
+        if (!event.sourceEvent) { return; }
         var selection = event.selection;
 
         // Testing with pixels is more reliable
@@ -421,7 +421,7 @@ dc.scatterPlot = function (parent, chartGroup) {
                     var scale = i === 0 ? _chart.x() : _chart.y();
                     return scale.invert(coord);
                 });
-            })
+            });
         }
         selection = _chart.extendBrush(selection);
 
@@ -456,7 +456,7 @@ dc.scatterPlot = function (parent, chartGroup) {
                         var scale = i === 0 ? _chart.x() : _chart.y();
                         return scale(coord);
                     });
-                })
+                });
             }
 
             _brush.move(_gBrush, selection);

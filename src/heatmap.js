@@ -240,7 +240,6 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('width', boxWidth)
             .attr('height', boxHeight);
 
-
         var gCols = _chartBody.select('g.cols');
         if (gCols.empty()) {
             gCols = _chartBody.append('g').attr('class', 'cols axis');
@@ -266,7 +265,6 @@ dc.heatMap = function (parent, chartGroup) {
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
-
 
         var gRows = _chartBody.select('g.rows');
         if (gRows.empty()) {

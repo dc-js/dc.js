@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate */
+/* global appendChartID, loadDateFixture, makeDate, setupEventForBrushing */
 describe('dc.compositeChart', function () {
     var id, chart, data, dateDimension, dateValueSumGroup, dateValueNegativeSumGroup,
         dateIdSumGroup, dateIdNegativeSumGroup, dateGroup;
@@ -243,7 +243,7 @@ describe('dc.compositeChart', function () {
                             .toMatchPath('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,' +
                                 '6 0 0 0 -0.5,73.33333333333333ZM-2.5,44.666666666666664V65.33333333333333M-4.5,' +
                                 '44.666666666666664V65.33333333333333');
-                     } else {
+                    } else {
                         expect(d3.select(this).attr('d'))
                             .toMatchPath('M0.5,36.666666666666664A6,6 0 0 1 6.5,42.666666666666664V67.33333333333333A6,' +
                                 '6 0 0 1 0.5,73.33333333333333ZM2.5,44.666666666666664V65.33333333333333M4.5,' +

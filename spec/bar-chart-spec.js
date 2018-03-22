@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate, cleanDateRange */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, setupEventForBrushing */
 describe('dc.barChart', function () {
     var id, chart, data;
     var dimension, group;
