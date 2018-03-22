@@ -1,4 +1,4 @@
-/* global appendChartID, comparePaths, loadDateFixture, makeDate */
+/* global appendChartID, comparePaths, loadDateFixture, makeDate, setupEventFor2DBrushing */
 describe('dc.scatterPlot', function () {
     var id, chart;
     var data, group, dimension;
@@ -242,11 +242,11 @@ describe('dc.scatterPlot', function () {
                 expect(otherDimension.top(Infinity).length).toBe(3);
             });
 
-/* D3v4 - no easy replacement, dropping this case
+            /* D3v4 - no easy replacement, dropping this case
             it('should set the height of the brush to the height implied by the extent', function () {
                 expect(chart.select('g.brush rect.extent').attr('height')).toBe('46');
             });
-*/
+            */
 
             it('should not add handles to the brush', function () {
                 expect(chart.select('.resize path').empty()).toBeTruthy();

@@ -75,7 +75,7 @@ module.exports = function (grunt) {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
+                    '!<%= conf.src %>/{banner,footer,d3v3-compat}.js',
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
@@ -89,7 +89,7 @@ module.exports = function (grunt) {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer}.js',
+                    '!<%= conf.src %>/{banner,footer,d3v3-compat}.js',
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',

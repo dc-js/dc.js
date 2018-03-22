@@ -73,7 +73,7 @@ dc.compositeChart = function (parent, chartGroup) {
         // Avoids infinite recursion
         // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
         d3.event = null;
-        if (!event.sourceEvent) return;
+        if (!event.sourceEvent) { return; }
         var selection = event.selection;
         if (selection) {
             selection = selection.map(_chart.x().invert);

@@ -1,4 +1,8 @@
 /* global parseTranslate */
+
+/*exported appendChartID, coordsFromTranslate, makeDate, cleanDateRange, flushAllD3Transitions */
+/*exported setupEventForBrushing, setupEventFor2DBrushing */
+
 beforeEach(function () {
     jasmine.clock().install();
 
@@ -18,7 +22,6 @@ afterEach(function () {
     jasmine.clock().uninstall();
 });
 
-/* jshint -W098 */
 function appendChartID (id) {
     return d3.select('#test-content').append('div').attr('id', id);
 }
@@ -74,5 +77,3 @@ var setupEventFor2DBrushing = function (chart, domainSelection) {
         selection: scaledSelection
     };
 };
-
-/* jshint +W098 */

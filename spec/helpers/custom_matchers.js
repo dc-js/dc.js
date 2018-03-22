@@ -194,7 +194,7 @@ beforeEach(function () {
                        http://localhost:8888/spec/?random=true#composite-chart-clip
                        http://localhost:8888/spec/##composite-chart-clip
                      */
-                    var cleanURL = function(u) {
+                    var cleanURL = function (u) {
                         var matches = u.match(/url\((.*)\)/);
                         if (matches) {
                             u = matches[1];
@@ -225,7 +225,7 @@ beforeEach(function () {
             return {
                 compare: function (actual, expected) {
                     // Colors can be rgb(0, 0, 0), #000000 or black
-                    var normalizeColor = function(c){
+                    var normalizeColor = function (c) {
                         // will convert to rgb(0, 0, 0)
                         return d3.color(c).toString();
                     };

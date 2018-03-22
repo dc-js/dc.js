@@ -400,7 +400,7 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
             var units;
-            if(_chart.xUnits() === dc.units.ordinal) {
+            if (_chart.xUnits() === dc.units.ordinal) {
                 // In this case it number of items in domain
                 units = _chart.x().domain();
             } else {
@@ -996,7 +996,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method brush
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @param {d3.brush} [brush]
+     * @param {d3.brush} [_]
      * @returns {d3.brush|dc.coordinateGridMixin}
      */
     _chart.brush = function (_) {
@@ -1007,11 +1007,11 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function brushHeight() {
+    function brushHeight () {
         return _chart.effectiveHeight();
     }
 
-    function brushWidth() {
+    function brushWidth () {
         return _chart.effectiveWidth();
     }
 
@@ -1035,12 +1035,12 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setHandlePaths = function (gBrush) {
-        _brushHandles = gBrush.selectAll('.handle--custom').data([{type: "w"}, {type: "e"}]);
+        _brushHandles = gBrush.selectAll('.handle--custom').data([{type: 'w'}, {type: 'e'}]);
 
         _brushHandles = _brushHandles
             .enter()
             .append('path')
-            .attr("class", "handle--custom")
+            .attr('class', 'handle--custom')
             .attr('d', _chart.resizeHandlePath)
             .merge(_brushHandles);
     };
@@ -1062,7 +1062,7 @@ dc.coordinateGridMixin = function (_chart) {
         // Avoids infinite recursion
         // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
         d3.event = null;
-        if (!event.sourceEvent) return;
+        if (!event.sourceEvent) { return; }
         var selection = event.selection;
         if (selection) {
             selection = selection.map(_chart.x().invert);
@@ -1093,15 +1093,15 @@ dc.coordinateGridMixin = function (_chart) {
                 _brush.move(_gBrush, null);
 
                 _brushHandles
-                    .attr("display", "none");
+                    .attr('display', 'none');
             } else {
                 var scaledSelection = [_x(selection[0]), _x(selection[1])];
                 _brush.move(_gBrush, scaledSelection);
 
                 _brushHandles
-                    .attr("display", null)
-                    .attr("transform", function (d, i) {
-                        return "translate(" + _x(selection[i]) + ", 0)";
+                    .attr('display', null)
+                    .attr('transform', function (d, i) {
+                        return 'translate(' + _x(selection[i]) + ', 0)';
                     });
             }
         }
@@ -1280,7 +1280,7 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function onZoom () {
-        if (!d3.event.sourceEvent && d3.event.sourceEvent.type !== "zoom") return;
+        if (!d3.event.sourceEvent && d3.event.sourceEvent.type !== 'zoom') { return; }
 
         _chart.x(d3.event.transform.rescaleX(_origX));
 
@@ -1356,7 +1356,7 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function rangesEqual(range1, range2) {
+    function rangesEqual (range1, range2) {
         if (!range1 && !range2) {
             return true;
         } else if (!range1 || !range2) {

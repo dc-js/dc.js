@@ -73,12 +73,11 @@ describe('dc.baseMixin', function () {
             var renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 count++;
-                if(count === 2){
+                if (count === 2) {
                     done();
                 }
             });
-            var firstRenderlet = renderlet,
-                secondRenderlet = firstRenderlet;
+            var firstRenderlet = renderlet;
             chart.renderlet(firstRenderlet);
             chart.renderlet(firstRenderlet);
             chart.render();
@@ -91,12 +90,11 @@ describe('dc.baseMixin', function () {
             var renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 count++;
-                if(count === 2){
+                if (count === 2) {
                     done();
                 }
             });
-            var firstRenderlet = renderlet,
-                secondRenderlet = firstRenderlet;
+            var firstRenderlet = renderlet;
             chart.renderlet(firstRenderlet);
             chart.renderlet(firstRenderlet);
             chart.redraw();
