@@ -54,16 +54,14 @@ div.dc-chart {
   opacity: .5;
   shape-rendering: crispEdges; }
 
-.dc-chart .brush rect.background {
-  z-index: -999; }
-
-.dc-chart .brush rect.extent {
+.dc-chart .brush rect.selection {
   fill: #4682b4;
   fill-opacity: .125; }
 
-.dc-chart .brush .resize path {
+.dc-chart .brush .handle--custom {
   fill: #eee;
-  stroke: #666; }
+  stroke: #666;
+  cursor: ew-resize; }
 
 .dc-chart path.line {
   fill: none;
