@@ -45,7 +45,7 @@ describe('dc.pieChart', function () {
             },
             //init
             function () {
-                return {count: 0, total: 0};
+                return {count: 0, total: 0, getTotal: function () { return this.total; }};
             }
         );
     });
@@ -576,7 +576,35 @@ describe('dc.pieChart', function () {
                 beforeEach(function () {
                     chart.cap(1).render();
                 });
-                it('correct values, others row', function () {
+                it('correct values, others slice', function () {
+                    expect(chart.selectAll('title')[0].map(function (t) {return d3.select(t).text();}))
+                        .toEqual(['F: 220', 'small: 198']);
+                });
+            });
+        });
+        describe('with custom valueAccessor calling function', function () {
+            // statusMultiGroup has
+            // [{"key":"F","value":{"count":5,"total":220}},{"key":"T","value":{"count":5,"total":198}}]
+            beforeEach(function () {
+                chart.dimension(statusDimension).group(statusMultiGroup)
+                    .valueAccessor(function (d) {
+                        return d.value.getTotal();
+                    })
+                    .ordering(function (d) {
+                        return -d.value.getTotal();
+                    })
+                    .render();
+                return chart;
+            });
+            it('correct values, no others slice', function () {
+                expect(chart.selectAll('g.pie-slice').data().map(dc.pluck('value')))
+                    .toEqual([220, 198]);
+            });
+            describe('with cap(1)', function () {
+                beforeEach(function () {
+                    chart.cap(1).render();
+                });
+                it('correct values, others slice', function () {
                     expect(chart.selectAll('title')[0].map(function (t) {return d3.select(t).text();}))
                         .toEqual(['F: 220', 'small: 198']);
                 });
