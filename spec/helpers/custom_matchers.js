@@ -191,13 +191,14 @@ beforeEach(function () {
                     /*
                     URL can be like:
                        url(http://localhost:8888/spec/?random=true#composite-chart-clip)
+                       url("http://localhost:8888/spec/?random=true#composite-chart-clip")
                        http://localhost:8888/spec/?random=true#composite-chart-clip
                        http://localhost:8888/spec/##composite-chart-clip
                      */
                     var cleanURL = function (u) {
                         var matches = u.match(/url\((.*)\)/);
                         if (matches) {
-                            u = matches[1];
+                            u = matches[1].replace(/"/g, '');
                         }
                         return u.replace(/\#+/, '#');
                     };
