@@ -94,8 +94,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @memberof dc.seriesChart
      * @instance
      * @example
-     * // put interpolation on the line charts used for the series
-     * chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+     * // put curve on the line charts used for the series
+     * chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
      * // do a scatter series chart
      * chart.chart(dc.scatterPlot)
      * @param {Function} [chartFunction=dc.lineChart]
