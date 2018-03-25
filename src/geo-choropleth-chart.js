@@ -30,6 +30,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     var _geoPath = d3.geoPath();
     var _projectionFlag;
+    var _projection;
 
     var _geoJsons = [];
 
@@ -50,7 +51,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
             regionG
                 .append('path')
                 .attr('fill', 'white')
-                .attr('d', _geoPath);
+                .attr('d', _getGeoPath());
 
             regionG.append('title');
 
@@ -169,7 +170,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if (_projectionFlag) {
-                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
+                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _getGeoPath());
             }
         }
         _projectionFlag = false;
@@ -211,20 +212,40 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Set custom geo projection function. See the available
+     * Gets or sets a custom geo projection function. See the available
      * {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3 geo projection functions}.
+     *
+     * Starting version 3.0 it has been deprecated to rely on the default projection being
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa d3.geoAlbersUsa()}. Please
+     * set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
+     * Considering that `null` is also a valid value for projection}, if you need
+     * projection to be `null` please set it explicitly to `null`.
      * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
      * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
      * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
      * @param {d3.projection} [projection=d3.geoAlbersUsa()]
-     * @returns {dc.geoChoroplethChart}
+     * @returns {d3.projection|dc.geoChoroplethChart}
      */
     _chart.projection = function (projection) {
-        _geoPath.projection(projection);
+        if (!arguments.length) {
+            return _projection;
+        }
+
+        _projection = projection;
         _projectionFlag = true;
         return _chart;
+    };
+
+    var _getGeoPath = function () {
+        if (_projection === undefined) {
+            dc.logger.warn('choropleth projection default of geoAlbers is deprecated,' +
+                ' in next version projection will need to be set explicitly');
+            return _geoPath.projection(d3.geoAlbersUsa());
+        }
+
+        return _geoPath.projection(_projection);
     };
 
     /**
