@@ -137,7 +137,7 @@
                     .overlayGeoJson(statesJson.features, "state", function (d) {
                         return d.properties.name;
                     })
-                .projection(d3.geoAlbersUsa())
+                // .projection(d3.geoAlbersUsa())
                 .valueAccessor(function(kv) {
                     console.log(kv);
                     return kv.value;
@@ -227,6 +227,11 @@
             });
 
             dc.renderAll();
+
+            setTimeout(function () {
+                usChart.projection(d3.geoAlbers());
+                usChart.render();
+            }, 6000);
         });
     });
 </script>
