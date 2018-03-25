@@ -49,6 +49,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _gBrush;
     var _brushHandles;
     var _brushOn = true;
+    var _brushingDebouncer = dc.events.deBouncer(dc.EVENT_DELAY);
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -59,6 +60,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
+    var _zoomingDebouncer = dc.events.deBouncer(dc.EVENT_DELAY);
 
     var _zoom = d3.zoom().on('zoom', onZoom);
     var _nullZoom = d3.zoom().on('zoom', null);
@@ -1073,17 +1075,17 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.redrawBrush(selection);
 
         if (_chart.brushIsEmpty(selection)) {
-            dc.events.trigger(function () {
+            _brushingDebouncer.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            });
         } else {
             var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
 
-            dc.events.trigger(function () {
+            _brushingDebouncer.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            });
         }
     };
 
@@ -1272,9 +1274,9 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._invokeZoomedListener();
 
-        dc.events.trigger(function () {
+        _zoomingDebouncer.trigger(function () {
             _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
+        });
 
         _refocused = !rangesEqual(domain, _xOriginalDomain);
     }

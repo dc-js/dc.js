@@ -35,3 +35,20 @@ dc.events.trigger = function (closure, delay) {
         }
     }, delay);
 };
+
+dc.events.deBouncer = function (delay) {
+    var _deBouncer = {};
+    var _current;
+
+    _deBouncer.trigger = function (closure) {
+        _current = closure;
+
+        setTimeout(function () {
+            if (closure === _current) {
+                closure();
+            }
+        }, delay);
+    };
+
+    return _deBouncer;
+};
