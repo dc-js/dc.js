@@ -29,7 +29,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     });
 
     var _geoPath = d3.geoPath();
-    var _projectionFlag;
     var _projection;
 
     var _geoJsons = [];
@@ -57,7 +56,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
             plotData(layerIndex);
         }
-        _projectionFlag = false;
     };
 
     function plotData (layerIndex) {
@@ -169,11 +167,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     _chart._doRedraw = function () {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
-            if (_projectionFlag) {
-                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _getGeoPath());
-            }
         }
-        _projectionFlag = false;
     };
 
     /**
@@ -234,7 +228,6 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         }
 
         _projection = projection;
-        _projectionFlag = true;
         return _chart;
     };
 
