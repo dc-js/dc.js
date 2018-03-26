@@ -65,7 +65,7 @@ describe('dc.compositeChart', function () {
     });
 
     it('should set the margins of the chart', function () {
-        expect(chart.margins()).not.toBeNull();
+        expect(chart.computedMargins()).not.toBeNull();
     });
 
     it('should set a domain', function () {
@@ -232,7 +232,7 @@ describe('dc.compositeChart', function () {
         describe('the chart brush', function () {
 
             it('should be positioned with the chart left margin', function () {
-                expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.margins().left, 10);
+                expect(chart.select('g.brush').attr('transform')).toMatchTranslate(chart.computedMargins().left, 10);
             });
 
             it('should have a resize handle', function () {

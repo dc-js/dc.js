@@ -84,7 +84,7 @@ dc.rowChart = function (parent, chartGroup) {
 
         _g = _chart.svg()
             .append('g')
-            .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+            .attr('transform', 'translate(' + _chart.computedMargins().left + ',' + _chart.computedMargins().top + ')');
 
         drawChart();
 

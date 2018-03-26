@@ -69,7 +69,7 @@ describe('dc.coordinateGridChart', function () {
         });
 
         it('should set the margins of the chart', function () {
-            expect(chart.margins()).not.toBeNull();
+            expect(chart.computedMargins()).not.toBeNull();
         });
 
         it('should set an x domain', function () {
