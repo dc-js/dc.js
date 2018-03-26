@@ -54,7 +54,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
-    var _refocused = false, _resizing = false;
+    var _resizing = false;
     var _unitCount;
 
     var _zoomScale = [1, Infinity];
@@ -1243,7 +1243,22 @@ dc.coordinateGridMixin = function (_chart) {
             .extent([[0, 0], [_chart.width(), _chart.height()]])
             .duration(_chart.transitionDuration());
 
+        if (_zoomOutRestrict) {
+            _zoom.constrain(function (transform, extent, translateExtent) {
+                var newDomain = _zoomTransformToDomain(transform, _origX);
+                // If it is outside the original domain, cancel the current op by returning the current transform
+                if (newDomain[0] < _xOriginalDomain[0] || newDomain[1] > _xOriginalDomain[1]) {
+                    transform = _domainToZoomTransform(_x.domain(), _xOriginalDomain, _origX);
+                }
+
+                return transform;
+            });
+        }
+
         _chart.root().call(_zoom);
+
+        // Tell D3 zoom our current zoom/pan status
+        _updateD3zoomTransform();
     };
 
     _chart._disableMouseZoom = function () {
@@ -1251,28 +1266,53 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     function zoomHandler () {
-        _refocused = true;
-        if (_zoomOutRestrict) {
-            var constraint = _xOriginalDomain;
-            if (_rangeChart) {
-                constraint = intersectExtents(constraint, _rangeChart.x().domain());
-            }
-            var constrained = constrainExtent(_chart.x().domain(), constraint);
-            if (constrained) {
-                _chart.x().domain(constrained);
-            }
-        }
-
         var domain = _chart.x().domain();
         var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
 
         _chart.replaceFilter(domFilter);
         _chart.rescale();
         _chart.redraw();
+    }
+
+    // Our zooming is not standard d3 zoom as defined in their examples.
+    // Instead we want to focus the chart based on current zoom transform.
+    // The following code computes values of new domain the same way as transform.rescaleX.
+    // The difference is what we do after we get the newDomain
+    var _zoomTransformToDomain = function (transform, xScale) {
+        return xScale.range().map(function (xCoord) {
+            return _origX.invert(transform.invertX(xCoord));
+        });
+    };
+
+    // _zoomTransformToDomain(transform, xScale) should give back newDomain
+    var _domainToZoomTransform = function (newDomain, origDomain, xScale) {
+        var k = (origDomain[1] - origDomain[0]) / (newDomain[1] - newDomain[0]);
+        var xt = -1 * xScale(newDomain[0]);
+
+        return d3.zoomIdentity.scale(k).translate(xt, 0);
+    };
+
+    // If we changing zoom status (for example by calling focus), tell D3 zoom about it
+    var _updateD3zoomTransform = function () {
+        if (_zoom) {
+            _zoom.transform(_chart.root(), _domainToZoomTransform(_chart.x().domain(), _xOriginalDomain, _origX));
+        }
+    };
+
+    function onZoom () {
+        var event = d3.event;
+        // Avoids infinite recursion
+        // To ensure that when it is called because of programatic zoom there is no d3.event.sourceEvent
+        d3.event = null;
+        if (!event.sourceEvent) { return; }
+
+        var newDomain = _zoomTransformToDomain(event.transform, _origX);
+
+        _chart.focus(newDomain);
 
         if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
             dc.events.trigger(function () {
-                _rangeChart.replaceFilter(domFilter);
+                _rangeChart.replaceFilter(newDomain);
                 _rangeChart.redraw();
             });
         }
@@ -1283,33 +1323,6 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.redrawGroup();
         }, dc.constants.EVENT_DELAY);
 
-        _refocused = !rangesEqual(domain, _xOriginalDomain);
-    }
-
-    function onZoom () {
-        if (!d3.event.sourceEvent && d3.event.sourceEvent.type !== 'zoom') { return; }
-
-        _chart.x(d3.event.transform.rescaleX(_origX));
-
-        zoomHandler();
-    }
-
-    function intersectExtents (ext1, ext2) {
-        if (ext1[0] > ext2[1] || ext1[1] < ext2[0]) {
-            console.warn('could not intersect extents');
-        }
-        return [Math.max(ext1[0], ext2[0]), Math.min(ext1[1], ext2[1])];
-    }
-
-    function constrainExtent (extent, constraint) {
-        var size = extent[1] - extent[0];
-        if (extent[0] < constraint[0]) {
-            return [constraint[0], Math.min(constraint[1], dc.utils.add(constraint[0], size, 'millis'))];
-        } else if (extent[1] > constraint[1]) {
-            return [Math.max(constraint[0], dc.utils.subtract(constraint[1], size, 'millis')), constraint[1]];
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -1337,11 +1350,13 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.x().domain(_xOriginalDomain);
         }
 
+        _updateD3zoomTransform();
+
         zoomHandler();
     };
 
     _chart.refocused = function () {
-        return _refocused;
+        return !rangesEqual(_chart.x().domain(), _xOriginalDomain);
     };
 
     _chart.focusChart = function (c) {
