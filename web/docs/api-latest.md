@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.1.10  
+**Version**: 2.1.10-groupstack  
 **Example**  
 ```js
 // Example chaining
@@ -35,6 +35,7 @@ chart.width(300)
         * [.drawPaths([drawPaths])](#dc.pieChart+drawPaths) ⇒ <code>Boolean</code> \| [<code>pieChart</code>](#dc.pieChart)
     * [.barChart](#dc.barChart)
         * [new barChart(parent, [chartGroup])](#new_dc.barChart_new)
+        * [.serieGap](#dc.barChart+serieGap) ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
         * [.centerBar([centerBar])](#dc.barChart+centerBar) ⇒ <code>Boolean</code> \| [<code>barChart</code>](#dc.barChart)
         * [.barPadding([barPadding])](#dc.barChart+barPadding) ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
         * [.outerPadding([padding])](#dc.barChart+outerPadding) ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
@@ -504,6 +505,7 @@ Get or set whether to draw lines from pie slices to their labels.
 
 * [.barChart](#dc.barChart)
     * [new barChart(parent, [chartGroup])](#new_dc.barChart_new)
+    * [.serieGap](#dc.barChart+serieGap) ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
     * [.centerBar([centerBar])](#dc.barChart+centerBar) ⇒ <code>Boolean</code> \| [<code>barChart</code>](#dc.barChart)
     * [.barPadding([barPadding])](#dc.barChart+barPadding) ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
     * [.outerPadding([padding])](#dc.barChart+outerPadding) ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
@@ -534,6 +536,18 @@ var chart2 = dc.barChart('#chart-container2', 'chartGroupA');
 // create a sub-chart under a composite parent chart
 var chart3 = dc.barChart(compositeChart);
 ```
+<a name="dc.barChart+serieGap"></a>
+
+#### barChart.serieGap ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
+Manually set fixed gap (in px) between bar groups instead of relying on the default auto-generated
+gap.  Only applicable for grouped bar charts.
+
+**Kind**: instance property of [<code>barChart</code>](#dc.barChart)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [serieGap] | <code>Number</code> | <code>5</code> | 
+
 <a name="dc.barChart+centerBar"></a>
 
 #### barChart.centerBar([centerBar]) ⇒ <code>Boolean</code> \| [<code>barChart</code>](#dc.barChart)

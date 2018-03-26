@@ -29,7 +29,7 @@ dc.barChart = function (parent, chartGroup) {
     var DEFAULT_GAP_BETWEEN_BARS = 2;
     var DEFAULT_GAP_BETWEEN_BAR_SERIES = 5;
     var LABEL_PADDING = 3;
-    var _type = "dc.BAR_CHART";
+    var _type = 'dc.BAR_CHART';
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
