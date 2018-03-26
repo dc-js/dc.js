@@ -39,8 +39,9 @@ dc.lineChart = function (parent, chartGroup) {
     var _dataPointRadius = null;
     var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
     var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
-    var _interpolate = d3.curveLinear;
-    var _tension = 0;
+    var _curve = null;
+    var _interpolate = null; // d3.curveLinear;  // deprecated in 3.0
+    var _tension = null;  // deprecated in 3.0
     var _defined;
     var _dashStyle;
     var _xyTipsOn = true;
@@ -80,59 +81,93 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
-     * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+     * Gets or sets the curve to use for lines and areas drawn, allowing e.g. step
      * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
      * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
-     * Please note that d3 version 4 has renamed interpolate to curve.
+     *
      * This is passed to
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve},
      * where you can find a complete list of valid arguments.
-     * @method interpolate
+     * @example
+     * // This is the default
+     * chart
+     *     .curve(d3.curveLinear);
+     * // You can combine tension
+     * chart
+     *     .curve(d3.curveCardinal.tension(0.5));
+     * // You can use some specialized variation like
+     * // https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
+     * chart
+     *     .curve(.curve(d3.curveCatmullRom.alpha(0.5));
+     * @method curve
      * @memberof dc.lineChart
      * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
-     * @param  {d3.curve} [interpolate=d3.curveLinear()]
+     * @param  {d3.curve} [curve=d3.curveLinear]
      * @returns {d3.curve|dc.lineChart}
      */
-    _chart.interpolate = function (interpolate) {
+    _chart.curve = function (curve) {
+        if (!arguments.length) {
+            return _curve;
+        }
+        _curve = curve;
+        return _chart;
+    };
+
+    /**
+     * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+     * functions, splines, and cubic interpolation. Possible values are:
+     * 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis', 'basis-open', 'basis-closed', 'bundle',
+     * 'cardinal', 'cardinal-open', 'cardinal-closed', and 'monotone'.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through curve takes precedence over interpolate and tension.
+     * @method interpolate
+     * @memberof dc.lineChart
+     * @instance
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
+     * @param  {d3.curve} [interpolate=d3.curveLinear]
+     * @returns {d3.curve|dc.lineChart}
+     */
+    _chart.interpolate = dc.logger.deprecate(function (interpolate) {
         if (!arguments.length) {
             return _interpolate;
         }
         _interpolate = interpolate;
         return _chart;
-    };
+    }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
 
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-     * Some interpolate (curve) functions {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}
+     * Some curve functions {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}
      * support additional customization using tension. Example:
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
-     * It is passed to the interpolate (d3 curve) function if it supports concept of tension.
+     * It is passed to the d3 curve function if it supports concept of tension.
      * See individual {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve functions}
      * documentation for their support of tension.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through curve takes precedence over interpolate and tension.
      * @method tension
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
      * @param  {Number} [tension=0]
      * @returns {Number|dc.lineChart}
-     *
-     *
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
-     * @param  {d3.curve} [interpolate=d3.curveLinear()]
-     * @returns {d3.curve|dc.lineChart}
      */
-    _chart.tension = function (tension) {
+    _chart.tension = dc.logger.deprecate(function (tension) {
         if (!arguments.length) {
             return _tension;
         }
         _tension = tension;
         return _chart;
-    };
+    }, 'dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
 
     /**
      * Gets or sets a function that will determine discontinuities in the line which should be
@@ -201,10 +236,53 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
-    // Behavior of interpolator has changed in D3v4
-    var _interpolateWithTension = function () {
-        return typeof _interpolate.tension === 'function' ?
-            _interpolate.tension(_tension) : _interpolate;
+    // To keep it backward compatible, it covers multiple cases
+    // See https://github.com/dc-js/dc.js/issues/1376
+    // It will be removed when interpolate and tension are deprecated.
+    var _getCurveFn = function () {
+        var curve = null;
+
+        // _curve takes precedence
+        if (_curve) {
+            return _curve;
+        }
+
+        // Approximate the D3v3 behavior
+        if (typeof _interpolate === 'function') {
+            curve = _interpolate;
+        } else {
+            // If _interpolate is string
+            var mapping = {
+                'linear': d3.curveLinear,
+                'linear-closed': d3.curveLinearClosed,
+                'step': d3.curveStep,
+                'step-before': d3.curveStepBefore,
+                'step-after': d3.curveStepAfter,
+                'basis': d3.curveBasis,
+                'basis-open': d3.curveBasisOpen,
+                'basis-closed': d3.curveBasisClosed,
+                'bundle': d3.curveBundle,
+                'cardinal': d3.curveCardinal,
+                'cardinal-open': d3.curveCardinalOpen,
+                'cardinal-closed': d3.curveCardinalClosed,
+                'monotone': d3.curveMonotoneX
+            };
+            curve = mapping[_interpolate];
+        }
+
+        // Default value
+        if (!curve) {
+            curve = d3.curveLinear;
+        }
+
+        if (_tension !== null) {
+            if (typeof curve.tension !== 'function') {
+                dc.logger.warn('tension was specified but the curve/interpolate does not support it.');
+            } else {
+                curve = curve.tension(_tension);
+            }
+        }
+        return curve;
     };
 
     function drawLine (layersEnter, layers) {
@@ -215,7 +293,7 @@ dc.lineChart = function (parent, chartGroup) {
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
             })
-            .curve(_interpolateWithTension());
+            .curve(_getCurveFn());
         if (_defined) {
             line.defined(_defined);
         }
@@ -247,7 +325,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y0(function (d) {
                     return _chart.y()(d.y0);
                 })
-                .curve(_interpolateWithTension());
+                .curve(_getCurveFn());
             if (_defined) {
                 area.defined(_defined);
             }
