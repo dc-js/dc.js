@@ -132,7 +132,7 @@
       group      = dimension.group().reduceSum(function(d) { return d.value; });
 
       rangeChart
-      .height(40)
+      .height(60)
       .dimension(dimension)
       .group(group)
       .x(d3.scaleTime().domain(domain))
