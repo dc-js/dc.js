@@ -1244,15 +1244,9 @@ dc.coordinateGridMixin = function (_chart) {
             .duration(_chart.transitionDuration());
 
         if (_zoomOutRestrict) {
-            _zoom.constrain(function (transform, extent, translateExtent) {
-                var newDomain = _zoomTransformToDomain(transform, _origX);
-                // If it is outside the original domain, cancel the current op by returning the current transform
-                if (newDomain[0] < _xOriginalDomain[0] || newDomain[1] > _xOriginalDomain[1]) {
-                    transform = _domainToZoomTransform(_x.domain(), _xOriginalDomain, _origX);
-                }
-
-                return transform;
-            });
+            var extent = [[0, 0],[_chart.effectiveWidth(), _chart.effectiveHeight()]];
+            _zoom.extent(extent);
+            _zoom.translateExtent(extent);
         }
 
         _chart.root().call(_zoom);
