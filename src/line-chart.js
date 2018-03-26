@@ -275,8 +275,12 @@ dc.lineChart = function (parent, chartGroup) {
             curve = d3.curveLinear;
         }
 
-        if (_tension && typeof curve.tension === 'function') {
-            curve = curve.tension(_tension);
+        if (_tension !== null) {
+            if (typeof curve.tension !== 'function') {
+                dc.logger.warn('tension was specified but the curve/interpolate does not support it.');
+            } else {
+                curve = curve.tension(_tension);
+            }
         }
         return curve;
     };
