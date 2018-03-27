@@ -149,7 +149,6 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _zoomOutRestrict;
         }
-        _zoomScale[0] = zoomOutRestrict ? 1 : 0;
         _zoomOutRestrict = zoomOutRestrict;
         return _chart;
     };
@@ -1231,15 +1230,19 @@ dc.coordinateGridMixin = function (_chart) {
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
 
+        var extent = [[0, 0],[_chart.effectiveWidth(), _chart.effectiveHeight()]];
+
         _zoom
             .scaleExtent(_zoomScale)
-            .extent([[0, 0], [_chart.width(), _chart.height()]])
+            .extent(extent)
             .duration(_chart.transitionDuration());
 
         if (_zoomOutRestrict) {
-            var extent = [[0, 0],[_chart.effectiveWidth(), _chart.effectiveHeight()]];
-            _zoom.extent(extent);
-            _zoom.translateExtent(extent);
+            // Ensure minimum zoomScale is at least 1
+            var zoomScaleMin = _zoomScale[0] < 1 ? 1 : _zoomScale[0];
+            _zoom
+                .translateExtent(extent)
+                .scaleExtent([zoomScaleMin, _zoomScale[1]]);
         }
 
         _chart.root().call(_zoom);
