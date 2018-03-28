@@ -81,25 +81,27 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
-     * Gets or sets the curve to use for lines and areas drawn, allowing e.g. step
+     * Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
      * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
      * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
      *
+     * Replaces the use of {@link dc.lineChart#interpolate} and {@link dc.lineChart#tension}
+     * in dc.js < 3.0
+     *
      * This is passed to
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
-     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve},
-     * where you can find a complete list of valid arguments.
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}.
      * @example
-     * // This is the default
+     * // default
      * chart
      *     .curve(d3.curveLinear);
-     * // You can combine tension
+     * // Add tension to curves that support it
      * chart
      *     .curve(d3.curveCardinal.tension(0.5));
      * // You can use some specialized variation like
      * // https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
      * chart
-     *     .curve(.curve(d3.curveCatmullRom.alpha(0.5));
+     *     .curve(d3.curveCatmullRom.alpha(0.5));
      * @method curve
      * @memberof dc.lineChart
      * @instance
@@ -118,13 +120,15 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
-     * functions, splines, and cubic interpolation. Possible values are:
-     * 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis', 'basis-open', 'basis-closed', 'bundle',
-     * 'cardinal', 'cardinal-open', 'cardinal-closed', and 'monotone'.
+     * functions, splines, and cubic interpolation.
+     *
+     * Possible values are: 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis',
+     * 'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
+     * 'monotone'.
      *
      * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
      * which is generic and provides more options.
-     * Value set through curve takes precedence over interpolate and tension.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
      * @method interpolate
      * @memberof dc.lineChart
      * @instance
@@ -143,16 +147,14 @@ dc.lineChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-     * Some curve functions {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}
-     * support additional customization using tension. Example:
+     *
+     * Passed to the {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve function}
+     * if it provides a `.tension` function. Example:
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
-     * It is passed to the d3 curve function if it supports concept of tension.
-     * See individual {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve functions}
-     * documentation for their support of tension.
      *
      * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
      * which is generic and provides more options.
-     * Value set through curve takes precedence over interpolate and tension.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
      * @method tension
      * @memberof dc.lineChart
      * @instance
@@ -236,10 +238,10 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
-    // To keep it backward compatible, it covers multiple cases
+    // To keep it backward compatible, this covers multiple cases
     // See https://github.com/dc-js/dc.js/issues/1376
-    // It will be removed when interpolate and tension are deprecated.
-    var _getCurveFn = function () {
+    // It will be removed when interpolate and tension are removed.
+    function getCurveFactory () {
         var curve = null;
 
         // _curve takes precedence
@@ -283,7 +285,7 @@ dc.lineChart = function (parent, chartGroup) {
             }
         }
         return curve;
-    };
+    }
 
     function drawLine (layersEnter, layers) {
         var line = d3.line()
@@ -293,7 +295,7 @@ dc.lineChart = function (parent, chartGroup) {
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
             })
-            .curve(_getCurveFn());
+            .curve(getCurveFactory());
         if (_defined) {
             line.defined(_defined);
         }
@@ -325,7 +327,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y0(function (d) {
                     return _chart.y()(d.y0);
                 })
-                .curve(_getCurveFn());
+                .curve(getCurveFactory());
             if (_defined) {
                 area.defined(_defined);
             }
