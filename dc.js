@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.1
+ *  dc 3.0.0-alpha.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -127,7 +127,7 @@ d3.stackD3v3 = function () {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.1
+ * @version 3.0.0-alpha.2
  * @example
  * // Example chaining
  * chart.width(300)
@@ -136,7 +136,7 @@ d3.stackD3v3 = function () {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.1',
+    version: '3.0.0-alpha.2',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -6148,8 +6148,9 @@ dc.lineChart = function (parent, chartGroup) {
     var _dataPointRadius = null;
     var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
     var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
-    var _interpolate = d3.curveLinear;
-    var _tension = 0;
+    var _curve = null;
+    var _interpolate = null; // d3.curveLinear;  // deprecated in 3.0
+    var _tension = null;  // deprecated in 3.0
     var _defined;
     var _dashStyle;
     var _xyTipsOn = true;
@@ -6189,59 +6190,95 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
-     * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+     * Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
      * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
      * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
-     * Please note that d3 version 4 has renamed interpolate to curve.
+     *
+     * Replaces the use of {@link dc.lineChart#interpolate} and {@link dc.lineChart#tension}
+     * in dc.js < 3.0
+     *
      * This is passed to
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
-     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve},
-     * where you can find a complete list of valid arguments.
-     * @method interpolate
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}.
+     * @example
+     * // default
+     * chart
+     *     .curve(d3.curveLinear);
+     * // Add tension to curves that support it
+     * chart
+     *     .curve(d3.curveCardinal.tension(0.5));
+     * // You can use some specialized variation like
+     * // https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
+     * chart
+     *     .curve(d3.curveCatmullRom.alpha(0.5));
+     * @method curve
      * @memberof dc.lineChart
      * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
-     * @param  {d3.curve} [interpolate=d3.curveLinear()]
+     * @param  {d3.curve} [curve=d3.curveLinear]
      * @returns {d3.curve|dc.lineChart}
      */
-    _chart.interpolate = function (interpolate) {
+    _chart.curve = function (curve) {
+        if (!arguments.length) {
+            return _curve;
+        }
+        _curve = curve;
+        return _chart;
+    };
+
+    /**
+     * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+     * functions, splines, and cubic interpolation.
+     *
+     * Possible values are: 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis',
+     * 'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
+     * 'monotone'.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
+     * @method interpolate
+     * @memberof dc.lineChart
+     * @instance
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
+     * @param  {d3.curve} [interpolate=d3.curveLinear]
+     * @returns {d3.curve|dc.lineChart}
+     */
+    _chart.interpolate = dc.logger.deprecate(function (interpolate) {
         if (!arguments.length) {
             return _interpolate;
         }
         _interpolate = interpolate;
         return _chart;
-    };
+    }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
 
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-     * Some interpolate (curve) functions {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}
-     * support additional customization using tension. Example:
+     *
+     * Passed to the {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve function}
+     * if it provides a `.tension` function. Example:
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
-     * It is passed to the interpolate (d3 curve) function if it supports concept of tension.
-     * See individual {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve functions}
-     * documentation for their support of tension.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
      * @method tension
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
      * @param  {Number} [tension=0]
      * @returns {Number|dc.lineChart}
-     *
-     *
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
-     * @param  {d3.curve} [interpolate=d3.curveLinear()]
-     * @returns {d3.curve|dc.lineChart}
      */
-    _chart.tension = function (tension) {
+    _chart.tension = dc.logger.deprecate(function (tension) {
         if (!arguments.length) {
             return _tension;
         }
         _tension = tension;
         return _chart;
-    };
+    }, 'dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
 
     /**
      * Gets or sets a function that will determine discontinuities in the line which should be
@@ -6310,11 +6347,54 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
-    // Behavior of interpolator has changed in D3v4
-    var _interpolateWithTension = function () {
-        return typeof _interpolate.tension === 'function' ?
-            _interpolate.tension(_tension) : _interpolate;
-    };
+    // To keep it backward compatible, this covers multiple cases
+    // See https://github.com/dc-js/dc.js/issues/1376
+    // It will be removed when interpolate and tension are removed.
+    function getCurveFactory () {
+        var curve = null;
+
+        // _curve takes precedence
+        if (_curve) {
+            return _curve;
+        }
+
+        // Approximate the D3v3 behavior
+        if (typeof _interpolate === 'function') {
+            curve = _interpolate;
+        } else {
+            // If _interpolate is string
+            var mapping = {
+                'linear': d3.curveLinear,
+                'linear-closed': d3.curveLinearClosed,
+                'step': d3.curveStep,
+                'step-before': d3.curveStepBefore,
+                'step-after': d3.curveStepAfter,
+                'basis': d3.curveBasis,
+                'basis-open': d3.curveBasisOpen,
+                'basis-closed': d3.curveBasisClosed,
+                'bundle': d3.curveBundle,
+                'cardinal': d3.curveCardinal,
+                'cardinal-open': d3.curveCardinalOpen,
+                'cardinal-closed': d3.curveCardinalClosed,
+                'monotone': d3.curveMonotoneX
+            };
+            curve = mapping[_interpolate];
+        }
+
+        // Default value
+        if (!curve) {
+            curve = d3.curveLinear;
+        }
+
+        if (_tension !== null) {
+            if (typeof curve.tension !== 'function') {
+                dc.logger.warn('tension was specified but the curve/interpolate does not support it.');
+            } else {
+                curve = curve.tension(_tension);
+            }
+        }
+        return curve;
+    }
 
     function drawLine (layersEnter, layers) {
         var line = d3.line()
@@ -6324,7 +6404,7 @@ dc.lineChart = function (parent, chartGroup) {
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
             })
-            .curve(_interpolateWithTension());
+            .curve(getCurveFactory());
         if (_defined) {
             line.defined(_defined);
         }
@@ -6356,7 +6436,7 @@ dc.lineChart = function (parent, chartGroup) {
                 .y0(function (d) {
                     return _chart.y()(d.y0);
                 })
-                .curve(_interpolateWithTension());
+                .curve(getCurveFactory());
             if (_defined) {
                 area.defined(_defined);
             }
@@ -8216,8 +8296,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @memberof dc.seriesChart
      * @instance
      * @example
-     * // put interpolation on the line charts used for the series
-     * chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+     * // put curve on the line charts used for the series
+     * chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
      * // do a scatter series chart
      * chart.chart(dc.scatterPlot)
      * @param {Function} [chartFunction=dc.lineChart]
@@ -8341,6 +8421,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     var _geoPath = d3.geoPath();
     var _projectionFlag;
+    var _projection;
 
     var _geoJsons = [];
 
@@ -8361,7 +8442,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
             regionG
                 .append('path')
                 .attr('fill', 'white')
-                .attr('d', _geoPath);
+                .attr('d', _getGeoPath());
 
             regionG.append('title');
 
@@ -8480,7 +8561,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if (_projectionFlag) {
-                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
+                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _getGeoPath());
             }
         }
         _projectionFlag = false;
@@ -8522,20 +8603,40 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Set custom geo projection function. See the available
+     * Gets or sets a custom geo projection function. See the available
      * {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3 geo projection functions}.
+     *
+     * Starting version 3.0 it has been deprecated to rely on the default projection being
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa d3.geoAlbersUsa()}. Please
+     * set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
+     * Considering that `null` is also a valid value for projection}, if you need
+     * projection to be `null` please set it explicitly to `null`.
      * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
      * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
      * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
      * @param {d3.projection} [projection=d3.geoAlbersUsa()]
-     * @returns {dc.geoChoroplethChart}
+     * @returns {d3.projection|dc.geoChoroplethChart}
      */
     _chart.projection = function (projection) {
-        _geoPath.projection(projection);
+        if (!arguments.length) {
+            return _projection;
+        }
+
+        _projection = projection;
         _projectionFlag = true;
         return _chart;
+    };
+
+    var _getGeoPath = function () {
+        if (_projection === undefined) {
+            dc.logger.warn('choropleth projection default of geoAlbers is deprecated,' +
+                ' in next version projection will need to be set explicitly');
+            return _geoPath.projection(d3.geoAlbersUsa());
+        }
+
+        return _geoPath.projection(_projection);
     };
 
     /**
