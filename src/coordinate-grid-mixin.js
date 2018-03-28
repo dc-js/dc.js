@@ -1262,13 +1262,34 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.root().call(_nullZoom);
     };
 
-    function zoomHandler () {
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+    function zoomHandler (newDomain, noRaiseEvents) {
+        var domFilter;
+
+        if (hasRangeSelected(newDomain)) {
+            _chart.x().domain(newDomain);
+            domFilter = dc.filters.RangedFilter(newDomain[0], newDomain[1]);
+        } else {
+            _chart.x().domain(_xOriginalDomain);
+            domFilter = null;
+        }
 
         _chart.replaceFilter(domFilter);
         _chart.rescale();
         _chart.redraw();
+
+        if (!noRaiseEvents) {
+            if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+                dc.events.trigger(function () {
+                    _rangeChart.replaceFilter(newDomain);
+                    _rangeChart.redraw();
+                });
+            }
+
+            _chart._invokeZoomedListener();
+            dc.events.trigger(function () {
+                _chart.redrawGroup();
+            }, dc.constants.EVENT_DELAY);
+        }
     }
 
     // Our zooming is not standard d3 zoom as defined in their examples.
@@ -1304,22 +1325,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (!event.sourceEvent) { return; }
 
         var newDomain = _zoomTransformToDomain(event.transform, _origX);
-
-        _chart.focus(newDomain);
-
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
-            dc.events.trigger(function () {
-                _rangeChart.replaceFilter(newDomain);
-                _rangeChart.redraw();
-            });
-        }
-
-        _chart._invokeZoomedListener();
-
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
-
+        _chart.focus(newDomain, false);
     }
 
     /**
@@ -1327,6 +1333,12 @@ dc.coordinateGridMixin = function (_chart) {
      * 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
      * to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
      * otherwise focus will be ignored.
+     *
+     * To avoid ping-pong volley of events between a pair of range and focus charts please set
+     * `noRaiseEvents` to `true`. In that case it will update this chart but will not fire `zoom` event
+     * and not try to update back the associated range chart.
+     * If you are calling it manually - typically you will leave it to `false` (the default).
+     *
      * @method focus
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -1339,17 +1351,11 @@ dc.coordinateGridMixin = function (_chart) {
      *     });
      * })
      * @param {Array<Number>} [range]
+     * @param {Boolean} [noRaiseEvents = false]
      */
-    _chart.focus = function (range) {
-        if (hasRangeSelected(range)) {
-            _chart.x().domain(range);
-        } else {
-            _chart.x().domain(_xOriginalDomain);
-        }
-
+    _chart.focus = function (range, noRaiseEvents) {
+        zoomHandler(range, noRaiseEvents);
         _updateD3zoomTransform();
-
-        zoomHandler();
     };
 
     _chart.refocused = function () {
@@ -1364,11 +1370,11 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.on('filtered', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
-                    _focusChart.x().domain(_focusChart.xOriginalDomain());
+                    _focusChart.x().domain(_focusChart.xOriginalDomain(), true);
                 });
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {
-                    _focusChart.focus(chart.filter());
+                    _focusChart.focus(chart.filter(), true);
                 });
             }
         });
