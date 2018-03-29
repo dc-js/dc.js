@@ -26,21 +26,29 @@
 
 var fileChart = dc.sunburstChart("#file_chart");
 var typeChart = dc.pieChart("#type_chart");
-    
-d3.tsv("cat.tsv", function(error, cats) {
-    var ndx = crossfilter(cats)
-    picturesDimension  = ndx.dimension(function(d) {return d.file.split('/');})
-    picturesGroup = picturesDimension.group().reduceSum(function(d) {return d.size;});
 
-    typeDimension  = ndx.dimension(function(d) {return d.type;});
-    typeGroup = typeDimension.group().reduceSum(function(d) {return d.size;});
+d3.tsv("cat.tsv", function (error, cats) {
+    var ndx = crossfilter(cats);
+    var picturesDimension = ndx.dimension(function (d) {
+        return d.file.split('/');
+    });
+    var picturesGroup = picturesDimension.group().reduceSum(function (d) {
+        return d.size;
+    });
+
+    var typeDimension = ndx.dimension(function (d) {
+        return d.type;
+    });
+    var typeGroup = typeDimension.group().reduceSum(function (d) {
+        return d.size;
+    });
 
     fileChart
         .width(700)
         .height(640)
         .dimension(picturesDimension)
         .group(picturesGroup)
-        .colors(d3.scale.category20b())
+        .colors(d3.scaleOrdinal(d3.schemeCategory20b))
         .legend(dc.legend());
 
     typeChart
@@ -49,8 +57,8 @@ d3.tsv("cat.tsv", function(error, cats) {
         .innerRadius(50)
         .dimension(typeDimension)
         .group(typeGroup);
-    
-  dc.renderAll();  
+
+    dc.renderAll();
 });
 
 </script>
