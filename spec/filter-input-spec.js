@@ -37,7 +37,7 @@ describe('dc.inputFilter', function () {
             expect(chart.selectAll('input').nodes().length).toEqual(1);
         });
         it('doesn\'t filter by default', function () {
-            expect(chart.dimension().top(1000).length).toEqual(100);
+            expect(chart.dimension().top(1000).length).toEqual(10);
         });
     });
 
@@ -72,7 +72,7 @@ describe('dc.inputFilter', function () {
             expect(chart.selectAll('input').nodes().length).toEqual(1);
         });
         it('doesn\'t filter by default', function () {
-            expect(chart.dimension().top(1000).length).toEqual(100);
+            expect(chart.dimension().top(1000).length).toEqual(10);
         });
     });
 
