@@ -28,29 +28,43 @@
 var chart3 = dc.rowChart("#test3");
 var chart2 = dc.rowChart("#test2");
 var chart = dc.sunburstChart("#test");
+
 d3.csv("morley.csv", function(error, experiments) {
 
-  var ndx           = crossfilter(experiments),
-      runDimension  = ndx.dimension(function(d) {return [d.Expt, d.Run];})
-      speedSumGroup = runDimension.group().reduceSum(function(d) {return d.Speed;});
+    var ndx = crossfilter(experiments),
+        runDimension = ndx.dimension(function (d) {
+            return [d.Expt, d.Run];
+        });
 
-      runOnlyDimension  = ndx.dimension(function(d) {return d.Run;})
-      runOnlySpeedGroup = runOnlyDimension.group().reduceSum(function(d) {return d.Speed;});
+    var speedSumGroup = runDimension.group().reduceSum(function (d) {
+        return d.Speed;
+    });
 
-      exptOnlyDimension  = ndx.dimension(function(d) {return d.Expt;})
-      exptOnlySpeedGroup = exptOnlyDimension.group().reduceSum(function(d) {return d.Speed;});
+    var runOnlyDimension = ndx.dimension(function (d) {
+        return d.Run;
+    });
+    var runOnlySpeedGroup = runOnlyDimension.group().reduceSum(function (d) {
+        return d.Speed;
+    });
+
+    var exptOnlyDimension = ndx.dimension(function (d) {
+        return d.Expt;
+    });
+    var exptOnlySpeedGroup = exptOnlyDimension.group().reduceSum(function (d) {
+        return d.Speed;
+    });
 
     chart3
         .width(200)
         .height(200)
         .dimension(exptOnlyDimension)
-        .group(exptOnlySpeedGroup)
+        .group(exptOnlySpeedGroup);
 
     chart2
         .width(200)
         .height(200)
         .dimension(runOnlyDimension)
-        .group(runOnlySpeedGroup)
+        .group(runOnlySpeedGroup);
 
     chart
         .width(768)
@@ -60,12 +74,8 @@ d3.csv("morley.csv", function(error, experiments) {
         .group(speedSumGroup)
         .legend(dc.legend());
 
-    
-  dc.renderAll();  
-//  chart.render();
-    
+    dc.renderAll();
 
-    
 });
 
 </script>

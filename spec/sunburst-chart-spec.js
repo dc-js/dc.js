@@ -30,7 +30,7 @@ describe('dc.sunburstChart', function () {
         });
 
         dateDimension = data.dimension(function (d) {
-            return d3.time.day.utc(d.dd);
+            return d3.utcDay(d.dd);
         });
 
         statusGroup = statusDimension.group();
@@ -144,14 +144,14 @@ describe('dc.sunburstChart', function () {
             });
         });
         it('slice path fill should be set correctly', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][0]).attr('fill')).toEqual('#3182bd');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][1]).attr('fill')).toEqual('#6baed6');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][2]).attr('fill')).toEqual('#9ecae1');
-            expect(d3.select(chart.selectAll('g.pie-slice path')[0][3]).attr('fill')).toEqual('#c6dbef');
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[0]).attr('fill')).toEqual('#3182bd');
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[1]).attr('fill')).toEqual('#6baed6');
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[2]).attr('fill')).toEqual('#9ecae1');
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[3]).attr('fill')).toEqual('#c6dbef');
         });
         it('slice label text should be set', function () {
             chart.selectAll('svg g text.pie-slice').call(function (p) {
-                expect(p.text()).toEqual(p.datum().key);
+                expect(p.text()).toEqual(p.datum().data.key);
             });
         });
         it('slice label should be middle anchored', function () {
@@ -191,7 +191,7 @@ describe('dc.sunburstChart', function () {
                 return chart;
             });
             it('multiple invocation of render should update chart', function () {
-                expect(d3.selectAll('#pie-chart-age svg')[0].length).toEqual(1);
+                expect(d3.selectAll('#pie-chart-age svg').nodes().length).toEqual(1);
             });
         });
 
@@ -205,7 +205,7 @@ describe('dc.sunburstChart', function () {
                 expect(chart.select('g').classed('empty-chart')).toBeTruthy();
             });
             it('should have one slice', function () {
-                expect(chart.selectAll('svg g text.pie-slice').length).toBe(1);
+                expect(chart.selectAll('svg g text.pie-slice').nodes().length).toBe(1);
             });
             afterEach(function () {
                 statusDimension.filterAll();
@@ -249,8 +249,8 @@ describe('dc.sunburstChart', function () {
                 chart.filter(dc.filters.HierarchyFilter(['US', 'West', 'Colorado']));
                 chart.render();
                 chart.selectAll('g.pie-slice-level-3').each(function (d) {
-                    if (d.data.key.toString() === ['CA', 'East', 'Ontario'].toString() ||
-                        d.data.key.toString() === ['US', 'West', 'Colorado'].toString()
+                    if (d.data.path.toString() === ['CA', 'East', 'Ontario'].toString() ||
+                        d.data.path.toString() === ['US', 'West', 'Colorado'].toString()
                     ) {
                         expect(d3.select(this).attr('class').indexOf('selected') >= 0).toBeTruthy();
                     } else {
@@ -282,7 +282,7 @@ describe('dc.sunburstChart', function () {
                 expect(chart.filters()).toEqual([]);
                 var d = chart.select('.pie-slice-level-3').datum();
                 chart.onClick(d);
-                expect(chart.filter().slice(0)).toEqual(d.path);
+                expect(chart.filter().slice(0)).toEqual(d.data.path);
             });
             it('onClick should reset filter if clicked twice', function () {
                 expect(chart.filters()).toEqual([]);

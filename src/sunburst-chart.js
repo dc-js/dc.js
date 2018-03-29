@@ -46,10 +46,12 @@ dc.sunburstChart = function (parent, chartGroup) {
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
     _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+        return _chart.cappedKeyAccessor(d.data) + ': ' + _chart.cappedValueAccessor(d);
     });
 
-    _chart.label(_chart.cappedKeyAccessor);
+    _chart.label(function (d) {
+        return _chart.cappedKeyAccessor(d.data);
+    });
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
@@ -93,16 +95,16 @@ dc.sunburstChart = function (parent, chartGroup) {
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
             cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
-            sunburstData = partitionLayout().nodes(cdata);
+            sunburstData = partitionLayout(cdata);
             sunburstData.shift();
             _g.classed(_emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
-            cdata = dc.utils.toHierarchy([{key: [0], value: 1}], function (d) {
+            cdata = dc.utils.toHierarchy([], function (d) {
                 return d.value;
             });
-            sunburstData = partitionLayout().nodes(cdata);
+            sunburstData = partitionLayout(cdata);
             _g.classed(_emptyCssClass, true);
         }
 
@@ -379,23 +381,23 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     function buildArcs () {
-        return d3.svg.arc()
+        return d3.arc()
             .startAngle(function (d) {
-                return d.x;
+                return d.x0;
             })
             .endAngle(function (d) {
-                return d.x + d.dx;
+                return d.x1;
             })
             .innerRadius(function (d) {
-                return d.path && d.path.length === 1 ? _innerRadius : Math.sqrt(d.y);
+                return d.data.path && d.data.path.length === 1 ? _innerRadius : Math.sqrt(d.y0);
             })
             .outerRadius(function (d) {
-                return Math.sqrt(d.y + d.dy);
+                return Math.sqrt(d.y1);
             });
     }
 
     function isSelectedSlice (d) {
-        return isPathFiltered(d.path);
+        return isPathFiltered(d.data.path);
     }
 
     function isPathFiltered (path) {
@@ -426,17 +428,25 @@ dc.sunburstChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function partitionLayout () {
-        return d3.layout.partition()
-            .size([2 * Math.PI, _radius * _radius])
-            .value(_chart.cappedValueAccessor)
+    function partitionLayout (data) {
+        var hierarchy = d3.hierarchy(data)
+            .sum(function (d) {
+                return d.children ? 0 : _chart.cappedValueAccessor(d);
+            })
             .sort(function (a, b) {
-                return d3.ascending(a.path, b.path);
+                return d3.ascending(a.data.path, b.data.path);
             });
+
+        var partition = d3.partition()
+            .size([2 * Math.PI, _radius * _radius]);
+
+        partition(hierarchy);
+
+        return hierarchy.descendants();
     }
 
     function sliceTooSmall (d) {
-        var angle = (d.dx);
+        var angle = d.x1 - d.x0;
         return isNaN(angle) || angle < _minAngleForLabel;
     }
 
@@ -464,11 +474,12 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     function fill (d, i) {
-        return _chart.getColor(d, i);
+        return _chart.getColor(d.data, i);
     }
 
     function _onClick (d) {
-        var path = d.path;
+        // Not sure if it is best handling, in legends it is `d.key` while in slices `d.data.path`
+        var path = d.key || d.data.path;
         var filter = dc.filters.HierarchyFilter(path);
 
         // filters are equal to, parents or children of the path.
@@ -477,7 +488,6 @@ dc.sunburstChart = function (parent, chartGroup) {
         // clear out any filters that cover the path filtered.
         for (var i = filters.length - 1; i >= 0; i--) {
             var currentFilter = filters[i];
-            console.log(i, currentFilter);
             if (dc.utils.arraysIdentical(currentFilter, path)) {
                 exactMatch = true;
             }
