@@ -11,13 +11,13 @@
  * @mixes dc.baseMixin
  * @example
  *
- * var data=[{"firstname":"John","lastname":"Coltrane"}{"firstname":"Miles",lastname:"Davis"]
+ * var data = [{"firstname":"John","lastname":"Coltrane"}{"firstname":"Miles",lastname:"Davis"}]
  * var ndx = crossfilter(data);
  * var dimension = ndx.dimension(function(d) {
- *     return d.lastname.toLowerCase() + " "+ d.firstname.toLowerCase();
+ *     return d.lastname.toLowerCase() + ' ' + d.firstname.toLowerCase();
  * });
  *
- * dc.inputFilter('.search')
+ * dc.inputFilter('#search')
  *     .dimension(dimension);
  *     // you don't need the group() function
  *
@@ -30,81 +30,114 @@
  **/
 
 dc.inputFilter = function (parent, chartGroup) {
+    var INPUT_CSS_CLASS = 'dc-filter-input';
+
     var _chart = dc.baseMixin({});
-    var _html = function () {
-        return '<input class=\'form-control input-lg\' placeholder=\'search\'/>';
-    };
+
     var _normalize = function (s) {
         return s.toLowerCase();
     };
-    var _filterFunction = function (q) {
-        _chart.dimension().filterFunction(function (d) {
-            return d.indexOf(q) !== -1;
-        });
+
+    var _filterFunctionFactory = function (query) {
+        query = _normalize(query);
+        return function (d) {
+            return _normalize(d).indexOf(query) !== -1;
+        };
     };
-    var _throttleDuration = 200;
-    var _throttleTimer;
+
+    var _placeHolder = 'search';
 
     _chart.group(function () {
         throw 'the group function on inputFilter should never be called, please report the issue';
     });
 
     _chart._doRender = function () {
-        _chart.root().html(_html());
+        _chart.select('input').remove();
 
-        _chart.root().selectAll('input').on('input', function () {
-            _filterFunction(_normalize(this.value));
-            _throttle();
+        var _input = _chart.root().append('input')
+            .classed(INPUT_CSS_CLASS, true);
+
+        _input.on('input', function () {
+            _chart.dimension().filterFunction(_filterFunctionFactory(this.value));
+            dc.events.trigger(function () {
+                dc.redrawAll();
+            }, dc.constants.EVENT_DELAY);
         });
+
+        _chart._doRedraw();
+
         return _chart;
     };
-
-    function _throttle () {
-        window.clearTimeout(_throttleTimer);
-        _throttleTimer = window.setTimeout(function () {
-            dc.redrawAll();
-        }, _throttleDuration);
-    }
 
     _chart._doRedraw = function () {
+        _chart.root().selectAll('input')
+            .attr('placeholder', _placeHolder);
+
         return _chart;
     };
 
-    _chart.html = function (s) {
-        if (!arguments.length) {
-            return _html;
-        }
-        if (typeof s === 'string') {
-            _html = function () {
-                return s;
-            };
-        } else {
-            _html = s;
-        }
-        return _chart;
-    };
-
-    _chart.normalize = function (s) {
+    /**
+     * This function will be called on values before calling the filter function.
+     * @name normalize
+     * @memberof dc.inputFilter
+     * @instance
+     * @example
+     * // This is the default
+     * chart.normalize(function (s) {
+     *   return s.toLowerCase();
+     * });
+     * @param {function} [normalize]
+     * @returns {dc.inputFilter|function}
+     **/
+    _chart.normalize = function (normalize) {
         if (!arguments.length) {
             return _normalize;
         }
-        _normalize = s;
+        _normalize = normalize;
         return _chart;
     };
 
-    _chart.filterFunction = function (s) {
+    /**
+     * Placeholder text in the search box.
+     * @name placeHolder
+     * @memberof dc.inputFilter
+     * @instance
+     * @example
+     * // This is the default
+     * chart.placeHolder('type to filter');
+     * @param {function} [placeHolder='search']
+     * @returns {dc.inputFilter|string}
+     **/
+    _chart.placeHolder = function (placeHolder) {
         if (!arguments.length) {
-            return _filterFunction;
+            return _placeHolder;
         }
-        _filterFunction = s;
+        _placeHolder = placeHolder;
         return _chart;
     };
 
-    _chart.throttleDuration = function (s) {
+    /**
+     * This function will be called with the search text, it needs to return a function that will be used to
+     * filter the data. The default function checks presence of the search text.
+     * @name filterFunctionFactory
+     * @memberof dc.inputFilter
+     * @instance
+     * @example
+     * // This is the default
+     * function (query) {
+     *     query = _normalize(query);
+     *     return function (d) {
+     *         return _normalize(d).indexOf(query) !== -1;
+     *     };
+     * };
+     * @param {function} [filterFunctionFactory]
+     * @returns {dc.inputFilter|function}
+     **/
+    _chart.filterFunctionFactory = function (filterFunctionFactory) {
         if (!arguments.length) {
-            return _throttleDuration;
+            return _filterFunctionFactory;
         }
-        _throttleDuration = s;
+        _filterFunctionFactory = filterFunctionFactory;
         return _chart;
     };
 

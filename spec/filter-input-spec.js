@@ -9,7 +9,7 @@ describe('dc.inputFilter', function () {
         dateFixture = loadDateFixture();
         data = crossfilter(dateFixture);
         dimension = data.dimension(function (d) {
-            return d.countrycode.toLowerCase() + ' ' + d.state.toLowerCase();
+            return d.countrycode + ' ' + d.state;
         });
         group = dimension.group().reduceSum(function (d) {
             return 1;
@@ -42,37 +42,18 @@ describe('dc.inputFilter', function () {
     });
 
     describe('default accessor functions', function () {
-        it('exists for html()', function () {
-            var html = chart.html();
-            expect(typeof html).toBe('function');
-        });
         it('exists for normalize()', function () {
             var normalize = chart.normalize();
             expect(typeof normalize).toBe('function');
         });
-        it('exists for filterFunction()', function () {
-            var filterFunction = chart.filterFunction();
-            expect(typeof filterFunction).toBe('function');
+        it('exists for filterFunctionFactory()', function () {
+            var filterFunctionFactory = chart.filterFunctionFactory();
+            expect(typeof filterFunctionFactory).toBe('function');
         });
-        it('exists for throttleDuration()', function () {
-            var throttleDuration = chart.throttleDuration();
-            expect(typeof throttleDuration).toBe('number');
-            expect(throttleDuration).toBe(200);
-        });
-    });
-
-    describe('change the html search field', function () {
-        it('generates something', function () {
-            expect(chart).not.toBeNull();
-        });
-        it('registers', function () {
-            expect(dc.hasChart(chart)).toBeTruthy();
-        });
-        it('sets an input field', function () {
-            expect(chart.selectAll('input').nodes().length).toEqual(1);
-        });
-        it('doesn\'t filter by default', function () {
-            expect(chart.dimension().top(1000).length).toEqual(10);
+        it('exists for placeHolder()', function () {
+            var placeHolder = chart.placeHolder();
+            expect(typeof placeHolder).toBe('string');
+            expect(placeHolder).toBe('search');
         });
     });
 
@@ -92,9 +73,14 @@ describe('dc.inputFilter', function () {
             expect(chart.selectAll('input').nodes()[0].value).toEqual('42');
         });
 
-        it('a letter that exists', function () {
-            mockTyping('C');
-            expect(chart.selectAll('input').nodes().length).toEqual(1);
+        it('filters the dimension', function () {
+            mockTyping('lifo'); // Will match California
+            expect(chart.dimension().top(1000).length).toEqual(3);
+        });
+
+        it('filters the dimension in case insensitive way', function () {
+            mockTyping('LiFo'); // Will match California
+            expect(chart.dimension().top(1000).length).toEqual(3);
         });
 
     });
