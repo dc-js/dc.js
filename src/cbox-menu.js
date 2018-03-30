@@ -73,6 +73,7 @@ dc.cboxMenu = function (parent, chartGroup) {
         if (_chart.hasFilter() && _multiple) {
             _cbox.selectAll('input')
                 .property('checked', function (d) {
+                    // adding `false` avoids failing test cases in phantomjs
                     return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0 || false;
                 });
         } else if (_chart.hasFilter()) {
