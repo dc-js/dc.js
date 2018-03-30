@@ -5,7 +5,7 @@ describe('dc.htmlLegend', function () {
     beforeEach(function () {
         var data = crossfilter(loadDateFixture());
         dateDimension = data.dimension(function (d) {
-            return d3.time.day(d.dd);
+            return d3.timeDay(d.dd);
         });
         dateValueSumGroup = dateDimension.group().reduceSum(function (d) {
             return d.value;
@@ -26,21 +26,23 @@ describe('dc.htmlLegend', function () {
             .stack(dateValueSumGroup, 'Value Sum')
             .stack(dateValueSumGroup, 'Fixed', function () {
             })
-            .x(d3.time.scale().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
+            .x(d3.scaleTime().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
             .legend(dc.htmlLegend().container('#' + legendId));
         legend = d3.select('#' + legendId);
     });
 
     function legendItem (n, orientation) {
-        return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' + orientation)[0][n]);
+        return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' + orientation).nodes()[n]);
     }
 
     function legendLabel (n, orientation) {
-        return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' + orientation + ' span.dc-legend-item-label')[0][n]);
+        return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' +
+            orientation + ' span.dc-legend-item-label').nodes()[n]);
     }
 
     function legendIcon (n, orientation) {
-        return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' + orientation + ' span.dc-legend-item-color')[0][n]);
+        return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' +
+            orientation + ' span.dc-legend-item-color').nodes()[n]);
     }
 
     describe('rendering the legend', function () {
@@ -69,7 +71,7 @@ describe('dc.htmlLegend', function () {
         });
 
         it('not allow hiding stacks be default', function () {
-            legendItem(0, 'vertical').on('click').call(legendItem(0)[0][0], legendItem(0, 'vertical').datum());
+            legendItem(0, 'vertical').on('click').call(legendItem(0).nodes()[0], legendItem(0, 'vertical').datum());
             expect(chart.selectAll('path.line').size()).toBe(3);
         });
     });
@@ -102,7 +104,7 @@ describe('dc.htmlLegend', function () {
 
         it('not allow hiding stacks be default', function () {
             var firstLegendItem = legendItem(0, 'horizontal');
-            firstLegendItem.on('click').call(firstLegendItem[0][0], firstLegendItem.datum());
+            firstLegendItem.on('click').call(firstLegendItem.nodes()[0], firstLegendItem.datum());
             expect(chart.selectAll('path.line').size()).toBe(3);
         });
     });
