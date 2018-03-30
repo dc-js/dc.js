@@ -79,7 +79,10 @@ dc.cboxMenu = function (parent, chartGroup) {
         } else if (_chart.hasFilter()) {
             _cbox.selectAll('input')
                 .property('checked', function (d) {
-                    return d && (_chart.keyAccessor()(d) === _chart.filter());
+                    if (!d) {
+                        return false;
+                    }
+                    return _chart.keyAccessor()(d) === _chart.filter();
                 });
         }
         return _chart;
