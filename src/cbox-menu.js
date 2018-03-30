@@ -72,7 +72,7 @@ dc.cboxMenu = function (parent, chartGroup) {
 
         if (_chart.hasFilter() && _multiple) {
             _cbox.selectAll('input')
-                 .property('checked', function (d) {
+                .property('checked', function (d) {
                     return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0;
                 });
         } else if (_chart.hasFilter()) {
@@ -89,9 +89,13 @@ dc.cboxMenu = function (parent, chartGroup) {
             return _chart.keyAccessor()(d);
         });
 
-        options.enter()
-        .append('li')
-            .classed(ITEM_CSS_CLASS, true);
+        options.exit().remove();
+
+        options = options.enter()
+                .append('li')
+                .classed(ITEM_CSS_CLASS, true)
+            .merge(options);
+
         options
             .append('input')
             .attr('type', _inputType)
@@ -132,7 +136,6 @@ dc.cboxMenu = function (parent, chartGroup) {
                 .text(_promptText);
         }
 
-        options.exit().remove();
         _cbox
             .selectAll('li.' + ITEM_CSS_CLASS)
             .sort(_order);
@@ -143,8 +146,9 @@ dc.cboxMenu = function (parent, chartGroup) {
 
     function onChange (d, i) {
         var values,
-        target = d3.select(d3.event.target),
-        options;
+            target = d3.select(d3.event.target),
+            options;
+
         if (!target.datum()) {
             values = _promptValue || null;
         } else {
@@ -154,7 +158,7 @@ dc.cboxMenu = function (parent, chartGroup) {
                     return this.checked;
                 }
             });
-            values = options[0].map(function (option) {
+            values = options.nodes().map(function (option) {
                 return option.value;
             });
             // check if only prompt option is selected
