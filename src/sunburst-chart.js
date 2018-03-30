@@ -46,12 +46,10 @@ dc.sunburstChart = function (parent, chartGroup) {
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
     _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d.data) + ': ' + _chart.cappedValueAccessor(d);
+        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
     });
 
-    _chart.label(function (d) {
-        return _chart.cappedKeyAccessor(d.data);
-    });
+    _chart.label(_chart.cappedKeyAccessor);
     _chart.renderLabel(true);
 
     _chart.transitionDuration(350);
@@ -95,7 +93,8 @@ dc.sunburstChart = function (parent, chartGroup) {
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
             cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
-            sunburstData = partitionLayout(cdata);
+            sunburstData = partitionNodes(cdata);
+            // First one is the root, which is not needed
             sunburstData.shift();
             _g.classed(_emptyCssClass, false);
         } else {
@@ -104,7 +103,7 @@ dc.sunburstChart = function (parent, chartGroup) {
             cdata = dc.utils.toHierarchy([], function (d) {
                 return d.value;
             });
-            sunburstData = partitionLayout(cdata);
+            sunburstData = partitionNodes(cdata);
             _g.classed(_emptyCssClass, true);
         }
 
@@ -397,7 +396,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     function isSelectedSlice (d) {
-        return isPathFiltered(d.data.path);
+        return isPathFiltered(d.path);
     }
 
     function isPathFiltered (path) {
@@ -428,7 +427,8 @@ dc.sunburstChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function partitionLayout (data) {
+    function partitionNodes (data) {
+        // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
         var hierarchy = d3.hierarchy(data)
             .sum(function (d) {
                 return d.children ? 0 : _chart.cappedValueAccessor(d);
@@ -442,7 +442,14 @@ dc.sunburstChart = function (parent, chartGroup) {
 
         partition(hierarchy);
 
-        return hierarchy.descendants();
+        // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
+        var nodes = hierarchy.descendants().map(function (d) {
+            d.key = d.data.key;
+            d.path = d.data.path;
+            return d;
+        });
+
+        return nodes;
     }
 
     function sliceTooSmall (d) {
@@ -474,12 +481,11 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     function fill (d, i) {
-        return _chart.getColor(d.data, i);
+        return _chart.getColor(d, i);
     }
 
     function _onClick (d) {
-        // Not sure if it is best handling, in legends it is `d.key` while in slices `d.data.path`
-        var path = d.key || d.data.path;
+        var path = d.path;
         var filter = dc.filters.HierarchyFilter(path);
 
         // filters are equal to, parents or children of the path.
