@@ -77,8 +77,10 @@ dc.cboxMenu = function (parent, chartGroup) {
                     return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0 || false;
                 });
         } else if (_chart.hasFilter()) {
-            _cbox.select('input[value="' + _chart.filter() + '"]')
-                .property('checked', true);
+            _cbox.selectAll('input')
+                .property('checked', function (d) {
+                    return d && (_chart.keyAccessor()(d) === _chart.filter());
+                });
         }
         return _chart;
     };
