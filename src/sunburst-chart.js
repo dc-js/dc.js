@@ -485,7 +485,9 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     function _onClick (d) {
-        var path = d.path;
+        // Clicking on Legends do not filter, it throws exception
+        // Must be better way to handle this, in legends we need to access `d.key`
+        var path = d.path || d.key;
         var filter = dc.filters.HierarchyFilter(path);
 
         // filters are equal to, parents or children of the path.
