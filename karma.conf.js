@@ -14,19 +14,6 @@ module.exports = function (config) {
 
 
         // list of files / patterns to load in the browser
-        files: [
-            // Helpers
-            'web/js/jasmine-jsreporter.js',
-            'spec/helpers/*.js',
-            // JS code dependencies
-            'web/js/d3.js',
-            'web/js/crossfilter.js',
-            'web/js/colorbrewer.js',
-            // Code to be tested
-            'web/js/dc.js',
-            // Jasmine spec files
-            'spec/*spec.js'
-        ],
 
 
         // list of files / patterns to exclude
@@ -63,7 +50,9 @@ module.exports = function (config) {
 
         // start these browsers
         // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-        browsers: ['Firefox', 'Chrome'],
+        browsers: ['Chrome'],
+
+        browserConsoleLogOptions: {level: 'error'},
 
 
         // Continuous Integration mode
