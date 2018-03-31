@@ -276,7 +276,16 @@ module.exports = function (grunt) {
                 concurrency: Infinity
             },
             unit: {
-                reporters: ['progress']
+                browsers: ['Chrome', 'Firefox', 'PhantomJS'],
+                reporters: ['dots', 'summary'],
+                summaryReporter: {
+                    // 'failed', 'skipped' or 'all'
+                    show: 'failed',
+                    // Limit the spec label to this length
+                    specLength: 100,
+                    // Show an 'all' column as a summary
+                    overviewColumn: true
+                }
             },
             ci: {
                 browsers: ['Chrome', 'Firefox'],
