@@ -265,19 +265,7 @@ module.exports = function (grunt) {
                 exclude: [],
                 preprocessors: {},
                 // possible values: 'dots', 'progress'
-                reporters: ['dots'],
-                port: 9876,
-                colors: true,
-                logLevel: config.LOG_INFO,
-                autoWatch: false,
-                browsers: ['Firefox'],
-                browserConsoleLogOptions: {level: 'error'},
-                singleRun: true,
-                concurrency: Infinity
-            },
-            unit: {
-                browsers: ['Chrome', 'Firefox', 'PhantomJS'],
-                reporters: ['dots', 'summary'],
+                reporters: ['progress', 'summary'],
                 summaryReporter: {
                     // 'failed', 'skipped' or 'all'
                     show: 'failed',
@@ -285,12 +273,62 @@ module.exports = function (grunt) {
                     specLength: 100,
                     // Show an 'all' column as a summary
                     overviewColumn: true
-                }
+                },
+                port: 9876,
+                colors: true,
+                logLevel: 'INFO',
+                autoWatch: false,
+                browsers: ['Firefox'],
+                browserConsoleLogOptions: {level: 'error'},
+                singleRun: true,
+                concurrency: Infinity
             },
+            unit: {},
             ci: {
                 browsers: ['Chrome', 'Firefox'],
-                concurrency: 1,
-                reporters: ['dots']
+                concurrency: 2,
+                reporters: ['dots', 'summary']
+            },
+            sauceLabs: {
+                testName: 'dc.js unit tests',
+                customLaunchers: {
+                    slFirefoxLinux: {
+                        base: 'SauceLabs',
+                        browserName: 'firefox',
+                        version: '45.0',
+                        platform: 'Linux'
+                    },
+                    slSafari: {
+                        base: 'SauceLabs',
+                        browserName: 'safari',
+                        version: '9.0',
+                        platform: 'OS X 10.11'
+                    },
+                    slInternetExplorer11: {
+                        base: 'SauceLabs',
+                        browserName: 'internet explorer',
+                        platform: 'Windows 10',
+                        version: '11.0'
+                    },
+                    slInternetExplorer11win8: {
+                        base: 'SauceLabs',
+                        browserName: 'internet explorer',
+                        version: '11.0',
+                        platform: 'Windows 8.1'
+                    },
+                    slMicrosoftEdge: {
+                        base: 'SauceLabs',
+                        browserName: 'MicrosoftEdge',
+                        version: '14',
+                        platform: 'Windows 10'
+                    }
+                },
+                browsers: ['slInternetExplorer11', 'slInternetExplorer11win8', 'slMicrosoftEdge',
+                    'slFirefoxLinux', 'slSafari'],
+                concurrency: 2,
+                browserNoActivityTimeout: 120000,
+                reporters: ['saucelabs', 'summary'],
+                singleRun: true
             }
         },
         jsdoc: {
@@ -493,11 +531,11 @@ module.exports = function (grunt) {
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
-    grunt.registerTask('test', ['build', 'copy', 'jasmine:specs']);
+    grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
     grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'copy', 'jasmine:coverage']);
-    grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
-    grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
+    grunt.registerTask('ci', ['ci-pull', 'karma:sauceLabs']);
+    grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
     grunt.registerTask('lint', ['jshint', 'jscs']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
