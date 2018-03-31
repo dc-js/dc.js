@@ -7,38 +7,84 @@
 </head>
 <body>
 
-<div id="test"></div>
-<div id="legend"></div>
+<p>This page demonstrates the usage of the html legend.
+    It shows example of scrollbars for the vertical menu and setting up a horizontal menu</p>
+<div class="container">
 
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+    <div style="width:600px; height:300px">
+        <div id="year"></div>
+        <div id="year-legend"></div>
+    </div>
 
-    var chart = dc.pieChart("#test");
-    d3.csv("morley.csv", function (error, experiments) {
+    <div style="width:600px; height:300px">
+        <div id="name"></div>
+        <div id="name-legend"></div>
+    </div>
 
-        var ndx = crossfilter(experiments),
-            runDimension = ndx.dimension(function (d) {
-                return "run-" + d.Run;
-            }),
-            speedSumGroup = runDimension.group().reduceSum(function (d) {
-                return d.Speed * d.Run;
-            });
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
 
-        chart
-            .width(768)
-            .height(480)
-            .slicesCap(4)
-            .innerRadius(100)
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            .legend(dc.htmlLegend().container('#legend').horizontal(false));
+    <style type="text/css">
+        /* overrode the dc-html-legend class to make scroll bar appear for examples purpose*/
+        .dc-html-legend {
+            height: 80px;
+            width: 150px;
+        }
+    </style>
 
-        chart.render();
-    });
+    <script type="text/javascript">
 
-</script>
+      var spendData = [
+        { Name: 'Mr A', Spent: '$40', Year: 2010 },
+        { Name: 'Mr B', Spent: '$10', Year: 2011 },
+        { Name: 'Mr C', Spent: '$40', Year: 2012 },
+        { Name: 'Mr D', Spent: '$70', Year: 2013 },
+        { Name: 'Mr E', Spent: '$20', Year: 2014 },
+        { Name: 'Mr F', Spent: '$50', Year: 2015 },
+        { Name: 'Mr G', Spent: '$30', Year: 2016 }
+      ];
+      // normalize/parse data
+      spendData.forEach(function (d) {
+        d.Spent = d.Spent.match(/\d+/)[0];
+      });
+      // set crossfilter
+      var ndx = crossfilter(spendData),
+        yearDim = ndx.dimension(function (d) {
+          return +d.Year;
+        }),
+        nameDim = ndx.dimension(function (d) {
+          return d.Name;
+        }),
+        spendPerYear = yearDim.group().reduceSum(function (d) {
+          return +d.Spent;
+        }),
+        nameGroup = nameDim.group().reduceCount();
 
+
+      var yearChart = dc.pieChart("#year"),
+        nameChart = dc.pieChart("#name");
+
+      yearChart
+        .width(400)
+        .height(300)
+        .innerRadius(100)
+        .dimension(yearDim)
+        .group(spendPerYear)
+        .legend(dc.htmlLegend().container('#year-legend').horizontal(false));
+
+      nameChart
+        .width(400)
+        .height(300)
+        .innerRadius(100)
+        .dimension(nameDim)
+        .group(nameGroup)
+        .legend(dc.htmlLegend().container('#name-legend').horizontal(true));
+
+      yearChart.render();
+      nameChart.render();
+
+    </script>
+</div>
 </body>
 </html>
