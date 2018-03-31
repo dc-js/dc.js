@@ -5,6 +5,9 @@ module.exports = function (grunt) {
         pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
     });
     require('time-grunt')(grunt);
+
+    grunt.loadNpmTasks('grunt-karma');
+
     var formatFileList = require('./grunt/format-file-list')(grunt);
 
     var config = {
@@ -238,6 +241,46 @@ module.exports = function (grunt) {
                     ],
                     testname: '<%= conf.pkg.name %>.js'
                 }
+            }
+        },
+        karma: {
+            options: {
+                basePath: '',
+                frameworks: ['jasmine'],
+                files: [
+                    // CSS files
+                    '<%= conf.web %>/css/dc.css',
+                    // Helpers
+                    '<%= conf.web %>/js/jasmine-jsreporter.js',
+                    '<%= conf.spec %>/helpers/*.js',
+                    // JS code dependencies
+                    '<%= conf.web %>/js/d3.js',
+                    '<%= conf.web %>/js/crossfilter.js',
+                    '<%= conf.web %>/js/colorbrewer.js',
+                    // Code to be tested
+                    '<%= conf.pkg.name %>.js',
+                    // Jasmine spec files
+                    '<%= conf.spec %>/cap*spec.js'
+                ],
+                exclude: [],
+                preprocessors: {},
+                // possible values: 'dots', 'progress'
+                reporters: ['dots'],
+                port: 9876,
+                colors: true,
+                logLevel: config.LOG_INFO,
+                autoWatch: false,
+                browsers: ['Firefox'],
+                browserConsoleLogOptions: {level: 'error'},
+                singleRun: true,
+                concurrency: Infinity
+            },
+            unit: {
+                reporters: ['progress']
+            },
+            ci: {
+                browsers: ['Chrome'],
+                reporters: ['dots']
             }
         },
         jsdoc: {

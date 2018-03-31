@@ -47,6 +47,7 @@
     "grunt-jscs": "~3.0",
     "grunt-jsdoc": "^2.2.0",
     "grunt-jsdoc-to-markdown": "3.x",
+    "grunt-karma": "^2.0.0",
     "grunt-lib-phantomjs": "~1.1",
     "grunt-markdown": "~0.7",
     "grunt-sass": "2.x",
