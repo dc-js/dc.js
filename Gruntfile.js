@@ -279,7 +279,7 @@ module.exports = function (grunt) {
                 reporters: ['progress']
             },
             ci: {
-                browsers: ['Chrome'],
+                browsers: ['Chrome', 'Firefox'],
                 reporters: ['dots']
             }
         },
