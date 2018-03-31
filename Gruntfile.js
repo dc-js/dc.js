@@ -286,7 +286,7 @@ module.exports = function (grunt) {
             unit: {},
             ci: {
                 browsers: ['Chrome', 'Firefox'],
-                concurrency: 2,
+                concurrency: 1,
                 reporters: ['dots', 'summary']
             },
             sauceLabs: {
