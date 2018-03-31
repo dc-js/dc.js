@@ -260,7 +260,7 @@ module.exports = function (grunt) {
                     // Code to be tested
                     '<%= conf.pkg.name %>.js',
                     // Jasmine spec files
-                    '<%= conf.spec %>/cap*spec.js'
+                    '<%= conf.spec %>/*spec.js'
                 ],
                 exclude: [],
                 preprocessors: {},
@@ -280,6 +280,7 @@ module.exports = function (grunt) {
             },
             ci: {
                 browsers: ['Chrome', 'Firefox'],
+                concurrency: 1,
                 reporters: ['dots']
             }
         },
