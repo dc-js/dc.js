@@ -8,30 +8,26 @@
 <body>
 
 <p>This page demonstrates the usage of the html legend.
-    It shows example of scrollbars for the vertical menu and setting up a horizontal menu</p>
+    It shows example of scrollbars for the vertical menu and setting up a horizontal menu.
+</p>
+<p style="padding-bottom: 20px">
+    It also shows the selected legend highlighted
+</p>
 <div class="container">
 
-    <div style="width:600px; height:300px">
+    <div style="width:400px; height:150px;display: inline-block">
         <div id="year"></div>
-        <div id="year-legend"></div>
+        <div id="year-legend" class="dc-html-legend-container"></div>
     </div>
 
-    <div style="width:600px; height:300px">
+    <div style="width:400px; height:150px;display: inline-block;margin-left: 100px">
         <div id="name"></div>
-        <div id="name-legend"></div>
+        <div id="name-legend" class="dc-html-legend-container"></div>
     </div>
 
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
-
-    <style type="text/css">
-        /* overrode the dc-html-legend class to make scroll bar appear for examples purpose*/
-        .dc-html-legend {
-            height: 80px;
-            width: 150px;
-        }
-    </style>
 
     <script type="text/javascript">
 
@@ -42,7 +38,11 @@
         { Name: 'Mr D', Spent: '$70', Year: 2013 },
         { Name: 'Mr E', Spent: '$20', Year: 2014 },
         { Name: 'Mr F', Spent: '$50', Year: 2015 },
-        { Name: 'Mr G', Spent: '$30', Year: 2016 }
+        { Name: 'Mr G', Spent: '$30', Year: 2016 },
+        { Name: 'Mr D', Spent: '$70', Year: 2017 },
+        { Name: 'Mr E', Spent: '$20', Year: 2018 },
+        { Name: 'Mr F', Spent: '$50', Year: 2019 },
+        { Name: 'Mr G', Spent: '$30', Year: 2020 }
       ];
       // normalize/parse data
       spendData.forEach(function (d) {
@@ -56,7 +56,7 @@
         nameDim = ndx.dimension(function (d) {
           return d.Name;
         }),
-        spendPerYear = yearDim.group().reduceSum(function (d) {
+        spendPerYearGroup = yearDim.group().reduceSum(function (d) {
           return +d.Spent;
         }),
         nameGroup = nameDim.group().reduceCount();
@@ -66,17 +66,16 @@
         nameChart = dc.pieChart("#name");
 
       yearChart
-        .width(400)
-        .height(300)
-        .innerRadius(100)
+        .width(200)
+        .height(150)
         .dimension(yearDim)
-        .group(spendPerYear)
+        .group(spendPerYearGroup)
+        .turnOnControls(true)
         .legend(dc.htmlLegend().container('#year-legend').horizontal(false));
 
       nameChart
-        .width(400)
-        .height(300)
-        .innerRadius(100)
+        .width(200)
+        .height(150)
         .dimension(nameDim)
         .group(nameGroup)
         .legend(dc.htmlLegend().container('#name-legend').horizontal(true));
