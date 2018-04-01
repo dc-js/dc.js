@@ -291,6 +291,8 @@ div.dc-html-legend {
   .dc-legend-item-vertical {
     display: block;
     margin-top: 5px;
+    padding-top: 1px;
+    padding-bottom: 1px;
     cursor: pointer;
       &.selected{
           background-color: rgb(49, 130, 189);
@@ -307,6 +309,8 @@ div.dc-html-legend {
     display: table-cell;
     vertical-align: middle;
     padding-left: 3px;
+    padding-right: 3px;
+    font-size: 0.75em;
   }
 }
 
