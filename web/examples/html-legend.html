@@ -71,14 +71,14 @@
         .dimension(yearDim)
         .group(spendPerYearGroup)
         .turnOnControls(true)
-        .legend(dc.htmlLegend().container('#year-legend').horizontal(false));
+        .legend(dc.htmlLegend().container('#year-legend').horizontal(false).highlightSelected(true));
 
       nameChart
         .width(200)
         .height(150)
         .dimension(nameDim)
         .group(nameGroup)
-        .legend(dc.htmlLegend().container('#name-legend').horizontal(true));
+        .legend(dc.htmlLegend().container('#name-legend').horizontal(true).highlightSelected(true));
 
       yearChart.render();
       nameChart.render();

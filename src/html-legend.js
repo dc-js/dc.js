@@ -15,9 +15,8 @@ dc.htmlLegend = function () {
         _legendText = dc.pluck('name'),
         _maxItems,
         _horizontal = false,
-        _legendItemClass;
-
-    var _l;
+        _legendItemClass,
+        _highlightSelected = false;
 
     _legend.parent = function (p) {
         if (!arguments.length) {
@@ -31,7 +30,7 @@ dc.htmlLegend = function () {
         var orientation = _horizontal ? 'horizontal' : 'vertical';
         _container.select('div.dc-html-legend').remove();
 
-        _l = _container.append('div').attr('class', 'dc-html-legend');
+        var _l = _container.append('div').attr('class', 'dc-html-legend');
         _l.attr('style', 'max-width:' + _container.nodes()[0].style.width);
 
         var legendables = _parent.legendables();
@@ -49,7 +48,7 @@ dc.htmlLegend = function () {
             .on('mouseover', _parent.legendHighlight)
             .on('mouseout', _parent.legendReset)
             .on('click', _parent.legendToggle);
-        if (!_legendItemClass) {
+        if (_highlightSelected && !_legendItemClass) {
             itemEnter.attr('class', function (d) {
                 return legendItemClassName + (filters.indexOf(d.name) === -1 ? '' : ' selected');
             });
@@ -88,6 +87,18 @@ dc.htmlLegend = function () {
             return _legendItemClass;
         }
         _legendItemClass = c;
+        return _legend;
+    };
+
+    /**
+     #### .highlightSelected([boolean])
+     This can be optionally used to enable highlighting legends for the selections/filters for the chart.
+     **/
+    _legend.highlightSelected = function (c) {
+        if (!arguments.length) {
+            return _highlightSelected;
+        }
+        _highlightSelected = c;
         return _legend;
     };
 
