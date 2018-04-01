@@ -59,7 +59,7 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 //d3.json('data.json', function(data) {...});
 //jQuery.getJson('data.json', function(data){...});
 //```
-d3.csv('ndx.csv', function (data) {
+d3.csv('ndx.csv').then(function (data) {
     // Since its a csv file we need to format the data a bit.
     var dateFormatSpecifier = '%m/%d/%Y';
     var dateFormat = d3.timeFormat(dateFormatSpecifier);
