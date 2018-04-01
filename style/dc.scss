@@ -273,27 +273,43 @@ div.dc-chart {
 
 
 div.dc-html-legend {
-    overflow: auto;
-    .dc-legend-item-horizontal {
-        display: inline-block;
-        margin-left: 5px;
-        margin-right: 5px;
-        cursor: pointer;
-    }
-    .dc-legend-item-vertical {
-        display: block;
-        margin-top: 5px;
-        cursor: pointer;
-    }
-    .dc-legend-item-color {
-        display: table-cell;
-        width: 12px;
-        height: 12px;
-    }
-    .dc-legend-item-label {
-        line-height: 12px;
-        display: table-cell;
-        vertical-align: middle;
-        padding-left: 3px;
-    }
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: inherit;
+  float: right;
+  padding-right: 2px;
+  .dc-legend-item-horizontal {
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px;
+    cursor: pointer;
+      &.selected{
+          background-color: rgb(49, 130, 189);
+          color: white;
+      }
+  }
+  .dc-legend-item-vertical {
+    display: block;
+    margin-top: 5px;
+    cursor: pointer;
+      &.selected{
+          background-color: rgb(49, 130, 189);
+          color: white;
+      }
+  }
+  .dc-legend-item-color {
+    display: table-cell;
+    width: 12px;
+    height: 12px;
+  }
+  .dc-legend-item-label {
+    line-height: 12px;
+    display: table-cell;
+    vertical-align: middle;
+    padding-left: 3px;
+  }
+}
+
+.dc-html-legend-container{
+    height: inherit;
 }

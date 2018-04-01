@@ -2,9 +2,7 @@
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
  * labels.
  *
- * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @class legend
+ * @class htmlLegend
  * @memberof dc
  * @example
  * chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
@@ -16,7 +14,8 @@ dc.htmlLegend = function () {
         _container,
         _legendText = dc.pluck('name'),
         _maxItems,
-        _horizontal = false;
+        _horizontal = false,
+        _legendItemClass;
 
     var _l;
 
@@ -31,23 +30,38 @@ dc.htmlLegend = function () {
     _legend.render = function () {
         var orientation = _horizontal ? 'horizontal' : 'vertical';
         _container.select('div.dc-html-legend').remove();
-        _l = _container.append('div')
-            .attr('class', 'dc-html-legend');
+
+        _l = _container.append('div').attr('class', 'dc-html-legend');
+        _l.attr('style', 'max-width:' + _container.nodes()[0].style.width);
+
         var legendables = _parent.legendables();
+        var filters = _parent.filters();
+
         if (_maxItems !== undefined) {
             legendables = legendables.slice(0, _maxItems);
         }
-        var itemEnter = _l.selectAll('div.dc-legend-item-' + orientation)
+
+        var legendItemClassName = _legendItemClass ? _legendItemClass : 'dc-legend-item-' + orientation;
+
+        var itemEnter = _l.selectAll('div.' + legendItemClassName)
             .data(legendables).enter()
-            .append('div').attr('class', 'dc-legend-item-' + orientation)
+            .append('div').attr('class', legendItemClassName)
             .on('mouseover', _parent.legendHighlight)
             .on('mouseout', _parent.legendReset)
             .on('click', _parent.legendToggle);
+        if (!_legendItemClass) {
+            itemEnter.attr('class', function (d) {
+                return legendItemClassName + (filters.indexOf(d.name) === -1 ? '' : ' selected');
+            });
+        }
+
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-color')
             .style('background-color', dc.pluck('color'));
+
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-label')
+            .attr('title', _legendText)
             .text(_legendText);
     };
 
@@ -64,8 +78,22 @@ dc.htmlLegend = function () {
     };
 
     /**
+     #### .legendItemClass([selector])
+     This can be optionally used to override class for legenditem and just use this class style.
+     The reason to have this is so this can be done for a particular chart rather than overriding the style for all charts
+     Setting this will disable the highlighting of selected items also.
+     **/
+    _legend.legendItemClass = function (c) {
+        if (!arguments.length) {
+            return _legendItemClass;
+        }
+        _legendItemClass = c;
+        return _legend;
+    };
+
+    /**
      #### .horizontal([boolean])
-     Display the legend horizontally instead of vertically
+     Display the legend horizontally instead of horizontally
      **/
     _legend.horizontal = function (b) {
         if (!arguments.length) {
