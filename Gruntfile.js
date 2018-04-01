@@ -2,7 +2,7 @@ module.exports = function (grunt) {
     'use strict';
 
     require('load-grunt-tasks')(grunt, {
-        pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
+        pattern: ['grunt-*']
     });
     require('time-grunt')(grunt);
 
@@ -115,10 +115,6 @@ module.exports = function (grunt) {
             sass: {
                 files: ['style/<%= conf.pkg.name %>.scss'],
                 tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
-            },
-            jasmineRunner: {
-                files: ['<%= conf.spec %>/**/*.js'],
-                tasks: ['jasmine:specs:build']
             },
             tests: {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/**/*.js'],
@@ -434,7 +430,6 @@ module.exports = function (grunt) {
             options: {
                 interrupt: true
             },
-            // runner: grunt.config('watch').jasmineRunner,
             scripts: grunt.config('watch').scripts,
             sass: grunt.config('watch').sass
         });
