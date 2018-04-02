@@ -1238,8 +1238,7 @@ dc.coordinateGridMixin = function (_chart) {
             .duration(_chart.transitionDuration());
 
         if (_zoomOutRestrict) {
-            // Ensure minimum zoomScale is at least 1
-            var zoomScaleMin = _zoomScale[0] < 1 ? 1 : _zoomScale[0];
+            var zoomScaleMin = Math.max(_zoomScale[0], 1);
             _zoom
                 .translateExtent(extent)
                 .scaleExtent([zoomScaleMin, _zoomScale[1]]);
