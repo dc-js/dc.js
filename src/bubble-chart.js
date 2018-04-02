@@ -128,7 +128,7 @@ dc.bubbleChart = function (parent, chartGroup) {
         // override default x axis brush from parent chart
     };
 
-    _chart.redrawBrush = function (g, selection, doTransition) {
+    _chart.redrawBrush = function (selection) {
         // override default x axis brush from parent chart
         _chart.fadeDeselectedArea(selection);
     };
