@@ -1208,7 +1208,7 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         if (render) {
-            _chart.renderBrush(_chart.g(), false);
+            _chart.renderBrush(_chart.g());
         } else {
             _chart.redrawBrush(_chart.filter());
         }
