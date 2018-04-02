@@ -2,16 +2,16 @@
 describe('dc.htmlLegend', function () {
     var id, chart, dateDimension, dateValueSumGroup, dateIdSumGroup, legend, legendId;
 
-    function legendItem(n, orientation) {
+    function legendItem (n, orientation) {
         return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' + orientation).nodes()[n]);
     }
 
-    function legendLabel(n, orientation) {
+    function legendLabel (n, orientation) {
         return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' +
             orientation + ' span.dc-legend-item-label').nodes()[n]);
     }
 
-    function legendIcon(n, orientation) {
+    function legendIcon (n, orientation) {
         return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' +
             orientation + ' span.dc-legend-item-color').nodes()[n]);
     }

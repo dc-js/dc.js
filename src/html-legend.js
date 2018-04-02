@@ -10,6 +10,9 @@
  */
 dc.htmlLegend = function () {
     var _legend = {},
+        _htmlLegendDivCssClass = 'dc-html-legend',
+        _legendItemCssClassHorizontal = 'dc-legend-item-horizontal',
+        _legendItemCssClassVertical = 'dc-legend-item-vertical',
         _parent,
         _container,
         _legendText = dc.pluck('name'),
@@ -27,10 +30,10 @@ dc.htmlLegend = function () {
     };
 
     _legend.render = function () {
-        var orientation = _horizontal ? 'horizontal' : 'vertical';
+        var _defaultLegendItemCssClass = _horizontal ?  _legendItemCssClassHorizontal : _legendItemCssClassVertical;
         _container.select('div.dc-html-legend').remove();
 
-        var _l = _container.append('div').attr('class', 'dc-html-legend');
+        var _l = _container.append('div').attr('class', _htmlLegendDivCssClass);
         _l.attr('style', 'max-width:' + _container.nodes()[0].style.width);
 
         var legendables = _parent.legendables();
@@ -40,17 +43,19 @@ dc.htmlLegend = function () {
             legendables = legendables.slice(0, _maxItems);
         }
 
-        var legendItemClassName = _legendItemClass ? _legendItemClass : 'dc-legend-item-' + orientation;
+        var legendItemClassName = _legendItemClass ? _legendItemClass : _defaultLegendItemCssClass;
 
         var itemEnter = _l.selectAll('div.' + legendItemClassName)
             .data(legendables).enter()
-            .append('div').attr('class', legendItemClassName)
+            .append('div')
+            .classed(legendItemClassName, true)
             .on('mouseover', _parent.legendHighlight)
             .on('mouseout', _parent.legendReset)
             .on('click', _parent.legendToggle);
-        if (_highlightSelected && !_legendItemClass) {
-            itemEnter.attr('class', function (d) {
-                return legendItemClassName + (filters.indexOf(d.name) === -1 ? '' : ' selected');
+
+        if (_highlightSelected) {
+            itemEnter.classed(dc.constants.SELECTED_CLASS, function (d) {
+                return filters.indexOf(d.name) !== -1;
             });
         }
 
