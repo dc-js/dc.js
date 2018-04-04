@@ -1057,12 +1057,10 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._brushing = function () {
-        var event = d3.event;
-        // Avoids infinite recursion
-        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
-        d3.event = null;
-        if (!event.sourceEvent) { return; }
-        var selection = event.selection;
+        // prevent events where we are the cause
+        _brush.on('start brush end', null);
+
+        var selection = d3.event.selection;
         if (selection) {
             selection = selection.map(_chart.x().invert);
         }
@@ -1075,15 +1073,18 @@ dc.coordinateGridMixin = function (_chart) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+         _brush.on('start brush end', _chart._brushing);
+           }, dc.constants.EVENT_DELAY);
         } else {
             var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
+        _brush.on('start brush end', _chart._brushing);
             }, dc.constants.EVENT_DELAY);
         }
+
     };
 
     _chart.redrawBrush = function (selection) {
@@ -1207,11 +1208,14 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.renderYAxis(_chart.g());
         }
 
+        _brush.on('start brush end', null);
         if (render) {
             _chart.renderBrush(_chart.g());
         } else {
             _chart.redrawBrush(_chart.filter());
         }
+        _brush.on('start brush end', _chart._brushing);
+
         _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;
     }
@@ -1246,8 +1250,10 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart.root().call(_zoom);
 
-        // Tell D3 zoom our current zoom/pan status
+        // Tell D3 zoom our current zoom/pan status, but don't event it
+        _zoom.on('zoom', null);
         updateD3zoomTransform();
+        _zoom.on('zoom', onZoom);
     };
 
     _chart._disableMouseZoom = function () {
@@ -1300,14 +1306,13 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function onZoom () {
-        var event = d3.event;
-        // Avoids infinite recursion
-        // To ensure that when it is called because of programatic zoom there is no d3.event.sourceEvent
-        d3.event = null;
-        if (!event.sourceEvent) { return; }
+        // prevent events where we are the cause
+        _zoom.on('zoom', null);
 
         var newDomain = d3.event.transform.rescaleX(_origX).domain();
         _chart.focus(newDomain, false);
+
+        _zoom.on('zoom', onZoom);
     }
 
     /**
