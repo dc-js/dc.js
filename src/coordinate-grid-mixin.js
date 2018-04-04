@@ -1284,18 +1284,18 @@ dc.coordinateGridMixin = function (_chart) {
         }
     }
 
-    // _zoomTransformToDomain(transform, xScale) should give back newDomain
-    var _domainToZoomTransform = function (newDomain, origDomain, xScale) {
-        var k = (origDomain[1] - origDomain[0]) / (newDomain[1] - newDomain[0]);
-        var xt = -1 * xScale(newDomain[0]);
+    // determine transform which produces this domain
+    function domainToZoomTransform (newDomain) {
+        var k = (_xOriginalDomain[1] - _xOriginalDomain[0]) / (newDomain[1] - newDomain[0]);
+        var xt = -1 * _origX(newDomain[0]);
 
         return d3.zoomIdentity.scale(k).translate(xt, 0);
-    };
+    }
 
     // If we changing zoom status (for example by calling focus), tell D3 zoom about it
     function updateD3zoomTransform () {
         if (_zoom) {
-            _zoom.transform(_chart.root(), _domainToZoomTransform(_chart.x().domain(), _xOriginalDomain, _origX));
+            _zoom.transform(_chart.root(), domainToZoomTransform(_chart.x().domain()));
         }
     }
 
