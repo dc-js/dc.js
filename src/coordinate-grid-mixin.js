@@ -1284,16 +1284,6 @@ dc.coordinateGridMixin = function (_chart) {
         }
     }
 
-    // Our zooming is not standard d3 zoom as defined in their examples.
-    // Instead we want to focus the chart based on current zoom transform.
-    // The following code computes values of new domain the same way as transform.rescaleX.
-    // The difference is what we do after we get the newDomain
-    var _zoomTransformToDomain = function (transform, xScale) {
-        return xScale.range().map(function (xCoord) {
-            return _origX.invert(transform.invertX(xCoord));
-        });
-    };
-
     // _zoomTransformToDomain(transform, xScale) should give back newDomain
     var _domainToZoomTransform = function (newDomain, origDomain, xScale) {
         var k = (origDomain[1] - origDomain[0]) / (newDomain[1] - newDomain[0]);
@@ -1316,7 +1306,7 @@ dc.coordinateGridMixin = function (_chart) {
         d3.event = null;
         if (!event.sourceEvent) { return; }
 
-        var newDomain = _zoomTransformToDomain(event.transform, _origX);
+        var newDomain = d3.event.transform.rescaleX(_origX).domain();
         _chart.focus(newDomain, false);
     }
 
