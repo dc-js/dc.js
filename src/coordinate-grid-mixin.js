@@ -1350,10 +1350,6 @@ dc.coordinateGridMixin = function (_chart) {
         updateD3zoomTransform();
     };
 
-    _chart.refocused = function () {
-        return !rangesEqual(_chart.x().domain(), _xOriginalDomain);
-    };
-
     _chart.focusChart = function (c) {
         if (!arguments.length) {
             return _focusChart;
