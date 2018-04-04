@@ -1056,13 +1056,15 @@ dc.coordinateGridMixin = function (_chart) {
         return !selection || selection[1] <= selection[0];
     };
 
+    var _brushEvent = true;
     _chart._brushing = function () {
-        var event = d3.event;
-        // Avoids infinite recursion
-        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
-        d3.event = null;
-        if (!event.sourceEvent) { return; }
-        var selection = event.selection;
+        if (!_brushEvent) {
+            return;
+        }
+        console.log('brush off');
+        _brushEvent = false;
+
+        var selection = d3.event.selection;
         if (selection) {
             selection = selection.map(_chart.x().invert);
         }
@@ -1075,6 +1077,8 @@ dc.coordinateGridMixin = function (_chart) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
+                _brushEvent = true;
+                console.log('brush on');
             }, dc.constants.EVENT_DELAY);
         } else {
             var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
@@ -1082,6 +1086,8 @@ dc.coordinateGridMixin = function (_chart) {
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
+                _brushEvent = true;
+                console.log('brush on');
             }, dc.constants.EVENT_DELAY);
         }
     };
@@ -1246,8 +1252,10 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart.root().call(_zoom);
 
-        // Tell D3 zoom our current zoom/pan status
+        // Tell D3 zoom our current zoom/pan status, but ignore any resulting events
+        _zoomEvent = false;
         updateD3zoomTransform();
+        _zoomEvent = true;
     };
 
     _chart._disableMouseZoom = function () {
@@ -1299,15 +1307,17 @@ dc.coordinateGridMixin = function (_chart) {
         }
     }
 
+    var _zoomEvent = true;
     function onZoom () {
-        var event = d3.event;
-        // Avoids infinite recursion
-        // To ensure that when it is called because of programatic zoom there is no d3.event.sourceEvent
-        d3.event = null;
-        if (!event.sourceEvent) { return; }
+        if (!_zoomEvent) {
+            return;
+        }
+        _zoomEvent = false;
 
         var newDomain = d3.event.transform.rescaleX(_origX).domain();
         _chart.focus(newDomain, false);
+
+        _zoomEvent = true;
     }
 
     /**
