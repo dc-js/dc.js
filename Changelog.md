@@ -1,3 +1,17 @@
+## 3.0.0 alpha 2
+* backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, ny Deepak Kumar
+* Fixed test cases for Edge/IE, by Deepak Kumar
+
+## 3.0.0 alpha 1
+* first pass of d3v4 support, by Deepak Kumar
+* until more stable, releases will be github-only (no npm/cdnjs)
+
+## 3.0
+dc.js 3.0 is compatible with d3 versions 4 and 5! Thanks to Deepak Kumar for his tireless effoprt on making this finally happen.
+
+New features will only be added to 3.0; however, 2.1 will be maintained for a limited time for those who still need compatibility with d3 version 3.
+
+
 ## 2.1.10
 * Update dependencies, including crossfilter2 v1.4
 * Example of adding a vertical line to a row chart
