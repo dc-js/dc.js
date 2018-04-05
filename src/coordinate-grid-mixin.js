@@ -63,6 +63,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _zoom = d3.zoom().on('zoom', onZoom);
     var _nullZoom = d3.zoom().on('zoom', null);
     var _hasBeenMouseZoomable = false;
+    var _stopBrushEvents = 0, _stopZoomEvents = 0;
 
     var _rangeChart;
     var _focusChart;
@@ -1057,12 +1058,12 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart._brushing = function () {
-        var event = d3.event;
-        // Avoids infinite recursion
-        // To ensure that when it is called because of brush.move there is no d3.event.sourceEvent
-        d3.event = null;
-        if (!event.sourceEvent) { return; }
-        var selection = event.selection;
+        if (_stopBrushEvents) {
+            return;
+        }
+        ++_stopBrushEvents;
+
+        var selection = d3.event.selection;
         if (selection) {
             selection = selection.map(_chart.x().invert);
         }
@@ -1073,17 +1074,22 @@ dc.coordinateGridMixin = function (_chart) {
 
         if (_chart.brushIsEmpty(selection)) {
             dc.events.trigger(function () {
+                ++_stopBrushEvents;
                 _chart.filter(null);
                 _chart.redrawGroup();
+                --_stopBrushEvents;
             }, dc.constants.EVENT_DELAY);
         } else {
             var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
 
             dc.events.trigger(function () {
+                ++_stopBrushEvents;
                 _chart.replaceFilter(rangedFilter);
                 _chart.redrawGroup();
+                --_stopBrushEvents;
             }, dc.constants.EVENT_DELAY);
         }
+        --_stopBrushEvents;
     };
 
     _chart.redrawBrush = function (selection) {
@@ -1207,11 +1213,13 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.renderYAxis(_chart.g());
         }
 
+        ++_stopBrushEvents;
         if (render) {
             _chart.renderBrush(_chart.g());
         } else {
             _chart.redrawBrush(_chart.filter());
         }
+        --_stopBrushEvents;
         _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;
     }
@@ -1246,8 +1254,10 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart.root().call(_zoom);
 
-        // Tell D3 zoom our current zoom/pan status
+        // Tell D3 zoom our current zoom/pan status, but ignore any resulting events
+        ++_stopZoomEvents;
         updateD3zoomTransform();
+        --_stopZoomEvents;
     };
 
     _chart._disableMouseZoom = function () {
@@ -1300,14 +1310,15 @@ dc.coordinateGridMixin = function (_chart) {
     }
 
     function onZoom () {
-        var event = d3.event;
-        // Avoids infinite recursion
-        // To ensure that when it is called because of programatic zoom there is no d3.event.sourceEvent
-        d3.event = null;
-        if (!event.sourceEvent) { return; }
+        if (_stopZoomEvents) {
+            return;
+        }
+        ++_stopZoomEvents;
 
         var newDomain = d3.event.transform.rescaleX(_origX).domain();
         _chart.focus(newDomain, false);
+
+        --_stopZoomEvents;
     }
 
     /**
