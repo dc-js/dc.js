@@ -1282,7 +1282,7 @@ dc.coordinateGridMixin = function (_chart) {
         if (!noRaiseEvents) {
             if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
                 dc.events.trigger(function () {
-                    _rangeChart.replaceFilter(newDomain);
+                    _rangeChart.replaceFilter(domFilter);
                     _rangeChart.redraw();
                 });
             }

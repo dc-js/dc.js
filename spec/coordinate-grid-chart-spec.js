@@ -770,7 +770,7 @@ describe('dc.coordinateGridChart', function () {
                 });
 
                 it('should update its range chart\'s filter', function () {
-                    expect(chart.rangeChart().filter()).toEqual(chart.filter());
+                    expect(cleanDateRange(chart.rangeChart().filter())).toEqual(cleanDateRange(chart.filter()));
                 });
 
                 it('should trigger redraw on its range chart', function () {
