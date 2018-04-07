@@ -847,7 +847,6 @@ describe('dc.coordinateGridChart', function () {
         it('should update the range chart brush to match zoomed domain of focus chart', function () {
             spyOn(rangeChart, 'replaceFilter');
             chart.focus(selectedRange);
-            // expect(rangeChart.replaceFilter).toHaveBeenCalledWith(selectedRange);
             var replaceFilter = cleanDateRange(rangeChart.replaceFilter.calls.argsFor(0)[0]);
             expect(replaceFilter).toEqual(selectedRange);
         });
