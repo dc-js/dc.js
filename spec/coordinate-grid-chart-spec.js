@@ -564,32 +564,6 @@ describe('dc.coordinateGridChart', function () {
         });
     });
 
-    describe('restricting zoom out', function () {
-        beforeEach(function () {
-            chart.zoomScale([-1,10]);
-            chart.zoomOutRestrict(true);
-        });
-
-        it('should set the start of zoom scale extent to 1', function () {
-            expect(chart.zoomScale()[0]).toEqual(1);
-        });
-
-        it('sohuld leave the end of zoom scale extent unchanged', function () {
-            expect(chart.zoomScale()[1]).toEqual(10);
-        });
-    });
-
-    describe('disabling zoom out restriction', function () {
-        beforeEach(function () {
-            chart.zoomScale([-1,10]);
-            chart.zoomOutRestrict(false);
-        });
-
-        it('should set the start of zoom scale extent to 0', function () {
-            expect(chart.zoomScale()[0]).toEqual(0);
-        });
-    });
-
     describe('setting x', function () {
         var newDomain = [1,10];
         beforeEach(function () {

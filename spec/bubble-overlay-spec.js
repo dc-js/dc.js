@@ -120,7 +120,6 @@ describe('dc.bubbleOverlay', function () {
         });
         function expectRadii (expected) {
             var circles = chart.selectAll('circle.bubble').nodes();
-            console.log(circles.map(function (c) { return +d3.select(c).attr('r'); }));
             circles.forEach(function (c, i) {
                 expect(+d3.select(c).attr('r')).toBeWithinDelta(expected[i], 0.1);
             });
