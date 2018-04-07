@@ -1324,6 +1324,18 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.focus(newDomain, false);
     }
 
+    function intersectExtents (ext, outerLimits) {
+        if (!ext || ext.length !== 2 || !outerLimits || outerLimits.length !== 2) {
+            return ext;
+        }
+
+        if (ext[0] > outerLimits[1] || ext[1] < outerLimits[0]) {
+            console.warn('Could not intersect extents, will reset');
+        }
+        // Math.max does not work (as the values may be dates as well)
+        return [ext[0] > outerLimits[0] ? ext[0] : outerLimits[0], ext[1] < outerLimits[1] ? ext[1] : outerLimits[1]];
+    }
+
     /**
      * Zoom this chart to focus on the given range. The given range should be an array containing only
      * 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
@@ -1350,6 +1362,16 @@ dc.coordinateGridMixin = function (_chart) {
      * @param {Boolean} [noRaiseEvents = false]
      */
     _chart.focus = function (range, noRaiseEvents) {
+        if (_zoomOutRestrict) {
+            // ensure range is within _xOriginalDomain
+            range = intersectExtents(range, _xOriginalDomain);
+
+            // If it has an associated range chart ensure range is within domain of that rangeChart
+            if (_rangeChart) {
+                range = intersectExtents(range, _rangeChart.x().domain());
+            }
+        }
+
         zoomHandler(range, noRaiseEvents);
         updateD3zoomTransform();
     };
