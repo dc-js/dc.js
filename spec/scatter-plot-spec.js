@@ -1,4 +1,4 @@
-/* global appendChartID, comparePaths, loadDateFixture, makeDate, setupEventFor2DBrushing */
+/* global appendChartID, comparePaths, loadDateFixture, makeDate, simulateChart2DBrushing */
 describe('dc.scatterPlot', function () {
     var id, chart;
     var data, group, dimension;
@@ -229,10 +229,7 @@ describe('dc.scatterPlot', function () {
             beforeEach(function () {
                 otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
 
-                // Setup a dummy event - just enough for the handler to get fooled
-                setupEventFor2DBrushing(chart, [[22, -3], [44, 2]]);
-                // Directly call the handler
-                chart._brushing();
+                simulateChart2DBrushing(chart, [[22, -3], [44, 2]]);
 
                 chart.redraw();
             });
@@ -312,10 +309,8 @@ describe('dc.scatterPlot', function () {
                 });
 
                 it('should restore sizes, colors, and opacity when the brush is empty', function () {
-                    // Setup a dummy event - just enough for the handler to get fooled
-                    setupEventFor2DBrushing(chart, [[22, 2], [22, -3]]);
-                    // Directly call the handler
-                    chart._brushing();
+                    simulateChart2DBrushing(chart, [[22, 2], [22, -3]]);
+
                     jasmine.clock().tick(100);
 
                     selectedPoints = symbolsOfRadius(chart.symbolSize());

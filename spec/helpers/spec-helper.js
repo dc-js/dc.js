@@ -1,7 +1,7 @@
 /* global parseTranslate */
 
 /*exported appendChartID, coordsFromTranslate, makeDate, cleanDateRange, flushAllD3Transitions */
-/*exported setupEventForBrushing, setupEventFor2DBrushing */
+/*exported simulateChartBrushing, simulateChart2DBrushing */
 
 beforeEach(function () {
     jasmine.clock().install();
@@ -51,20 +51,25 @@ function flushAllD3Transitions () {
     d3.timerFlush();
 }
 
-// Setup a dummy event - just enough for the handler to get fooled
-var setupEventForBrushing = function (chart, domainSelection) {
+// Simulate a dummy event - just enough for the handler to get fooled
+var simulateChartBrushing = function (chart, domainSelection) {
     // D3v4 needs scaled coordinates for the event
     var scaledSelection = domainSelection.map(function (coord) {
         return chart.x()(coord);
     });
+
     d3.event = {
         sourceEvent: true,
         selection: scaledSelection
     };
+
+    chart._brushing();
+
+    d3.event = null;
 };
 
-// Setup a dummy event - just enough for the handler to get fooled
-var setupEventFor2DBrushing = function (chart, domainSelection) {
+// Simulate a dummy event - just enough for the handler to get fooled
+var simulateChart2DBrushing = function (chart, domainSelection) {
     // D3v4 needs scaled coordinates for the event
     var scaledSelection = domainSelection.map(function (point) {
         return point.map(function (coord, i) {
@@ -72,8 +77,13 @@ var setupEventFor2DBrushing = function (chart, domainSelection) {
             return scale(coord);
         });
     });
+
     d3.event = {
         sourceEvent: true,
         selection: scaledSelection
     };
+
+    chart._brushing();
+
+    d3.event = null;
 };

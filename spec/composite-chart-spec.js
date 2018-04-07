@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate, setupEventForBrushing */
+/* global appendChartID, loadDateFixture, makeDate, simulateChartBrushing */
 describe('dc.compositeChart', function () {
     var id, chart, data, dateDimension, dateValueSumGroup, dateValueNegativeSumGroup,
         dateIdSumGroup, dateIdNegativeSumGroup, dateGroup;
@@ -698,10 +698,7 @@ describe('dc.compositeChart', function () {
 
             beforeEach(function () {
                 otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
-                // Setup a dummy event - just enough for the handler to get fooled
-                setupEventForBrushing(chart, [22, 35]);
-                // Directly call the handler
-                chart._brushing();
+                simulateChartBrushing(chart, [22, 35]);
                 chart.redraw();
             });
 
@@ -711,10 +708,7 @@ describe('dc.compositeChart', function () {
 
             describe('brush decreases in size', function () {
                 beforeEach(function () {
-                    // Setup a dummy event - just enough for the handler to get fooled
-                    setupEventForBrushing(chart, [22, 33]);
-                    // Directly call the handler
-                    chart._brushing();
+                    simulateChartBrushing(chart, [22, 33]);
                     chart.redraw();
                 });
 
@@ -726,10 +720,7 @@ describe('dc.compositeChart', function () {
 
             describe('brush disappears', function () {
                 beforeEach(function () {
-                    // Setup a dummy event - just enough for the handler to get fooled
-                    setupEventForBrushing(chart, [22, 22]);
-                    // Directly call the handler
-                    chart._brushing();
+                    simulateChartBrushing(chart, [22, 22]);
                     chart.redraw();
                 });
 

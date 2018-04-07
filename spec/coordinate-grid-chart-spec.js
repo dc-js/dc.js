@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, setupEventForBrushing */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, simulateChartBrushing */
 describe('dc.coordinateGridChart', function () {
     var chart, id;
     var data, dimension, group;
@@ -657,10 +657,7 @@ describe('dc.coordinateGridChart', function () {
         beforeEach(function () {
             chart.brushOn(true);
             chart.render();
-            // Setup a dummy event - just enough for the handler to get fooled
-            setupEventForBrushing(chart, [makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
-            // Directly call the handler
-            chart._brushing();
+            simulateChartBrushing(chart, [makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
             chart.filter(null);
         });
 
@@ -809,10 +806,7 @@ describe('dc.coordinateGridChart', function () {
 
         describe('with equal dates', function () {
             beforeEach(function () {
-                // Setup a dummy event - just enough for the handler to get fooled
-                setupEventForBrushing(chart, [22, 22]);
-                // Directly call the handler
-                chart._brushing();
+                simulateChartBrushing(chart, [22, 22]);
             });
 
             it('should clear the chart filter', function () {
@@ -834,20 +828,14 @@ describe('dc.coordinateGridChart', function () {
 
         it('should zoom the focus chart when range chart is brushed', function () {
             spyOn(chart, 'focus').and.callThrough();
-            // Setup a dummy event - just enough for the handler to get fooled
-            setupEventForBrushing(rangeChart, selectedRange);
-            // Directly call the handler
-            rangeChart._brushing();
+            simulateChartBrushing(rangeChart, selectedRange);
             jasmine.clock().tick(100);
             var focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
             expect(focus).toEqual(selectedRange);
         });
 
         it('should zoom the focus chart back out when range chart is un-brushed', function () {
-            // Setup a dummy event - just enough for the handler to get fooled
-            setupEventForBrushing(rangeChart, selectedRange);
-            // Directly call the handler
-            rangeChart._brushing();
+            simulateChartBrushing(rangeChart, selectedRange);
             jasmine.clock().tick(100);
 
             expect(chart.x().domain()).toEqual(selectedRange);

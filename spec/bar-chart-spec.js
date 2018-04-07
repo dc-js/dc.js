@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, setupEventForBrushing */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, simulateChartBrushing */
 describe('dc.barChart', function () {
     var id, chart, data;
     var dimension, group;
@@ -1109,10 +1109,7 @@ describe('dc.barChart', function () {
                 consoleWarnSpy = spyOn(console, 'warn');
                 chart.render();
 
-                // Setup a dummy event - just enough for the handler to get fooled
-                setupEventForBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
-                // Directly call the handler
-                chart._brushing();
+                simulateChartBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
             });
 
             it('should log a warning indicating that brush rounding was disabled', function () {
@@ -1130,10 +1127,8 @@ describe('dc.barChart', function () {
             beforeEach(function () {
                 chart.alwaysUseRounding(true);
                 chart.render();
-                // Setup a dummy event - just enough for the handler to get fooled
-                setupEventForBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
-                // Directly call the handler
-                chart._brushing();
+
+                simulateChartBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
             });
 
             it('should round the brush', function () {
