@@ -21,7 +21,7 @@
 <script type="text/javascript">
     var moveChart = dc.compositeChart("#monthly-move-chart");
 
-    d3.csv("../examples/monthly-move.csv", function (error, data) {
+    d3.csv("../examples/monthly-move.csv").then(function(data) {
         var dateParse = d3.timeParse("%m/%d/%Y");
         var numberFormat = d3.format(".2f");
 

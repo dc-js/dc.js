@@ -36,7 +36,7 @@
 
       var chart = dc.barChart("#test"),
           pie = dc.pieChart('#pie');
-      d3.csv("morley.csv", function(error, experiments) {
+      d3.csv("morley.csv").then(function(experiments) {
 
           experiments.forEach(function(x) {
               x.Speed = +x.Speed;
