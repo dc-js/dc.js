@@ -63,9 +63,11 @@ var simulateChartBrushing = function (chart, domainSelection) {
         selection: scaledSelection
     };
 
-    chart._brushing();
-
-    d3.event = null;
+    try {
+        chart._brushing();
+    } finally {
+        d3.event = null;
+    }
 };
 
 // Simulate a dummy event - just enough for the handler to get fooled
@@ -83,7 +85,9 @@ var simulateChart2DBrushing = function (chart, domainSelection) {
         selection: scaledSelection
     };
 
-    chart._brushing();
-
-    d3.event = null;
+    try {
+        chart._brushing();
+    } finally {
+        d3.event = null;
+    }
 };
