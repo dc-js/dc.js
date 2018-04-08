@@ -1,3 +1,6 @@
+## 3.0.0 alpha 3
+* improved integration with `d3.zoom`, by Deepak Kumar. Since the d3v4 implementation is a lot more powerful, this eliminates a lot of custom zoom code.
+
 ## 3.0.0 alpha 2
 * backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, ny Deepak Kumar
 * Fixed test cases for Edge/IE, by Deepak Kumar
