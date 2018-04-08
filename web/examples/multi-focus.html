@@ -88,13 +88,7 @@ d3.csv("morley.csv", function(error, experiments) {
         }
         this._focusCharts = chartlist; // only needed to support the getter above
         this.on('filtered', function (range_chart) {
-            if (!range_chart.filter()) {
-                dc.events.trigger(function () {
-                    chartlist.forEach(function(focus_chart) {
-                        focus_chart.x().domain(focus_chart.xOriginalDomain());
-                    });
-                });
-            } else chartlist.forEach(function(focus_chart) {
+            chartlist.forEach(function(focus_chart) {
                 if (!rangesEqual(range_chart.filter(), focus_chart.filter())) {
                     dc.events.trigger(function () {
                         focus_chart.focus(range_chart.filter());
