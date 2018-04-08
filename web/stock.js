@@ -55,8 +55,8 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 //favorite javascript library
 //
 //```javascript
-//d3.csv('data.csv', function(data) {...});
-//d3.json('data.json', function(data) {...});
+//d3.csv('data.csv').then(function(data) {...});
+//d3.json('data.json').then(function(data) {...});
 //jQuery.getJson('data.json', function(data){...});
 //```
 d3.csv('ndx.csv').then(function (data) {
