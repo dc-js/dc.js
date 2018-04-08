@@ -294,7 +294,6 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/dist/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
-                            'node_modules/queue-async/build/queue.js',
                             'node_modules/file-saver/FileSaver.js'
                         ],
                         dest: '<%= conf.web %>/js/'

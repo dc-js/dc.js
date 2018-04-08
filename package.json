@@ -61,8 +61,7 @@
     "karma-sauce-launcher": "^1.2.0",
     "karma-summary-reporter": "^1.5.0",
     "load-grunt-tasks": "~3.5",
-    "marked": "^0.3.19",
-    "queue-async": "~1.x",
+    "marked": "~0.3.19",
     "time-grunt": "~1.4",
     "uglify-js": "^3.3.17"
   },
