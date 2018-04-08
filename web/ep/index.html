@@ -188,12 +188,11 @@ href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
 </div>
 
 <script>
-$(function() {
-    d3.csv("mep.csv", function(d) {return d;}
-      ,function(error, rows) {
-      grid ("#ep2014list",rows);
-      });      
-    });      
+  $(function () {
+    d3.csv("mep.csv").then(function (rows) {
+      grid("#ep2014list", rows);
+    });
+  });
 </script>
 
 <style>

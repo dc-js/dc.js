@@ -21,7 +21,7 @@
     var heatmapChart = dc.heatMap("#heatmap", chartGroup);
     var barChart = dc.barChart("#barchart", chartGroup);
 
-    d3.csv("../ndx.csv", function(error, data) {
+    d3.csv("../ndx.csv").then(function(data) {
 
         var dateParse = d3.timeParse("%m/%d/%Y");
 

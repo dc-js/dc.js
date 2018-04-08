@@ -57,10 +57,7 @@
             aggregate = find_query('aggregate') || 'average';
 
         var chart = dc.barChart("#test"), counter = dc.numberDisplay('#counter');
-        d3.csv(data, function(error, posts) {
-            if(error)
-                throw new Error(error);
-
+        d3.csv(data).then(function(posts) {
             posts.forEach(function(d) {
                 d[date_col] = new Date(d[date_col]);
                 d[val_col] = +d[val_col];

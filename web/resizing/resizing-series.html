@@ -22,7 +22,7 @@
       var chart = dc.seriesChart("#test");
       var ndx, runDimension, runGroup;
 
-      d3.csv("../examples/morley.csv", function(error, experiments) {
+      d3.csv("../examples/morley.csv").then(function( experiments) {
 
           ndx = crossfilter(experiments);
           runDimension = ndx.dimension(function(d) {return [+d.Expt, +d.Run]; });
@@ -61,7 +61,7 @@
 
       function load_button(file) {
           return function load_it() {
-              d3.csv(file, function(error, experiments) {
+              d3.csv(file).then(function( experiments) {
                   ndx.remove();
                   ndx.add(experiments);
                   dc.redrawAll();
