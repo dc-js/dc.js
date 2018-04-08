@@ -76,7 +76,7 @@
     var industryChart = dc.bubbleChart("#industry-chart");
     var roundChart = dc.bubbleChart("#round-chart");
 
-    d3.csv("vc.csv", function (csv) {
+    d3.csv("vc.csv").then(function (csv) {
         var data = crossfilter(csv);
 
         var states = data.dimension(function (d) {
@@ -126,7 +126,7 @@
                 }
         );
 
-        d3.json("../geo/us-states.json", function (statesJson) {
+        d3.json("../geo/us-states.json").then(function (statesJson) {
             usChart.width(990)
                     .height(500)
                     .dimension(states)
