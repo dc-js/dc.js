@@ -1324,7 +1324,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.focus(newDomain, false);
     }
 
-    function intersectExtents (ext, outerLimits) {
+    function checkExtents (ext, outerLimits) {
         if (!ext || ext.length !== 2 || !outerLimits || outerLimits.length !== 2) {
             return ext;
         }
@@ -1364,11 +1364,11 @@ dc.coordinateGridMixin = function (_chart) {
     _chart.focus = function (range, noRaiseEvents) {
         if (_zoomOutRestrict) {
             // ensure range is within _xOriginalDomain
-            range = intersectExtents(range, _xOriginalDomain);
+            range = checkExtents(range, _xOriginalDomain);
 
             // If it has an associated range chart ensure range is within domain of that rangeChart
             if (_rangeChart) {
-                range = intersectExtents(range, _rangeChart.x().domain());
+                range = checkExtents(range, _rangeChart.x().domain());
             }
         }
 
