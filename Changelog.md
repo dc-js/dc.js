@@ -5,6 +5,7 @@
 ## 3.0.0 alpha 1
 * first pass of d3v4 support, by Deepak Kumar
 * until more stable, releases will be github-only (no npm/cdnjs)
+* all [axis.tickArguments()](https://github.com/d3/d3-axis/blob/master/README.md#axis_tickArguments) are applied to `scale.ticks()` to produce horizontal & vertical gridlines, not just the first argument.
 
 ## 3.0
 dc.js 3.0 is compatible with d3 versions 4 and 5! Thanks to Deepak Kumar for his tireless effoprt on making this finally happen.

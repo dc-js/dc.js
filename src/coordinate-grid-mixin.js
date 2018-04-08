@@ -542,7 +542,7 @@ dc.coordinateGridMixin = function (_chart) {
             }
 
             var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
-                    (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
+                (typeof _x.ticks === 'function' ? _x.ticks.apply(_x, _xAxis.tickArguments()) : _x.domain());
 
             var lines = gridLineG.selectAll('line')
                 .data(ticks);
