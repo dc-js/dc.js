@@ -59,7 +59,7 @@ any items whose intervals overlap with it.</p>
   var monthChart = dc.barChart("#month");
   var costChart = dc.barChart("#cost");
   // data from http://stackoverflow.com/questions/22603788/crossfilter-how-to-extract-time-information-from-start-date-and-end-date-column
-  d3.csv("intervals.csv", function(error, projects) {
+  d3.csv("intervals.csv").then(function(projects) {
 
       projects.forEach(function(x) {
           x['Start Date'] = dateFormatParser(x['Start Date']);

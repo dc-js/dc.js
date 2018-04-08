@@ -92,10 +92,7 @@
           d3.select('#wait-url').attr('href', location.origin + location.pathname + '?nowait');
       }
 
-      d3.csv('iris.csv', function(error, iris) {
-          if(error)
-              throw new Error(error);
-
+      d3.csv('iris.csv').then(function(iris) {
           iris.forEach(function(d) {
               Object.keys(fields).forEach(function(ab) {
                   d[fields[ab]] = +d[fields[ab]];

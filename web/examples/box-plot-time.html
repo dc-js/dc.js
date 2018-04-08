@@ -21,7 +21,7 @@
 var chart = dc.boxPlot("#box-test"),
     pie = dc.pieChart("#pie-chart");
 
-d3.csv("monthly-move.csv", function(error, data) {
+d3.csv("monthly-move.csv").then(function(data) {
 
   data.forEach(function(x) {
     x.date = new Date(x.date);

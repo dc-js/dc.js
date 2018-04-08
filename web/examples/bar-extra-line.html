@@ -24,7 +24,7 @@ dc.js for such "derived" values, but this example is here to tide folks over unt
 <script type="text/javascript">
 
 var chart = dc.barChart("#test");
-d3.csv("morley.csv", function(error, experiments) {
+d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {
     x.Speed = +x.Speed;
