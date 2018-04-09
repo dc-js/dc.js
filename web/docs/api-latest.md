@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.0-alpha.2  
+**Version**: 3.0.0-alpha.3  
 **Example**  
 ```js
 // Example chaining
@@ -270,7 +270,7 @@ chart.width(300)
         * [.round([round])](#dc.coordinateGridMixin+round) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.brush([_])](#dc.coordinateGridMixin+brush) ⇒ <code>d3.brush</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.focus([range])](#dc.coordinateGridMixin+focus)
+        * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
         * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.stackMixin](#dc.stackMixin) ⇒ [<code>stackMixin</code>](#dc.stackMixin)
         * [.stack(group, [name], [accessor])](#dc.stackMixin+stack) ⇒ <code>Array.&lt;{group: crossfilter.group, name: String, accessor: function()}&gt;</code> \| [<code>stackMixin</code>](#dc.stackMixin)
@@ -4102,7 +4102,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.round([round])](#dc.coordinateGridMixin+round) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.brush([_])](#dc.coordinateGridMixin+brush) ⇒ <code>d3.brush</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.focus([range])](#dc.coordinateGridMixin+focus)
+    * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
     * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 
 <a name="dc.coordinateGridMixin+rescale"></a>
@@ -4552,17 +4552,23 @@ will be exactly the chart body area minus the margins.
 
 <a name="dc.coordinateGridMixin+focus"></a>
 
-#### coordinateGridMixin.focus([range])
+#### coordinateGridMixin.focus([range], [noRaiseEvents])
 Zoom this chart to focus on the given range. The given range should be an array containing only
 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
 to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
 otherwise focus will be ignored.
 
+To avoid ping-pong volley of events between a pair of range and focus charts please set
+`noRaiseEvents` to `true`. In that case it will update this chart but will not fire `zoom` event
+and not try to update back the associated range chart.
+If you are calling it manually - typically you will leave it to `false` (the default).
+
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 
-| Param | Type |
-| --- | --- |
-| [range] | <code>Array.&lt;Number&gt;</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [range] | <code>Array.&lt;Number&gt;</code> |  | 
+| [noRaiseEvents] | <code>Boolean</code> | <code>false</code> | 
 
 **Example**  
 ```js
