@@ -2,9 +2,12 @@ module.exports = function (grunt) {
     'use strict';
 
     require('load-grunt-tasks')(grunt, {
-        pattern: ['grunt-*', '!grunt-lib-phantomjs', '!grunt-template-jasmine-istanbul']
+        pattern: ['grunt-*']
     });
     require('time-grunt')(grunt);
+
+    grunt.loadNpmTasks('grunt-karma');
+
     var formatFileList = require('./grunt/format-file-list')(grunt);
 
     var config = {
@@ -113,10 +116,6 @@ module.exports = function (grunt) {
                 files: ['style/<%= conf.pkg.name %>.scss'],
                 tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
-            jasmineRunner: {
-                files: ['<%= conf.spec %>/**/*.js'],
-                tasks: ['jasmine:specs:build']
-            },
             tests: {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/**/*.js'],
                 tasks: ['test']
@@ -140,104 +139,108 @@ module.exports = function (grunt) {
                 }
             }
         },
-        jasmine: {
-            specs: {
-                options: {
-                    display: 'short',
-                    summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: [
-                        '<%= conf.web %>/js/jasmine-jsreporter.js',
-                        '<%= conf.spec %>/helpers/*.js'
-                    ],
-                    styles: [
-                        '<%= conf.web %>/css/dc.css'
-                    ],
-                    version: '2.0.0',
-                    outfile: '<%= conf.spec %>/index.html',
-                    keepRunner: true
-                },
-                src: [
+        karma: {
+            options: {
+                basePath: '',
+                frameworks: ['jasmine'],
+                files: [
+                    // CSS files
+                    '<%= conf.web %>/css/dc.css',
+                    // Helpers
+                    '<%= conf.web %>/js/jasmine-jsreporter.js',
+                    '<%= conf.spec %>/helpers/*.js',
+                    // JS code dependencies
                     '<%= conf.web %>/js/d3.js',
                     '<%= conf.web %>/js/crossfilter.js',
                     '<%= conf.web %>/js/colorbrewer.js',
-                    '<%= conf.pkg.name %>.js'
-                ]
-            },
-            coverage: {
-                src: '<%= jasmine.specs.src %>',
-                options: {
-                    specs: '<%= jasmine.specs.options.specs %>',
-                    helpers: '<%= jasmine.specs.options.helpers %>',
-                    version: '<%= jasmine.specs.options.version %>',
-                    template: require('grunt-template-jasmine-istanbul'),
-                    templateOptions: {
-                        coverage: 'coverage/jasmine/coverage.json',
-                        report: [
-                            {
-                                type: 'html',
-                                options: {
-                                    dir: 'coverage/jasmine'
-                                }
-                            }
-                        ]
-                    }
-                }
-            },
-            browserify: {
-                options: {
-                    display: 'short',
-                    summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
-                    helpers: [
-                        '<%= conf.web %>/js/jasmine-jsreporter.js',
-                        '<%= conf.spec %>/helpers/*.js'
-                    ],
-                    version: '2.0.0',
-                    outfile: '<%= conf.spec %>/index-browserify.html',
-                    keepRunner: true
+                    // Code to be tested
+                    '<%= conf.pkg.name %>.js',
+                    // Jasmine spec files
+                    '<%= conf.spec %>/*spec.js'
+                ],
+                exclude: [],
+                preprocessors: {},
+                // possible values: 'dots', 'progress'
+                reporters: ['progress', 'summary'],
+                summaryReporter: {
+                    // 'failed', 'skipped' or 'all'
+                    show: 'failed',
+                    // Limit the spec label to this length
+                    specLength: 100,
+                    // Show an 'all' column as a summary
+                    overviewColumn: true
                 },
-                src: [
-                    'bundle.js'
-                ]
-            }
-        },
-        'saucelabs-jasmine': {
-            all: {
-                options: {
-                    urls: ['http://localhost:8888/spec/'],
-                    tunnelTimeout: 5,
-                    build: process.env.TRAVIS_JOB_ID,
-                    concurrency: 3,
-                    browsers: [
-                        {
-                            browserName: 'firefox',
-                            version: '45.0',
-                            platform: 'Linux'
-                        },
-                        {
-                            browserName: 'safari',
-                            version: '9.0',
-                            platform: 'OS X 10.11'
-                        },
-                        {
-                            browserName: 'internet explorer',
-                            version: '11.0',
-                            platform: 'Windows 10'
-                        },
-                        {
-                            browserName: 'internet explorer',
-                            version: '11.0',
-                            platform: 'Windows 8.1'
-                        },
-                        {
-                            browserName: 'MicrosoftEdge',
-                            version: '14',
-                            platform: 'Windows 10'
-                        }
-                    ],
-                    testname: '<%= conf.pkg.name %>.js'
+                port: 9876,
+                colors: true,
+                logLevel: 'INFO',
+                autoWatch: false,
+                browsers: ['Firefox'],
+                browserConsoleLogOptions: {level: 'error'},
+                singleRun: true,
+                concurrency: Infinity
+            },
+            unit: {},
+            coverage: {
+                reporters: ['progress', 'coverage'],
+
+                preprocessors: {
+                    // source files, that you wanna generate coverage for
+                    // do not include tests or libraries
+                    // (these files will be instrumented by Istanbul)
+                    '<%= conf.pkg.name %>.js': ['coverage']
+                },
+
+                // optionally, configure the reporter
+                coverageReporter: {
+                    type: 'html',
+                    dir: 'coverage/'
                 }
+            },
+            ci: {
+                browsers: ['Chrome', 'Firefox'],
+                concurrency: 1,
+                reporters: ['dots', 'summary']
+            },
+            sauceLabs: {
+                testName: 'dc.js unit tests',
+                customLaunchers: {
+                    slFirefoxLinux: {
+                        base: 'SauceLabs',
+                        browserName: 'firefox',
+                        version: '45.0',
+                        platform: 'Linux'
+                    },
+                    slSafari: {
+                        base: 'SauceLabs',
+                        browserName: 'safari',
+                        version: '9.0',
+                        platform: 'OS X 10.11'
+                    },
+                    slInternetExplorer11: {
+                        base: 'SauceLabs',
+                        browserName: 'internet explorer',
+                        platform: 'Windows 10',
+                        version: '11.0'
+                    },
+                    slInternetExplorer11win8: {
+                        base: 'SauceLabs',
+                        browserName: 'internet explorer',
+                        version: '11.0',
+                        platform: 'Windows 8.1'
+                    },
+                    slMicrosoftEdge: {
+                        base: 'SauceLabs',
+                        browserName: 'MicrosoftEdge',
+                        version: '14',
+                        platform: 'Windows 10'
+                    }
+                },
+                browsers: ['slInternetExplorer11', 'slInternetExplorer11win8', 'slMicrosoftEdge',
+                    'slFirefoxLinux', 'slSafari'],
+                concurrency: 2,
+                browserNoActivityTimeout: 120000,
+                reporters: ['saucelabs', 'summary'],
+                singleRun: true
             }
         },
         jsdoc: {
@@ -292,7 +295,6 @@ module.exports = function (grunt) {
                             'node_modules/d3/build/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/queue-async/build/queue.js',
-                            'node_modules/grunt-saucelabs/examples/jasmine/lib/jasmine-jsreporter/jasmine-jsreporter.js',
                             'node_modules/file-saver/FileSaver.js'
                         ],
                         dest: '<%= conf.web %>/js/'
@@ -423,28 +425,34 @@ module.exports = function (grunt) {
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
-    grunt.registerTask('watch:jasmine-docs', function () {
+    grunt.registerTask('watch:scripts-sass-docs', function () {
         grunt.config('watch', {
             options: {
                 interrupt: true
             },
-            runner: grunt.config('watch').jasmineRunner,
             scripts: grunt.config('watch').scripts,
             sass: grunt.config('watch').sass
         });
         grunt.task.run('watch');
+    });
+    grunt.registerTask('safe-sauce-labs', function () {
+        if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
+            grunt.log.writeln('Skipping Sauce Lab tests - SAUCE_USERNAME/SAUCE_ACCESS_KEY not set');
+            return;
+        }
+        grunt.task.run('karma:sauceLabs');
     });
 
     // task aliases
     grunt.registerTask('build', ['concat', 'sass', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:jasmine-docs']);
-    grunt.registerTask('test', ['build', 'copy', 'jasmine:specs']);
-    grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
-    grunt.registerTask('coverage', ['build', 'copy', 'jasmine:coverage']);
-    grunt.registerTask('ci', ['test', 'jasmine:specs:build', 'connect:server', 'saucelabs-jasmine']);
-    grunt.registerTask('ci-pull', ['test', 'jasmine:specs:build', 'connect:server']);
+    grunt.registerTask('server', ['docs', 'fileindex', 'connect:server', 'watch:scripts-sass-docs']);
+    grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
+    // grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
+    grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
+    grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
+    grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
     grunt.registerTask('lint', ['jshint', 'jscs']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
