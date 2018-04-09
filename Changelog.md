@@ -1,15 +1,16 @@
 ## 3.0.0 alpha 4
-* switch to Karma for testing across browsers, by Deepak Kumar
+* switch to Karma for testing across browsers, by Deepak Kumar ([#1393](https://github.com/dc-js/dc.js/pull/1393))
 
 ## 3.0.0 alpha 3
-* improved integration with `d3.zoom`, by Deepak Kumar. Since the d3v4 implementation is a lot more powerful, this eliminates a lot of custom zoom code.
+* improved integration with `d3.zoom`, by Deepak Kumar. Since the d3v4 implementation is a lot more powerful, this eliminates a lot of custom zoom code. ([#1385](https://github.com/dc-js/dc.js/pull/1385))
 
 ## 3.0.0 alpha 2
-* backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, ny Deepak Kumar
-* Fixed test cases for Edge/IE, by Deepak Kumar
+* backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, ny Deepak Kumar ([#1381](https://github.com/dc-js/dc.js/pull/1381) / [#1376](https://github.com/dc-js/dc.js/issues/1376), [#1382](https://github.com/dc-js/dc.js/pull/1382) / [#1379](https://github.com/dc-js/dc.js/issues/1379))
+* Fixed test cases for Edge/IE, by Deepak Kumar ([#1378](https://github.com/dc-js/dc.js/pull/1378))
+* lint ([#1372](https://github.com/dc-js/dc.js/pull/1372))
 
 ## 3.0.0 alpha 1
-* first pass of d3v4 support, by Deepak Kumar
+* first pass of d3v4 support, by Deepak Kumar ([#1363](https://github.com/dc-js/dc.js/pull/1363))
 * until more stable, releases will be github-only (no npm/cdnjs)
 * all [axis.tickArguments()](https://github.com/d3/d3-axis/blob/master/README.md#axis_tickArguments) are applied to `scale.ticks()` to produce horizontal & vertical gridlines, not just the first argument.
 
