@@ -1014,22 +1014,16 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart.effectiveWidth();
     }
 
-    _chart.renderBrush = function (g) {
+    _chart.renderBrush = function (g, doTransition) {
         if (_brushOn) {
             _brush.on('start brush end', _chart._brushing);
-
-            // Set boundaries of the brush, must set it before applying to _gBrush
-            _brush.extent([[0, 0], [brushWidth(), brushHeight()]]);
 
             // To retrieve selection we need _gBrush
             _gBrush = g.append('g')
                 .attr('class', 'brush')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
-                .call(_brush);
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
 
-            _chart.setHandlePaths(_gBrush);
-
-            _chart.redrawBrush(_chart.filter());
+            _chart.redrawBrush(_chart.filter(), doTransition);
         }
     };
 
@@ -1040,8 +1034,10 @@ dc.coordinateGridMixin = function (_chart) {
             .enter()
             .append('path')
             .attr('class', 'handle--custom')
-            .attr('d', _chart.resizeHandlePath)
             .merge(_brushHandles);
+
+        _brushHandles
+            .attr('d', _chart.resizeHandlePath);
     };
 
     _chart.extendBrush = function (selection) {
@@ -1076,7 +1072,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         selection = _chart.extendBrush(selection);
 
-        _chart.redrawBrush(selection);
+        _chart.redrawBrush(selection, false);
 
         if (_chart.brushIsEmpty(selection)) {
             dc.events.trigger(function () {
@@ -1093,8 +1089,16 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (selection) {
+    _chart.redrawBrush = function (selection, doTransition) {
         if (_brushOn && _gBrush) {
+            // Set boundaries of the brush, must set it before applying to _gBrush
+            _brush.extent([[0, 0], [brushWidth(), brushHeight()]]);
+
+            _gBrush
+                .call(_brush);
+
+            _chart.setHandlePaths(_gBrush);
+
             if (!selection) {
                 _brush.move(_gBrush, null);
 
@@ -1102,9 +1106,11 @@ dc.coordinateGridMixin = function (_chart) {
                     .attr('display', 'none');
             } else {
                 var scaledSelection = [_x(selection[0]), _x(selection[1])];
-                _brush.move(_gBrush, scaledSelection);
 
-                _brushHandles
+                dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush)
+                    .call(_brush.move, scaledSelection);
+
+                dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_brushHandles)
                     .attr('display', null)
                     .attr('transform', function (d, i) {
                         return 'translate(' + _x(selection[i]) + ', 0)';
@@ -1217,7 +1223,8 @@ dc.coordinateGridMixin = function (_chart) {
         if (render) {
             _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.filter());
+            // Animate the brush only while resizing
+            _chart.redrawBrush(_chart.filter(), _resizing);
         }
         _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;
