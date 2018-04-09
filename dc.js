@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.3
+ *  dc 3.0.0-alpha.4
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -127,7 +127,7 @@ d3.stackD3v3 = function () {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.3
+ * @version 3.0.0-alpha.4
  * @example
  * // Example chaining
  * chart.width(300)
@@ -136,7 +136,7 @@ d3.stackD3v3 = function () {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.3',
+    version: '3.0.0-alpha.4',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
