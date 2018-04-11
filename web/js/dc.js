@@ -912,6 +912,27 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
  */
 dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
 
+/**
+ * Return true if both arrays are equal, if both array are null these are considered equal
+ * @method arraysEqual
+ * @memberof dc.utils
+ * @param {Array|null} a1
+ * @param {Array|null} a2
+ * @returns {Boolean}
+ */
+dc.utils.arraysEqual = function (a1, a2) {
+    if (!a1 || !a2) {
+        return a1 === a2;
+    }
+
+    return a1.length === a2.length &&
+        // If elements are not integers/strings, we hope that it will match because of toString
+        // Test cases cover dates as well.
+        a1.every(function (elem, i) {
+            return elem === a2[i] || elem.toString() === a2[i].toString();
+        });
+};
+
 dc.logger = {};
 
 dc.logger.enableDebugLog = false;

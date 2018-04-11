@@ -456,11 +456,6 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function compareDomains (d1, d2) {
-        return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
-    }
-
     function prepareXAxis (g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
@@ -483,7 +478,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (render || compareDomains(_lastXDomain, xdom)) {
+        if (render || !dc.utils.arraysEqual(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -978,7 +973,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._filter(_);
 
-        _chart.redrawBrush(_);
+        _chart.redrawBrush(_, false);
 
         return _chart;
     });
@@ -1022,6 +1017,8 @@ dc.coordinateGridMixin = function (_chart) {
             _gBrush = g.append('g')
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
+
+            _chart.setBrushExtents();
 
             _chart.redrawBrush(_chart.filter(), doTransition);
         }
@@ -1089,15 +1086,21 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
+    _chart.setBrushExtents = function () {
+        // Set boundaries of the brush, must set it before applying to _gBrush
+        _brush.extent([[0, 0], [brushWidth(), brushHeight()]]);
+
+        _gBrush
+            .call(_brush);
+
+        _chart.setHandlePaths(_gBrush);
+    };
+
     _chart.redrawBrush = function (selection, doTransition) {
         if (_brushOn && _gBrush) {
-            // Set boundaries of the brush, must set it before applying to _gBrush
-            _brush.extent([[0, 0], [brushWidth(), brushHeight()]]);
-
-            _gBrush
-                .call(_brush);
-
-            _chart.setHandlePaths(_gBrush);
+            if (_resizing) {
+                _chart.setBrushExtents();
+            }
 
             if (!selection) {
                 _brush.move(_gBrush, null);

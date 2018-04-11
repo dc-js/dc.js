@@ -84,7 +84,9 @@ d3.csv("morley.csv").then(function(experiments) {
                 });
             } else if (!rangesEqual(chart.filter(), overviewChart.focusChart().filter())) {
                 dc.events.trigger(function () {
-                    overviewChart.focusChart().focus(chart.filter());
+                    // The second parameter is quite important. It asks the focus operation not to propagate events
+                    // In absence of that it will cause infinite mutual recursion
+                    overviewChart.focusChart().focus(chart.filter(), true);
                 });
             }
         });
@@ -98,7 +100,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .group(runGroup)
     .seriesAccessor(function(d) {return "Expt: " + d.key[0];})
     .keyAccessor(function(d) {return +d.key[1];})
-    .valueAccessor(function(d) {return +d.value - 500;})
+    .valueAccessor(function(d) {return +d.value - 500;});
 
   dc.renderAll();
 

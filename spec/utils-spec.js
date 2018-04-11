@@ -130,4 +130,61 @@ describe('dc utils', function () {
             expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
     });
+    describe('dc.utils.arraysEqual', function () {
+        it('nulls should be equal', function () {
+            var a1 = null;
+            var a2 = null;
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
+        });
+        it('null should not be equal to any array', function () {
+            var a1 = null;
+            var a2 = [];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
+        });
+        it('any array should not be equal to null', function () {
+            var a1 = null;
+            var a2 = [];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
+        });
+        it('empty arrays should be', function () {
+            var a1 = [];
+            var a2 = [];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
+        });
+        it('should identify equal arrays - numbers', function () {
+            var a1 = [1, 2, 3];
+            var a2 = [1, 2, 3];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
+        });
+        it('should identify equal arrays - strings', function () {
+            var a1 = ['apple', 'mangoes', 'oranges', 'bananas'];
+            var a2 = ['apple', 'mangoes', 'oranges', 'bananas'];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
+        });
+        it('should identify equal arrays - dates', function () {
+            var a1 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
+            var a2 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
+        });
+        it('should identify unequal arrays - numbers', function () {
+            var a1 = [4, 2, 3];
+            var a2 = [1, 2, 3];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
+        });
+        it('should identify unequal arrays - strings', function () {
+            var a1 = ['apple', 'cherries', 'oranges', 'bananas'];
+            var a2 = ['apple', 'mangoes', 'oranges', 'bananas'];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
+        });
+        it('should identify unequal arrays - dates', function () {
+            var a1 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
+            var a2 = [makeDate(2012, 1, 1), makeDate(2013, 10, 16)];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
+        });
+        it('should identify equal arrays with one of the elements as 0', function () {
+            var a1 = [0, 20];
+            var a2 = [0, 20];
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
+        });
+    });
 });
