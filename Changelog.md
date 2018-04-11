@@ -1,3 +1,6 @@
+## 3.0.0 alpha 5
+* d3v5 support: all examples upgraded to d3-fetch. `schemeCategory20c` is patched into `d3` temporarily but see [#1403](https://github.com/dc-js/dc.js/issues/1403)
+
 ## 3.0.0 alpha 4
 * switch to Karma for testing across browsers, by Deepak Kumar ([#1393](https://github.com/dc-js/dc.js/pull/1393))
 
