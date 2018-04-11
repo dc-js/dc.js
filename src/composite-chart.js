@@ -87,7 +87,7 @@ dc.compositeChart = function (parent, chartGroup) {
         }
         selection = _chart.extendBrush(selection);
 
-        _chart.redrawBrush(selection);
+        _chart.redrawBrush(selection, false);
 
         var brushIsEmpty = _chart.brushIsEmpty(selection);
 

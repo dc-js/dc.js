@@ -432,7 +432,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
         selection = _chart.extendBrush(selection);
 
-        _chart.redrawBrush(selection);
+        _chart.redrawBrush(selection, false);
 
         if (brushIsEmpty) {
             dc.events.trigger(function () {
@@ -451,7 +451,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     };
 
-    _chart.redrawBrush = function (selection) {
+    _chart.redrawBrush = function (selection, doTransition) {
         // override default x axis brush from parent chart
         var _brush = _chart.brush();
         var _gBrush = _chart.gBrush();
