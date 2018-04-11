@@ -16,6 +16,7 @@ dc.coordinateGridMixin = function (_chart) {
     var VERTICAL_CLASS = 'vertical';
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var CUSTOM_BRUSH_HANDLE_CLASS = 'custom-brush-handle';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
@@ -1017,12 +1018,12 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.setHandlePaths = function (gBrush) {
-        _brushHandles = gBrush.selectAll('.handle--custom').data([{type: 'w'}, {type: 'e'}]);
+        _brushHandles = gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS).data([{type: 'w'}, {type: 'e'}]);
 
         _brushHandles = _brushHandles
             .enter()
             .append('path')
-            .attr('class', 'handle--custom')
+            .attr('class', CUSTOM_BRUSH_HANDLE_CLASS)
             .merge(_brushHandles);
 
         _brushHandles
