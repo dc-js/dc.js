@@ -1001,14 +1001,6 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function brushHeight () {
-        return _chart.effectiveHeight();
-    }
-
-    function brushWidth () {
-        return _chart.effectiveWidth();
-    }
-
     _chart.renderBrush = function (g, doTransition) {
         if (_brushOn) {
             _brush.on('start brush end', _chart._brushing);
@@ -1088,7 +1080,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart.setBrushExtents = function () {
         // Set boundaries of the brush, must set it before applying to _gBrush
-        _brush.extent([[0, 0], [brushWidth(), brushHeight()]]);
+        _brush.extent([[0, 0], [_chart.effectiveWidth(), _chart.effectiveHeight()]]);
 
         _gBrush
             .call(_brush);
@@ -1130,7 +1122,7 @@ dc.coordinateGridMixin = function (_chart) {
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
         d = d.type;
-        var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
+        var e = +(d === 'e'), x = e ? 1 : -1, y = _chart.effectiveHeight() / 3;
         return 'M' + (0.5 * x) + ',' + y +
             'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
             'V' + (2 * y - 6) +
