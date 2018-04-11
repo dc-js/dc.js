@@ -209,14 +209,14 @@ any html element with its css class set to <code>filter</code></p>
               </div>
               <p>Data can be loaded through regular means with your
 favorite javascript library</p>
-<pre><code class="lang-javascript">d3.csv(<span class="hljs-string">'data.csv'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{...});
-d3.json(<span class="hljs-string">'data.json'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{...});
+<pre><code class="lang-javascript">d3.csv(<span class="hljs-string">'data.csv'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{...});
+d3.json(<span class="hljs-string">'data.json'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{...});
 jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{...});
 </code></pre>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>d3.csv(<span class="hljs-string">'ndx.csv'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>{</pre></div></div>
+            <div class="content"><div class='highlight'><pre>d3.csv(<span class="hljs-string">'ndx.csv'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">data</span>) </span>{</pre></div></div>
             
         </li>
         

@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.4
+ *  dc 3.0.0-alpha.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -117,6 +117,15 @@ d3.stackD3v3 = function () {
     }
 }();
 
+// d3v4 Compat
+if (!d3.schemeCategory20c) {
+    d3.schemeCategory20c = [
+        '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
+        '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
+        '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
+        '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
+}
+
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
  * anything else into the global name space.
@@ -127,7 +136,7 @@ d3.stackD3v3 = function () {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.4
+ * @version 3.0.0-alpha.5
  * @example
  * // Example chaining
  * chart.width(300)
@@ -136,7 +145,7 @@ d3.stackD3v3 = function () {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.4',
+    version: '3.0.0-alpha.5',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
