@@ -222,6 +222,8 @@ dc.heatMap = function (parent, chartGroup) {
         gEnter.append('rect')
             .attr('class', 'heat-box')
             .attr('fill', 'white')
+            .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
+            .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
@@ -278,10 +280,11 @@ dc.heatMap = function (parent, chartGroup) {
         gRowsText = gRowsText
             .enter()
             .append('text')
-                .attr('dy', 6)
                 .style('text-anchor', 'end')
                 .attr('x', 0)
                 .attr('dx', -2)
+                .attr('y', function (d) { return rows(d) + boxHeight / 2; })
+                .attr('dy', 6)
                 .on('click', _chart.yAxisOnClick())
                 .text(_chart.rowsLabel())
             .merge(gRowsText);
