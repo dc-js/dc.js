@@ -673,7 +673,8 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should create a fancy brush resize handle', function () {
-                    var selectAll = chart.select('g.brush').selectAll('path.handle--custom');
+                    var selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
+                    expect(selectAll.size()).toBe(2);
                     selectAll.each(function (d, i) {
                         if (i === 0) {
                             expect(d3.select(this).attr('d'))

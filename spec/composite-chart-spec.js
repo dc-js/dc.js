@@ -236,8 +236,9 @@ describe('dc.compositeChart', function () {
             });
 
             it('should have a resize handle', function () {
-                expect(chart.selectAll('g.brush path.handle--custom').size()).not.toBe(0);
-                chart.selectAll('g.brush path.handle--custom').each(function (d, i) {
+                var selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
+                expect(selectAll.size()).toBe(2);
+                selectAll.each(function (d, i) {
                     if (i === 0) {
                         expect(d3.select(this).attr('d'))
                             .toMatchPath('M-0.5,36.666666666666664A6,6 0 0 0 -6.5,42.666666666666664V67.33333333333333A6,' +
