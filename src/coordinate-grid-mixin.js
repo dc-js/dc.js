@@ -48,7 +48,6 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _brush = d3.brushX();
     var _gBrush;
-    var _brushHandles;
     var _brushOn = true;
     var _round;
 
@@ -1013,20 +1012,22 @@ dc.coordinateGridMixin = function (_chart) {
 
             _chart.setBrushExtents();
 
+            _chart.createBrushHandlePaths(_gBrush, doTransition);
+
             _chart.redrawBrush(_chart.filter(), doTransition);
         }
     };
 
-    _chart.setHandlePaths = function (gBrush) {
-        _brushHandles = gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS).data([{type: 'w'}, {type: 'e'}]);
+    _chart.createBrushHandlePaths = function (gBrush) {
+        var brushHandles = gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS).data([{type: 'w'}, {type: 'e'}]);
 
-        _brushHandles = _brushHandles
+        brushHandles = brushHandles
             .enter()
             .append('path')
             .attr('class', CUSTOM_BRUSH_HANDLE_CLASS)
-            .merge(_brushHandles);
+            .merge(brushHandles);
 
-        _brushHandles
+        brushHandles
             .attr('d', _chart.resizeHandlePath);
     };
 
@@ -1079,38 +1080,41 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.setBrushExtents = function () {
+    _chart.setBrushExtents = function (doTransition) {
         // Set boundaries of the brush, must set it before applying to _gBrush
         _brush.extent([[0, 0], [_chart.effectiveWidth(), _chart.effectiveHeight()]]);
 
         _gBrush
             .call(_brush);
-
-        _chart.setHandlePaths(_gBrush);
     };
 
     _chart.redrawBrush = function (selection, doTransition) {
         if (_brushOn && _gBrush) {
             if (_resizing) {
-                _chart.setBrushExtents();
+                _chart.setBrushExtents(doTransition);
             }
 
-            if (!selection) {
-                _brush.move(_gBrush, null);
+            var gBrush =
+                dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
 
-                _brushHandles
+            if (!selection) {
+                gBrush
+                    .call(_brush.move, null);
+
+                gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', 'none');
             } else {
                 var scaledSelection = [_x(selection[0]), _x(selection[1])];
 
-                dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush)
+                gBrush
                     .call(_brush.move, scaledSelection);
 
-                dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_brushHandles)
+                gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', null)
                     .attr('transform', function (d, i) {
                         return 'translate(' + _x(selection[i]) + ', 0)';
-                    });
+                    })
+                    .attr('d', _chart.resizeHandlePath);
             }
         }
         _chart.fadeDeselectedArea(selection);
