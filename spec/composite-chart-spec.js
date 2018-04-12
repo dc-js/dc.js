@@ -4,6 +4,8 @@ describe('dc.compositeChart', function () {
         dateIdSumGroup, dateIdNegativeSumGroup, dateGroup;
 
     beforeEach(function () {
+        dc.constants.EVENT_DELAY = 0; // so that dc.events.trigger executes immediately
+
         data = crossfilter(loadDateFixture());
         dateDimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         dateValueSumGroup = dateDimension.group().reduceSum(function (d) { return d.value; });
