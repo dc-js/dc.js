@@ -1065,19 +1065,17 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart.redrawBrush(selection, false);
 
-        if (_chart.brushIsEmpty(selection)) {
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        } else {
-            var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
+        var rangedFilter = _chart.brushIsEmpty(selection) ? null : dc.filters.RangedFilter(selection[0], selection[1]);
 
-            dc.events.trigger(function () {
-                _chart.replaceFilter(rangedFilter);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        }
+        dc.events.trigger(function () {
+            _chart.applyBrushSelection(rangedFilter);
+        }, dc.constants.EVENT_DELAY);
+    };
+
+    // This can be overridden in a derived chart. For example Composite chart overrides it
+    _chart.applyBrushSelection = function (rangedFilter) {
+        _chart.replaceFilter(rangedFilter);
+        _chart.redrawGroup();
     };
 
     _chart.setBrushExtents = function (doTransition) {

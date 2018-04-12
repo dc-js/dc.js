@@ -741,7 +741,7 @@ describe('dc.coordinateGridChart', function () {
                 });
 
                 it('should update its range chart\'s filter', function () {
-                    expect(chart.rangeChart().filter()).toEqual(chart.filter());
+                    expect(dc.utils.arraysEqual(chart.rangeChart().filter(), chart.filter())).toEqual(true);
                 });
 
                 it('should trigger redraw on its range chart', function () {
