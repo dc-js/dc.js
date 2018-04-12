@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.5
+ *  dc 3.0.0-alpha.6
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -136,7 +136,7 @@ if (!d3.schemeCategory20c) {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.5
+ * @version 3.0.0-alpha.6
  * @example
  * // Example chaining
  * chart.width(300)
@@ -145,7 +145,7 @@ if (!d3.schemeCategory20c) {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.5',
+    version: '3.0.0-alpha.6',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -5877,6 +5877,27 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
+    function labelXPos (d) {
+        var x = _chart.x()(d.x);
+        if (!_centerBar) {
+            x += _barWidth / 2;
+        }
+        if (_chart.isOrdinal() && _gap !== undefined) {
+            x += _gap / 2;
+        }
+        return dc.utils.safeNumber(x);
+    }
+
+    function labelYPos (d) {
+        var y = _chart.y()(d.y + d.y0);
+
+        if (d.y < 0) {
+            y -= barHeight(d);
+        }
+
+        return dc.utils.safeNumber(y - LABEL_PADDING);
+    }
+
     function renderLabels (layer, layerIndex, d) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
@@ -5886,6 +5907,8 @@ dc.barChart = function (parent, chartGroup) {
                 .append('text')
                 .attr('class', 'barLabel')
                 .attr('text-anchor', 'middle')
+                .attr('x', labelXPos)
+                .attr('y', labelYPos)
             .merge(labels);
 
         if (_chart.isOrdinal()) {
@@ -5894,22 +5917,8 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                if (!_centerBar) {
-                    x += _barWidth / 2;
-                }
-                return dc.utils.safeNumber(x);
-            })
-            .attr('y', function (d) {
-                var y = _chart.y()(d.y + d.y0);
-
-                if (d.y < 0) {
-                    y -= barHeight(d);
-                }
-
-                return dc.utils.safeNumber(y - LABEL_PADDING);
-            })
+            .attr('x', labelXPos)
+            .attr('y', labelYPos)
             .text(function (d) {
                 return _chart.label()(d);
             });
@@ -5917,6 +5926,17 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
+    }
+
+    function barXPos (d) {
+        var x = _chart.x()(d.x);
+        if (_centerBar) {
+            x -= _barWidth / 2;
+        }
+        if (_chart.isOrdinal() && _gap !== undefined) {
+            x += _gap / 2;
+        }
+        return dc.utils.safeNumber(x);
     }
 
     function renderBars (layer, layerIndex, d) {
@@ -5927,6 +5947,7 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('x', barXPos)
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
 
@@ -5941,16 +5962,7 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                if (_centerBar) {
-                    x -= _barWidth / 2;
-                }
-                if (_chart.isOrdinal() && _gap !== undefined) {
-                    x += _gap / 2;
-                }
-                return dc.utils.safeNumber(x);
-            })
+            .attr('x', barXPos)
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
@@ -6542,6 +6554,12 @@ dc.lineChart = function (parent, chartGroup) {
                     .enter()
                         .append('circle')
                         .attr('class', DOT_CIRCLE_CLASS)
+                        .attr('cx', function (d) {
+                            return dc.utils.safeNumber(_chart.x()(d.x));
+                        })
+                        .attr('cy', function (d) {
+                            return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                        })
                         .attr('r', getDotRadius())
                         .style('fill-opacity', _dataPointFillOpacity)
                         .style('stroke-opacity', _dataPointStrokeOpacity)
@@ -10544,6 +10562,8 @@ dc.heatMap = function (parent, chartGroup) {
         gEnter.append('rect')
             .attr('class', 'heat-box')
             .attr('fill', 'white')
+            .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
+            .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
@@ -10600,10 +10620,11 @@ dc.heatMap = function (parent, chartGroup) {
         gRowsText = gRowsText
             .enter()
             .append('text')
-                .attr('dy', 6)
                 .style('text-anchor', 'end')
                 .attr('x', 0)
                 .attr('dx', -2)
+                .attr('y', function (d) { return rows(d) + boxHeight / 2; })
+                .attr('dy', 6)
                 .on('click', _chart.yAxisOnClick())
                 .text(_chart.rowsLabel())
             .merge(gRowsText);
