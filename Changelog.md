@@ -1,3 +1,6 @@
+## 3.0.0 alpha 6
+* initialize all positions for entering objects, since d3.transition will now start them at zero if you don't ([#1400](https://github.com/dc-js/dc.js/issues/1400))
+
 ## 3.0.0 alpha 5
 * d3v5 support: all examples upgraded to d3-fetch. `schemeCategory20c` is patched into `d3` temporarily but see [#1403](https://github.com/dc-js/dc.js/issues/1403)
 
