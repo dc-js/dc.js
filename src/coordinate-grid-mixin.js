@@ -1094,17 +1094,17 @@ dc.coordinateGridMixin = function (_chart) {
                 _chart.setBrushExtents(doTransition);
             }
 
-            var gBrush =
-                dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
-
             if (!selection) {
-                gBrush
+                _gBrush
                     .call(_brush.move, null);
 
-                gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                _gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', 'none');
             } else {
                 var scaledSelection = [_x(selection[0]), _x(selection[1])];
+
+                var gBrush =
+                    dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
 
                 gBrush
                     .call(_brush.move, scaledSelection);

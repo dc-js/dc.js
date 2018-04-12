@@ -91,6 +91,8 @@ dc.compositeChart = function (parent, chartGroup) {
 
         var brushIsEmpty = _chart.brushIsEmpty(selection);
 
+        _chart.replaceFilter(brushIsEmpty ? null : selection);
+
         for (var i = 0; i < _children.length; ++i) {
             _children[i].replaceFilter(brushIsEmpty ? null : selection);
         }
