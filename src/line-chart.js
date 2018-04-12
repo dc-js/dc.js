@@ -381,6 +381,12 @@ dc.lineChart = function (parent, chartGroup) {
                     .enter()
                         .append('circle')
                         .attr('class', DOT_CIRCLE_CLASS)
+                        .attr('cx', function (d) {
+                            return dc.utils.safeNumber(_chart.x()(d.x));
+                        })
+                        .attr('cy', function (d) {
+                            return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                        })
                         .attr('r', getDotRadius())
                         .style('fill-opacity', _dataPointFillOpacity)
                         .style('stroke-opacity', _dataPointStrokeOpacity)
