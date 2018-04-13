@@ -139,6 +139,31 @@ module.exports = function (grunt) {
                 }
             }
         },
+        jasmine: {
+            specs: {
+                options: {
+                    display: 'short',
+                    summary: true,
+                    specs:  '<%= conf.spec %>/*-spec.js',
+                    helpers: [
+                        '<%= conf.web %>/js/jasmine-jsreporter.js',
+                        '<%= conf.spec %>/helpers/*.js'
+                    ],
+                    styles: [
+                        '<%= conf.web %>/css/dc.css'
+                    ],
+                    version: '2.0.0',
+                    outfile: '<%= conf.spec %>/index.html',
+                    keepRunner: true
+                },
+                src: [
+                    '<%= conf.web %>/js/d3.js',
+                    '<%= conf.web %>/js/crossfilter.js',
+                    '<%= conf.web %>/js/colorbrewer.js',
+                    '<%= conf.pkg.name %>.js'
+                ]
+            }
+        },
         karma: {
             options: {
                 basePath: '',
