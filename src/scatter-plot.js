@@ -434,21 +434,12 @@ dc.scatterPlot = function (parent, chartGroup) {
 
         _chart.redrawBrush(selection, false);
 
-        if (brushIsEmpty) {
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.redrawGroup();
-            });
+        var ranged2DFilter = brushIsEmpty ? null : dc.filters.RangedTwoDimensionalFilter(selection);
 
-        } else {
-            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(selection);
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.filter(ranged2DFilter);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-
-        }
+        dc.events.trigger(function () {
+            _chart.replaceFilter(ranged2DFilter);
+            _chart.redrawGroup();
+        }, dc.constants.EVENT_DELAY);
     };
 
     _chart.redrawBrush = function (selection, doTransition) {
@@ -456,17 +447,30 @@ dc.scatterPlot = function (parent, chartGroup) {
         var _brush = _chart.brush();
         var _gBrush = _chart.gBrush();
 
-        if (_brush && _gBrush) {
-            if (selection) {
+        if (_chart.brushOn() && _gBrush) {
+            if (_chart.resizing()) {
+                _chart.setBrushExtents(doTransition);
+            }
+
+            if (!selection) {
+                _gBrush
+                    .call(_brush.move, selection);
+
+            } else {
                 selection = selection.map(function (point) {
                     return point.map(function (coord, i) {
                         var scale = i === 0 ? _chart.x() : _chart.y();
                         return scale(coord);
                     });
                 });
-            }
 
-            _brush.move(_gBrush, selection);
+                var gBrush =
+                    dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
+
+                gBrush
+                    .call(_brush.move, selection);
+
+            }
         }
 
         _chart.fadeDeselectedArea(selection);
