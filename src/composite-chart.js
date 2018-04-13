@@ -60,8 +60,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration(), _chart.transitionDelay());
-            // TODO: Determine if we can switch off brush for children and only keep it on for parent
-            child.brushOn(_chart.brushOn());
+            child.brushOn(false);
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());
         }
