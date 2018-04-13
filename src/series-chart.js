@@ -60,7 +60,7 @@ dc.seriesChart = function (parent, chartGroup) {
                     .group({all: d3.functor(sub.values)}, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
-                    .brushOn(_chart.brushOn());
+                    .brushOn(false);
             });
         // this works around the fact compositeChart doesn't really
         // have a removal interface
