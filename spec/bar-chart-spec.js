@@ -616,6 +616,15 @@ describe('dc.barChart', function () {
                 expect(chart.refocused()).toBeTruthy();
             });
 
+            describe('with evadeDomainFilter', function () {
+                beforeEach(function () {
+                    chart.evadeDomainFilter(true).redraw();
+                });
+                it('should still reset the y-axis domain based on the focus range', function () {
+                    expect(chart.y().domain()).toEqual([0, 1]);
+                });
+            });
+
             it('should reset the focus when focused to null', function () {
                 chart.focus(null);
                 itBehavesLikeItWasReset();
