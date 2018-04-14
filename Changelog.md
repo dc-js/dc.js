@@ -1,11 +1,12 @@
 ## 3.0.0 alpha 7
 * `elasticY` needs still to look at only points within the X domain, even with `evadeDomainFilter` enabled, by Keith Dahlby ([#1367](https://github.com/dc-js/dc.js/pull/1367))
+* fixes to animated resizing of brush when chart resizes, by Deepak Kumar ([#1402](https://github.com/dc-js/dc.js/pull/1402) / [#1376](https://github.com/dc-js/dc.js/issues/1399)
 
 ## 3.0.0 alpha 6
 * initialize all positions for entering objects, since d3.transition will now start them at zero if you don't ([#1400](https://github.com/dc-js/dc.js/issues/1400))
 
 ## 3.0.0 alpha 5
-* d3v5 support: all examples upgraded to d3-fetch. `schemeCategory20c` is patched into `d3` temporarily but see [#1403](https://github.com/dc-js/dc.js/issues/1403)
+* d3v5 support: all examples upgraded to d3-fetch. `schemeCategory20c` is patched into `d3` temporarily, by Deepak Kumar, but see [#1403](https://github.com/dc-js/dc.js/issues/1403)
 
 ## 3.0.0 alpha 4
 * switch to Karma for testing across browsers, by Deepak Kumar ([#1393](https://github.com/dc-js/dc.js/pull/1393))
@@ -15,7 +16,7 @@
 
 ## 3.0.0 alpha 2
 * backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, ny Deepak Kumar ([#1381](https://github.com/dc-js/dc.js/pull/1381) / [#1376](https://github.com/dc-js/dc.js/issues/1376), [#1382](https://github.com/dc-js/dc.js/pull/1382) / [#1379](https://github.com/dc-js/dc.js/issues/1379))
-* Fixed test cases for Edge/IE, by Deepak Kumar ([#1378](https://github.com/dc-js/dc.js/pull/1378))
+* Fixed test cases for Edge/IE, by Deepak Kumar ([#1378](https://github.com/dc-js/dc.js/pull/1378) / [#1373](https://github.com/dc-js/dc.js/issues/1373)
 * lint ([#1372](https://github.com/dc-js/dc.js/pull/1372))
 
 ## 3.0.0 alpha 1
