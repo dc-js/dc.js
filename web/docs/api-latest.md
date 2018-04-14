@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.0-alpha.6  
+**Version**: 3.0.0-alpha.7  
 **Example**  
 ```js
 // Example chaining
@@ -318,6 +318,7 @@ chart.width(300)
         * [.nameToId(name)](#dc.utils.nameToId) ⇒ <code>String</code>
         * [.appendOrSelect(parent, selector, tag)](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
         * [.safeNumber(n)](#dc.utils.safeNumber) ⇒ <code>Number</code>
+        * [.arraysEqual(a1, a2)](#dc.utils.arraysEqual) ⇒ <code>Boolean</code>
     * [.filters](#dc.filters) : <code>object</code>
         * [.RangedFilter](#dc.filters.RangedFilter)
             * [new RangedFilter(low, high)](#new_dc.filters.RangedFilter_new)
@@ -5166,6 +5167,7 @@ Converts a filter into a readable string.
     * [.nameToId(name)](#dc.utils.nameToId) ⇒ <code>String</code>
     * [.appendOrSelect(parent, selector, tag)](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
     * [.safeNumber(n)](#dc.utils.safeNumber) ⇒ <code>Number</code>
+    * [.arraysEqual(a1, a2)](#dc.utils.arraysEqual) ⇒ <code>Boolean</code>
 
 <a name="dc.utils.printSingleValue"></a>
 
@@ -5275,6 +5277,18 @@ Return the number if the value is a number; else 0.
 | Param | Type |
 | --- | --- |
 | n | <code>Number</code> \| <code>any</code> | 
+
+<a name="dc.utils.arraysEqual"></a>
+
+#### utils.arraysEqual(a1, a2) ⇒ <code>Boolean</code>
+Return true if both arrays are equal, if both array are null these are considered equal
+
+**Kind**: static method of [<code>utils</code>](#dc.utils)  
+
+| Param | Type |
+| --- | --- |
+| a1 | <code>Array</code> \| <code>null</code> | 
+| a2 | <code>Array</code> \| <code>null</code> | 
 
 <a name="dc.filters"></a>
 

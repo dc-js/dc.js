@@ -58,7 +58,7 @@ div.dc-chart {
   fill: #4682b4;
   fill-opacity: .125; }
 
-.dc-chart .brush .handle--custom {
+.dc-chart .brush .custom-brush-handle {
   fill: #eee;
   stroke: #666;
   cursor: ew-resize; }
