@@ -1,3 +1,6 @@
+## 3.0.0 alpha 7
+* `elasticY` needs still to look at only points within the X domain, even with `evadeDomainFilter` enabled, by Keith Dahlby ([#1367](https://github.com/dc-js/dc.js/pull/1367))
+
 ## 3.0.0 alpha 6
 * initialize all positions for entering objects, since d3.transition will now start them at zero if you don't ([#1400](https://github.com/dc-js/dc.js/issues/1400))
 
