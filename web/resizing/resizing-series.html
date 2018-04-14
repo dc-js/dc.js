@@ -34,7 +34,7 @@
               .height(window.innerHeight-adjustY)
               .chart(function(c) { return dc.lineChart(c).curve(d3.curveCardinal); })
               .x(d3.scaleLinear().domain([0,20]))
-              .brushOn(false)
+              .brushOn(true)
               .yAxisLabel("Measured Speed km/s")
               .xAxisLabel("Run")
               .clipPadding(10)

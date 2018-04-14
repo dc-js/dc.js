@@ -16,6 +16,7 @@ dc.coordinateGridMixin = function (_chart) {
     var VERTICAL_CLASS = 'vertical';
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var CUSTOM_BRUSH_HANDLE_CLASS = 'custom-brush-handle';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
@@ -47,8 +48,8 @@ dc.coordinateGridMixin = function (_chart) {
 
     var _brush = d3.brushX();
     var _gBrush;
-    var _brushHandles;
     var _brushOn = true;
+    var _parentBrushOn = false;
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -456,11 +457,6 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function compareDomains (d1, d2) {
-        return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
-    }
-
     function prepareXAxis (g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
@@ -483,7 +479,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (render || compareDomains(_lastXDomain, xdom)) {
+        if (render || !dc.utils.arraysEqual(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
@@ -978,7 +974,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._filter(_);
 
-        _chart.redrawBrush(_);
+        _chart.redrawBrush(_, false);
 
         return _chart;
     });
@@ -1006,42 +1002,34 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function brushHeight () {
-        return _chart.effectiveHeight();
-    }
-
-    function brushWidth () {
-        return _chart.effectiveWidth();
-    }
-
-    _chart.renderBrush = function (g) {
+    _chart.renderBrush = function (g, doTransition) {
         if (_brushOn) {
             _brush.on('start brush end', _chart._brushing);
-
-            // Set boundaries of the brush, must set it before applying to _gBrush
-            _brush.extent([[0, 0], [brushWidth(), brushHeight()]]);
 
             // To retrieve selection we need _gBrush
             _gBrush = g.append('g')
                 .attr('class', 'brush')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
-                .call(_brush);
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
 
-            _chart.setHandlePaths(_gBrush);
+            _chart.setBrushExtents();
 
-            _chart.redrawBrush(_chart.filter());
+            _chart.createBrushHandlePaths(_gBrush, doTransition);
+
+            _chart.redrawBrush(_chart.filter(), doTransition);
         }
     };
 
-    _chart.setHandlePaths = function (gBrush) {
-        _brushHandles = gBrush.selectAll('.handle--custom').data([{type: 'w'}, {type: 'e'}]);
+    _chart.createBrushHandlePaths = function (gBrush) {
+        var brushHandles = gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS).data([{type: 'w'}, {type: 'e'}]);
 
-        _brushHandles = _brushHandles
+        brushHandles = brushHandles
             .enter()
             .append('path')
-            .attr('class', 'handle--custom')
-            .attr('d', _chart.resizeHandlePath)
-            .merge(_brushHandles);
+            .attr('class', CUSTOM_BRUSH_HANDLE_CLASS)
+            .merge(brushHandles);
+
+        brushHandles
+            .attr('d', _chart.resizeHandlePath);
     };
 
     _chart.extendBrush = function (selection) {
@@ -1076,39 +1064,56 @@ dc.coordinateGridMixin = function (_chart) {
 
         selection = _chart.extendBrush(selection);
 
-        _chart.redrawBrush(selection);
+        _chart.redrawBrush(selection, false);
 
-        if (_chart.brushIsEmpty(selection)) {
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        } else {
-            var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
+        var rangedFilter = _chart.brushIsEmpty(selection) ? null : dc.filters.RangedFilter(selection[0], selection[1]);
 
-            dc.events.trigger(function () {
-                _chart.replaceFilter(rangedFilter);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        }
+        dc.events.trigger(function () {
+            _chart.applyBrushSelection(rangedFilter);
+        }, dc.constants.EVENT_DELAY);
     };
 
-    _chart.redrawBrush = function (selection) {
-        if (_brushOn && _gBrush) {
-            if (!selection) {
-                _brush.move(_gBrush, null);
+    // This can be overridden in a derived chart. For example Composite chart overrides it
+    _chart.applyBrushSelection = function (rangedFilter) {
+        _chart.replaceFilter(rangedFilter);
+        _chart.redrawGroup();
+    };
 
-                _brushHandles
+    _chart.setBrushExtents = function (doTransition) {
+        // Set boundaries of the brush, must set it before applying to _gBrush
+        _brush.extent([[0, 0], [_chart.effectiveWidth(), _chart.effectiveHeight()]]);
+
+        _gBrush
+            .call(_brush);
+    };
+
+    _chart.redrawBrush = function (selection, doTransition) {
+        if (_brushOn && _gBrush) {
+            if (_resizing) {
+                _chart.setBrushExtents(doTransition);
+            }
+
+            if (!selection) {
+                _gBrush
+                    .call(_brush.move, null);
+
+                _gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', 'none');
             } else {
                 var scaledSelection = [_x(selection[0]), _x(selection[1])];
-                _brush.move(_gBrush, scaledSelection);
 
-                _brushHandles
+                var gBrush =
+                    dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
+
+                gBrush
+                    .call(_brush.move, scaledSelection);
+
+                gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', null)
                     .attr('transform', function (d, i) {
                         return 'translate(' + _x(selection[i]) + ', 0)';
-                    });
+                    })
+                    .attr('d', _chart.resizeHandlePath);
             }
         }
         _chart.fadeDeselectedArea(selection);
@@ -1121,7 +1126,7 @@ dc.coordinateGridMixin = function (_chart) {
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
         d = d.type;
-        var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
+        var e = +(d === 'e'), x = e ? 1 : -1, y = _chart.effectiveHeight() / 3;
         return 'M' + (0.5 * x) + ',' + y +
             'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
             'V' + (2 * y - 6) +
@@ -1217,7 +1222,8 @@ dc.coordinateGridMixin = function (_chart) {
         if (render) {
             _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.filter());
+            // Animate the brush only while resizing
+            _chart.redrawBrush(_chart.filter(), _resizing);
         }
         _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;
@@ -1431,6 +1437,24 @@ dc.coordinateGridMixin = function (_chart) {
             return _brushOn;
         }
         _brushOn = brushOn;
+        return _chart;
+    };
+
+    /**
+     * This will be internally used by composite chart onto children. Please go not invoke directly.
+     *
+     * @method parentBrushOn
+     * @memberof dc.coordinateGridMixin
+     * @protected
+     * @instance
+     * @param {Boolean} [brushOn=false]
+     * @returns {Boolean|dc.coordinateGridMixin}
+     */
+    _chart.parentBrushOn = function (brushOn) {
+        if (!arguments.length) {
+            return _parentBrushOn;
+        }
+        _parentBrushOn = brushOn;
         return _chart;
     };
 
