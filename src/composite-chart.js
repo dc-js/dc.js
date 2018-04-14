@@ -60,6 +60,7 @@ dc.compositeChart = function (parent, chartGroup) {
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration(), _chart.transitionDelay());
+            child.parentBrushOn(_chart.brushOn());
             child.brushOn(false);
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());

@@ -49,6 +49,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _brush = d3.brushX();
     var _gBrush;
     var _brushOn = true;
+    var _parentBrushOn = false;
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -1436,6 +1437,24 @@ dc.coordinateGridMixin = function (_chart) {
             return _brushOn;
         }
         _brushOn = brushOn;
+        return _chart;
+    };
+
+    /**
+     * This will be internally used by composite chart onto children. Please go not invoke directly.
+     *
+     * @method parentBrushOn
+     * @memberof dc.coordinateGridMixin
+     * @protected
+     * @instance
+     * @param {Boolean} [brushOn=false]
+     * @returns {Boolean|dc.coordinateGridMixin}
+     */
+    _chart.parentBrushOn = function (brushOn) {
+        if (!arguments.length) {
+            return _parentBrushOn;
+        }
+        _parentBrushOn = brushOn;
         return _chart;
     };
 
