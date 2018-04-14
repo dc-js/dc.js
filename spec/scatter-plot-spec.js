@@ -234,6 +234,11 @@ describe('dc.scatterPlot', function () {
                 chart.redraw();
             });
 
+            it('should not create brush handles', function () {
+                var selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
+                expect(selectAll.size()).toBe(0);
+            });
+
             it('should filter dimensions based on the same data', function () {
                 jasmine.clock().tick(100);
                 expect(otherDimension.top(Infinity).length).toBe(3);

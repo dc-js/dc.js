@@ -388,7 +388,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         _symbol.size(oldSize);
     }
 
-    _chart.setHandlePaths = function () {
+    _chart.createBrushHandlePaths = function () {
         // no handle paths for poly-brushes
     };
 
