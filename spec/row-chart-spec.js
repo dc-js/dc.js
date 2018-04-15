@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate */
+/* global appendChartID, loadDateFixture, makeDate, standardColors */
 describe('dc.rowChart', function () {
     var id, chart;
     var data, dimension, nvdimension;
@@ -117,11 +117,11 @@ describe('dc.rowChart', function () {
                 });
 
                 it('should fill each row rect with pre-defined colors', function () {
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[0]).attr('fill')).toMatch(/#3182bd/i);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[1]).attr('fill')).toMatch(/#6baed6/i);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[2]).attr('fill')).toMatch(/#9ecae1/i);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[3]).attr('fill')).toMatch(/#c6dbef/i);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[4]).attr('fill')).toMatch(/#e6550d/i);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[0]).attr('fill')).toMatchColor(standardColors[0]);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[1]).attr('fill')).toMatchColor(standardColors[1]);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[2]).attr('fill')).toMatchColor(standardColors[2]);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[3]).attr('fill')).toMatchColor(standardColors[3]);
+                    expect(d3.select(chart.selectAll('g.row rect').nodes()[4]).attr('fill')).toMatchColor(standardColors[4]);
                 });
 
                 it('should create a row label from the data for each row', function () {

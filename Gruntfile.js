@@ -489,6 +489,7 @@ module.exports.jsFiles = [
     'src/errors.js',
     'src/utils.js',
     'src/logger.js',
+    'src/config.js',
     'src/events.js',
     'src/filters.js',
     'src/base-mixin.js',

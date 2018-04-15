@@ -149,6 +149,11 @@ function compareIntList (actual, expected) {
     return {pass: true};
 }
 
+function normalizeColor (c) {
+    // will convert to rgb(0, 0, 0)
+    return d3.color(c).toString();
+}
+
 beforeEach(function () {
     jasmine.addMatchers({
         toBeWithinDelta: function (_) {
@@ -222,14 +227,19 @@ beforeEach(function () {
                 compare: compareIntList
             };
         },
+        toMatchColor: function () {
+            return {
+                compare: function (actual, expected) {
+                    // Colors can be rgb(0, 0, 0), #000000 or black
+                    expect(normalizeColor(actual)).toEqual(normalizeColor(expected));
+                    return {pass: true};
+                }
+            };
+        },
         toMatchColors: function () {
             return {
                 compare: function (actual, expected) {
                     // Colors can be rgb(0, 0, 0), #000000 or black
-                    var normalizeColor = function (c) {
-                        // will convert to rgb(0, 0, 0)
-                        return d3.color(c).toString();
-                    };
                     actual = actual.map(normalizeColor);
                     expected = expected.map(normalizeColor);
 

@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate */
+/* global appendChartID, loadDateFixture, makeDate, standardColors */
 describe('dc.pieChart', function () {
     var width = 200;
     var height = 200;
@@ -157,10 +157,10 @@ describe('dc.pieChart', function () {
             });
         });
         it('slice path fill should be set correctly', function () {
-            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[0]).attr('fill')).toMatch(/#3182bd/i);
-            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[1]).attr('fill')).toMatch(/#6baed6/i);
-            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[2]).attr('fill')).toMatch(/#9ecae1/i);
-            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[3]).attr('fill')).toMatch(/#c6dbef/i);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[0]).attr('fill')).toMatchColor(standardColors[0]);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[1]).attr('fill')).toMatchColor(standardColors[1]);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[2]).attr('fill')).toMatchColor(standardColors[2]);
+            expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[3]).attr('fill')).toMatchColor(standardColors[3]);
         });
         it('slice label should be created', function () {
             expect(chart.selectAll('svg text.pie-slice').data().length).toEqual(5);

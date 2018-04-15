@@ -1,4 +1,4 @@
-/* global loadDateFixture */
+/* global loadDateFixture, standardColors */
 describe('dc.colorMixin', function () {
     function colorTest (chart, domain, test) {
         chart.colorDomain(domain);
@@ -17,7 +17,9 @@ describe('dc.colorMixin', function () {
         });
 
         it('default', function () {
-            expect(colorTest(chart, domain)).toMatchColors(['#3182bd','#6baed6','#9ecae1','#c6dbef','#e6550d']);
+            expect(colorTest(chart, domain))
+                .toMatchColors([standardColors[0], standardColors[1],
+                    standardColors[2], standardColors[3], standardColors[4]]);
         });
 
         it('custom', function () {
@@ -48,7 +50,8 @@ describe('dc.colorMixin', function () {
         });
 
         it('default', function () {
-            expect(colorTest(chart, domain, test)).toMatchColors(['#9ecae1','#3182bd','#c6dbef','#6baed6','#e6550d','#3182bd']);
+            expect(colorTest(chart, domain, test)).toMatchColors([standardColors[2], standardColors[0],
+                standardColors[3], standardColors[1], standardColors[4], standardColors[0]]);
         });
 
         it('custom', function () {
