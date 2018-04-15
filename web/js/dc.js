@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.7
+ *  dc 3.0.0-alpha.8
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -18,13 +18,6 @@
  */
 (function() { function _dc(d3, crossfilter) {
 'use strict';
-
-// Missing in D3v4, code picked up from D3v3
-d3.functor = function (v) {
-    return typeof v === "function" ? v : function () {
-        return v;
-    };
-};
 
 // Significant changes in d3.layout.stack - copying from D3v3 for now
 d3.stackD3v3 = function () {
@@ -136,7 +129,7 @@ if (!d3.schemeCategory20c) {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.7
+ * @version 3.0.0-alpha.8
  * @example
  * // Example chaining
  * chart.width(300)
@@ -145,7 +138,7 @@ if (!d3.schemeCategory20c) {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.7',
+    version: '3.0.0-alpha.8',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -864,6 +857,23 @@ dc.utils.clamp = function (val, min, max) {
 };
 
 /**
+ * Given `x`, return a function that always returns `x`.
+ *
+ * {@link https://github.com/d3/d3/blob/master/CHANGES.md#internals `d3.functor` was removed in d3 version 4}.
+ * This function helps to implement the replacement,
+ * `typeof x === "function" ? x : dc.utils.constant(x)`
+ * @method constant
+ * @memberof dc.utils
+ * @param {any} x
+ * @returns {Function}
+ */
+dc.utils.constant = function (x) {
+    return function () {
+        return x;
+    };
+};
+
+/**
  * Using a simple static counter, provide a unique integer id.
  * @method uniqueId
  * @memberof dc.utils
@@ -1275,7 +1285,7 @@ dc.baseMixin = function (_chart) {
             }
             return _height;
         }
-        _heightCalc = d3.functor(height || _defaultHeightCalc);
+        _heightCalc = height ? (typeof height === 'function' ? height : dc.utils.constant(height)) : _defaultHeightCalc;
         _height = undefined;
         return _chart;
     };
@@ -1304,7 +1314,7 @@ dc.baseMixin = function (_chart) {
             }
             return _width;
         }
-        _widthCalc = d3.functor(width || _defaultWidthCalc);
+        _widthCalc = width ? (typeof width === 'function' ? width : dc.utils.constant(width)) : _defaultWidthCalc;
         _width = undefined;
         return _chart;
     };
@@ -1424,7 +1434,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _data.call(_chart, _group);
         }
-        _data = d3.functor(callback);
+        _data = typeof callback === 'function' ? callback : dc.utils.constant(callback);
         _chart.expireCache();
         return _chart;
     };
@@ -2787,7 +2797,7 @@ dc.colorMixin = function (_chart) {
         if (colorScale instanceof Array) {
             _colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
         } else {
-            _colors = d3.functor(colorScale);
+            _colors = typeof colorScale === 'function' ? colorScale : dc.utils.constant(colorScale);
         }
         return _chart;
     };
@@ -4414,7 +4424,7 @@ dc.stackMixin = function (_chart) {
 
     function domainFilter () {
         if (!_chart.x()) {
-            return d3.functor(true);
+            return dc.utils.constant(true);
         }
         var xDomain = _chart.x().domain();
         if (_chart.isOrdinal()) {
@@ -8369,7 +8379,9 @@ dc.seriesChart = function (parent, chartGroup) {
                 keep.push(sub.key);
                 return subChart
                     .dimension(_chart.dimension())
-                    .group({all: d3.functor(sub.values)}, sub.key)
+                    .group({
+                        all: typeof sub.values === 'function' ? sub.values : dc.utils.constant(sub.values)
+                    }, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .brushOn(_chart.brushOn());
@@ -10119,7 +10131,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         _symbol.size(oldSize);
     }
 
-    _chart.setHandlePaths = function () {
+    _chart.createBrushHandlePaths = function () {
         // no handle paths for poly-brushes
     };
 
@@ -11087,7 +11099,7 @@ dc.heatMap = function (parent, chartGroup) {
             if (!arguments.length) {
                 return domain;
             }
-            domain = x === null ? x : d3.functor(x);
+            domain = x === null ? x :  typeof x === 'function' ? x : dc.utils.constant(x);
             return box;
         };
 
@@ -11252,7 +11264,7 @@ dc.boxPlot = function (parent, chartGroup) {
         if (!arguments.length) {
             return _boxWidth;
         }
-        _boxWidth = d3.functor(boxWidth);
+        _boxWidth = typeof boxWidth === 'function' ? boxWidth : dc.utils.constant(boxWidth);
         return _chart;
     };
 

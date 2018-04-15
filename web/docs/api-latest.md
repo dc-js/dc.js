@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.0-alpha.7  
+**Version**: 3.0.0-alpha.8  
 **Example**  
 ```js
 // Example chaining
@@ -314,6 +314,7 @@ chart.width(300)
         * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
         * [.isNegligible(n)](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
         * [.clamp(val, min, max)](#dc.utils.clamp) ⇒ <code>any</code>
+        * [.constant(x)](#dc.utils.constant) ⇒ <code>function</code>
         * [.uniqueId()](#dc.utils.uniqueId) ⇒ <code>Number</code>
         * [.nameToId(name)](#dc.utils.nameToId) ⇒ <code>String</code>
         * [.appendOrSelect(parent, selector, tag)](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
@@ -5163,6 +5164,7 @@ Converts a filter into a readable string.
     * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
     * [.isNegligible(n)](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
     * [.clamp(val, min, max)](#dc.utils.clamp) ⇒ <code>any</code>
+    * [.constant(x)](#dc.utils.constant) ⇒ <code>function</code>
     * [.uniqueId()](#dc.utils.uniqueId) ⇒ <code>Number</code>
     * [.nameToId(name)](#dc.utils.nameToId) ⇒ <code>String</code>
     * [.appendOrSelect(parent, selector, tag)](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
@@ -5236,6 +5238,21 @@ Ensure the value is no greater or less than the min/max values.  If it is return
 | val | <code>any</code> | 
 | min | <code>any</code> | 
 | max | <code>any</code> | 
+
+<a name="dc.utils.constant"></a>
+
+#### utils.constant(x) ⇒ <code>function</code>
+Given `x`, return a function that always returns `x`.
+
+[`d3.functor` was removed in d3 version 4](https://github.com/d3/d3/blob/master/CHANGES.md#internals).
+This function helps to implement the replacement,
+`typeof x === "function" ? x : dc.utils.constant(x)`
+
+**Kind**: static method of [<code>utils</code>](#dc.utils)  
+
+| Param | Type |
+| --- | --- |
+| x | <code>any</code> | 
 
 <a name="dc.utils.uniqueId"></a>
 
