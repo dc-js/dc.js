@@ -1,5 +1,9 @@
+## 3.0.0 alpha 8
+* don't show brush handles on scatter plot, by Deepak Kumar ([#1407](https://github.com/dc-js/dc.js/pull/1407) / [#1406](https://github.com/dc-js/dc.js/issues/1406))
+* remove `d3.functor`. [`d3.functor` was removed in d3 version 4]( https://github.com/d3/d3/blob/master/CHANGES.md#internals); to replace it, use  `typeof x === "function" ? x : dc.utils.constant(x)` ([#1374](https://github.com/dc-js/dc.js/issues/1374))
+
 ## 3.0.0 alpha 7
-* `elasticY` needs still to look at only points within the X domain, even with `evadeDomainFilter` enabled, by Keith Dahlby ([#1367](https://github.com/dc-js/dc.js/pull/1367))
+* `elasticY` should look only at points within the X domain, even with `evadeDomainFilter` enabled, by Keith Dahlby ([#1367](https://github.com/dc-js/dc.js/pull/1367))
 * fixes to animated resizing of brush when chart resizes, by Deepak Kumar ([#1402](https://github.com/dc-js/dc.js/pull/1402) / [#1376](https://github.com/dc-js/dc.js/issues/1399)
 
 ## 3.0.0 alpha 6
