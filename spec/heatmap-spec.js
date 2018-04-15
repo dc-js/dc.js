@@ -499,7 +499,7 @@ describe('dc.heatmap', function () {
                     .y(d3.scaleLinear()).yAxisPadding(0.5)
                     .elasticX(true)
                     .elasticY(true)
-                    .label(d3.functor(''))
+                    .label(dc.utils.constant(''))
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
                     .r(d3.scaleLinear().domain([0,20]).range([4,25]))

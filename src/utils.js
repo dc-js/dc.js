@@ -264,6 +264,23 @@ dc.utils.clamp = function (val, min, max) {
 };
 
 /**
+ * Given `x`, return a function that always returns `x`.
+ *
+ * {@link https://github.com/d3/d3/blob/master/CHANGES.md#internals `d3.functor` was removed in d3 version 4}.
+ * This function helps to implement the replacement,
+ * `typeof x === "function" ? x : dc.utils.constant(x)`
+ * @method constant
+ * @memberof dc.utils
+ * @param {any} x
+ * @returns {Function}
+ */
+dc.utils.constant = function (x) {
+    return function () {
+        return x;
+    };
+};
+
+/**
  * Using a simple static counter, provide a unique integer id.
  * @method uniqueId
  * @memberof dc.utils

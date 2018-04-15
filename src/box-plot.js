@@ -118,7 +118,7 @@ dc.boxPlot = function (parent, chartGroup) {
         if (!arguments.length) {
             return _boxWidth;
         }
-        _boxWidth = d3.functor(boxWidth);
+        _boxWidth = typeof boxWidth === 'function' ? boxWidth : dc.utils.constant(boxWidth);
         return _chart;
     };
 

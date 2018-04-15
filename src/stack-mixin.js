@@ -37,7 +37,7 @@ dc.stackMixin = function (_chart) {
 
     function domainFilter () {
         if (!_chart.x()) {
-            return d3.functor(true);
+            return dc.utils.constant(true);
         }
         var xDomain = _chart.x().domain();
         if (_chart.isOrdinal()) {

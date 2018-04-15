@@ -300,7 +300,7 @@
             if (!arguments.length) {
                 return domain;
             }
-            domain = x === null ? x : d3.functor(x);
+            domain = x === null ? x :  typeof x === 'function' ? x : dc.utils.constant(x);
             return box;
         };
 

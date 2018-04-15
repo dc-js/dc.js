@@ -57,7 +57,9 @@ dc.seriesChart = function (parent, chartGroup) {
                 keep.push(sub.key);
                 return subChart
                     .dimension(_chart.dimension())
-                    .group({all: d3.functor(sub.values)}, sub.key)
+                    .group({
+                        all: typeof sub.values === 'function' ? sub.values : dc.utils.constant(sub.values)
+                    }, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .brushOn(_chart.brushOn());

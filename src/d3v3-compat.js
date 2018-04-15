@@ -1,10 +1,3 @@
-// Missing in D3v4, code picked up from D3v3
-d3.functor = function (v) {
-    return typeof v === "function" ? v : function () {
-        return v;
-    };
-};
-
 // Significant changes in d3.layout.stack - copying from D3v3 for now
 d3.stackD3v3 = function () {
     function d3_layout_stackOrderDefault(data) {

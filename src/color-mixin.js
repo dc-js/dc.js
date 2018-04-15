@@ -39,7 +39,7 @@ dc.colorMixin = function (_chart) {
         if (colorScale instanceof Array) {
             _colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
         } else {
-            _colors = d3.functor(colorScale);
+            _colors = typeof colorScale === 'function' ? colorScale : dc.utils.constant(colorScale);
         }
         return _chart;
     };

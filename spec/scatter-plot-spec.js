@@ -100,7 +100,7 @@ describe('dc.scatterPlot', function () {
                 if (!arguments.length) {
                     return size;
                 }
-                size = d3.functor(_);
+                size = typeof _ === 'function' ? _ : dc.utils.constant(_);
                 return symbol;
             };
             return symbol;

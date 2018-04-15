@@ -139,7 +139,7 @@ dc.baseMixin = function (_chart) {
             }
             return _height;
         }
-        _heightCalc = d3.functor(height || _defaultHeightCalc);
+        _heightCalc = height ? (typeof height === 'function' ? height : dc.utils.constant(height)) : _defaultHeightCalc;
         _height = undefined;
         return _chart;
     };
@@ -168,7 +168,7 @@ dc.baseMixin = function (_chart) {
             }
             return _width;
         }
-        _widthCalc = d3.functor(width || _defaultWidthCalc);
+        _widthCalc = width ? (typeof width === 'function' ? width : dc.utils.constant(width)) : _defaultWidthCalc;
         _width = undefined;
         return _chart;
     };
@@ -288,7 +288,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _data.call(_chart, _group);
         }
-        _data = d3.functor(callback);
+        _data = typeof callback === 'function' ? callback : dc.utils.constant(callback);
         _chart.expireCache();
         return _chart;
     };
