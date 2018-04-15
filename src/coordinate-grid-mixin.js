@@ -267,7 +267,6 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @todo Add docs for utilities
      * @example
      * // set x units to count days
      * chart.xUnits(d3.timeDays);
@@ -276,15 +275,16 @@ dc.coordinateGridMixin = function (_chart) {
      *
      * // A custom xUnits function can be used as long as it follows the following interface:
      * // units in integer
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // simply calculates how many integers in the domain
      *      return Math.abs(end - start);
-     * };
+     * }
      *
      * // fixed units
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
+     * }
      * @param {Function} [xUnits=dc.units.integers]
      * @returns {Function|dc.coordinateGridMixin}
      */
