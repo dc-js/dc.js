@@ -390,7 +390,8 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Returns the number of units displayed on the x axis using the unit measure configured by
-     * {@link dc.coordinateGridMixin#xUnits xUnits}.
+     * {@link dc.coordinateGridMixin#xUnits xUnits}. If it is an Ordinal chart, it will return
+     * number of items in the domain.
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -398,18 +399,16 @@ dc.coordinateGridMixin = function (_chart) {
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
-            var units;
-            if (_chart.xUnits() === dc.units.ordinal) {
+            if (_chart.isOrdinal()) {
                 // In this case it number of items in domain
-                units = _chart.x().domain();
+                _unitCount = _chart.x().domain().length;
             } else {
-                units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
-            }
+                _unitCount = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
 
-            if (units instanceof Array) {
-                _unitCount = units.length;
-            } else {
-                _unitCount = units;
+                // Sometimes xUnits() may return an array while sometimes directly the count
+                if (_unitCount instanceof Array) {
+                    _unitCount = _unitCount.length;
+                }
             }
         }
 
