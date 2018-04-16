@@ -75,7 +75,7 @@ spendHistChart
     .width(300).height(200)
     .dimension(spendDim)
     .group(nonEmptyHist)
-    .x(d3.scaleOrdinal())
+    .x(d3.scaleBand())
     .xUnits(dc.units.ordinal)
     .elasticX(true)
     .elasticY(true);
