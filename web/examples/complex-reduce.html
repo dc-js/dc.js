@@ -137,7 +137,7 @@
       runChart
           .width(400)
           .height(300)
-          .x(d3.scaleOrdinal())
+          .x(d3.scaleBand())
           .xUnits(dc.units.ordinal)
           .valueAccessor(medianSpeed)
           .elasticY(true)
@@ -149,7 +149,7 @@
       exptChart
           .width(400)
           .height(300)
-          .x(d3.scaleOrdinal())
+          .x(d3.scaleBand())
           .xUnits(dc.units.ordinal)
           .valueAccessor(medianSpeed)
           .elasticY(true)
