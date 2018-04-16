@@ -77,4 +77,56 @@ describe('dc.logger', function () {
             });
         });
     });
+
+    describe('deprecate', function () {
+        var dummy, wrappedFn;
+
+        beforeEach(function () {
+            dummy = {
+                origFn: function () {
+                }
+            };
+            spyOn(dummy, 'origFn');
+            spyOn(dc.logger, 'warn');
+
+            wrappedFn = dc.logger.deprecate(dummy.origFn, 'origFn is deprecated');
+        });
+        it('should call deprecated function and issue a warning', function () {
+            wrappedFn('a');
+            expect(dummy.origFn).toHaveBeenCalledWith('a');
+            expect(dc.logger.warn).toHaveBeenCalled();
+        });
+        it('should warn for one deprecated function only once', function () {
+            wrappedFn();
+            wrappedFn();
+            expect(dummy.origFn.calls.count()).toBe(2);
+            expect(dc.logger.warn.calls.count()).toBe(1);
+        });
+    });
+
+    describe('warnOnce', function () {
+        beforeEach(function () {
+            spyOn(dc.logger, 'warn');
+        });
+
+        it('should warn only once for the same message', function () {
+            dc.logger.warnOnce('Message 01');
+            dc.logger.warnOnce('Message 01');
+
+            expect(dc.logger.warn.calls.count()).toBe(1);
+        });
+
+        // Please remember that during run of the entire test suite warnOnce remembers messages.
+        // So, ensure to use distinct messages in different test cases.
+        it('should warn only once each for different messages', function () {
+            dc.logger.warnOnce('Message 02');
+            dc.logger.warnOnce('Message 03');
+            dc.logger.warnOnce('Message 02');
+            dc.logger.warnOnce('Message 03');
+
+            expect(dc.logger.warn.calls.count()).toBe(2);
+            expect(dc.logger.warn.calls.argsFor(0)).toEqual(['Message 02']);
+            expect(dc.logger.warn.calls.argsFor(1)).toEqual(['Message 03']);
+        });
+    });
 });
