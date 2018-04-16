@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate, standardColors */
+/* global appendChartID, loadDateFixture, makeDate */
 describe('dc.rowChart', function () {
     var id, chart;
     var data, dimension, nvdimension;
@@ -117,11 +117,10 @@ describe('dc.rowChart', function () {
                 });
 
                 it('should fill each row rect with pre-defined colors', function () {
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[0]).attr('fill')).toMatchColor(standardColors[0]);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[1]).attr('fill')).toMatchColor(standardColors[1]);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[2]).attr('fill')).toMatchColor(standardColors[2]);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[3]).attr('fill')).toMatchColor(standardColors[3]);
-                    expect(d3.select(chart.selectAll('g.row rect').nodes()[4]).attr('fill')).toMatchColor(standardColors[4]);
+                    for (var i = 0; i < N; i++) {
+                        expect(d3.select(chart.selectAll('g.row rect').nodes()[i]).attr('fill'))
+                            .toMatchColor(dc.config.defaultColors()[i]);
+                    }
                 });
 
                 it('should create a row label from the data for each row', function () {

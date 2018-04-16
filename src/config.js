@@ -8,37 +8,38 @@
 dc.config = (function () {
     var _config = {};
 
-    var _useV2CompatColorScheme = false;
-    _config.compatColors = null;
+    // D3v5 has removed schemeCategory20c, copied here for backward compatibility
     var _schemeCategory20c = [
         '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
         '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
         '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
         '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
 
+    var _defaultColors = _schemeCategory20c;
+
     /**
-     * Set this flag to use DCv2's color scheme (d3.schemeCategory20c).
-     * Please note this color scheme has been deprecated by D3
-     * (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50) as well as DC.
-     * @method useV2CompatColorScheme
+     * Set the default color scheme for ordinal charts. Changing it will impact all ordinal charts.
+     *
+     * By default it is set to
+     * (d3.schemeCategory20c) for backward compatibility. This color scheme has been
+     * removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
+     * In DC 3.1 release it will change to a more appropriate default.
+     *
+     * @example
+     * dc.config.defaultColors(d3.schemeSet1)
+     * @method defaultColors
      * @memberof dc.config
      * @instance
-     * @param {Boolean} [flag=false]
-     * @returns {Boolean|dc.config}
+     * @param {Array} [colors]
+     * @returns {Array|dc.config}
      */
-    _config.useV2CompatColorScheme = function (flag) {
+    _config.defaultColors = function (colors) {
         if (!arguments.length) {
-            return _useV2CompatColorScheme;
+            return _defaultColors;
         }
-        _useV2CompatColorScheme = flag;
-        if (_useV2CompatColorScheme) {
-            dc.logger.warn('Forcing use of d3.schemeCategory20c. It has been deprecated and will be removed in dc 3.1');
-            _config.compatColors = _schemeCategory20c;
-        }
+        _defaultColors = colors;
         return _config;
     };
-
-    // _config.useV2CompatColorScheme(true);
 
     return _config;
 })();

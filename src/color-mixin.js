@@ -8,7 +8,7 @@
  * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
-    var _colors = d3.scaleOrdinal(dc.config.compatColors ? dc.config.compatColors : d3.schemeSet1);
+    var _colors = d3.scaleOrdinal(dc.config.defaultColors());
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
