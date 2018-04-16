@@ -97,9 +97,6 @@ dc.selectMenu = function (parent, chartGroup) {
         _select.selectAll('option.' + OPTION_CSS_CLASS).sort(_order);
 
         _select.on('change', onChange);
-
-        // indicate that no one should use return value
-        return null;
     }
 
     function onChange (d, i) {
