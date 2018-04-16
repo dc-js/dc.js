@@ -468,6 +468,10 @@ dc.coordinateGridMixin = function (_chart) {
             if (!_x.bandwidth) {
                 // If _x is not a scaleBand create a new scale and
                 // copy the original domain to the new scale
+                dc.logger.warn('Since DCv3 Ordinal bar/line/bubble charts need d3.scaleBand() for x scale. ' +
+                    'Please update your code to pass a d3.scaleBand. ' +
+                    'Changing d3.scaleOrdinal() to d3.scaleBand() should work. ' +
+                    'For now DC has created an equivalent d3.scaleBand.');
                 _x = d3.scaleBand().domain(_x.domain());
             }
 
