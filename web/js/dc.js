@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.8
+ *  dc 3.0.0-alpha.9
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -129,7 +129,7 @@ if (!d3.schemeCategory20c) {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.8
+ * @version 3.0.0-alpha.9
  * @example
  * // Example chaining
  * chart.width(300)
@@ -138,7 +138,7 @@ if (!d3.schemeCategory20c) {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.8',
+    version: '3.0.0-alpha.9',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -474,11 +474,14 @@ dc.units.integers = function (start, end) {
 };
 
 /**
- * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
- * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal} to
- * {@link dc.coordinateGridMixin#x .x}.
- * It just returns the domain passed to it, which for ordinal charts is an array of all values.
+ * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of a
+ * coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
+ * combination with passing
+ * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
+ * to {@link dc.coordinateGridMixin#x .x}.
+ *
+ * As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
+ * function is not called.
  * @method ordinal
  * @memberof dc.units
  * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
@@ -487,13 +490,9 @@ dc.units.integers = function (start, end) {
  * @example
  * chart.xUnits(dc.units.ordinal)
  *      .x(d3.scaleOrdinal())
- * @param {*} start
- * @param {*} end
- * @param {Array<String>} domain
- * @returns {Array<String>}
  */
-dc.units.ordinal = function (start, end, domain) {
-    return domain;
+dc.units.ordinal = function () {
+    throw new Error('dc.units.ordinal should not be called - it is a placeholder');
 };
 
 /**
@@ -943,46 +942,124 @@ dc.utils.arraysEqual = function (a1, a2) {
         });
 };
 
-dc.logger = {};
+/**
+ * Provides basis logging and deprecation utilities
+ * @class logger
+ * @memberof dc
+ * @returns {dc.logger}
+ */
+dc.logger = (function () {
 
-dc.logger.enableDebugLog = false;
+    var _logger = {};
 
-dc.logger.warn = function (msg) {
-    if (console) {
-        if (console.warn) {
-            console.warn(msg);
-        } else if (console.log) {
-            console.log(msg);
+    /**
+     * Enable debug level logging. Set to `false` by default.
+     * @name enableDebugLog
+     * @memberof dc.logger
+     * @instance
+     */
+    _logger.enableDebugLog = false;
+
+    /**
+     * Put a warning message to console
+     * @method warn
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * dc.logger.warn('Invalid use of .tension on CurveLinear');
+     * @param {String} [msg]
+     * @returns {dc.logger}
+     */
+    _logger.warn = function (msg) {
+        if (console) {
+            if (console.warn) {
+                console.warn(msg);
+            } else if (console.log) {
+                console.log(msg);
+            }
         }
-    }
 
-    return dc.logger;
-};
+        return _logger;
+    };
 
-dc.logger.debug = function (msg) {
-    if (dc.logger.enableDebugLog && console) {
-        if (console.debug) {
-            console.debug(msg);
-        } else if (console.log) {
-            console.log(msg);
-        }
-    }
+    var _alreadyWarned = {};
 
-    return dc.logger;
-};
+    /**
+     * Put a warning message to console. It will warn only on unique messages.
+     * @method warnOnce
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * dc.logger.warnOnce('Invalid use of .tension on CurveLinear');
+     * @param {String} [msg]
+     * @returns {dc.logger}
+     */
+    _logger.warnOnce = function (msg) {
+        if (!_alreadyWarned[msg]) {
+            _alreadyWarned[msg] = true;
 
-dc.logger.deprecate = function (fn, msg) {
-    // Allow logging of deprecation
-    var warned = false;
-    function deprecated () {
-        if (!warned) {
             dc.logger.warn(msg);
-            warned = true;
         }
-        return fn.apply(this, arguments);
-    }
-    return deprecated;
-};
+
+        return _logger;
+    };
+
+    /**
+     * Put a debug message to console. It is controlled by `dc.logger.enableDebugLog`
+     * @method debug
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * dc.logger.debug('Total number of slices: ' + numSlices);
+     * @param {String} [msg]
+     * @returns {dc.logger}
+     */
+    _logger.debug = function (msg) {
+        if (_logger.enableDebugLog && console) {
+            if (console.debug) {
+                console.debug(msg);
+            } else if (console.log) {
+                console.log(msg);
+            }
+        }
+
+        return _logger;
+    };
+
+    /**
+     * Use it to deprecate a function. It will return a wrapped version of the function, which will
+     * will issue a warning when invoked. For each function, warning will be issued only once.
+     *
+     * @method deprecate
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * _chart.interpolate = dc.logger.deprecate(function (interpolate) {
+     *    if (!arguments.length) {
+     *        return _interpolate;
+     *    }
+     *    _interpolate = interpolate;
+     *    return _chart;
+     * }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+     * @param {Function} [fn]
+     * @param {String} [msg]
+     * @returns {Function}
+     */
+    _logger.deprecate = function (fn, msg) {
+        // Allow logging of deprecation
+        var warned = false;
+        function deprecated () {
+            if (!warned) {
+                _logger.warn(msg);
+                warned = true;
+            }
+            return fn.apply(this, arguments);
+        }
+        return deprecated;
+    };
+
+    return _logger;
+})();
 
 dc.events = {
     current: null
@@ -3189,17 +3266,23 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
-     * the number of data projections on x axis such as the number of bars for a bar chart or the
-     * number of dots for a line chart. This function is expected to return a Javascript array of all
-     * data points on x axis, or the number of points on the axis. [d3 time range functions
-     * d3.timeDays, d3.timeMonths, and
-     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid xUnits
-     * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
+     * the number of data projections on the x axis such as the number of bars for a bar chart or the
+     * number of dots for a line chart.
+     *
+     * This function is expected to return a Javascript array of all data points on the x axis, or
+     * the number of points on the axis. d3 time range functions [d3.timeDays, d3.timeMonths, and
+     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
+     * xUnits functions.
+     *
+     * dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
+     *
+     * Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
+     * possible to define this function compliant with the d3 range functions. It was already a
+     * magic value which caused charts to behave differently, and now it is completely so.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @todo Add docs for utilities
      * @example
      * // set x units to count days
      * chart.xUnits(d3.timeDays);
@@ -3208,15 +3291,16 @@ dc.coordinateGridMixin = function (_chart) {
      *
      * // A custom xUnits function can be used as long as it follows the following interface:
      * // units in integer
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // simply calculates how many integers in the domain
      *      return Math.abs(end - start);
-     * };
+     * }
      *
      * // fixed units
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
+     * }
      * @param {Function} [xUnits=dc.units.integers]
      * @returns {Function|dc.coordinateGridMixin}
      */
@@ -3321,8 +3405,9 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Returns the number of units displayed on the x axis using the unit measure configured by
-     * {@link dc.coordinateGridMixin#xUnits xUnits}.
+     * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
+     * `dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
+     * x unit count is calculated using the {@link dc.coordinateGridMixin#xUnits xUnits} function.
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -3330,18 +3415,16 @@ dc.coordinateGridMixin = function (_chart) {
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
-            var units;
-            if (_chart.xUnits() === dc.units.ordinal) {
+            if (_chart.isOrdinal()) {
                 // In this case it number of items in domain
-                units = _chart.x().domain();
+                _unitCount = _chart.x().domain().length;
             } else {
-                units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
-            }
+                _unitCount = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
 
-            if (units instanceof Array) {
-                _unitCount = units.length;
-            } else {
-                _unitCount = units;
+                // Sometimes xUnits() may return an array while sometimes directly the count
+                if (_unitCount instanceof Array) {
+                    _unitCount = _unitCount.length;
+                }
             }
         }
 
@@ -10338,7 +10421,7 @@ dc.numberDisplay = function (parent, chartGroup) {
         span.transition()
             .duration(_chart.transitionDuration())
             .delay(_chart.transitionDelay())
-            .ease(d3.easeQuadIn)
+            .ease(d3.easeQuad)
             .tween('text', function () {
                 // [XA] don't try and interpolate from Infinity, else this breaks.
                 var interpStart = isFinite(_lastValue) ? _lastValue : 0;
@@ -11497,9 +11580,6 @@ dc.selectMenu = function (parent, chartGroup) {
         _select.selectAll('option.' + OPTION_CSS_CLASS).sort(_order);
 
         _select.on('change', onChange);
-
-        // indicate that no one should use return value
-        return null;
     }
 
     function onChange (d, i) {

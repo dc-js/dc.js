@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.0-alpha.8  
+**Version**: 3.0.0-alpha.9  
 **Example**  
 ```js
 // Example chaining
@@ -21,6 +21,13 @@ chart.width(300)
 ```
 
 * [dc](#dc) : <code>object</code>
+    * [.logger](#dc.logger)
+        * [new logger()](#new_dc.logger_new)
+        * [.enableDebugLog](#dc.logger+enableDebugLog)
+        * [.warn([msg])](#dc.logger+warn) ⇒ [<code>logger</code>](#dc.logger)
+        * [.warnOnce([msg])](#dc.logger+warnOnce) ⇒ [<code>logger</code>](#dc.logger)
+        * [.debug([msg])](#dc.logger+debug) ⇒ [<code>logger</code>](#dc.logger)
+        * [.deprecate([fn], [msg])](#dc.logger+deprecate) ⇒ <code>function</code>
     * [.pieChart](#dc.pieChart)
         * [new pieChart(parent, [chartGroup])](#new_dc.pieChart_new)
         * [.slicesCap([cap])](#dc.pieChart+slicesCap) ⇒ <code>Number</code> \| [<code>pieChart</code>](#dc.pieChart)
@@ -303,7 +310,7 @@ chart.width(300)
         * [.fp](#dc.units.fp) : <code>object</code>
             * [.precision(precision)](#dc.units.fp.precision) ⇒ <code>function</code>
         * [.integers(start, end)](#dc.units.integers) ⇒ <code>Number</code>
-        * [.ordinal(start, end, domain)](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
+        * [.ordinal()](#dc.units.ordinal)
     * [.printers](#dc.printers) : <code>object</code>
         * [.filters(filters)](#dc.printers.filters) ⇒ <code>String</code>
         * [.filter(filter)](#dc.printers.filter) ⇒ <code>String</code>
@@ -338,6 +345,98 @@ chart.width(300)
     * [.transition(selection, [duration], [delay], [name])](#dc.transition) ⇒ <code>d3.transition</code> \| <code>d3.selection</code>
     * [.pluck(n, [f])](#dc.pluck) ⇒ <code>function</code>
 
+<a name="dc.logger"></a>
+
+### dc.logger
+**Kind**: static class of [<code>dc</code>](#dc)  
+
+* [.logger](#dc.logger)
+    * [new logger()](#new_dc.logger_new)
+    * [.enableDebugLog](#dc.logger+enableDebugLog)
+    * [.warn([msg])](#dc.logger+warn) ⇒ [<code>logger</code>](#dc.logger)
+    * [.warnOnce([msg])](#dc.logger+warnOnce) ⇒ [<code>logger</code>](#dc.logger)
+    * [.debug([msg])](#dc.logger+debug) ⇒ [<code>logger</code>](#dc.logger)
+    * [.deprecate([fn], [msg])](#dc.logger+deprecate) ⇒ <code>function</code>
+
+<a name="new_dc.logger_new"></a>
+
+#### new logger()
+Provides basis logging and deprecation utilities
+
+<a name="dc.logger+enableDebugLog"></a>
+
+#### logger.enableDebugLog
+Enable debug level logging. Set to `false` by default.
+
+**Kind**: instance property of [<code>logger</code>](#dc.logger)  
+<a name="dc.logger+warn"></a>
+
+#### logger.warn([msg]) ⇒ [<code>logger</code>](#dc.logger)
+Put a warning message to console
+
+**Kind**: instance method of [<code>logger</code>](#dc.logger)  
+
+| Param | Type |
+| --- | --- |
+| [msg] | <code>String</code> | 
+
+**Example**  
+```js
+dc.logger.warn('Invalid use of .tension on CurveLinear');
+```
+<a name="dc.logger+warnOnce"></a>
+
+#### logger.warnOnce([msg]) ⇒ [<code>logger</code>](#dc.logger)
+Put a warning message to console. It will warn only on unique messages.
+
+**Kind**: instance method of [<code>logger</code>](#dc.logger)  
+
+| Param | Type |
+| --- | --- |
+| [msg] | <code>String</code> | 
+
+**Example**  
+```js
+dc.logger.warnOnce('Invalid use of .tension on CurveLinear');
+```
+<a name="dc.logger+debug"></a>
+
+#### logger.debug([msg]) ⇒ [<code>logger</code>](#dc.logger)
+Put a debug message to console. It is controlled by `dc.logger.enableDebugLog`
+
+**Kind**: instance method of [<code>logger</code>](#dc.logger)  
+
+| Param | Type |
+| --- | --- |
+| [msg] | <code>String</code> | 
+
+**Example**  
+```js
+dc.logger.debug('Total number of slices: ' + numSlices);
+```
+<a name="dc.logger+deprecate"></a>
+
+#### logger.deprecate([fn], [msg]) ⇒ <code>function</code>
+Use it to deprecate a function. It will return a wrapped version of the function, which will
+will issue a warning when invoked. For each function, warning will be issued only once.
+
+**Kind**: instance method of [<code>logger</code>](#dc.logger)  
+
+| Param | Type |
+| --- | --- |
+| [fn] | <code>function</code> | 
+| [msg] | <code>String</code> | 
+
+**Example**  
+```js
+_chart.interpolate = dc.logger.deprecate(function (interpolate) {
+   if (!arguments.length) {
+       return _interpolate;
+   }
+   _interpolate = interpolate;
+   return _chart;
+}, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+```
 <a name="dc.pieChart"></a>
 
 ### dc.pieChart
@@ -4222,19 +4321,22 @@ chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
 
 #### coordinateGridMixin.xUnits([xUnits]) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
-the number of data projections on x axis such as the number of bars for a bar chart or the
-number of dots for a line chart. This function is expected to return a Javascript array of all
-data points on x axis, or the number of points on the axis. [d3 time range functions
-d3.timeDays, d3.timeMonths, and
-d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid xUnits
-function. dc.js also provides a few units function, see the [Units Namespace](#dc.units) for
+the number of data projections on the x axis such as the number of bars for a bar chart or the
+number of dots for a line chart.
+
+This function is expected to return a Javascript array of all data points on the x axis, or
+the number of points on the axis. d3 time range functions [d3.timeDays, d3.timeMonths, and
+d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
+xUnits functions.
+
+dc.js also provides a few units function, see the [Units Namespace](#dc.units) for
 a list of built-in units functions.
 
+Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
+possible to define this function compliant with the d3 range functions. It was already a
+magic value which caused charts to behave differently, and now it is completely so.
+
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
-**Todo**
-
-- [ ] Add docs for utilities
-
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -4249,15 +4351,16 @@ chart.xUnits(d3.timeMonths);
 
 // A custom xUnits function can be used as long as it follows the following interface:
 // units in integer
-function(start, end, xDomain) {
+function(start, end) {
      // simply calculates how many integers in the domain
      return Math.abs(end - start);
-};
+}
 
 // fixed units
-function(start, end, xDomain) {
+function(start, end) {
      // be aware using fixed units will disable the focus/zoom ability on the chart
      return 1000;
+}
 ```
 <a name="dc.coordinateGridMixin+xAxis"></a>
 
@@ -4336,8 +4439,9 @@ the available d3 time intervals; see
 <a name="dc.coordinateGridMixin+xUnitCount"></a>
 
 #### coordinateGridMixin.xUnitCount() ⇒ <code>Number</code>
-Returns the number of units displayed on the x axis using the unit measure configured by
-[xUnits](#dc.coordinateGridMixin+xUnits).
+Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
+`dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
+x unit count is calculated using the [xUnits](#dc.coordinateGridMixin+xUnits) function.
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 <a name="dc.coordinateGridMixin+useRightYAxis"></a>
@@ -5042,7 +5146,7 @@ If no group is provided, the charts in the default group are returned.
     * [.fp](#dc.units.fp) : <code>object</code>
         * [.precision(precision)](#dc.units.fp.precision) ⇒ <code>function</code>
     * [.integers(start, end)](#dc.units.integers) ⇒ <code>Number</code>
-    * [.ordinal(start, end, domain)](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
+    * [.ordinal()](#dc.units.ordinal)
 
 <a name="dc.units.fp"></a>
 
@@ -5095,12 +5199,15 @@ chart.xUnits(dc.units.integers) // already the default
 ```
 <a name="dc.units.ordinal"></a>
 
-#### units.ordinal(start, end, domain) ⇒ <code>Array.&lt;String&gt;</code>
-This argument can be passed to the [.xUnits](#dc.coordinateGridMixin+xUnits) function of the to
-specify ordinal units for the x axis. Usually this parameter is used in combination with passing
-[d3.scaleOrdinal](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales) to
-[.x](#dc.coordinateGridMixin+x).
-It just returns the domain passed to it, which for ordinal charts is an array of all values.
+#### units.ordinal()
+This argument can be passed to the [.xUnits](#dc.coordinateGridMixin+xUnits) function of a
+coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
+combination with passing
+[d3.scaleOrdinal](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales)
+to [.x](#dc.coordinateGridMixin+x).
+
+As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
+function is not called.
 
 **Kind**: static method of [<code>units</code>](#dc.units)  
 **See**
@@ -5108,13 +5215,6 @@ It just returns the domain passed to it, which for ordinal charts is an array of
 - [d3.scaleOrdinal](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales)
 - [coordinateGridMixin.xUnits](#dc.coordinateGridMixin+xUnits)
 - [coordinateGridMixin.x](#dc.coordinateGridMixin+x)
-
-
-| Param | Type |
-| --- | --- |
-| start | <code>\*</code> | 
-| end | <code>\*</code> | 
-| domain | <code>Array.&lt;String&gt;</code> | 
 
 **Example**  
 ```js
