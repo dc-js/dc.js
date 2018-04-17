@@ -40,7 +40,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _lastXDomain;
 
     var _y;
-    var _yAxis = d3.axisLeft();
+    var _yAxis = null;
     var _yAxisPadding = 0;
     var _yElasticity = false;
     var _yAxisLabel;
@@ -436,6 +436,14 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _useRightYAxis;
         }
+
+        // We need to warn if value is changing after _yAxis was created
+        if (_useRightYAxis !== useRightYAxis && _yAxis) {
+            dc.logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
+                'You might get unexpected yAxis behavior. ' +
+                'Make calls to useRightYAxis sooner in your chart creation process.');
+        }
+
         _useRightYAxis = useRightYAxis;
         return _chart;
     };
@@ -611,6 +619,10 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    function createYAxis () {
+        return _useRightYAxis ? d3.axisRight() : d3.axisLeft();
+    }
+
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
@@ -623,17 +635,11 @@ dc.coordinateGridMixin = function (_chart) {
 
         _y.range([_chart.yAxisHeight(), 0]);
 
-        // Ideally we should update the API so that if someone uses Right Y Axis
-        // they would need to pass _yAxis as well
         if (!_yAxis) {
-            if (_useRightYAxis) {
-                _yAxis = d3.axisRight();
-            } else {
-                _yAxis = d3.axisLeft();
-            }
+            _yAxis = createYAxis();
         }
 
-        _yAxis = _yAxis.scale(_y);
+        _yAxis.scale(_y);
 
         _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
@@ -774,8 +780,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
-     * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-     * object](https://github.com/d3/d3-axis/blob/master/README.md); therefore it supports any
+     * when y axis customization is required. Depending on `useRightYAxis` the y axis in dc.js is an instance of
+     * either [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft) or
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight); therefore it supports any
      * valid d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -795,11 +802,14 @@ dc.coordinateGridMixin = function (_chart) {
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [yAxis=d3.svg.axis().orient('left')]
-     * @returns {d3.svg.axis|dc.coordinateGridMixin}
+     * @param {d3.axisLeft|d3.axisRight} [yAxis]
+     * @returns {d3.axisLeft|d3.axisRight|dc.coordinateGridMixin}
      */
     _chart.yAxis = function (yAxis) {
         if (!arguments.length) {
+            if (!_yAxis) {
+                _yAxis = createYAxis();
+            }
             return _yAxis;
         }
         _yAxis = yAxis;
