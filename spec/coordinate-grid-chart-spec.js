@@ -390,7 +390,7 @@ describe('dc.coordinateGridChart', function () {
 
                     describe('with an ordinal x axis', function () {
                         beforeEach(function () {
-                            chart.x(d3.scaleOrdinal())
+                            chart.x(d3.scaleBand())
                                 .xUnits(dc.units.ordinal)
                                 .render();
                         });
