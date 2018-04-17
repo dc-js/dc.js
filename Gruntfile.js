@@ -471,7 +471,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['concat', 'sass', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('server', ['docs', 'fileindex', 'connect:server', 'watch:scripts-sass-docs']);
+    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:scripts-sass-docs']);
     grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
     // grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
@@ -489,6 +489,7 @@ module.exports.jsFiles = [
     'src/errors.js',
     'src/utils.js',
     'src/logger.js',
+    'src/config.js',
     'src/events.js',
     'src/filters.js',
     'src/base-mixin.js',
