@@ -413,7 +413,7 @@ describe('dc.compositeChart', function () {
                 .brushOn(false)
                 .dimension(dimension)
                 .shareTitle(false)
-                .x(d3.scaleOrdinal())
+                .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
                 .compose([
                     dc.lineChart(chart)

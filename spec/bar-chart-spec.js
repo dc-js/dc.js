@@ -184,7 +184,7 @@ describe('dc.barChart', function () {
                 chart.dimension(stateDimension)
                     .group(stateGroup)
                     .xUnits(dc.units.ordinal)
-                    .x(d3.scaleOrdinal().domain(ordinalDomainValues))
+                    .x(d3.scaleBand().domain(ordinalDomainValues))
                     .barPadding(0)
                     .outerPadding(0.1)
                     .render();
@@ -240,7 +240,7 @@ describe('dc.barChart', function () {
 
             describe('with an unspecified domain', function () {
                 beforeEach(function () {
-                    chart.x(d3.scaleOrdinal()).render();
+                    chart.x(d3.scaleBand()).render();
                 });
 
                 it('should use alphabetical ordering', function () {
@@ -292,6 +292,37 @@ describe('dc.barChart', function () {
                     alabel.on('click')(alabel.datum());
                     expect(dimension.top(Infinity).length).toEqual(3);
                 });
+            });
+        });
+
+        describe('d3.scaleOrdinal() deprecation for ordinal x domain', function () {
+            var stateDimension;
+
+            beforeEach(function () {
+                spyOn(dc.logger, 'warn');
+
+                stateDimension = data.dimension(function (d) { return d.state; });
+                var stateGroup = stateDimension.group();
+                var ordinalDomainValues = ['California', 'Colorado', 'Delaware', 'Ontario', 'Mississippi', 'Oklahoma'];
+
+                chart.rescale(); // BUG: barWidth cannot change after initial rendering
+
+                chart.dimension(stateDimension)
+                    .group(stateGroup)
+                    .xUnits(dc.units.ordinal)
+                    .x(d3.scaleOrdinal().domain(ordinalDomainValues))
+                    .barPadding(0)
+                    .outerPadding(0.1)
+                    .render();
+            });
+
+            it('should work with a warning', function () {
+                expect(dc.logger.warn).toHaveBeenCalled();
+
+                expect(typeof chart.x().bandwidth).toEqual('function');
+                expect(nthStack(0).nthBar(0).attr('x')).toBeWithinDelta(16, 1);
+                expect(nthStack(0).nthBar(3).attr('x')).toBeWithinDelta(674, 1);
+                expect(nthStack(0).nthBar(5).attr('x')).toBeWithinDelta(509, 1);
             });
         });
 
@@ -849,7 +880,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.xUnits(dc.units.ordinal)
-                .x(d3.scaleOrdinal())
+                .x(d3.scaleBand())
                 .transitionDuration(0)
                 .dimension(dimension)
                 .group(group, 'Population');
@@ -901,7 +932,7 @@ describe('dc.barChart', function () {
                 .outerPadding(0)
                 .dimension(dimension)
                 .group(group)
-                .x(d3.scaleOrdinal())
+                .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal);
             chart.render();
         });
@@ -1073,7 +1104,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scaleOrdinal())
+                .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
@@ -1170,7 +1201,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scaleOrdinal())
+                .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
@@ -1231,7 +1262,7 @@ describe('dc.barChart', function () {
 
             chart = dc.barChart('#' + id);
             chart.width(500).transitionDuration(0)
-                .x(d3.scaleOrdinal())
+                .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)

@@ -54,7 +54,7 @@ function grid (selector,data) {
       });
 
   var ageGroup   = age.group().reduceSum(function(d) {   return 1; });
-    //.x(d3.scaleOrdinal())
+
   chart_age
     .width(444)
     .height(200)
@@ -123,7 +123,7 @@ function grid (selector,data) {
     .outerPadding(0)
     .gap(1)
     .margins({top: 0, right: 0, bottom: 95, left: 30})
-    .x(d3.scaleOrdinal())
+    .x(d3.scaleBand())
     .xUnits(dc.units.ordinal)
     .brushOn(false)
     .elasticY(true)

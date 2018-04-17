@@ -801,7 +801,7 @@ bubbleChart.width(990)
         .radiusValueAccessor(function (p) {
             return p.value.count;
         })
-        .x(d3.scaleOrdinal().domain(["A", "T", "F", "Z"]))
+        .x(d3.scaleBand().domain(["A", "T", "F", "Z"]))
         .xUnits(dc.units.ordinal)
         .y(d3.scaleLinear().domain([0, 10]))
         .r(d3.scaleLinear().domain([0, 30]))
@@ -822,7 +822,7 @@ ordinalBarChart.width(500)
         .dimension(stateDimension)
         .group(stateGroup)
         .elasticY(true)
-        .x(d3.scaleOrdinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
+        .x(d3.scaleBand().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
 
 var ordinalLineChart = dc.lineChart("#ordinal-line-chart");
@@ -833,7 +833,7 @@ ordinalLineChart.width(500)
         .y(d3.scaleLinear().domain([0, 3]))
         .renderArea(true)
         .renderTitle(true)
-        .x(d3.scaleOrdinal().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
+        .x(d3.scaleBand().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
 
 var linearBarChart = dc.barChart("#linear-bar-chart");
