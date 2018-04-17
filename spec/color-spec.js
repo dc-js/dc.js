@@ -7,6 +7,25 @@ describe('dc.colorMixin', function () {
 
     function identity (d) { return d; }
 
+    describe('deprecation', function () {
+        it('issues a one time warning when using default color scheme', function () {
+            spyOn(dc.logger, 'warnOnce');
+
+            dc.colorMixin({});
+
+            expect(dc.logger.warnOnce).toHaveBeenCalled();
+        });
+
+        it('does not issue a warning when default color scheme has been changed', function () {
+            spyOn(dc.logger, 'warnOnce');
+
+            dc.config.defaultColors(d3.schemeSet1);
+            dc.colorMixin({});
+
+            expect(dc.logger.warnOnce).not.toHaveBeenCalled();
+        });
+    });
+
     describe('with ordinal domain' , function () {
         var chart, domain;
 
