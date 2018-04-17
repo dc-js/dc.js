@@ -337,7 +337,7 @@ describe('dc.lineChart', function () {
                 chart.dimension(stateDimension)
                     .group(stateGroup)
                     .xUnits(dc.units.ordinal)
-                    .x(d3.scaleOrdinal().domain(['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario']))
+                    .x(d3.scaleBand().domain(['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario']))
                     .render();
             });
 
