@@ -1,3 +1,7 @@
+## 3.0.0 alpha 10
+* Streamlined creation of YAxis in coordinate grid charts, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416))
+* Updated XAxis and YAxis documentation, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416)) 
+
 ## 3.0.0 alpha 9
 * `numberDisplay` uses [d3.easeQuad](https://github.com/d3/d3-ease/blob/master/README.md#easeQuad) instead of [quad-out-in](https://github.com/d3/d3-3.x-api-reference/blob/master/Transitions.md#d3_ease), which didn't make sense. ([#1413](https://github.com/dc-js/dc.js/pull/1413))
 * `dc.units.ordinal` is now purely a placeholder or magic value, and not called as a function. Previously dc.js would call the `xUnits` function with three arguments: the start, end, and domain array, but this was not compliant with d3 range functions. Now these functions are called with only the start and end, and `dc.units.ordinal` is detected with `===`. ([#1410](https://github.com/dc-js/dc.js/pull/1410))
