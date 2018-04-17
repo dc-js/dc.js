@@ -401,7 +401,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart.brushIsEmpty = function (selection) {
-        return !selection || selection[0][0] === selection[1][0] || selection[0][1] === selection[1][1];
+        return !selection || selection[0][0] >= selection[1][0] || selection[0][1] >= selection[1][1];
     };
 
     _chart._brushing = function () {
@@ -429,8 +429,12 @@ dc.scatterPlot = function (parent, chartGroup) {
                     return scale.invert(coord);
                 });
             });
+
+            selection = _chart.extendBrush(selection);
+
+            // The rounding process might have made selection empty, so we need to recheck
+            brushIsEmpty = brushIsEmpty && _chart.brushIsEmpty(selection);
         }
-        selection = _chart.extendBrush(selection);
 
         _chart.redrawBrush(selection, false);
 
