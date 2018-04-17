@@ -257,13 +257,20 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
-     * the number of data projections on x axis such as the number of bars for a bar chart or the
-     * number of dots for a line chart. This function is expected to return a Javascript array of all
-     * data points on x axis, or the number of points on the axis. [d3 time range functions
-     * d3.timeDays, d3.timeMonths, and
-     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid xUnits
-     * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
+     * the number of data projections on the x axis such as the number of bars for a bar chart or the
+     * number of dots for a line chart.
+     *
+     * This function is expected to return a Javascript array of all data points on the x axis, or
+     * the number of points on the axis. d3 time range functions [d3.timeDays, d3.timeMonths, and
+     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
+     * xUnits functions.
+     *
+     * dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
+     *
+     * Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
+     * possible to define this function compliant with the d3 range functions. It was already a
+     * magic value which caused charts to behave differently, and now it is completely so.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -389,9 +396,9 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Returns the number of units displayed on the x axis using the unit measure configured by
-     * {@link dc.coordinateGridMixin#xUnits xUnits}. If it is an Ordinal chart, it will return
-     * number of items in the domain.
+     * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
+     * `dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
+     * x unit count is calculated using the {@link dc.coordinateGridMixin#xUnits xUnits} function.
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
