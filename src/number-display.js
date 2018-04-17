@@ -110,7 +110,7 @@ dc.numberDisplay = function (parent, chartGroup) {
         span.transition()
             .duration(_chart.transitionDuration())
             .delay(_chart.transitionDelay())
-            .ease(d3.easeQuadIn)
+            .ease(d3.easeQuad)
             .tween('text', function () {
                 // [XA] don't try and interpolate from Infinity, else this breaks.
                 var interpStart = isFinite(_lastValue) ? _lastValue : 0;
