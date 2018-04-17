@@ -530,29 +530,26 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
-     * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/d3/d3-axis/blob/master/README.md) therefore it supports any valid
+     * axis customization is required. The y axis in dc.js is an instance of a
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight) therefore it supports any valid
      * d3 axis manipulation.
      *
-     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
+     * **Caution**: The right y axis is usually generated internally by dc; resetting it may cause
      * unexpected results.  Note also that when used as a getter, this function is not chainable: it
      * returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
-     * In addition, depending on whether you are going to use the axis on left or right
-     * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
-     * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisRight}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [rightYAxis]
-     * @returns {d3.svg.axis|dc.compositeChart}
+     * @param {d3.axisRight} [rightYAxis]
+     * @returns {d3.axisRight|dc.compositeChart}
      */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {
