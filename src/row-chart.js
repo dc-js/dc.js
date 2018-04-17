@@ -305,7 +305,7 @@ dc.rowChart = function (parent, chartGroup) {
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.svg.axis}
+     * @returns {d3.axisBottom}
      */
     _chart.xAxis = function () {
         return _xAxis;
