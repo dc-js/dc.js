@@ -1,6 +1,9 @@
 ## 3.0.0 alpha 10
+* Streamlined creation of YAxis in coordinate grid charts, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416))
+* Updated XAxis and YAxis documentation, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416))
 * `dc.config.defaultColors` is a mechanism to change default color scheme for all ordinal charts, by Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
-* deprecate use of default color scheme `d3.schemeCategory20c`, which has been [removed in D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50). The defaults will change in DCv3.1. By Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
+* deprecate use of default color scheme `d3.schemeCategory20c`, which has been [removed in D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50). Provide a temporary copy of the old colors for backward compatibility, but the defaults will change in DCv3.1. By Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
+* more cleanup from d3v4 refactor, by Deepak Kumar. Warn before converting from `d3.scaleOrdinal` to `d3.scaleBands` ([#1414](https://github.com/dc-js/dc.js/pull/1414), 
 
 ## 3.0.0 alpha 9
 * `numberDisplay` uses [d3.easeQuad](https://github.com/d3/d3-ease/blob/master/README.md#easeQuad) instead of [quad-out-in](https://github.com/d3/d3-3.x-api-reference/blob/master/Transitions.md#d3_ease), which didn't make sense. ([#1413](https://github.com/dc-js/dc.js/pull/1413))
