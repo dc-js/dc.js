@@ -1,3 +1,7 @@
+## 3.0.0 alpha 9
+* `dc.units.ordinal` is now purely a placeholder or magic value, and not called as a function. Previously dc.js would call the `xUnits` function with three arguments: the start, end, and domain array, but this was not compliant with d3 range functions. Now these functions are called with only the start and end, and `dc.units.ordinal` is detected with `===`. ([#1410](https://github.com/dc-js/dc.js/pull/1410))
+* cleanup from d3v4 refactor, by Deepak Kumar ([#1412](https://github.com/dc-js/dc.js/pull/1412))
+
 ## 3.0.0 alpha 8
 * don't show brush handles on scatter plot, by Deepak Kumar ([#1407](https://github.com/dc-js/dc.js/pull/1407) / [#1406](https://github.com/dc-js/dc.js/issues/1406))
 * remove `d3.functor`. [`d3.functor` was removed in d3 version 4]( https://github.com/d3/d3/blob/master/CHANGES.md#internals); to replace it, use  `typeof x === "function" ? x : dc.utils.constant(x)` ([#1374](https://github.com/dc-js/dc.js/issues/1374))
