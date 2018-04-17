@@ -33,3 +33,12 @@
 - Consider removing transitions for zooming and brushing
 - d3 stack to D3v4
 - Changing .tension call in lineChart
+
+
+### For end users
+
+- Changes to `xUnits` interface.
+- geoChart
+- Color scheme
+- tension in curves
+
