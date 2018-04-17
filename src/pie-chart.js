@@ -115,10 +115,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             removeElements(slices, labels);
 
-            // Uglify does not like array assignments
-            var t = createElements(slices, labels, arc, pieData);
-            slices = t[0];
-            labels = t[1];
+            createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
 
@@ -130,19 +127,13 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function createElements (slices, labels, arc, pieData) {
-
-        // Uglify does not like array assignments
-        var t = createSliceNodes(slices);
-        var slicesEnter = t[0];
-        slices = t[1];
+        var slicesEnter = createSliceNodes(slices);
 
         createSlicePath(slicesEnter, arc);
 
         createTitles(slicesEnter);
 
-        labels = createLabels(labels, pieData, arc);
-
-        return [slices, labels];
+        createLabels(labels, pieData, arc);
     }
 
     function createSliceNodes (slices) {
@@ -152,9 +143,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('class', function (d, i) {
                 return _sliceCssClass + ' _' + i;
             });
-
-        slices = slicesEnter.merge(slices);
-        return [slicesEnter, slices];
+        return slicesEnter;
     }
 
     function createSlicePath (slicesEnter, arc) {
@@ -227,16 +216,12 @@ dc.pieChart = function (parent, chartGroup) {
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
             }
-
-            labels = labelsEnter.merge(labels);
         }
-
-        return labels;
     }
 
     function updateLabelPaths (pieData, arc) {
         var polyline = _g.selectAll('polyline.' + _sliceCssClass)
-            .data(pieData);
+                .data(pieData);
 
         polyline.exit().remove();
 
