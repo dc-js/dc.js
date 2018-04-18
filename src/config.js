@@ -20,8 +20,8 @@ dc.config = (function () {
     /**
      * Set the default color scheme for ordinal charts. Changing it will impact all ordinal charts.
      *
-     * By default it is set to
-     * (d3.schemeCategory20c) for backward compatibility. This color scheme has been
+     * By default it is set to a copy of
+     * `d3.schemeCategory20c` for backward compatibility. This color scheme has been
      * removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
      * In DC 3.1 release it will change to a more appropriate default.
      *
@@ -37,7 +37,7 @@ dc.config = (function () {
         if (!arguments.length) {
             // Issue warning if it uses _schemeCategory20c
             if (_defaultColors === _schemeCategory20c) {
-                dc.logger.warnOnce('You are using d3.schemeCategory20c; which has been removed in D3v5. ' +
+                dc.logger.warnOnce('You are using d3.schemeCategory20c, which has been removed in D3v5. ' +
                     'See the explanation at https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50. ' +
                     'DC is using it for backward compatibility, however it will be changed in DCv3.1. ' +
                     'You can change it by calling dc.config.defaultColors(newScheme). ' +

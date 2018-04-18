@@ -1,5 +1,5 @@
 ## 3.0.0 alpha 10
-* `dc.config.defalutColors` as a mechanism to change default color scheme for all ordinal charts, By Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
+* `dc.config.defaultColors` is a mechanism to change default color scheme for all ordinal charts, by Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
 * deprecate use of default color scheme `d3.schemeCategory20c`, which has been [removed in D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50). The defaults will change in DCv3.1. By Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
 
 ## 3.0.0 alpha 9
