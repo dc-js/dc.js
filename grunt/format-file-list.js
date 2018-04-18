@@ -14,7 +14,7 @@ module.exports = function (grunt) {
                 var file = files[i + j];
                 cols.push('    <td><a href="' + file[1] + '">' + file[0] + '</a></td>');
             }
-            rows.push('  <tr>\n' + cols.join('\n') + '\n<tr>');
+            rows.push('  <tr>\n' + cols.join('\n') + '\n  </tr>');
         }
         var body = '<table class="table">\n' + rows.join('\n') + '\n</table>';
         return [
