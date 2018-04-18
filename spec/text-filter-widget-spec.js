@@ -1,5 +1,5 @@
 /* global loadDateFixture, appendChartID */
-describe('dc.inputFilter', function () {
+describe('dc.textFilterWidget', function () {
     var dateFixture;
     var id, chart, data;
     var dimension, group;
@@ -20,7 +20,7 @@ describe('dc.inputFilter', function () {
 
         id = 'input-filter';
         appendChartID(id);
-        chart = dc.inputFilter('#' + id)
+        chart = dc.textFilterWidget('#' + id)
             .dimension(dimension)
             .group(group);
         chart.render();
