@@ -24,7 +24,6 @@
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
-<!--script type="text/javascript" src="../../src/filter-input.js"></script-->
 <script type="text/javascript">
 
 
@@ -46,7 +45,7 @@
             return d.last_name + ' ' + d.first_name;
         });
 
-    var chart = dc.inputFilter("#search")
+    var chart = dc.textFilterWidget("#search")
         .dimension(dimension);
 
     var i = 0;

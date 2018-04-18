@@ -1,23 +1,23 @@
 /**
- * input Filter Widget
+ * Text Filter Widget
  *
- * The input filter data widget is a simple widget designed to display an input field allowing to filter
- * the data that matches the text typed.
- * As opposed to the other graphs, this doesn't display any result and doesn't update its display,
- * it's just to input an filter other graphs.
+ * The text filter widget is a simple widget designed to display an input field allowing to filter
+ * data that matches the text typed.
+ * As opposed to the other charts, this doesn't display any result and doesn't update its display,
+ * it's just to input an filter other charts.
  *
- * @class inputFilter
+ * @class textFilterWidget
  * @memberof dc
  * @mixes dc.baseMixin
  * @example
  *
- * var data = [{"firstname":"John","lastname":"Coltrane"}{"firstname":"Miles",lastname:"Davis"}]
+ * var data = [{"firstName":"John","lastName":"Coltrane"}{"firstName":"Miles",lastName:"Davis"}]
  * var ndx = crossfilter(data);
  * var dimension = ndx.dimension(function(d) {
- *     return d.lastname.toLowerCase() + ' ' + d.firstname.toLowerCase();
+ *     return d.lastName.toLowerCase() + ' ' + d.firstName.toLowerCase();
  * });
  *
- * dc.inputFilter('#search')
+ * dc.textFilterWidget('#search')
  *     .dimension(dimension);
  *     // you don't need the group() function
  *
@@ -26,11 +26,11 @@
  * specifying a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.inputFilter}
+ * @returns {dc.textFilterWidget}
  **/
 
-dc.inputFilter = function (parent, chartGroup) {
-    var INPUT_CSS_CLASS = 'dc-filter-input';
+dc.textFilterWidget = function (parent, chartGroup) {
+    var INPUT_CSS_CLASS = 'dc-text-filter-input';
 
     var _chart = dc.baseMixin({});
 
@@ -48,7 +48,7 @@ dc.inputFilter = function (parent, chartGroup) {
     var _placeHolder = 'search';
 
     _chart.group(function () {
-        throw 'the group function on inputFilter should never be called, please report the issue';
+        throw 'the group function on textFilterWidget should never be called, please report the issue';
     });
 
     _chart._doRender = function () {
@@ -79,7 +79,7 @@ dc.inputFilter = function (parent, chartGroup) {
     /**
      * This function will be called on values before calling the filter function.
      * @name normalize
-     * @memberof dc.inputFilter
+     * @memberof dc.textFilterWidget
      * @instance
      * @example
      * // This is the default
@@ -87,7 +87,7 @@ dc.inputFilter = function (parent, chartGroup) {
      *   return s.toLowerCase();
      * });
      * @param {function} [normalize]
-     * @returns {dc.inputFilter|function}
+     * @returns {dc.textFilterWidget|function}
      **/
     _chart.normalize = function (normalize) {
         if (!arguments.length) {
@@ -100,13 +100,13 @@ dc.inputFilter = function (parent, chartGroup) {
     /**
      * Placeholder text in the search box.
      * @name placeHolder
-     * @memberof dc.inputFilter
+     * @memberof dc.textFilterWidget
      * @instance
      * @example
      * // This is the default
      * chart.placeHolder('type to filter');
      * @param {function} [placeHolder='search']
-     * @returns {dc.inputFilter|string}
+     * @returns {dc.textFilterWidget|string}
      **/
     _chart.placeHolder = function (placeHolder) {
         if (!arguments.length) {
@@ -120,7 +120,7 @@ dc.inputFilter = function (parent, chartGroup) {
      * This function will be called with the search text, it needs to return a function that will be used to
      * filter the data. The default function checks presence of the search text.
      * @name filterFunctionFactory
-     * @memberof dc.inputFilter
+     * @memberof dc.textFilterWidget
      * @instance
      * @example
      * // This is the default
@@ -131,7 +131,7 @@ dc.inputFilter = function (parent, chartGroup) {
      *     };
      * };
      * @param {function} [filterFunctionFactory]
-     * @returns {dc.inputFilter|function}
+     * @returns {dc.textFilterWidget|function}
      **/
     _chart.filterFunctionFactory = function (filterFunctionFactory) {
         if (!arguments.length) {
