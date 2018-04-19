@@ -110,15 +110,6 @@ d3.stackD3v3 = function () {
     }
 }();
 
-// d3v4 Compat
-if (!d3.schemeCategory20c) {
-    d3.schemeCategory20c = [
-        '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
-        '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
-        '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
-        '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
-}
-
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
  * anything else into the global name space.
@@ -1059,6 +1050,60 @@ dc.logger = (function () {
     };
 
     return _logger;
+})();
+
+/**
+ * General configuration
+ *
+ * @class config
+ * @memberof dc
+ * @returns {dc.config}
+ */
+dc.config = (function () {
+    var _config = {};
+
+    // D3v5 has removed schemeCategory20c, copied here for backward compatibility
+    var _schemeCategory20c = [
+        '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
+        '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
+        '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
+        '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
+
+    var _defaultColors = _schemeCategory20c;
+
+    /**
+     * Set the default color scheme for ordinal charts. Changing it will impact all ordinal charts.
+     *
+     * By default it is set to a copy of
+     * `d3.schemeCategory20c` for backward compatibility. This color scheme has been
+     * removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
+     * In DC 3.1 release it will change to a more appropriate default.
+     *
+     * @example
+     * dc.config.defaultColors(d3.schemeSet1)
+     * @method defaultColors
+     * @memberof dc.config
+     * @instance
+     * @param {Array} [colors]
+     * @returns {Array|dc.config}
+     */
+    _config.defaultColors = function (colors) {
+        if (!arguments.length) {
+            // Issue warning if it uses _schemeCategory20c
+            if (_defaultColors === _schemeCategory20c) {
+                dc.logger.warnOnce('You are using d3.schemeCategory20c, which has been removed in D3v5. ' +
+                    'See the explanation at https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50. ' +
+                    'DC is using it for backward compatibility, however it will be changed in DCv3.1. ' +
+                    'You can change it by calling dc.config.defaultColors(newScheme). ' +
+                    'See https://github.com/d3/d3-scale-chromatic for some alternatives.');
+            }
+            return _defaultColors;
+        }
+        _defaultColors = colors;
+        return _config;
+    };
+
+    return _config;
 })();
 
 dc.events = {
@@ -2843,7 +2888,7 @@ dc.marginMixin = function (_chart) {
  * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
-    var _colors = d3.scaleOrdinal(d3.schemeCategory20c);
+    var _colors = d3.scaleOrdinal(dc.config.defaultColors());
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
@@ -3049,7 +3094,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _lastXDomain;
 
     var _y;
-    var _yAxis = d3.axisLeft();
+    var _yAxis = null;
     var _yAxisPadding = 0;
     var _yElasticity = false;
     var _yAxisLabel;
@@ -3445,6 +3490,14 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _useRightYAxis;
         }
+
+        // We need to warn if value is changing after _yAxis was created
+        if (_useRightYAxis !== useRightYAxis && _yAxis) {
+            dc.logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
+                'You might get unexpected yAxis behavior. ' +
+                'Make calls to useRightYAxis sooner in your chart creation process.');
+        }
+
         _useRightYAxis = useRightYAxis;
         return _chart;
     };
@@ -3483,6 +3536,10 @@ dc.coordinateGridMixin = function (_chart) {
             if (!_x.bandwidth) {
                 // If _x is not a scaleBand create a new scale and
                 // copy the original domain to the new scale
+                dc.logger.warn('For compatibility with d3v4+, dc.js d3.0 ordinal bar/line/bubble charts need ' +
+                               'd3.scaleBand() for the x scale, instead of d3.scaleOrdinal(). ' +
+                               'Replacing .x() with a d3.scaleBand with the same domain - ' +
+                               'make the same change in your code to avoid this warning!');
                 _x = d3.scaleBand().domain(_x.domain());
             }
 
@@ -3620,6 +3677,10 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    function createYAxis () {
+        return _useRightYAxis ? d3.axisRight() : d3.axisLeft();
+    }
+
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
@@ -3632,17 +3693,11 @@ dc.coordinateGridMixin = function (_chart) {
 
         _y.range([_chart.yAxisHeight(), 0]);
 
-        // Ideally we should update the API so that if someone uses Right Y Axis
-        // they would need to pass _yAxis as well
         if (!_yAxis) {
-            if (_useRightYAxis) {
-                _yAxis = d3.axisRight();
-            } else {
-                _yAxis = d3.axisLeft();
-            }
+            _yAxis = createYAxis();
         }
 
-        _yAxis = _yAxis.scale(_y);
+        _yAxis.scale(_y);
 
         _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
@@ -3783,8 +3838,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
-     * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-     * object](https://github.com/d3/d3-axis/blob/master/README.md); therefore it supports any
+     * when y axis customization is required. Depending on `useRightYAxis` the y axis in dc.js is an instance of
+     * either [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft) or
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight); therefore it supports any
      * valid d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -3804,11 +3860,14 @@ dc.coordinateGridMixin = function (_chart) {
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [yAxis=d3.svg.axis().orient('left')]
-     * @returns {d3.svg.axis|dc.coordinateGridMixin}
+     * @param {d3.axisLeft|d3.axisRight} [yAxis]
+     * @returns {d3.axisLeft|d3.axisRight|dc.coordinateGridMixin}
      */
     _chart.yAxis = function (yAxis) {
         if (!arguments.length) {
+            if (!_yAxis) {
+                _yAxis = createYAxis();
+            }
             return _yAxis;
         }
         _yAxis = yAxis;
@@ -5411,10 +5470,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             removeElements(slices, labels);
 
-            // Uglify does not like array assignments
-            var t = createElements(slices, labels, arc, pieData);
-            slices = t[0];
-            labels = t[1];
+            createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
 
@@ -5426,19 +5482,13 @@ dc.pieChart = function (parent, chartGroup) {
     }
 
     function createElements (slices, labels, arc, pieData) {
-
-        // Uglify does not like array assignments
-        var t = createSliceNodes(slices);
-        var slicesEnter = t[0];
-        slices = t[1];
+        var slicesEnter = createSliceNodes(slices);
 
         createSlicePath(slicesEnter, arc);
 
         createTitles(slicesEnter);
 
-        labels = createLabels(labels, pieData, arc);
-
-        return [slices, labels];
+        createLabels(labels, pieData, arc);
     }
 
     function createSliceNodes (slices) {
@@ -5448,9 +5498,7 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('class', function (d, i) {
                 return _sliceCssClass + ' _' + i;
             });
-
-        slices = slicesEnter.merge(slices);
-        return [slicesEnter, slices];
+        return slicesEnter;
     }
 
     function createSlicePath (slicesEnter, arc) {
@@ -5523,16 +5571,12 @@ dc.pieChart = function (parent, chartGroup) {
             if (_externalLabelRadius && _drawPaths) {
                 updateLabelPaths(pieData, arc);
             }
-
-            labels = labelsEnter.merge(labels);
         }
-
-        return labels;
     }
 
     function updateLabelPaths (pieData, arc) {
         var polyline = _g.selectAll('polyline.' + _sliceCssClass)
-            .data(pieData);
+                .data(pieData);
 
         polyline.exit().remove();
 
@@ -8368,29 +8412,26 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
-     * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/d3/d3-axis/blob/master/README.md) therefore it supports any valid
+     * axis customization is required. The y axis in dc.js is an instance of a
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight) therefore it supports any valid
      * d3 axis manipulation.
      *
-     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
+     * **Caution**: The right y axis is usually generated internally by dc; resetting it may cause
      * unexpected results.  Note also that when used as a getter, this function is not chainable: it
      * returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
-     * In addition, depending on whether you are going to use the axis on left or right
-     * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
-     * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisRight}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [rightYAxis]
-     * @returns {d3.svg.axis|dc.compositeChart}
+     * @param {d3.axisRight} [rightYAxis]
+     * @returns {d3.axisRight|dc.compositeChart}
      */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {
@@ -9416,7 +9457,7 @@ dc.rowChart = function (parent, chartGroup) {
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.svg.axis}
+     * @returns {d3.axisBottom}
      */
     _chart.xAxis = function () {
         return _xAxis;
@@ -10227,7 +10268,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     _chart.brushIsEmpty = function (selection) {
-        return !selection || selection[0][0] === selection[1][0] || selection[0][1] === selection[1][1];
+        return !selection || selection[0][0] >= selection[1][0] || selection[0][1] >= selection[1][1];
     };
 
     _chart._brushing = function () {
@@ -10255,8 +10296,12 @@ dc.scatterPlot = function (parent, chartGroup) {
                     return scale.invert(coord);
                 });
             });
+
+            selection = _chart.extendBrush(selection);
+
+            // The rounding process might have made selection empty, so we need to recheck
+            brushIsEmpty = brushIsEmpty && _chart.brushIsEmpty(selection);
         }
-        selection = _chart.extendBrush(selection);
 
         _chart.redrawBrush(selection, false);
 

@@ -28,6 +28,9 @@ chart.width(300)
         * [.warnOnce([msg])](#dc.logger+warnOnce) ⇒ [<code>logger</code>](#dc.logger)
         * [.debug([msg])](#dc.logger+debug) ⇒ [<code>logger</code>](#dc.logger)
         * [.deprecate([fn], [msg])](#dc.logger+deprecate) ⇒ <code>function</code>
+    * [.config](#dc.config)
+        * [new config()](#new_dc.config_new)
+        * [.defaultColors([colors])](#dc.config+defaultColors) ⇒ <code>Array</code> \| [<code>config</code>](#dc.config)
     * [.pieChart](#dc.pieChart)
         * [new pieChart(parent, [chartGroup])](#new_dc.pieChart_new)
         * [.slicesCap([cap])](#dc.pieChart+slicesCap) ⇒ <code>Number</code> \| [<code>pieChart</code>](#dc.pieChart)
@@ -97,7 +100,7 @@ chart.width(300)
         * [.shareTitle([shareTitle])](#dc.compositeChart+shareTitle) ⇒ <code>Boolean</code> \| [<code>compositeChart</code>](#dc.compositeChart)
         * [.rightY([yScale])](#dc.compositeChart+rightY) ⇒ <code>d3.scale</code> \| [<code>compositeChart</code>](#dc.compositeChart)
         * [.alignYAxes([alignYAxes])](#dc.compositeChart+alignYAxes) ⇒ <code>Chart</code>
-        * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.svg.axis</code> \| [<code>compositeChart</code>](#dc.compositeChart)
+        * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.axisRight</code> \| [<code>compositeChart</code>](#dc.compositeChart)
     * [.seriesChart](#dc.seriesChart)
         * [new seriesChart(parent, [chartGroup])](#new_dc.seriesChart_new)
         * [.chart([chartFunction])](#dc.seriesChart+chart) ⇒ <code>function</code> \| [<code>seriesChart</code>](#dc.seriesChart)
@@ -119,7 +122,7 @@ chart.width(300)
         * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
         * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-        * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.svg.axis</code>
+        * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axisBottom</code>
         * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -265,7 +268,7 @@ chart.width(300)
         * [.xAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
         * [.yAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.y([yScale])](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+        * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.axisLeft</code> \| <code>d3.axisRight</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.elasticY([elasticY])](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.renderHorizontalGridLines([renderHorizontalGridLines])](#dc.coordinateGridMixin+renderHorizontalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.renderVerticalGridLines([renderVerticalGridLines])](#dc.coordinateGridMixin+renderVerticalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -436,6 +439,40 @@ _chart.interpolate = dc.logger.deprecate(function (interpolate) {
    _interpolate = interpolate;
    return _chart;
 }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+```
+<a name="dc.config"></a>
+
+### dc.config
+**Kind**: static class of [<code>dc</code>](#dc)  
+
+* [.config](#dc.config)
+    * [new config()](#new_dc.config_new)
+    * [.defaultColors([colors])](#dc.config+defaultColors) ⇒ <code>Array</code> \| [<code>config</code>](#dc.config)
+
+<a name="new_dc.config_new"></a>
+
+#### new config()
+General configuration
+
+<a name="dc.config+defaultColors"></a>
+
+#### config.defaultColors([colors]) ⇒ <code>Array</code> \| [<code>config</code>](#dc.config)
+Set the default color scheme for ordinal charts. Changing it will impact all ordinal charts.
+
+By default it is set to a copy of
+`d3.schemeCategory20c` for backward compatibility. This color scheme has been
+removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
+In DC 3.1 release it will change to a more appropriate default.
+
+**Kind**: instance method of [<code>config</code>](#dc.config)  
+
+| Param | Type |
+| --- | --- |
+| [colors] | <code>Array</code> | 
+
+**Example**  
+```js
+dc.config.defaultColors(d3.schemeSet1)
 ```
 <a name="dc.pieChart"></a>
 
@@ -1487,7 +1524,7 @@ bubbles will be sorted by their radius, with smaller bubbles in front.
     * [.shareTitle([shareTitle])](#dc.compositeChart+shareTitle) ⇒ <code>Boolean</code> \| [<code>compositeChart</code>](#dc.compositeChart)
     * [.rightY([yScale])](#dc.compositeChart+rightY) ⇒ <code>d3.scale</code> \| [<code>compositeChart</code>](#dc.compositeChart)
     * [.alignYAxes([alignYAxes])](#dc.compositeChart+alignYAxes) ⇒ <code>Chart</code>
-    * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.svg.axis</code> \| [<code>compositeChart</code>](#dc.compositeChart)
+    * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.axisRight</code> \| [<code>compositeChart</code>](#dc.compositeChart)
 
 <a name="new_dc.compositeChart_new"></a>
 
@@ -1636,27 +1673,24 @@ will be parallel to x axis. This only has effect when [elasticY](#dc.coordinateG
 
 <a name="dc.compositeChart+rightYAxis"></a>
 
-#### compositeChart.rightYAxis([rightYAxis]) ⇒ <code>d3.svg.axis</code> \| [<code>compositeChart</code>](#dc.compositeChart)
+#### compositeChart.rightYAxis([rightYAxis]) ⇒ <code>d3.axisRight</code> \| [<code>compositeChart</code>](#dc.compositeChart)
 Set or get the right y axis used by the composite chart. This function is most useful when y
-axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-object](https://github.com/d3/d3-axis/blob/master/README.md) therefore it supports any valid
+axis customization is required. The y axis in dc.js is an instance of a
+[d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight) therefore it supports any valid
 d3 axis manipulation.
 
-**Caution**: The y axis is usually generated internally by dc; resetting it may cause
+**Caution**: The right y axis is usually generated internally by dc; resetting it may cause
 unexpected results.  Note also that when used as a getter, this function is not chainable: it
 returns the axis, not the chart,
 {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
 so attempting to call chart functions after calling `.yAxis()` will fail}.
-In addition, depending on whether you are going to use the axis on left or right
-you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
-or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
-**See**: [d3.axis](https://github.com/d3/d3-axis/blob/master/README.md)  
+**See**: [https://github.com/d3/d3-axis/blob/master/README.md#axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)  
 
 | Param | Type |
 | --- | --- |
-| [rightYAxis] | <code>d3.svg.axis</code> | 
+| [rightYAxis] | <code>d3.axisRight</code> | 
 
 **Example**  
 ```js
@@ -1984,7 +2018,7 @@ value specified here are relative to the underlying svg.
     * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
     * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-    * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.svg.axis</code>
+    * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axisBottom</code>
     * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -2039,7 +2073,7 @@ Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
 
 <a name="dc.rowChart+xAxis"></a>
 
-#### rowChart.xAxis() ⇒ <code>d3.svg.axis</code>
+#### rowChart.xAxis() ⇒ <code>d3.axisBottom</code>
 Get the x axis for the row chart instance.  Note: not settable for row charts.
 See the [d3.axisBottom](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom)
 documention for more information.
@@ -4191,7 +4225,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.xAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
     * [.yAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.y([yScale])](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+    * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.axisLeft</code> \| <code>d3.axisRight</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.elasticY([elasticY])](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.renderHorizontalGridLines([renderHorizontalGridLines])](#dc.coordinateGridMixin+renderHorizontalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.renderVerticalGridLines([renderVerticalGridLines])](#dc.coordinateGridMixin+renderVerticalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -4506,10 +4540,11 @@ Get or set the y scale. The y scale is typically automatically determined by the
 
 <a name="dc.coordinateGridMixin+yAxis"></a>
 
-#### coordinateGridMixin.yAxis([yAxis]) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+#### coordinateGridMixin.yAxis([yAxis]) ⇒ <code>d3.axisLeft</code> \| <code>d3.axisRight</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 Set or get the y axis used by the coordinate grid chart instance. This function is most useful
-when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-object](https://github.com/d3/d3-axis/blob/master/README.md); therefore it supports any
+when y axis customization is required. Depending on `useRightYAxis` the y axis in dc.js is an instance of
+either [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft) or
+[d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight); therefore it supports any
 valid d3 axis manipulation.
 
 **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -4524,9 +4559,9 @@ or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 **See**: [d3.axis](https://github.com/d3/d3-axis/blob/master/README.md)  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [yAxis] | <code>d3.svg.axis</code> | <code>d3.svg.axis().orient(&#x27;left&#x27;)</code> | 
+| Param | Type |
+| --- | --- |
+| [yAxis] | <code>d3.axisLeft</code> \| <code>d3.axisRight</code> | 
 
 **Example**  
 ```js
