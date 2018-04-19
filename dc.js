@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.9
+ *  dc 3.0.0-alpha.11
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -120,7 +120,7 @@ d3.stackD3v3 = function () {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.9
+ * @version 3.0.0-alpha.11
  * @example
  * // Example chaining
  * chart.width(300)
@@ -129,7 +129,7 @@ d3.stackD3v3 = function () {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.9',
+    version: '3.0.0-alpha.11',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -710,8 +710,6 @@ dc.utils.toTimeFunc = function (t) {
 
 /**
  * Arbitrary add one value to another.
- * @method add
- * @memberof dc.utils
  *
  * If the value l is of type Date, adds r units to it. t becomes the unit.
  * For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
@@ -721,10 +719,14 @@ dc.utils.toTimeFunc = function (t) {
  * dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.
  *
  * They also generate strange results if l is a string.
+ * @method add
+ * @memberof dc.utils
  * @param {Date|Number} l the value to modify
  * @param {String|Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, then possible values are
- * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', and 'year'
+ * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+ * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
 dc.utils.add = function (l, r, t) {
@@ -739,8 +741,11 @@ dc.utils.add = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() + r);
         }
-        t = t || 'day';
-        return d3[dc.utils.toTimeFunc(t)].offset(l, r);
+        t = t || d3.timeDay;
+        if (typeof t !== 'function') {
+            t = d3[dc.utils.toTimeFunc(t)];
+        }
+        return t.offset(l, r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -751,8 +756,7 @@ dc.utils.add = function (l, r, t) {
 
 /**
  * Arbitrary subtract one value from another.
- * @method subtract
- * @memberof dc.utils
+ *
  * If the value l is of type Date, subtracts r units from it. t becomes the unit.
  * For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
  *
@@ -761,10 +765,14 @@ dc.utils.add = function (l, r, t) {
  * dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.
  *
  * They also generate strange results if l is a string.
+ * @method subtract
+ * @memberof dc.utils
  * @param {Date|Number} l the value to modify
  * @param {String|Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, then possible values are
- * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', and 'year'
+ * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+ * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
 dc.utils.subtract = function (l, r, t) {
@@ -779,8 +787,11 @@ dc.utils.subtract = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() - r);
         }
-        t = t || 'day';
-        return d3[dc.utils.toTimeFunc(t)].offset(l, -r);
+        t = t || d3.timeDay;
+        if (typeof t !== 'function') {
+            t = d3[dc.utils.toTimeFunc(t)];
+        }
+        return t.offset(l, -r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -3087,7 +3098,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxis = d3.axisBottom();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
-    var _xAxisPaddingUnit = 'day';
+    var _xAxisPaddingUnit = d3.timeDay;
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
@@ -3432,13 +3443,15 @@ dc.coordinateGridMixin = function (_chart) {
      * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
      * otherwise it is ignored.
      *
-     * Padding unit is a string that will be used when the padding is calculated. Available parameters are
-     * the available d3 time intervals; see
-     * {@link https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval}.
+     * The padding unit should be a
+     * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+     * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
+     * ('day', 'hour', etc). Available arguments are the
+     * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
      * @method xAxisPaddingUnit
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @param {String} [unit='days']
+     * @param {String} [unit=d3.timeDay]
      * @returns {String|dc.coordinateGridMixin}
      */
     _chart.xAxisPaddingUnit = function (unit) {
@@ -8369,7 +8382,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMin', function () {
-        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
+        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     });
 
     function getAllXAxisMaxFromChildCharts () {
@@ -8379,7 +8392,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMax', function () {
-        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
+        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     });
 
     _chart.legendables = function () {

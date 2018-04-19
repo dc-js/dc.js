@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.0-alpha.9  
+**Version**: 3.0.0-alpha.11  
 **Example**  
 ```js
 // Example chaining
@@ -319,6 +319,8 @@ chart.width(300)
         * [.filter(filter)](#dc.printers.filter) ⇒ <code>String</code>
     * [.utils](#dc.utils) : <code>object</code>
         * [.printSingleValue(filter)](#dc.utils.printSingleValue) ⇒ <code>String</code>
+        * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>Date</code> \| <code>Number</code>
+        * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>Date</code> \| <code>Number</code>
         * [.isNumber(n)](#dc.utils.isNumber) ⇒ <code>Boolean</code>
         * [.isFloat(n)](#dc.utils.isFloat) ⇒ <code>Boolean</code>
         * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
@@ -4460,15 +4462,17 @@ Set or get x axis padding unit for the elastic x axis. The padding unit will det
 use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
 otherwise it is ignored.
 
-Padding unit is a string that will be used when the padding is calculated. Available parameters are
-the available d3 time intervals; see
-[d3.timeInterval](https://github.com/d3/d3-time/blob/master/README.md#intervals).
+The padding unit should be a
+[d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
+('day', 'hour', etc). Available arguments are the
+[d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [unit] | <code>String</code> | <code>&#x27;days&#x27;</code> | 
+| [unit] | <code>String</code> | <code>d3.timeDay</code> | 
 
 <a name="dc.coordinateGridMixin+xUnitCount"></a>
 
@@ -5294,6 +5298,8 @@ Converts a filter into a readable string.
 
 * [.utils](#dc.utils) : <code>object</code>
     * [.printSingleValue(filter)](#dc.utils.printSingleValue) ⇒ <code>String</code>
+    * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>Date</code> \| <code>Number</code>
+    * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>Date</code> \| <code>Number</code>
     * [.isNumber(n)](#dc.utils.isNumber) ⇒ <code>Boolean</code>
     * [.isFloat(n)](#dc.utils.isFloat) ⇒ <code>Boolean</code>
     * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
@@ -5316,6 +5322,50 @@ Print a single value filter.
 | Param | Type |
 | --- | --- |
 | filter | <code>any</code> | 
+
+<a name="dc.utils.add"></a>
+
+#### utils.add(l, r, [t]) ⇒ <code>Date</code> \| <code>Number</code>
+Arbitrary add one value to another.
+
+If the value l is of type Date, adds r units to it. t becomes the unit.
+For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
+
+If l is of type numeric, t is ignored. In this case if r is of type string,
+it is assumed to be percentage (whether or not it includes %). For example
+dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.
+
+They also generate strange results if l is a string.
+
+**Kind**: static method of [<code>utils</code>](#dc.utils)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| l | <code>Date</code> \| <code>Number</code> |  | the value to modify |
+| r | <code>String</code> \| <code>Number</code> |  | the amount by which to modify the value |
+| [t] | <code>function</code> \| <code>String</code> | <code>d3.timeDay</code> | if `l` is a `Date`, then this should be a [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval). For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e. 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year' |
+
+<a name="dc.utils.subtract"></a>
+
+#### utils.subtract(l, r, [t]) ⇒ <code>Date</code> \| <code>Number</code>
+Arbitrary subtract one value from another.
+
+If the value l is of type Date, subtracts r units from it. t becomes the unit.
+For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
+
+If l is of type numeric, t is ignored. In this case if r is of type string,
+it is assumed to be percentage (whether or not it includes %). For example
+dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.
+
+They also generate strange results if l is a string.
+
+**Kind**: static method of [<code>utils</code>](#dc.utils)  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| l | <code>Date</code> \| <code>Number</code> |  | the value to modify |
+| r | <code>String</code> \| <code>Number</code> |  | the amount by which to modify the value |
+| [t] | <code>function</code> \| <code>String</code> | <code>d3.timeDay</code> | if `l` is a `Date`, then this should be a [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval). For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e. 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year' |
 
 <a name="dc.utils.isNumber"></a>
 
