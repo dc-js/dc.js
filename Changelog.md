@@ -1,3 +1,6 @@
+## 3.0.0 alpha 11
+* xAxisPaddingUnit should be the d3 interval not the name of it ([#1320](https://github.com/dc-js/dc.js/issues/1320), [#1326](https://github.com/dc-js/dc.js/issues/1326), [#1420](https://github.com/dc-js/dc.js/issues/1420))
+
 ## 3.0.0 alpha 10
 * Streamlined creation of YAxis in coordinate grid charts, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416))
 * Updated XAxis and YAxis documentation, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416))
