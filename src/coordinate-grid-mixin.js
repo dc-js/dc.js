@@ -33,7 +33,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _xAxis = d3.axisBottom();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
-    var _xAxisPaddingUnit = 'day';
+    var _xAxisPaddingUnit = d3.timeDay;
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
@@ -378,13 +378,15 @@ dc.coordinateGridMixin = function (_chart) {
      * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
      * otherwise it is ignored.
      *
-     * Padding unit is a string that will be used when the padding is calculated. Available parameters are
-     * the available d3 time intervals; see
-     * {@link https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval}.
+     * The padding unit should be a
+     * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+     * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
+     * ('day', 'hour', etc). Available arguments are the
+     * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
      * @method xAxisPaddingUnit
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @param {String} [unit='days']
+     * @param {String} [unit=d3.timeDay]
      * @returns {String|dc.coordinateGridMixin}
      */
     _chart.xAxisPaddingUnit = function (unit) {

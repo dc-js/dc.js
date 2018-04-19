@@ -471,7 +471,8 @@ describe('dc.bubbleChart', function () {
 
         describe('with 10 day padding', function () {
             beforeEach(function () {
-                chart.xAxisPadding(10)
+                chart.xAxisPaddingUnit(d3.utcDay)
+                    .xAxisPadding(10)
                     .render();
             });
             it('should stretch the domain appropriately', function () {
@@ -481,7 +482,7 @@ describe('dc.bubbleChart', function () {
 
         describe('with 2 month padding', function () {
             beforeEach(function () {
-                chart.xAxisPaddingUnit('month')
+                chart.xAxisPaddingUnit(d3.utcMonth)
                     .xAxisPadding(2)
                     .render();
             });
