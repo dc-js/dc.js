@@ -1007,7 +1007,7 @@ describe('dc.barChart', function () {
             chart = dc.barChart('#' + id);
             chart.width(500)
                 .transitionDuration(0)
-                .x(d3.scaleTime())
+                .x(d3.scaleUtc())
                 .elasticY(true).elasticX(true)
                 .dimension(dimension)
                 .group(group);
@@ -1022,8 +1022,8 @@ describe('dc.barChart', function () {
         it('should render the right xAxisMax/Min when 10 day padding', function () {
             chart.xAxisPadding(10)
                 .render();
-            var expectedStartDate = d3.timeDay.offset(date, -10);
-            var expectedEndDate = d3.timeDay.offset(date, 10);
+            var expectedStartDate = d3.utcDay.offset(date, -10);
+            var expectedEndDate = d3.utcDay.offset(date, 10);
             expect(chart.xAxisMin()).toEqual(expectedStartDate);
             expect(chart.xAxisMax()).toEqual(expectedEndDate);
         });
@@ -1031,8 +1031,8 @@ describe('dc.barChart', function () {
             chart.xAxisPaddingUnit('month')
                 .xAxisPadding(2)
                 .render();
-            var expectedStartDate = d3.timeMonth.offset(date, -2);
-            var expectedEndDate = d3.timeMonth.offset(date, 2);
+            var expectedStartDate = d3.utcMonth.offset(date, -2);
+            var expectedEndDate = d3.utcMonth.offset(date, 2);
             expect(chart.xAxisMin()).toEqual(expectedStartDate);
             expect(chart.xAxisMax()).toEqual(expectedEndDate);
         });
