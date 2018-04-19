@@ -487,7 +487,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMin', function () {
-        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
+        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     });
 
     function getAllXAxisMaxFromChildCharts () {
@@ -497,7 +497,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMax', function () {
-        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
+        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     });
 
     _chart.legendables = function () {
