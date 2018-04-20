@@ -42,7 +42,7 @@
 * improved integration with `d3.zoom`, by Deepak Kumar. Since the d3v4 implementation is a lot more powerful, this eliminates a lot of custom zoom code. ([#1385](https://github.com/dc-js/dc.js/pull/1385))
 
 ## 3.0.0 alpha 2
-* backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, ny Deepak Kumar ([#1381](https://github.com/dc-js/dc.js/pull/1381) / [#1376](https://github.com/dc-js/dc.js/issues/1376), [#1382](https://github.com/dc-js/dc.js/pull/1382) / [#1379](https://github.com/dc-js/dc.js/issues/1379))
+* backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, by Deepak Kumar ([#1381](https://github.com/dc-js/dc.js/pull/1381) / [#1376](https://github.com/dc-js/dc.js/issues/1376), [#1382](https://github.com/dc-js/dc.js/pull/1382) / [#1379](https://github.com/dc-js/dc.js/issues/1379))
 * Fixed test cases for Edge/IE, by Deepak Kumar ([#1378](https://github.com/dc-js/dc.js/pull/1378) / [#1373](https://github.com/dc-js/dc.js/issues/1373)
 * lint ([#1372](https://github.com/dc-js/dc.js/pull/1372))
 
@@ -52,7 +52,7 @@
 * all [axis.tickArguments()](https://github.com/d3/d3-axis/blob/master/README.md#axis_tickArguments) are applied to `scale.ticks()` to produce horizontal & vertical gridlines, not just the first argument.
 
 ## 3.0
-dc.js 3.0 is compatible with d3 versions 4 and 5! Thanks to Deepak Kumar for his tireless effoprt on making this finally happen.
+dc.js 3.0 is compatible with d3 versions 4 and 5! Thanks to Deepak Kumar for his tireless effort on making this finally happen.
 
 New features will only be added to 3.0; however, 2.1 will be maintained for a limited time for those who still need compatibility with d3 version 3.
 
