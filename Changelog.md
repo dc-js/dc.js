@@ -1,3 +1,6 @@
+## 3.0.0 alpha 12
+* Use `d3.stack` from d3v4+, transforming the data from/to the old layer/stack objects. Remove `d3v3-compat.js` ([#1375](https://github.com/dc-js/dc.js/issues/1375)
+
 ## 3.0.0 alpha 11
 * xAxisPaddingUnit should be the d3 interval not the name of it ([#1320](https://github.com/dc-js/dc.js/issues/1320), [#1326](https://github.com/dc-js/dc.js/issues/1326), [#1420](https://github.com/dc-js/dc.js/issues/1420))
 
