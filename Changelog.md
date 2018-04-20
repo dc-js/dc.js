@@ -1,3 +1,6 @@
+## 3.0.0 beta 1
+* First NPM release of dc.js, compatible with D3 versions 4 and 5. Thanks to Deepak Kumar for all his effort on the port! We've made every effort to keep the library backward-compatible, but see [the 3.0 changes in the wiki](https://github.com/dc-js/dc.js/wiki/Changes-in-dc.js-version-3.0).
+
 ## 3.0.0 alpha 12
 * Use `d3.stack` from d3v4+, transforming the data from/to the old layer/stack objects. Remove `d3v3-compat.js` ([#1375](https://github.com/dc-js/dc.js/issues/1375)
 
