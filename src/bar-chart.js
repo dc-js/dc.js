@@ -214,9 +214,6 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     _chart.fadeDeselectedArea = function (brushSelection) {
-        if (!_chart.brushOn()) {
-            return;
-        }
         var bars = _chart.chartBodyG().selectAll('rect.bar');
 
         if (_chart.isOrdinal()) {
@@ -231,7 +228,7 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
-        } else {
+        } else if (_chart.brushOn()) {
             if (!_chart.brushIsEmpty(brushSelection)) {
                 var start = brushSelection[0];
                 var end = brushSelection[1];
