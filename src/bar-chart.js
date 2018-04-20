@@ -213,7 +213,7 @@ dc.barChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.fadeDeselectedArea = function (selection) {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         if (!_chart.brushOn()) {
             return;
         }
@@ -232,9 +232,9 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
         } else {
-            if (!_chart.brushIsEmpty(selection)) {
-                var start = selection[0];
-                var end = selection[1];
+            if (!_chart.brushIsEmpty(brushSelection)) {
+                var start = brushSelection[0];
+                var end = brushSelection[1];
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
                     return d.x < start || d.x >= end;
@@ -318,12 +318,12 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function (selection) {
-        if (selection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            selection[0] = _chart.round()(selection[0]);
-            selection[1] = _chart.round()(selection[1]);
+    _chart.extendBrush = function (brushSelection) {
+        if (brushSelection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            brushSelection[0] = _chart.round()(brushSelection[0]);
+            brushSelection[1] = _chart.round()(brushSelection[1]);
         }
-        return selection;
+        return brushSelection;
     };
 
     /**

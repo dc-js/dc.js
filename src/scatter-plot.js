@@ -392,16 +392,16 @@ dc.scatterPlot = function (parent, chartGroup) {
         // no handle paths for poly-brushes
     };
 
-    _chart.extendBrush = function (selection) {
+    _chart.extendBrush = function (brushSelection) {
         if (_chart.round()) {
-            selection[0] = selection[0].map(_chart.round());
-            selection[1] = selection[1].map(_chart.round());
+            brushSelection[0] = brushSelection[0].map(_chart.round());
+            brushSelection[1] = brushSelection[1].map(_chart.round());
         }
-        return selection;
+        return brushSelection;
     };
 
-    _chart.brushIsEmpty = function (selection) {
-        return !selection || selection[0][0] >= selection[1][0] || selection[0][1] >= selection[1][1];
+    _chart.brushIsEmpty = function (brushSelection) {
+        return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
     };
 
     _chart._brushing = function () {
@@ -417,28 +417,28 @@ dc.scatterPlot = function (parent, chartGroup) {
             return;
         }
 
-        var selection = d3.event.selection;
+        var brushSelection = d3.event.selection;
 
         // Testing with pixels is more reliable
-        var brushIsEmpty = _chart.brushIsEmpty(selection);
+        var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
 
-        if (selection) {
-            selection = selection.map(function (point) {
+        if (brushSelection) {
+            brushSelection = brushSelection.map(function (point) {
                 return point.map(function (coord, i) {
                     var scale = i === 0 ? _chart.x() : _chart.y();
                     return scale.invert(coord);
                 });
             });
 
-            selection = _chart.extendBrush(selection);
+            brushSelection = _chart.extendBrush(brushSelection);
 
-            // The rounding process might have made selection empty, so we need to recheck
-            brushIsEmpty = brushIsEmpty && _chart.brushIsEmpty(selection);
+            // The rounding process might have made brushSelection empty, so we need to recheck
+            brushIsEmpty = brushIsEmpty && _chart.brushIsEmpty(brushSelection);
         }
 
-        _chart.redrawBrush(selection, false);
+        _chart.redrawBrush(brushSelection, false);
 
-        var ranged2DFilter = brushIsEmpty ? null : dc.filters.RangedTwoDimensionalFilter(selection);
+        var ranged2DFilter = brushIsEmpty ? null : dc.filters.RangedTwoDimensionalFilter(brushSelection);
 
         dc.events.trigger(function () {
             _chart.replaceFilter(ranged2DFilter);
@@ -446,7 +446,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         }, dc.constants.EVENT_DELAY);
     };
 
-    _chart.redrawBrush = function (selection, doTransition) {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
         // override default x axis brush from parent chart
         var _brush = _chart.brush();
         var _gBrush = _chart.gBrush();
@@ -456,12 +456,12 @@ dc.scatterPlot = function (parent, chartGroup) {
                 _chart.setBrushExtents(doTransition);
             }
 
-            if (!selection) {
+            if (!brushSelection) {
                 _gBrush
-                    .call(_brush.move, selection);
+                    .call(_brush.move, brushSelection);
 
             } else {
-                selection = selection.map(function (point) {
+                brushSelection = brushSelection.map(function (point) {
                     return point.map(function (coord, i) {
                         var scale = i === 0 ? _chart.x() : _chart.y();
                         return scale(coord);
@@ -472,12 +472,12 @@ dc.scatterPlot = function (parent, chartGroup) {
                     dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
 
                 gBrush
-                    .call(_brush.move, selection);
+                    .call(_brush.move, brushSelection);
 
             }
         }
 
-        _chart.fadeDeselectedArea(selection);
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
     _chart.setBrushY = function (gBrush) {
