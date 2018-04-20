@@ -23,11 +23,9 @@ dc.stackMixin = function (_chart) {
 
         layer.domainValues = allValues.filter(domainFilter());
         layer.values = _chart.evadeDomainFilter() ? allValues : layer.domainValues;
-        return layer.values;
     }
 
-    var _stackLayout = d3.stackD3v3()
-        .values(prepareValues);
+    var _stackLayout = d3.stack();
 
     var _stack = [];
     var _titles = {};
@@ -259,9 +257,6 @@ dc.stackMixin = function (_chart) {
             return _stackLayout;
         }
         _stackLayout = stack;
-        if (_stackLayout.values() === d3.stackD3v3().values()) {
-            _stackLayout.values(prepareValues);
-        }
         return _chart;
     };
 
@@ -289,13 +284,32 @@ dc.stackMixin = function (_chart) {
         return _chart;
     };
 
-    function visability (l) {
+    function visibility (l) {
         return !l.hidden;
     }
 
     _chart.data(function () {
-        var layers = _stack.filter(visability);
-        return layers.length ? _chart.stackLayout()(layers) : [];
+        var layers = _stack.filter(visibility);
+        if (!layers.length) {
+            return [];
+        }
+        layers.forEach(prepareValues);
+        var v4data = layers[0].values.map(function (v, i) {
+            var col = {x: v.x};
+            layers.forEach(function (layer) {
+                col[layer.name] = layer.values[i].y;
+            });
+            return col;
+        });
+        var keys = layers.map(function (layer) { return layer.name; });
+        var v4result = _chart.stackLayout().keys(keys)(v4data);
+        v4result.forEach(function (series, i) {
+            series.forEach(function (ys, j) {
+                layers[i].values[j].y0 = ys[0];
+                layers[i].values[j].y1 = ys[1];
+            });
+        });
+        return layers;
     });
 
     _chart._ordinalXDomain = function () {

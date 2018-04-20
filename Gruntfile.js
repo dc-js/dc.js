@@ -484,7 +484,6 @@ module.exports = function (grunt) {
 
 module.exports.jsFiles = [
     'src/banner.js',   // NOTE: keep this first
-    'src/d3v3-compat.js',
     'src/core.js',
     'src/errors.js',
     'src/utils.js',
