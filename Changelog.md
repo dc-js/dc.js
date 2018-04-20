@@ -1,3 +1,6 @@
+## 3.0.0 alpha 12
+* Rename selection --> brushSelection. By Deepak Kumar.([#1423](https://github.com/dc-js/dc.js/issues/1423))
+
 ## 3.0.0 alpha 11
 * xAxisPaddingUnit should be the d3 interval not the name of it ([#1320](https://github.com/dc-js/dc.js/issues/1320), [#1326](https://github.com/dc-js/dc.js/issues/1326), [#1420](https://github.com/dc-js/dc.js/issues/1420))
 
