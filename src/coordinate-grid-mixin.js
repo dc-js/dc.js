@@ -16,49 +16,52 @@ dc.coordinateGridMixin = function (_chart) {
     var VERTICAL_CLASS = 'vertical';
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var CUSTOM_BRUSH_HANDLE_CLASS = 'custom-brush-handle';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
-    _chart.colors(d3.scale.category10());
+    _chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
     _chart._mandatoryAttributes().push('x');
     var _parent;
     var _g;
     var _chartBodyG;
 
     var _x;
+    var _origX; // Will hold orginial scale in case of zoom
     var _xOriginalDomain;
-    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxis = d3.axisBottom();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
-    var _xAxisPaddingUnit = 'day';
+    var _xAxisPaddingUnit = d3.timeDay;
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
     var _lastXDomain;
 
     var _y;
-    var _yAxis = d3.svg.axis().orient('left');
+    var _yAxis = null;
     var _yAxisPadding = 0;
     var _yElasticity = false;
     var _yAxisLabel;
     var _yAxisLabelPadding = 0;
 
-    var _brush = d3.svg.brush();
+    var _brush = d3.brushX();
+    var _gBrush;
     var _brushOn = true;
     var _round;
 
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
-    var _refocused = false, _resizing = false;
+    var _resizing = false;
     var _unitCount;
 
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
 
-    var _zoom = d3.behavior.zoom().on('zoom', zoomHandler);
-    var _nullZoom = d3.behavior.zoom().on('zoom', null);
+    var _zoom = d3.zoom().on('zoom', onZoom);
+    var _nullZoom = d3.zoom().on('zoom', null);
     var _hasBeenMouseZoomable = false;
 
     var _rangeChart;
@@ -146,7 +149,6 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _zoomOutRestrict;
         }
-        _zoomScale[0] = zoomOutRestrict ? 1 : 0;
         _zoomOutRestrict = zoomOutRestrict;
         return _chart;
     };
@@ -225,17 +227,17 @@ dc.coordinateGridMixin = function (_chart) {
      * **mandatory**
      *
      * Get or set the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale} or
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md ordinal scale}.
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale} or
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales ordinal scale}
      * @method x
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
      * // set x to a linear scale
-     * chart.x(d3.scale.linear().domain([-2500, 2500]))
+     * chart.x(d3.scaleLinear().domain([-2500, 2500]))
      * // set x to a time scale to generate histogram
-     * chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+     * chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
      * @param {d3.scale} [xScale]
      * @returns {d3.scale|dc.coordinateGridMixin}
      */
@@ -255,34 +257,41 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
-     * the number of data projections on x axis such as the number of bars for a bar chart or the
-     * number of dots for a line chart. This function is expected to return a Javascript array of all
-     * data points on x axis, or the number of points on the axis. [d3 time range functions
-     * d3.time.days, d3.time.months, and
-     * d3.time.years](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
-     * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
+     * the number of data projections on the x axis such as the number of bars for a bar chart or the
+     * number of dots for a line chart.
+     *
+     * This function is expected to return a Javascript array of all data points on the x axis, or
+     * the number of points on the axis. d3 time range functions [d3.timeDays, d3.timeMonths, and
+     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
+     * xUnits functions.
+     *
+     * dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
+     *
+     * Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
+     * possible to define this function compliant with the d3 range functions. It was already a
+     * magic value which caused charts to behave differently, and now it is completely so.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @todo Add docs for utilities
      * @example
      * // set x units to count days
-     * chart.xUnits(d3.time.days);
+     * chart.xUnits(d3.timeDays);
      * // set x units to count months
-     * chart.xUnits(d3.time.months);
+     * chart.xUnits(d3.timeMonths);
      *
      * // A custom xUnits function can be used as long as it follows the following interface:
      * // units in integer
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // simply calculates how many integers in the domain
      *      return Math.abs(end - start);
-     * };
+     * }
      *
      * // fixed units
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
+     * }
      * @param {Function} [xUnits=dc.units.integers]
      * @returns {Function|dc.coordinateGridMixin}
      */
@@ -297,8 +306,8 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
      * useful when x axis customization is required. The x axis in dc.js is an instance of a
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object};
-     * therefore it supports any valid d3 axis manipulation.
+     * {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3 bottom axis object};
+     * therefore it supports any valid d3 axisBottom manipulation.
      *
      * **Caution**: The x axis is usually generated internally by dc; resetting it may cause
      * unexpected results. Note also that when used as a getter, this function is not chainable:
@@ -308,14 +317,14 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [xAxis=d3.svg.axis().orient('bottom')]
-     * @returns {d3.svg.axis|dc.coordinateGridMixin}
+     * @param {d3.axisBottom} [xAxis=d3.axisBottom]
+     * @returns {d3.axisBottom|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -369,13 +378,15 @@ dc.coordinateGridMixin = function (_chart) {
      * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
      * otherwise it is ignored.
      *
-     * Padding unit is a string that will be used when the padding is calculated. Available parameters are
-     * the available d3 time intervals; see
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}.
+     * The padding unit should be a
+     * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+     * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
+     * ('day', 'hour', etc). Available arguments are the
+     * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
      * @method xAxisPaddingUnit
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @param {String} [unit='days']
+     * @param {String} [unit=d3.timeDay]
      * @returns {String|dc.coordinateGridMixin}
      */
     _chart.xAxisPaddingUnit = function (unit) {
@@ -387,8 +398,9 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Returns the number of units displayed on the x axis using the unit measure configured by
-     * {@link dc.coordinateGridMixin#xUnits xUnits}.
+     * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
+     * `dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
+     * x unit count is calculated using the {@link dc.coordinateGridMixin#xUnits xUnits} function.
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -396,12 +408,16 @@ dc.coordinateGridMixin = function (_chart) {
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
-            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
-
-            if (units instanceof Array) {
-                _unitCount = units.length;
+            if (_chart.isOrdinal()) {
+                // In this case it number of items in domain
+                _unitCount = _chart.x().domain().length;
             } else {
-                _unitCount = units;
+                _unitCount = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
+
+                // Sometimes xUnits() may return an array while sometimes directly the count
+                if (_unitCount instanceof Array) {
+                    _unitCount = _unitCount.length;
+                }
             }
         }
 
@@ -422,6 +438,14 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _useRightYAxis;
         }
+
+        // We need to warn if value is changing after _yAxis was created
+        if (_useRightYAxis !== useRightYAxis && _yAxis) {
+            dc.logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
+                'You might get unexpected yAxis behavior. ' +
+                'Make calls to useRightYAxis sooner in your chart creation process.');
+        }
+
         _useRightYAxis = useRightYAxis;
         return _chart;
     };
@@ -448,17 +472,25 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function compareDomains (d1, d2) {
-        return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
-    }
-
     function prepareXAxis (g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
             }
         } else { // _chart.isOrdinal()
+            // D3v4 - Ordinal charts would need scaleBand
+            // bandwidth is a method in scaleBand
+            // (https://github.com/d3/d3-scale/blob/master/README.md#scaleBand)
+            if (!_x.bandwidth) {
+                // If _x is not a scaleBand create a new scale and
+                // copy the original domain to the new scale
+                dc.logger.warn('For compatibility with d3v4+, dc.js d3.0 ordinal bar/line/bubble charts need ' +
+                               'd3.scaleBand() for the x scale, instead of d3.scaleOrdinal(). ' +
+                               'Replacing .x() with a d3.scaleBand with the same domain - ' +
+                               'make the same change in your code to avoid this warning!');
+                _x = d3.scaleBand().domain(_x.domain());
+            }
+
             if (_chart.elasticX() || _x.domain().length === 0) {
                 _x.domain(_chart._ordinalXDomain());
             }
@@ -466,15 +498,16 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (render || compareDomains(_lastXDomain, xdom)) {
+        if (render || !dc.utils.arraysEqual(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
 
         // please can't we always use rangeBands for bar charts?
         if (_chart.isOrdinal()) {
-            _x.rangeBands([0, _chart.xAxisLength()], _rangeBandPadding,
-                          _chart._useOuterPadding() ? _outerRangeBandPadding : 0);
+            _x.range([0, _chart.xAxisLength()])
+                .paddingInner(_rangeBandPadding)
+                .paddingOuter(_chart._useOuterPadding() ? _outerRangeBandPadding : 0);
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -524,7 +557,7 @@ dc.coordinateGridMixin = function (_chart) {
             }
 
             var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
-                    (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
+                (typeof _x.ticks === 'function' ? _x.ticks.apply(_x, _xAxis.tickArguments()) : _x.domain());
 
             var lines = gridLineG.selectAll('line')
                 .data(ticks);
@@ -545,7 +578,8 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+            var linesGEnterUpdate = linesGEnter.merge(lines);
+            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -591,10 +625,14 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    function createYAxis () {
+        return _useRightYAxis ? d3.axisRight() : d3.axisLeft();
+    }
+
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
-                _y = d3.scale.linear();
+                _y = d3.scaleLinear();
             }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
@@ -602,11 +640,12 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
-        _yAxis = _yAxis.scale(_y);
 
-        if (_useRightYAxis) {
-            _yAxis.orient('right');
+        if (!_yAxis) {
+            _yAxis = createYAxis();
         }
+
+        _yAxis.scale(_y);
 
         _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
@@ -655,7 +694,8 @@ dc.coordinateGridMixin = function (_chart) {
         var gridLineG = g.select('g.' + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
-            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
+            // Last part copied from https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
+            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks.apply(scale, axis.tickArguments());
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
@@ -682,7 +722,8 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+            var linesGEnterUpdate = linesGEnter.merge(lines);
+            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -730,7 +771,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method y
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.coordinateGridMixin}
      */
@@ -745,8 +786,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
-     * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis); therefore it supports any
+     * when y axis customization is required. Depending on `useRightYAxis` the y axis in dc.js is an instance of
+     * either [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft) or
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight); therefore it supports any
      * valid d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -754,20 +796,26 @@ dc.coordinateGridMixin = function (_chart) {
      * returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
+     * In addition, depending on whether you are going to use the axis on left or right
+     * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
+     * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * @example
      * // customize y axis tick format
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [yAxis=d3.svg.axis().orient('left')]
-     * @returns {d3.svg.axis|dc.coordinateGridMixin}
+     * @param {d3.axisLeft|d3.axisRight} [yAxis]
+     * @returns {d3.axisLeft|d3.axisRight|dc.coordinateGridMixin}
      */
     _chart.yAxis = function (yAxis) {
         if (!arguments.length) {
+            if (!_yAxis) {
+                _yAxis = createYAxis();
+            }
             return _yAxis;
         }
         _yAxis = yAxis;
@@ -912,7 +960,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @example
      * // set x unit round to by month, this will make sure range selection brush will
      * // select whole months
-     * chart.round(d3.time.month.round);
+     * chart.round(d3.timeMonth.round);
      * @param {Function} [round]
      * @returns {Function|dc.coordinateGridMixin}
      */
@@ -947,15 +995,26 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._filter(_);
 
-        if (_) {
-            _chart.brush().extent(_);
-        } else {
-            _chart.brush().clear();
-        }
+        _chart.redrawBrush(_, false);
 
         return _chart;
     });
 
+    /**
+     * Get or set the brush. Brush must be an instance of d3 brushes
+     * https://github.com/d3/d3-brush/blob/master/README.md
+     * You will use this only if you are writing a new chart type that supports brushing.
+     *
+     * **Caution**: dc creates and manages brushes internally. Go through and understand the source code
+     * if you want to pass a new brush object. Even if you are only using the getter,
+     * the brush object may not behave the way you expect.
+     *
+     * @method brush
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {d3.brush} [_]
+     * @returns {d3.brush|dc.coordinateGridMixin}
+     */
     _chart.brush = function (_) {
         if (!arguments.length) {
             return _brush;
@@ -964,68 +1023,77 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function brushHeight () {
-        return _chart._xAxisY() - _chart.margins().top;
-    }
-
-    _chart.renderBrush = function (g) {
+    _chart.renderBrush = function (g, doTransition) {
         if (_brushOn) {
-            _brush.on('brush', _chart._brushing);
-            _brush.on('brushstart', _chart._disableMouseZoom);
-            _brush.on('brushend', configureMouseZoom);
+            _brush.on('start brush end', _chart._brushing);
 
-            var gBrush = g.append('g')
+            // To retrieve selection we need _gBrush
+            _gBrush = g.append('g')
                 .attr('class', 'brush')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
-                .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush, false);
-            _chart.setHandlePaths(gBrush);
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
 
-            if (_chart.hasFilter()) {
-                _chart.redrawBrush(g, false);
-            }
+            _chart.setBrushExtents();
+
+            _chart.createBrushHandlePaths(_gBrush, doTransition);
+
+            _chart.redrawBrush(_chart.filter(), doTransition);
         }
     };
 
-    _chart.setHandlePaths = function (gBrush) {
-        gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
-    };
+    _chart.createBrushHandlePaths = function (gBrush) {
+        var brushHandles = gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS).data([{type: 'w'}, {type: 'e'}]);
 
-    _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect')
-            .attr('height', brushHeight());
-        gBrush.selectAll('.resize path')
+        brushHandles = brushHandles
+            .enter()
+            .append('path')
+            .attr('class', CUSTOM_BRUSH_HANDLE_CLASS)
+            .merge(brushHandles);
+
+        brushHandles
             .attr('d', _chart.resizeHandlePath);
     };
 
-    _chart.extendBrush = function () {
-        var extent = _brush.extent();
-        if (_chart.round()) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
-
-            _g.select('.brush')
-                .call(_brush.extent(extent));
+    _chart.extendBrush = function (brushSelection) {
+        if (brushSelection && _chart.round()) {
+            brushSelection[0] = _chart.round()(brushSelection[0]);
+            brushSelection[1] = _chart.round()(brushSelection[1]);
         }
-        return extent;
+        return brushSelection;
     };
 
-    _chart.brushIsEmpty = function (extent) {
-        return _brush.empty() || !extent || extent[1] <= extent[0];
+    _chart.brushIsEmpty = function (brushSelection) {
+        return !brushSelection || brushSelection[1] <= brushSelection[0];
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        // Avoids infinite recursion (mutual recursion between range and focus operations)
+        // Source Event will be null when brush.move is called programmatically (see below as well).
+        if (!d3.event.sourceEvent) { return; }
 
-        _chart.redrawBrush(_g, false);
+        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
+        // In this case we are more worried about this handler causing brush move programmatically which will
+        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
+        // This check avoids recursive calls
+        if (d3.event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+            return;
+        }
 
-        if (_chart.brushIsEmpty(extent)) {
+        var brushSelection = d3.event.selection;
+        if (brushSelection) {
+            brushSelection = brushSelection.map(_chart.x().invert);
+        }
+
+        brushSelection = _chart.extendBrush(brushSelection);
+
+        _chart.redrawBrush(brushSelection, false);
+
+        if (_chart.brushIsEmpty(brushSelection)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
         } else {
-            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+            var rangedFilter = dc.filters.RangedFilter(brushSelection[0], brushSelection[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
@@ -1034,29 +1102,54 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g, doTransition) {
-        if (_brushOn) {
-            if (_chart.filter() && _chart.brush().empty()) {
-                _chart.brush().extent(_chart.filter());
-            }
+    _chart.setBrushExtents = function (doTransition) {
+        // Set boundaries of the brush, must set it before applying to _gBrush
+        _brush.extent([[0, 0], [_chart.effectiveWidth(), _chart.effectiveHeight()]]);
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
-            _chart.setBrushY(gBrush);
-            gBrush.call(_chart.brush()
-                      .x(_chart.x())
-                      .extent(_chart.brush().extent()));
-        }
-
-        _chart.fadeDeselectedArea();
+        _gBrush
+            .call(_brush);
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
+        if (_brushOn && _gBrush) {
+            if (_resizing) {
+                _chart.setBrushExtents(doTransition);
+            }
+
+            if (!brushSelection) {
+                _gBrush
+                    .call(_brush.move, null);
+
+                _gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                    .attr('display', 'none');
+            } else {
+                var scaledSelection = [_x(brushSelection[0]), _x(brushSelection[1])];
+
+                var gBrush =
+                    dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
+
+                gBrush
+                    .call(_brush.move, scaledSelection);
+
+                gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                    .attr('display', null)
+                    .attr('transform', function (d, i) {
+                        return 'translate(' + _x(brushSelection[i]) + ', 0)';
+                    })
+                    .attr('d', _chart.resizeHandlePath);
+            }
+        }
+        _chart.fadeDeselectedArea(brushSelection);
+    };
+
+    _chart.fadeDeselectedArea = function (brushSelection) {
         // do nothing, sub-chart should override this function
     };
 
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
-        var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
+        d = d.type;
+        var e = +(d === 'e'), x = e ? 1 : -1, y = _chart.effectiveHeight() / 3;
         return 'M' + (0.5 * x) + ',' + y +
             'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
             'V' + (2 * y - 6) +
@@ -1152,13 +1245,17 @@ dc.coordinateGridMixin = function (_chart) {
         if (render) {
             _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g(), _resizing);
+            // Animate the brush only while resizing
+            _chart.redrawBrush(_chart.filter(), _resizing);
         }
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;
     }
 
     function configureMouseZoom () {
+        // Save a copy of original x scale
+        _origX = _x.copy();
+
         if (_mouseZoomable) {
             _chart._enableMouseZoom();
         } else if (_hasBeenMouseZoomable) {
@@ -1168,69 +1265,104 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
-        _zoom.x(_chart.x())
+
+        var extent = [[0, 0],[_chart.effectiveWidth(), _chart.effectiveHeight()]];
+
+        _zoom
             .scaleExtent(_zoomScale)
-            .size([_chart.width(), _chart.height()])
+            .extent(extent)
             .duration(_chart.transitionDuration());
+
+        if (_zoomOutRestrict) {
+            // Ensure minimum zoomScale is at least 1
+            var zoomScaleMin = Math.max(_zoomScale[0], 1);
+            _zoom
+                .translateExtent(extent)
+                .scaleExtent([zoomScaleMin, _zoomScale[1]]);
+        }
+
         _chart.root().call(_zoom);
+
+        // Tell D3 zoom our current zoom/pan status
+        updateD3zoomTransform();
     };
 
     _chart._disableMouseZoom = function () {
         _chart.root().call(_nullZoom);
     };
 
-    function zoomHandler () {
-        _refocused = true;
-        if (_zoomOutRestrict) {
-            var constraint = _xOriginalDomain;
-            if (_rangeChart) {
-                constraint = intersectExtents(constraint, _rangeChart.x().domain());
-            }
-            var constrained = constrainExtent(_chart.x().domain(), constraint);
-            if (constrained) {
-                _chart.x().domain(constrained);
-            }
-        }
+    function zoomHandler (newDomain, noRaiseEvents) {
+        var domFilter;
 
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+        if (hasRangeSelected(newDomain)) {
+            _chart.x().domain(newDomain);
+            domFilter = dc.filters.RangedFilter(newDomain[0], newDomain[1]);
+        } else {
+            _chart.x().domain(_xOriginalDomain);
+            domFilter = null;
+        }
 
         _chart.replaceFilter(domFilter);
         _chart.rescale();
         _chart.redraw();
 
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+        if (!noRaiseEvents) {
+            if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+                dc.events.trigger(function () {
+                    _rangeChart.replaceFilter(domFilter);
+                    _rangeChart.redraw();
+                });
+            }
+
+            _chart._invokeZoomedListener();
             dc.events.trigger(function () {
-                _rangeChart.replaceFilter(domFilter);
-                _rangeChart.redraw();
-            });
+                _chart.redrawGroup();
+            }, dc.constants.EVENT_DELAY);
         }
-
-        _chart._invokeZoomedListener();
-
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
-
-        _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
 
-    function intersectExtents (ext1, ext2) {
-        if (ext1[0] > ext2[1] || ext1[1] < ext2[0]) {
-            console.warn('could not intersect extents');
-        }
-        return [Math.max(ext1[0], ext2[0]), Math.min(ext1[1], ext2[1])];
+    // event.transform.rescaleX(_origX).domain() should give back newDomain
+    function domainToZoomTransform (newDomain, origDomain, xScale) {
+        var k = (origDomain[1] - origDomain[0]) / (newDomain[1] - newDomain[0]);
+        var xt = -1 * xScale(newDomain[0]);
+
+        return d3.zoomIdentity.scale(k).translate(xt, 0);
     }
 
-    function constrainExtent (extent, constraint) {
-        var size = extent[1] - extent[0];
-        if (extent[0] < constraint[0]) {
-            return [constraint[0], Math.min(constraint[1], dc.utils.add(constraint[0], size, 'millis'))];
-        } else if (extent[1] > constraint[1]) {
-            return [Math.max(constraint[0], dc.utils.subtract(constraint[1], size, 'millis')), constraint[1]];
-        } else {
-            return null;
+    // If we changing zoom status (for example by calling focus), tell D3 zoom about it
+    function updateD3zoomTransform () {
+        if (_zoom) {
+            _zoom.transform(_chart.root(), domainToZoomTransform(_chart.x().domain(), _xOriginalDomain, _origX));
         }
+    }
+
+    function onZoom () {
+        // Avoids infinite recursion (mutual recursion between range and focus operations)
+        // Source Event will be null when zoom is called programmatically (see below as well).
+        if (!d3.event.sourceEvent) { return; }
+
+        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
+        // In this case we are more worried about this handler causing zoom programmatically which will
+        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
+        // This check avoids recursive calls
+        if (d3.event.sourceEvent.type && ['start', 'zoom', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+            return;
+        }
+
+        var newDomain = d3.event.transform.rescaleX(_origX).domain();
+        _chart.focus(newDomain, false);
+    }
+
+    function checkExtents (ext, outerLimits) {
+        if (!ext || ext.length !== 2 || !outerLimits || outerLimits.length !== 2) {
+            return ext;
+        }
+
+        if (ext[0] > outerLimits[1] || ext[1] < outerLimits[0]) {
+            console.warn('Could not intersect extents, will reset');
+        }
+        // Math.max does not work (as the values may be dates as well)
+        return [ext[0] > outerLimits[0] ? ext[0] : outerLimits[0], ext[1] < outerLimits[1] ? ext[1] : outerLimits[1]];
     }
 
     /**
@@ -1238,6 +1370,12 @@ dc.coordinateGridMixin = function (_chart) {
      * 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
      * to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
      * otherwise focus will be ignored.
+     *
+     * To avoid ping-pong volley of events between a pair of range and focus charts please set
+     * `noRaiseEvents` to `true`. In that case it will update this chart but will not fire `zoom` event
+     * and not try to update back the associated range chart.
+     * If you are calling it manually - typically you will leave it to `false` (the default).
+     *
      * @method focus
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -1250,20 +1388,25 @@ dc.coordinateGridMixin = function (_chart) {
      *     });
      * })
      * @param {Array<Number>} [range]
+     * @param {Boolean} [noRaiseEvents = false]
      */
-    _chart.focus = function (range) {
-        if (hasRangeSelected(range)) {
-            _chart.x().domain(range);
-        } else {
-            _chart.x().domain(_xOriginalDomain);
+    _chart.focus = function (range, noRaiseEvents) {
+        if (_zoomOutRestrict) {
+            // ensure range is within _xOriginalDomain
+            range = checkExtents(range, _xOriginalDomain);
+
+            // If it has an associated range chart ensure range is within domain of that rangeChart
+            if (_rangeChart) {
+                range = checkExtents(range, _rangeChart.x().domain());
+            }
         }
 
-        _zoom.x(_chart.x());
-        zoomHandler();
+        zoomHandler(range, noRaiseEvents);
+        updateD3zoomTransform();
     };
 
     _chart.refocused = function () {
-        return _refocused;
+        return !rangesEqual(_chart.x().domain(), _xOriginalDomain);
     };
 
     _chart.focusChart = function (c) {
@@ -1274,11 +1417,11 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.on('filtered', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
-                    _focusChart.x().domain(_focusChart.xOriginalDomain());
+                    _focusChart.x().domain(_focusChart.xOriginalDomain(), true);
                 });
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {
-                    _focusChart.focus(chart.filter());
+                    _focusChart.focus(chart.filter(), true);
                 });
             }
         });
@@ -1318,6 +1461,11 @@ dc.coordinateGridMixin = function (_chart) {
         }
         _brushOn = brushOn;
         return _chart;
+    };
+
+    // Get the SVG rendered brush
+    _chart.gBrush = function () {
+        return _gBrush;
     };
 
     function hasRangeSelected (range) {

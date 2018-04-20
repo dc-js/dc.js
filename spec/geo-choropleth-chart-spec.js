@@ -52,7 +52,7 @@ describe('dc.geoChoropleth', function () {
         var chart = dc.geoChoroplethChart('#' + id);
         chart.dimension(districtDimension)
             .group(districtValueEnrollGroup)
-            .projection(d3.geo.mercator()
+            .projection(d3.geoMercator()
                         .scale(26778)
                         .translate([8227, 3207]))
             .width(990)
@@ -79,7 +79,7 @@ describe('dc.geoChoropleth', function () {
         it('should return not null', function () {
             expect(chart).not.toBeNull();
         });
-        it('should have a d3.geo.path', function () {
+        it('should have a d3.geoPath', function () {
             expect(chart.geoPath()).not.toBeNull();
         });
         it('svg is created', function () {
@@ -89,64 +89,64 @@ describe('dc.geoChoropleth', function () {
             expect(chart.selectAll('g.layer0').length).not.toEqual(0);
         });
         it('correct number of states should be generated', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0].length).toEqual(52);
+            expect(chart.selectAll('g.layer0 g.state').nodes().length).toEqual(52);
         });
         it('correct css class should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][1].getAttribute('class')).toEqual('state alaska');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[1].getAttribute('class')).toEqual('state alaska');
         });
         it('correct title should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state title')[0][1].textContent).toEqual('Alaska : 0');
+            expect(chart.selectAll('g.layer0 g.state title').nodes()[1].textContent).toEqual('Alaska : 0');
         });
         it('correct color filling should be set [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('fill')).toMatch(/#ccc/i);
+            expect(chart.selectAll('g.layer0 g.state path').nodes()[1].getAttribute('fill')).toMatch(/#ccc/i);
         });
         it('correct state boundary should be rendered [Alaska]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][1].getAttribute('d').length).not.toEqual(0);
+            expect(chart.selectAll('g.layer0 g.state path').nodes()[1].getAttribute('d').length).not.toEqual(0);
         });
         it('correct css class should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][4].getAttribute('class')).toEqual('state california');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[4].getAttribute('class')).toEqual('state california');
         });
         it('correct css class should be set [District of Columbia]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][8].getAttribute('class')).toEqual('state district_of_columbia');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[8].getAttribute('class')).toEqual('state district_of_columbia');
         });
         it('correct title should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state title')[0][4].textContent).toEqual('California : 154');
+            expect(chart.selectAll('g.layer0 g.state title').nodes()[4].textContent).toEqual('California : 154');
         });
         it('correct color should be set [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('fill')).toMatch(/#0089ff/i);
+            expect(chart.selectAll('g.layer0 g.state path').nodes()[4].getAttribute('fill')).toMatch(/#0089ff/i);
         });
         it('correct state boundary should be rendered [California]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][4].getAttribute('d').length).not.toEqual(0);
+            expect(chart.selectAll('g.layer0 g.state path').nodes()[4].getAttribute('d').length).not.toEqual(0);
         });
         it('correct css class should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][5].getAttribute('class')).toEqual('state colorado');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[5].getAttribute('class')).toEqual('state colorado');
         });
         it('correct title should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state title')[0][5].textContent).toEqual('Colorado : 22');
+            expect(chart.selectAll('g.layer0 g.state title').nodes()[5].textContent).toEqual('Colorado : 22');
         });
         it('correct color should be set [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('fill')).toMatch(/#e2f2ff/i);
+            expect(chart.selectAll('g.layer0 g.state path').nodes()[5].getAttribute('fill')).toMatch(/#e2f2ff/i);
         });
         it('correct state boundary should be rendered [Colorado]', function () {
-            expect(chart.selectAll('g.layer0 g.state path')[0][5].getAttribute('d').length).not.toEqual(0);
+            expect(chart.selectAll('g.layer0 g.state path').nodes()[5].getAttribute('d').length).not.toEqual(0);
         });
         it('geo layer1 g is created', function () {
             expect(chart.selectAll('g.layer1').length).not.toEqual(0);
         });
         it('correct number of counties should be generated', function () {
-            expect(chart.selectAll('g.layer1 g.county')[0].length).toEqual(5);
+            expect(chart.selectAll('g.layer1 g.county').nodes().length).toEqual(5);
         });
         it('correct css class should be set [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county')[0][1].getAttribute('class')).toEqual('county');
+            expect(chart.selectAll('g.layer1 g.county').nodes()[1].getAttribute('class')).toEqual('county');
         });
         it('correct title should be set [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county title')[0][1].textContent).toEqual('');
+            expect(chart.selectAll('g.layer1 g.county title').nodes()[1].textContent).toEqual('');
         });
         it('correct color filling should be set [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county path')[0][1].getAttribute('fill')).toEqual('white');
+            expect(chart.selectAll('g.layer1 g.county path').nodes()[1].getAttribute('fill')).toEqual('white');
         });
         it('correct state boundary should be rendered [county]', function () {
-            expect(chart.selectAll('g.layer1 g.county path')[0][1].getAttribute('d').length).not.toEqual(0);
+            expect(chart.selectAll('g.layer1 g.county path').nodes()[1].getAttribute('d').length).not.toEqual(0);
         });
     });
 
@@ -160,12 +160,12 @@ describe('dc.geoChoropleth', function () {
         });
 
         it('sets deselected classes for some states', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][0].getAttribute('class')).toEqual('state alabama deselected');
-            expect(chart.selectAll('g.layer0 g.state')[0][1].getAttribute('class')).toEqual('state alaska deselected');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[0].getAttribute('class')).toEqual('state alabama deselected');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[1].getAttribute('class')).toEqual('state alaska deselected');
         });
         it('sets selected classes for selected states', function () {
-            expect(chart.selectAll('g.layer0 g.state')[0][4].getAttribute('class')).toEqual('state california selected');
-            expect(chart.selectAll('g.layer0 g.state')[0][5].getAttribute('class')).toEqual('state colorado selected');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[4].getAttribute('class')).toEqual('state california selected');
+            expect(chart.selectAll('g.layer0 g.state').nodes()[5].getAttribute('class')).toEqual('state colorado selected');
         });
     });
 

@@ -3,9 +3,9 @@
  * @name dateFormat
  * @memberof dc
  * @type {Function}
- * @default d3.time.format('%m/%d/%Y')
+ * @default d3.timeFormat('%m/%d/%Y')
  */
-dc.dateFormat = d3.time.format('%m/%d/%Y');
+dc.dateFormat = d3.timeFormat('%m/%d/%Y');
 
 /**
  * @namespace printers
@@ -120,19 +120,31 @@ dc.utils.printSingleValue = function (filter) {
 };
 dc.utils.printSingleValue.fformat = d3.format('.2f');
 
+// convert 'day' to 'timeDay' and similar
+dc.utils.toTimeFunc = function (t) {
+    return 'time' + t.charAt(0).toUpperCase() + t.slice(1);
+};
+
 /**
  * Arbitrary add one value to another.
+ *
+ * If the value l is of type Date, adds r units to it. t becomes the unit.
+ * For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
+ *
+ * If l is of type numeric, t is ignored. In this case if r is of type string,
+ * it is assumed to be percentage (whether or not it includes %). For example
+ * dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.
+ *
+ * They also generate strange results if l is a string.
  * @method add
  * @memberof dc.utils
- * @todo
- * These assume than any string r is a percentage (whether or not it includes %).
- * They also generate strange results if l is a string.
- * @param {String|Date|Number} l the value to modify
- * @param {Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, the
- * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
- * the `d3.time` namespace
- * @returns {String|Date|Number}
+ * @param {Date|Number} l the value to modify
+ * @param {String|Number} r the amount by which to modify the value
+ * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+ * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
+ * @returns {Date|Number}
  */
 dc.utils.add = function (l, r, t) {
     if (typeof r === 'string') {
@@ -146,8 +158,11 @@ dc.utils.add = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() + r);
         }
-        t = t || 'day';
-        return d3.time[t].offset(l, r);
+        t = t || d3.timeDay;
+        if (typeof t !== 'function') {
+            t = d3[dc.utils.toTimeFunc(t)];
+        }
+        return t.offset(l, r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -158,17 +173,24 @@ dc.utils.add = function (l, r, t) {
 
 /**
  * Arbitrary subtract one value from another.
+ *
+ * If the value l is of type Date, subtracts r units from it. t becomes the unit.
+ * For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
+ *
+ * If l is of type numeric, t is ignored. In this case if r is of type string,
+ * it is assumed to be percentage (whether or not it includes %). For example
+ * dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.
+ *
+ * They also generate strange results if l is a string.
  * @method subtract
  * @memberof dc.utils
- * @todo
- * These assume than any string r is a percentage (whether or not it includes %).
- * They also generate strange results if l is a string.
- * @param {String|Date|Number} l the value to modify
- * @param {Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, the
- * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
- * the `d3.time` namespace
- * @returns {String|Date|Number}
+ * @param {Date|Number} l the value to modify
+ * @param {String|Number} r the amount by which to modify the value
+ * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+ * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
+ * @returns {Date|Number}
  */
 dc.utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {
@@ -182,8 +204,11 @@ dc.utils.subtract = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() - r);
         }
-        t = t || 'day';
-        return d3.time[t].offset(l, -r);
+        t = t || d3.timeDay;
+        if (typeof t !== 'function') {
+            t = d3[dc.utils.toTimeFunc(t)];
+        }
+        return t.offset(l, -r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -250,6 +275,23 @@ dc.utils.clamp = function (val, min, max) {
 };
 
 /**
+ * Given `x`, return a function that always returns `x`.
+ *
+ * {@link https://github.com/d3/d3/blob/master/CHANGES.md#internals `d3.functor` was removed in d3 version 4}.
+ * This function helps to implement the replacement,
+ * `typeof x === "function" ? x : dc.utils.constant(x)`
+ * @method constant
+ * @memberof dc.utils
+ * @param {any} x
+ * @returns {Function}
+ */
+dc.utils.constant = function (x) {
+    return function () {
+        return x;
+    };
+};
+
+/**
  * Using a simple static counter, provide a unique integer id.
  * @method uniqueId
  * @memberof dc.utils
@@ -297,3 +339,24 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
  * @returns {Number}
  */
 dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+
+/**
+ * Return true if both arrays are equal, if both array are null these are considered equal
+ * @method arraysEqual
+ * @memberof dc.utils
+ * @param {Array|null} a1
+ * @param {Array|null} a2
+ * @returns {Boolean}
+ */
+dc.utils.arraysEqual = function (a1, a2) {
+    if (!a1 || !a2) {
+        return a1 === a2;
+    }
+
+    return a1.length === a2.length &&
+        // If elements are not integers/strings, we hope that it will match because of toString
+        // Test cases cover dates as well.
+        a1.every(function (elem, i) {
+            return elem === a2[i] || elem.toString() === a2[i].toString();
+        });
+};

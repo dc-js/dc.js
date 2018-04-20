@@ -31,7 +31,7 @@
           return chart
               .width(768)
               .height(380)
-              .x(d3.scale.ordinal())
+              .x(d3.scaleBand())
               .xUnits(dc.units.ordinal)
               .elasticX(true)
               .elasticY(true)

@@ -18,7 +18,7 @@
 <script type="text/javascript">
 
 var chart = dc.scatterPlot("#test");
-d3.csv("morley.csv", function(error, experiments) {
+d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {
     x.Speed = +x.Speed;
@@ -31,7 +31,7 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .x(d3.scale.linear().domain([6,20]))
+    .x(d3.scaleLinear().domain([6,20]))
     .brushOn(false)
     .symbolSize(8)
     .clipPadding(10)

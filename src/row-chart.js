@@ -15,7 +15,7 @@
  * // create a row chart under #chart-container2 element using chart group A
  * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -44,7 +44,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _elasticX;
 
-    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxis = d3.axisBottom();
 
     var _rowData;
 
@@ -59,7 +59,7 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[1] < 0) {
                 extent[1] = 0;
             }
-            _x = d3.scale.linear().domain(extent)
+            _x = d3.scaleLinear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
         }
         _xAxis.scale(_x);
@@ -99,11 +99,11 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}.
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}.
      * @method x
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [scale]
      * @returns {d3.scale|dc.rowChart}
      */
@@ -140,8 +140,9 @@ dc.rowChart = function (parent, chartGroup) {
         var rows = _g.selectAll('g.' + _rowCssClass)
             .data(_rowData);
 
-        createElements(rows);
         removeElements(rows);
+        rows = createElements(rows)
+            .merge(rows);
         updateElements(rows);
     }
 
@@ -155,6 +156,8 @@ dc.rowChart = function (parent, chartGroup) {
         rowEnter.append('rect').attr('width', 0);
 
         createLabels(rowEnter);
+
+        return rowEnter;
     }
 
     function removeElements (rows) {
@@ -291,18 +294,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object}
+     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.svg.axis}
+     * @returns {d3.axisBottom}
      */
     _chart.xAxis = function () {
         return _xAxis;

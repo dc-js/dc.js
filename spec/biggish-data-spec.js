@@ -14,8 +14,6 @@ describe('dc.barChart.biggish', function () {
         var chartAttemptSeries = dc.lineChart('#stack-chart');
         var chartRange = dc.barChart('#range-chart');
 
-        var dateFormat = d3.time.format.iso;
-
         var xfilter;
 
         var data = biggishData();
@@ -24,11 +22,11 @@ describe('dc.barChart.biggish', function () {
             // coerce k(ind) into a number
             row.k = +row.k;
             // convert event time into d3 date format
-            row.dd = dateFormat.parse(row.t);
+            row.dd = d3.isoParse(row.t);
             // pre-calculate the day of the time
-            row.day = d3.time.day(row.dd);
+            row.day = d3.utcDay(row.dd);
             // precalculate the hour of the time
-            row.hour = d3.time.hour(row.dd);
+            row.hour = d3.utcHour(row.dd);
             // coerce n(umber of attempts) into a number
             row.n = +row.n;
         });
@@ -83,13 +81,13 @@ describe('dc.barChart.biggish', function () {
         // calculate day extent (two element array of first and last items in the range) - of the hour data
         var extentDay = d3.extent(data, function (row) { return row.day; });
         // select the following day for the end of the extent
-        extentDay[1] = d3.time.day.offset(extentDay[1], 1);
+        extentDay[1] = d3.utcDay.offset(extentDay[1], 1);
 
         chartAttemptSeries
             .margins({top: 30, right: 50, bottom: 25, left: 40})
             .renderArea(true)
             .height(200)
-            .x(d3.time.scale().domain(extentDay))
+            .x(d3.scaleUtc().domain(extentDay))
             .renderHorizontalGridLines(true)
             .rangeChart(chartRange)
             .transitionDuration(1000)
@@ -103,7 +101,7 @@ describe('dc.barChart.biggish', function () {
             .valueAccessor(function (d) { return d.value.bfa; })
             .stack(groupHourSeries, 'Horizontal Movement', function (d) { return d.value.hma; })
             .stack(groupHourSeries, 'User Account Hacking', function (d) { return d.value.uha; })
-            .xUnits(d3.time.hours);
+            .xUnits(d3.utcHours);
 
         chartAttemptSeries.legend(dc.legend().horizontal(true).x(50).y(0).itemWidth(150).gap(5));
 
@@ -113,10 +111,10 @@ describe('dc.barChart.biggish', function () {
             .group(groupHourSum)
             .centerBar(true)
             .gap(1)
-            .xUnits(d3.time.hours)
-            .round(d3.time.hour.round)
+            .xUnits(d3.utcHours)
+            .round(d3.utcHour.round)
             .alwaysUseRounding(true)
-            .x(d3.time.scale().domain(extentDay))
+            .x(d3.scaleUtc().domain(extentDay))
 
         // hide the range chart's y axis
         // note: breaks function chaining by returning the yAxis

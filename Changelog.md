@@ -1,3 +1,62 @@
+## 3.0.0 beta 1
+* First NPM release of dc.js, compatible with D3 versions 4 and 5. Thanks to Deepak Kumar for all his effort on the port! We've made every effort to keep the library backward-compatible, but see [the 3.0 changes in the wiki](https://github.com/dc-js/dc.js/wiki/Changes-in-dc.js-version-3.0).
+* `fadeDeselectedArea` checks if brushing is enabled for the chart. Restores backward compatibility. By Deepak Kumar. ([#1422](https://github.com/dc-js/dc.js/pull/1422) / [#1401](https://github.com/dc-js/dc.js/issues/1401))
+* Rename `selection` --> `brushSelection`. By Deepak Kumar.([#1423](https://github.com/dc-js/dc.js/issues/1423) / [#1398](https://github.com/dc-js/dc.js/issues/1398))
+
+## 3.0.0 alpha 12
+* Use `d3.stack` from d3v4+, transforming the data from/to the old layer/stack objects. Remove `d3v3-compat.js` ([#1375](https://github.com/dc-js/dc.js/issues/1375)
+
+## 3.0.0 alpha 11
+* xAxisPaddingUnit should be the d3 interval not the name of it ([#1320](https://github.com/dc-js/dc.js/issues/1320), [#1326](https://github.com/dc-js/dc.js/issues/1326), [#1420](https://github.com/dc-js/dc.js/issues/1420))
+
+## 3.0.0 alpha 10
+* Streamlined creation of YAxis in coordinate grid charts, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416))
+* Updated XAxis and YAxis documentation, by Deepak Kumar ([#1416](https://github.com/dc-js/dc.js/pull/1416))
+* `dc.config.defaultColors` is a mechanism to change default color scheme for all ordinal charts, by Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
+* deprecate use of default color scheme `d3.schemeCategory20c`, which has been [removed in D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50). Provide a temporary copy of the old colors for backward compatibility, but the defaults will change in DCv3.1. By Deepak Kumar ([#1409](https://github.com/dc-js/dc.js/pull/1409)).
+* more cleanup from d3v4 refactor, by Deepak Kumar. Warn before converting from `d3.scaleOrdinal` to `d3.scaleBands` ([#1414](https://github.com/dc-js/dc.js/pull/1414), [#1417](https://github.com/dc-js/dc.js/pull/1417), [#1418](https://github.com/dc-js/dc.js/pull/1418))
+
+## 3.0.0 alpha 9
+* `numberDisplay` uses [d3.easeQuad](https://github.com/d3/d3-ease/blob/master/README.md#easeQuad) instead of [quad-out-in](https://github.com/d3/d3-3.x-api-reference/blob/master/Transitions.md#d3_ease), which didn't make sense. ([#1413](https://github.com/dc-js/dc.js/pull/1413))
+* `dc.units.ordinal` is now purely a placeholder or magic value, and not called as a function. Previously dc.js would call the `xUnits` function with three arguments: the start, end, and domain array, but this was not compliant with d3 range functions. Now these functions are called with only the start and end, and `dc.units.ordinal` is detected with `===`. ([#1410](https://github.com/dc-js/dc.js/pull/1410))
+* cleanup from d3v4 refactor, by Deepak Kumar ([#1412](https://github.com/dc-js/dc.js/pull/1412))
+
+## 3.0.0 alpha 8
+* don't show brush handles on scatter plot, by Deepak Kumar ([#1407](https://github.com/dc-js/dc.js/pull/1407) / [#1406](https://github.com/dc-js/dc.js/issues/1406))
+* remove `d3.functor`. [`d3.functor` was removed in d3 version 4]( https://github.com/d3/d3/blob/master/CHANGES.md#internals); to replace it, use  `typeof x === "function" ? x : dc.utils.constant(x)` ([#1374](https://github.com/dc-js/dc.js/issues/1374))
+
+## 3.0.0 alpha 7
+* `elasticY` should look only at points within the X domain, even with `evadeDomainFilter` enabled, by Keith Dahlby ([#1367](https://github.com/dc-js/dc.js/pull/1367))
+* fixes to animated resizing of brush when chart resizes, by Deepak Kumar ([#1402](https://github.com/dc-js/dc.js/pull/1402) / [#1376](https://github.com/dc-js/dc.js/issues/1399)
+
+## 3.0.0 alpha 6
+* initialize all positions for entering objects, since d3.transition will now start them at zero if you don't ([#1400](https://github.com/dc-js/dc.js/issues/1400))
+
+## 3.0.0 alpha 5
+* d3v5 support: all examples upgraded to d3-fetch. `schemeCategory20c` is patched into `d3` temporarily, by Deepak Kumar, but see [#1403](https://github.com/dc-js/dc.js/issues/1403)
+
+## 3.0.0 alpha 4
+* switch to Karma for testing across browsers, by Deepak Kumar ([#1393](https://github.com/dc-js/dc.js/pull/1393))
+
+## 3.0.0 alpha 3
+* improved integration with `d3.zoom`, by Deepak Kumar. Since the d3v4 implementation is a lot more powerful, this eliminates a lot of custom zoom code. ([#1385](https://github.com/dc-js/dc.js/pull/1385))
+
+## 3.0.0 alpha 2
+* backward compatibility for `dc.lineChart.interpolate` and `dc.geoChoroplethChart.projection`, ny Deepak Kumar ([#1381](https://github.com/dc-js/dc.js/pull/1381) / [#1376](https://github.com/dc-js/dc.js/issues/1376), [#1382](https://github.com/dc-js/dc.js/pull/1382) / [#1379](https://github.com/dc-js/dc.js/issues/1379))
+* Fixed test cases for Edge/IE, by Deepak Kumar ([#1378](https://github.com/dc-js/dc.js/pull/1378) / [#1373](https://github.com/dc-js/dc.js/issues/1373)
+* lint ([#1372](https://github.com/dc-js/dc.js/pull/1372))
+
+## 3.0.0 alpha 1
+* first pass of d3v4 support, by Deepak Kumar ([#1363](https://github.com/dc-js/dc.js/pull/1363))
+* until more stable, releases will be github-only (no npm/cdnjs)
+* all [axis.tickArguments()](https://github.com/d3/d3-axis/blob/master/README.md#axis_tickArguments) are applied to `scale.ticks()` to produce horizontal & vertical gridlines, not just the first argument.
+
+## 3.0
+dc.js 3.0 is compatible with d3 versions 4 and 5! Thanks to Deepak Kumar for his tireless effoprt on making this finally happen.
+
+New features will only be added to 3.0; however, 2.1 will be maintained for a limited time for those who still need compatibility with d3 version 3.
+
+
 ## 2.1.10
 * Update dependencies, including crossfilter2 v1.4
 * Example of adding a vertical line to a row chart

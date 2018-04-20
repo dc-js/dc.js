@@ -336,30 +336,30 @@
     var homicideChart = dc.lineChart("#homicide-chart");
 
     function isTotalCrimeRateRecord(v) {
-        return v.type == "Total, all violations" && v.sub_type == "Rate per 100,000 population";
+        return v.type === "Total, all violations" && v.sub_type === "Rate per 100,000 population";
     }
 
     function isTotalCrimeIncidentRecord(v) {
-        return v.type == "Total, all violations" && v.sub_type == "Actual incidents";
+        return v.type === "Total, all violations" && v.sub_type === "Actual incidents";
     }
 
     function isViolentCrimeRateRecord(v) {
-        return v.type == "Total violent Criminal Code violations" && v.sub_type == "Rate per 100,000 population";
+        return v.type === "Total violent Criminal Code violations" && v.sub_type === "Rate per 100,000 population";
     }
 
     function isViolentCrimeIncidentRecord(v) {
-        return v.type == "Total violent Criminal Code violations" && v.sub_type == "Actual incidents";
+        return v.type === "Total violent Criminal Code violations" && v.sub_type === "Actual incidents";
     }
 
     function isHomicideRateRecord(v) {
-        return v.type == "Homicide" && v.sub_type == "Rate per 100,000 population";
+        return v.type === "Homicide" && v.sub_type === "Rate per 100,000 population";
     }
 
     function isHomicideIncidentRecord(v) {
-        return v.type == "Homicide" && v.sub_type == "Actual incidents";
+        return v.type === "Homicide" && v.sub_type === "Actual incidents";
     }
 
-    d3.csv("crime.csv", function(csv) {
+    d3.csv("crime.csv").then(function(csv) {
         var data = crossfilter(csv);
 
         var cities = data.dimension(function(d) {
@@ -462,7 +462,7 @@
                 .radiusValueAccessor(function(p) {
                     return p.value.avgTotalCrimeRate;
                 })
-                .r(d3.scale.linear().domain([0, 200000]))
+                .r(d3.scaleLinear().domain([0, 200000]))
                 .colors(["#ff7373","#ff4040","#ff0000","#bf3030","#a60000"])
                 .colorDomain([13, 30])
                 .colorAccessor(function(p) {
@@ -500,7 +500,7 @@
                     return d.value.nonViolentCrimeAvg;
                 })
                 .stack(crimeIncidentByYear, "Violent Crime", function(d){return d.value.violentCrimeAvg;})
-                .x(d3.scale.linear().domain([1997, 2012]))
+                .x(d3.scaleLinear().domain([1997, 2012]))
                 .renderHorizontalGridLines(true)
                 .centerBar(true)
                 .elasticY(true)
@@ -522,7 +522,7 @@
                 .valueAccessor(function(d) {
                     return d.value.homicide;
                 })
-                .x(d3.scale.linear().domain([1997, 2012]))
+                .x(d3.scaleLinear().domain([1997, 2012]))
                 .renderHorizontalGridLines(true)
                 .elasticY(true)
                 .brushOn(true)
@@ -544,7 +544,7 @@
        var ga = document.createElement('script');
        ga.type = 'text/javascript';
        ga.async = true;
-       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       ga.src = ('https:' === document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
        var s = document.getElementsByTagName('script')[0];
        s.parentNode.insertBefore(ga, s);
    })();

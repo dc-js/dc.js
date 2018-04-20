@@ -17,7 +17,7 @@
  * // create a pie chart under #chart-container2 element using chart group A
  * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -113,11 +113,11 @@ dc.pieChart = function (parent, chartGroup) {
                 .selectAll('text.' + _labelCssClass)
                 .data(pieData);
 
+            removeElements(slices, labels);
+
             createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
-
-            removeElements(slices, labels);
 
             highlightFilter();
 
@@ -223,22 +223,24 @@ dc.pieChart = function (parent, chartGroup) {
         var polyline = _g.selectAll('polyline.' + _sliceCssClass)
                 .data(pieData);
 
-        polyline
-                .enter()
-                .append('polyline')
-                .attr('class', function (d, i) {
-                    return 'pie-path _' + i + ' ' + _sliceCssClass;
-                })
-                .on('click', onClick)
-                .on('mouseover', function (d, i) {
-                    highlightSlice(i, true);
-                })
-                .on('mouseout', function (d, i) {
-                    highlightSlice(i, false);
-                });
-
         polyline.exit().remove();
-        var arc2 = d3.svg.arc()
+
+        polyline = polyline
+            .enter()
+            .append('polyline')
+            .attr('class', function (d, i) {
+                return 'pie-path _' + i + ' ' + _sliceCssClass;
+            })
+            .on('click', onClick)
+            .on('mouseover', function (d, i) {
+                highlightSlice(i, true);
+            })
+            .on('mouseout', function (d, i) {
+                highlightSlice(i, false);
+            })
+            .merge(polyline);
+
+        var arc2 = d3.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding);
         var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
@@ -413,7 +415,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs () {
-        return d3.svg.arc()
+        return d3.arc()
             .outerRadius(_radius - _externalRadiusPadding)
             .innerRadius(_innerRadius);
     }
@@ -445,7 +447,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function pieLayout () {
-        return d3.layout.pie().sort(null).value(_chart.cappedValueAccessor);
+        return d3.pie().sort(null).value(_chart.cappedValueAccessor);
     }
 
     function sliceTooSmall (d) {
@@ -553,7 +555,7 @@ dc.pieChart = function (parent, chartGroup) {
     function labelPosition (d, arc) {
         var centroid;
         if (_externalLabelRadius) {
-            centroid = d3.svg.arc()
+            centroid = d3.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .centroid(d);

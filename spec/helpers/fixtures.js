@@ -1,7 +1,7 @@
 /* jscs:disable validateQuoteMarks, maximumLineLength */
 /* jshint -W109, -W101, -W098 */
 function dateCleaner (e) {
-    e.dd = d3.time.format.iso.parse(e.date);
+    e.dd = d3.isoParse(e.date);
 }
 
 function loadDateFixture () {
@@ -79,7 +79,7 @@ function loadColorFixture2 () {
 }
 
 function loadIrisFixture () {
-    return d3.csv.parse(
+    return d3.csvParse(
         "sepal_length,sepal_width,petal_length,petal_width,species\n" +
             "5.1,3.5,1.4,0.2,setosa\n" +
             "4.9,3,1.4,0.2,setosa\n" +

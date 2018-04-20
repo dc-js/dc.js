@@ -139,7 +139,7 @@ dc.baseMixin = function (_chart) {
             }
             return _height;
         }
-        _heightCalc = d3.functor(height || _defaultHeightCalc);
+        _heightCalc = height ? (typeof height === 'function' ? height : dc.utils.constant(height)) : _defaultHeightCalc;
         _height = undefined;
         return _chart;
     };
@@ -168,7 +168,7 @@ dc.baseMixin = function (_chart) {
             }
             return _width;
         }
-        _widthCalc = d3.functor(width || _defaultWidthCalc);
+        _widthCalc = width ? (typeof width === 'function' ? width : dc.utils.constant(width)) : _defaultWidthCalc;
         _width = undefined;
         return _chart;
     };
@@ -288,7 +288,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _data.call(_chart, _group);
         }
-        _data = d3.functor(callback);
+        _data = typeof callback === 'function' ? callback : dc.utils.constant(callback);
         _chart.expireCache();
         return _chart;
     };
@@ -385,7 +385,7 @@ dc.baseMixin = function (_chart) {
      * @method select
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_select d3.select}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3.select}
      * @example
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
@@ -403,7 +403,7 @@ dc.baseMixin = function (_chart) {
      * @method selectAll
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_selectAll d3.selectAll}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll d3.selectAll}
      * @example
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
@@ -415,7 +415,7 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
-     * selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom
+     * selector](https://github.com/d3/d3-selection/blob/master/README.md#selecting-elements) specifying a dom
      * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.
@@ -688,7 +688,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.render = function () {
         _height = _width = undefined; // force recalculate
-        _listeners.preRender(_chart);
+        _listeners.call('preRender', _chart, _chart);
 
         if (_mandatoryAttributes) {
             _mandatoryAttributes.forEach(checkForMandatoryAttributes);
@@ -706,19 +706,19 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
-        _listeners.pretransition(_chart);
+        _listeners.call('pretransition', _chart, _chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
-                .each('end', function () {
-                    _listeners.renderlet(_chart);
+                .on('end', function () {
+                    _listeners.call('renderlet', _chart, _chart);
                     if (event) {
-                        _listeners[event](_chart);
+                        _listeners.call(event, _chart, _chart);
                     }
                 });
         } else {
-            _listeners.renderlet(_chart);
+            _listeners.call('renderlet', _chart, _chart);
             if (event) {
-                _listeners[event](_chart);
+                _listeners.call(event, _chart, _chart);
             }
         }
     };
@@ -738,7 +738,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.redraw = function () {
         sizeSvg();
-        _listeners.preRedraw(_chart);
+        _listeners.call('preRedraw', _chart, _chart);
 
         var result = _chart._doRedraw();
 
@@ -821,12 +821,12 @@ dc.baseMixin = function (_chart) {
 
     _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) {
-            _listeners.filtered(_chart, f);
+            _listeners.call('filtered', _chart, _chart, f);
         }
     };
 
     _chart._invokeZoomedListener = function () {
-        _listeners.zoomed(_chart);
+        _listeners.call('zoomed', _chart, _chart);
     };
 
     var _hasFilterHandler = function (filters, filter) {
@@ -1544,7 +1544,7 @@ dc.baseMixin = function (_chart) {
      * @method on
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Internals.md#dispatch_on d3.dispatch.on}
+     * @see {@link https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on d3.dispatch.on}
      * @example
      * .on('renderlet', function(chart, filter){...})
      * .on('pretransition', function(chart, filter){...})

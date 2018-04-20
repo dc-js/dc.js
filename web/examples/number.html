@@ -46,7 +46,7 @@ var inlineND = dc.numberDisplay("#test"),
     boxND    = dc.numberDisplay("#number-box"),
     meanND   = dc.numberDisplay("#mean"),
     expnND   = dc.numberDisplay("#expn");
-d3.csv("morley.csv", function(error, experiments) {
+d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {
     x.Speed = +x.Speed * 1000;

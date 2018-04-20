@@ -16,7 +16,7 @@ describe('dc.dataCount', function () {
             .dimension(data)
             .group(groupAll);
         chart.render();
-        d3.timer.flush();
+        d3.timerFlush();
         return chart;
     }
     describe('creation', function () {

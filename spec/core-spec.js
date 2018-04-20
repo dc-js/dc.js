@@ -188,12 +188,8 @@ describe('dc.core', function () {
         });
 
         describe('.ordinal', function () {
-            var result;
-            beforeEach(function () {
-                result = dc.units.ordinal('a', 'd', ['a', 'b', 'c', 'd']);
-            });
-            it('units should be based on count', function () {
-                expect(result.length).toEqual(4);
+            it('should throw - it\'s a placeholder only', function () {
+                expect(dc.units.ordinal).toThrow(new Error('dc.units.ordinal should not be called - it is a placeholder'));
             });
         });
     });

@@ -56,9 +56,9 @@ describe('dc.bubbleChart', function () {
             .radiusValueAccessor(function (p) {
                 return p.value.count;
             })
-            .x(d3.scale.linear().domain([0, 300]))
-            .y(d3.scale.linear().domain([0, 10]))
-            .r(d3.scale.linear().domain([0, 30]))
+            .x(d3.scaleLinear().domain([0, 300]))
+            .y(d3.scaleLinear().domain([0, 10]))
+            .r(d3.scaleLinear().domain([0, 30]))
             .maxBubbleRelativeSize(0.3)
             .transitionDuration(0)
             .renderLabel(true)
@@ -98,7 +98,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of bubbles', function () {
-            expect(chart.selectAll('circle.bubble')[0].length).toBe(2);
+            expect(chart.selectAll('circle.bubble').nodes().length).toBe(2);
         });
 
         it('calculates right cx for each bubble', function () {
@@ -142,7 +142,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of labels', function () {
-            expect(chart.selectAll('g.node text')[0].length).toBe(2);
+            expect(chart.selectAll('g.node text').nodes().length).toBe(2);
         });
 
         it('creates correct label for each bubble', function () {
@@ -157,7 +157,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of titles', function () {
-            expect(chart.selectAll('g.node title')[0].length).toBe(2);
+            expect(chart.selectAll('g.node title').nodes().length).toBe(2);
         });
 
         it('creates correct title for each bubble', function () {
@@ -189,11 +189,11 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of labels', function () {
-            expect(chart.selectAll('g.node text')[0].length).toBe(0);
+            expect(chart.selectAll('g.node text').nodes().length).toBe(0);
         });
 
         it('generates right number of titles', function () {
-            expect(chart.selectAll('g.node title')[0].length).toBe(0);
+            expect(chart.selectAll('g.node title').nodes().length).toBe(0);
         });
     });
 
@@ -375,7 +375,7 @@ describe('dc.bubbleChart', function () {
         });
 
         it('generates right number of bubbles', function () {
-            expect(chart.selectAll('circle.bubble')[0].length).toBe(10);
+            expect(chart.selectAll('circle.bubble').nodes().length).toBe(10);
         });
 
         it('auto calculates x range based on width', function () {
@@ -415,8 +415,8 @@ describe('dc.bubbleChart', function () {
                 .valueAccessor(function (kv) {
                     return 0;
                 })
-                .x(d3.scale.log().domain([1, 300]))
-                .y(d3.scale.log().domain([1, 10]))
+                .x(d3.scaleLog().domain([1, 300]))
+                .y(d3.scaleLog().domain([1, 10]))
                 .elasticX(false)
                 .elasticY(false);
             chart.render();
@@ -431,13 +431,13 @@ describe('dc.bubbleChart', function () {
 
     describe('with a date-based scale', function () {
         beforeEach(function () {
-            dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+            dimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
             group = dimension.group();
 
             chart
                 .dimension(dimension)
                 .group(group)
-                .x(d3.time.scale.utc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
+                .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
                 .elasticX(true)
                 .elasticY(true)
                 .keyAccessor(function (kv) {
@@ -449,7 +449,7 @@ describe('dc.bubbleChart', function () {
                 .radiusValueAccessor(function (kv) {
                     return kv.value;
                 })
-                .colors(d3.scale.ordinal().range(['#a60000', '#ff0000', '#ff4040', '#ff7373', '#67e667', '#39e639', '#00cc00']))
+                .colors(d3.scaleOrdinal().range(['#a60000', '#ff0000', '#ff4040', '#ff7373', '#67e667', '#39e639', '#00cc00']))
                 .colorAccessor(function (kv) {
                     return kv.key;
                 })
@@ -471,7 +471,8 @@ describe('dc.bubbleChart', function () {
 
         describe('with 10 day padding', function () {
             beforeEach(function () {
-                chart.xAxisPadding(10)
+                chart.xAxisPaddingUnit(d3.utcDay)
+                    .xAxisPadding(10)
                     .render();
             });
             it('should stretch the domain appropriately', function () {
@@ -481,7 +482,7 @@ describe('dc.bubbleChart', function () {
 
         describe('with 2 month padding', function () {
             beforeEach(function () {
-                chart.xAxisPaddingUnit('month')
+                chart.xAxisPaddingUnit(d3.utcMonth)
                     .xAxisPadding(2)
                     .render();
             });
@@ -587,15 +588,15 @@ describe('dc.bubbleChart', function () {
                     .transitionDuration(0)
                     .width(400)
                     .height(400)
-                    .x(d3.scale.linear()).xAxisPadding(0.5)
-                    .y(d3.scale.linear()).yAxisPadding(0.5)
+                    .x(d3.scaleLinear()).xAxisPadding(0.5)
+                    .y(d3.scaleLinear()).yAxisPadding(0.5)
                     .elasticX(true)
                     .elasticY(true)
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
                     .radiusValueAccessor(function (kv) { return kv.value.total; })
                     .elasticRadius(true)
-                    .colors(d3.scale.ordinal()
+                    .colors(d3.scaleOrdinal()
                             .domain(species.concat('none'))
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
                     .colorAccessor(function (d) {
@@ -616,7 +617,7 @@ describe('dc.bubbleChart', function () {
                     .xBorderRadius(15).yBorderRadius(15)
                     .keyAccessor(key_part(0))
                     .valueAccessor(key_part(1))
-                    .colors(d3.scale.ordinal()
+                    .colors(d3.scaleOrdinal()
                             .domain(species.concat('none'))
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
                     .colorAccessor(function (d) {
@@ -659,14 +660,14 @@ describe('dc.bubbleChart', function () {
         }
 
         function testBubbleRadiiCol3 (chart) {
-            var bubbles = chart.selectAll('circle.bubble')[0];
+            var bubbles = chart.selectAll('circle.bubble').nodes();
             var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34.5, 16.1, 0, 0, 16.1, 59.1, 34.5, 16.1, 96, 0, 22.2, 0, 0, 0, 0];
             bubbles.forEach(function (b, i) {
                 expect(+d3.select(b).attr('r')).toBeWithinDelta(expected[i], 0.1);
             });
         }
         function testBubbleTitlesCol3 (chart) {
-            var titles = chart.selectAll('g.node title')[0];
+            var titles = chart.selectAll('g.node title').nodes();
             var expected = [
                 {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
                 {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
@@ -687,7 +688,7 @@ describe('dc.bubbleChart', function () {
             });
         }
         function testBubbleLabelsCol3 (chart) {
-            var labels = chart.selectAll('g.node text')[0];
+            var labels = chart.selectAll('g.node text').nodes();
             var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 8, 4, 1, 14, 0, 2, 0, 0, 0, 0];
             labels.forEach(function (l, i) {
                 expect(+d3.select(l).text()).toBe(expected[i]);
@@ -695,9 +696,9 @@ describe('dc.bubbleChart', function () {
         }
         describe('column filtering with straight crossfilter', function () {
             beforeEach(function () {
-                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
+                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('updates bubble radii correctly', function () {
                 testBubbleRadiiCol3(chart);
@@ -713,9 +714,9 @@ describe('dc.bubbleChart', function () {
             beforeEach(function () {
                 chart.group(clone_group(sepalGroup));
                 chart.render();
-                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text')[0][3]);
+                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
-                d3.timer.flush();
+                d3.timerFlush();
             });
             it('updates bubble radii correctly', function () {
                 testBubbleRadiiCol3(chart);

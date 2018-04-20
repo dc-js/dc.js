@@ -2,7 +2,7 @@ function remove_empty_bins(source_group) {
     return {
         all:function () {
             return source_group.all().filter(function(d) {
-                return d.value != 0;
+                return d.value !== 0;
             });
         }
     };
@@ -14,10 +14,7 @@ function ordinal_filter(bins) {
 }
 
 function startOrdinal(initChart) {
-    d3.json('../examples/fruits.json', function(error, counts) {
-        if(error)
-            throw new Error(error);
-
+    d3.json('../examples/fruits.json').then(function(counts) {
         var ndx            = crossfilter(counts),
             fruitDimension = ndx.dimension(function(d) {return d.name;}),
             sumGroup       = fruitDimension.group().reduceSum(function(d) {return d.cnt;}),

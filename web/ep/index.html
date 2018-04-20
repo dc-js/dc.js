@@ -26,12 +26,12 @@ function grid (selector,data) {
 
   function adjust (data) {
     //calculate age
-    var dateFormat = d3.time.format("%Y-%m-%d");
+    var dateParse = d3.timeParse("%Y-%m-%d");
     var now = Date.now();
     var birthdate=null;
 
     data.forEach(function (e) {
-      birthdate = dateFormat.parse(e.birthdate);
+      birthdate = dateParse(e.birthdate);
       e.age= ~~((now - birthdate) / (31557600000));// 24 * 3600 * 365.25 * 1000
     });
   }
@@ -54,12 +54,12 @@ function grid (selector,data) {
       });
 
   var ageGroup   = age.group().reduceSum(function(d) {   return 1; });
-    //.x(d3.scale.ordinal())
+
   chart_age
     .width(444)
     .height(200)
     .margins({top: 0, right: 0, bottom: 95, left: 30})
-    .x(d3.scale.linear().domain([20,100]))
+    .x(d3.scaleLinear().domain([20,100]))
     .brushOn(true)
     .renderArea(true)
     .elasticY(true)
@@ -112,7 +112,7 @@ function grid (selector,data) {
     .width(200)
     .height(200)
     .dimension(group)
-    .colors(d3.scale.category10())
+    .colors(d3.scaleOrdinal(d3.schemeCategory10))
     .group(groupGroup)
     .on('renderlet', function (chart) {
         });
@@ -123,7 +123,7 @@ function grid (selector,data) {
     .outerPadding(0)
     .gap(1)
     .margins({top: 0, right: 0, bottom: 95, left: 30})
-    .x(d3.scale.ordinal())
+    .x(d3.scaleBand())
     .xUnits(dc.units.ordinal)
     .brushOn(false)
     .elasticY(true)
@@ -188,12 +188,11 @@ href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
 </div>
 
 <script>
-$(function() {
-    d3.csv("mep.csv", function(d) {return d;}
-      ,function(error, rows) {
-      grid ("#ep2014list",rows);
-      });      
-    });      
+  $(function () {
+    d3.csv("mep.csv").then(function (rows) {
+      grid("#ep2014list", rows);
+    });
+  });
 </script>
 
 <style>

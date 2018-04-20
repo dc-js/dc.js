@@ -32,7 +32,7 @@ var data = "x,y,z\n" +
     "8,6,14\n"+
     "1,4,9\n"+
     "8,8,12\n";
-var data = d3.csv.parse(data);
+var data = d3.csvParse(data);
 
 data.forEach(function (x) {
     x.x = +x.x;
@@ -52,7 +52,7 @@ var ndx = crossfilter(data),
 
 chart1.width(300)
     .height(300)
-    .x(d3.scale.linear().domain([0, 20]))
+    .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("y")
     .xAxisLabel("x")
     .clipPadding(10)
@@ -62,7 +62,7 @@ chart1.width(300)
 
 chart2.width(300)
     .height(300)
-    .x(d3.scale.linear().domain([0, 20]))
+    .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("z")
     .xAxisLabel("y")
     .clipPadding(10)

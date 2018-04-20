@@ -55,7 +55,7 @@
         .dimension(bookDimension)
         .group(bookscoresGroup)
         .elasticY(true)
-        .x(d3.scale.ordinal())
+        .x(d3.scaleBand())
         .xUnits(dc.units.ordinal)
         .colors(["orange"])
         .yAxis().ticks(5);

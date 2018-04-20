@@ -12,7 +12,6 @@
 <script type="text/javascript" src="header.js"></script>
 <div id="test_composed"></div>
 
-<script type="text/javascript" src="../js/queue.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -20,11 +19,9 @@
 
 var composite = dc.compositeChart("#test_composed");
 
-var q = queue()
-    .defer(d3.csv, "morley.csv")
-    .defer(d3.csv, "morley2.csv");
-
-q.await(function(error, exp1, exp2) {
+Promise.all([d3.csv("morley.csv"), d3.csv("morley2.csv")]).then(function(results) {
+    var exp1 = results[0],
+        exp2 = results[1];
 
     var ndx = crossfilter();
     ndx.add(exp1.map(function(d) {
@@ -41,7 +38,7 @@ q.await(function(error, exp1, exp2) {
     composite
         .width(768)
         .height(480)
-        .x(d3.scale.linear().domain([0,20]))
+        .x(d3.scaleLinear().domain([0,20]))
         .yAxisLabel("The Y Axis")
         .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
         .renderHorizontalGridLines(true)

@@ -25,14 +25,16 @@
     var heatmapChart = dc.heatMap("#heatmap", chartGroup);
     var barChart = dc.barChart("#barchart", chartGroup);
 
-    d3.csv("../ndx.csv", function(error, data) {
+    d3.csv("../ndx.csv").then(function(data) {
 
-        var dateFormat = d3.time.format("%m/%d/%Y");
+        var dateFormatSpecifier = "%m/%d/%Y";
+        var dateFormat = d3.timeFormat(dateFormatSpecifier);
+        var dateFormatParser = d3.timeParse(dateFormatSpecifier);
 
         data.forEach(function (d) {
-            d.dd = dateFormat.parse(d.date);
-            d.month = d3.time.month(d.dd).getMonth(); // pre-calculate month for better performance
-            d.year = d3.time.year(d.dd).getFullYear();
+            d.dd = dateFormatParser(d.date);
+            d.month = d3.timeMonth(d.dd).getMonth(); // pre-calculate month for better performance
+            d.year = d3.timeYear(d.dd).getFullYear();
             d.close = +d.close; // coerce to number
             d.open = +d.open;
         });
@@ -68,7 +70,7 @@
                 }
             );
 
-        var heatColorMapping = d3.scale.linear()
+        var heatColorMapping = d3.scaleLinear()
             .domain([-23, 0, 23])
             .range(["red", "#e5e5e5", "green"]);
 
@@ -113,8 +115,8 @@
                 .group(percentageGainByMonthArrayGroup)
                 .width(12 * 80 + 80)
                 .height(480)
-                .y(d3.scale.linear().domain([-10.0,100.0]))
-                .x(d3.scale.linear().domain([-0.5,11.5]))
+                .y(d3.scaleLinear().domain([-10.0,100.0]))
+                .x(d3.scaleLinear().domain([-0.5,11.5]))
                 .elasticY(true)
                 .centerBar(true);
         barChart.render();

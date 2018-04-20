@@ -3,7 +3,7 @@
  * filtered) in a good old tabular fashion.
  *
  * Note: Unlike other charts, the data table (and data grid chart) use the {@link dc.dataTable#group group} attribute as a
- * keying function for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data
+ * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
  * together in groups.  Do not pass in a crossfilter group as this will not work.
  *
  * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
@@ -19,7 +19,7 @@
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -110,25 +110,27 @@ dc.dataTable = function (parent, chartGroup) {
         if (!bAllFunctions) {
             // ensure one thead
             var thead = _chart.selectAll('thead').data([0]);
-            thead.enter().append('thead');
             thead.exit().remove();
+            thead = thead.enter()
+                    .append('thead')
+                .merge(thead);
 
             // with one tr
             var headrow = thead.selectAll('tr').data([0]);
-            headrow.enter().append('tr');
             headrow.exit().remove();
+            headrow = headrow.enter()
+                    .append('tr')
+                .merge(headrow);
 
             // with a th for each column
             var headcols = headrow.selectAll('th')
                 .data(_columns);
-            headcols.enter().append('th');
             headcols.exit().remove();
-
-            headcols
-                .attr('class', HEAD_CSS_CLASS)
+            headcols.enter().append('th')
+                .merge(headcols)
+                    .attr('class', HEAD_CSS_CLASS)
                     .html(function (d) {
                         return (_chart._doColumnHeaderFormat(d));
-
                     });
         }
 
@@ -204,7 +206,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set the group function for the data table. The group function takes a data row and
-     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
      * to split rows into groups.
      *
      * Do not pass in a crossfilter group as this will not work.
@@ -388,8 +390,8 @@ dc.dataTable = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataTable
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]

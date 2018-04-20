@@ -57,10 +57,7 @@
             aggregate = find_query('aggregate') || 'average';
 
         var chart = dc.barChart("#test"), counter = dc.numberDisplay('#counter');
-        d3.csv(data, function(error, posts) {
-            if(error)
-                throw new Error(error);
-
+        d3.csv(data).then(function(posts) {
             posts.forEach(function(d) {
                 d[date_col] = new Date(d[date_col]);
                 d[val_col] = +d[val_col];
@@ -69,10 +66,10 @@
             var ndx = crossfilter(posts), dateDim, postsGroup;
 
             var intervals = {
-                Days: d3.time.day,
-                Weeks: d3.time.week,
-                Months: d3.time.month,
-                Years: d3.time.year
+                Days: d3.timeDay,
+                Weeks: d3.timeWeek,
+                Months: d3.timeMonth,
+                Years: d3.timeYear
             };
             var defint = find_query('interval') || 'Weeks';
             d3.select('#interval').selectAll('option')
@@ -85,7 +82,7 @@
                     dateDim.dispose();
                     group.dispose();
                 }
-                var interval = intervals[d3.select('#interval')[0][0].value];
+                var interval = intervals[d3.select('#interval').nodes()[0].value];
                 dateDim = ndx.dimension(function(d) {return interval(d[date_col]);});
                 chart.xUnits(interval.range);
                 group = dateDim
@@ -127,8 +124,8 @@
             chart
                 .width(768)
                 .height(480)
-                .x(d3.time.scale())
-                .xUnits(d3.time.weeks)
+                .x(d3.scaleTime())
+                .xUnits(d3.timeWeeks)
                 .margins({left: 50, top: 0, right: 0, bottom: 20})
                 .elasticY(true)
                 .clipPadding(10);
@@ -139,7 +136,7 @@
             function calc_domain(chart) {
                 var min = d3.min(chart.group().all(), function(kv) { return kv.key; }),
                     max = d3.max(chart.group().all(), function(kv) { return kv.key; });
-                max = d3.time.month.offset(max, 1);
+                max = d3.timeMonth.offset(max, 1);
                 chart.x().domain([min, max]);
             }
             chart.on('preRender', calc_domain);

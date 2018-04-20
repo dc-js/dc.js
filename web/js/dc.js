@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.10
+ *  dc 3.0.0-beta.1
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.10
+ * @version 3.0.0-beta.1
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.10',
+    version: '3.0.0-beta.1',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -340,7 +340,7 @@ dc.afterTransition = function (transition, callback) {
         var n = 0;
         transition
             .each(function () { ++n; })
-            .each('end', function () {
+            .on('end', function () {
                 if (!--n) {
                     callback.call(transition);
                 }
@@ -374,26 +374,25 @@ dc.units.integers = function (start, end) {
 };
 
 /**
- * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
- * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal} to
- * {@link dc.coordinateGridMixin#x .x}.
- * It just returns the domain passed to it, which for ordinal charts is an array of all values.
+ * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of a
+ * coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
+ * combination with passing
+ * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
+ * to {@link dc.coordinateGridMixin#x .x}.
+ *
+ * As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
+ * function is not called.
  * @method ordinal
  * @memberof dc.units
- * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal}
+ * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
  * chart.xUnits(dc.units.ordinal)
- *      .x(d3.scale.ordinal())
- * @param {*} start
- * @param {*} end
- * @param {Array<String>} domain
- * @returns {Array<String>}
+ *      .x(d3.scaleOrdinal())
  */
-dc.units.ordinal = function (start, end, domain) {
-    return domain;
+dc.units.ordinal = function () {
+    throw new Error('dc.units.ordinal should not be called - it is a placeholder');
 };
 
 /**
@@ -496,9 +495,9 @@ dc.errors.BadArgumentException.prototype.constructor = dc.errors.BadArgumentExce
  * @name dateFormat
  * @memberof dc
  * @type {Function}
- * @default d3.time.format('%m/%d/%Y')
+ * @default d3.timeFormat('%m/%d/%Y')
  */
-dc.dateFormat = d3.time.format('%m/%d/%Y');
+dc.dateFormat = d3.timeFormat('%m/%d/%Y');
 
 /**
  * @namespace printers
@@ -613,19 +612,31 @@ dc.utils.printSingleValue = function (filter) {
 };
 dc.utils.printSingleValue.fformat = d3.format('.2f');
 
+// convert 'day' to 'timeDay' and similar
+dc.utils.toTimeFunc = function (t) {
+    return 'time' + t.charAt(0).toUpperCase() + t.slice(1);
+};
+
 /**
  * Arbitrary add one value to another.
+ *
+ * If the value l is of type Date, adds r units to it. t becomes the unit.
+ * For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
+ *
+ * If l is of type numeric, t is ignored. In this case if r is of type string,
+ * it is assumed to be percentage (whether or not it includes %). For example
+ * dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.
+ *
+ * They also generate strange results if l is a string.
  * @method add
  * @memberof dc.utils
- * @todo
- * These assume than any string r is a percentage (whether or not it includes %).
- * They also generate strange results if l is a string.
- * @param {String|Date|Number} l the value to modify
- * @param {Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, the
- * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
- * the `d3.time` namespace
- * @returns {String|Date|Number}
+ * @param {Date|Number} l the value to modify
+ * @param {String|Number} r the amount by which to modify the value
+ * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+ * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
+ * @returns {Date|Number}
  */
 dc.utils.add = function (l, r, t) {
     if (typeof r === 'string') {
@@ -639,8 +650,11 @@ dc.utils.add = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() + r);
         }
-        t = t || 'day';
-        return d3.time[t].offset(l, r);
+        t = t || d3.timeDay;
+        if (typeof t !== 'function') {
+            t = d3[dc.utils.toTimeFunc(t)];
+        }
+        return t.offset(l, r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -651,17 +665,24 @@ dc.utils.add = function (l, r, t) {
 
 /**
  * Arbitrary subtract one value from another.
+ *
+ * If the value l is of type Date, subtracts r units from it. t becomes the unit.
+ * For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
+ *
+ * If l is of type numeric, t is ignored. In this case if r is of type string,
+ * it is assumed to be percentage (whether or not it includes %). For example
+ * dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.
+ *
+ * They also generate strange results if l is a string.
  * @method subtract
  * @memberof dc.utils
- * @todo
- * These assume than any string r is a percentage (whether or not it includes %).
- * They also generate strange results if l is a string.
- * @param {String|Date|Number} l the value to modify
- * @param {Number} r the amount by which to modify the value
- * @param {String} [t] if `l` is a `Date`, the
- * [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in
- * the `d3.time` namespace
- * @returns {String|Date|Number}
+ * @param {Date|Number} l the value to modify
+ * @param {String|Number} r the amount by which to modify the value
+ * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+ * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+ * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
+ * @returns {Date|Number}
  */
 dc.utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {
@@ -675,8 +696,11 @@ dc.utils.subtract = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() - r);
         }
-        t = t || 'day';
-        return d3.time[t].offset(l, -r);
+        t = t || d3.timeDay;
+        if (typeof t !== 'function') {
+            t = d3[dc.utils.toTimeFunc(t)];
+        }
+        return t.offset(l, -r);
     } else if (typeof r === 'string') {
         var percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
@@ -743,6 +767,23 @@ dc.utils.clamp = function (val, min, max) {
 };
 
 /**
+ * Given `x`, return a function that always returns `x`.
+ *
+ * {@link https://github.com/d3/d3/blob/master/CHANGES.md#internals `d3.functor` was removed in d3 version 4}.
+ * This function helps to implement the replacement,
+ * `typeof x === "function" ? x : dc.utils.constant(x)`
+ * @method constant
+ * @memberof dc.utils
+ * @param {any} x
+ * @returns {Function}
+ */
+dc.utils.constant = function (x) {
+    return function () {
+        return x;
+    };
+};
+
+/**
  * Using a simple static counter, provide a unique integer id.
  * @method uniqueId
  * @memberof dc.utils
@@ -791,46 +832,199 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
  */
 dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
 
-dc.logger = {};
-
-dc.logger.enableDebugLog = false;
-
-dc.logger.warn = function (msg) {
-    if (console) {
-        if (console.warn) {
-            console.warn(msg);
-        } else if (console.log) {
-            console.log(msg);
-        }
+/**
+ * Return true if both arrays are equal, if both array are null these are considered equal
+ * @method arraysEqual
+ * @memberof dc.utils
+ * @param {Array|null} a1
+ * @param {Array|null} a2
+ * @returns {Boolean}
+ */
+dc.utils.arraysEqual = function (a1, a2) {
+    if (!a1 || !a2) {
+        return a1 === a2;
     }
 
-    return dc.logger;
+    return a1.length === a2.length &&
+        // If elements are not integers/strings, we hope that it will match because of toString
+        // Test cases cover dates as well.
+        a1.every(function (elem, i) {
+            return elem === a2[i] || elem.toString() === a2[i].toString();
+        });
 };
 
-dc.logger.debug = function (msg) {
-    if (dc.logger.enableDebugLog && console) {
-        if (console.debug) {
-            console.debug(msg);
-        } else if (console.log) {
-            console.log(msg);
+/**
+ * Provides basis logging and deprecation utilities
+ * @class logger
+ * @memberof dc
+ * @returns {dc.logger}
+ */
+dc.logger = (function () {
+
+    var _logger = {};
+
+    /**
+     * Enable debug level logging. Set to `false` by default.
+     * @name enableDebugLog
+     * @memberof dc.logger
+     * @instance
+     */
+    _logger.enableDebugLog = false;
+
+    /**
+     * Put a warning message to console
+     * @method warn
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * dc.logger.warn('Invalid use of .tension on CurveLinear');
+     * @param {String} [msg]
+     * @returns {dc.logger}
+     */
+    _logger.warn = function (msg) {
+        if (console) {
+            if (console.warn) {
+                console.warn(msg);
+            } else if (console.log) {
+                console.log(msg);
+            }
         }
-    }
 
-    return dc.logger;
-};
+        return _logger;
+    };
 
-dc.logger.deprecate = function (fn, msg) {
-    // Allow logging of deprecation
-    var warned = false;
-    function deprecated () {
-        if (!warned) {
+    var _alreadyWarned = {};
+
+    /**
+     * Put a warning message to console. It will warn only on unique messages.
+     * @method warnOnce
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * dc.logger.warnOnce('Invalid use of .tension on CurveLinear');
+     * @param {String} [msg]
+     * @returns {dc.logger}
+     */
+    _logger.warnOnce = function (msg) {
+        if (!_alreadyWarned[msg]) {
+            _alreadyWarned[msg] = true;
+
             dc.logger.warn(msg);
-            warned = true;
         }
-        return fn.apply(this, arguments);
-    }
-    return deprecated;
-};
+
+        return _logger;
+    };
+
+    /**
+     * Put a debug message to console. It is controlled by `dc.logger.enableDebugLog`
+     * @method debug
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * dc.logger.debug('Total number of slices: ' + numSlices);
+     * @param {String} [msg]
+     * @returns {dc.logger}
+     */
+    _logger.debug = function (msg) {
+        if (_logger.enableDebugLog && console) {
+            if (console.debug) {
+                console.debug(msg);
+            } else if (console.log) {
+                console.log(msg);
+            }
+        }
+
+        return _logger;
+    };
+
+    /**
+     * Use it to deprecate a function. It will return a wrapped version of the function, which will
+     * will issue a warning when invoked. For each function, warning will be issued only once.
+     *
+     * @method deprecate
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * _chart.interpolate = dc.logger.deprecate(function (interpolate) {
+     *    if (!arguments.length) {
+     *        return _interpolate;
+     *    }
+     *    _interpolate = interpolate;
+     *    return _chart;
+     * }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+     * @param {Function} [fn]
+     * @param {String} [msg]
+     * @returns {Function}
+     */
+    _logger.deprecate = function (fn, msg) {
+        // Allow logging of deprecation
+        var warned = false;
+        function deprecated () {
+            if (!warned) {
+                _logger.warn(msg);
+                warned = true;
+            }
+            return fn.apply(this, arguments);
+        }
+        return deprecated;
+    };
+
+    return _logger;
+})();
+
+/**
+ * General configuration
+ *
+ * @class config
+ * @memberof dc
+ * @returns {dc.config}
+ */
+dc.config = (function () {
+    var _config = {};
+
+    // D3v5 has removed schemeCategory20c, copied here for backward compatibility
+    var _schemeCategory20c = [
+        '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
+        '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
+        '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
+        '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
+
+    var _defaultColors = _schemeCategory20c;
+
+    /**
+     * Set the default color scheme for ordinal charts. Changing it will impact all ordinal charts.
+     *
+     * By default it is set to a copy of
+     * `d3.schemeCategory20c` for backward compatibility. This color scheme has been
+     * removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
+     * In DC 3.1 release it will change to a more appropriate default.
+     *
+     * @example
+     * dc.config.defaultColors(d3.schemeSet1)
+     * @method defaultColors
+     * @memberof dc.config
+     * @instance
+     * @param {Array} [colors]
+     * @returns {Array|dc.config}
+     */
+    _config.defaultColors = function (colors) {
+        if (!arguments.length) {
+            // Issue warning if it uses _schemeCategory20c
+            if (_defaultColors === _schemeCategory20c) {
+                dc.logger.warnOnce('You are using d3.schemeCategory20c, which has been removed in D3v5. ' +
+                    'See the explanation at https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50. ' +
+                    'DC is using it for backward compatibility, however it will be changed in DCv3.1. ' +
+                    'You can change it by calling dc.config.defaultColors(newScheme). ' +
+                    'See https://github.com/d3/d3-scale-chromatic for some alternatives.');
+            }
+            return _defaultColors;
+        }
+        _defaultColors = colors;
+        return _config;
+    };
+
+    return _config;
+})();
 
 dc.events = {
     current: null
@@ -1133,7 +1327,7 @@ dc.baseMixin = function (_chart) {
             }
             return _height;
         }
-        _heightCalc = d3.functor(height || _defaultHeightCalc);
+        _heightCalc = height ? (typeof height === 'function' ? height : dc.utils.constant(height)) : _defaultHeightCalc;
         _height = undefined;
         return _chart;
     };
@@ -1162,7 +1356,7 @@ dc.baseMixin = function (_chart) {
             }
             return _width;
         }
-        _widthCalc = d3.functor(width || _defaultWidthCalc);
+        _widthCalc = width ? (typeof width === 'function' ? width : dc.utils.constant(width)) : _defaultWidthCalc;
         _width = undefined;
         return _chart;
     };
@@ -1282,7 +1476,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _data.call(_chart, _group);
         }
-        _data = d3.functor(callback);
+        _data = typeof callback === 'function' ? callback : dc.utils.constant(callback);
         _chart.expireCache();
         return _chart;
     };
@@ -1379,7 +1573,7 @@ dc.baseMixin = function (_chart) {
      * @method select
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_select d3.select}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3.select}
      * @example
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
@@ -1397,7 +1591,7 @@ dc.baseMixin = function (_chart) {
      * @method selectAll
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_selectAll d3.selectAll}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll d3.selectAll}
      * @example
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
@@ -1409,7 +1603,7 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
-     * selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom
+     * selector](https://github.com/d3/d3-selection/blob/master/README.md#selecting-elements) specifying a dom
      * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.
@@ -1682,7 +1876,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.render = function () {
         _height = _width = undefined; // force recalculate
-        _listeners.preRender(_chart);
+        _listeners.call('preRender', _chart, _chart);
 
         if (_mandatoryAttributes) {
             _mandatoryAttributes.forEach(checkForMandatoryAttributes);
@@ -1700,19 +1894,19 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
-        _listeners.pretransition(_chart);
+        _listeners.call('pretransition', _chart, _chart);
         if (_chart.transitionDuration() > 0 && _svg) {
             _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
-                .each('end', function () {
-                    _listeners.renderlet(_chart);
+                .on('end', function () {
+                    _listeners.call('renderlet', _chart, _chart);
                     if (event) {
-                        _listeners[event](_chart);
+                        _listeners.call(event, _chart, _chart);
                     }
                 });
         } else {
-            _listeners.renderlet(_chart);
+            _listeners.call('renderlet', _chart, _chart);
             if (event) {
-                _listeners[event](_chart);
+                _listeners.call(event, _chart, _chart);
             }
         }
     };
@@ -1732,7 +1926,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.redraw = function () {
         sizeSvg();
-        _listeners.preRedraw(_chart);
+        _listeners.call('preRedraw', _chart, _chart);
 
         var result = _chart._doRedraw();
 
@@ -1815,12 +2009,12 @@ dc.baseMixin = function (_chart) {
 
     _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) {
-            _listeners.filtered(_chart, f);
+            _listeners.call('filtered', _chart, _chart, f);
         }
     };
 
     _chart._invokeZoomedListener = function () {
-        _listeners.zoomed(_chart);
+        _listeners.call('zoomed', _chart, _chart);
     };
 
     var _hasFilterHandler = function (filters, filter) {
@@ -2538,7 +2732,7 @@ dc.baseMixin = function (_chart) {
      * @method on
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Internals.md#dispatch_on d3.dispatch.on}
+     * @see {@link https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on d3.dispatch.on}
      * @example
      * .on('renderlet', function(chart, filter){...})
      * .on('pretransition', function(chart, filter){...})
@@ -2614,7 +2808,7 @@ dc.marginMixin = function (_chart) {
  * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
-    var _colors = d3.scale.category20c();
+    var _colors = d3.scaleOrdinal(dc.config.defaultColors());
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
@@ -2625,17 +2819,17 @@ dc.colorMixin = function (_chart) {
      * @method colors
      * @memberof dc.colorMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
      * // alternate categorical scale
      * chart.colors(d3.scale.category20b());
      * // ordinal scale
-     * chart.colors(d3.scale.ordinal().range(['red','green','blue']));
+     * chart.colors(d3.scaleOrdinal().range(['red','green','blue']));
      * // convenience method, the same as above
      * chart.ordinalColors(['red','green','blue']);
      * // set a linear scale
      * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
-     * @param {d3.scale} [colorScale=d3.scale.category20c()]
+     * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
      * @returns {d3.scale|dc.colorMixin}
      */
     _chart.colors = function (colorScale) {
@@ -2643,16 +2837,16 @@ dc.colorMixin = function (_chart) {
             return _colors;
         }
         if (colorScale instanceof Array) {
-            _colors = d3.scale.quantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
+            _colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
         } else {
-            _colors = d3.functor(colorScale);
+            _colors = typeof colorScale === 'function' ? colorScale : dc.utils.constant(colorScale);
         }
         return _chart;
     };
 
     /**
      * Convenience method to set the color scale to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal d3.scale.ordinal} with
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal} with
      * range `r`.
      * @method ordinalColors
      * @memberof dc.colorMixin
@@ -2661,7 +2855,7 @@ dc.colorMixin = function (_chart) {
      * @returns {dc.colorMixin}
      */
     _chart.ordinalColors = function (r) {
-        return _chart.colors(d3.scale.ordinal().range(r));
+        return _chart.colors(d3.scaleOrdinal().range(r));
     };
 
     /**
@@ -2673,7 +2867,7 @@ dc.colorMixin = function (_chart) {
      * @returns {dc.colorMixin}
      */
     _chart.linearColors = function (r) {
-        return _chart.colors(d3.scale.linear()
+        return _chart.colors(d3.scaleLinear()
                              .range(r)
                              .interpolate(d3.interpolateHcl));
     };
@@ -2796,49 +2990,52 @@ dc.coordinateGridMixin = function (_chart) {
     var VERTICAL_CLASS = 'vertical';
     var Y_AXIS_LABEL_CLASS = 'y-axis-label';
     var X_AXIS_LABEL_CLASS = 'x-axis-label';
+    var CUSTOM_BRUSH_HANDLE_CLASS = 'custom-brush-handle';
     var DEFAULT_AXIS_LABEL_PADDING = 12;
 
     _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)));
 
-    _chart.colors(d3.scale.category10());
+    _chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
     _chart._mandatoryAttributes().push('x');
     var _parent;
     var _g;
     var _chartBodyG;
 
     var _x;
+    var _origX; // Will hold orginial scale in case of zoom
     var _xOriginalDomain;
-    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxis = d3.axisBottom();
     var _xUnits = dc.units.integers;
     var _xAxisPadding = 0;
-    var _xAxisPaddingUnit = 'day';
+    var _xAxisPaddingUnit = d3.timeDay;
     var _xElasticity = false;
     var _xAxisLabel;
     var _xAxisLabelPadding = 0;
     var _lastXDomain;
 
     var _y;
-    var _yAxis = d3.svg.axis().orient('left');
+    var _yAxis = null;
     var _yAxisPadding = 0;
     var _yElasticity = false;
     var _yAxisLabel;
     var _yAxisLabelPadding = 0;
 
-    var _brush = d3.svg.brush();
+    var _brush = d3.brushX();
+    var _gBrush;
     var _brushOn = true;
     var _round;
 
     var _renderHorizontalGridLine = false;
     var _renderVerticalGridLine = false;
 
-    var _refocused = false, _resizing = false;
+    var _resizing = false;
     var _unitCount;
 
     var _zoomScale = [1, Infinity];
     var _zoomOutRestrict = true;
 
-    var _zoom = d3.behavior.zoom().on('zoom', zoomHandler);
-    var _nullZoom = d3.behavior.zoom().on('zoom', null);
+    var _zoom = d3.zoom().on('zoom', onZoom);
+    var _nullZoom = d3.zoom().on('zoom', null);
     var _hasBeenMouseZoomable = false;
 
     var _rangeChart;
@@ -2926,7 +3123,6 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _zoomOutRestrict;
         }
-        _zoomScale[0] = zoomOutRestrict ? 1 : 0;
         _zoomOutRestrict = zoomOutRestrict;
         return _chart;
     };
@@ -3005,17 +3201,17 @@ dc.coordinateGridMixin = function (_chart) {
      * **mandatory**
      *
      * Get or set the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale} or
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md ordinal scale}.
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale} or
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales ordinal scale}
      * @method x
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
      * // set x to a linear scale
-     * chart.x(d3.scale.linear().domain([-2500, 2500]))
+     * chart.x(d3.scaleLinear().domain([-2500, 2500]))
      * // set x to a time scale to generate histogram
-     * chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+     * chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
      * @param {d3.scale} [xScale]
      * @returns {d3.scale|dc.coordinateGridMixin}
      */
@@ -3035,34 +3231,41 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
-     * the number of data projections on x axis such as the number of bars for a bar chart or the
-     * number of dots for a line chart. This function is expected to return a Javascript array of all
-     * data points on x axis, or the number of points on the axis. [d3 time range functions
-     * d3.time.days, d3.time.months, and
-     * d3.time.years](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
-     * function. dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
+     * the number of data projections on the x axis such as the number of bars for a bar chart or the
+     * number of dots for a line chart.
+     *
+     * This function is expected to return a Javascript array of all data points on the x axis, or
+     * the number of points on the axis. d3 time range functions [d3.timeDays, d3.timeMonths, and
+     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
+     * xUnits functions.
+     *
+     * dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
      * a list of built-in units functions.
+     *
+     * Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
+     * possible to define this function compliant with the d3 range functions. It was already a
+     * magic value which caused charts to behave differently, and now it is completely so.
      * @method xUnits
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @todo Add docs for utilities
      * @example
      * // set x units to count days
-     * chart.xUnits(d3.time.days);
+     * chart.xUnits(d3.timeDays);
      * // set x units to count months
-     * chart.xUnits(d3.time.months);
+     * chart.xUnits(d3.timeMonths);
      *
      * // A custom xUnits function can be used as long as it follows the following interface:
      * // units in integer
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // simply calculates how many integers in the domain
      *      return Math.abs(end - start);
-     * };
+     * }
      *
      * // fixed units
-     * function(start, end, xDomain) {
+     * function(start, end) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
+     * }
      * @param {Function} [xUnits=dc.units.integers]
      * @returns {Function|dc.coordinateGridMixin}
      */
@@ -3077,8 +3280,8 @@ dc.coordinateGridMixin = function (_chart) {
     /**
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
      * useful when x axis customization is required. The x axis in dc.js is an instance of a
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object};
-     * therefore it supports any valid d3 axis manipulation.
+     * {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3 bottom axis object};
+     * therefore it supports any valid d3 axisBottom manipulation.
      *
      * **Caution**: The x axis is usually generated internally by dc; resetting it may cause
      * unexpected results. Note also that when used as a getter, this function is not chainable:
@@ -3088,14 +3291,14 @@ dc.coordinateGridMixin = function (_chart) {
      * @method xAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [xAxis=d3.svg.axis().orient('bottom')]
-     * @returns {d3.svg.axis|dc.coordinateGridMixin}
+     * @param {d3.axisBottom} [xAxis=d3.axisBottom]
+     * @returns {d3.axisBottom|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -3149,13 +3352,15 @@ dc.coordinateGridMixin = function (_chart) {
      * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
      * otherwise it is ignored.
      *
-     * Padding unit is a string that will be used when the padding is calculated. Available parameters are
-     * the available d3 time intervals; see
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval d3.time.interval}.
+     * The padding unit should be a
+     * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
+     * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
+     * ('day', 'hour', etc). Available arguments are the
+     * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
      * @method xAxisPaddingUnit
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @param {String} [unit='days']
+     * @param {String} [unit=d3.timeDay]
      * @returns {String|dc.coordinateGridMixin}
      */
     _chart.xAxisPaddingUnit = function (unit) {
@@ -3167,8 +3372,9 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     /**
-     * Returns the number of units displayed on the x axis using the unit measure configured by
-     * {@link dc.coordinateGridMixin#xUnits xUnits}.
+     * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
+     * `dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
+     * x unit count is calculated using the {@link dc.coordinateGridMixin#xUnits xUnits} function.
      * @method xUnitCount
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -3176,12 +3382,16 @@ dc.coordinateGridMixin = function (_chart) {
      */
     _chart.xUnitCount = function () {
         if (_unitCount === undefined) {
-            var units = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1], _chart.x().domain());
-
-            if (units instanceof Array) {
-                _unitCount = units.length;
+            if (_chart.isOrdinal()) {
+                // In this case it number of items in domain
+                _unitCount = _chart.x().domain().length;
             } else {
-                _unitCount = units;
+                _unitCount = _chart.xUnits()(_chart.x().domain()[0], _chart.x().domain()[1]);
+
+                // Sometimes xUnits() may return an array while sometimes directly the count
+                if (_unitCount instanceof Array) {
+                    _unitCount = _unitCount.length;
+                }
             }
         }
 
@@ -3202,6 +3412,14 @@ dc.coordinateGridMixin = function (_chart) {
         if (!arguments.length) {
             return _useRightYAxis;
         }
+
+        // We need to warn if value is changing after _yAxis was created
+        if (_useRightYAxis !== useRightYAxis && _yAxis) {
+            dc.logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
+                'You might get unexpected yAxis behavior. ' +
+                'Make calls to useRightYAxis sooner in your chart creation process.');
+        }
+
         _useRightYAxis = useRightYAxis;
         return _chart;
     };
@@ -3228,17 +3446,25 @@ dc.coordinateGridMixin = function (_chart) {
         return groups.map(_chart.keyAccessor());
     };
 
-    function compareDomains (d1, d2) {
-        return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
-    }
-
     function prepareXAxis (g, render) {
         if (!_chart.isOrdinal()) {
             if (_chart.elasticX()) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
             }
         } else { // _chart.isOrdinal()
+            // D3v4 - Ordinal charts would need scaleBand
+            // bandwidth is a method in scaleBand
+            // (https://github.com/d3/d3-scale/blob/master/README.md#scaleBand)
+            if (!_x.bandwidth) {
+                // If _x is not a scaleBand create a new scale and
+                // copy the original domain to the new scale
+                dc.logger.warn('For compatibility with d3v4+, dc.js d3.0 ordinal bar/line/bubble charts need ' +
+                               'd3.scaleBand() for the x scale, instead of d3.scaleOrdinal(). ' +
+                               'Replacing .x() with a d3.scaleBand with the same domain - ' +
+                               'make the same change in your code to avoid this warning!');
+                _x = d3.scaleBand().domain(_x.domain());
+            }
+
             if (_chart.elasticX() || _x.domain().length === 0) {
                 _x.domain(_chart._ordinalXDomain());
             }
@@ -3246,15 +3472,16 @@ dc.coordinateGridMixin = function (_chart) {
 
         // has the domain changed?
         var xdom = _x.domain();
-        if (render || compareDomains(_lastXDomain, xdom)) {
+        if (render || !dc.utils.arraysEqual(_lastXDomain, xdom)) {
             _chart.rescale();
         }
         _lastXDomain = xdom;
 
         // please can't we always use rangeBands for bar charts?
         if (_chart.isOrdinal()) {
-            _x.rangeBands([0, _chart.xAxisLength()], _rangeBandPadding,
-                          _chart._useOuterPadding() ? _outerRangeBandPadding : 0);
+            _x.range([0, _chart.xAxisLength()])
+                .paddingInner(_rangeBandPadding)
+                .paddingOuter(_chart._useOuterPadding() ? _outerRangeBandPadding : 0);
         } else {
             _x.range([0, _chart.xAxisLength()]);
         }
@@ -3304,7 +3531,7 @@ dc.coordinateGridMixin = function (_chart) {
             }
 
             var ticks = _xAxis.tickValues() ? _xAxis.tickValues() :
-                    (typeof _x.ticks === 'function' ? _x.ticks(_xAxis.ticks()[0]) : _x.domain());
+                (typeof _x.ticks === 'function' ? _x.ticks.apply(_x, _xAxis.tickArguments()) : _x.domain());
 
             var lines = gridLineG.selectAll('line')
                 .data(ticks);
@@ -3325,7 +3552,8 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+            var linesGEnterUpdate = linesGEnter.merge(lines);
+            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -3371,10 +3599,14 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    function createYAxis () {
+        return _useRightYAxis ? d3.axisRight() : d3.axisLeft();
+    }
+
     _chart._prepareYAxis = function (g) {
         if (_y === undefined || _chart.elasticY()) {
             if (_y === undefined) {
-                _y = d3.scale.linear();
+                _y = d3.scaleLinear();
             }
             var min = _chart.yAxisMin() || 0,
                 max = _chart.yAxisMax() || 0;
@@ -3382,11 +3614,12 @@ dc.coordinateGridMixin = function (_chart) {
         }
 
         _y.range([_chart.yAxisHeight(), 0]);
-        _yAxis = _yAxis.scale(_y);
 
-        if (_useRightYAxis) {
-            _yAxis.orient('right');
+        if (!_yAxis) {
+            _yAxis = createYAxis();
         }
+
+        _yAxis.scale(_y);
 
         _chart._renderHorizontalGridLinesForAxis(g, _y, _yAxis);
     };
@@ -3435,7 +3668,8 @@ dc.coordinateGridMixin = function (_chart) {
         var gridLineG = g.select('g.' + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
-            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks(axis.ticks()[0]);
+            // Last part copied from https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
+            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks.apply(scale, axis.tickArguments());
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
@@ -3462,7 +3696,8 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('opacity', 1);
 
             // update
-            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
+            var linesGEnterUpdate = linesGEnter.merge(lines);
+            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -3510,7 +3745,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @method y
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.coordinateGridMixin}
      */
@@ -3525,8 +3760,9 @@ dc.coordinateGridMixin = function (_chart) {
 
     /**
      * Set or get the y axis used by the coordinate grid chart instance. This function is most useful
-     * when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
-     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis); therefore it supports any
+     * when y axis customization is required. Depending on `useRightYAxis` the y axis in dc.js is an instance of
+     * either [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft) or
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight); therefore it supports any
      * valid d3 axis manipulation.
      *
      * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -3534,20 +3770,26 @@ dc.coordinateGridMixin = function (_chart) {
      * returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
+     * In addition, depending on whether you are going to use the axis on left or right
+     * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
+     * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @method yAxis
      * @memberof dc.coordinateGridMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * @example
      * // customize y axis tick format
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [yAxis=d3.svg.axis().orient('left')]
-     * @returns {d3.svg.axis|dc.coordinateGridMixin}
+     * @param {d3.axisLeft|d3.axisRight} [yAxis]
+     * @returns {d3.axisLeft|d3.axisRight|dc.coordinateGridMixin}
      */
     _chart.yAxis = function (yAxis) {
         if (!arguments.length) {
+            if (!_yAxis) {
+                _yAxis = createYAxis();
+            }
             return _yAxis;
         }
         _yAxis = yAxis;
@@ -3692,7 +3934,7 @@ dc.coordinateGridMixin = function (_chart) {
      * @example
      * // set x unit round to by month, this will make sure range selection brush will
      * // select whole months
-     * chart.round(d3.time.month.round);
+     * chart.round(d3.timeMonth.round);
      * @param {Function} [round]
      * @returns {Function|dc.coordinateGridMixin}
      */
@@ -3727,15 +3969,26 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart._filter(_);
 
-        if (_) {
-            _chart.brush().extent(_);
-        } else {
-            _chart.brush().clear();
-        }
+        _chart.redrawBrush(_, false);
 
         return _chart;
     });
 
+    /**
+     * Get or set the brush. Brush must be an instance of d3 brushes
+     * https://github.com/d3/d3-brush/blob/master/README.md
+     * You will use this only if you are writing a new chart type that supports brushing.
+     *
+     * **Caution**: dc creates and manages brushes internally. Go through and understand the source code
+     * if you want to pass a new brush object. Even if you are only using the getter,
+     * the brush object may not behave the way you expect.
+     *
+     * @method brush
+     * @memberof dc.coordinateGridMixin
+     * @instance
+     * @param {d3.brush} [_]
+     * @returns {d3.brush|dc.coordinateGridMixin}
+     */
     _chart.brush = function (_) {
         if (!arguments.length) {
             return _brush;
@@ -3744,68 +3997,77 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    function brushHeight () {
-        return _chart._xAxisY() - _chart.margins().top;
-    }
-
-    _chart.renderBrush = function (g) {
+    _chart.renderBrush = function (g, doTransition) {
         if (_brushOn) {
-            _brush.on('brush', _chart._brushing);
-            _brush.on('brushstart', _chart._disableMouseZoom);
-            _brush.on('brushend', configureMouseZoom);
+            _brush.on('start brush end', _chart._brushing);
 
-            var gBrush = g.append('g')
+            // To retrieve selection we need _gBrush
+            _gBrush = g.append('g')
                 .attr('class', 'brush')
-                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')')
-                .call(_brush.x(_chart.x()));
-            _chart.setBrushY(gBrush, false);
-            _chart.setHandlePaths(gBrush);
+                .attr('transform', 'translate(' + _chart.margins().left + ',' + _chart.margins().top + ')');
 
-            if (_chart.hasFilter()) {
-                _chart.redrawBrush(g, false);
-            }
+            _chart.setBrushExtents();
+
+            _chart.createBrushHandlePaths(_gBrush, doTransition);
+
+            _chart.redrawBrush(_chart.filter(), doTransition);
         }
     };
 
-    _chart.setHandlePaths = function (gBrush) {
-        gBrush.selectAll('.resize').append('path').attr('d', _chart.resizeHandlePath);
-    };
+    _chart.createBrushHandlePaths = function (gBrush) {
+        var brushHandles = gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS).data([{type: 'w'}, {type: 'e'}]);
 
-    _chart.setBrushY = function (gBrush) {
-        gBrush.selectAll('rect')
-            .attr('height', brushHeight());
-        gBrush.selectAll('.resize path')
+        brushHandles = brushHandles
+            .enter()
+            .append('path')
+            .attr('class', CUSTOM_BRUSH_HANDLE_CLASS)
+            .merge(brushHandles);
+
+        brushHandles
             .attr('d', _chart.resizeHandlePath);
     };
 
-    _chart.extendBrush = function () {
-        var extent = _brush.extent();
-        if (_chart.round()) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
-
-            _g.select('.brush')
-                .call(_brush.extent(extent));
+    _chart.extendBrush = function (brushSelection) {
+        if (brushSelection && _chart.round()) {
+            brushSelection[0] = _chart.round()(brushSelection[0]);
+            brushSelection[1] = _chart.round()(brushSelection[1]);
         }
-        return extent;
+        return brushSelection;
     };
 
-    _chart.brushIsEmpty = function (extent) {
-        return _brush.empty() || !extent || extent[1] <= extent[0];
+    _chart.brushIsEmpty = function (brushSelection) {
+        return !brushSelection || brushSelection[1] <= brushSelection[0];
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        // Avoids infinite recursion (mutual recursion between range and focus operations)
+        // Source Event will be null when brush.move is called programmatically (see below as well).
+        if (!d3.event.sourceEvent) { return; }
 
-        _chart.redrawBrush(_g, false);
+        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
+        // In this case we are more worried about this handler causing brush move programmatically which will
+        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
+        // This check avoids recursive calls
+        if (d3.event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+            return;
+        }
 
-        if (_chart.brushIsEmpty(extent)) {
+        var brushSelection = d3.event.selection;
+        if (brushSelection) {
+            brushSelection = brushSelection.map(_chart.x().invert);
+        }
+
+        brushSelection = _chart.extendBrush(brushSelection);
+
+        _chart.redrawBrush(brushSelection, false);
+
+        if (_chart.brushIsEmpty(brushSelection)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
         } else {
-            var rangedFilter = dc.filters.RangedFilter(extent[0], extent[1]);
+            var rangedFilter = dc.filters.RangedFilter(brushSelection[0], brushSelection[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
@@ -3814,29 +4076,54 @@ dc.coordinateGridMixin = function (_chart) {
         }
     };
 
-    _chart.redrawBrush = function (g, doTransition) {
-        if (_brushOn) {
-            if (_chart.filter() && _chart.brush().empty()) {
-                _chart.brush().extent(_chart.filter());
-            }
+    _chart.setBrushExtents = function (doTransition) {
+        // Set boundaries of the brush, must set it before applying to _gBrush
+        _brush.extent([[0, 0], [_chart.effectiveWidth(), _chart.effectiveHeight()]]);
 
-            var gBrush = dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(g.select('g.brush'));
-            _chart.setBrushY(gBrush);
-            gBrush.call(_chart.brush()
-                      .x(_chart.x())
-                      .extent(_chart.brush().extent()));
-        }
-
-        _chart.fadeDeselectedArea();
+        _gBrush
+            .call(_brush);
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
+        if (_brushOn && _gBrush) {
+            if (_resizing) {
+                _chart.setBrushExtents(doTransition);
+            }
+
+            if (!brushSelection) {
+                _gBrush
+                    .call(_brush.move, null);
+
+                _gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                    .attr('display', 'none');
+            } else {
+                var scaledSelection = [_x(brushSelection[0]), _x(brushSelection[1])];
+
+                var gBrush =
+                    dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
+
+                gBrush
+                    .call(_brush.move, scaledSelection);
+
+                gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                    .attr('display', null)
+                    .attr('transform', function (d, i) {
+                        return 'translate(' + _x(brushSelection[i]) + ', 0)';
+                    })
+                    .attr('d', _chart.resizeHandlePath);
+            }
+        }
+        _chart.fadeDeselectedArea(brushSelection);
+    };
+
+    _chart.fadeDeselectedArea = function (brushSelection) {
         // do nothing, sub-chart should override this function
     };
 
     // borrowed from Crossfilter example
     _chart.resizeHandlePath = function (d) {
-        var e = +(d === 'e'), x = e ? 1 : -1, y = brushHeight() / 3;
+        d = d.type;
+        var e = +(d === 'e'), x = e ? 1 : -1, y = _chart.effectiveHeight() / 3;
         return 'M' + (0.5 * x) + ',' + y +
             'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
             'V' + (2 * y - 6) +
@@ -3932,13 +4219,17 @@ dc.coordinateGridMixin = function (_chart) {
         if (render) {
             _chart.renderBrush(_chart.g(), false);
         } else {
-            _chart.redrawBrush(_chart.g(), _resizing);
+            // Animate the brush only while resizing
+            _chart.redrawBrush(_chart.filter(), _resizing);
         }
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
         _resizing = false;
     }
 
     function configureMouseZoom () {
+        // Save a copy of original x scale
+        _origX = _x.copy();
+
         if (_mouseZoomable) {
             _chart._enableMouseZoom();
         } else if (_hasBeenMouseZoomable) {
@@ -3948,69 +4239,104 @@ dc.coordinateGridMixin = function (_chart) {
 
     _chart._enableMouseZoom = function () {
         _hasBeenMouseZoomable = true;
-        _zoom.x(_chart.x())
+
+        var extent = [[0, 0],[_chart.effectiveWidth(), _chart.effectiveHeight()]];
+
+        _zoom
             .scaleExtent(_zoomScale)
-            .size([_chart.width(), _chart.height()])
+            .extent(extent)
             .duration(_chart.transitionDuration());
+
+        if (_zoomOutRestrict) {
+            // Ensure minimum zoomScale is at least 1
+            var zoomScaleMin = Math.max(_zoomScale[0], 1);
+            _zoom
+                .translateExtent(extent)
+                .scaleExtent([zoomScaleMin, _zoomScale[1]]);
+        }
+
         _chart.root().call(_zoom);
+
+        // Tell D3 zoom our current zoom/pan status
+        updateD3zoomTransform();
     };
 
     _chart._disableMouseZoom = function () {
         _chart.root().call(_nullZoom);
     };
 
-    function zoomHandler () {
-        _refocused = true;
-        if (_zoomOutRestrict) {
-            var constraint = _xOriginalDomain;
-            if (_rangeChart) {
-                constraint = intersectExtents(constraint, _rangeChart.x().domain());
-            }
-            var constrained = constrainExtent(_chart.x().domain(), constraint);
-            if (constrained) {
-                _chart.x().domain(constrained);
-            }
-        }
+    function zoomHandler (newDomain, noRaiseEvents) {
+        var domFilter;
 
-        var domain = _chart.x().domain();
-        var domFilter = dc.filters.RangedFilter(domain[0], domain[1]);
+        if (hasRangeSelected(newDomain)) {
+            _chart.x().domain(newDomain);
+            domFilter = dc.filters.RangedFilter(newDomain[0], newDomain[1]);
+        } else {
+            _chart.x().domain(_xOriginalDomain);
+            domFilter = null;
+        }
 
         _chart.replaceFilter(domFilter);
         _chart.rescale();
         _chart.redraw();
 
-        if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+        if (!noRaiseEvents) {
+            if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+                dc.events.trigger(function () {
+                    _rangeChart.replaceFilter(domFilter);
+                    _rangeChart.redraw();
+                });
+            }
+
+            _chart._invokeZoomedListener();
             dc.events.trigger(function () {
-                _rangeChart.replaceFilter(domFilter);
-                _rangeChart.redraw();
-            });
+                _chart.redrawGroup();
+            }, dc.constants.EVENT_DELAY);
         }
-
-        _chart._invokeZoomedListener();
-
-        dc.events.trigger(function () {
-            _chart.redrawGroup();
-        }, dc.constants.EVENT_DELAY);
-
-        _refocused = !rangesEqual(domain, _xOriginalDomain);
     }
 
-    function intersectExtents (ext1, ext2) {
-        if (ext1[0] > ext2[1] || ext1[1] < ext2[0]) {
-            console.warn('could not intersect extents');
-        }
-        return [Math.max(ext1[0], ext2[0]), Math.min(ext1[1], ext2[1])];
+    // event.transform.rescaleX(_origX).domain() should give back newDomain
+    function domainToZoomTransform (newDomain, origDomain, xScale) {
+        var k = (origDomain[1] - origDomain[0]) / (newDomain[1] - newDomain[0]);
+        var xt = -1 * xScale(newDomain[0]);
+
+        return d3.zoomIdentity.scale(k).translate(xt, 0);
     }
 
-    function constrainExtent (extent, constraint) {
-        var size = extent[1] - extent[0];
-        if (extent[0] < constraint[0]) {
-            return [constraint[0], Math.min(constraint[1], dc.utils.add(constraint[0], size, 'millis'))];
-        } else if (extent[1] > constraint[1]) {
-            return [Math.max(constraint[0], dc.utils.subtract(constraint[1], size, 'millis')), constraint[1]];
-        } else {
-            return null;
+    // If we changing zoom status (for example by calling focus), tell D3 zoom about it
+    function updateD3zoomTransform () {
+        if (_zoom) {
+            _zoom.transform(_chart.root(), domainToZoomTransform(_chart.x().domain(), _xOriginalDomain, _origX));
         }
+    }
+
+    function onZoom () {
+        // Avoids infinite recursion (mutual recursion between range and focus operations)
+        // Source Event will be null when zoom is called programmatically (see below as well).
+        if (!d3.event.sourceEvent) { return; }
+
+        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
+        // In this case we are more worried about this handler causing zoom programmatically which will
+        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
+        // This check avoids recursive calls
+        if (d3.event.sourceEvent.type && ['start', 'zoom', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+            return;
+        }
+
+        var newDomain = d3.event.transform.rescaleX(_origX).domain();
+        _chart.focus(newDomain, false);
+    }
+
+    function checkExtents (ext, outerLimits) {
+        if (!ext || ext.length !== 2 || !outerLimits || outerLimits.length !== 2) {
+            return ext;
+        }
+
+        if (ext[0] > outerLimits[1] || ext[1] < outerLimits[0]) {
+            console.warn('Could not intersect extents, will reset');
+        }
+        // Math.max does not work (as the values may be dates as well)
+        return [ext[0] > outerLimits[0] ? ext[0] : outerLimits[0], ext[1] < outerLimits[1] ? ext[1] : outerLimits[1]];
     }
 
     /**
@@ -4018,6 +4344,12 @@ dc.coordinateGridMixin = function (_chart) {
      * 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
      * to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
      * otherwise focus will be ignored.
+     *
+     * To avoid ping-pong volley of events between a pair of range and focus charts please set
+     * `noRaiseEvents` to `true`. In that case it will update this chart but will not fire `zoom` event
+     * and not try to update back the associated range chart.
+     * If you are calling it manually - typically you will leave it to `false` (the default).
+     *
      * @method focus
      * @memberof dc.coordinateGridMixin
      * @instance
@@ -4030,20 +4362,25 @@ dc.coordinateGridMixin = function (_chart) {
      *     });
      * })
      * @param {Array<Number>} [range]
+     * @param {Boolean} [noRaiseEvents = false]
      */
-    _chart.focus = function (range) {
-        if (hasRangeSelected(range)) {
-            _chart.x().domain(range);
-        } else {
-            _chart.x().domain(_xOriginalDomain);
+    _chart.focus = function (range, noRaiseEvents) {
+        if (_zoomOutRestrict) {
+            // ensure range is within _xOriginalDomain
+            range = checkExtents(range, _xOriginalDomain);
+
+            // If it has an associated range chart ensure range is within domain of that rangeChart
+            if (_rangeChart) {
+                range = checkExtents(range, _rangeChart.x().domain());
+            }
         }
 
-        _zoom.x(_chart.x());
-        zoomHandler();
+        zoomHandler(range, noRaiseEvents);
+        updateD3zoomTransform();
     };
 
     _chart.refocused = function () {
-        return _refocused;
+        return !rangesEqual(_chart.x().domain(), _xOriginalDomain);
     };
 
     _chart.focusChart = function (c) {
@@ -4054,11 +4391,11 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.on('filtered', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
-                    _focusChart.x().domain(_focusChart.xOriginalDomain());
+                    _focusChart.x().domain(_focusChart.xOriginalDomain(), true);
                 });
             } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {
-                    _focusChart.focus(chart.filter());
+                    _focusChart.focus(chart.filter(), true);
                 });
             }
         });
@@ -4100,6 +4437,11 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
+    // Get the SVG rendered brush
+    _chart.gBrush = function () {
+        return _gBrush;
+    };
+
     function hasRangeSelected (range) {
         return range instanceof Array && range.length > 1;
     }
@@ -4108,7 +4450,7 @@ dc.coordinateGridMixin = function (_chart) {
 };
 
 /**
- * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
+ * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stackD3v3.
  * @name stackMixin
  * @memberof dc
  * @mixin
@@ -4120,7 +4462,7 @@ dc.stackMixin = function (_chart) {
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
-        layer.values = layer.group.all().map(function (d, i) {
+        var allValues = layer.group.all().map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
@@ -4130,12 +4472,11 @@ dc.stackMixin = function (_chart) {
             };
         });
 
-        layer.values = layer.values.filter(domainFilter());
-        return layer.values;
+        layer.domainValues = allValues.filter(domainFilter());
+        layer.values = _chart.evadeDomainFilter() ? allValues : layer.domainValues;
     }
 
-    var _stackLayout = d3.layout.stack()
-        .values(prepareValues);
+    var _stackLayout = d3.stack();
 
     var _stack = [];
     var _titles = {};
@@ -4144,8 +4485,8 @@ dc.stackMixin = function (_chart) {
     var _evadeDomainFilter = false;
 
     function domainFilter () {
-        if (!_chart.x() || _evadeDomainFilter) {
-            return d3.functor(true);
+        if (!_chart.x()) {
+            return dc.utils.constant(true);
         }
         var xDomain = _chart.x().domain();
         if (_chart.isOrdinal()) {
@@ -4297,7 +4638,7 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack () {
-        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var valueses = _chart.data().map(function (layer) { return layer.domainValues; });
         return Array.prototype.concat.apply([], valueses);
     }
 
@@ -4358,8 +4699,8 @@ dc.stackMixin = function (_chart) {
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.layout.stack}
-     * @param {Function} [stack=d3.layout.stack]
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.stackD3v3}
+     * @param {Function} [stack=d3.stackD3v3]
      * @returns {Function|dc.stackMixin}
      */
     _chart.stackLayout = function (stack) {
@@ -4367,9 +4708,6 @@ dc.stackMixin = function (_chart) {
             return _stackLayout;
         }
         _stackLayout = stack;
-        if (_stackLayout.values() === d3.layout.stack().values()) {
-            _stackLayout.values(prepareValues);
-        }
         return _chart;
     };
 
@@ -4397,13 +4735,32 @@ dc.stackMixin = function (_chart) {
         return _chart;
     };
 
-    function visability (l) {
+    function visibility (l) {
         return !l.hidden;
     }
 
     _chart.data(function () {
-        var layers = _stack.filter(visability);
-        return layers.length ? _chart.stackLayout()(layers) : [];
+        var layers = _stack.filter(visibility);
+        if (!layers.length) {
+            return [];
+        }
+        layers.forEach(prepareValues);
+        var v4data = layers[0].values.map(function (v, i) {
+            var col = {x: v.x};
+            layers.forEach(function (layer) {
+                col[layer.name] = layer.values[i].y;
+            });
+            return col;
+        });
+        var keys = layers.map(function (layer) { return layer.name; });
+        var v4result = _chart.stackLayout().keys(keys)(v4data);
+        v4result.forEach(function (series, i) {
+            series.forEach(function (ys, j) {
+                layers[i].values[j].y0 = ys[0];
+                layers[i].values[j].y1 = ys[1];
+            });
+        });
+        return layers;
     });
 
     _chart._ordinalXDomain = function () {
@@ -4677,7 +5034,7 @@ dc.bubbleMixin = function (_chart) {
         return data;
     });
 
-    var _r = d3.scale.linear().domain([0, 100]);
+    var _r = d3.scaleLinear().domain([0, 100]);
 
     var _rValueAccessor = function (d) {
         return d.r;
@@ -4685,13 +5042,13 @@ dc.bubbleMixin = function (_chart) {
 
     /**
      * Get or set the bubble radius scale. By default the bubble chart uses
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md#linear d3.scale.linear().domain([0, 100])}
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
      * as its radius scale.
      * @method r
      * @memberof dc.bubbleMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
-     * @param {d3.scale} [bubbleRadiusScale=d3.scale.linear().domain([0, 100])]
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+     * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
      * @returns {d3.scale|dc.bubbleMixin}
      */
     _chart.r = function (bubbleRadiusScale) {
@@ -4901,7 +5258,7 @@ dc.bubbleMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (selection) {
         if (_chart.hasFilter()) {
             _chart.selectAll('g.' + _chart.BUBBLE_NODE_CLASS).each(function (d) {
                 if (_chart.isSelectedNode(d)) {
@@ -4951,7 +5308,7 @@ dc.bubbleMixin = function (_chart) {
  * // create a pie chart under #chart-container2 element using chart group A
  * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -5047,11 +5404,11 @@ dc.pieChart = function (parent, chartGroup) {
                 .selectAll('text.' + _labelCssClass)
                 .data(pieData);
 
+            removeElements(slices, labels);
+
             createElements(slices, labels, arc, pieData);
 
             updateElements(pieData, arc);
-
-            removeElements(slices, labels);
 
             highlightFilter();
 
@@ -5157,22 +5514,24 @@ dc.pieChart = function (parent, chartGroup) {
         var polyline = _g.selectAll('polyline.' + _sliceCssClass)
                 .data(pieData);
 
-        polyline
-                .enter()
-                .append('polyline')
-                .attr('class', function (d, i) {
-                    return 'pie-path _' + i + ' ' + _sliceCssClass;
-                })
-                .on('click', onClick)
-                .on('mouseover', function (d, i) {
-                    highlightSlice(i, true);
-                })
-                .on('mouseout', function (d, i) {
-                    highlightSlice(i, false);
-                });
-
         polyline.exit().remove();
-        var arc2 = d3.svg.arc()
+
+        polyline = polyline
+            .enter()
+            .append('polyline')
+            .attr('class', function (d, i) {
+                return 'pie-path _' + i + ' ' + _sliceCssClass;
+            })
+            .on('click', onClick)
+            .on('mouseover', function (d, i) {
+                highlightSlice(i, true);
+            })
+            .on('mouseout', function (d, i) {
+                highlightSlice(i, false);
+            })
+            .merge(polyline);
+
+        var arc2 = d3.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding);
         var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
@@ -5347,7 +5706,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function buildArcs () {
-        return d3.svg.arc()
+        return d3.arc()
             .outerRadius(_radius - _externalRadiusPadding)
             .innerRadius(_innerRadius);
     }
@@ -5379,7 +5738,7 @@ dc.pieChart = function (parent, chartGroup) {
     };
 
     function pieLayout () {
-        return d3.layout.pie().sort(null).value(_chart.cappedValueAccessor);
+        return d3.pie().sort(null).value(_chart.cappedValueAccessor);
     }
 
     function sliceTooSmall (d) {
@@ -5487,7 +5846,7 @@ dc.pieChart = function (parent, chartGroup) {
     function labelPosition (d, arc) {
         var centroid;
         if (_externalLabelRadius) {
-            centroid = d3.svg.arc()
+            centroid = d3.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .centroid(d);
@@ -5550,7 +5909,7 @@ dc.pieChart = function (parent, chartGroup) {
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.barChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
@@ -5596,12 +5955,13 @@ dc.barChart = function (parent, chartGroup) {
 
         calculateBarWidth();
 
-        layers
+        layers = layers
             .enter()
-            .append('g')
-            .attr('class', function (d, i) {
-                return 'stack ' + '_' + i;
-            });
+                .append('g')
+                .attr('class', function (d, i) {
+                    return 'stack ' + '_' + i;
+                })
+            .merge(layers);
 
         var last = layers.size() - 1;
         layers.each(function (d, i) {
@@ -5619,37 +5979,48 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
+    function labelXPos (d) {
+        var x = _chart.x()(d.x);
+        if (!_centerBar) {
+            x += _barWidth / 2;
+        }
+        if (_chart.isOrdinal() && _gap !== undefined) {
+            x += _gap / 2;
+        }
+        return dc.utils.safeNumber(x);
+    }
+
+    function labelYPos (d) {
+        var y = _chart.y()(d.y + d.y0);
+
+        if (d.y < 0) {
+            y -= barHeight(d);
+        }
+
+        return dc.utils.safeNumber(y - LABEL_PADDING);
+    }
+
     function renderLabels (layer, layerIndex, d) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
-        labels.enter()
-            .append('text')
-            .attr('class', 'barLabel')
-            .attr('text-anchor', 'middle');
+        var labelsEnterUpdate = labels
+            .enter()
+                .append('text')
+                .attr('class', 'barLabel')
+                .attr('text-anchor', 'middle')
+                .attr('x', labelXPos)
+                .attr('y', labelYPos)
+            .merge(labels);
 
         if (_chart.isOrdinal()) {
-            labels.on('click', _chart.onClick);
-            labels.attr('cursor', 'pointer');
+            labelsEnterUpdate.on('click', _chart.onClick);
+            labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                if (!_centerBar) {
-                    x += _barWidth / 2;
-                }
-                return dc.utils.safeNumber(x);
-            })
-            .attr('y', function (d) {
-                var y = _chart.y()(d.y + d.y0);
-
-                if (d.y < 0) {
-                    y -= barHeight(d);
-                }
-
-                return dc.utils.safeNumber(y - LABEL_PADDING);
-            })
+        dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', labelXPos)
+            .attr('y', labelYPos)
             .text(function (d) {
                 return _chart.label()(d);
             });
@@ -5657,6 +6028,17 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
+    }
+
+    function barXPos (d) {
+        var x = _chart.x()(d.x);
+        if (_centerBar) {
+            x -= _barWidth / 2;
+        }
+        if (_chart.isOrdinal() && _gap !== undefined) {
+            x += _gap / 2;
+        }
+        return dc.utils.safeNumber(x);
     }
 
     function renderBars (layer, layerIndex, d) {
@@ -5667,28 +6049,22 @@ dc.barChart = function (parent, chartGroup) {
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('x', barXPos)
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
+
+        var barsEnterUpdate = enter.merge(bars);
 
         if (_chart.renderTitle()) {
             enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
         }
 
         if (_chart.isOrdinal()) {
-            bars.on('click', _chart.onClick);
+            barsEnterUpdate.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                if (_centerBar) {
-                    x -= _barWidth / 2;
-                }
-                if (_chart.isOrdinal() && _gap !== undefined) {
-                    x += _gap / 2;
-                }
-                return dc.utils.safeNumber(x);
-            })
+        dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', barXPos)
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
@@ -5717,7 +6093,7 @@ dc.barChart = function (parent, chartGroup) {
 
             // please can't we always use rangeBands for bar charts?
             if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().rangeBand());
+                _barWidth = Math.floor(_chart.x().bandwidth());
             } else if (_gap) {
                 _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
             } else {
@@ -5730,9 +6106,8 @@ dc.barChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         var bars = _chart.chartBodyG().selectAll('rect.bar');
-        var extent = _chart.brush().extent();
 
         if (_chart.isOrdinal()) {
             if (_chart.hasFilter()) {
@@ -5746,10 +6121,10 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
-        } else {
-            if (!_chart.brushIsEmpty(extent)) {
-                var start = extent[0];
-                var end = extent[1];
+        } else if (_chart.brushOn()) {
+            if (!_chart.brushIsEmpty(brushSelection)) {
+                var start = brushSelection[0];
+                var end = brushSelection[1];
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
                     return d.x < start || d.x >= end;
@@ -5783,7 +6158,7 @@ dc.barChart = function (parent, chartGroup) {
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
      * Setting this value will also remove any previously set {@link dc.barChart#gap gap}. See the
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      * @method barPadding
      * @memberof dc.barChart
@@ -5833,17 +6208,12 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
-        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
-
-            _chart.chartBodyG().select('.brush')
-                .call(_chart.brush().extent(extent));
+    _chart.extendBrush = function (brushSelection) {
+        if (brushSelection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            brushSelection[0] = _chart.round()(brushSelection[0]);
+            brushSelection[1] = _chart.round()(brushSelection[1]);
         }
-
-        return extent;
+        return brushSelection;
     };
 
     /**
@@ -5921,7 +6291,7 @@ dc.barChart = function (parent, chartGroup) {
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.lineChart(compositeChart);
  * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector}
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
  * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
  * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
  * composite chart instance instead.
@@ -5944,8 +6314,9 @@ dc.lineChart = function (parent, chartGroup) {
     var _dataPointRadius = null;
     var _dataPointFillOpacity = DEFAULT_DOT_OPACITY;
     var _dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
-    var _interpolate = 'linear';
-    var _tension = 0.7;
+    var _curve = null;
+    var _interpolate = null; // d3.curveLinear;  // deprecated in 3.0
+    var _tension = null;  // deprecated in 3.0
     var _defined;
     var _dashStyle;
     var _xyTipsOn = true;
@@ -5971,6 +6342,8 @@ dc.lineChart = function (parent, chartGroup) {
                 return 'stack ' + '_' + i;
             });
 
+        layers = layersEnter.merge(layers);
+
         drawLine(layersEnter, layers);
 
         drawArea(layersEnter, layers);
@@ -5983,53 +6356,101 @@ dc.lineChart = function (parent, chartGroup) {
     };
 
     /**
+     * Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
+     * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
+     * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
+     *
+     * Replaces the use of {@link dc.lineChart#interpolate} and {@link dc.lineChart#tension}
+     * in dc.js < 3.0
+     *
+     * This is passed to
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}.
+     * @example
+     * // default
+     * chart
+     *     .curve(d3.curveLinear);
+     * // Add tension to curves that support it
+     * chart
+     *     .curve(d3.curveCardinal.tension(0.5));
+     * // You can use some specialized variation like
+     * // https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
+     * chart
+     *     .curve(d3.curveCatmullRom.alpha(0.5));
+     * @method curve
+     * @memberof dc.lineChart
+     * @instance
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     * @param  {d3.curve} [curve=d3.curveLinear]
+     * @returns {d3.curve|dc.lineChart}
+     */
+    _chart.curve = function (curve) {
+        if (!arguments.length) {
+            return _curve;
+        }
+        _curve = curve;
+        return _chart;
+    };
+
+    /**
      * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
-     * functions, splines, and cubic interpolation.  This is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate} and
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate},
-     * where you can find a complete list of valid arguments.
+     * functions, splines, and cubic interpolation.
+     *
+     * Possible values are: 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis',
+     * 'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
+     * 'monotone'.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
      * @method interpolate
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
-     * @param  {String} [interpolate='linear']
-     * @returns {String|dc.lineChart}
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
+     * @param  {d3.curve} [interpolate=d3.curveLinear]
+     * @returns {d3.curve|dc.lineChart}
      */
-    _chart.interpolate = function (interpolate) {
+    _chart.interpolate = dc.logger.deprecate(function (interpolate) {
         if (!arguments.length) {
             return _interpolate;
         }
         _interpolate = interpolate;
         return _chart;
-    };
+    }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
 
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-     * This parameter further customizes the interpolation behavior.  It is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension d3.svg.line.tension} and
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension d3.svg.area.tension}.
+     *
+     * Passed to the {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve function}
+     * if it provides a `.tension` function. Example:
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
      * @method tension
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate d3.svg.line.interpolate}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate d3.svg.area.interpolate}
-     * @param  {Number} [tension=0.7]
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
+     * @param  {Number} [tension=0]
      * @returns {Number|dc.lineChart}
      */
-    _chart.tension = function (tension) {
+    _chart.tension = dc.logger.deprecate(function (tension) {
         if (!arguments.length) {
             return _tension;
         }
         _tension = tension;
         return _chart;
-    };
+    }, 'dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
 
     /**
      * Gets or sets a function that will determine discontinuities in the line which should be
      * skipped: the path will be broken into separate subpaths if some points are undefined.
      * This function is passed to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined line.defined}
      *
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
@@ -6038,7 +6459,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @method defined
      * @memberof dc.lineChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined d3.svg.line.defined}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined line.defined}
      * @param  {Function} [defined]
      * @returns {Function|dc.lineChart}
      */
@@ -6092,16 +6513,64 @@ dc.lineChart = function (parent, chartGroup) {
         return _chart.getColor.call(d, d.values, i);
     }
 
+    // To keep it backward compatible, this covers multiple cases
+    // See https://github.com/dc-js/dc.js/issues/1376
+    // It will be removed when interpolate and tension are removed.
+    function getCurveFactory () {
+        var curve = null;
+
+        // _curve takes precedence
+        if (_curve) {
+            return _curve;
+        }
+
+        // Approximate the D3v3 behavior
+        if (typeof _interpolate === 'function') {
+            curve = _interpolate;
+        } else {
+            // If _interpolate is string
+            var mapping = {
+                'linear': d3.curveLinear,
+                'linear-closed': d3.curveLinearClosed,
+                'step': d3.curveStep,
+                'step-before': d3.curveStepBefore,
+                'step-after': d3.curveStepAfter,
+                'basis': d3.curveBasis,
+                'basis-open': d3.curveBasisOpen,
+                'basis-closed': d3.curveBasisClosed,
+                'bundle': d3.curveBundle,
+                'cardinal': d3.curveCardinal,
+                'cardinal-open': d3.curveCardinalOpen,
+                'cardinal-closed': d3.curveCardinalClosed,
+                'monotone': d3.curveMonotoneX
+            };
+            curve = mapping[_interpolate];
+        }
+
+        // Default value
+        if (!curve) {
+            curve = d3.curveLinear;
+        }
+
+        if (_tension !== null) {
+            if (typeof curve.tension !== 'function') {
+                dc.logger.warn('tension was specified but the curve/interpolate does not support it.');
+            } else {
+                curve = curve.tension(_tension);
+            }
+        }
+        return curve;
+    }
+
     function drawLine (layersEnter, layers) {
-        var line = d3.svg.line()
+        var line = d3.line()
             .x(function (d) {
                 return _chart.x()(d.x);
             })
             .y(function (d) {
                 return _chart.y()(d.y + d.y0);
             })
-            .interpolate(_interpolate)
-            .tension(_tension);
+            .curve(getCurveFactory());
         if (_defined) {
             line.defined(_defined);
         }
@@ -6123,18 +6592,17 @@ dc.lineChart = function (parent, chartGroup) {
 
     function drawArea (layersEnter, layers) {
         if (_renderArea) {
-            var area = d3.svg.area()
+            var area = d3.area()
                 .x(function (d) {
                     return _chart.x()(d.x);
                 })
-                .y(function (d) {
+                .y1(function (d) {
                     return _chart.y()(d.y + d.y0);
                 })
                 .y0(function (d) {
                     return _chart.y()(d.y0);
                 })
-                .interpolate(_interpolate)
-                .tension(_tension);
+                .curve(getCurveFactory());
             if (_defined) {
                 area.defined(_defined);
             }
@@ -6184,27 +6652,35 @@ dc.lineChart = function (parent, chartGroup) {
                 var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
                     .data(points, dc.pluck('x'));
 
-                dots.enter()
-                    .append('circle')
-                    .attr('class', DOT_CIRCLE_CLASS)
-                    .attr('r', getDotRadius())
-                    .style('fill-opacity', _dataPointFillOpacity)
-                    .style('stroke-opacity', _dataPointStrokeOpacity)
-                    .attr('fill', _chart.getColor)
-                    .on('mousemove', function () {
-                        var dot = d3.select(this);
-                        showDot(dot);
-                        showRefLines(dot, g);
-                    })
-                    .on('mouseout', function () {
-                        var dot = d3.select(this);
-                        hideDot(dot);
-                        hideRefLines(g);
-                    });
+                var dotsEnterModify = dots
+                    .enter()
+                        .append('circle')
+                        .attr('class', DOT_CIRCLE_CLASS)
+                        .attr('cx', function (d) {
+                            return dc.utils.safeNumber(_chart.x()(d.x));
+                        })
+                        .attr('cy', function (d) {
+                            return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                        })
+                        .attr('r', getDotRadius())
+                        .style('fill-opacity', _dataPointFillOpacity)
+                        .style('stroke-opacity', _dataPointStrokeOpacity)
+                        .attr('fill', _chart.getColor)
+                        .on('mousemove', function () {
+                            var dot = d3.select(this);
+                            showDot(dot);
+                            showRefLines(dot, g);
+                        })
+                        .on('mouseout', function () {
+                            var dot = d3.select(this);
+                            hideDot(dot);
+                            hideRefLines(g);
+                        })
+                    .merge(dots);
 
-                dots.call(renderTitle, d);
+                dotsEnterModify.call(renderTitle, d);
 
-                dc.transition(dots, _chart.transitionDuration())
+                dc.transition(dotsEnterModify, _chart.transitionDuration())
                     .attr('cx', function (d) {
                         return dc.utils.safeNumber(_chart.x()(d.x));
                     })
@@ -6228,12 +6704,14 @@ dc.lineChart = function (parent, chartGroup) {
             var labels = layer.selectAll('text.lineLabel')
                 .data(d.values, dc.pluck('x'));
 
-            labels.enter()
-                .append('text')
-                .attr('class', 'lineLabel')
-                .attr('text-anchor', 'middle');
+            var labelsEnterModify = labels
+                .enter()
+                    .append('text')
+                    .attr('class', 'lineLabel')
+                    .attr('text-anchor', 'middle')
+                .merge(labels);
 
-            dc.transition(labels, _chart.transitionDuration())
+            dc.transition(labelsEnterModify, _chart.transitionDuration())
                 .attr('x', function (d) {
                     return dc.utils.safeNumber(_chart.x()(d.x));
                 })
@@ -6429,7 +6907,7 @@ dc.lineChart = function (parent, chartGroup) {
  *     .dimension(ndx)
  *     .group(all);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -6475,7 +6953,7 @@ dc.dataCount = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.dataCount
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
+     * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]
@@ -6518,7 +6996,7 @@ dc.dataCount = function (parent, chartGroup) {
  * filtered) in a good old tabular fashion.
  *
  * Note: Unlike other charts, the data table (and data grid chart) use the {@link dc.dataTable#group group} attribute as a
- * keying function for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data
+ * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
  * together in groups.  Do not pass in a crossfilter group as this will not work.
  *
  * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
@@ -6534,7 +7012,7 @@ dc.dataCount = function (parent, chartGroup) {
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -6625,25 +7103,27 @@ dc.dataTable = function (parent, chartGroup) {
         if (!bAllFunctions) {
             // ensure one thead
             var thead = _chart.selectAll('thead').data([0]);
-            thead.enter().append('thead');
             thead.exit().remove();
+            thead = thead.enter()
+                    .append('thead')
+                .merge(thead);
 
             // with one tr
             var headrow = thead.selectAll('tr').data([0]);
-            headrow.enter().append('tr');
             headrow.exit().remove();
+            headrow = headrow.enter()
+                    .append('tr')
+                .merge(headrow);
 
             // with a th for each column
             var headcols = headrow.selectAll('th')
                 .data(_columns);
-            headcols.enter().append('th');
             headcols.exit().remove();
-
-            headcols
-                .attr('class', HEAD_CSS_CLASS)
+            headcols.enter().append('th')
+                .merge(headcols)
+                    .attr('class', HEAD_CSS_CLASS)
                     .html(function (d) {
                         return (_chart._doColumnHeaderFormat(d));
-
                     });
         }
 
@@ -6719,7 +7199,7 @@ dc.dataTable = function (parent, chartGroup) {
 
     /**
      * Get or set the group function for the data table. The group function takes a data row and
-     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
      * to split rows into groups.
      *
      * Do not pass in a crossfilter group as this will not work.
@@ -6903,8 +7383,8 @@ dc.dataTable = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataTable
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
@@ -6947,7 +7427,7 @@ dc.dataTable = function (parent, chartGroup) {
  * a simple way to define how the items are displayed.
  *
  * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
- * for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data together in groups.
+ * for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
@@ -6956,7 +7436,7 @@ dc.dataTable = function (parent, chartGroup) {
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -7031,14 +7511,16 @@ dc.dataGrid = function (parent, chartGroup) {
                     return d.values;
                 });
 
-        items.enter()
-            .append('div')
-            .attr('class', ITEM_CSS_CLASS)
-            .html(function (d) {
-                return _html(d);
-            });
-
         items.exit().remove();
+
+        items = items
+            .enter()
+                .append('div')
+                .attr('class', ITEM_CSS_CLASS)
+                .html(function (d) {
+                    return _html(d);
+                })
+            .merge(items);
 
         return items;
     }
@@ -7049,7 +7531,7 @@ dc.dataGrid = function (parent, chartGroup) {
 
     /**
      * Get or set the group function for the data grid. The group function takes a data row and
-     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
      * to split rows into groups.
      *
      * Do not pass in a crossfilter group as this will not work.
@@ -7178,8 +7660,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataGrid
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
@@ -7217,7 +7699,7 @@ dc.dataGrid = function (parent, chartGroup) {
  * // create a bubble chart under #chart-container2 element using chart group A
  * var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -7246,13 +7728,13 @@ dc.bubbleChart = function (parent, chartGroup) {
             bubbleG.order();
         }
 
-        renderNodes(bubbleG);
+        bubbleG = renderNodes(bubbleG);
 
         updateNodes(bubbleG);
 
         removeNodes(bubbleG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderNodes (bubbleG) {
@@ -7267,6 +7749,9 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
+
+        bubbleG = bubbleGEnter.merge(bubbleG);
+
         dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
@@ -7279,6 +7764,8 @@ dc.bubbleChart = function (parent, chartGroup) {
         _chart._doRenderLabel(bubbleGEnter);
 
         _chart._doRenderTitles(bubbleGEnter);
+
+        return bubbleG;
     }
 
     function updateNodes (bubbleG) {
@@ -7303,7 +7790,7 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     function bubbleX (d) {
         var x = _chart.x()(_chart.keyAccessor()(d));
-        if (isNaN(x)) {
+        if (isNaN(x) || !isFinite(x)) {
             x = 0;
         }
         return x;
@@ -7311,7 +7798,7 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     function bubbleY (d) {
         var y = _chart.y()(_chart.valueAccessor()(d));
-        if (isNaN(y)) {
+        if (isNaN(y) || !isFinite(y)) {
             y = 0;
         }
         return y;
@@ -7321,9 +7808,9 @@ dc.bubbleChart = function (parent, chartGroup) {
         // override default x axis brush from parent chart
     };
 
-    _chart.redrawBrush = function () {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
         // override default x axis brush from parent chart
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -7342,7 +7829,7 @@ dc.bubbleChart = function (parent, chartGroup) {
  * // create a composite chart under #chart-container2 element using chart group A
  * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -7362,7 +7849,7 @@ dc.compositeChart = function (parent, chartGroup) {
         _shareTitle = true,
         _alignYAxes = false;
 
-    var _rightYAxis = d3.svg.axis(),
+    var _rightYAxis = d3.axisRight(),
         _rightYAxisLabel = 0,
         _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
         _rightY,
@@ -7400,11 +7887,32 @@ dc.compositeChart = function (parent, chartGroup) {
     });
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
-        var brushIsEmpty = _chart.brushIsEmpty(extent);
+        // Avoids infinite recursion (mutual recursion between range and focus operations)
+        // Source Event will be null when brush.move is called programmatically (see below as well).
+        if (!d3.event.sourceEvent) { return; }
+
+        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
+        // In this case we are more worried about this handler causing brush move programmatically which will
+        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
+        // This check avoids recursive calls
+        if (d3.event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+            return;
+        }
+
+        var brushSelection = d3.event.selection;
+        if (brushSelection) {
+            brushSelection = brushSelection.map(_chart.x().invert);
+        }
+        brushSelection = _chart.extendBrush(brushSelection);
+
+        _chart.redrawBrush(brushSelection, false);
+
+        var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
+
+        _chart.replaceFilter(brushIsEmpty ? null : brushSelection);
 
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(brushIsEmpty ? null : extent);
+            _children[i].replaceFilter(brushIsEmpty ? null : brushSelection);
         }
     };
 
@@ -7484,7 +7992,7 @@ dc.compositeChart = function (parent, chartGroup) {
         var needDomain = _chart.rightY() === undefined || _chart.elasticY(),
             needRange = needDomain || _chart.resizing();
         if (_chart.rightY() === undefined) {
-            _chart.rightY(d3.scale.linear());
+            _chart.rightY(d3.scaleLinear());
         }
         if (needDomain) {
             _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
@@ -7496,14 +8004,15 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.rightY().range([_chart.yAxisHeight(), 0]);
         _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
 
-        _chart.rightYAxis().orient('right');
+        // In D3v4 create a RightAxis
+        // _chart.rightYAxis().orient('right');
     }
 
     function prepareLeftYAxis (ranges) {
         var needDomain = _chart.y() === undefined || _chart.elasticY(),
             needRange = needDomain || _chart.resizing();
         if (_chart.y() === undefined) {
-            _chart.y(d3.scale.linear());
+            _chart.y(d3.scaleLinear());
         }
         if (needDomain) {
             _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
@@ -7515,7 +8024,8 @@ dc.compositeChart = function (parent, chartGroup) {
         _chart.y().range([_chart.yAxisHeight(), 0]);
         _chart.yAxis(_chart.yAxis().scale(_chart.y()));
 
-        _chart.yAxis().orient('left');
+        // In D3v4 create a LeftAxis
+        // _chart.yAxis().orient('left');
     }
 
     function generateChildG (child, i) {
@@ -7592,11 +8102,11 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
-            child.fadeDeselectedArea();
+            child.fadeDeselectedArea(brushSelection);
         }
     };
 
@@ -7715,7 +8225,7 @@ dc.compositeChart = function (parent, chartGroup) {
      * @method rightY
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|dc.compositeChart}
      */
@@ -7795,7 +8305,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMin', function () {
-        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding());
+        return dc.utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     });
 
     function getAllXAxisMaxFromChildCharts () {
@@ -7805,7 +8315,7 @@ dc.compositeChart = function (parent, chartGroup) {
     }
 
     dc.override(_chart, 'xAxisMax', function () {
-        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding());
+        return dc.utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
     });
 
     _chart.legendables = function () {
@@ -7838,23 +8348,26 @@ dc.compositeChart = function (parent, chartGroup) {
 
     /**
      * Set or get the right y axis used by the composite chart. This function is most useful when y
-     * axis customization is required. The y axis in dc.js is an instance of a [d3 axis
-     * object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis) therefore it supports any valid
+     * axis customization is required. The y axis in dc.js is an instance of a
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight) therefore it supports any valid
      * d3 axis manipulation.
      *
-     * **Caution**: The y axis is usually generated internally by dc; resetting it may cause
-     * unexpected results.
+     * **Caution**: The right y axis is usually generated internally by dc; resetting it may cause
+     * unexpected results.  Note also that when used as a getter, this function is not chainable: it
+     * returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+     * so attempting to call chart functions after calling `.yAxis()` will fail}.
      * @method rightYAxis
      * @memberof dc.compositeChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisRight}
      * @example
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.svg.axis} [rightYAxis]
-     * @returns {d3.svg.axis|dc.compositeChart}
+     * @param {d3.axisRight} [rightYAxis]
+     * @returns {d3.axisRight|dc.compositeChart}
      */
     _chart.rightYAxis = function (rightYAxis) {
         if (!arguments.length) {
@@ -7883,7 +8396,7 @@ dc.compositeChart = function (parent, chartGroup) {
  * // create a series chart under #chart-container2 element using chart group A
  * var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -7926,7 +8439,9 @@ dc.seriesChart = function (parent, chartGroup) {
                 keep.push(sub.key);
                 return subChart
                     .dimension(_chart.dimension())
-                    .group({all: d3.functor(sub.values)}, sub.key)
+                    .group({
+                        all: typeof sub.values === 'function' ? sub.values : dc.utils.constant(sub.values)
+                    }, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .brushOn(_chart.brushOn());
@@ -7963,8 +8478,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @memberof dc.seriesChart
      * @instance
      * @example
-     * // put interpolation on the line charts used for the series
-     * chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+     * // put curve on the line charts used for the series
+     * chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
      * // do a scatter series chart
      * chart.chart(dc.scatterPlot)
      * @param {Function} [chartFunction=dc.lineChart]
@@ -8007,8 +8522,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method seriesSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.seriesSort(d3.descending);
      * @param {Function} [sortFunction=d3.ascending]
@@ -8030,8 +8545,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method valueSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * // Default value sort
      * _chart.valueSort(function keySort (a, b) {
@@ -8073,7 +8588,7 @@ dc.seriesChart = function (parent, chartGroup) {
  * // create a choropleth chart under '#us-chart2' element using chart group A
  * var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -8086,8 +8601,9 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return d || 0;
     });
 
-    var _geoPath = d3.geo.path();
+    var _geoPath = d3.geoPath();
     var _projectionFlag;
+    var _projection;
 
     var _geoJsons = [];
 
@@ -8098,15 +8614,17 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 .attr('class', 'layer' + layerIndex);
 
             var regionG = states.selectAll('g.' + geoJson(layerIndex).name)
-                .data(geoJson(layerIndex).data)
-                .enter()
-                .append('g')
-                .attr('class', geoJson(layerIndex).name);
+                .data(geoJson(layerIndex).data);
+
+            regionG = regionG.enter()
+                    .append('g')
+                    .attr('class', geoJson(layerIndex).name)
+                .merge(regionG);
 
             regionG
                 .append('path')
                 .attr('fill', 'white')
-                .attr('d', _geoPath);
+                .attr('d', _getGeoPath());
 
             regionG.append('title');
 
@@ -8225,7 +8743,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if (_projectionFlag) {
-                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
+                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _getGeoPath());
             }
         }
         _projectionFlag = false;
@@ -8267,20 +8785,40 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Set custom geo projection function. See the available
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3 geo projection functions}.
+     * Gets or sets a custom geo projection function. See the available
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3 geo projection functions}.
+     *
+     * Starting version 3.0 it has been deprecated to rely on the default projection being
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa d3.geoAlbersUsa()}. Please
+     * set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
+     * Considering that `null` is also a valid value for projection}, if you need
+     * projection to be `null` please set it explicitly to `null`.
      * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3.geo.projection}
-     * @see {@link https://github.com/d3/d3-geo-projection Extended d3.geo.projection}
-     * @param {d3.projection} [projection=d3.geo.albersUsa()]
-     * @returns {dc.geoChoroplethChart}
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
+     * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
+     * @param {d3.projection} [projection=d3.geoAlbersUsa()]
+     * @returns {d3.projection|dc.geoChoroplethChart}
      */
     _chart.projection = function (projection) {
-        _geoPath.projection(projection);
+        if (!arguments.length) {
+            return _projection;
+        }
+
+        _projection = projection;
         _projectionFlag = true;
         return _chart;
+    };
+
+    var _getGeoPath = function () {
+        if (_projection === undefined) {
+            dc.logger.warn('choropleth projection default of geoAlbers is deprecated,' +
+                ' in next version projection will need to be set explicitly');
+            return _geoPath.projection(d3.geoAlbersUsa());
+        }
+
+        return _geoPath.projection(_projection);
     };
 
     /**
@@ -8297,14 +8835,14 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Returns the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path} object used to
+     * Returns the {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @method geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path}
-     * @returns {d3.geo.path}
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath}
+     * @returns {d3.geoPath}
      */
     _chart.geoPath = function () {
         return _geoPath;
@@ -8354,7 +8892,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
  * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
  * var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -8419,7 +8957,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
 
         initializeBubbles();
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
 
         return _chart;
     };
@@ -8487,7 +9025,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
     _chart._doRedraw = function () {
         updateBubbles();
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
 
         return _chart;
     };
@@ -8565,7 +9103,7 @@ dc.bubbleOverlay = function (parent, chartGroup) {
  * // create a row chart under #chart-container2 element using chart group A
  * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -8594,7 +9132,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _elasticX;
 
-    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxis = d3.axisBottom();
 
     var _rowData;
 
@@ -8609,7 +9147,7 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[1] < 0) {
                 extent[1] = 0;
             }
-            _x = d3.scale.linear().domain(extent)
+            _x = d3.scaleLinear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
         }
         _xAxis.scale(_x);
@@ -8649,11 +9187,11 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}.
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}.
      * @method x
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [scale]
      * @returns {d3.scale|dc.rowChart}
      */
@@ -8690,8 +9228,9 @@ dc.rowChart = function (parent, chartGroup) {
         var rows = _g.selectAll('g.' + _rowCssClass)
             .data(_rowData);
 
-        createElements(rows);
         removeElements(rows);
+        rows = createElements(rows)
+            .merge(rows);
         updateElements(rows);
     }
 
@@ -8705,6 +9244,8 @@ dc.rowChart = function (parent, chartGroup) {
         rowEnter.append('rect').attr('width', 0);
 
         createLabels(rowEnter);
+
+        return rowEnter;
     }
 
     function removeElements (rows) {
@@ -8841,18 +9382,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object}
+     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.svg.axis}
+     * @returns {d3.axisBottom}
      */
     _chart.xAxis = function () {
         return _xAxis;
@@ -9277,7 +9818,7 @@ dc.legend = function () {
  * // create a sub-chart under a composite parent chart
  * var chart3 = dc.scatterPlot(compositeChart);
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -9285,7 +9826,7 @@ dc.legend = function () {
  */
 dc.scatterPlot = function (parent, chartGroup) {
     var _chart = dc.coordinateGridMixin({});
-    var _symbol = d3.svg.symbol();
+    var _symbol = d3.symbol();
 
     var _existenceAccessor = function (d) { return d.value; };
 
@@ -9317,6 +9858,9 @@ dc.scatterPlot = function (parent, chartGroup) {
     var _emptyColor = null;
     var _filtered = [];
 
+    // Use a 2 dimensional brush
+    _chart.brush(d3.brush());
+
     function elementSize (d, i) {
         if (!_existenceAccessor(d)) {
             return Math.pow(_emptySize, 2);
@@ -9340,13 +9884,14 @@ dc.scatterPlot = function (parent, chartGroup) {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
             .data(_chart.data());
 
-        symbols
+        symbols = symbols
             .enter()
-        .append('path')
-            .attr('class', 'symbol')
-            .attr('opacity', 0)
-            .attr('fill', _chart.getColor)
-            .attr('transform', _locator);
+                .append('path')
+                .attr('class', 'symbol')
+                .attr('opacity', 0)
+                .attr('fill', _chart.getColor)
+                .attr('transform', _locator)
+            .merge(symbols);
 
         symbols.call(renderTitles, _chart.data());
 
@@ -9415,19 +9960,19 @@ dc.scatterPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the symbol type used for each point. By default the symbol is a circle.
+     * Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
      * Type can be a constant or an accessor.
      * @method symbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type d3.svg.symbol.type}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_type symbol.type}
      * @example
      * // Circle type
-     * chart.symbol('circle');
+     * chart.symbol(d3.symbolCircle);
      * // Square type
-     * chart.symbol('square');
-     * @param {String|Function} [type='circle']
-     * @returns {String|Function|dc.scatterPlot}
+     * chart.symbol(d3.symbolSquare);
+     * @param {Function} [type=d3.symbolCircle]
+     * @returns {Function|dc.scatterPlot}
      */
     _chart.symbol = function (type) {
         if (!arguments.length) {
@@ -9439,16 +9984,16 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the symbol generator. By default `dc.scatterPlot` will use
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol()}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol()}
      * to generate symbols. `dc.scatterPlot` will set the
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size size accessor}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size symbol size accessor}
      * on the symbol generator.
      * @method customSymbol
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol d3.svg.symbol}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol}
      * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
-     * @param {String|Function} [customSymbol=d3.svg.symbol()]
+     * @param {String|Function} [customSymbol=d3.symbol()]
      * @returns {String|Function|dc.scatterPlot}
      */
     _chart.customSymbol = function (customSymbol) {
@@ -9465,7 +10010,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method symbolSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [symbolSize=3]
      * @returns {Number|dc.scatterPlot}
      */
@@ -9482,7 +10027,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method highlightedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [highlightedSize=5]
      * @returns {Number|dc.scatterPlot}
      */
@@ -9500,7 +10045,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method excludedSize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [excludedSize=null]
      * @returns {Number|dc.scatterPlot}
      */
@@ -9550,7 +10095,7 @@ dc.scatterPlot = function (parent, chartGroup) {
      * @method emptySize
      * @memberof dc.scatterPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size d3.svg.symbol.size}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [emptySize=0]
      * @returns {Number|dc.scatterPlot}
      */
@@ -9646,46 +10191,96 @@ dc.scatterPlot = function (parent, chartGroup) {
         _symbol.size(oldSize);
     }
 
-    _chart.setHandlePaths = function () {
+    _chart.createBrushHandlePaths = function () {
         // no handle paths for poly-brushes
     };
 
-    _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
+    _chart.extendBrush = function (brushSelection) {
         if (_chart.round()) {
-            extent[0] = extent[0].map(_chart.round());
-            extent[1] = extent[1].map(_chart.round());
-
-            _chart.g().select('.brush')
-                .call(_chart.brush().extent(extent));
+            brushSelection[0] = brushSelection[0].map(_chart.round());
+            brushSelection[1] = brushSelection[1].map(_chart.round());
         }
-        return extent;
+        return brushSelection;
     };
 
-    _chart.brushIsEmpty = function (extent) {
-        return _chart.brush().empty() || !extent || extent[0][0] >= extent[1][0] || extent[0][1] >= extent[1][1];
+    _chart.brushIsEmpty = function (brushSelection) {
+        return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
     };
 
     _chart._brushing = function () {
-        var extent = _chart.extendBrush();
+        // Avoids infinite recursion (mutual recursion between range and focus operations)
+        // Source Event will be null when brush.move is called programmatically (see below as well).
+        if (!d3.event.sourceEvent) { return; }
 
-        _chart.redrawBrush(_chart.g());
+        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
+        // In this case we are more worried about this handler causing brush move programmatically which will
+        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
+        // This check avoids recursive calls
+        if (d3.event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+            return;
+        }
 
-        if (_chart.brushIsEmpty(extent)) {
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.redrawGroup();
+        var brushSelection = d3.event.selection;
+
+        // Testing with pixels is more reliable
+        var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
+
+        if (brushSelection) {
+            brushSelection = brushSelection.map(function (point) {
+                return point.map(function (coord, i) {
+                    var scale = i === 0 ? _chart.x() : _chart.y();
+                    return scale.invert(coord);
+                });
             });
 
-        } else {
-            var ranged2DFilter = dc.filters.RangedTwoDimensionalFilter(extent);
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.filter(ranged2DFilter);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
+            brushSelection = _chart.extendBrush(brushSelection);
 
+            // The rounding process might have made brushSelection empty, so we need to recheck
+            brushIsEmpty = brushIsEmpty && _chart.brushIsEmpty(brushSelection);
         }
+
+        _chart.redrawBrush(brushSelection, false);
+
+        var ranged2DFilter = brushIsEmpty ? null : dc.filters.RangedTwoDimensionalFilter(brushSelection);
+
+        dc.events.trigger(function () {
+            _chart.replaceFilter(ranged2DFilter);
+            _chart.redrawGroup();
+        }, dc.constants.EVENT_DELAY);
+    };
+
+    _chart.redrawBrush = function (brushSelection, doTransition) {
+        // override default x axis brush from parent chart
+        var _brush = _chart.brush();
+        var _gBrush = _chart.gBrush();
+
+        if (_chart.brushOn() && _gBrush) {
+            if (_chart.resizing()) {
+                _chart.setBrushExtents(doTransition);
+            }
+
+            if (!brushSelection) {
+                _gBrush
+                    .call(_brush.move, brushSelection);
+
+            } else {
+                brushSelection = brushSelection.map(function (point) {
+                    return point.map(function (coord, i) {
+                        var scale = i === 0 ? _chart.x() : _chart.y();
+                        return scale(coord);
+                    });
+                });
+
+                var gBrush =
+                    dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
+
+                gBrush
+                    .call(_brush.move, brushSelection);
+
+            }
+        }
+
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
     _chart.setBrushY = function (gBrush) {
@@ -9706,7 +10301,7 @@ dc.scatterPlot = function (parent, chartGroup) {
  * // create a number display under #chart-container1 element using the default global chart group
  * var display1 = dc.numberDisplay('#chart-container1');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -9799,19 +10394,23 @@ dc.numberDisplay = function (parent, chartGroup) {
         if (span.empty()) {
             span = span.data([0])
                 .enter()
-                .append('span')
-                .attr('class', SPAN_CLASS);
+                    .append('span')
+                    .attr('class', SPAN_CLASS)
+                .merge(span);
         }
 
         span.transition()
             .duration(_chart.transitionDuration())
             .delay(_chart.transitionDelay())
-            .ease('quad-out-in')
+            .ease(d3.easeQuad)
             .tween('text', function () {
                 // [XA] don't try and interpolate from Infinity, else this breaks.
                 var interpStart = isFinite(_lastValue) ? _lastValue : 0;
                 var interp = d3.interpolateNumber(interpStart || 0, newValue);
                 _lastValue = newValue;
+
+                // need to save it in D3v4
+                var node = this;
                 return function (t) {
                     var html = null, num = _chart.formatNumber()(interp(t));
                     if (newValue === 0 && (_html.none !== '')) {
@@ -9821,7 +10420,7 @@ dc.numberDisplay = function (parent, chartGroup) {
                     } else if (_html.some !== '') {
                         html = _html.some;
                     }
-                    this.innerHTML = html ? html.replace('%number', num) : num;
+                    node.innerHTML = html ? html.replace('%number', num) : num;
                 };
             });
     };
@@ -9835,7 +10434,7 @@ dc.numberDisplay = function (parent, chartGroup) {
      * @method formatNumber
      * @memberof dc.numberDisplay
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md d3.format}
+     * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
      * @param {Function} [formatter=d3.format('.2s')]
      * @returns {Function|dc.numberDisplay}
      */
@@ -9863,7 +10462,7 @@ dc.numberDisplay = function (parent, chartGroup) {
  * // create a heat map under #chart-container2 element using chart group A
  * var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -9879,8 +10478,8 @@ dc.heatMap = function (parent, chartGroup) {
     var _rows;
     var _colOrdering = d3.ascending;
     var _rowOrdering = d3.ascending;
-    var _colScale = d3.scale.ordinal();
-    var _rowScale = d3.scale.ordinal();
+    var _colScale = d3.scaleBand();
+    var _rowScale = d3.scaleBand();
 
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
@@ -10059,24 +10658,31 @@ dc.heatMap = function (parent, chartGroup) {
             boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
             boxHeight = Math.floor(_chart.effectiveHeight() / rowCount);
 
-        cols.rangeRoundBands([0, _chart.effectiveWidth()]);
-        rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
+        cols.rangeRound([0, _chart.effectiveWidth()]);
+        rows.rangeRound([_chart.effectiveHeight(), 0]);
 
         var boxes = _chartBody.selectAll('g.box-group').data(_chart.data(), function (d, i) {
             return _chart.keyAccessor()(d, i) + '\0' + _chart.valueAccessor()(d, i);
         });
+
+        boxes.exit().remove();
+
         var gEnter = boxes.enter().append('g')
             .attr('class', 'box-group');
 
         gEnter.append('rect')
             .attr('class', 'heat-box')
             .attr('fill', 'white')
+            .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
+            .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
             gEnter.append('title');
             boxes.select('title').text(_chart.title());
         }
+
+        boxes = gEnter.merge(boxes);
 
         dc.transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
@@ -10087,41 +10693,56 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('width', boxWidth)
             .attr('height', boxHeight);
 
-        boxes.exit().remove();
-
         var gCols = _chartBody.select('g.cols');
         if (gCols.empty()) {
             gCols = _chartBody.append('g').attr('class', 'cols axis');
         }
         var gColsText = gCols.selectAll('text').data(cols.domain());
-        gColsText.enter().append('text')
-              .attr('x', function (d) { return cols(d) + boxWidth / 2; })
-              .style('text-anchor', 'middle')
-              .attr('y', _chart.effectiveHeight())
-              .attr('dy', 12)
-              .on('click', _chart.xAxisOnClick())
-              .text(_chart.colsLabel());
+
+        gColsText.exit().remove();
+
+        gColsText = gColsText
+            .enter()
+                .append('text')
+                .attr('x', function (d) {
+                    return cols(d) + boxWidth / 2;
+                })
+                .style('text-anchor', 'middle')
+                .attr('y', _chart.effectiveHeight())
+                .attr('dy', 12)
+                .on('click', _chart.xAxisOnClick())
+                .text(_chart.colsLabel())
+            .merge(gColsText);
+
         dc.transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
-        gColsText.exit().remove();
+
         var gRows = _chartBody.select('g.rows');
         if (gRows.empty()) {
             gRows = _chartBody.append('g').attr('class', 'rows axis');
         }
+
         var gRowsText = gRows.selectAll('text').data(rows.domain());
-        gRowsText.enter().append('text')
-              .attr('dy', 6)
-              .style('text-anchor', 'end')
-              .attr('x', 0)
-              .attr('dx', -2)
-              .on('click', _chart.yAxisOnClick())
-              .text(_chart.rowsLabel());
+
+        gRowsText.exit().remove();
+
+        gRowsText = gRowsText
+            .enter()
+            .append('text')
+                .style('text-anchor', 'end')
+                .attr('x', 0)
+                .attr('dx', -2)
+                .attr('y', function (d) { return rows(d) + boxHeight / 2; })
+                .attr('dy', 6)
+                .on('click', _chart.yAxisOnClick())
+                .text(_chart.rowsLabel())
+            .merge(gRowsText);
+
         dc.transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
               .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
-        gRowsText.exit().remove();
 
         if (_chart.hasFilter()) {
             _chart.selectAll('g.box-group').each(function (d) {
@@ -10277,12 +10898,12 @@ dc.heatMap = function (parent, chartGroup) {
                     d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n)) : d3.range(n);
 
                 // Compute the new x-scale.
-                var x1 = d3.scale.linear()
+                var x1 = d3.scaleLinear()
                     .domain(domain && domain.call(this, d, i) || [min, max])
                     .range([height, 0]);
 
                 // Retrieve the old x-scale, if this is an update.
-                var x0 = this.__chart__ || d3.scale.linear()
+                var x0 = this.__chart__ || d3.scaleLinear()
                     .domain([0, Infinity])
                     .range(x1.range());
 
@@ -10503,7 +11124,7 @@ dc.heatMap = function (parent, chartGroup) {
                     .style('opacity', 1e-6)
                     .remove();
             });
-            d3.timer.flush();
+            d3.timerFlush();
         }
 
         box.width = function (x) {
@@ -10542,7 +11163,7 @@ dc.heatMap = function (parent, chartGroup) {
             if (!arguments.length) {
                 return domain;
             }
-            domain = x === null ? x : d3.functor(x);
+            domain = x === null ? x :  typeof x === 'function' ? x : dc.utils.constant(x);
             return box;
         };
 
@@ -10603,7 +11224,7 @@ dc.heatMap = function (parent, chartGroup) {
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -10635,7 +11256,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
-            return _chart.x().rangeBand();
+            return _chart.x().bandwidth();
         } else {
             return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
         }
@@ -10645,7 +11266,7 @@ dc.boxPlot = function (parent, chartGroup) {
     _chart.yAxisPadding(12);
 
     // default to ordinal
-    _chart.x(d3.scale.ordinal());
+    _chart.x(d3.scaleBand());
     _chart.xUnits(dc.units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
@@ -10663,12 +11284,12 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
+     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scale.ordinal.rangeBands}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
      * @param {Number} [padding=0.8]
      * @returns {Number|dc.boxPlot}
      */
@@ -10707,7 +11328,7 @@ dc.boxPlot = function (parent, chartGroup) {
         if (!arguments.length) {
             return _boxWidth;
         }
-        _boxWidth = d3.functor(boxWidth);
+        _boxWidth = typeof boxWidth === 'function' ? boxWidth : dc.utils.constant(boxWidth);
         return _chart;
     };
 
@@ -10735,11 +11356,11 @@ dc.boxPlot = function (parent, chartGroup) {
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
-        renderBoxes(boxesG);
-        updateBoxes(boxesG);
+        var boxesGEnterUpdate = renderBoxes(boxesG);
+        updateBoxes(boxesGEnterUpdate);
         removeBoxes(boxesG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderBoxes (boxesG) {
@@ -10753,6 +11374,8 @@ dc.boxPlot = function (parent, chartGroup) {
                 _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
+
+        return boxesGEnter.merge(boxesG);
     }
 
     function updateBoxes (boxesG) {
@@ -10768,7 +11391,7 @@ dc.boxPlot = function (parent, chartGroup) {
         boxesG.exit().remove().call(_box);
     }
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         if (_chart.hasFilter()) {
             if (_chart.isOrdinal()) {
                 _chart.g().selectAll('g.box').each(function (d) {
@@ -10779,9 +11402,11 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                var extent = _chart.brush().extent();
-                var start = extent[0];
-                var end = extent[1];
+                if (!_chart.brushOn()) {
+                    return;
+                }
+                var start = brushSelection[0];
+                var end = brushSelection[1];
                 var keyAccessor = _chart.keyAccessor();
                 _chart.g().selectAll('g.box').each(function (d) {
                     var key = keyAccessor(d);
@@ -10927,17 +11552,18 @@ dc.selectMenu = function (parent, chartGroup) {
         var options = _select.selectAll('option.' + OPTION_CSS_CLASS)
           .data(_chart.data(), function (d) { return _chart.keyAccessor()(d); });
 
+        options.exit().remove();
+
         options.enter()
               .append('option')
               .classed(OPTION_CSS_CLASS, true)
-              .attr('value', function (d) { return _chart.keyAccessor()(d); });
+              .attr('value', function (d) { return _chart.keyAccessor()(d); })
+            .merge(options)
+              .text(_chart.title());
 
-        options.text(_chart.title());
-        options.exit().remove();
         _select.selectAll('option.' + OPTION_CSS_CLASS).sort(_order);
 
         _select.on('change', onChange);
-        return options;
     }
 
     function onChange (d, i) {

@@ -10,7 +10,7 @@ describe('dc.dataTable', function () {
         dateFixture = loadDateFixture();
         data = crossfilter(dateFixture);
         dimension = data.dimension(function (d) {
-            return d3.time.day.utc(d.dd);
+            return d3.utcDay(d.dd);
         });
         countryDimension = data.dimension(function (d) {
             return d.countrycode;
@@ -62,20 +62,20 @@ describe('dc.dataTable', function () {
                 expect(chart.group()).toEqual(valueGroup);
             });
             it('group tr should not be undefined', function () {
-                expect(typeof(chart.selectAll('tr.dc-table-group')[0][0])).not.toBe('undefined');
+                expect(typeof(chart.selectAll('tr.dc-table-group').nodes()[0])).not.toBe('undefined');
             });
             it('sets column span set on group tr', function () {
-                expect(chart.selectAll('tr.dc-table-group td')[0][0].getAttribute('colspan')).toEqual('2');
+                expect(chart.selectAll('tr.dc-table-group td').nodes()[0].getAttribute('colspan')).toEqual('2');
             });
             it('creates id column', function () {
-                expect(chart.selectAll('td._0')[0][0].innerHTML).toEqual('9');
-                expect(chart.selectAll('td._0')[0][1].innerHTML).toEqual('8');
-                expect(chart.selectAll('td._0')[0][2].innerHTML).toEqual('3');
+                expect(chart.selectAll('td._0').nodes()[0].innerHTML).toEqual('9');
+                expect(chart.selectAll('td._0').nodes()[1].innerHTML).toEqual('8');
+                expect(chart.selectAll('td._0').nodes()[2].innerHTML).toEqual('3');
             });
             it('creates status column', function () {
-                expect(chart.selectAll('td._1')[0][0].innerHTML).toEqual('T');
-                expect(chart.selectAll('td._1')[0][1].innerHTML).toEqual('F');
-                expect(chart.selectAll('td._1')[0][2].innerHTML).toEqual('T');
+                expect(chart.selectAll('td._1').nodes()[0].innerHTML).toEqual('T');
+                expect(chart.selectAll('td._1').nodes()[1].innerHTML).toEqual('F');
+                expect(chart.selectAll('td._1').nodes()[2].innerHTML).toEqual('T');
             });
         });
 
@@ -86,14 +86,14 @@ describe('dc.dataTable', function () {
             });
 
             it('slice beginning', function () {
-                expect(chart.selectAll('tr.dc-table-row')[0].length).toEqual(2);
+                expect(chart.selectAll('tr.dc-table-row').nodes().length).toEqual(2);
             });
 
             it('slice beginning and end', function () {
                 chart.endSlice(2);
                 chart.redraw();
 
-                expect(chart.selectAll('tr.dc-table-row')[0].length).toEqual(1);
+                expect(chart.selectAll('tr.dc-table-row').nodes().length).toEqual(1);
             });
         });
 
@@ -103,11 +103,11 @@ describe('dc.dataTable', function () {
                 chart.redraw();
             });
             it('renders only filtered data set', function () {
-                expect(chart.selectAll('td._0')[0].length).toEqual(2);
+                expect(chart.selectAll('td._0').nodes().length).toEqual(2);
             });
             it('renders the correctly filtered records', function () {
-                expect(chart.selectAll('td._0')[0][0].innerHTML).toEqual('7');
-                expect(chart.selectAll('td._0')[0][1].innerHTML).toEqual('5');
+                expect(chart.selectAll('td._0').nodes()[0].innerHTML).toEqual('7');
+                expect(chart.selectAll('td._0').nodes()[1].innerHTML).toEqual('5');
             });
         });
 
@@ -117,7 +117,7 @@ describe('dc.dataTable', function () {
                 chart.redraw();
             });
             it('uses dimension.bottom() instead of top()', function () {
-                expect(chart.selectAll('td._0')[0][0].innerHTML).toEqual('1');
+                expect(chart.selectAll('td._0').nodes()[0].innerHTML).toEqual('1');
             });
         });
     });
@@ -149,13 +149,13 @@ describe('dc.dataTable', function () {
             chart.render();
         });
         it('should render value and capitalized header', function () {
-            var cols = chart.selectAll('td.dc-table-column')[0].map(function (d) {return d.textContent;});
+            var cols = chart.selectAll('td.dc-table-column').nodes().map(function (d) {return d.textContent;});
             var expected = ['Mississippi', 'Mississippi', 'Delaware'];
             expect(cols.length).toEqual(expected.length);
             expected.forEach(function (d) {
                 expect(cols).toContain(d);
             });
-            var colheader = chart.selectAll('th.dc-table-head')[0].map(function (d) {return d.textContent;});
+            var colheader = chart.selectAll('th.dc-table-head').nodes().map(function (d) {return d.textContent;});
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('State');
 
@@ -167,13 +167,13 @@ describe('dc.dataTable', function () {
             chart.render();
         });
         it('should render function result and no header', function () {
-            var cols = chart.selectAll('td.dc-table-column')[0].map(function (d) {return d.textContent;});
+            var cols = chart.selectAll('td.dc-table-column').nodes().map(function (d) {return d.textContent;});
             var expected = ['9test', '8test', '3test'];
             expect(cols.length).toEqual(expected.length);
             expected.forEach(function (d) {
                 expect(cols).toContain(d);
             });
-            var colheader = chart.selectAll('th.dc-table-head')[0].map(function (d) {return d.textContent;});
+            var colheader = chart.selectAll('th.dc-table-head').nodes().map(function (d) {return d.textContent;});
             expect(colheader.length).toEqual(0);
         });
     });
@@ -189,16 +189,16 @@ describe('dc.dataTable', function () {
         });
         it('should produce correct table header with single column', function () {
             var thead = chart.selectAll('thead');
-            expect(thead.length).toBe(1);
+            expect(thead.nodes().length).toBe(1);
             var tr = thead.selectAll('tr');
-            expect(tr.length).toBe(1);
-            var colheader = tr.selectAll('th.dc-table-head')[0].map(function (d) {return d.textContent;});
+            expect(tr.nodes().length).toBe(1);
+            var colheader = tr.selectAll('th.dc-table-head').nodes().map(function (d) {return d.textContent;});
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('Test ID');
         });
 
         it('should render correct values in rows', function () {
-            var cols = chart.selectAll('td.dc-table-column')[0].map(function (d) {return d.textContent;});
+            var cols = chart.selectAll('td.dc-table-column').nodes().map(function (d) {return d.textContent;});
             var expected = ['test9', 'test8', 'test3'];
             expect(cols.length).toEqual(expected.length);
             expected.forEach(function (d, i) {
@@ -224,10 +224,10 @@ describe('dc.dataTable', function () {
         });
         it('should produce correct table header with single column', function () {
             var thead = chart.selectAll('thead');
-            expect(thead.length).toBe(1);
+            expect(thead.nodes().length).toBe(1);
             var tr = thead.selectAll('tr');
-            expect(tr.length).toBe(1);
-            var colheader = tr.selectAll('th.dc-table-head')[0].map(function (d) {return d.textContent;});
+            expect(tr.nodes().length).toBe(1);
+            var colheader = tr.selectAll('th.dc-table-head').nodes().map(function (d) {return d.textContent;});
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('Test ID');
         });
@@ -239,7 +239,7 @@ describe('dc.dataTable', function () {
             chart.render();
         });
         it('group tr should be undefined', function () {
-            expect(typeof(chart.selectAll('tr.dc-table-group')[0][0])).toBe('undefined');
+            expect(typeof(chart.selectAll('tr.dc-table-group').nodes()[0])).toBe('undefined');
         });
     });
 

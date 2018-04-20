@@ -1,5 +1,5 @@
 /**
- * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
+ * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stackD3v3.
  * @name stackMixin
  * @memberof dc
  * @mixin
@@ -11,7 +11,7 @@ dc.stackMixin = function (_chart) {
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
-        layer.values = layer.group.all().map(function (d, i) {
+        var allValues = layer.group.all().map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
@@ -21,12 +21,11 @@ dc.stackMixin = function (_chart) {
             };
         });
 
-        layer.values = layer.values.filter(domainFilter());
-        return layer.values;
+        layer.domainValues = allValues.filter(domainFilter());
+        layer.values = _chart.evadeDomainFilter() ? allValues : layer.domainValues;
     }
 
-    var _stackLayout = d3.layout.stack()
-        .values(prepareValues);
+    var _stackLayout = d3.stack();
 
     var _stack = [];
     var _titles = {};
@@ -35,8 +34,8 @@ dc.stackMixin = function (_chart) {
     var _evadeDomainFilter = false;
 
     function domainFilter () {
-        if (!_chart.x() || _evadeDomainFilter) {
-            return d3.functor(true);
+        if (!_chart.x()) {
+            return dc.utils.constant(true);
         }
         var xDomain = _chart.x().domain();
         if (_chart.isOrdinal()) {
@@ -188,7 +187,7 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack () {
-        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var valueses = _chart.data().map(function (layer) { return layer.domainValues; });
         return Array.prototype.concat.apply([], valueses);
     }
 
@@ -249,8 +248,8 @@ dc.stackMixin = function (_chart) {
      * @method stackLayout
      * @memberof dc.stackMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.layout.stack}
-     * @param {Function} [stack=d3.layout.stack]
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.stackD3v3}
+     * @param {Function} [stack=d3.stackD3v3]
      * @returns {Function|dc.stackMixin}
      */
     _chart.stackLayout = function (stack) {
@@ -258,9 +257,6 @@ dc.stackMixin = function (_chart) {
             return _stackLayout;
         }
         _stackLayout = stack;
-        if (_stackLayout.values() === d3.layout.stack().values()) {
-            _stackLayout.values(prepareValues);
-        }
         return _chart;
     };
 
@@ -288,13 +284,32 @@ dc.stackMixin = function (_chart) {
         return _chart;
     };
 
-    function visability (l) {
+    function visibility (l) {
         return !l.hidden;
     }
 
     _chart.data(function () {
-        var layers = _stack.filter(visability);
-        return layers.length ? _chart.stackLayout()(layers) : [];
+        var layers = _stack.filter(visibility);
+        if (!layers.length) {
+            return [];
+        }
+        layers.forEach(prepareValues);
+        var v4data = layers[0].values.map(function (v, i) {
+            var col = {x: v.x};
+            layers.forEach(function (layer) {
+                col[layer.name] = layer.values[i].y;
+            });
+            return col;
+        });
+        var keys = layers.map(function (layer) { return layer.name; });
+        var v4result = _chart.stackLayout().keys(keys)(v4data);
+        v4result.forEach(function (series, i) {
+            series.forEach(function (ys, j) {
+                layers[i].values[j].y0 = ys[0];
+                layers[i].values[j].y1 = ys[1];
+            });
+        });
+        return layers;
     });
 
     _chart._ordinalXDomain = function () {

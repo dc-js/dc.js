@@ -149,6 +149,11 @@ function compareIntList (actual, expected) {
     return {pass: true};
 }
 
+function normalizeColor (c) {
+    // will convert to rgb(0, 0, 0)
+    return d3.color(c).toString();
+}
+
 beforeEach(function () {
     jasmine.addMatchers({
         toBeWithinDelta: function (_) {
@@ -188,8 +193,21 @@ beforeEach(function () {
         toMatchUrl: function () {
             return {
                 compare: function (actual, url) {
-                    var regexp = new RegExp('url\\("?' + url + '"?\\)');
-                    expect(actual).toMatch(regexp);
+                    /*
+                    URL can be like:
+                       url(http://localhost:8888/spec/?random=true#composite-chart-clip)
+                       url("http://localhost:8888/spec/?random=true#composite-chart-clip")
+                       http://localhost:8888/spec/?random=true#composite-chart-clip
+                       http://localhost:8888/spec/##composite-chart-clip
+                     */
+                    var cleanURL = function (u) {
+                        var matches = u.match(/url\((.*)\)/);
+                        if (matches) {
+                            u = matches[1].replace(/"/g, '');
+                        }
+                        return u.replace(/\#+/, '#');
+                    };
+                    expect(cleanURL(actual)).toEqual(cleanURL(url));
                     return {pass: true};
                 }
             };
@@ -207,6 +225,27 @@ beforeEach(function () {
         toEqualIntList: function () {
             return {
                 compare: compareIntList
+            };
+        },
+        toMatchColor: function () {
+            return {
+                compare: function (actual, expected) {
+                    // Colors can be rgb(0, 0, 0), #000000 or black
+                    expect(normalizeColor(actual)).toEqual(normalizeColor(expected));
+                    return {pass: true};
+                }
+            };
+        },
+        toMatchColors: function () {
+            return {
+                compare: function (actual, expected) {
+                    // Colors can be rgb(0, 0, 0), #000000 or black
+                    actual = actual.map(normalizeColor);
+                    expected = expected.map(normalizeColor);
+
+                    expect(actual).toEqual(expected);
+                    return {pass: true};
+                }
             };
         }
     });

@@ -5,7 +5,7 @@ describe('dc.lineChart', function () {
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         group = dimension.group();
 
         id = 'line-chart';
@@ -14,7 +14,7 @@ describe('dc.lineChart', function () {
         chart = dc.lineChart('#' + id);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
-            .x(d3.time.scale.utc().domain([makeDate(2012, 1, 1), makeDate(2012, 11, 31)]))
+            .x(d3.scaleUtc().domain([makeDate(2012, 1, 1), makeDate(2012, 11, 31)]))
             .transitionDuration(0);
     });
 
@@ -252,7 +252,7 @@ describe('dc.lineChart', function () {
                         var x;
                         beforeEach(function () {
                             var dot = chart.select('circle.dot');
-                            dot.on('mousemove').call(dot[0][0]);
+                            dot.on('mousemove').call(dot.nodes()[0]);
                             x = dot.attr('cx');
                         });
 
@@ -268,7 +268,7 @@ describe('dc.lineChart', function () {
                             var x;
                             beforeEach(function () {
                                 var dot = chart.select('circle.dot');
-                                dot.on('mousemove').call(dot[0][0]);
+                                dot.on('mousemove').call(dot.nodes()[0]);
                                 x = dot.attr('cx');
                             });
 
@@ -284,7 +284,7 @@ describe('dc.lineChart', function () {
                             beforeEach(function () {
                                 chart.useRightYAxis(true).render();
                                 var dot = chart.select('circle.dot');
-                                dot.on('mousemove').call(dot[0][0]);
+                                dot.on('mousemove').call(dot.nodes()[0]);
                                 x = dot.attr('cx');
                             });
 
@@ -337,7 +337,7 @@ describe('dc.lineChart', function () {
                 chart.dimension(stateDimension)
                     .group(stateGroup)
                     .xUnits(dc.units.ordinal)
-                    .x(d3.scale.ordinal().domain(['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario']))
+                    .x(d3.scaleBand().domain(['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario']))
                     .render();
             });
 
@@ -358,7 +358,7 @@ describe('dc.lineChart', function () {
 
                     chart.dimension(dimension)
                         .brushOn(false)
-                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
+                        .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                         .group(idGroup, 'stack 0')
                         .title('stack 0', function (d) { return 'stack 0: ' + d.value; })
                         .stack(valueGroup, 'stack 1')
@@ -429,9 +429,9 @@ describe('dc.lineChart', function () {
                     it('should draw tooltip dots on top of paths and areas', function () {
                         var list = chart.selectAll('circle.dot, path.line, path.area');
 
-                        var indexOfLastLine = list[0].indexOf(list.filter('path.line')[0][2]);
-                        var indexOfLastArea = list[0].indexOf(list.filter('path.area')[0][2]);
-                        var indexOfDot = list[0].indexOf(list.filter('circle.dot')[0][0]);
+                        var indexOfLastLine = list.nodes().indexOf(list.filter('path.line').nodes()[2]);
+                        var indexOfLastArea = list.nodes().indexOf(list.filter('path.area').nodes()[2]);
+                        var indexOfDot = list.nodes().indexOf(list.filter('circle.dot').nodes()[0]);
 
                         expect(indexOfDot).toBeGreaterThan(indexOfLastArea);
                         expect(indexOfDot).toBeGreaterThan(indexOfLastLine);
@@ -440,11 +440,11 @@ describe('dc.lineChart', function () {
                     it('should draw tooltip ref lines on top of paths', function () {
                         var list = chart.selectAll('path.yRef, path.xRef, path.line, path.area');
 
-                        var indexOfLastLine = list[0].indexOf(list.filter('path.line')[0][2]);
-                        var indexOfLastArea = list[0].indexOf(list.filter('path.area')[0][2]);
+                        var indexOfLastLine = list.nodes().indexOf(list.filter('path.line').nodes()[2]);
+                        var indexOfLastArea = list.nodes().indexOf(list.filter('path.area').nodes()[2]);
 
-                        var indexOfFirstYRef = list[0].indexOf(list.filter('path.yRef')[0][0]);
-                        var indexOfFirstXRef = list[0].indexOf(list.filter('path.xRef')[0][0]);
+                        var indexOfFirstYRef = list.nodes().indexOf(list.filter('path.yRef').nodes()[0]);
+                        var indexOfFirstXRef = list.nodes().indexOf(list.filter('path.xRef').nodes()[0]);
 
                         expect(indexOfLastLine).toBeLessThan(indexOfFirstXRef);
                         expect(indexOfLastLine).toBeLessThan(indexOfFirstYRef);
@@ -529,7 +529,7 @@ describe('dc.lineChart', function () {
                     var mixedGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
 
                     chart.group(mixedGroup).stack(mixedGroup).stack(mixedGroup);
-                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                    chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .renderArea(true)
@@ -558,7 +558,7 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
 
                     expect(nthText(0).text()).toBe('-20');
                     expect(nthText(1).text()).toBe('0');
@@ -581,18 +581,18 @@ describe('dc.lineChart', function () {
                     var negativeGroup = dimension.group().reduceSum(function (d) { return -Math.abs(d.nvalue); });
 
                     chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
-                    chart.x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                    chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
 
                     chart.margins({top: 30, right: 50, bottom: 30, left: 30})
                         .elasticY(true)
-                        .xUnits(d3.time.days.utc)
+                        .xUnits(d3.utcDays)
                         .yAxis().ticks(3);
 
                     chart.render();
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text')[0][n]); };
+                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
 
                     expect(nthText(0).text()).toBe('-30');
                     expect(nthText(1).text()).toBe('-20');
@@ -642,11 +642,11 @@ describe('dc.lineChart', function () {
             });
 
             function nthLine (n) {
-                return d3.select(chart.selectAll('path.line')[0][n]);
+                return d3.select(chart.selectAll('path.line').nodes()[n]);
             }
 
             function nthArea (n) {
-                return d3.select(chart.selectAll('path.area')[0][n]);
+                return d3.select(chart.selectAll('path.area').nodes()[n]);
             }
         });
 
@@ -673,31 +673,33 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should create a fancy brush resize handle', function () {
-                    chart.select('g.brush').selectAll('.resize path').each(function (d, i) {
+                    var selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
+                    expect(selectAll.size()).toBe(2);
+                    selectAll.each(function (d, i) {
                         if (i === 0) {
                             expect(d3.select(this).attr('d'))
-                                .toMatchPath('M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98');
+                                .toMatchPath('M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98');
                         } else {
                             expect(d3.select(this).attr('d'))
-                                .toMatchPath('M-0.5,53 A6,6 0 0 0 -6.5,59 V100 A6,6 0 0 0 -0.5,106 ZM-2.5,61 V98 M-4.5,61 V98');
+                                .toMatchPath('M0.5,53 A6,6 0 0 1 6.5,59 V100 A6,6 0 0 1 0.5,106 ZM2.5,61 V98 M4.5,61 V98');
                         }
                     });
                 });
 
                 it('should stretch the background', function () {
-                    expect(chart.select('g.brush rect.background').attr('width')).toBe('1020');
+                    expect(chart.select('g.brush rect.overlay').attr('width')).toBe('1020');
                 });
 
                 it('should set the background height to the chart height', function () {
-                    expect(chart.select('g.brush rect.background').attr('height')).toBe('160');
+                    expect(chart.select('g.brush rect.overlay').attr('height')).toBe('160');
                 });
 
                 it('should set extent height to the chart height', function () {
-                    expect(chart.select('g.brush rect.extent').attr('height')).toBe('160');
+                    expect(chart.select('g.brush rect.selection').attr('height')).toBe('160');
                 });
 
                 it('should set extent width based on filter set', function () {
-                    expect(chart.select('g.brush rect.extent').attr('width')).toBeWithinDelta(88, 1);
+                    expect(chart.select('g.brush rect.selection').attr('width')).toBeWithinDelta(88, 1);
                 });
 
                 it('should not have an area path', function () {
@@ -740,7 +742,7 @@ describe('dc.lineChart', function () {
                 .render();
         });
         it('updates dot colors', function () {
-            expect(chart.select('circle.dot')[0][0].attributes.fill.value).toMatch(/#ff0000/i);
+            expect(chart.select('circle.dot').nodes()[0].attributes.fill.value).toMatch(/#ff0000/i);
         });
     });
 
@@ -750,8 +752,8 @@ describe('dc.lineChart', function () {
 
     function lineLabelPositions () {
         var LABEL_PADDING = 3;
-        chart.selectAll('.stack')[0].forEach(function (stack, i) {
-            d3.select(stack).selectAll('text.lineLabel')[0].forEach(function (lineLabel, j) {
+        chart.selectAll('.stack').nodes().forEach(function (stack, i) {
+            d3.select(stack).selectAll('text.lineLabel').nodes().forEach(function (lineLabel, j) {
                 expect(+d3.select(lineLabel).attr('x')).toBeCloseTo(chart.x()(chart.data()[i].values[j].x));
                 expect(+d3.select(lineLabel).attr('y') + LABEL_PADDING).toBeCloseTo(chart.y()(chart.data()[i].values[j].y +
                         chart.data()[i].values[j].y0));

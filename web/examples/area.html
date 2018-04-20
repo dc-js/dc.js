@@ -18,7 +18,7 @@
     <script type="text/javascript">
 
       var chart = dc.lineChart("#test");
-      d3.csv("morley.csv", function(error, experiments) {
+      d3.csv("morley.csv").then(function(experiments) {
 
           experiments.forEach(function(x) {
               x.Speed = +x.Speed;
@@ -45,7 +45,7 @@
           chart
               .width(768)
               .height(480)
-              .x(d3.scale.linear().domain([1,20]))
+              .x(d3.scaleLinear().domain([1,20]))
               .margins({left: 50, top: 10, right: 10, bottom: 20})
               .renderArea(true)
               .brushOn(false)

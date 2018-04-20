@@ -76,7 +76,7 @@
     var industryChart = dc.bubbleChart("#industry-chart");
     var roundChart = dc.bubbleChart("#round-chart");
 
-    d3.csv("vc.csv", function (csv) {
+    d3.csv("vc.csv").then(function (csv) {
         var data = crossfilter(csv);
 
         var states = data.dimension(function (d) {
@@ -126,17 +126,18 @@
                 }
         );
 
-        d3.json("../geo/us-states.json", function (statesJson) {
+        d3.json("../geo/us-states.json").then(function (statesJson) {
             usChart.width(990)
                     .height(500)
                     .dimension(states)
                     .group(stateRaisedSum)
-                    .colors(d3.scale.quantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
+                    .colors(d3.scaleQuantize().range(["#E2F2FF", "#C4E4FF", "#9ED2FF", "#81C5FF", "#6BBAFF", "#51AEFF", "#36A2FF", "#1E96FF", "#0089FF", "#0061B5"]))
                     .colorDomain([0, 200])
                     .colorCalculator(function (d) { return d ? usChart.colors()(d) : '#ccc'; })
                     .overlayGeoJson(statesJson.features, "state", function (d) {
                         return d.properties.name;
                     })
+                .projection(d3.geoAlbersUsa())
                 .valueAccessor(function(kv) {
                     console.log(kv);
                     return kv.value;
@@ -150,7 +151,7 @@
                     .margins({top: 10, right: 50, bottom: 30, left: 60})
                     .dimension(industries)
                     .group(statsByIndustries)
-                    .colors(d3.scale.category10())
+                    .colors(d3.scaleOrdinal(d3.schemeCategory10))
                     .keyAccessor(function (p) {
                         return p.value.amountRaised;
                     })
@@ -160,8 +161,8 @@
                     .radiusValueAccessor(function (p) {
                         return p.value.amountRaised;
                     })
-                    .x(d3.scale.linear().domain([0, 5000]))
-                    .r(d3.scale.linear().domain([0, 4000]))
+                    .x(d3.scaleLinear().domain([0, 5000]))
+                    .r(d3.scaleLinear().domain([0, 4000]))
                     .minRadiusWithLabel(15)
                     .elasticY(true)
                     .yAxisPadding(100)
@@ -190,7 +191,7 @@
                     .margins({top: 10, right: 50, bottom: 30, left: 60})
                     .dimension(rounds)
                     .group(statsByRounds)
-                    .colors(d3.scale.category10())
+                    .colors(d3.scaleOrdinal(d3.schemeCategory10))
                     .keyAccessor(function (p) {
                         return p.value.amountRaised;
                     })
@@ -200,8 +201,8 @@
                     .radiusValueAccessor(function (p) {
                         return p.value.amountRaised;
                     })
-                    .x(d3.scale.linear().domain([0, 5000]))
-                    .r(d3.scale.linear().domain([0, 9000]))
+                    .x(d3.scaleLinear().domain([0, 5000]))
+                    .r(d3.scaleLinear().domain([0, 9000]))
                     .minRadiusWithLabel(15)
                     .elasticY(true)
                     .yAxisPadding(150)

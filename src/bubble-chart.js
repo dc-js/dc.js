@@ -19,7 +19,7 @@
  * // create a bubble chart under #chart-container2 element using chart group A
  * var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -48,13 +48,13 @@ dc.bubbleChart = function (parent, chartGroup) {
             bubbleG.order();
         }
 
-        renderNodes(bubbleG);
+        bubbleG = renderNodes(bubbleG);
 
         updateNodes(bubbleG);
 
         removeNodes(bubbleG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderNodes (bubbleG) {
@@ -69,6 +69,9 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
+
+        bubbleG = bubbleGEnter.merge(bubbleG);
+
         dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
@@ -81,6 +84,8 @@ dc.bubbleChart = function (parent, chartGroup) {
         _chart._doRenderLabel(bubbleGEnter);
 
         _chart._doRenderTitles(bubbleGEnter);
+
+        return bubbleG;
     }
 
     function updateNodes (bubbleG) {
@@ -105,7 +110,7 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     function bubbleX (d) {
         var x = _chart.x()(_chart.keyAccessor()(d));
-        if (isNaN(x)) {
+        if (isNaN(x) || !isFinite(x)) {
             x = 0;
         }
         return x;
@@ -113,7 +118,7 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     function bubbleY (d) {
         var y = _chart.y()(_chart.valueAccessor()(d));
-        if (isNaN(y)) {
+        if (isNaN(y) || !isFinite(y)) {
             y = 0;
         }
         return y;
@@ -123,9 +128,9 @@ dc.bubbleChart = function (parent, chartGroup) {
         // override default x axis brush from parent chart
     };
 
-    _chart.redrawBrush = function () {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
         // override default x axis brush from parent chart
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
     return _chart.anchor(parent, chartGroup);

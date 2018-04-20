@@ -20,13 +20,13 @@
 var chart = dc.seriesChart("#test");
 var ndx, runDimension, runGroup;
 
-d3.csv("morley.csv", function(error, experiments) {
+d3.csv("morley.csv").then(function(experiments) {
 
   ndx = crossfilter(experiments);
   runDimension = ndx.dimension(function(d) {return [+d.Expt, +d.Run]; });
   runGroup = runDimension.group().reduceSum(function(d) { return +d.Speed; });
 
-  var symbolScale = d3.scale.ordinal().range(d3.svg.symbolTypes);
+  var symbolScale = d3.scaleOrdinal().range(d3.symbols);
   var symbolAccessor = function(d) { return symbolScale(d.key[0]); };
   var subChart = function(c) {
     return dc.scatterPlot(c)
@@ -39,7 +39,7 @@ d3.csv("morley.csv", function(error, experiments) {
     .width(768)
     .height(480)
     .chart(subChart)
-    .x(d3.scale.linear().domain([0,20]))
+    .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")
     .xAxisLabel("Run")

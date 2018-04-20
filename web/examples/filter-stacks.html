@@ -36,7 +36,7 @@
 
       var chart = dc.barChart("#test"),
           pie = dc.pieChart('#pie');
-      d3.csv("morley.csv", function(error, experiments) {
+      d3.csv("morley.csv").then(function(experiments) {
 
           experiments.forEach(function(x) {
               x.Speed = +x.Speed;
@@ -81,7 +81,7 @@
                   return d.Speed;
               }),
               stackedGroup = stack_second(runExptGroup);
-          var quantizeSpeed = d3.scale.quantize().domain(d3.extent(experiments, function(d) {
+          var quantizeSpeed = d3.scaleQuantize().domain(d3.extent(experiments, function(d) {
               return d.Speed;
           })).range(['lowest', 'low', 'medium', 'high', 'highest']);
           var quantizeSpeedDim = ndx.dimension(function(d) {
@@ -98,7 +98,7 @@
               .width(600)
               .height(400)
               .controlsUseVisibility(true)
-              .x(d3.scale.linear().domain([1,21]))
+              .x(d3.scaleLinear().domain([1,21]))
               .margins({left: 80, top: 20, right: 10, bottom: 20})
               .brushOn(false)
               .clipPadding(10)

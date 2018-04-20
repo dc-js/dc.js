@@ -132,11 +132,11 @@
       group      = dimension.group().reduceSum(function(d) { return d.value; });
 
       rangeChart
-      .height(40)
+      .height(46)
       .dimension(dimension)
       .group(group)
-      .x(d3.time.scale().domain(domain))
-      .xUnits(d3.time.month)
+      .x(d3.scaleTime().domain(domain))
+      .xUnits(d3.timeMonth)
       .centerBar(true)
       .render();
 
@@ -145,8 +145,8 @@
       .dimension(dimension)
       .group(group)
       .rangeChart(rangeChart)
-      .x(d3.time.scale().domain(domain))
-      .xUnits(d3.time.day)
+      .x(d3.scaleTime().domain(domain))
+      .xUnits(d3.timeDay)
       .brushOn(false)
       .mouseZoomable(true)
       .zoomScale([1, 100])

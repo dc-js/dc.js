@@ -1,11 +1,11 @@
-/* global appendChartID, loadDateFixture, makeDate, cleanDateRange */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, simulateChartBrushing */
 describe('dc.coordinateGridChart', function () {
     var chart, id;
     var data, dimension, group;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function (d) { return d3.time.day.utc(d.dd); });
+        dimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         group = dimension.group();
 
         id = 'coordinate-grid-chart';
@@ -20,7 +20,7 @@ describe('dc.coordinateGridChart', function () {
             .transitionDelay(0)
             .brushOn(false)
             .margins({top: 20, bottom: 0, right: 10, left: 0})
-            .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+            .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
     });
 
     describe('rendering', function () {
@@ -108,7 +108,7 @@ describe('dc.coordinateGridChart', function () {
         });
 
         it('should be able to change round', function () {
-            chart.round(d3.time.day.utc.round);
+            chart.round(d3.utcDay.round);
             expect(chart.round()).not.toBeNull();
         });
 
@@ -205,7 +205,7 @@ describe('dc.coordinateGridChart', function () {
                         .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
-                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                        .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
                     chart.render();
                 });
                 it('should generate a valid clippath id', function () {
@@ -226,7 +226,7 @@ describe('dc.coordinateGridChart', function () {
                         .transitionDelay(0)
                         .brushOn(false)
                         .margins({top: 20, bottom: 0, right: 10, left: 0})
-                        .x(d3.time.scale.utc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
+                        .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
                     chart.render();
                 });
                 it('should generate a valid clippath id', function () {
@@ -307,6 +307,10 @@ describe('dc.coordinateGridChart', function () {
         describe('y-axes', function () {
             describe('grid lines', function () {
                 beforeEach(function () {
+                    // The calculations have changed internally for tick count from D3v3 to D3v4
+                    // By default it guesses 10 ticks and computes from there. In v3 it ends up with 7 in v4
+                    // it is 16. For 9 as well as 11 both the versions agree.
+                    chart.yAxis().ticks(9);
                     chart
                         .renderHorizontalGridLines(true)
                         .renderVerticalGridLines(true)
@@ -314,8 +318,8 @@ describe('dc.coordinateGridChart', function () {
                 });
 
                 describe('horizontal grid lines', function () {
-                    it('should draw lines associated with the data shown on the right y-axis', function () {
-                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line')[0][n]); };
+                    it('should draw lines associated with the data shown on the y-axis', function () {
+                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line').nodes()[n]); };
 
                         expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(7);
                         expect(nthGridLine(0).attr('y2')).toBe('130');
@@ -338,7 +342,7 @@ describe('dc.coordinateGridChart', function () {
                         });
 
                         it('should draws lines associated with the data using the custom ticks', function () {
-                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line')[0][n]); };
+                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.horizontal line').nodes()[n]); };
 
                             expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(3);
                             expect(nthGridLine(0).attr('y2')).toBe('130');
@@ -351,7 +355,7 @@ describe('dc.coordinateGridChart', function () {
 
                 describe('vertical grid lines', function () {
                     it('should draw lines associated with the data shown on the x-axis', function () {
-                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line')[0][n]); };
+                        var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line').nodes()[n]); };
 
                         expect(chart.selectAll('.grid-line.vertical line').size()).toBe(13);
                         expect(nthGridLine(0).attr('x2')).toBe('0');
@@ -374,7 +378,7 @@ describe('dc.coordinateGridChart', function () {
                         });
 
                         it('should draw lines associated with the data using the custom ticks', function () {
-                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line')[0][n]); };
+                            var nthGridLine = function (n) { return d3.select(chart.selectAll('.grid-line.vertical line').nodes()[n]); };
 
                             expect(chart.selectAll('.grid-line.vertical line').size()).toBe(3);
                             expect(nthGridLine(0).attr('x2')).toBeWithinDelta(6, 1);
@@ -386,7 +390,7 @@ describe('dc.coordinateGridChart', function () {
 
                     describe('with an ordinal x axis', function () {
                         beforeEach(function () {
-                            chart.x(d3.scale.ordinal())
+                            chart.x(d3.scaleBand())
                                 .xUnits(dc.units.ordinal)
                                 .render();
                         });
@@ -406,9 +410,10 @@ describe('dc.coordinateGridChart', function () {
                     expect(chart.selectAll('.axis.y').size()).toBe(1);
                 });
 
-                it('should orient the y-axis text to the left by default', function () {
+                // No longer valid in D3v4
+                /*it('should orient the y-axis text to the left by default', function () {
                     expect(chart.yAxis().orient()).toBe('left');
-                });
+                });*/
 
                 it('should place the y axis to the left', function () {
                     expect(chart.select('g.y').attr('transform')).toMatchTranslate(0, 20);
@@ -453,9 +458,10 @@ describe('dc.coordinateGridChart', function () {
                     expect(chart.selectAll('.axis.y').size()).toBe(1);
                 });
 
-                it('should orient the y-axis text to the right', function () {
+                // Not applicable in D3v4
+                /*it('should orient the y-axis text to the right', function () {
                     expect(chart.yAxis().orient()).toBe('right');
-                });
+                });*/
 
                 it('should position the axis to the right of the chart', function () {
                     expect(chart.select('.axis.y').attr('transform')).toMatchTranslate(490, 20);
@@ -558,36 +564,10 @@ describe('dc.coordinateGridChart', function () {
         });
     });
 
-    describe('restricting zoom out', function () {
-        beforeEach(function () {
-            chart.zoomScale([-1,10]);
-            chart.zoomOutRestrict(true);
-        });
-
-        it('should set the start of zoom scale extent to 1', function () {
-            expect(chart.zoomScale()[0]).toEqual(1);
-        });
-
-        it('sohuld leave the end of zoom scale extent unchanged', function () {
-            expect(chart.zoomScale()[1]).toEqual(10);
-        });
-    });
-
-    describe('disabling zoom out restriction', function () {
-        beforeEach(function () {
-            chart.zoomScale([-1,10]);
-            chart.zoomOutRestrict(false);
-        });
-
-        it('should set the start of zoom scale extent to 0', function () {
-            expect(chart.zoomScale()[0]).toEqual(0);
-        });
-    });
-
     describe('setting x', function () {
         var newDomain = [1,10];
         beforeEach(function () {
-            chart.x(d3.scale.linear().domain(newDomain));
+            chart.x(d3.scaleLinear().domain(newDomain));
         });
 
         it('should reset the original x domain', function () {
@@ -638,8 +618,12 @@ describe('dc.coordinateGridChart', function () {
             chart.filter(filter);
         });
 
-        it('should update the brush extent', function () {
-            expect(chart.brush().extent()).toEqual(filter);
+        it('should update the brush selection', function () {
+            // expect(chart.getBrushSelection()).toEqual(filter);
+            var brushSelectionRect = chart.select('g.brush rect.selection');
+            expect(brushSelectionRect.attr('x')).toBeCloseTo(chart.x()(filter[0]), 1);
+            expect((+brushSelectionRect.attr('x')) + (+brushSelectionRect.attr('width')))
+                .toBeCloseTo(chart.x()(filter[1]), 1);
         });
     });
 
@@ -647,12 +631,13 @@ describe('dc.coordinateGridChart', function () {
         beforeEach(function () {
             chart.brushOn(true);
             chart.render();
-            chart.brush().extent([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
+            simulateChartBrushing(chart, [makeDate(2012, 5, 20), makeDate(2012, 6, 15)]);
             chart.filter(null);
         });
 
-        it('should clear the brush extent', function () {
-            expect(chart.brush().empty()).toBeTruthy();
+        it('should clear the brush selection', function () {
+            var brushSelectionRect = chart.select('g.brush rect.selection');
+            expect(+brushSelectionRect.attr('width')).toEqual(0);
         });
     });
 
@@ -790,50 +775,16 @@ describe('dc.coordinateGridChart', function () {
     describe('brushing', function () {
         beforeEach(function () {
             chart.brushOn(true);
-        });
-
-        describe('with mouse zoom enabled', function () {
-            beforeEach(function () {
-                spyOn(chart, '_disableMouseZoom');
-                spyOn(chart, '_enableMouseZoom');
-                chart.mouseZoomable(true);
-                chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 6, 15)]);
-                chart.brush().event(chart.root());
-            });
-
-            it('should disable mouse zooming on brush start, and re-enables it afterwards', function () {
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 6, 15)]);
-                chart.brush().event(chart.root());
-                expect(chart._disableMouseZoom).toHaveBeenCalled();
-                expect(chart._enableMouseZoom).toHaveBeenCalled();
-            });
-        });
-
-        describe('with mouse zoom disabled', function () {
-            beforeEach(function () {
-                spyOn(chart, '_enableMouseZoom');
-                chart.mouseZoomable(false);
-                chart.render();
-                chart.brush().extent([makeDate(2012, 6, 1), makeDate(2012, 6, 15)]);
-                chart.brush().event(chart.root());
-            });
-
-            it('should not enable mouse zooming', function () {
-                expect(chart._enableMouseZoom).not.toHaveBeenCalled();
-            });
+            chart.render();
         });
 
         describe('with equal dates', function () {
             beforeEach(function () {
-                spyOn(chart, 'filter');
-                chart.brush().clear();
-                chart.render();
-                chart.brush().event(chart.root());
+                simulateChartBrushing(chart, [22, 22]);
             });
 
             it('should clear the chart filter', function () {
-                expect(chart.filter()).toEqual(undefined);
+                expect(chart.filter()).toBeFalsy();
             });
         });
     });
@@ -851,17 +802,14 @@ describe('dc.coordinateGridChart', function () {
 
         it('should zoom the focus chart when range chart is brushed', function () {
             spyOn(chart, 'focus').and.callThrough();
-            rangeChart.brush().extent(selectedRange);
-            rangeChart.brush().event(rangeChart.g());
+            simulateChartBrushing(rangeChart, selectedRange);
             jasmine.clock().tick(100);
-            // expect(chart.focus).toHaveBeenCalledWith(selectedRange);
             var focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
             expect(focus).toEqual(selectedRange);
         });
 
         it('should zoom the focus chart back out when range chart is un-brushed', function () {
-            rangeChart.brush().extent(selectedRange);
-            rangeChart.brush().event(rangeChart.g());
+            simulateChartBrushing(rangeChart, selectedRange);
             jasmine.clock().tick(100);
 
             expect(chart.x().domain()).toEqual(selectedRange);
@@ -873,7 +821,6 @@ describe('dc.coordinateGridChart', function () {
         it('should update the range chart brush to match zoomed domain of focus chart', function () {
             spyOn(rangeChart, 'replaceFilter');
             chart.focus(selectedRange);
-            // expect(rangeChart.replaceFilter).toHaveBeenCalledWith(selectedRange);
             var replaceFilter = cleanDateRange(rangeChart.replaceFilter.calls.argsFor(0)[0]);
             expect(replaceFilter).toEqual(selectedRange);
         });
@@ -956,7 +903,7 @@ describe('dc.coordinateGridChart', function () {
         return dc.lineChart('#' + rangeId)
             .dimension(dimension)
             .group(dimension.group().reduceSum(function (d) { return d.id; }))
-            .x(d3.time.scale.utc().domain([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]));
+            .x(d3.scaleUtc().domain([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]));
     }
 
     function doubleClick (chart) {

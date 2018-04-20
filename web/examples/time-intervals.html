@@ -16,12 +16,12 @@ tree</a> to plot items which span from a begin date to an end date. The brush wi
 any items whose intervals overlap with it.</p>
   <div id="month">
     <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
-      <a href="javascript:monthChart.filterAll().redrawGroup();">reset</a>
+      <a href="javascript:monthChart.filterAll();dc.redrawAll();">reset</a>
     </div>
   </div>
   <div id="cost">
     <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
-      <a href="javascript:costChart.filterAll().redrawGroup();">reset</a>
+      <a href="javascript:costChart.filterAll();dc.redrawAll();">reset</a>
     </div>
   </div>
 
@@ -34,7 +34,7 @@ any items whose intervals overlap with it.</p>
   function intervalTreeGroup(tree, firstDate, lastDate) {
       return {
           all: function() {
-              var begin = d3.time.month(firstDate), end = d3.time.month(lastDate);
+              var begin = d3.timeMonth(firstDate), end = d3.timeMonth(lastDate);
               var i = new Date(begin);
               var ret = [], count;
               do {
@@ -52,15 +52,18 @@ any items whose intervals overlap with it.</p>
           }
       };
   }
-  var timeFormat = d3.time.format('%x');
+
+  var dateFormatSpecifier = '%x';
+  var timeFormat = d3.timeFormat(dateFormatSpecifier);
+  var dateFormatParser = d3.timeParse(dateFormatSpecifier);
   var monthChart = dc.barChart("#month");
   var costChart = dc.barChart("#cost");
   // data from http://stackoverflow.com/questions/22603788/crossfilter-how-to-extract-time-information-from-start-date-and-end-date-column
-  d3.csv("intervals.csv", function(error, projects) {
+  d3.csv("intervals.csv").then(function(projects) {
 
       projects.forEach(function(x) {
-          x['Start Date'] = timeFormat.parse(x['Start Date']);
-          x['End Date'] = timeFormat.parse(x['End Date']);
+          x['Start Date'] = dateFormatParser(x['Start Date']);
+          x['End Date'] = dateFormatParser(x['End Date']);
           // the library uses object identity so we have to cache the interval arrays
           x.interval = [x['Start Date'].getTime(), x['End Date'].getTime()];
           x.Cost = +x.Cost;
@@ -91,9 +94,9 @@ any items whose intervals overlap with it.</p>
       monthChart
           .width(400)
           .height(300)
-          .x(d3.time.scale())
-          .y(d3.scale.linear().domain([0,25]))
-          .xUnits(d3.time.months)
+          .x(d3.scaleTime())
+          .y(d3.scaleLinear().domain([0,25]))
+          .xUnits(d3.timeMonths)
           .gap(5)
           .elasticX(true)
           .brushOn(true)
@@ -120,8 +123,8 @@ any items whose intervals overlap with it.</p>
       costChart
           .width(400)
           .height(300)
-          .x(d3.scale.linear().domain([0,24]))
-          .y(d3.scale.linear().domain([0,25]))
+          .x(d3.scaleLinear().domain([0,24]))
+          .y(d3.scaleLinear().domain([0,25]))
           .brushOn(true)
           .yAxisLabel("Number of Projects")
           .xAxisLabel("Cost")

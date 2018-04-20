@@ -11,7 +11,7 @@
  * // create a heat map under #chart-container2 element using chart group A
  * var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -27,8 +27,8 @@ dc.heatMap = function (parent, chartGroup) {
     var _rows;
     var _colOrdering = d3.ascending;
     var _rowOrdering = d3.ascending;
-    var _colScale = d3.scale.ordinal();
-    var _rowScale = d3.scale.ordinal();
+    var _colScale = d3.scaleBand();
+    var _rowScale = d3.scaleBand();
 
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
@@ -207,24 +207,31 @@ dc.heatMap = function (parent, chartGroup) {
             boxWidth = Math.floor(_chart.effectiveWidth() / colCount),
             boxHeight = Math.floor(_chart.effectiveHeight() / rowCount);
 
-        cols.rangeRoundBands([0, _chart.effectiveWidth()]);
-        rows.rangeRoundBands([_chart.effectiveHeight(), 0]);
+        cols.rangeRound([0, _chart.effectiveWidth()]);
+        rows.rangeRound([_chart.effectiveHeight(), 0]);
 
         var boxes = _chartBody.selectAll('g.box-group').data(_chart.data(), function (d, i) {
             return _chart.keyAccessor()(d, i) + '\0' + _chart.valueAccessor()(d, i);
         });
+
+        boxes.exit().remove();
+
         var gEnter = boxes.enter().append('g')
             .attr('class', 'box-group');
 
         gEnter.append('rect')
             .attr('class', 'heat-box')
             .attr('fill', 'white')
+            .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
+            .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .on('click', _chart.boxOnClick());
 
         if (_chart.renderTitle()) {
             gEnter.append('title');
             boxes.select('title').text(_chart.title());
         }
+
+        boxes = gEnter.merge(boxes);
 
         dc.transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
@@ -235,41 +242,56 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('width', boxWidth)
             .attr('height', boxHeight);
 
-        boxes.exit().remove();
-
         var gCols = _chartBody.select('g.cols');
         if (gCols.empty()) {
             gCols = _chartBody.append('g').attr('class', 'cols axis');
         }
         var gColsText = gCols.selectAll('text').data(cols.domain());
-        gColsText.enter().append('text')
-              .attr('x', function (d) { return cols(d) + boxWidth / 2; })
-              .style('text-anchor', 'middle')
-              .attr('y', _chart.effectiveHeight())
-              .attr('dy', 12)
-              .on('click', _chart.xAxisOnClick())
-              .text(_chart.colsLabel());
+
+        gColsText.exit().remove();
+
+        gColsText = gColsText
+            .enter()
+                .append('text')
+                .attr('x', function (d) {
+                    return cols(d) + boxWidth / 2;
+                })
+                .style('text-anchor', 'middle')
+                .attr('y', _chart.effectiveHeight())
+                .attr('dy', 12)
+                .on('click', _chart.xAxisOnClick())
+                .text(_chart.colsLabel())
+            .merge(gColsText);
+
         dc.transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
-        gColsText.exit().remove();
+
         var gRows = _chartBody.select('g.rows');
         if (gRows.empty()) {
             gRows = _chartBody.append('g').attr('class', 'rows axis');
         }
+
         var gRowsText = gRows.selectAll('text').data(rows.domain());
-        gRowsText.enter().append('text')
-              .attr('dy', 6)
-              .style('text-anchor', 'end')
-              .attr('x', 0)
-              .attr('dx', -2)
-              .on('click', _chart.yAxisOnClick())
-              .text(_chart.rowsLabel());
+
+        gRowsText.exit().remove();
+
+        gRowsText = gRowsText
+            .enter()
+            .append('text')
+                .style('text-anchor', 'end')
+                .attr('x', 0)
+                .attr('dx', -2)
+                .attr('y', function (d) { return rows(d) + boxHeight / 2; })
+                .attr('dy', 6)
+                .on('click', _chart.yAxisOnClick())
+                .text(_chart.rowsLabel())
+            .merge(gRowsText);
+
         dc.transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
               .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
-        gRowsText.exit().remove();
 
         if (_chart.hasFilter()) {
             _chart.selectAll('g.box-group').each(function (d) {

@@ -8,7 +8,7 @@
  * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
-    var _colors = d3.scale.category20c();
+    var _colors = d3.scaleOrdinal(dc.config.defaultColors());
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
@@ -19,17 +19,17 @@ dc.colorMixin = function (_chart) {
      * @method colors
      * @memberof dc.colorMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
      * // alternate categorical scale
      * chart.colors(d3.scale.category20b());
      * // ordinal scale
-     * chart.colors(d3.scale.ordinal().range(['red','green','blue']));
+     * chart.colors(d3.scaleOrdinal().range(['red','green','blue']));
      * // convenience method, the same as above
      * chart.ordinalColors(['red','green','blue']);
      * // set a linear scale
      * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
-     * @param {d3.scale} [colorScale=d3.scale.category20c()]
+     * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
      * @returns {d3.scale|dc.colorMixin}
      */
     _chart.colors = function (colorScale) {
@@ -37,16 +37,16 @@ dc.colorMixin = function (_chart) {
             return _colors;
         }
         if (colorScale instanceof Array) {
-            _colors = d3.scale.quantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
+            _colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
         } else {
-            _colors = d3.functor(colorScale);
+            _colors = typeof colorScale === 'function' ? colorScale : dc.utils.constant(colorScale);
         }
         return _chart;
     };
 
     /**
      * Convenience method to set the color scale to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal d3.scale.ordinal} with
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal} with
      * range `r`.
      * @method ordinalColors
      * @memberof dc.colorMixin
@@ -55,7 +55,7 @@ dc.colorMixin = function (_chart) {
      * @returns {dc.colorMixin}
      */
     _chart.ordinalColors = function (r) {
-        return _chart.colors(d3.scale.ordinal().range(r));
+        return _chart.colors(d3.scaleOrdinal().range(r));
     };
 
     /**
@@ -67,7 +67,7 @@ dc.colorMixin = function (_chart) {
      * @returns {dc.colorMixin}
      */
     _chart.linearColors = function (r) {
-        return _chart.colors(d3.scale.linear()
+        return _chart.colors(d3.scaleLinear()
                              .range(r)
                              .interpolate(d3.interpolateHcl));
     };

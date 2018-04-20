@@ -19,10 +19,7 @@
 
   var chart = dc.lineChart('#test');
 
-  d3.json('fruits.json', function(error, counts) {
-      if(error)
-          throw new Error(error);
-
+  d3.json('fruits.json').then(function(counts) {
       var ndx            = crossfilter(counts),
           fruitDimension = ndx.dimension(function(d) {return d.name;}),
           sumGroup       = fruitDimension.group().reduceSum(function(d) {return d.cnt;});
@@ -30,7 +27,7 @@
       chart
           .width(768)
           .height(380)
-          .x(d3.scale.ordinal())
+          .x(d3.scaleBand())
           .xUnits(dc.units.ordinal)
           .brushOn(false)
           .xAxisLabel('Fruit')

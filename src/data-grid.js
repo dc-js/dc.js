@@ -3,7 +3,7 @@
  * a simple way to define how the items are displayed.
  *
  * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
- * for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data together in groups.
+ * for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
@@ -12,7 +12,7 @@
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -87,14 +87,16 @@ dc.dataGrid = function (parent, chartGroup) {
                     return d.values;
                 });
 
-        items.enter()
-            .append('div')
-            .attr('class', ITEM_CSS_CLASS)
-            .html(function (d) {
-                return _html(d);
-            });
-
         items.exit().remove();
+
+        items = items
+            .enter()
+                .append('div')
+                .attr('class', ITEM_CSS_CLASS)
+                .html(function (d) {
+                    return _html(d);
+                })
+            .merge(items);
 
         return items;
     }
@@ -105,7 +107,7 @@ dc.dataGrid = function (parent, chartGroup) {
 
     /**
      * Get or set the group function for the data grid. The group function takes a data row and
-     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
      * to split rows into groups.
      *
      * Do not pass in a crossfilter group as this will not work.
@@ -234,8 +236,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataGrid
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]

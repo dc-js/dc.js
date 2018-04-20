@@ -319,7 +319,7 @@ dc.afterTransition = function (transition, callback) {
         var n = 0;
         transition
             .each(function () { ++n; })
-            .each('end', function () {
+            .on('end', function () {
                 if (!--n) {
                     callback.call(transition);
                 }
@@ -353,26 +353,25 @@ dc.units.integers = function (start, end) {
 };
 
 /**
- * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
- * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal} to
- * {@link dc.coordinateGridMixin#x .x}.
- * It just returns the domain passed to it, which for ordinal charts is an array of all values.
+ * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of a
+ * coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
+ * combination with passing
+ * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
+ * to {@link dc.coordinateGridMixin#x .x}.
+ *
+ * As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
+ * function is not called.
  * @method ordinal
  * @memberof dc.units
- * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal}
+ * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
  * chart.xUnits(dc.units.ordinal)
- *      .x(d3.scale.ordinal())
- * @param {*} start
- * @param {*} end
- * @param {Array<String>} domain
- * @returns {Array<String>}
+ *      .x(d3.scaleOrdinal())
  */
-dc.units.ordinal = function (start, end, domain) {
-    return domain;
+dc.units.ordinal = function () {
+    throw new Error('dc.units.ordinal should not be called - it is a placeholder');
 };
 
 /**

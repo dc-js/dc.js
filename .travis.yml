@@ -1,9 +1,23 @@
-sudo: false
+sudo: required
 language: node_js
 node_js:
-  - '6'
+  - '8'
+
+cache:
+  directories:
+  - node_modules # NPM packages
+
+addons:
+  chrome: stable
+
+before_install:
+  - export CHROME_BIN=chromium-browser
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
 script:
   - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then grunt ci; else grunt ci-pull; fi'
+
 env:
   global:
   - secure: Kt+5IJDJRVwr28xRnmR5YDsJceXDcDR21/JUBfk6DYFixPbIq7LCPnZUmiSZQs8akU95ucXwB5hsirUAdEhXdYKilec6go70lticVlZBLy8IdJ+Di1uPwMOeMHvalC2P0woIRJSMzP8u5E+e+5ASggTjsXID7/p1rE0jXtoOueQ=

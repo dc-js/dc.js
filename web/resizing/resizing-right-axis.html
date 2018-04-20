@@ -21,13 +21,13 @@
 <script type="text/javascript">
     var moveChart = dc.compositeChart("#monthly-move-chart");
 
-    d3.csv("../examples/monthly-move.csv", function (error, data) {
-        var dateFormat = d3.time.format("%m/%d/%Y");
+    d3.csv("../examples/monthly-move.csv").then(function(data) {
+        var dateParse = d3.timeParse("%m/%d/%Y");
         var numberFormat = d3.format(".2f");
 
         data.forEach(function (e) {
-            e.dd = dateFormat.parse(e.date);
-            e.month = d3.time.month(e.dd); // pre-calculate month for better performance
+            e.dd = dateParse(e.date);
+            e.month = d3.timeMonth(e.dd); // pre-calculate month for better performance
         });
 
         var ndx = crossfilter(data);
@@ -64,9 +64,9 @@
                 .margins({top: 30, right: 50, bottom: 25, left: 60})
                 .dimension(moveMonths)
                 .mouseZoomable(true)
-                .x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-                .round(d3.time.month.round)
-                .xUnits(d3.time.months)
+                .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                .round(d3.timeMonth.round)
+                .xUnits(d3.timeMonths)
                 .elasticY(true)
                 .renderHorizontalGridLines(true)
                 .legend(dc.legend().x(90).y(10).itemHeight(13).gap(5))
@@ -85,7 +85,7 @@
                             .title(function (d) {
                                 var value = d.data.value.avg ? d.data.value.avg : d.data.value;
                                 if (isNaN(value)) value = 0;
-                                return dateFormat(d.data.key) + "\n" + numberFormat(value);
+                                return dateParse(d.data.key) + "\n" + numberFormat(value);
                             })
                             .ordinalColors(["orange"])
                             .useRightYAxis(true)

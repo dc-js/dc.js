@@ -25,7 +25,7 @@
 
   var barChart = dc.barChart("#bartest");
   var lineChart = dc.lineChart("#linetest");
-  d3.csv("morley.csv", function(error, experiments) {
+  d3.csv("morley.csv").then(function(experiments) {
 
       experiments.forEach(function(x) {
           x.Speed = +x.Speed;
@@ -41,7 +41,7 @@
           .width(100)
           .height(20)
           .margins({left: 0, top: 0, right: 0, bottom: 0})
-          .x(d3.scale.linear().domain([6,20]))
+          .x(d3.scaleLinear().domain([6,20]))
           .brushOn(true)
           .dimension(runDimension)
           .group(speedSumGroup);
@@ -49,7 +49,7 @@
           .width(100)
           .height(20)
           .margins({left: 0, top: 0, right: 0, bottom: 0})
-          .x(d3.scale.linear().domain([6,20]))
+          .x(d3.scaleLinear().domain([6,20]))
           .brushOn(true)
           .dimension(runDimension2)
           .group(speedSumGroup2);

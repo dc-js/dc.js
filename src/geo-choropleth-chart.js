@@ -15,7 +15,7 @@
  * // create a choropleth chart under '#us-chart2' element using chart group A
  * var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -28,8 +28,9 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         return d || 0;
     });
 
-    var _geoPath = d3.geo.path();
+    var _geoPath = d3.geoPath();
     var _projectionFlag;
+    var _projection;
 
     var _geoJsons = [];
 
@@ -40,15 +41,17 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 .attr('class', 'layer' + layerIndex);
 
             var regionG = states.selectAll('g.' + geoJson(layerIndex).name)
-                .data(geoJson(layerIndex).data)
-                .enter()
-                .append('g')
-                .attr('class', geoJson(layerIndex).name);
+                .data(geoJson(layerIndex).data);
+
+            regionG = regionG.enter()
+                    .append('g')
+                    .attr('class', geoJson(layerIndex).name)
+                .merge(regionG);
 
             regionG
                 .append('path')
                 .attr('fill', 'white')
-                .attr('d', _geoPath);
+                .attr('d', _getGeoPath());
 
             regionG.append('title');
 
@@ -167,7 +170,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
         for (var layerIndex = 0; layerIndex < _geoJsons.length; ++layerIndex) {
             plotData(layerIndex);
             if (_projectionFlag) {
-                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _geoPath);
+                _chart.svg().selectAll('g.' + geoJson(layerIndex).name + ' path').attr('d', _getGeoPath());
             }
         }
         _projectionFlag = false;
@@ -209,20 +212,40 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Set custom geo projection function. See the available
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3 geo projection functions}.
+     * Gets or sets a custom geo projection function. See the available
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3 geo projection functions}.
+     *
+     * Starting version 3.0 it has been deprecated to rely on the default projection being
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa d3.geoAlbersUsa()}. Please
+     * set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
+     * Considering that `null` is also a valid value for projection}, if you need
+     * projection to be `null` please set it explicitly to `null`.
      * @method projection
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md d3.geo.projection}
-     * @see {@link https://github.com/d3/d3-geo-projection Extended d3.geo.projection}
-     * @param {d3.projection} [projection=d3.geo.albersUsa()]
-     * @returns {dc.geoChoroplethChart}
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
+     * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
+     * @param {d3.projection} [projection=d3.geoAlbersUsa()]
+     * @returns {d3.projection|dc.geoChoroplethChart}
      */
     _chart.projection = function (projection) {
-        _geoPath.projection(projection);
+        if (!arguments.length) {
+            return _projection;
+        }
+
+        _projection = projection;
         _projectionFlag = true;
         return _chart;
+    };
+
+    var _getGeoPath = function () {
+        if (_projection === undefined) {
+            dc.logger.warn('choropleth projection default of geoAlbers is deprecated,' +
+                ' in next version projection will need to be set explicitly');
+            return _geoPath.projection(d3.geoAlbersUsa());
+        }
+
+        return _geoPath.projection(_projection);
     };
 
     /**
@@ -239,14 +262,14 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
     };
 
     /**
-     * Returns the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path} object used to
+     * Returns the {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @method geoPath
      * @memberof dc.geoChoroplethChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path d3.geo.path}
-     * @returns {d3.geo.path}
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath}
+     * @returns {d3.geoPath}
      */
     _chart.geoPath = function () {
         return _geoPath;

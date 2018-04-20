@@ -85,17 +85,18 @@ dc.selectMenu = function (parent, chartGroup) {
         var options = _select.selectAll('option.' + OPTION_CSS_CLASS)
           .data(_chart.data(), function (d) { return _chart.keyAccessor()(d); });
 
+        options.exit().remove();
+
         options.enter()
               .append('option')
               .classed(OPTION_CSS_CLASS, true)
-              .attr('value', function (d) { return _chart.keyAccessor()(d); });
+              .attr('value', function (d) { return _chart.keyAccessor()(d); })
+            .merge(options)
+              .text(_chart.title());
 
-        options.text(_chart.title());
-        options.exit().remove();
         _select.selectAll('option.' + OPTION_CSS_CLASS).sort(_order);
 
         _select.on('change', onChange);
-        return options;
     }
 
     function onChange (d, i) {

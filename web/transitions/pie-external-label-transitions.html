@@ -25,7 +25,7 @@
 
       var chart = dc.pieChart("#test");
       var stop, button1, button2, button3;
-      d3.csv("../examples/morley.csv", function(error, experiments) {
+      d3.csv("../examples/morley.csv").then(function(experiments) {
 
           var ndx           = crossfilter(experiments),
               runDimension  = ndx.dimension(function(d) {return "run-"+d.Run;}),
