@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.11
+ *  dc 3.0.0-alpha.12
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -19,97 +19,6 @@
 (function() { function _dc(d3, crossfilter) {
 'use strict';
 
-// Significant changes in d3.layout.stack - copying from D3v3 for now
-d3.stackD3v3 = function () {
-    function d3_layout_stackOrderDefault(data) {
-        return d3.range(data.length);
-    }
-
-    function d3_layout_stackOffsetZero(data) {
-        var j = -1, m = data[0].length, y0 = [];
-        while (++j < m) y0[j] = 0;
-        return y0;
-    }
-
-    function d3_layout_stackOut(d, y0, y) {
-        d.y0 = y0;
-        d.y = y;
-    }
-
-    function d3_layout_stackX(d) {
-        return d.x;
-    }
-
-    function d3_layout_stackY(d) {
-        return d.y;
-    }
-
-    function d3_identity(d) {
-        return d;
-    }
-
-    return function () {
-        var values = d3_identity, order = d3_layout_stackOrderDefault, offset = d3_layout_stackOffsetZero,
-            out = d3_layout_stackOut, x = d3_layout_stackX, y = d3_layout_stackY;
-
-        function stack(data, index) {
-            if (!(n = data.length)) return data;
-            var series = data.map(function (d, i) {
-                return values.call(stack, d, i);
-            });
-            var points = series.map(function (d) {
-                return d.map(function (v, i) {
-                    return [x.call(stack, v, i), y.call(stack, v, i)];
-                });
-            });
-            var orders = order.call(stack, points, index);
-            series = d3.permute(series, orders);
-            points = d3.permute(points, orders);
-            var offsets = offset.call(stack, points, index);
-            var m = series[0].length, n, i, j, o;
-            for (j = 0; j < m; ++j) {
-                out.call(stack, series[0][j], o = offsets[j], points[0][j][1]);
-                for (i = 1; i < n; ++i) {
-                    out.call(stack, series[i][j], o += points[i - 1][j][1], points[i][j][1]);
-                }
-            }
-            return data;
-        }
-
-        stack.values = function (x) {
-            if (!arguments.length) return values;
-            values = x;
-            return stack;
-        };
-        stack.order = function (x) {
-            if (!arguments.length) return order;
-            order = typeof x === "function" ? x : d3_layout_stackOrders.get(x) || d3_layout_stackOrderDefault;
-            return stack;
-        };
-        stack.offset = function (x) {
-            if (!arguments.length) return offset;
-            offset = typeof x === "function" ? x : d3_layout_stackOffsets.get(x) || d3_layout_stackOffsetZero;
-            return stack;
-        };
-        stack.x = function (z) {
-            if (!arguments.length) return x;
-            x = z;
-            return stack;
-        };
-        stack.y = function (z) {
-            if (!arguments.length) return y;
-            y = z;
-            return stack;
-        };
-        stack.out = function (z) {
-            if (!arguments.length) return out;
-            out = z;
-            return stack;
-        };
-        return stack;
-    }
-}();
-
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
  * anything else into the global name space.
@@ -120,7 +29,7 @@ d3.stackD3v3 = function () {
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.11
+ * @version 3.0.0-alpha.12
  * @example
  * // Example chaining
  * chart.width(300)
@@ -129,7 +38,7 @@ d3.stackD3v3 = function () {
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.11',
+    version: '3.0.0-alpha.12',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -4565,11 +4474,9 @@ dc.stackMixin = function (_chart) {
 
         layer.domainValues = allValues.filter(domainFilter());
         layer.values = _chart.evadeDomainFilter() ? allValues : layer.domainValues;
-        return layer.values;
     }
 
-    var _stackLayout = d3.stackD3v3()
-        .values(prepareValues);
+    var _stackLayout = d3.stack();
 
     var _stack = [];
     var _titles = {};
@@ -4801,9 +4708,6 @@ dc.stackMixin = function (_chart) {
             return _stackLayout;
         }
         _stackLayout = stack;
-        if (_stackLayout.values() === d3.stackD3v3().values()) {
-            _stackLayout.values(prepareValues);
-        }
         return _chart;
     };
 
@@ -4831,13 +4735,32 @@ dc.stackMixin = function (_chart) {
         return _chart;
     };
 
-    function visability (l) {
+    function visibility (l) {
         return !l.hidden;
     }
 
     _chart.data(function () {
-        var layers = _stack.filter(visability);
-        return layers.length ? _chart.stackLayout()(layers) : [];
+        var layers = _stack.filter(visibility);
+        if (!layers.length) {
+            return [];
+        }
+        layers.forEach(prepareValues);
+        var v4data = layers[0].values.map(function (v, i) {
+            var col = {x: v.x};
+            layers.forEach(function (layer) {
+                col[layer.name] = layer.values[i].y;
+            });
+            return col;
+        });
+        var keys = layers.map(function (layer) { return layer.name; });
+        var v4result = _chart.stackLayout().keys(keys)(v4data);
+        v4result.forEach(function (series, i) {
+            series.forEach(function (ys, j) {
+                layers[i].values[j].y0 = ys[0];
+                layers[i].values[j].y1 = ys[1];
+            });
+        });
+        return layers;
     });
 
     _chart._ordinalXDomain = function () {
