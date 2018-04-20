@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-alpha.12
+ *  dc 3.0.0-beta.1
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-alpha.12
+ * @version 3.0.0-beta.1
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-alpha.12',
+    version: '3.0.0-beta.1',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -4027,16 +4027,16 @@ dc.coordinateGridMixin = function (_chart) {
             .attr('d', _chart.resizeHandlePath);
     };
 
-    _chart.extendBrush = function (selection) {
-        if (selection && _chart.round()) {
-            selection[0] = _chart.round()(selection[0]);
-            selection[1] = _chart.round()(selection[1]);
+    _chart.extendBrush = function (brushSelection) {
+        if (brushSelection && _chart.round()) {
+            brushSelection[0] = _chart.round()(brushSelection[0]);
+            brushSelection[1] = _chart.round()(brushSelection[1]);
         }
-        return selection;
+        return brushSelection;
     };
 
-    _chart.brushIsEmpty = function (selection) {
-        return !selection || selection[1] <= selection[0];
+    _chart.brushIsEmpty = function (brushSelection) {
+        return !brushSelection || brushSelection[1] <= brushSelection[0];
     };
 
     _chart._brushing = function () {
@@ -4052,22 +4052,22 @@ dc.coordinateGridMixin = function (_chart) {
             return;
         }
 
-        var selection = d3.event.selection;
-        if (selection) {
-            selection = selection.map(_chart.x().invert);
+        var brushSelection = d3.event.selection;
+        if (brushSelection) {
+            brushSelection = brushSelection.map(_chart.x().invert);
         }
 
-        selection = _chart.extendBrush(selection);
+        brushSelection = _chart.extendBrush(brushSelection);
 
-        _chart.redrawBrush(selection, false);
+        _chart.redrawBrush(brushSelection, false);
 
-        if (_chart.brushIsEmpty(selection)) {
+        if (_chart.brushIsEmpty(brushSelection)) {
             dc.events.trigger(function () {
                 _chart.filter(null);
                 _chart.redrawGroup();
             }, dc.constants.EVENT_DELAY);
         } else {
-            var rangedFilter = dc.filters.RangedFilter(selection[0], selection[1]);
+            var rangedFilter = dc.filters.RangedFilter(brushSelection[0], brushSelection[1]);
 
             dc.events.trigger(function () {
                 _chart.replaceFilter(rangedFilter);
@@ -4084,20 +4084,20 @@ dc.coordinateGridMixin = function (_chart) {
             .call(_brush);
     };
 
-    _chart.redrawBrush = function (selection, doTransition) {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
         if (_brushOn && _gBrush) {
             if (_resizing) {
                 _chart.setBrushExtents(doTransition);
             }
 
-            if (!selection) {
+            if (!brushSelection) {
                 _gBrush
                     .call(_brush.move, null);
 
                 _gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', 'none');
             } else {
-                var scaledSelection = [_x(selection[0]), _x(selection[1])];
+                var scaledSelection = [_x(brushSelection[0]), _x(brushSelection[1])];
 
                 var gBrush =
                     dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
@@ -4108,15 +4108,15 @@ dc.coordinateGridMixin = function (_chart) {
                 gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', null)
                     .attr('transform', function (d, i) {
-                        return 'translate(' + _x(selection[i]) + ', 0)';
+                        return 'translate(' + _x(brushSelection[i]) + ', 0)';
                     })
                     .attr('d', _chart.resizeHandlePath);
             }
         }
-        _chart.fadeDeselectedArea(selection);
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
-    _chart.fadeDeselectedArea = function (selection) {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         // do nothing, sub-chart should override this function
     };
 
@@ -6106,7 +6106,7 @@ dc.barChart = function (parent, chartGroup) {
         }
     }
 
-    _chart.fadeDeselectedArea = function (selection) {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         var bars = _chart.chartBodyG().selectAll('rect.bar');
 
         if (_chart.isOrdinal()) {
@@ -6121,10 +6121,10 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
-        } else {
-            if (!_chart.brushIsEmpty(selection)) {
-                var start = selection[0];
-                var end = selection[1];
+        } else if (_chart.brushOn()) {
+            if (!_chart.brushIsEmpty(brushSelection)) {
+                var start = brushSelection[0];
+                var end = brushSelection[1];
 
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
                     return d.x < start || d.x >= end;
@@ -6208,12 +6208,12 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function (selection) {
-        if (selection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            selection[0] = _chart.round()(selection[0]);
-            selection[1] = _chart.round()(selection[1]);
+    _chart.extendBrush = function (brushSelection) {
+        if (brushSelection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            brushSelection[0] = _chart.round()(brushSelection[0]);
+            brushSelection[1] = _chart.round()(brushSelection[1]);
         }
-        return selection;
+        return brushSelection;
     };
 
     /**
@@ -7808,9 +7808,9 @@ dc.bubbleChart = function (parent, chartGroup) {
         // override default x axis brush from parent chart
     };
 
-    _chart.redrawBrush = function (selection, doTransition) {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
         // override default x axis brush from parent chart
-        _chart.fadeDeselectedArea(selection);
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -7899,20 +7899,20 @@ dc.compositeChart = function (parent, chartGroup) {
             return;
         }
 
-        var selection = d3.event.selection;
-        if (selection) {
-            selection = selection.map(_chart.x().invert);
+        var brushSelection = d3.event.selection;
+        if (brushSelection) {
+            brushSelection = brushSelection.map(_chart.x().invert);
         }
-        selection = _chart.extendBrush(selection);
+        brushSelection = _chart.extendBrush(brushSelection);
 
-        _chart.redrawBrush(selection, false);
+        _chart.redrawBrush(brushSelection, false);
 
-        var brushIsEmpty = _chart.brushIsEmpty(selection);
+        var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
 
-        _chart.replaceFilter(brushIsEmpty ? null : selection);
+        _chart.replaceFilter(brushIsEmpty ? null : brushSelection);
 
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(brushIsEmpty ? null : selection);
+            _children[i].replaceFilter(brushIsEmpty ? null : brushSelection);
         }
     };
 
@@ -8102,11 +8102,11 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.fadeDeselectedArea = function (selection) {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
-            child.fadeDeselectedArea(selection);
+            child.fadeDeselectedArea(brushSelection);
         }
     };
 
@@ -10195,16 +10195,16 @@ dc.scatterPlot = function (parent, chartGroup) {
         // no handle paths for poly-brushes
     };
 
-    _chart.extendBrush = function (selection) {
+    _chart.extendBrush = function (brushSelection) {
         if (_chart.round()) {
-            selection[0] = selection[0].map(_chart.round());
-            selection[1] = selection[1].map(_chart.round());
+            brushSelection[0] = brushSelection[0].map(_chart.round());
+            brushSelection[1] = brushSelection[1].map(_chart.round());
         }
-        return selection;
+        return brushSelection;
     };
 
-    _chart.brushIsEmpty = function (selection) {
-        return !selection || selection[0][0] >= selection[1][0] || selection[0][1] >= selection[1][1];
+    _chart.brushIsEmpty = function (brushSelection) {
+        return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
     };
 
     _chart._brushing = function () {
@@ -10220,28 +10220,28 @@ dc.scatterPlot = function (parent, chartGroup) {
             return;
         }
 
-        var selection = d3.event.selection;
+        var brushSelection = d3.event.selection;
 
         // Testing with pixels is more reliable
-        var brushIsEmpty = _chart.brushIsEmpty(selection);
+        var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
 
-        if (selection) {
-            selection = selection.map(function (point) {
+        if (brushSelection) {
+            brushSelection = brushSelection.map(function (point) {
                 return point.map(function (coord, i) {
                     var scale = i === 0 ? _chart.x() : _chart.y();
                     return scale.invert(coord);
                 });
             });
 
-            selection = _chart.extendBrush(selection);
+            brushSelection = _chart.extendBrush(brushSelection);
 
-            // The rounding process might have made selection empty, so we need to recheck
-            brushIsEmpty = brushIsEmpty && _chart.brushIsEmpty(selection);
+            // The rounding process might have made brushSelection empty, so we need to recheck
+            brushIsEmpty = brushIsEmpty && _chart.brushIsEmpty(brushSelection);
         }
 
-        _chart.redrawBrush(selection, false);
+        _chart.redrawBrush(brushSelection, false);
 
-        var ranged2DFilter = brushIsEmpty ? null : dc.filters.RangedTwoDimensionalFilter(selection);
+        var ranged2DFilter = brushIsEmpty ? null : dc.filters.RangedTwoDimensionalFilter(brushSelection);
 
         dc.events.trigger(function () {
             _chart.replaceFilter(ranged2DFilter);
@@ -10249,7 +10249,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         }, dc.constants.EVENT_DELAY);
     };
 
-    _chart.redrawBrush = function (selection, doTransition) {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
         // override default x axis brush from parent chart
         var _brush = _chart.brush();
         var _gBrush = _chart.gBrush();
@@ -10259,12 +10259,12 @@ dc.scatterPlot = function (parent, chartGroup) {
                 _chart.setBrushExtents(doTransition);
             }
 
-            if (!selection) {
+            if (!brushSelection) {
                 _gBrush
-                    .call(_brush.move, selection);
+                    .call(_brush.move, brushSelection);
 
             } else {
-                selection = selection.map(function (point) {
+                brushSelection = brushSelection.map(function (point) {
                     return point.map(function (coord, i) {
                         var scale = i === 0 ? _chart.x() : _chart.y();
                         return scale(coord);
@@ -10275,12 +10275,12 @@ dc.scatterPlot = function (parent, chartGroup) {
                     dc.optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
 
                 gBrush
-                    .call(_brush.move, selection);
+                    .call(_brush.move, brushSelection);
 
             }
         }
 
-        _chart.fadeDeselectedArea(selection);
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
     _chart.setBrushY = function (gBrush) {
@@ -11391,7 +11391,7 @@ dc.boxPlot = function (parent, chartGroup) {
         boxesG.exit().remove().call(_box);
     }
 
-    _chart.fadeDeselectedArea = function (selection) {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         if (_chart.hasFilter()) {
             if (_chart.isOrdinal()) {
                 _chart.g().selectAll('g.box').each(function (d) {
@@ -11402,8 +11402,11 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                var start = selection[0];
-                var end = selection[1];
+                if (!_chart.brushOn()) {
+                    return;
+                }
+                var start = brushSelection[0];
+                var end = brushSelection[1];
                 var keyAccessor = _chart.keyAccessor();
                 _chart.g().selectAll('g.box').each(function (d) {
                     var key = keyAccessor(d);
