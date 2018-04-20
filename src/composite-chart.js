@@ -81,20 +81,20 @@ dc.compositeChart = function (parent, chartGroup) {
             return;
         }
 
-        var selection = d3.event.selection;
-        if (selection) {
-            selection = selection.map(_chart.x().invert);
+        var brushSelection = d3.event.selection;
+        if (brushSelection) {
+            brushSelection = brushSelection.map(_chart.x().invert);
         }
-        selection = _chart.extendBrush(selection);
+        brushSelection = _chart.extendBrush(brushSelection);
 
-        _chart.redrawBrush(selection, false);
+        _chart.redrawBrush(brushSelection, false);
 
-        var brushIsEmpty = _chart.brushIsEmpty(selection);
+        var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
 
-        _chart.replaceFilter(brushIsEmpty ? null : selection);
+        _chart.replaceFilter(brushIsEmpty ? null : brushSelection);
 
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(brushIsEmpty ? null : selection);
+            _children[i].replaceFilter(brushIsEmpty ? null : brushSelection);
         }
     };
 
@@ -284,11 +284,11 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.fadeDeselectedArea = function (selection) {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         for (var i = 0; i < _children.length; ++i) {
             var child = _children[i];
             child.brush(_chart.brush());
-            child.fadeDeselectedArea(selection);
+            child.fadeDeselectedArea(brushSelection);
         }
     };
 
