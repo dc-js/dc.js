@@ -1,3 +1,6 @@
+## 3.0.0 alpha 12
+* fadeDeselectedArea checks if brushing is enabled for the chart. Restores backward compatibility. By Deepak Kumar. ([#1422](https://github.com/dc-js/dc.js/pull/1422))
+
 ## 3.0.0 alpha 11
 * xAxisPaddingUnit should be the d3 interval not the name of it ([#1320](https://github.com/dc-js/dc.js/issues/1320), [#1326](https://github.com/dc-js/dc.js/issues/1326), [#1420](https://github.com/dc-js/dc.js/issues/1420))
 
