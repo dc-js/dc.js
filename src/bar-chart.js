@@ -214,6 +214,9 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     _chart.fadeDeselectedArea = function (selection) {
+        if (!_chart.brushOn()) {
+            return;
+        }
         var bars = _chart.chartBodyG().selectAll('rect.bar');
 
         if (_chart.isOrdinal()) {

@@ -192,6 +192,9 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
+                if (!_chart.brushOn()) {
+                    return;
+                }
                 var start = selection[0];
                 var end = selection[1];
                 var keyAccessor = _chart.keyAccessor();
