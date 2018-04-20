@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -405,7 +405,7 @@ dc.afterTransition = function (transition, callback) {
         var n = 0;
         transition
             .each(function () { ++n; })
-            .each('end', function () {
+            .on('end', function () {
                 if (!--n) {
                     callback.call(transition);
                 }
@@ -439,26 +439,25 @@ dc.units.integers = function (start, end) {
 };
 
 /**
- * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of the to
- * specify ordinal units for the x axis. Usually this parameter is used in combination with passing
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal} to
- * {@link dc.coordinateGridMixin#x .x}.
- * It just returns the domain passed to it, which for ordinal charts is an array of all values.
+ * This argument can be passed to the {@link dc.coordinateGridMixin#xUnits .xUnits} function of a
+ * coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
+ * combination with passing
+ * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
+ * to {@link dc.coordinateGridMixin#x .x}.
+ *
+ * As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
+ * function is not called.
  * @method ordinal
  * @memberof dc.units
- * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md d3.scale.ordinal}
+ * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
  * @example
  * chart.xUnits(dc.units.ordinal)
- *      .x(d3.scale.ordinal())
- * @param {*} start
- * @param {*} end
- * @param {Array&lt;String>} domain
- * @returns {Array&lt;String>}
+ *      .x(d3.scaleOrdinal())
  */
-dc.units.ordinal = function (start, end, domain) {
-    return domain;
+dc.units.ordinal = function () {
+    throw new Error('dc.units.ordinal should not be called - it is a placeholder');
 };
 
 /**
@@ -565,13 +564,13 @@ dc.instanceOfChart = function (o) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -24,7 +24,7 @@
 
   var chart = dc.dataTable("#test");
   var ndx;
-d3.csv("morley.csv", function(error, experiments) {
+d3.csv("morley.csv").then(function(experiments) {
     ndx              = crossfilter(experiments);
     var fmt = d3.format('02d');
     var runDimension    = ndx.dimension(function(d) {return [fmt(+d.Expt),fmt(+d.Run)];}),

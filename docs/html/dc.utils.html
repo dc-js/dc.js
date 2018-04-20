@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -181,6 +181,12 @@
     
     <div class="description">
         <p>Arbitrary add one value to another.</p>
+<p>If the value l is of type Date, adds r units to it. t becomes the unit.
+For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.</p>
+<p>If l is of type numeric, t is ignored. In this case if r is of type string,
+it is assumed to be percentage (whether or not it includes %). For example
+dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.</p>
+<p>They also generate strange results if l is a string.</p>
     </div>
     
 
@@ -207,6 +213,8 @@
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -223,9 +231,6 @@
             <td class="type">
             
                 
-<span class="param-type">String</span>
-|
-
 <span class="param-type">Date</span>
 |
 
@@ -247,6 +252,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>the value to modify</p></td>
         </tr>
@@ -261,6 +270,9 @@
             <td class="type">
             
                 
+<span class="param-type">String</span>
+|
+
 <span class="param-type">Number</span>
 
 
@@ -279,6 +291,10 @@
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>the amount by which to modify the value</p></td>
         </tr>
@@ -293,6 +309,9 @@
             <td class="type">
             
                 
+<span class="param-type">function</span>
+|
+
 <span class="param-type">String</span>
 
 
@@ -313,10 +332,17 @@
             
 
             
+                <td class="default">
+                
+                    d3.timeDay
+                
+                </td>
+            
 
-            <td class="description last"><p>if <code>l</code> is a <code>Date</code>, the
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval">interval</a> in
-the <code>d3.time</code> namespace</p></td>
+            <td class="description last"><p>if <code>l</code> is a <code>Date</code>, then this should be a
+<a href="https://github.com/d3/d3-time/blob/master/README.md#_interval">d3 time interval</a>.
+For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'</p></td>
         </tr>
 
     
@@ -361,7 +387,7 @@ the <code>d3.time</code> namespace</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-123">line 123</a>
+				 <a href="utils.js.html#sunlight-1-line-128">line 128</a>
 			</li>
 		</ul>
 	</dd>
@@ -371,14 +397,6 @@ the <code>d3.time</code> namespace</p></td>
 
 	
 
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>These assume than any string r is a percentage (whether or not it includes %).
-They also generate strange results if l is a string.</li>
-			</ul>
-	</dd>
 	
 </dl>
 
@@ -405,9 +423,6 @@ They also generate strange results if l is a string.</li>
     </dt>
     <dd>
         
-<span class="param-type">String</span>
-|
-
 <span class="param-type">Date</span>
 |
 
@@ -581,7 +596,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-274">line 274</a>
+				 <a href="utils.js.html#sunlight-1-line-316">line 316</a>
 			</li>
 		</ul>
 	</dd>
@@ -618,6 +633,194 @@ They also generate strange results if l is a string.</li>
     <dd>
         
 <span class="param-type">d3.selection</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".arraysEqual"><span class="type-signature">&lt;static> </span>arraysEqual(a1, a2)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Return true if both arrays are equal, if both array are null these are considered equal</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>a1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">null</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>a2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+|
+
+<span class="param-type">null</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="utils.js.html">utils.js</a>,
+				 <a href="utils.js.html#sunlight-1-line-343">line 343</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
 
 
 
@@ -787,7 +990,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-239">line 239</a>
+				 <a href="utils.js.html#sunlight-1-line-264">line 264</a>
 			</li>
 		</ul>
 	</dd>
@@ -824,6 +1027,167 @@ They also generate strange results if l is a string.</li>
     <dd>
         
 <span class="param-type">any</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".constant"><span class="type-signature">&lt;static> </span>constant(x)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Given <code>x</code>, return a function that always returns <code>x</code>.</p>
+<p><a href="https://github.com/d3/d3/blob/master/CHANGES.md#internals"><code>d3.functor</code> was removed in d3 version 4</a>.
+This function helps to implement the replacement,
+<code>typeof x === &quot;function&quot; ? x : dc.utils.constant(x)</code></p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>x</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="utils.js.html">utils.js</a>,
+				 <a href="utils.js.html#sunlight-1-line-277">line 277</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
 
 
 
@@ -945,7 +1309,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-206">line 206</a>
+				 <a href="utils.js.html#sunlight-1-line-231">line 231</a>
 			</li>
 		</ul>
 	</dd>
@@ -1103,7 +1467,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-217">line 217</a>
+				 <a href="utils.js.html#sunlight-1-line-242">line 242</a>
 			</li>
 		</ul>
 	</dd>
@@ -1261,7 +1625,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-228">line 228</a>
+				 <a href="utils.js.html#sunlight-1-line-253">line 253</a>
 			</li>
 		</ul>
 	</dd>
@@ -1419,7 +1783,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-195">line 195</a>
+				 <a href="utils.js.html#sunlight-1-line-220">line 220</a>
 			</li>
 		</ul>
 	</dd>
@@ -1577,7 +1941,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-263">line 263</a>
+				 <a href="utils.js.html#sunlight-1-line-305">line 305</a>
 			</li>
 		</ul>
 	</dd>
@@ -1896,7 +2260,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-292">line 292</a>
+				 <a href="utils.js.html#sunlight-1-line-334">line 334</a>
 			</li>
 		</ul>
 	</dd>
@@ -1958,6 +2322,12 @@ They also generate strange results if l is a string.</li>
     
     <div class="description">
         <p>Arbitrary subtract one value from another.</p>
+<p>If the value l is of type Date, subtracts r units from it. t becomes the unit.
+For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.</p>
+<p>If l is of type numeric, t is ignored. In this case if r is of type string,
+it is assumed to be percentage (whether or not it includes %). For example
+dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.</p>
+<p>They also generate strange results if l is a string.</p>
     </div>
     
 
@@ -1984,6 +2354,8 @@ They also generate strange results if l is a string.</li>
         
 
         
+        <th>Default</th>
+        
 
         <th class="last">Description</th>
     </tr>
@@ -2000,9 +2372,6 @@ They also generate strange results if l is a string.</li>
             <td class="type">
             
                 
-<span class="param-type">String</span>
-|
-
 <span class="param-type">Date</span>
 |
 
@@ -2024,6 +2393,10 @@ They also generate strange results if l is a string.</li>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>the value to modify</p></td>
         </tr>
@@ -2038,6 +2411,9 @@ They also generate strange results if l is a string.</li>
             <td class="type">
             
                 
+<span class="param-type">String</span>
+|
+
 <span class="param-type">Number</span>
 
 
@@ -2056,6 +2432,10 @@ They also generate strange results if l is a string.</li>
             
 
             
+                <td class="default">
+                
+                </td>
+            
 
             <td class="description last"><p>the amount by which to modify the value</p></td>
         </tr>
@@ -2070,6 +2450,9 @@ They also generate strange results if l is a string.</li>
             <td class="type">
             
                 
+<span class="param-type">function</span>
+|
+
 <span class="param-type">String</span>
 
 
@@ -2090,10 +2473,17 @@ They also generate strange results if l is a string.</li>
             
 
             
+                <td class="default">
+                
+                    d3.timeDay
+                
+                </td>
+            
 
-            <td class="description last"><p>if <code>l</code> is a <code>Date</code>, the
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval">interval</a> in
-the <code>d3.time</code> namespace</p></td>
+            <td class="description last"><p>if <code>l</code> is a <code>Date</code>, then this should be a
+<a href="https://github.com/d3/d3-time/blob/master/README.md#_interval">d3 time interval</a>.
+For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
+'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'</p></td>
         </tr>
 
     
@@ -2138,7 +2528,7 @@ the <code>d3.time</code> namespace</p></td>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-159">line 159</a>
+				 <a href="utils.js.html#sunlight-1-line-174">line 174</a>
 			</li>
 		</ul>
 	</dd>
@@ -2148,14 +2538,6 @@ the <code>d3.time</code> namespace</p></td>
 
 	
 
-	
-	<dt class="tag-todo method-doc-label method-doc-details-label">To Do:</dt>
-	<dd class="tag-todo">
-		<ul>
-			<li>These assume than any string r is a percentage (whether or not it includes %).
-They also generate strange results if l is a string.</li>
-			</ul>
-	</dd>
 	
 </dl>
 
@@ -2182,9 +2564,6 @@ They also generate strange results if l is a string.</li>
     </dt>
     <dd>
         
-<span class="param-type">String</span>
-|
-
 <span class="param-type">Date</span>
 |
 
@@ -2260,7 +2639,7 @@ They also generate strange results if l is a string.</li>
 		<ul class="dummy">
 			<li>
 				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-252">line 252</a>
+				 <a href="utils.js.html#sunlight-1-line-294">line 294</a>
 			</li>
 		</ul>
 	</dd>
@@ -2357,13 +2736,13 @@ They also generate strange results if l is a string.</li>
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -111,7 +111,7 @@
         <p>Data grid is a simple widget designed to list the filtered records, providing
 a simple way to define how the items are displayed.</p>
 <p>Note: Unlike other charts, the data grid chart (and data table) use the <a href="dc.dataGrid.html#group">group</a> attribute as a keying function
-for <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest">nesting</a> the data together in groups.
+for <a href="https://github.com/d3/d3-collection/blob/master/README.md#nest">nesting</a> the data together in groups.
 Do not pass in a crossfilter group as this will not work.</p>
 <p>Examples:</p>
 <ul>
@@ -185,7 +185,7 @@ Do not pass in a crossfilter group as this will not work.</p>
             
 
             <td class="description last"><p>Any valid
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+<a href="https://github.com/d3/d3-selection/blob/master/README.md#select">d3 single selector</a> specifying
 a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
@@ -471,7 +471,7 @@ Useful when implementing pagination.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-123">line 123</a>
+				 <a href="data-grid.js.html#sunlight-1-line-125">line 125</a>
 			</li>
 		</ul>
 	</dd>
@@ -645,7 +645,7 @@ Useful when implementing pagination.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-140">line 140</a>
+				 <a href="data-grid.js.html#sunlight-1-line-142">line 142</a>
 			</li>
 		</ul>
 	</dd>
@@ -710,7 +710,7 @@ Useful when implementing pagination.</p>
     
     <div class="description">
         <p>Get or set the group function for the data grid. The group function takes a data row and
-returns the key to specify to <a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest">d3.nest</a>
+returns the key to specify to <a href="https://github.com/d3/d3-collection/blob/master/README.md#nest">d3.nest</a>
 to split rows into groups.</p>
 <p>Do not pass in a crossfilter group as this will not work.</p>
     </div>
@@ -809,7 +809,7 @@ to split rows into groups.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-106">line 106</a>
+				 <a href="data-grid.js.html#sunlight-1-line-108">line 108</a>
 			</li>
 		</ul>
 	</dd>
@@ -992,7 +992,7 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-173">line 173</a>
+				 <a href="data-grid.js.html#sunlight-1-line-175">line 175</a>
 			</li>
 		</ul>
 	</dd>
@@ -1171,7 +1171,7 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-193">line 193</a>
+				 <a href="data-grid.js.html#sunlight-1-line-195">line 195</a>
 			</li>
 		</ul>
 	</dd>
@@ -1358,7 +1358,7 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-232">line 232</a>
+				 <a href="data-grid.js.html#sunlight-1-line-234">line 234</a>
 			</li>
 		</ul>
 	</dd>
@@ -1370,9 +1370,9 @@ generate the string directly.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending">d3.ascending</a></li>
+			<li><a href="https://github.com/d3/d3-array/blob/master/README.md#ascending">d3.ascending</a></li>
 			
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending">d3.descending</a></li>
+			<li><a href="https://github.com/d3/d3-array/blob/master/README.md#descending">d3.descending</a></li>
 			</ul>
 	</dd>
 	
@@ -1554,7 +1554,7 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-157">line 157</a>
+				 <a href="data-grid.js.html#sunlight-1-line-159">line 159</a>
 			</li>
 		</ul>
 	</dd>
@@ -1728,7 +1728,7 @@ level and returns a particular field to be sorted.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-211">line 211</a>
+				 <a href="data-grid.js.html#sunlight-1-line-213">line 213</a>
 			</li>
 		</ul>
 	</dd>
@@ -1836,13 +1836,13 @@ level and returns a particular field to be sorted.</p>
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -18,7 +18,7 @@
 <script type="text/javascript">
 
   var chart = dc.pieChart("#test");
-  d3.csv("morley.csv", function(error, experiments) {
+  d3.csv("morley.csv").then(function(experiments) {
 
       var ndx           = crossfilter(experiments),
           runDimension  = ndx.dimension(function(d) {return "run-"+d.Run;})

@@ -14,7 +14,7 @@
 
 <div id="test">
   <div>
-    <a class="reset" style="visibility: hidden" href="javascript:chart.filter(null).redrawGroup()">reset</a>
+    <a class="reset" style="visibility: hidden" href="javascript:chart.filterAll();dc.redrawAll();">reset</a>
   </div>
 </div>
 
@@ -24,7 +24,7 @@
 <script type="text/javascript">
 
 var chart = dc.barChart("#test");
-d3.csv("morley.csv", function(error, experiments) {
+d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {
     x.Speed = +x.Speed;
@@ -37,7 +37,7 @@ d3.csv("morley.csv", function(error, experiments) {
   chart
     .width(768)
     .height(480)
-    .x(d3.scale.ordinal())
+    .x(d3.scaleBand())
     .xUnits(dc.units.ordinal)
     .brushOn(true)
     .yAxisLabel("This is the Y Axis!")

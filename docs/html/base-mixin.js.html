@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -225,7 +225,7 @@ dc.baseMixin = function (_chart) {
             }
             return _height;
         }
-        _heightCalc = d3.functor(height || _defaultHeightCalc);
+        _heightCalc = height ? (typeof height === 'function' ? height : dc.utils.constant(height)) : _defaultHeightCalc;
         _height = undefined;
         return _chart;
     };
@@ -254,7 +254,7 @@ dc.baseMixin = function (_chart) {
             }
             return _width;
         }
-        _widthCalc = d3.functor(width || _defaultWidthCalc);
+        _widthCalc = width ? (typeof width === 'function' ? width : dc.utils.constant(width)) : _defaultWidthCalc;
         _width = undefined;
         return _chart;
     };
@@ -374,7 +374,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _data.call(_chart, _group);
         }
-        _data = d3.functor(callback);
+        _data = typeof callback === 'function' ? callback : dc.utils.constant(callback);
         _chart.expireCache();
         return _chart;
     };
@@ -471,7 +471,7 @@ dc.baseMixin = function (_chart) {
      * @method select
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_select d3.select}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3.select}
      * @example
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
@@ -489,7 +489,7 @@ dc.baseMixin = function (_chart) {
      * @method selectAll
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_selectAll d3.selectAll}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll d3.selectAll}
      * @example
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
@@ -501,7 +501,7 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
-     * selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom
+     * selector](https://github.com/d3/d3-selection/blob/master/README.md#selecting-elements) specifying a dom
      * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.
@@ -774,7 +774,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.render = function () {
         _height = _width = undefined; // force recalculate
-        _listeners.preRender(_chart);
+        _listeners.call('preRender', _chart, _chart);
 
         if (_mandatoryAttributes) {
             _mandatoryAttributes.forEach(checkForMandatoryAttributes);
@@ -792,19 +792,19 @@ dc.baseMixin = function (_chart) {
     };
 
     _chart._activateRenderlets = function (event) {
-        _listeners.pretransition(_chart);
+        _listeners.call('pretransition', _chart, _chart);
         if (_chart.transitionDuration() > 0 &amp;&amp; _svg) {
             _svg.transition().duration(_chart.transitionDuration()).delay(_chart.transitionDelay())
-                .each('end', function () {
-                    _listeners.renderlet(_chart);
+                .on('end', function () {
+                    _listeners.call('renderlet', _chart, _chart);
                     if (event) {
-                        _listeners[event](_chart);
+                        _listeners.call(event, _chart, _chart);
                     }
                 });
         } else {
-            _listeners.renderlet(_chart);
+            _listeners.call('renderlet', _chart, _chart);
             if (event) {
-                _listeners[event](_chart);
+                _listeners.call(event, _chart, _chart);
             }
         }
     };
@@ -824,7 +824,7 @@ dc.baseMixin = function (_chart) {
      */
     _chart.redraw = function () {
         sizeSvg();
-        _listeners.preRedraw(_chart);
+        _listeners.call('preRedraw', _chart, _chart);
 
         var result = _chart._doRedraw();
 
@@ -907,12 +907,12 @@ dc.baseMixin = function (_chart) {
 
     _chart._invokeFilteredListener = function (f) {
         if (f !== undefined) {
-            _listeners.filtered(_chart, f);
+            _listeners.call('filtered', _chart, _chart, f);
         }
     };
 
     _chart._invokeZoomedListener = function () {
-        _listeners.zoomed(_chart);
+        _listeners.call('zoomed', _chart, _chart);
     };
 
     var _hasFilterHandler = function (filters, filter) {
@@ -1630,7 +1630,7 @@ dc.baseMixin = function (_chart) {
      * @method on
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Internals.md#dispatch_on d3.dispatch.on}
+     * @see {@link https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on d3.dispatch.on}
      * @example
      * .on('renderlet', function(chart, filter){...})
      * .on('pretransition', function(chart, filter){...})
@@ -1690,13 +1690,13 @@ dc.baseMixin = function (_chart) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

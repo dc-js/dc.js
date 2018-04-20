@@ -21,7 +21,7 @@
 var chart = dc.boxPlot("#box-test"),
     pie = dc.pieChart("#pie-chart");
 
-d3.csv("monthly-move.csv", function(error, data) {
+d3.csv("monthly-move.csv").then(function(data) {
 
   data.forEach(function(x) {
     x.date = new Date(x.date);
@@ -33,7 +33,7 @@ d3.csv("monthly-move.csv", function(error, data) {
   var ndx             = crossfilter(data),
       openDimension   = ndx.dimension(function(d) {return parseInt(d.open/10)*10;}),
       openGroup       = openDimension.group(),
-      monthDimension  = ndx.dimension(function(d) {return d3.time.month(d.date); }),
+      monthDimension  = ndx.dimension(function(d) {return d3.timeMonth(d.date); }),
       closeGroup      = monthDimension.group().reduce(
         function(p,v) {
           p.push(v.close);
@@ -54,9 +54,9 @@ d3.csv("monthly-move.csv", function(error, data) {
     .margins({top: 10, right: 50, bottom: 30, left: 50})
     .dimension(monthDimension)
     .group(closeGroup)
-    .x(d3.time.scale())
-    .round(d3.time.month.round)
-    .xUnits(d3.time.months)
+    .x(d3.scaleTime())
+    .round(d3.timeMonth.round)
+    .xUnits(d3.timeMonths)
     .elasticY(true);
 
   // this demonstrates solving elasticX manually, avoiding the
@@ -64,7 +64,7 @@ d3.csv("monthly-move.csv", function(error, data) {
   function calc_domain(chart) {
       var min = d3.min(chart.group().all(), function(kv) { return kv.key; }),
           max = d3.max(chart.group().all(), function(kv) { return kv.key; });
-      max = d3.time.month.offset(max, 1);
+      max = d3.timeMonth.offset(max, 1);
       chart.x().domain([min, max]);
   }
   chart.on('preRender', calc_domain);

@@ -938,7 +938,7 @@ module.exports = result;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
-module.exports={"version":"1.4.3"}
+module.exports={"version":"1.4.5"}
 },{}],4:[function(require,module,exports){
 if (typeof Uint8Array !== "undefined") {
   var crossfilter_array8 = function(n) { return new Uint8Array(n); };
@@ -1322,6 +1322,8 @@ function crossfilter() {
       filterRange: filterRange,
       filterFunction: filterFunction,
       filterAll: filterAll,
+      currentFilter: currentFilter,
+      hasCurrentFilter: hasCurrentFilter,
       top: top,
       bottom: bottom,
       group: group,
@@ -1348,6 +1350,8 @@ function crossfilter() {
         sort = quicksort.by(function(i) { return newValues[i]; }),
         refilter = xfilterFilter.filterAll, // for recomputing filter
         refilterFunction, // the custom filter function in use
+        filterValue, // the value used for filtering (value, array, function or undefined)
+        filterValuePresent, // true if filterValue contains something
         indexListeners = [], // when data is added
         dimensionGroups = [],
         lo0 = 0,
@@ -1706,22 +1710,31 @@ function crossfilter() {
 
     // Filters this dimension to select the exact value.
     function filterExact(value) {
+      filterValue = value;
+      filterValuePresent = true;
       return filterIndexBounds((refilter = xfilterFilter.filterExact(bisect, value))(values));
     }
 
     // Filters this dimension to select the specified range [lo, hi].
     // The lower bound is inclusive, and the upper bound is exclusive.
     function filterRange(range) {
+      filterValue = range;
+      filterValuePresent = true;
       return filterIndexBounds((refilter = xfilterFilter.filterRange(bisect, range))(values));
     }
 
     // Clears any filters on this dimension.
     function filterAll() {
+      filterValue = undefined;
+      filterValuePresent = false;
       return filterIndexBounds((refilter = xfilterFilter.filterAll)(values));
     }
 
     // Filters this dimension using an arbitrary function.
     function filterFunction(f) {
+      filterValue = f;
+      filterValuePresent = true;
+      
       refilterFunction = f;
       refilter = xfilterFilter.filterAll;
 
@@ -1825,6 +1838,14 @@ function crossfilter() {
 
       filterListeners.forEach(function(l) { l(one, offset, added, removed); });
       triggerOnChange('filtered');
+    }
+    
+    function currentFilter() {
+      return filterValue;
+    }
+    
+    function hasCurrentFilter() {
+      return filterValuePresent;
     }
 
     // Returns the top K selected records based on this dimension's order.
@@ -2401,6 +2422,8 @@ function crossfilter() {
         if (i >= 0) indexListeners.splice(i, 1);
         i = removeDataListeners.indexOf(removeData);
         if (i >= 0) removeDataListeners.splice(i, 1);
+        i = dimensionGroups.indexOf(group);
+        if (i >= 0) dimensionGroups.splice(i, 1);
         return group;
       }
 

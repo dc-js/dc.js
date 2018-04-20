@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -100,7 +100,7 @@
  * // create a series chart under #chart-container2 element using chart group A
  * var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -143,7 +143,9 @@ dc.seriesChart = function (parent, chartGroup) {
                 keep.push(sub.key);
                 return subChart
                     .dimension(_chart.dimension())
-                    .group({all: d3.functor(sub.values)}, sub.key)
+                    .group({
+                        all: typeof sub.values === 'function' ? sub.values : dc.utils.constant(sub.values)
+                    }, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
                     .brushOn(_chart.brushOn());
@@ -180,8 +182,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @memberof dc.seriesChart
      * @instance
      * @example
-     * // put interpolation on the line charts used for the series
-     * chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
+     * // put curve on the line charts used for the series
+     * chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
      * // do a scatter series chart
      * chart.chart(dc.scatterPlot)
      * @param {Function} [chartFunction=dc.lineChart]
@@ -224,8 +226,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method seriesSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.seriesSort(d3.descending);
      * @param {Function} [sortFunction=d3.ascending]
@@ -247,8 +249,8 @@ dc.seriesChart = function (parent, chartGroup) {
      * @method valueSort
      * @memberof dc.seriesChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * // Default value sort
      * _chart.valueSort(function keySort (a, b) {
@@ -311,13 +313,13 @@ dc.seriesChart = function (parent, chartGroup) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

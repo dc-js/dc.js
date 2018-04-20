@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -101,7 +101,7 @@
  * // create a row chart under #chart-container2 element using chart group A
  * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -130,7 +130,7 @@ dc.rowChart = function (parent, chartGroup) {
 
     var _elasticX;
 
-    var _xAxis = d3.svg.axis().orient('bottom');
+    var _xAxis = d3.axisBottom();
 
     var _rowData;
 
@@ -145,7 +145,7 @@ dc.rowChart = function (parent, chartGroup) {
             if (extent[1] &lt; 0) {
                 extent[1] = 0;
             }
-            _x = d3.scale.linear().domain(extent)
+            _x = d3.scaleLinear().domain(extent)
                 .range([0, _chart.effectiveWidth()]);
         }
         _xAxis.scale(_x);
@@ -185,11 +185,11 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}.
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}.
      * @method x
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md quantitive scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [scale]
      * @returns {d3.scale|dc.rowChart}
      */
@@ -226,8 +226,9 @@ dc.rowChart = function (parent, chartGroup) {
         var rows = _g.selectAll('g.' + _rowCssClass)
             .data(_rowData);
 
-        createElements(rows);
         removeElements(rows);
+        rows = createElements(rows)
+            .merge(rows);
         updateElements(rows);
     }
 
@@ -241,6 +242,8 @@ dc.rowChart = function (parent, chartGroup) {
         rowEnter.append('rect').attr('width', 0);
 
         createLabels(rowEnter);
+
+        return rowEnter;
     }
 
     function removeElements (rows) {
@@ -377,18 +380,18 @@ dc.rowChart = function (parent, chartGroup) {
 
     /**
      * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3 axis object}
+     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis d3.svg.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.svg.axis}
+     * @returns {d3.axisBottom}
      */
     _chart.xAxis = function () {
         return _xAxis;
@@ -542,13 +545,13 @@ dc.rowChart = function (parent, chartGroup) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

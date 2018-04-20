@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -100,7 +100,7 @@
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -132,7 +132,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
-            return _chart.x().rangeBand();
+            return _chart.x().bandwidth();
         } else {
             return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
         }
@@ -142,7 +142,7 @@ dc.boxPlot = function (parent, chartGroup) {
     _chart.yAxisPadding(12);
 
     // default to ordinal
-    _chart.x(d3.scale.ordinal());
+    _chart.x(d3.scaleBand());
     _chart.xUnits(dc.units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
@@ -160,12 +160,12 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
+     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scale.ordinal.rangeBands}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
      * @param {Number} [padding=0.8]
      * @returns {Number|dc.boxPlot}
      */
@@ -204,7 +204,7 @@ dc.boxPlot = function (parent, chartGroup) {
         if (!arguments.length) {
             return _boxWidth;
         }
-        _boxWidth = d3.functor(boxWidth);
+        _boxWidth = typeof boxWidth === 'function' ? boxWidth : dc.utils.constant(boxWidth);
         return _chart;
     };
 
@@ -232,11 +232,11 @@ dc.boxPlot = function (parent, chartGroup) {
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
-        renderBoxes(boxesG);
-        updateBoxes(boxesG);
+        var boxesGEnterUpdate = renderBoxes(boxesG);
+        updateBoxes(boxesGEnterUpdate);
         removeBoxes(boxesG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderBoxes (boxesG) {
@@ -250,6 +250,8 @@ dc.boxPlot = function (parent, chartGroup) {
                 _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
+
+        return boxesGEnter.merge(boxesG);
     }
 
     function updateBoxes (boxesG) {
@@ -265,7 +267,7 @@ dc.boxPlot = function (parent, chartGroup) {
         boxesG.exit().remove().call(_box);
     }
 
-    _chart.fadeDeselectedArea = function () {
+    _chart.fadeDeselectedArea = function (brushSelection) {
         if (_chart.hasFilter()) {
             if (_chart.isOrdinal()) {
                 _chart.g().selectAll('g.box').each(function (d) {
@@ -276,9 +278,11 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                var extent = _chart.brush().extent();
-                var start = extent[0];
-                var end = extent[1];
+                if (!_chart.brushOn()) {
+                    return;
+                }
+                var start = brushSelection[0];
+                var end = brushSelection[1];
                 var keyAccessor = _chart.keyAccessor();
                 _chart.g().selectAll('g.box').each(function (d) {
                     var key = keyAccessor(d);
@@ -375,13 +379,13 @@ dc.boxPlot = function (parent, chartGroup) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

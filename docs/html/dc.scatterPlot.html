@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -182,7 +182,7 @@
             
 
             <td class="description last"><p>Any valid
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+<a href="https://github.com/d3/d3-selection/blob/master/README.md#select">d3 single selector</a> specifying
 a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
@@ -401,7 +401,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-303">line 303</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-307">line 307</a>
 			</li>
 		</ul>
 	</dd>
@@ -471,7 +471,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-321">line 321</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-325">line 325</a>
 			</li>
 		</ul>
 	</dd>
@@ -541,7 +541,7 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-338">line 338</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-342">line 342</a>
 			</li>
 		</ul>
 	</dd>
@@ -577,9 +577,9 @@ var chart3 = dc.scatterPlot(compositeChart);</pre>
     
     <div class="description">
         <p>Get or set the symbol generator. By default <code>dc.scatterPlot</code> will use
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol">d3.svg.symbol()</a>
+<a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol">d3.symbol()</a>
 to generate symbols. <code>dc.scatterPlot</code> will set the
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">size accessor</a>
+<a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol_size">symbol size accessor</a>
 on the symbol generator.</p>
     </div>
     
@@ -650,7 +650,7 @@ on the symbol generator.</p>
             
                 <td class="default">
                 
-                    d3.svg.symbol()
+                    d3.symbol()
                 
                 </td>
             
@@ -700,7 +700,7 @@ on the symbol generator.</p>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-178">line 178</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-182">line 182</a>
 			</li>
 		</ul>
 	</dd>
@@ -712,7 +712,7 @@ on the symbol generator.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol">d3.svg.symbol</a></li>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol">d3.symbol</a></li>
 			
 			<li><a href="https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols">Create additional D3.js symbols</a></li>
 			</ul>
@@ -893,7 +893,7 @@ on the symbol generator.</p>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-286">line 286</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-290">line 290</a>
 			</li>
 		</ul>
 	</dd>
@@ -905,7 +905,7 @@ on the symbol generator.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol_size">d3.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -1082,7 +1082,7 @@ special color is applied for symbols based on their filter status.</p>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-253">line 253</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-257">line 257</a>
 			</li>
 		</ul>
 	</dd>
@@ -1263,7 +1263,7 @@ special color is applied for symbols based on their filter status.</p>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-270">line 270</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-274">line 274</a>
 			</li>
 		</ul>
 	</dd>
@@ -1445,7 +1445,7 @@ special size is applied for symbols based on their filter status.</p>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-235">line 235</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-239">line 239</a>
 			</li>
 		</ul>
 	</dd>
@@ -1457,7 +1457,7 @@ special size is applied for symbols based on their filter status.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol_size">d3.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -1629,7 +1629,7 @@ the existence accessor checks if the reduced value is truthy.</p>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-130">line 130</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-134">line 134</a>
 			</li>
 		</ul>
 	</dd>
@@ -1826,7 +1826,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-218">line 218</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-222">line 222</a>
 			</li>
 		</ul>
 	</dd>
@@ -1838,7 +1838,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol_size">d3.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -1897,7 +1897,7 @@ chart.existenceAccessor(function (d) { return d.value; });</pre>
 
     
     <div class="description">
-        <p>Get or set the symbol type used for each point. By default the symbol is a circle.
+        <p>Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
 Type can be a constant or an accessor.</p>
     </div>
     
@@ -1943,9 +1943,6 @@ Type can be a constant or an accessor.</p>
             <td class="type">
             
                 
-<span class="param-type">String</span>
-|
-
 <span class="param-type">function</span>
 
 
@@ -1968,7 +1965,7 @@ Type can be a constant or an accessor.</p>
             
                 <td class="default">
                 
-                    'circle'
+                    d3.symbolCircle
                 
                 </td>
             
@@ -2018,7 +2015,7 @@ Type can be a constant or an accessor.</p>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-155">line 155</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-159">line 159</a>
 			</li>
 		</ul>
 	</dd>
@@ -2030,7 +2027,7 @@ Type can be a constant or an accessor.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type">d3.svg.symbol.type</a></li>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol_type">symbol.type</a></li>
 			</ul>
 	</dd>
 	
@@ -2061,9 +2058,6 @@ Type can be a constant or an accessor.</p>
     </dt>
     <dd>
         
-<span class="param-type">String</span>
-|
-
 <span class="param-type">function</span>
 |
 
@@ -2081,9 +2075,9 @@ Type can be a constant or an accessor.</p>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// Circle type
-chart.symbol(&#x27;circle&#x27;);
+chart.symbol(d3.symbolCircle);
 // Square type
-chart.symbol(&#x27;square&#x27;);</pre>
+chart.symbol(d3.symbolSquare);</pre>
 
 
     
@@ -2218,7 +2212,7 @@ chart.symbol(&#x27;square&#x27;);</pre>
 		<ul class="dummy">
 			<li>
 				<a href="scatter-plot.js.html">scatter-plot.js</a>,
-				 <a href="scatter-plot.js.html#sunlight-1-line-201">line 201</a>
+				 <a href="scatter-plot.js.html#sunlight-1-line-205">line 205</a>
 			</li>
 		</ul>
 	</dd>
@@ -2230,7 +2224,7 @@ chart.symbol(&#x27;square&#x27;);</pre>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size">d3.svg.symbol.size</a></li>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#symbol_size">d3.symbol.size</a></li>
 			</ul>
 	</dd>
 	
@@ -2325,13 +2319,13 @@ chart.symbol(&#x27;square&#x27;);</pre>
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

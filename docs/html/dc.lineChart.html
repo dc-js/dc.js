@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -185,7 +185,7 @@
             
 
             <td class="description last"><p>Any valid
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a>
+<a href="https://github.com/d3/d3-selection/blob/master/README.md#select">d3 single selector</a>
 specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
 chart is a sub-chart in a <a href="dc.compositeChart.html">Composite Chart</a> then pass in the parent
 composite chart instance instead.</p></td>
@@ -360,6 +360,218 @@ var chart3 = dc.lineChart(compositeChart);</pre>
             
 <hr>
 <dt>
+    <h4 class="name" id="curve"><span class="type-signature"></span>curve( [curve])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
+functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
+provided by <a href="https://github.com/d3/d3-shape/blob/master/README.md#curves">d3 curves</a>.</p>
+<p>Replaces the use of <a href="dc.lineChart.html#interpolate">dc.lineChart#interpolate</a> and <a href="dc.lineChart.html#tension">dc.lineChart#tension</a>
+in dc.js &lt; 3.0</p>
+<p>This is passed to
+<a href="https://github.com/d3/d3-shape/blob/master/README.md#line_curve">line.curve</a> and
+<a href="https://github.com/d3/d3-shape/blob/master/README.md#area_curve">area.curve</a>.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>curve</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">d3.curve</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    d3.curveLinear
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="line-chart.js.html">line-chart.js</a>,
+				 <a href="line-chart.js.html#sunlight-1-line-83">line 83</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
+	<dd class="tag-see">
+		<ul>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#line_curve">line.curve</a></li>
+			
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#area_curve">area.curve</a></li>
+			</ul>
+	</dd>
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">d3.curve</span>
+|
+
+<span class="param-type"><a href="dc.lineChart.html">dc.lineChart</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// default
+chart
+    .curve(d3.curveLinear);
+// Add tension to curves that support it
+chart
+    .curve(d3.curveCardinal.tension(0.5));
+// You can use some specialized variation like
+// https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
+chart
+    .curve(d3.curveCatmullRom.alpha(0.5));</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="dashStyle"><span class="type-signature"></span>dashStyle( [dashStyle])</h4>
     
     
@@ -486,7 +698,7 @@ array (solid line).</p>
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-148">line 148</a>
+				 <a href="line-chart.js.html#sunlight-1-line-199">line 199</a>
 			</li>
 		</ul>
 	</dd>
@@ -567,7 +779,7 @@ chart.dashStyle([3,1,1,1]);</pre>
         <p>Gets or sets a function that will determine discontinuities in the line which should be
 skipped: the path will be broken into separate subpaths if some points are undefined.
 This function is passed to
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined">d3.svg.line.defined</a></p>
+<a href="https://github.com/d3/d3-shape/blob/master/README.md#line_defined">line.defined</a></p>
 <p>Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
 custom reduce functions to get this to work, depending on your data. See
 <a href="https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248">this GitHub comment</a>
@@ -680,7 +892,7 @@ for more details and an example.</p>
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-123">line 123</a>
+				 <a href="line-chart.js.html#sunlight-1-line-174">line 174</a>
 			</li>
 		</ul>
 	</dd>
@@ -692,7 +904,7 @@ for more details and an example.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined">d3.svg.line.defined</a></li>
+			<li><a href="https://github.com/d3/d3-shape/blob/master/README.md#line_defined">line.defined</a></li>
 			</ul>
 	</dd>
 	
@@ -868,7 +1080,7 @@ for more details and an example.</p>
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-416">line 416</a>
+				 <a href="line-chart.js.html#sunlight-1-line-524">line 524</a>
 			</li>
 		</ul>
 	</dd>
@@ -933,10 +1145,13 @@ for more details and an example.</p>
     
     <div class="description">
         <p>Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
-functions, splines, and cubic interpolation.  This is passed to
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate">d3.svg.line.interpolate</a> and
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate">d3.svg.area.interpolate</a>,
-where you can find a complete list of valid arguments.</p>
+functions, splines, and cubic interpolation.</p>
+<p>Possible values are: 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis',
+'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
+'monotone'.</p>
+<p>This function exists for backward compatibility. Use <a href="dc.lineChart.html#curve">dc.lineChart#curve</a>
+which is generic and provides more options.
+Value set through <code>.curve</code> takes precedence over <code>.interpolate</code> and <code>.tension</code>.</p>
     </div>
     
 
@@ -981,7 +1196,7 @@ where you can find a complete list of valid arguments.</p>
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">d3.curve</span>
 
 
 
@@ -1003,7 +1218,7 @@ where you can find a complete list of valid arguments.</p>
             
                 <td class="default">
                 
-                    'linear'
+                    d3.curveLinear
                 
                 </td>
             
@@ -1036,6 +1251,15 @@ where you can find a complete list of valid arguments.</p>
     
 
 	
+	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
+	
+    <dd>
+        <ul class="dummy">
+            <li>since version 3.0 use <a href="dc.lineChart.html#curve">dc.lineChart#curve</a> instead</li>
+        </ul>
+    </dd>
+    
+    
 
 	
 
@@ -1053,7 +1277,7 @@ where you can find a complete list of valid arguments.</p>
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-80">line 80</a>
+				 <a href="line-chart.js.html#sunlight-1-line-121">line 121</a>
 			</li>
 		</ul>
 	</dd>
@@ -1065,9 +1289,7 @@ where you can find a complete list of valid arguments.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate">d3.svg.line.interpolate</a></li>
-			
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate">d3.svg.area.interpolate</a></li>
+			<li><a href="dc.lineChart.html#curve">dc.lineChart#curve</a></li>
 			</ul>
 	</dd>
 	
@@ -1098,7 +1320,7 @@ where you can find a complete list of valid arguments.</p>
     </dt>
     <dd>
         
-<span class="param-type">String</span>
+<span class="param-type">d3.curve</span>
 |
 
 <span class="param-type"><a href="dc.lineChart.html">dc.lineChart</a></span>
@@ -1244,7 +1466,7 @@ beneath each line and the line chart effectively becomes an area chart.</p>
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-169">line 169</a>
+				 <a href="line-chart.js.html#sunlight-1-line-220">line 220</a>
 			</li>
 		</ul>
 	</dd>
@@ -1427,7 +1649,7 @@ current <code>options</code> values are instead returned.</p>
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-432">line 432</a>
+				 <a href="line-chart.js.html#sunlight-1-line-540">line 540</a>
 			</li>
 		</ul>
 	</dd>
@@ -1497,10 +1719,13 @@ current <code>options</code> values are instead returned.</p>
 
     
     <div class="description">
-        <p>Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-This parameter further customizes the interpolation behavior.  It is passed to
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension">d3.svg.line.tension</a> and
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension">d3.svg.area.tension</a>.</p>
+        <p>Gets or sets the tension to use for lines drawn, in the range 0 to 1.</p>
+<p>Passed to the <a href="https://github.com/d3/d3-shape/blob/master/README.md#curves">d3 curve function</a>
+if it provides a <code>.tension</code> function. Example:
+<a href="https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension">curveCardinal.tension</a>.</p>
+<p>This function exists for backward compatibility. Use <a href="dc.lineChart.html#curve">dc.lineChart#curve</a>
+which is generic and provides more options.
+Value set through <code>.curve</code> takes precedence over <code>.interpolate</code> and <code>.tension</code>.</p>
     </div>
     
 
@@ -1567,7 +1792,7 @@ This parameter further customizes the interpolation behavior.  It is passed to
             
                 <td class="default">
                 
-                    0.7
+                    0
                 
                 </td>
             
@@ -1600,6 +1825,15 @@ This parameter further customizes the interpolation behavior.  It is passed to
     
 
 	
+	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
+	
+    <dd>
+        <ul class="dummy">
+            <li>since version 3.0 use <a href="dc.lineChart.html#curve">dc.lineChart#curve</a> instead</li>
+        </ul>
+    </dd>
+    
+    
 
 	
 
@@ -1617,7 +1851,7 @@ This parameter further customizes the interpolation behavior.  It is passed to
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-102">line 102</a>
+				 <a href="line-chart.js.html#sunlight-1-line-148">line 148</a>
 			</li>
 		</ul>
 	</dd>
@@ -1629,9 +1863,7 @@ This parameter further customizes the interpolation behavior.  It is passed to
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate">d3.svg.line.interpolate</a></li>
-			
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate">d3.svg.area.interpolate</a></li>
+			<li><a href="dc.lineChart.html#curve">dc.lineChart#curve</a></li>
 			</ul>
 	</dd>
 	
@@ -1809,7 +2041,7 @@ dashed lines back to each respective axis.  This is ignored if the chart
 		<ul class="dummy">
 			<li>
 				<a href="line-chart.js.html">line-chart.js</a>,
-				 <a href="line-chart.js.html#sunlight-1-line-398">line 398</a>
+				 <a href="line-chart.js.html#sunlight-1-line-506">line 506</a>
 			</li>
 		</ul>
 	</dd>
@@ -1909,13 +2141,13 @@ dashed lines back to each respective axis.  This is ignored if the chart
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -105,7 +105,7 @@
  * // create a bubble chart under #chart-container2 element using chart group A
  * var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -134,13 +134,13 @@ dc.bubbleChart = function (parent, chartGroup) {
             bubbleG.order();
         }
 
-        renderNodes(bubbleG);
+        bubbleG = renderNodes(bubbleG);
 
         updateNodes(bubbleG);
 
         removeNodes(bubbleG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderNodes (bubbleG) {
@@ -155,6 +155,9 @@ dc.bubbleChart = function (parent, chartGroup) {
             .on('click', _chart.onClick)
             .attr('fill', _chart.getColor)
             .attr('r', 0);
+
+        bubbleG = bubbleGEnter.merge(bubbleG);
+
         dc.transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
             .select('circle.' + _chart.BUBBLE_CLASS)
             .attr('r', function (d) {
@@ -167,6 +170,8 @@ dc.bubbleChart = function (parent, chartGroup) {
         _chart._doRenderLabel(bubbleGEnter);
 
         _chart._doRenderTitles(bubbleGEnter);
+
+        return bubbleG;
     }
 
     function updateNodes (bubbleG) {
@@ -191,7 +196,7 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     function bubbleX (d) {
         var x = _chart.x()(_chart.keyAccessor()(d));
-        if (isNaN(x)) {
+        if (isNaN(x) || !isFinite(x)) {
             x = 0;
         }
         return x;
@@ -199,7 +204,7 @@ dc.bubbleChart = function (parent, chartGroup) {
 
     function bubbleY (d) {
         var y = _chart.y()(_chart.valueAccessor()(d));
-        if (isNaN(y)) {
+        if (isNaN(y) || !isFinite(y)) {
             y = 0;
         }
         return y;
@@ -209,9 +214,9 @@ dc.bubbleChart = function (parent, chartGroup) {
         // override default x axis brush from parent chart
     };
 
-    _chart.redrawBrush = function () {
+    _chart.redrawBrush = function (brushSelection, doTransition) {
         // override default x axis brush from parent chart
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(brushSelection);
     };
 
     return _chart.anchor(parent, chartGroup);
@@ -255,13 +260,13 @@ dc.bubbleChart = function (parent, chartGroup) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

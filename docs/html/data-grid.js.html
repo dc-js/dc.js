@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -89,7 +89,7 @@
  * a simple way to define how the items are displayed.
  *
  * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
- * for {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest nesting} the data together in groups.
+ * for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data together in groups.
  * Do not pass in a crossfilter group as this will not work.
  *
  * Examples:
@@ -98,7 +98,7 @@
  * @memberof dc
  * @mixes dc.baseMixin
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -173,14 +173,16 @@ dc.dataGrid = function (parent, chartGroup) {
                     return d.values;
                 });
 
-        items.enter()
-            .append('div')
-            .attr('class', ITEM_CSS_CLASS)
-            .html(function (d) {
-                return _html(d);
-            });
-
         items.exit().remove();
+
+        items = items
+            .enter()
+                .append('div')
+                .attr('class', ITEM_CSS_CLASS)
+                .html(function (d) {
+                    return _html(d);
+                })
+            .merge(items);
 
         return items;
     }
@@ -191,7 +193,7 @@ dc.dataGrid = function (parent, chartGroup) {
 
     /**
      * Get or set the group function for the data grid. The group function takes a data row and
-     * returns the key to specify to {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest d3.nest}
+     * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
      * to split rows into groups.
      *
      * Do not pass in a crossfilter group as this will not work.
@@ -320,8 +322,8 @@ dc.dataGrid = function (parent, chartGroup) {
      * @method order
      * @memberof dc.dataGrid
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending d3.descending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
+     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
@@ -376,13 +378,13 @@ dc.dataGrid = function (parent, chartGroup) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

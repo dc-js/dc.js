@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -94,7 +94,7 @@
  * @returns {dc.colorMixin}
  */
 dc.colorMixin = function (_chart) {
-    var _colors = d3.scale.category20c();
+    var _colors = d3.scaleOrdinal(dc.config.defaultColors());
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
@@ -105,17 +105,17 @@ dc.colorMixin = function (_chart) {
      * @method colors
      * @memberof dc.colorMixin
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
      * // alternate categorical scale
      * chart.colors(d3.scale.category20b());
      * // ordinal scale
-     * chart.colors(d3.scale.ordinal().range(['red','green','blue']));
+     * chart.colors(d3.scaleOrdinal().range(['red','green','blue']));
      * // convenience method, the same as above
      * chart.ordinalColors(['red','green','blue']);
      * // set a linear scale
      * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
-     * @param {d3.scale} [colorScale=d3.scale.category20c()]
+     * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
      * @returns {d3.scale|dc.colorMixin}
      */
     _chart.colors = function (colorScale) {
@@ -123,16 +123,16 @@ dc.colorMixin = function (_chart) {
             return _colors;
         }
         if (colorScale instanceof Array) {
-            _colors = d3.scale.quantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
+            _colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
         } else {
-            _colors = d3.functor(colorScale);
+            _colors = typeof colorScale === 'function' ? colorScale : dc.utils.constant(colorScale);
         }
         return _chart;
     };
 
     /**
      * Convenience method to set the color scale to
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal d3.scale.ordinal} with
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal} with
      * range `r`.
      * @method ordinalColors
      * @memberof dc.colorMixin
@@ -141,7 +141,7 @@ dc.colorMixin = function (_chart) {
      * @returns {dc.colorMixin}
      */
     _chart.ordinalColors = function (r) {
-        return _chart.colors(d3.scale.ordinal().range(r));
+        return _chart.colors(d3.scaleOrdinal().range(r));
     };
 
     /**
@@ -153,7 +153,7 @@ dc.colorMixin = function (_chart) {
      * @returns {dc.colorMixin}
      */
     _chart.linearColors = function (r) {
-        return _chart.colors(d3.scale.linear()
+        return _chart.colors(d3.scaleLinear()
                              .range(r)
                              .interpolate(d3.interpolateHcl));
     };
@@ -296,13 +296,13 @@ dc.colorMixin = function (_chart) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

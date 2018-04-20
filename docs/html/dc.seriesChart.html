@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -183,7 +183,7 @@ composite features other than recomposing the chart.</p>
             
 
             <td class="description last"><p>Any valid
-<a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements">d3 single selector</a> specifying
+<a href="https://github.com/d3/d3-selection/blob/master/README.md#select">d3 single selector</a> specifying
 a dom block element such as a div; or a dom element or d3 selection.</p></td>
         </tr>
 
@@ -477,7 +477,7 @@ var seriesChart2 = dc.seriesChart(&quot;#chart-container2&quot;, &quot;chartGrou
 		<ul class="dummy">
 			<li>
 				<a href="series-chart.js.html">series-chart.js</a>,
-				 <a href="series-chart.js.html#sunlight-1-line-91">line 91</a>
+				 <a href="series-chart.js.html#sunlight-1-line-93">line 93</a>
 			</li>
 		</ul>
 	</dd>
@@ -529,8 +529,8 @@ var seriesChart2 = dc.seriesChart(&quot;#chart-container2&quot;, &quot;chartGrou
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">// put interpolation on the line charts used for the series
-chart.chart(function(c) { return dc.lineChart(c).interpolate(&#x27;basis&#x27;); })
+    <pre class="sunlight-highlight-javascript">// put curve on the line charts used for the series
+chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
 // do a scatter series chart
 chart.chart(dc.scatterPlot)</pre>
 
@@ -661,7 +661,7 @@ should return the series that datum belongs to.</p>
 		<ul class="dummy">
 			<li>
 				<a href="series-chart.js.html">series-chart.js</a>,
-				 <a href="series-chart.js.html#sunlight-1-line-113">line 113</a>
+				 <a href="series-chart.js.html#sunlight-1-line-115">line 115</a>
 			</li>
 		</ul>
 	</dd>
@@ -849,7 +849,7 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 		<ul class="dummy">
 			<li>
 				<a href="series-chart.js.html">series-chart.js</a>,
-				 <a href="series-chart.js.html#sunlight-1-line-136">line 136</a>
+				 <a href="series-chart.js.html#sunlight-1-line-138">line 138</a>
 			</li>
 		</ul>
 	</dd>
@@ -861,9 +861,9 @@ chart.seriesAccessor(function(d) { return &quot;Expt: &quot; + d.key[0]; })</pre
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending">d3.ascending</a></li>
+			<li><a href="https://github.com/d3/d3-array/blob/master/README.md#ascending">d3.ascending</a></li>
 			
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending">d3.descending</a></li>
+			<li><a href="https://github.com/d3/d3-array/blob/master/README.md#descending">d3.descending</a></li>
 			</ul>
 	</dd>
 	
@@ -1039,7 +1039,7 @@ rather than haphazardly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="series-chart.js.html">series-chart.js</a>,
-				 <a href="series-chart.js.html#sunlight-1-line-157">line 157</a>
+				 <a href="series-chart.js.html#sunlight-1-line-159">line 159</a>
 			</li>
 		</ul>
 	</dd>
@@ -1051,9 +1051,9 @@ rather than haphazardly.</p>
 	<dt class="tag-see method-doc-label method-doc-details-label">See:</dt>
 	<dd class="tag-see">
 		<ul>
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending">d3.ascending</a></li>
+			<li><a href="https://github.com/d3/d3-array/blob/master/README.md#ascending">d3.ascending</a></li>
 			
-			<li><a href="https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending">d3.descending</a></li>
+			<li><a href="https://github.com/d3/d3-array/blob/master/README.md#descending">d3.descending</a></li>
 			</ul>
 	</dd>
 	
@@ -1157,13 +1157,13 @@ _chart.valueSort(function keySort (a, b) {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Mon Mar 12th 2018
+		on Fri Apr 20th 2018
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
