@@ -192,7 +192,7 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                if (!_chart.brushOn()) {
+                if (!(_chart.brushOn() || _chart.parentBrushOn())) {
                     return;
                 }
                 var start = brushSelection[0];
