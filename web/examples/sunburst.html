@@ -29,7 +29,7 @@ var chart3 = dc.rowChart("#test3");
 var chart2 = dc.rowChart("#test2");
 var chart = dc.sunburstChart("#test");
 
-d3.csv("morley.csv", function(error, experiments) {
+d3.csv("morley.csv").then(function(experiments) {
 
     var ndx = crossfilter(experiments),
         runDimension = ndx.dimension(function (d) {

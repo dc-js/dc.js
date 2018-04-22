@@ -27,7 +27,7 @@
 var fileChart = dc.sunburstChart("#file_chart");
 var typeChart = dc.pieChart("#type_chart");
 
-d3.tsv("cat.tsv", function (error, cats) {
+d3.tsv("cat.tsv").then(function (cats) {
     var ndx = crossfilter(cats);
     var picturesDimension = ndx.dimension(function (d) {
         return d.file.split('/');
@@ -43,12 +43,20 @@ d3.tsv("cat.tsv", function (error, cats) {
         return d.size;
     });
 
+    // d3.schemeCategory20b has been removed from D3v5
+    var d3SchemeCategory20b = [
+        '#393b79','#5254a3','#6b6ecf','#9c9ede','#637939',
+        '#8ca252','#b5cf6b','#cedb9c','#8c6d31','#bd9e39',
+        '#e7ba52','#e7cb94','#843c39','#ad494a','#d6616b',
+        '#e7969c','#7b4173','#a55194','#ce6dbd','#de9ed6'
+    ];
+
     fileChart
         .width(700)
         .height(640)
         .dimension(picturesDimension)
         .group(picturesGroup)
-        .colors(d3.scaleOrdinal(d3.schemeCategory20b))
+        .colors(d3.scaleOrdinal(d3SchemeCategory20b))
         .legend(dc.legend());
 
     typeChart
