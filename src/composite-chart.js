@@ -264,9 +264,11 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.fadeDeselectedArea = function (brushSelection) {
-        for (var i = 0; i < _children.length; ++i) {
-            var child = _children[i];
-            child.fadeDeselectedArea(brushSelection);
+        if (_chart.brushOn()) {
+            for (var i = 0; i < _children.length; ++i) {
+                var child = _children[i];
+                child.fadeDeselectedArea(brushSelection);
+            }
         }
     };
 
