@@ -74,10 +74,25 @@ dc.barChart = function (parent, chartGroup) {
         layers.each(function (d, i) {
             var layer = d3.select(this);
 
-            renderBars(layer, i, d);
+            if (layer.select('g').empty()) {
+                layer.append('g').attr('class', 'main');
+
+                if (_chart.isOrdinal()) {
+                    layer.append('g').attr('class', 'sensor');
+                }
+            }
+            
+            var mainLayer = layer.select('.main')
+
+            renderBars(mainLayer, i, d, false);
+
+            if (_chart.isOrdinal()) {
+                var sensorLayer = layer.select('.sensor')
+                renderBars(sensorLayer, i, d, true);
+            }
 
             if (_chart.renderLabel() && last === i) {
-                renderLabels(layer, i, d);
+                renderLabels(mainLayer, i, d);
             }
         });
     };
@@ -148,7 +163,7 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(x);
     }
 
-    function renderBars (layer, layerIndex, d) {
+    function renderBars (layer, layerIndex, d, isSensor) {
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
@@ -157,8 +172,9 @@ dc.barChart = function (parent, chartGroup) {
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
             .attr('x', barXPos)
-            .attr('y', _chart.yAxisHeight())
-            .attr('height', 0);
+            .attr('y', isSensor ? 0 : _chart.yAxisHeight())
+            .attr('height', isSensor ? _chart.yAxisHeight() : 0);
+
 
         var barsEnterUpdate = enter.merge(bars);
 
@@ -173,6 +189,8 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', barXPos)
             .attr('y', function (d) {
+                if (isSensor) return 0;
+
                 var y = _chart.y()(d.y + d.y0);
 
                 if (d.y < 0) {
@@ -183,7 +201,7 @@ dc.barChart = function (parent, chartGroup) {
             })
             .attr('width', _barWidth)
             .attr('height', function (d) {
-                return barHeight(d);
+                return isSensor ? _chart.yAxisHeight() : barHeight(d);
             })
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
