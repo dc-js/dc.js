@@ -17,12 +17,17 @@ describe('dc.colorMixin', function () {
         });
 
         it('does not issue a warning when default color scheme has been changed', function () {
+            var origColors = dc.config.defaultColors();
+
             spyOn(dc.logger, 'warnOnce');
 
             dc.config.defaultColors(d3.schemeSet1);
             dc.colorMixin({});
 
             expect(dc.logger.warnOnce).not.toHaveBeenCalled();
+
+            // Restore original colors
+            dc.config.defaultColors(origColors);
         });
     });
 
