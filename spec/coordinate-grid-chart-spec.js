@@ -532,7 +532,10 @@ describe('dc.coordinateGridChart', function () {
     describe('rescaling', function () {
         var originalUnitCount;
         beforeEach(function () {
+            expect(chart.resizing()).toBe(true);
             chart.render();
+            expect(chart.resizing()).toBe(false);
+
             originalUnitCount = chart.xUnitCount();
             chart.x().domain([makeDate(2012, 4, 20), makeDate(2012, 6, 15)]);
             chart.rescale();
@@ -540,6 +543,12 @@ describe('dc.coordinateGridChart', function () {
 
         it('should reset x unit count to reflect updated x domain', function () {
             expect(chart.xUnitCount()).not.toEqual(originalUnitCount);
+        });
+
+        it('should be resizing until render', function() {
+            expect(chart.resizing()).toBe(true);
+            chart.render();
+            expect(chart.resizing()).toBe(false);
         });
     });
 
@@ -847,6 +856,24 @@ describe('dc.coordinateGridChart', function () {
             chart.rangeChart(rangeChart);
             chart.render();
             rangeChart.render();
+        });
+
+        it('range filter should execute filtered listener and zoom focus chart', function() {
+            spyOn(chart, 'focus').and.callThrough();
+            var expectedCallbackSignature = function (callbackChart, callbackFilter) {
+                expect(callbackChart).toBe(rangeChart);
+                expect(callbackFilter).toEqual(selectedRange);
+            };
+            var filteredCallback = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+            rangeChart.on('filtered', filteredCallback);
+            expect(filteredCallback).not.toHaveBeenCalled();
+
+            rangeChart.filter(selectedRange);
+            expect(filteredCallback).toHaveBeenCalled();
+
+            expect(chart.focus).toHaveBeenCalled();
+            var focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
+            expect(focus).toEqual(selectedRange);
         });
 
         it('should zoom the focus chart when range chart is brushed', function () {

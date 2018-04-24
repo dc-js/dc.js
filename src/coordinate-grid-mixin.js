@@ -88,8 +88,12 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.resizing = function () {
-        return _resizing;
+    _chart.resizing = function (resizing) {
+        if (!arguments.length) {
+            return _resizing;
+        }
+        _resizing = resizing;
+        return _chart;
     };
 
     /**
@@ -450,7 +454,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
+            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem !== d2[i]; });
     }
 
     function prepareXAxis (g, render) {
@@ -1155,7 +1159,7 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.redrawBrush(_chart.g(), _resizing);
         }
         _chart.fadeDeselectedArea();
-        _resizing = false;
+        _chart.resizing(false);
     }
 
     function configureMouseZoom () {
@@ -1271,7 +1275,7 @@ dc.coordinateGridMixin = function (_chart) {
             return _focusChart;
         }
         _focusChart = c;
-        _chart.on('filtered', function (chart) {
+        _chart.on('filtered.rangeChart', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
                     _focusChart.x().domain(_focusChart.xOriginalDomain());

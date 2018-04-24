@@ -68,6 +68,31 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
+
+        var _children = _chart.children();
+        _children.forEach(function (child) {
+            child.rescale();
+        });
+
+        return _chart;
+    });
+
+    dc.override(_chart, 'resizing', function (resizing) {
+        if (!arguments.length) {
+            return _chart._resizing();
+        }
+        _chart._resizing(resizing);
+
+        var _children = _chart.children();
+        _children.forEach(function (child) {
+            child.resizing(resizing);
+        });
+
+        return _chart;
+    });
+
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
         var brushIsEmpty = _chart.brushIsEmpty(extent);
@@ -328,8 +353,29 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child.options(_childOptions);
         });
+
+        _chart.rescale();
         return _chart;
     };
+
+    // properties passed through in compose()
+    ['height', 'width', 'margins'].forEach(function (prop) {
+        var _prop = '_' + prop;
+        dc.override(_chart, prop, function (value) {
+            if (!arguments.length) {
+                return _chart[_prop]();
+            }
+
+            _chart[_prop](value);
+
+            var _children = _chart.children();
+            _children.forEach(function (child) {
+                child[prop](value);
+            });
+
+            return _chart;
+        });
+    });
 
     /**
      * Returns the child charts which are composed into the composite chart.
