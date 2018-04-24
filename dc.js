@@ -1,5 +1,5 @@
 /*!
- *  dc 2.1.10
+ *  dc 2.1.11-newboco
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 2.1.10
+ * @version 2.1.11-newboco
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '2.1.10',
+    version: '2.1.11-newboco',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -2868,8 +2868,12 @@ dc.coordinateGridMixin = function (_chart) {
         return _chart;
     };
 
-    _chart.resizing = function () {
-        return _resizing;
+    _chart.resizing = function (resizing) {
+        if (!arguments.length) {
+            return _resizing;
+        }
+        _resizing = resizing;
+        return _chart;
     };
 
     /**
@@ -3230,7 +3234,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function compareDomains (d1, d2) {
         return !d1 || !d2 || d1.length !== d2.length ||
-            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem === d2[i]; });
+            d1.some(function (elem, i) { return (elem && d2[i]) ? elem.toString() !== d2[i].toString() : elem !== d2[i]; });
     }
 
     function prepareXAxis (g, render) {
@@ -3935,7 +3939,7 @@ dc.coordinateGridMixin = function (_chart) {
             _chart.redrawBrush(_chart.g(), _resizing);
         }
         _chart.fadeDeselectedArea();
-        _resizing = false;
+        _chart.resizing(false);
     }
 
     function configureMouseZoom () {
@@ -4051,7 +4055,7 @@ dc.coordinateGridMixin = function (_chart) {
             return _focusChart;
         }
         _focusChart = c;
-        _chart.on('filtered', function (chart) {
+        _chart.on('filtered.rangeChart', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
                     _focusChart.x().domain(_focusChart.xOriginalDomain());
@@ -4120,7 +4124,7 @@ dc.stackMixin = function (_chart) {
     function prepareValues (layer, layerIdx) {
         var valAccessor = layer.accessor || _chart.valueAccessor();
         layer.name = String(layer.name || layerIdx);
-        layer.values = layer.group.all().map(function (d, i) {
+        var allValues = layer.group.all().map(function (d, i) {
             return {
                 x: _chart.keyAccessor()(d, i),
                 y: layer.hidden ? null : valAccessor(d, i),
@@ -4130,7 +4134,8 @@ dc.stackMixin = function (_chart) {
             };
         });
 
-        layer.values = layer.values.filter(domainFilter());
+        layer.domainValues = allValues.filter(domainFilter());
+        layer.values = _chart.evadeDomainFilter() ? allValues : layer.domainValues;
         return layer.values;
     }
 
@@ -4144,7 +4149,7 @@ dc.stackMixin = function (_chart) {
     var _evadeDomainFilter = false;
 
     function domainFilter () {
-        if (!_chart.x() || _evadeDomainFilter) {
+        if (!_chart.x()) {
             return d3.functor(true);
         }
         var xDomain = _chart.x().domain();
@@ -4297,7 +4302,7 @@ dc.stackMixin = function (_chart) {
     };
 
     function flattenStack () {
-        var valueses = _chart.data().map(function (layer) { return layer.values; });
+        var valueses = _chart.data().map(function (layer) { return layer.domainValues; });
         return Array.prototype.concat.apply([], valueses);
     }
 
@@ -7399,6 +7404,31 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
+
+        var _children = _chart.children();
+        _children.forEach(function (child) {
+            child.rescale();
+        });
+
+        return _chart;
+    });
+
+    dc.override(_chart, 'resizing', function (resizing) {
+        if (!arguments.length) {
+            return _chart._resizing();
+        }
+        _chart._resizing(resizing);
+
+        var _children = _chart.children();
+        _children.forEach(function (child) {
+            child.resizing(resizing);
+        });
+
+        return _chart;
+    });
+
     _chart._brushing = function () {
         var extent = _chart.extendBrush();
         var brushIsEmpty = _chart.brushIsEmpty(extent);
@@ -7659,8 +7689,29 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child.options(_childOptions);
         });
+
+        _chart.rescale();
         return _chart;
     };
+
+    // properties passed through in compose()
+    ['height', 'width', 'margins'].forEach(function (prop) {
+        var _prop = '_' + prop;
+        dc.override(_chart, prop, function (value) {
+            if (!arguments.length) {
+                return _chart[_prop]();
+            }
+
+            _chart[_prop](value);
+
+            var _children = _chart.children();
+            _children.forEach(function (child) {
+                child[prop](value);
+            });
+
+            return _chart;
+        });
+    });
 
     /**
      * Returns the child charts which are composed into the composite chart.
