@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-beta.1
+ *  dc 3.0.0-beta.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-beta.1
+ * @version 3.0.0-beta.2
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-beta.1',
+    version: '3.0.0-beta.2',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -996,7 +996,7 @@ dc.config = (function () {
      *
      * By default it is set to a copy of
      * `d3.schemeCategory20c` for backward compatibility. This color scheme has been
-     * removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
+     * [removed from D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
      * In DC 3.1 release it will change to a more appropriate default.
      *
      * @example
