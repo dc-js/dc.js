@@ -1,3 +1,6 @@
+## 3.0.0 beta 2
+* declare `pkg.main` for compatibility with some bundlers (and hopefully Observable)
+
 ## 3.0.0 beta 1
 * First NPM release of dc.js, compatible with D3 versions 4 and 5. Thanks to Deepak Kumar for all his effort on the port! We've made every effort to keep the library backward-compatible, but see [the 3.0 changes in the wiki](https://github.com/dc-js/dc.js/wiki/Changes-in-dc.js-version-3.0).
 * `fadeDeselectedArea` checks if brushing is enabled for the chart. Restores backward compatibility. By Deepak Kumar. ([#1422](https://github.com/dc-js/dc.js/pull/1422) / [#1401](https://github.com/dc-js/dc.js/issues/1401))
