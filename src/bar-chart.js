@@ -34,6 +34,7 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
     var _alwaysUseRounding = false;
+    var _mousesensor = true;
 
     var _barWidth;
 
@@ -77,18 +78,18 @@ dc.barChart = function (parent, chartGroup) {
             if (layer.select('g').empty()) {
                 layer.append('g').attr('class', 'main');
 
-                if (_chart.isOrdinal()) {
+                if (_mousesensor && !_chart.brushOn()) {
                     layer.append('g').attr('class', 'sensor');
                 }
             }
             
             var mainLayer = layer.select('.main')
 
-            renderBars(mainLayer, i, d, false);
+            renderBars(layer, mainLayer, i, d, false);
 
-            if (_chart.isOrdinal()) {
+            if (_mousesensor && !_chart.brushOn()) {
                 var sensorLayer = layer.select('.sensor')
-                renderBars(sensorLayer, i, d, true);
+                renderBars(layer, sensorLayer, i, d, true);
             }
 
             if (_chart.renderLabel() && last === i) {
@@ -163,17 +164,27 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(x);
     }
 
-    function renderBars (layer, layerIndex, d, isSensor) {
+    function renderBars (parentLayer, layer, layerIndex, d, isSensor) {
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
         var enter = bars.enter()
             .append('rect')
-            .attr('class', 'bar')
+            .attr('class', isSensor ? 'sensor-bar' : 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
             .attr('x', barXPos)
             .attr('y', isSensor ? 0 : _chart.yAxisHeight())
-            .attr('height', isSensor ? _chart.yAxisHeight() : 0);
+            .attr('height', isSensor ? _chart.yAxisHeight() : 0)
+            .on('mouseover', function(d, i) {
+                parentLayer.select('.main').selectAll('.bar')
+                    .style('fill-opacity', function(p, j) { 
+                        return j === i ? .5 : null 
+                    });
+            })
+            .on('mouseout', function() {
+                parentLayer.select('.main').selectAll('.bar')
+                    .style('fill-opacity', null);
+            });
 
 
         var barsEnterUpdate = enter.merge(bars);
@@ -384,6 +395,14 @@ dc.barChart = function (parent, chartGroup) {
         _chart.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
+    };
+
+    _chart.mousesensor = function (useMousesensor) {
+        if (!arguments.length) {
+            return _mousesensor;
+        }
+        _mousesensor = useMousesensor;
+        return _chart;
     };
 
     dc.override(_chart, 'xAxisMax', function () {

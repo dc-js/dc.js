@@ -42,6 +42,12 @@ div.dc-chart {
                 fill-opacity: .5;
             }
         }
+        &.sensor-bar {
+            fill-opacity: 0;
+            stroke-opacity: 0;
+            stroke: none;
+            cursor: pointer; 
+        }
         &.deselected {
             stroke: none;
             fill: $color_celeste;

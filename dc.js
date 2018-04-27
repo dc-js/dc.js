@@ -996,7 +996,7 @@ dc.config = (function () {
      *
      * By default it is set to a copy of
      * `d3.schemeCategory20c` for backward compatibility. This color scheme has been
-     * removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
+     * [removed from D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
      * In DC 3.1 release it will change to a more appropriate default.
      *
      * @example
@@ -5927,6 +5927,7 @@ dc.barChart = function (parent, chartGroup) {
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
     var _alwaysUseRounding = false;
+    var _mousesensor = true;
 
     var _barWidth;
 
@@ -5967,10 +5968,25 @@ dc.barChart = function (parent, chartGroup) {
         layers.each(function (d, i) {
             var layer = d3.select(this);
 
-            renderBars(layer, i, d);
+            if (layer.select('g').empty()) {
+                layer.append('g').attr('class', 'main');
+
+                if (_mousesensor && !_chart.brushOn()) {
+                    layer.append('g').attr('class', 'sensor');
+                }
+            }
+            
+            var mainLayer = layer.select('.main')
+
+            renderBars(layer, mainLayer, i, d, false);
+
+            if (_mousesensor && !_chart.brushOn()) {
+                var sensorLayer = layer.select('.sensor')
+                renderBars(layer, sensorLayer, i, d, true);
+            }
 
             if (_chart.renderLabel() && last === i) {
-                renderLabels(layer, i, d);
+                renderLabels(mainLayer, i, d);
             }
         });
     };
@@ -6041,17 +6057,28 @@ dc.barChart = function (parent, chartGroup) {
         return dc.utils.safeNumber(x);
     }
 
-    function renderBars (layer, layerIndex, d) {
+    function renderBars (parentLayer, layer, layerIndex, d, isSensor) {
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
         var enter = bars.enter()
             .append('rect')
-            .attr('class', 'bar')
+            .attr('class', isSensor ? 'sensor-bar' : 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
             .attr('x', barXPos)
-            .attr('y', _chart.yAxisHeight())
-            .attr('height', 0);
+            .attr('y', isSensor ? 0 : _chart.yAxisHeight())
+            .attr('height', isSensor ? _chart.yAxisHeight() : 0)
+            .on('mouseover', function(d, i) {
+                parentLayer.select('.main').selectAll('.bar')
+                    .style('fill-opacity', function(p, j) { 
+                        return j === i ? .5 : null 
+                    });
+            })
+            .on('mouseout', function() {
+                parentLayer.select('.main').selectAll('.bar')
+                    .style('fill-opacity', null);
+            });
+
 
         var barsEnterUpdate = enter.merge(bars);
 
@@ -6066,6 +6093,8 @@ dc.barChart = function (parent, chartGroup) {
         dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', barXPos)
             .attr('y', function (d) {
+                if (isSensor) return 0;
+
                 var y = _chart.y()(d.y + d.y0);
 
                 if (d.y < 0) {
@@ -6076,7 +6105,7 @@ dc.barChart = function (parent, chartGroup) {
             })
             .attr('width', _barWidth)
             .attr('height', function (d) {
-                return barHeight(d);
+                return isSensor ? _chart.yAxisHeight() : barHeight(d);
             })
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
@@ -6259,6 +6288,14 @@ dc.barChart = function (parent, chartGroup) {
         _chart.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
+    };
+
+    _chart.mousesensor = function (useMousesensor) {
+        if (!arguments.length) {
+            return _mousesensor;
+        }
+        _mousesensor = useMousesensor;
+        return _chart;
     };
 
     dc.override(_chart, 'xAxisMax', function () {

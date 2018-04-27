@@ -11,13 +11,11 @@ div.dc-chart {
   .dc-chart rect.bar:hover {
     fill-opacity: .5; }
 
-.dc-chart .sensor rect.bar {
+.dc-chart rect.sensor-bar {
   fill-opacity: 0;
   stroke-opacity: 0;
   stroke: none;
   cursor: pointer; }
-  .dc-chart .sensor rect.bar:hover {
-    fill-opacity: .1; }
 
 .dc-chart rect.deselected {
   stroke: none;

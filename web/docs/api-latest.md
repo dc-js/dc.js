@@ -463,7 +463,7 @@ Set the default color scheme for ordinal charts. Changing it will impact all ord
 
 By default it is set to a copy of
 `d3.schemeCategory20c` for backward compatibility. This color scheme has been
-removed from D3v5 (https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
+[removed from D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
 In DC 3.1 release it will change to a more appropriate default.
 
 **Kind**: instance method of [<code>config</code>](#dc.config)  
