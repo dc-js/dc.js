@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.0-beta.2  
+**Version**: 3.0.0  
 **Example**  
 ```js
 // Example chaining
@@ -43,6 +43,15 @@ chart.width(300)
         * [.emptyTitle([title])](#dc.pieChart+emptyTitle) ⇒ <code>String</code> \| [<code>pieChart</code>](#dc.pieChart)
         * [.externalLabels([externalLabelRadius])](#dc.pieChart+externalLabels) ⇒ <code>Number</code> \| [<code>pieChart</code>](#dc.pieChart)
         * [.drawPaths([drawPaths])](#dc.pieChart+drawPaths) ⇒ <code>Boolean</code> \| [<code>pieChart</code>](#dc.pieChart)
+    * [.sunburstChart](#dc.sunburstChart)
+        * [new sunburstChart(parent, [chartGroup])](#new_dc.sunburstChart_new)
+        * [.innerRadius([innerRadius])](#dc.sunburstChart+innerRadius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+        * [.radius([radius])](#dc.sunburstChart+radius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+        * [.cx([cx])](#dc.sunburstChart+cx) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+        * [.cy([cy])](#dc.sunburstChart+cy) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+        * [.minAngleForLabel([minAngleForLabel])](#dc.sunburstChart+minAngleForLabel) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+        * [.emptyTitle([title])](#dc.sunburstChart+emptyTitle) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+        * [.externalLabels([externalLabelRadius])](#dc.sunburstChart+externalLabels) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
     * [.barChart](#dc.barChart)
         * [new barChart(parent, [chartGroup])](#new_dc.barChart_new)
         * [.centerBar([centerBar])](#dc.barChart+centerBar) ⇒ <code>Boolean</code> \| [<code>barChart</code>](#dc.barChart)
@@ -141,6 +150,10 @@ chart.width(300)
         * [.autoItemWidth([autoItemWidth])](#dc.legend+autoItemWidth) ⇒ <code>Boolean</code> \| [<code>legend</code>](#dc.legend)
         * [.legendText([legendText])](#dc.legend+legendText) ⇒ <code>function</code> \| [<code>legend</code>](#dc.legend)
         * [.maxItems([maxItems])](#dc.legend+maxItems) ⇒ [<code>legend</code>](#dc.legend)
+    * [.htmlLegend](#dc.htmlLegend)
+        * [new htmlLegend()](#new_dc.htmlLegend_new)
+        * [.legendText([legendText])](#dc.htmlLegend+legendText) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+        * [.maxItems([maxItems])](#dc.htmlLegend+maxItems) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
     * [.scatterPlot](#dc.scatterPlot)
         * [new scatterPlot(parent, [chartGroup])](#new_dc.scatterPlot_new)
         * [.emptyColor](#dc.scatterPlot+emptyColor) ⇒ <code>String</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
@@ -185,6 +198,18 @@ chart.width(300)
         * [.multiple](#dc.selectMenu+multiple)
         * [.promptValue](#dc.selectMenu+promptValue)
         * [.numberItems](#dc.selectMenu+numberItems)
+    * [.textFilterWidget](#dc.textFilterWidget)
+        * [new textFilterWidget(parent, [chartGroup])](#new_dc.textFilterWidget_new)
+        * [.normalize](#dc.textFilterWidget+normalize) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
+        * [.placeHolder](#dc.textFilterWidget+placeHolder) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>string</code>
+        * [.filterFunctionFactory](#dc.textFilterWidget+filterFunctionFactory) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
+    * [.cboxMenu](#dc.cboxMenu)
+        * [new cboxMenu(parent, [chartGroup])](#new_dc.cboxMenu_new)
+        * [.order](#dc.cboxMenu+order)
+        * [.promptText](#dc.cboxMenu+promptText)
+        * [.filterDisplayed](#dc.cboxMenu+filterDisplayed)
+        * [.multiple](#dc.cboxMenu+multiple)
+        * [.promptValue](#dc.cboxMenu+promptValue)
     * [.baseMixin](#dc.baseMixin) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.height([height])](#dc.baseMixin+height) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.width([width])](#dc.baseMixin+width) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -339,6 +364,8 @@ chart.width(300)
             * [new TwoDimensionalFilter(filter)](#new_dc.filters.TwoDimensionalFilter_new)
         * [.RangedTwoDimensionalFilter](#dc.filters.RangedTwoDimensionalFilter)
             * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
+        * [.HierarchyFilter](#dc.filters.HierarchyFilter)
+            * [new HierarchyFilter(path)](#new_dc.filters.HierarchyFilter_new)
     * [.registerChart(chart, [group])](#dc.registerChart)
     * [.deregisterChart(chart, [group])](#dc.deregisterChart)
     * [.hasChart(chart)](#dc.hasChart) ⇒ <code>Boolean</code>
@@ -635,6 +662,129 @@ Get or set whether to draw lines from pie slices to their labels.
 | Param | Type |
 | --- | --- |
 | [drawPaths] | <code>Boolean</code> | 
+
+<a name="dc.sunburstChart"></a>
+
+### dc.sunburstChart
+**Kind**: static class of [<code>dc</code>](#dc)  
+**Mixes**: [<code>capMixin</code>](#dc.capMixin), [<code>colorMixin</code>](#dc.colorMixin), [<code>baseMixin</code>](#dc.baseMixin)  
+
+* [.sunburstChart](#dc.sunburstChart)
+    * [new sunburstChart(parent, [chartGroup])](#new_dc.sunburstChart_new)
+    * [.innerRadius([innerRadius])](#dc.sunburstChart+innerRadius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+    * [.radius([radius])](#dc.sunburstChart+radius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+    * [.cx([cx])](#dc.sunburstChart+cx) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+    * [.cy([cy])](#dc.sunburstChart+cy) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+    * [.minAngleForLabel([minAngleForLabel])](#dc.sunburstChart+minAngleForLabel) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+    * [.emptyTitle([title])](#dc.sunburstChart+emptyTitle) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+    * [.externalLabels([externalLabelRadius])](#dc.sunburstChart+externalLabels) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+
+<a name="new_dc.sunburstChart_new"></a>
+
+#### new sunburstChart(parent, [chartGroup])
+The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
+chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+slice relative to the sum of all values. Slices are ordered by [ordering](#dc.baseMixin+ordering) which defaults to sorting
+by key.
+
+The keys used in the sunburst chart should be arrays, representing paths in the tree.
+
+When filtering, the sunburst chart creates instances of [HierarchyFilter](#dc.filters.HierarchyFilter).
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
+
+**Example**  
+```js
+// create a sunburst chart under #chart-container1 element using the default global chart group
+var chart1 = dc.sunburstChart('#chart-container1');
+// create a sunburst chart under #chart-container2 element using chart group A
+var chart2 = dc.sunburstChart('#chart-container2', 'chartGroupA');
+```
+<a name="dc.sunburstChart+innerRadius"></a>
+
+#### sunburstChart.innerRadius([innerRadius]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
+sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [innerRadius] | <code>Number</code> | <code>0</code> | 
+
+<a name="dc.sunburstChart+radius"></a>
+
+#### sunburstChart.radius([radius]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+chart width and height.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| [radius] | <code>Number</code> | 
+
+<a name="dc.sunburstChart+cx"></a>
+
+#### sunburstChart.cx([cx]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Get or set center x coordinate position. Default is center of svg.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| [cx] | <code>Number</code> | 
+
+<a name="dc.sunburstChart+cy"></a>
+
+#### sunburstChart.cy([cy]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Get or set center y coordinate position. Default is center of svg.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| [cy] | <code>Number</code> | 
+
+<a name="dc.sunburstChart+minAngleForLabel"></a>
+
+#### sunburstChart.minAngleForLabel([minAngleForLabel]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+display a slice label.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [minAngleForLabel] | <code>Number</code> | <code>0.5</code> | 
+
+<a name="dc.sunburstChart+emptyTitle"></a>
+
+#### sunburstChart.emptyTitle([title]) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Title to use for the only slice when there is no data.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| [title] | <code>String</code> | 
+
+<a name="dc.sunburstChart+externalLabels"></a>
+
+#### sunburstChart.externalLabels([externalLabelRadius]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Position slice labels offset from the outer edge of the chart.
+
+The argument specifies the extra radius to be added for slice labels.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| [externalLabelRadius] | <code>Number</code> | 
 
 <a name="dc.barChart"></a>
 
@@ -2319,6 +2469,61 @@ Maximum number of legend items to display
 | --- | --- |
 | [maxItems] | <code>Number</code> | 
 
+<a name="dc.htmlLegend"></a>
+
+### dc.htmlLegend
+**Kind**: static class of [<code>dc</code>](#dc)  
+
+* [.htmlLegend](#dc.htmlLegend)
+    * [new htmlLegend()](#new_dc.htmlLegend_new)
+    * [.legendText([legendText])](#dc.htmlLegend+legendText) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+    * [.maxItems([maxItems])](#dc.htmlLegend+maxItems) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
+
+<a name="new_dc.htmlLegend_new"></a>
+
+#### new htmlLegend()
+htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
+labels.
+
+**Example**  
+```js
+chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
+```
+<a name="dc.htmlLegend+legendText"></a>
+
+#### htmlLegend.legendText([legendText]) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+Set or get the legend text function. The legend widget uses this function to render the legend
+text for each item. If no function is specified the legend widget will display the names
+associated with each group.
+
+**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
+
+| Param | Type |
+| --- | --- |
+| [legendText] | <code>function</code> | 
+
+**Example**  
+```js
+// default legendText
+legend.legendText(dc.pluck('name'))
+
+// create numbered legend items
+chart.legend(dc.htmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
+
+// create legend displaying group counts
+chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
+```
+<a name="dc.htmlLegend+maxItems"></a>
+
+#### htmlLegend.maxItems([maxItems]) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
+Maximum number of legend items to display
+
+**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
+
+| Param | Type |
+| --- | --- |
+| [maxItems] | <code>Number</code> | 
+
 <a name="dc.scatterPlot"></a>
 
 ### dc.scatterPlot
@@ -3009,6 +3214,225 @@ the `select` element. If `null` (the default), uses the browser's default height
 ```js
 chart.numberVisible(10);
 ```
+<a name="dc.textFilterWidget"></a>
+
+### dc.textFilterWidget
+**Kind**: static class of [<code>dc</code>](#dc)  
+**Mixes**: [<code>baseMixin</code>](#dc.baseMixin)  
+
+* [.textFilterWidget](#dc.textFilterWidget)
+    * [new textFilterWidget(parent, [chartGroup])](#new_dc.textFilterWidget_new)
+    * [.normalize](#dc.textFilterWidget+normalize) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
+    * [.placeHolder](#dc.textFilterWidget+placeHolder) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>string</code>
+    * [.filterFunctionFactory](#dc.textFilterWidget+filterFunctionFactory) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
+
+<a name="new_dc.textFilterWidget_new"></a>
+
+#### new textFilterWidget(parent, [chartGroup])
+Text Filter Widget
+
+The text filter widget is a simple widget designed to display an input field allowing to filter
+data that matches the text typed.
+As opposed to the other charts, this doesn't display any result and doesn't update its display,
+it's just to input an filter other charts.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
+
+**Example**  
+```js
+var data = [{"firstName":"John","lastName":"Coltrane"}{"firstName":"Miles",lastName:"Davis"}]
+var ndx = crossfilter(data);
+var dimension = ndx.dimension(function(d) {
+    return d.lastName.toLowerCase() + ' ' + d.firstName.toLowerCase();
+});
+
+dc.textFilterWidget('#search')
+    .dimension(dimension);
+    // you don't need the group() function
+```
+<a name="dc.textFilterWidget+normalize"></a>
+
+#### textFilterWidget.normalize ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
+This function will be called on values before calling the filter function.
+
+**Kind**: instance property of [<code>textFilterWidget</code>](#dc.textFilterWidget)  
+
+| Param | Type |
+| --- | --- |
+| [normalize] | <code>function</code> | 
+
+**Example**  
+```js
+// This is the default
+chart.normalize(function (s) {
+  return s.toLowerCase();
+});
+```
+<a name="dc.textFilterWidget+placeHolder"></a>
+
+#### textFilterWidget.placeHolder ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>string</code>
+Placeholder text in the search box.
+
+**Kind**: instance property of [<code>textFilterWidget</code>](#dc.textFilterWidget)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [placeHolder] | <code>function</code> | <code>&#x27;search&#x27;</code> | 
+
+**Example**  
+```js
+// This is the default
+chart.placeHolder('type to filter');
+```
+<a name="dc.textFilterWidget+filterFunctionFactory"></a>
+
+#### textFilterWidget.filterFunctionFactory ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
+This function will be called with the search text, it needs to return a function that will be used to
+filter the data. The default function checks presence of the search text.
+
+**Kind**: instance property of [<code>textFilterWidget</code>](#dc.textFilterWidget)  
+
+| Param | Type |
+| --- | --- |
+| [filterFunctionFactory] | <code>function</code> | 
+
+**Example**  
+```js
+// This is the default
+function (query) {
+    query = _normalize(query);
+    return function (d) {
+        return _normalize(d).indexOf(query) !== -1;
+    };
+};
+```
+<a name="dc.cboxMenu"></a>
+
+### dc.cboxMenu
+**Kind**: static class of [<code>dc</code>](#dc)  
+**Mixes**: [<code>baseMixin</code>](#dc.baseMixin)  
+
+* [.cboxMenu](#dc.cboxMenu)
+    * [new cboxMenu(parent, [chartGroup])](#new_dc.cboxMenu_new)
+    * [.order](#dc.cboxMenu+order)
+    * [.promptText](#dc.cboxMenu+promptText)
+    * [.filterDisplayed](#dc.cboxMenu+filterDisplayed)
+    * [.multiple](#dc.cboxMenu+multiple)
+    * [.promptValue](#dc.cboxMenu+promptValue)
+
+<a name="new_dc.cboxMenu_new"></a>
+
+#### new cboxMenu(parent, [chartGroup])
+The cboxMenu is a simple widget designed to filter a dimension by
+selecting option(s) from a set of HTML `<input />` elements. The menu can be
+made into a set of radio buttons (single select) or checkboxes (multiple).
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| [chartGroup] | <code>String</code> | The name of the chart group this widget should be placed in. Interaction with the widget will only trigger events and redraws within its group. |
+
+**Example**  
+```js
+// create a cboxMenu under #cbox-container using the default global chart group
+var cbox = dc.cboxMenu('#cbox-container')
+               .dimension(states)
+               .group(stateGroup);
+// the option text can be set via the title() function
+// by default the option text is '`key`: `value`'
+cbox.title(function (d){
+    return 'STATE: ' + d.key;
+})
+```
+<a name="dc.cboxMenu+order"></a>
+
+#### cboxMenu.order
+Get or set the function that controls the ordering of option tags in the
+cbox menu. By default options are ordered by the group key in ascending
+order.
+
+**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+
+| Param | Type |
+| --- | --- |
+| [order] | <code>function</code> | 
+
+**Example**  
+```js
+// order by the group's value
+chart.order(function (a,b) {
+    return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
+});
+```
+<a name="dc.cboxMenu+promptText"></a>
+
+#### cboxMenu.promptText
+Get or set the text displayed in the options used to prompt selection.
+
+**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [promptText] | <code>String</code> | <code>&#x27;Select all&#x27;</code> | 
+
+**Example**  
+```js
+chart.promptText('All states');
+```
+<a name="dc.cboxMenu+filterDisplayed"></a>
+
+#### cboxMenu.filterDisplayed
+Get or set the function that filters options prior to display. By default options
+with a value of < 1 are not displayed.
+
+**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+
+| Param | Type |
+| --- | --- |
+| [filterDisplayed] | <code>function</code> | 
+
+**Example**  
+```js
+// display all options override the `filterDisplayed` function:
+chart.filterDisplayed(function () {
+    return true;
+});
+```
+<a name="dc.cboxMenu+multiple"></a>
+
+#### cboxMenu.multiple
+Controls the type of input element. Setting it to true converts
+the HTML `input` tags from radio buttons to checkboxes.
+
+**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [multiple] | <code>boolean</code> | <code>false</code> | 
+
+**Example**  
+```js
+chart.multiple(true);
+```
+<a name="dc.cboxMenu+promptValue"></a>
+
+#### cboxMenu.promptValue
+Controls the default value to be used for
+[dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
+when only the prompt value is selected. If `null` (the default), no filtering will occur when
+just the prompt is selected.
+
+**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [promptValue] | <code>\*</code> | <code></code> | 
+
 <a name="dc.baseMixin"></a>
 
 ### dc.baseMixin ⇒ [<code>baseMixin</code>](#dc.baseMixin)
@@ -5520,6 +5944,8 @@ can be used as long as they have the properties above.
         * [new TwoDimensionalFilter(filter)](#new_dc.filters.TwoDimensionalFilter_new)
     * [.RangedTwoDimensionalFilter](#dc.filters.RangedTwoDimensionalFilter)
         * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
+    * [.HierarchyFilter](#dc.filters.HierarchyFilter)
+        * [new HierarchyFilter(path)](#new_dc.filters.HierarchyFilter_new)
 
 <a name="dc.filters.RangedFilter"></a>
 
@@ -5581,6 +6007,22 @@ Its `filterType` is 'RangedTwoDimensionalFilter'
 | Param | Type |
 | --- | --- |
 | filter | <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> | 
+
+<a name="dc.filters.HierarchyFilter"></a>
+
+#### filters.HierarchyFilter
+**Kind**: static class of [<code>filters</code>](#dc.filters)  
+<a name="new_dc.filters.HierarchyFilter_new"></a>
+
+##### new HierarchyFilter(path)
+HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
+child of, the given path. It is used by the [sunburst chart](#dc.sunburstChart) to include particular cells and all
+their children as they are clicked.
+
+
+| Param | Type |
+| --- | --- |
+| path | <code>String</code> | 
 
 <a name="dc.registerChart"></a>
 
