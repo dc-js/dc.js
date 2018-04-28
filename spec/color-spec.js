@@ -103,9 +103,10 @@ describe('dc.colorMixin', function () {
         });
 
         it('linear', function () {
-            // This case is different than others in this group. It scales colors based on RGB values
+            // interpolateHcl (note the one changed value for d3 5.1)
             chart.linearColors(['#4575b4','#ffffbf']);
-            expect(colorTest(chart, domain, test)).toMatchColors(['#4773b3', '#4575b4', '#4dc6c1', '#ffffbf', '#ffffc0', '#4575b4']);
+            expect(colorTest(chart, domain, test))
+                .toMatchColors(['#4773b3', '#4575b4', 'rgb(88, 198, 186)', '#ffffbf', '#ffffc0', '#4575b4']);
         });
     });
     describe('calculateColorDomain' , function () {
