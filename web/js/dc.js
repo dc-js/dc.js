@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.0-beta.2
+ *  dc 3.0.0
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.0-beta.2
+ * @version 3.0.0
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.0-beta.2',
+    version: '3.0.0',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -853,6 +853,84 @@ dc.utils.arraysEqual = function (a1, a2) {
         });
 };
 
+// ******** Sunburst Chart ********
+dc.utils.allChildren = function (node) {
+    var paths = [];
+    paths.push(node.path);
+    console.log('currentNode', node);
+    if (node.children) {
+        for (var i = 0; i < node.children.length; i++) {
+            paths = paths.concat(dc.utils.allChildren(node.children[i]));
+        }
+    }
+    return paths;
+};
+
+// builds a d3 Hierarchy from a collection
+// TODO: turn this monster method something better.
+dc.utils.toHierarchy = function (list, accessor) {
+    var root = {'key': 'root', 'children': []};
+    for (var i = 0; i < list.length; i++) {
+        var data = list[i];
+        var parts = data.key;
+        var value = accessor(data);
+        var currentNode = root;
+        for (var j = 0; j < parts.length; j++) {
+            var currentPath = parts.slice(0, j + 1);
+            var children = currentNode.children;
+            var nodeName = parts[j];
+            var childNode;
+            if (j + 1 < parts.length) {
+                // Not yet at the end of the sequence; move down the tree.
+                childNode = findChild(children, nodeName);
+
+                // If we don't already have a child node for this branch, create it.
+                if (childNode === void 0) {
+                    childNode = {'key': nodeName, 'children': [], 'path': currentPath};
+                    children.push(childNode);
+                }
+                currentNode = childNode;
+            } else {
+                // Reached the end of the sequence; create a leaf node.
+                childNode = {'key': nodeName, 'value': value, 'data': data, 'path': currentPath};
+                children.push(childNode);
+            }
+        }
+    }
+    return root;
+};
+
+function findChild (children, nodeName) {
+    for (var k = 0; k < children.length; k++) {
+        if (children[k].key === nodeName) {
+            return children[k];
+        }
+    }
+}
+
+dc.utils.getAncestors = function (node) {
+    var path = [];
+    var current = node;
+    while (current.parent) {
+        path.unshift(current.name);
+        current = current.parent;
+    }
+    return path;
+};
+
+dc.utils.arraysIdentical = function (a, b) {
+    var i = a.length;
+    if (i !== b.length) {
+        return false;
+    }
+    while (i--) {
+        if (a[i] !== b[i]) {
+            return false;
+        }
+    }
+    return true;
+};
+
 /**
  * Provides basis logging and deprecation utilities
  * @class logger
@@ -1184,6 +1262,41 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
     f.filterType = 'RangedTwoDimensionalFilter';
 
     return f;
+};
+
+// ******** Sunburst Chart ********
+
+/**
+ * HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
+ * child of, the given path. It is used by the {@link dc.sunburstChart sunburst chart} to include particular cells and all
+ * their children as they are clicked.
+ *
+ * @name HierarchyFilter
+ * @memberof dc.filters
+ * @param {String} path
+ * @returns {Array<String>}
+ * @constructor
+ */
+dc.filters.HierarchyFilter = function (path) {
+    if (path === null) {
+        return null;
+    }
+
+    var filter = path.slice(0);
+    filter.isFiltered = function (value) {
+        if (!(filter.length && value && value.length && value.length >= filter.length)) {
+            return false;
+        }
+
+        for (var i = 0; i < filter.length; i++) {
+            if (value[i] !== filter[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+    return filter;
 };
 
 /**
@@ -5892,6 +6005,582 @@ dc.pieChart = function (parent, chartGroup) {
 };
 
 /**
+ * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
+ * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+ * slice relative to the sum of all values. Slices are ordered by {@link dc.baseMixin#ordering ordering} which defaults to sorting
+ * by key.
+ *
+ * The keys used in the sunburst chart should be arrays, representing paths in the tree.
+ *
+ * When filtering, the sunburst chart creates instances of {@link dc.filters.HierarchyFilter HierarchyFilter}.
+ *
+ * @class sunburstChart
+ * @memberof dc
+ * @mixes dc.capMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.baseMixin
+ * @example
+ * // create a sunburst chart under #chart-container1 element using the default global chart group
+ * var chart1 = dc.sunburstChart('#chart-container1');
+ * // create a sunburst chart under #chart-container2 element using chart group A
+ * var chart2 = dc.sunburstChart('#chart-container2', 'chartGroupA');
+ *
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {dc.sunburstChart}
+ **/
+dc.sunburstChart = function (parent, chartGroup) {
+    var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+
+    var _sliceCssClass = 'pie-slice';
+    var _emptyCssClass = 'empty-chart';
+    var _emptyTitle = 'empty';
+
+    var _radius,
+        _innerRadius = 0;
+
+    var _g;
+    var _cx;
+    var _cy;
+    var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+    var _externalLabelRadius;
+    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+
+    _chart.colorAccessor(_chart.cappedKeyAccessor);
+
+    _chart.title(function (d) {
+        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+    });
+
+    _chart.label(_chart.cappedKeyAccessor);
+    _chart.renderLabel(true);
+
+    _chart.transitionDuration(350);
+
+    _chart.filterHandler(function (dimension, filters) {
+        if (filters.length === 0) {
+            dimension.filter(null);
+        } else {
+            dimension.filterFunction(function (d) {
+                for (var i = 0; i < filters.length; i++) {
+                    var filter = filters[i];
+                    if (filter.isFiltered && filter.isFiltered(d)) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        return filters;
+    });
+
+    _chart._doRender = function () {
+        _chart.resetSvg();
+
+        _g = _chart.svg()
+            .append('g')
+            .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
+
+        drawChart();
+
+        return _chart;
+    };
+
+    function drawChart () {
+        // set radius on basis of chart dimension if missing
+        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+
+        var arc = buildArcs();
+
+        var sunburstData, cdata;
+        // if we have data...
+        if (d3.sum(_chart.data(), _chart.valueAccessor())) {
+            cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
+            sunburstData = partitionNodes(cdata);
+            // First one is the root, which is not needed
+            sunburstData.shift();
+            _g.classed(_emptyCssClass, false);
+        } else {
+            // otherwise we'd be getting NaNs, so override
+            // note: abuse others for its ignoring the value accessor
+            cdata = dc.utils.toHierarchy([], function (d) {
+                return d.value;
+            });
+            sunburstData = partitionNodes(cdata);
+            _g.classed(_emptyCssClass, true);
+        }
+
+        if (_g) {
+            var slices = _g.selectAll('g.' + _sliceCssClass)
+                .data(sunburstData);
+            createElements(slices, arc, sunburstData);
+
+            updateElements(sunburstData, arc);
+
+            removeElements(slices);
+
+            highlightFilter();
+        }
+    }
+
+    function createElements (slices, arc, sunburstData) {
+        var slicesEnter = createSliceNodes(slices);
+
+        createSlicePath(slicesEnter, arc);
+        createTitles(slicesEnter);
+        createLabels(sunburstData, arc);
+    }
+
+    function createSliceNodes (slices) {
+        var slicesEnter = slices
+            .enter()
+            .append('g')
+            .attr('class', function (d, i) {
+                return _sliceCssClass +
+                    ' _' + i + ' ' +
+                    _sliceCssClass + '-level-' + d.depth;
+            });
+        return slicesEnter;
+    }
+
+    function createSlicePath (slicesEnter, arc) {
+        var slicePath = slicesEnter.append('path')
+            .attr('fill', fill)
+            .on('click', onClick)
+            .attr('d', function (d, i) {
+                return safeArc(d, i, arc);
+            });
+
+        var transition = dc.transition(slicePath, _chart.transitionDuration());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenSlice);
+        }
+    }
+
+    function createTitles (slicesEnter) {
+        if (_chart.renderTitle()) {
+            slicesEnter.append('title').text(function (d) {
+                return _chart.title()(d);
+            });
+        }
+    }
+
+    function positionLabels (labelsEnter, arc) {
+        dc.transition(labelsEnter, _chart.transitionDuration())
+            .attr('transform', function (d) {
+                return labelPosition(d, arc);
+            })
+            .attr('text-anchor', 'middle')
+            .text(function (d) {
+                // position label...
+                if (sliceHasNoData(d) || sliceTooSmall(d)) {
+                    return '';
+                }
+                return _chart.label()(d);
+            });
+    }
+
+    function createLabels (sunburstData, arc) {
+        if (_chart.renderLabel()) {
+            var labels = _g.selectAll('text.' + _sliceCssClass)
+                .data(sunburstData);
+
+            labels.exit().remove();
+
+            var labelsEnter = labels
+                .enter()
+                .append('text')
+                .attr('class', function (d, i) {
+                    var classes = _sliceCssClass + ' _' + i;
+                    if (_externalLabelRadius) {
+                        classes += ' external';
+                    }
+                    return classes;
+                })
+                .on('click', onClick);
+            positionLabels(labelsEnter, arc);
+        }
+    }
+
+    function updateElements (sunburstData, arc) {
+        updateSlicePaths(sunburstData, arc);
+        updateLabels(sunburstData, arc);
+        updateTitles(sunburstData);
+    }
+
+    function updateSlicePaths (sunburstData, arc) {
+        var slicePaths = _g.selectAll('g.' + _sliceCssClass)
+            .data(sunburstData)
+            .select('path')
+            .attr('d', function (d, i) {
+                return safeArc(d, i, arc);
+            });
+        var transition = dc.transition(slicePaths, _chart.transitionDuration());
+        if (transition.attrTween) {
+            transition.attrTween('d', tweenSlice);
+        }
+        transition.attr('fill', fill);
+    }
+
+    function updateLabels (sunburstData, arc) {
+        if (_chart.renderLabel()) {
+            var labels = _g.selectAll('text.' + _sliceCssClass)
+                .data(sunburstData);
+            positionLabels(labels, arc);
+        }
+    }
+
+    function updateTitles (sunburstData) {
+        if (_chart.renderTitle()) {
+            _g.selectAll('g.' + _sliceCssClass)
+                .data(sunburstData)
+                .select('title')
+                .text(function (d) {
+                    return _chart.title()(d);
+                });
+        }
+    }
+
+    function removeElements (slices) {
+        slices.exit().remove();
+    }
+
+    function highlightFilter () {
+        if (_chart.hasFilter()) {
+            _chart.selectAll('g.' + _sliceCssClass).each(function (d) {
+                if (isSelectedSlice(d)) {
+                    _chart.highlightSelected(this);
+                } else {
+                    _chart.fadeDeselected(this);
+                }
+            });
+        } else {
+            _chart.selectAll('g.' + _sliceCssClass).each(function (d) {
+                _chart.resetHighlight(this);
+            });
+        }
+    }
+
+    /**
+     * Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
+     * sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
+     * @method innerRadius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [innerRadius=0]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.innerRadius = function (innerRadius) {
+        if (!arguments.length) {
+            return _innerRadius;
+        }
+        _innerRadius = innerRadius;
+        return _chart;
+    };
+
+    /**
+     * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+     * chart width and height.
+     * @method radius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [radius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.radius = function (radius) {
+        if (!arguments.length) {
+            return _radius;
+        }
+        _radius = radius;
+        return _chart;
+    };
+
+    /**
+     * Get or set center x coordinate position. Default is center of svg.
+     * @method cx
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cx]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.cx = function (cx) {
+        if (!arguments.length) {
+            return (_cx || _chart.width() / 2);
+        }
+        _cx = cx;
+        return _chart;
+    };
+
+    /**
+     * Get or set center y coordinate position. Default is center of svg.
+     * @method cy
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cy]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.cy = function (cy) {
+        if (!arguments.length) {
+            return (_cy || _chart.height() / 2);
+        }
+        _cy = cy;
+        return _chart;
+    };
+
+    /**
+     * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+     * display a slice label.
+     * @method minAngleForLabel
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [minAngleForLabel=0.5]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.minAngleForLabel = function (minAngleForLabel) {
+        if (!arguments.length) {
+            return _minAngleForLabel;
+        }
+        _minAngleForLabel = minAngleForLabel;
+        return _chart;
+    };
+
+    /**
+     * Title to use for the only slice when there is no data.
+     * @method emptyTitle
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {String} [title]
+     * @returns {String|dc.sunburstChart}
+     */
+    _chart.emptyTitle = function (title) {
+        if (arguments.length === 0) {
+            return _emptyTitle;
+        }
+        _emptyTitle = title;
+        return _chart;
+    };
+
+    /**
+     * Position slice labels offset from the outer edge of the chart.
+     *
+     * The argument specifies the extra radius to be added for slice labels.
+     * @method externalLabels
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [externalLabelRadius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    _chart.externalLabels = function (externalLabelRadius) {
+        if (arguments.length === 0) {
+            return _externalLabelRadius;
+        } else if (externalLabelRadius) {
+            _externalLabelRadius = externalLabelRadius;
+        } else {
+            _externalLabelRadius = undefined;
+        }
+
+        return _chart;
+    };
+
+    function buildArcs () {
+        return d3.arc()
+            .startAngle(function (d) {
+                return d.x0;
+            })
+            .endAngle(function (d) {
+                return d.x1;
+            })
+            .innerRadius(function (d) {
+                return d.data.path && d.data.path.length === 1 ? _innerRadius : Math.sqrt(d.y0);
+            })
+            .outerRadius(function (d) {
+                return Math.sqrt(d.y1);
+            });
+    }
+
+    function isSelectedSlice (d) {
+        return isPathFiltered(d.path);
+    }
+
+    function isPathFiltered (path) {
+        for (var i = 0; i < _chart.filters().length; i++) {
+            var currentFilter = _chart.filters()[i];
+            if (currentFilter.isFiltered(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // returns all filters that are a parent or child of the path
+    function filtersForPath (path) {
+        var pathFilter = dc.filters.HierarchyFilter(path);
+        var filters = [];
+        for (var i = 0; i < _chart.filters().length; i++) {
+            var currentFilter = _chart.filters()[i];
+            if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
+                filters.push(currentFilter);
+            }
+        }
+        return filters;
+    }
+
+    _chart._doRedraw = function () {
+        drawChart();
+        return _chart;
+    };
+
+    function partitionNodes (data) {
+        // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
+        var hierarchy = d3.hierarchy(data)
+            .sum(function (d) {
+                return d.children ? 0 : _chart.cappedValueAccessor(d);
+            })
+            .sort(function (a, b) {
+                return d3.ascending(a.data.path, b.data.path);
+            });
+
+        var partition = d3.partition()
+            .size([2 * Math.PI, _radius * _radius]);
+
+        partition(hierarchy);
+
+        // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
+        var nodes = hierarchy.descendants().map(function (d) {
+            d.key = d.data.key;
+            d.path = d.data.path;
+            return d;
+        });
+
+        return nodes;
+    }
+
+    function sliceTooSmall (d) {
+        var angle = d.x1 - d.x0;
+        return isNaN(angle) || angle < _minAngleForLabel;
+    }
+
+    function sliceHasNoData (d) {
+        return _chart.cappedValueAccessor(d) === 0;
+    }
+
+    function tweenSlice (b) {
+        b.innerRadius = _innerRadius; //?
+        var current = this._current;
+        if (isOffCanvas(current)) {
+            current = {x: 0, y: 0, dx: 0, dy: 0};
+        }
+        // unfortunally, we can't tween an entire hierarchy since it has 2 way links.
+        var tweenTarget = {x: b.x, y: b.y, dx: b.dx, dy: b.dy};
+        var i = d3.interpolate(current, tweenTarget);
+        this._current = i(0);
+        return function (t) {
+            return safeArc(Object.assign({}, b, i(t)), 0, buildArcs());
+        };
+    }
+
+    function isOffCanvas (current) {
+        return !current || isNaN(current.dx) || isNaN(current.dy);
+    }
+
+    function fill (d, i) {
+        return _chart.getColor(d, i);
+    }
+
+    function _onClick (d) {
+        // Clicking on Legends do not filter, it throws exception
+        // Must be better way to handle this, in legends we need to access `d.key`
+        var path = d.path || d.key;
+        var filter = dc.filters.HierarchyFilter(path);
+
+        // filters are equal to, parents or children of the path.
+        var filters = filtersForPath(path);
+        var exactMatch = false;
+        // clear out any filters that cover the path filtered.
+        for (var i = filters.length - 1; i >= 0; i--) {
+            var currentFilter = filters[i];
+            if (dc.utils.arraysIdentical(currentFilter, path)) {
+                exactMatch = true;
+            }
+            _chart.filter(filters[i]);
+        }
+        dc.events.trigger(function () {
+            // if it is a new filter - put it in.
+            if (!exactMatch) {
+                _chart.filter(filter);
+            }
+            _chart.redrawGroup();
+        });
+    }
+
+    _chart.onClick = onClick;
+
+    function onClick (d, i) {
+        if (_g.attr('class') !== _emptyCssClass) {
+            _onClick(d, i);
+        }
+    }
+
+    function safeArc (d, i, arc) {
+        var path = arc(d, i);
+        if (path.indexOf('NaN') >= 0) {
+            path = 'M0,0';
+        }
+        return path;
+    }
+
+    function labelPosition (d, arc) {
+        var centroid;
+        if (_externalLabelRadius) {
+            centroid = d3.svg.arc()
+                .outerRadius(_radius + _externalLabelRadius)
+                .innerRadius(_radius + _externalLabelRadius)
+                .centroid(d);
+        } else {
+            centroid = arc.centroid(d);
+        }
+        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+            return 'translate(0,0)';
+        } else {
+            return 'translate(' + centroid + ')';
+        }
+    }
+
+    _chart.legendables = function () {
+        return _chart.data().map(function (d, i) {
+            var legendable = {name: d.key, data: d.value, others: d.others, chart: _chart};
+            legendable.color = _chart.getColor(d, i);
+            return legendable;
+        });
+    };
+
+    _chart.legendHighlight = function (d) {
+        highlightSliceFromLegendable(d, true);
+    };
+
+    _chart.legendReset = function (d) {
+        highlightSliceFromLegendable(d, false);
+    };
+
+    _chart.legendToggle = function (d) {
+        _chart.onClick({key: d.name, others: d.others});
+    };
+
+    function highlightSliceFromLegendable (legendable, highlighted) {
+        _chart.selectAll('g.pie-slice').each(function (d) {
+            if (legendable.name === d.key) {
+                d3.select(this).classed('highlight', highlighted);
+            }
+        });
+    }
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
  * Concrete bar chart/histogram implementation.
  *
  * Examples:
@@ -9802,6 +10491,174 @@ dc.legend = function () {
 };
 
 /**
+ * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
+ * labels.
+ *
+ * @class htmlLegend
+ * @memberof dc
+ * @example
+ * chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
+ * @returns {dc.htmlLegend}
+ */
+dc.htmlLegend = function () {
+    var _legend = {},
+        _htmlLegendDivCssClass = 'dc-html-legend',
+        _legendItemCssClassHorizontal = 'dc-legend-item-horizontal',
+        _legendItemCssClassVertical = 'dc-legend-item-vertical',
+        _parent,
+        _container,
+        _legendText = dc.pluck('name'),
+        _maxItems,
+        _horizontal = false,
+        _legendItemClass,
+        _highlightSelected = false;
+
+    _legend.parent = function (p) {
+        if (!arguments.length) {
+            return _parent;
+        }
+        _parent = p;
+        return _legend;
+    };
+
+    _legend.render = function () {
+        var _defaultLegendItemCssClass = _horizontal ?  _legendItemCssClassHorizontal : _legendItemCssClassVertical;
+        _container.select('div.dc-html-legend').remove();
+
+        var _l = _container.append('div').attr('class', _htmlLegendDivCssClass);
+        _l.attr('style', 'max-width:' + _container.nodes()[0].style.width);
+
+        var legendables = _parent.legendables();
+        var filters = _parent.filters();
+
+        if (_maxItems !== undefined) {
+            legendables = legendables.slice(0, _maxItems);
+        }
+
+        var legendItemClassName = _legendItemClass ? _legendItemClass : _defaultLegendItemCssClass;
+
+        var itemEnter = _l.selectAll('div.' + legendItemClassName)
+            .data(legendables).enter()
+            .append('div')
+            .classed(legendItemClassName, true)
+            .on('mouseover', _parent.legendHighlight)
+            .on('mouseout', _parent.legendReset)
+            .on('click', _parent.legendToggle);
+
+        if (_highlightSelected) {
+            itemEnter.classed(dc.constants.SELECTED_CLASS, function (d) {
+                return filters.indexOf(d.name) !== -1;
+            });
+        }
+
+        itemEnter.append('span')
+            .attr('class', 'dc-legend-item-color')
+            .style('background-color', dc.pluck('color'));
+
+        itemEnter.append('span')
+            .attr('class', 'dc-legend-item-label')
+            .attr('title', _legendText)
+            .text(_legendText);
+    };
+
+    /**
+     #### .container([selector])
+     Set the container selector for the legend widget. Required.
+     **/
+    _legend.container = function (c) {
+        if (!arguments.length) {
+            return _container;
+        }
+        _container = d3.select(c);
+        return _legend;
+    };
+
+    /**
+     #### .legendItemClass([selector])
+     This can be optionally used to override class for legenditem and just use this class style.
+     The reason to have this is so this can be done for a particular chart rather than overriding the style for all charts
+     Setting this will disable the highlighting of selected items also.
+     **/
+    _legend.legendItemClass = function (c) {
+        if (!arguments.length) {
+            return _legendItemClass;
+        }
+        _legendItemClass = c;
+        return _legend;
+    };
+
+    /**
+     #### .highlightSelected([boolean])
+     This can be optionally used to enable highlighting legends for the selections/filters for the chart.
+     **/
+    _legend.highlightSelected = function (c) {
+        if (!arguments.length) {
+            return _highlightSelected;
+        }
+        _highlightSelected = c;
+        return _legend;
+    };
+
+    /**
+     #### .horizontal([boolean])
+     Display the legend horizontally instead of horizontally
+     **/
+    _legend.horizontal = function (b) {
+        if (!arguments.length) {
+            return _horizontal;
+        }
+        _horizontal = b;
+        return _legend;
+    };
+
+    /**
+     * Set or get the legend text function. The legend widget uses this function to render the legend
+     * text for each item. If no function is specified the legend widget will display the names
+     * associated with each group.
+     * @method legendText
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param  {Function} [legendText]
+     * @returns {Function|dc.htmlLegend}
+     * @example
+     * // default legendText
+     * legend.legendText(dc.pluck('name'))
+     *
+     * // create numbered legend items
+     * chart.legend(dc.htmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     *
+     * // create legend displaying group counts
+     * chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
+     **/
+    _legend.legendText = function (legendText) {
+        if (!arguments.length) {
+            return _legendText;
+        }
+        _legendText = legendText;
+        return _legend;
+    };
+
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param  {Number} [maxItems]
+     * @return {dc.htmlLegend}
+     */
+    _legend.maxItems = function (maxItems) {
+        if (!arguments.length) {
+            return _maxItems;
+        }
+        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
+        return _legend;
+    };
+
+    return _legend;
+};
+
+
+/**
  * A scatter plot chart
  *
  * Examples:
@@ -11738,6 +12595,447 @@ dc.selectMenu = function (parent, chartGroup) {
     };
 
     _chart.size = dc.logger.deprecate(_chart.numberVisible, 'selectMenu.size is ambiguous - use numberVisible instead');
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+ * Text Filter Widget
+ *
+ * The text filter widget is a simple widget designed to display an input field allowing to filter
+ * data that matches the text typed.
+ * As opposed to the other charts, this doesn't display any result and doesn't update its display,
+ * it's just to input an filter other charts.
+ *
+ * @class textFilterWidget
+ * @memberof dc
+ * @mixes dc.baseMixin
+ * @example
+ *
+ * var data = [{"firstName":"John","lastName":"Coltrane"}{"firstName":"Miles",lastName:"Davis"}]
+ * var ndx = crossfilter(data);
+ * var dimension = ndx.dimension(function(d) {
+ *     return d.lastName.toLowerCase() + ' ' + d.firstName.toLowerCase();
+ * });
+ *
+ * dc.textFilterWidget('#search')
+ *     .dimension(dimension);
+ *     // you don't need the group() function
+ *
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
+ * specifying a dom block element such as a div; or a dom element or d3 selection.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {dc.textFilterWidget}
+ **/
+
+dc.textFilterWidget = function (parent, chartGroup) {
+    var INPUT_CSS_CLASS = 'dc-text-filter-input';
+
+    var _chart = dc.baseMixin({});
+
+    var _normalize = function (s) {
+        return s.toLowerCase();
+    };
+
+    var _filterFunctionFactory = function (query) {
+        query = _normalize(query);
+        return function (d) {
+            return _normalize(d).indexOf(query) !== -1;
+        };
+    };
+
+    var _placeHolder = 'search';
+
+    _chart.group(function () {
+        throw 'the group function on textFilterWidget should never be called, please report the issue';
+    });
+
+    _chart._doRender = function () {
+        _chart.select('input').remove();
+
+        var _input = _chart.root().append('input')
+            .classed(INPUT_CSS_CLASS, true);
+
+        _input.on('input', function () {
+            _chart.dimension().filterFunction(_filterFunctionFactory(this.value));
+            dc.events.trigger(function () {
+                dc.redrawAll();
+            }, dc.constants.EVENT_DELAY);
+        });
+
+        _chart._doRedraw();
+
+        return _chart;
+    };
+
+    _chart._doRedraw = function () {
+        _chart.root().selectAll('input')
+            .attr('placeholder', _placeHolder);
+
+        return _chart;
+    };
+
+    /**
+     * This function will be called on values before calling the filter function.
+     * @name normalize
+     * @memberof dc.textFilterWidget
+     * @instance
+     * @example
+     * // This is the default
+     * chart.normalize(function (s) {
+     *   return s.toLowerCase();
+     * });
+     * @param {function} [normalize]
+     * @returns {dc.textFilterWidget|function}
+     **/
+    _chart.normalize = function (normalize) {
+        if (!arguments.length) {
+            return _normalize;
+        }
+        _normalize = normalize;
+        return _chart;
+    };
+
+    /**
+     * Placeholder text in the search box.
+     * @name placeHolder
+     * @memberof dc.textFilterWidget
+     * @instance
+     * @example
+     * // This is the default
+     * chart.placeHolder('type to filter');
+     * @param {function} [placeHolder='search']
+     * @returns {dc.textFilterWidget|string}
+     **/
+    _chart.placeHolder = function (placeHolder) {
+        if (!arguments.length) {
+            return _placeHolder;
+        }
+        _placeHolder = placeHolder;
+        return _chart;
+    };
+
+    /**
+     * This function will be called with the search text, it needs to return a function that will be used to
+     * filter the data. The default function checks presence of the search text.
+     * @name filterFunctionFactory
+     * @memberof dc.textFilterWidget
+     * @instance
+     * @example
+     * // This is the default
+     * function (query) {
+     *     query = _normalize(query);
+     *     return function (d) {
+     *         return _normalize(d).indexOf(query) !== -1;
+     *     };
+     * };
+     * @param {function} [filterFunctionFactory]
+     * @returns {dc.textFilterWidget|function}
+     **/
+    _chart.filterFunctionFactory = function (filterFunctionFactory) {
+        if (!arguments.length) {
+            return _filterFunctionFactory;
+        }
+        _filterFunctionFactory = filterFunctionFactory;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
+
+/**
+ * The cboxMenu is a simple widget designed to filter a dimension by
+ * selecting option(s) from a set of HTML `<input />` elements. The menu can be
+ * made into a set of radio buttons (single select) or checkboxes (multiple).
+ * @class cboxMenu
+ * @memberof dc
+ * @mixes dc.baseMixin
+ * @example
+ * // create a cboxMenu under #cbox-container using the default global chart group
+ * var cbox = dc.cboxMenu('#cbox-container')
+ *                .dimension(states)
+ *                .group(stateGroup);
+ * // the option text can be set via the title() function
+ * // by default the option text is '`key`: `value`'
+ * cbox.title(function (d){
+ *     return 'STATE: ' + d.key;
+ * })
+ * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+ * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
+ * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
+ * Interaction with the widget will only trigger events and redraws within its group.
+ * @returns {cboxMenu}
+ **/
+dc.cboxMenu = function (parent, chartGroup) {
+    var GROUP_CSS_CLASS = 'dc-cbox-group';
+    var ITEM_CSS_CLASS = 'dc-cbox-item';
+
+    var _chart = dc.baseMixin({});
+
+    var _cbox;
+    var _promptText = 'Select all';
+    var _multiple = false;
+    var _inputType = 'radio';
+    var _promptValue = null;
+    // generate a random number to use as an ID
+    var _randVal = Math.floor(Math.random() * (100000)) + 1;
+    var _order = function (a, b) {
+        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
+             1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
+            -1 : 0;
+    };
+
+    var _filterDisplayed = function (d) {
+        return _chart.valueAccessor()(d) > 0;
+    };
+
+    _chart.data(function (group) {
+        return group.all().filter(_filterDisplayed);
+    });
+
+    _chart._doRender = function () {
+        return _chart._doRedraw();
+    };
+    /*
+    // IS THIS NEEDED?
+    // Fixing IE 11 crash when redrawing the chart
+    // see here for list of IE user Agents :
+    // http://www.useragentstring.com/pages/useragentstring.php?name=Internet+Explorer
+    var ua = window.navigator.userAgent;
+    // test for IE 11 but not a lower version (which contains MSIE in UA)
+    if (ua.indexOf('Trident/') > 0 && ua.indexOf('MSIE') === -1) {
+        _chart.redraw = _chart.render;
+    }
+    */
+    _chart._doRedraw = function () {
+        _chart.select('ul').remove();
+        _cbox = _chart.root()
+            .append('ul')
+            .classed(GROUP_CSS_CLASS, true);
+        renderOptions();
+
+        if (_chart.hasFilter() && _multiple) {
+            _cbox.selectAll('input')
+                .property('checked', function (d) {
+                    // adding `false` avoids failing test cases in phantomjs
+                    return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0 || false;
+                });
+        } else if (_chart.hasFilter()) {
+            _cbox.selectAll('input')
+                .property('checked', function (d) {
+                    if (!d) {
+                        return false;
+                    }
+                    return _chart.keyAccessor()(d) === _chart.filter();
+                });
+        }
+        return _chart;
+    };
+
+    function renderOptions () {
+        var options = _cbox
+        .selectAll('li.' + ITEM_CSS_CLASS)
+            .data(_chart.data(), function (d) {
+            return _chart.keyAccessor()(d);
+        });
+
+        options.exit().remove();
+
+        options = options.enter()
+                .append('li')
+                .classed(ITEM_CSS_CLASS, true)
+            .merge(options);
+
+        options
+            .append('input')
+            .attr('type', _inputType)
+            .attr('value', function (d) { return _chart.keyAccessor()(d); })
+            .attr('name', 'domain_' + _randVal)
+            .attr('id', function (d, i) {
+                return 'input_' + _randVal + '_' + i;
+            });
+        options
+            .append('label')
+            .attr('for', function (d, i) {
+                return 'input_' + _randVal + '_' + i;
+            })
+            .text(_chart.title());
+
+        // 'all' option
+        if (_multiple) {
+            _cbox
+            .append('li')
+            .append('input')
+            .attr('type', 'reset')
+            .text(_promptText)
+            .on('click', onChange);
+        } else {
+            var li = _cbox.append('li');
+            li.append('input')
+                .attr('type', _inputType)
+                .attr('value', _promptValue)
+                .attr('name', 'domain_' + _randVal)
+                .attr('id', function (d, i) {
+                    return 'input_' + _randVal + '_all';
+                })
+                .property('checked', true);
+            li.append('label')
+                .attr('for', function (d, i) {
+                    return 'input_' + _randVal + '_all';
+                })
+                .text(_promptText);
+        }
+
+        _cbox
+            .selectAll('li.' + ITEM_CSS_CLASS)
+            .sort(_order);
+
+        _cbox.on('change', onChange);
+        return options;
+    }
+
+    function onChange (d, i) {
+        var values,
+            target = d3.select(d3.event.target),
+            options;
+
+        if (!target.datum()) {
+            values = _promptValue || null;
+        } else {
+            options = d3.select(this).selectAll('input')
+            .filter(function (o) {
+                if (o) {
+                    return this.checked;
+                }
+            });
+            values = options.nodes().map(function (option) {
+                return option.value;
+            });
+            // check if only prompt option is selected
+            if (!_multiple && values.length === 1) {
+                values = values[0];
+            }
+        }
+        _chart.onChange(values);
+    }
+
+    _chart.onChange = function (val) {
+        if (val && _multiple) {
+            _chart.replaceFilter([val]);
+        } else if (val) {
+            _chart.replaceFilter(val);
+        } else {
+            _chart.filterAll();
+        }
+        dc.events.trigger(function () {
+            _chart.redrawGroup();
+        });
+    };
+
+    /**
+     * Get or set the function that controls the ordering of option tags in the
+     * cbox menu. By default options are ordered by the group key in ascending
+     * order.
+     * @name order
+     * @memberof dc.cboxMenu
+     * @instance
+     * @param {Function} [order]
+     * @example
+     * // order by the group's value
+     * chart.order(function (a,b) {
+     *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
+     * });
+     **/
+    _chart.order = function (order) {
+        if (!arguments.length) {
+            return _order;
+        }
+        _order = order;
+        return _chart;
+    };
+
+    /**
+     * Get or set the text displayed in the options used to prompt selection.
+     * @name promptText
+     * @memberof dc.cboxMenu
+     * @instance
+     * @param {String} [promptText='Select all']
+     * @example
+     * chart.promptText('All states');
+     **/
+    _chart.promptText = function (_) {
+        if (!arguments.length) {
+            return _promptText;
+        }
+        _promptText = _;
+        return _chart;
+    };
+
+    /**
+     * Get or set the function that filters options prior to display. By default options
+     * with a value of < 1 are not displayed.
+     * @name filterDisplayed
+     * @memberof dc.cboxMenu
+     * @instance
+     * @param {function} [filterDisplayed]
+     * @example
+     * // display all options override the `filterDisplayed` function:
+     * chart.filterDisplayed(function () {
+     *     return true;
+     * });
+     **/
+    _chart.filterDisplayed = function (filterDisplayed) {
+        if (!arguments.length) {
+            return _filterDisplayed;
+        }
+        _filterDisplayed = filterDisplayed;
+        return _chart;
+    };
+
+    /**
+     * Controls the type of input element. Setting it to true converts
+     * the HTML `input` tags from radio buttons to checkboxes.
+     * @name multiple
+     * @memberof dc.cboxMenu
+     * @instance
+     * @param {boolean} [multiple=false]
+     * @example
+     * chart.multiple(true);
+     **/
+    _chart.multiple = function (multiple) {
+        if (!arguments.length) {
+            return _multiple;
+        }
+        _multiple = multiple;
+        if (_multiple) {
+            _inputType = 'checkbox';
+        } else {
+            _inputType = 'radio';
+        }
+        return _chart;
+    };
+
+    /**
+     * Controls the default value to be used for
+     * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
+     * when only the prompt value is selected. If `null` (the default), no filtering will occur when
+     * just the prompt is selected.
+     * @name promptValue
+     * @memberof dc.cboxMenu
+     * @instance
+     * @param {?*} [promptValue=null]
+     **/
+    _chart.promptValue = function (promptValue) {
+        if (!arguments.length) {
+            return _promptValue;
+        }
+        _promptValue = promptValue;
+
+        return _chart;
+    };
 
     return _chart.anchor(parent, chartGroup);
 };

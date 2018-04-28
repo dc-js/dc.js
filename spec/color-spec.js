@@ -17,12 +17,17 @@ describe('dc.colorMixin', function () {
         });
 
         it('does not issue a warning when default color scheme has been changed', function () {
+            var origColors = dc.config.defaultColors();
+
             spyOn(dc.logger, 'warnOnce');
 
             dc.config.defaultColors(d3.schemeSet1);
             dc.colorMixin({});
 
             expect(dc.logger.warnOnce).not.toHaveBeenCalled();
+
+            // Restore original colors
+            dc.config.defaultColors(origColors);
         });
     });
 
@@ -103,9 +108,10 @@ describe('dc.colorMixin', function () {
         });
 
         it('linear', function () {
-            // This case is different than others in this group. It scales colors based on RGB values
+            // interpolateHcl (note the one changed value for d3 5.1)
             chart.linearColors(['#4575b4','#ffffbf']);
-            expect(colorTest(chart, domain, test)).toMatchColors(['#4773b3', '#4575b4', '#4dc6c1', '#ffffbf', '#ffffc0', '#4575b4']);
+            expect(colorTest(chart, domain, test))
+                .toMatchColors(['#4773b3', '#4575b4', 'rgb(88, 198, 186)', '#ffffbf', '#ffffc0', '#4575b4']);
         });
     });
     describe('calculateColorDomain' , function () {

@@ -499,6 +499,7 @@ module.exports.jsFiles = [
     'src/cap-mixin.js',
     'src/bubble-mixin.js',
     'src/pie-chart.js',
+    'src/sunburst-chart.js',
     'src/bar-chart.js',
     'src/line-chart.js',
     'src/data-count.js',
@@ -511,11 +512,14 @@ module.exports.jsFiles = [
     'src/bubble-overlay.js',
     'src/row-chart.js',
     'src/legend.js',
+    'src/html-legend.js',
     'src/scatter-plot.js',
     'src/number-display.js',
     'src/heatmap.js',
     'src/d3.box.js',
     'src/box-plot.js',
     'src/select-menu.js',
+    'src/text-filter-widget.js',
+    'src/cbox-menu.js',
     'src/footer.js'  // NOTE: keep this last
 ];

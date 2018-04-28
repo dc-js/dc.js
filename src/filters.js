@@ -119,3 +119,38 @@ dc.filters.RangedTwoDimensionalFilter = function (filter) {
 
     return f;
 };
+
+// ******** Sunburst Chart ********
+
+/**
+ * HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
+ * child of, the given path. It is used by the {@link dc.sunburstChart sunburst chart} to include particular cells and all
+ * their children as they are clicked.
+ *
+ * @name HierarchyFilter
+ * @memberof dc.filters
+ * @param {String} path
+ * @returns {Array<String>}
+ * @constructor
+ */
+dc.filters.HierarchyFilter = function (path) {
+    if (path === null) {
+        return null;
+    }
+
+    var filter = path.slice(0);
+    filter.isFiltered = function (value) {
+        if (!(filter.length && value && value.length && value.length >= filter.length)) {
+            return false;
+        }
+
+        for (var i = 0; i < filter.length; i++) {
+            if (value[i] !== filter[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+    return filter;
+};

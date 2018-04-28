@@ -1,3 +1,9 @@
+## 3.0.0
+* Sunburst chart, by Blair Nilsson, with contributions by Sean Micklethwaite and Deepak Kumar ([#781](https://github.com/dc-js/dc.js/issues/781) / [#907](https://github.com/dc-js/dc.js/pull/907) / [#1337](https://github.com/dc-js/dc.js/pull/1337) /[#1388](https://github.com/dc-js/dc.js/pull/1388))
+* Text filter widget, by Xavier Dutoit ([#383](https://github.com/dc-js/dc.js/issues/383) / [#936](https://github.com/dc-js/dc.js/pull/936) / [#1387](https://github.com/dc-js/dc.js/pull/1387))
+* Checkbox/radio button filtering, by Amelia Ireland, with contributions by Deepak Kumar ([#1348](https://github.com/dc-js/dc.js/pull/1348) / [#1389](https://github.com/dc-js/dc.js/pull/1389))
+* HTML Legend, by David Long and Ramesh Rajagopalon, with contributions by Deepak Kumar ([#1325](https://github.com/dc-js/dc.js/issues/1325) / [#577](https://github.com/dc-js/dc.js/pull/577) / [#1329](https://github.com/dc-js/dc.js/pull/1329) / [#1392](https://github.com/dc-js/dc.js/pull/1392))
+
 ## 3.0.0 beta 2
 * declare `pkg.main` for compatibility with some bundlers (and hopefully Observable)
 
