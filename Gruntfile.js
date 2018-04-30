@@ -20,7 +20,7 @@ module.exports = function (grunt) {
     };
 
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
-    var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '5' ? 'dist' : 'build';
+    var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
     grunt.initConfig({
         conf: config,
