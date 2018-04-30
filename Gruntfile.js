@@ -19,6 +19,9 @@ module.exports = function (grunt) {
         jsFiles: module.exports.jsFiles
     };
 
+    // in d3v4 and d3v5 pre-built d3.js are in different sub folders
+    var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
+
     grunt.initConfig({
         conf: config,
 
@@ -147,6 +150,7 @@ module.exports = function (grunt) {
                     specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
                         '<%= conf.web %>/js/jasmine-jsreporter.js',
+                        '<%= conf.web %>/js/compare-versions.js',
                         '<%= conf.spec %>/helpers/*.js'
                     ],
                     styles: [
@@ -173,6 +177,7 @@ module.exports = function (grunt) {
                     '<%= conf.web %>/css/dc.css',
                     // Helpers
                     '<%= conf.web %>/js/jasmine-jsreporter.js',
+                    '<%= conf.web %>/js/compare-versions.js',
                     '<%= conf.spec %>/helpers/*.js',
                     // JS code dependencies
                     '<%= conf.web %>/js/d3.js',
@@ -317,11 +322,23 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.js.map',
                             '<%= conf.pkg.name %>.min.js',
                             '<%= conf.pkg.name %>.min.js.map',
-                            'node_modules/d3/dist/d3.js',
+                            'node_modules/d3/' + d3pkgSubDir + '/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js'
                         ],
                         dest: '<%= conf.web %>/js/'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        nonull: true,
+                        src: [
+                            'node_modules/compare-versions/index.js'
+                        ],
+                        dest: '<%= conf.web %>/js/',
+                        rename: function (dest, src) {
+                            return dest + 'compare-versions.js';
+                        }
                     }
                 ]
             }

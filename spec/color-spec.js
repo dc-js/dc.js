@@ -1,4 +1,4 @@
-/* global loadDateFixture */
+/* global loadDateFixture, compareVersions */
 describe('dc.colorMixin', function () {
     function colorTest (chart, domain, test) {
         chart.colorDomain(domain);
@@ -108,10 +108,18 @@ describe('dc.colorMixin', function () {
         });
 
         it('linear', function () {
-            // interpolateHcl (note the one changed value for d3 5.1)
+            // interpolateHcl (note the adjustment for one changed value for d3 5.1)
             chart.linearColors(['#4575b4','#ffffbf']);
+
+            var changedInD3v51 = 'rgb(88, 198, 186)';
+            // https://github.com/omichelsen/compare-versions
+            if (compareVersions(d3.version, '5.1') === -1) {
+                // d3 is older than v5.1
+                changedInD3v51 = 'rgb(77, 198, 193)';
+            }
+
             expect(colorTest(chart, domain, test))
-                .toMatchColors(['#4773b3', '#4575b4', 'rgb(88, 198, 186)', '#ffffbf', '#ffffc0', '#4575b4']);
+                .toMatchColors(['#4773b3', '#4575b4', changedInD3v51, '#ffffbf', '#ffffc0', '#4575b4']);
         });
     });
     describe('calculateColorDomain' , function () {
