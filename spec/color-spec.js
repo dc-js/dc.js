@@ -110,6 +110,9 @@ describe('dc.colorMixin', function () {
         it('linear', function () {
             // interpolateHcl (note the one changed value for d3 5.1)
             chart.linearColors(['#4575b4','#ffffbf']);
+
+            // These 5 lines including all commented lines are important. The last line gets uncommented
+            // before running test cases with d3v4. Please see `scripts/adjust-for-d3v4.sh`
             var changedInD3v51 = 'rgb(88, 198, 186)';
             // Value in earlier versions
             // changedInD3v51 = 'rgb(77, 198, 193)';
