@@ -3,17 +3,20 @@
 <head>
     <title>dc.js - HTML Legend Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 </head>
 <body>
 
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+
 <p>This page demonstrates the usage of the html legend.
-    It shows example of scrollbars for the vertical menu and setting up a horizontal menu.
+  It shows example of scrollbars for the vertical menu and setting up a horizontal menu.
 </p>
 <p style="padding-bottom: 20px">
-    It also shows the selected legend highlighted
+  It also shows the selected legend highlighted
 </p>
-<div class="container">
 
     <div style="width:250px; height:150px;display: inline-block">
         <div id="year"></div>
@@ -67,7 +70,7 @@
 
       yearChart
         .width(200)
-        .height(150)
+        .height(200)
         .dimension(yearDim)
         .group(spendPerYearGroup)
         .turnOnControls(true)
@@ -75,7 +78,7 @@
 
       nameChart
         .width(200)
-        .height(150)
+        .height(200)
         .dimension(nameDim)
         .group(nameGroup)
         .legend(dc.htmlLegend().container('#name-legend').horizontal(true).highlightSelected(true));

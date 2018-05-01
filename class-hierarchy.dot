@@ -33,4 +33,8 @@ marginMixin -> rowChart
 colorMixin -> rowChart
 coordinateGridMixin -> scatterPlot
 baseMixin -> selectMenu
+baseMixin -> cboxMenu
+colorMixin -> sunburstChart
+capMixin -> sunburstChart
+baseMixin -> textFilterWidget
 }
