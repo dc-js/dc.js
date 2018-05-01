@@ -3,6 +3,7 @@
 <head>
     <title>dc.js - Sunburst Chart Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
     <style>
         .pie-slice path {
@@ -15,6 +16,9 @@
     </style>
 </head>
 <body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 
 <div id="file_chart"></div>
 <div id="type_chart"></div>
@@ -71,5 +75,6 @@ d3.tsv("cat.tsv").then(function (cats) {
 
 </script>
 
+</div>
 </body>
 </html>
