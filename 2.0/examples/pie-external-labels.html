@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Pie Chart External Labels Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+  var chart = dc.pieChart("#test");
+  d3.csv("morley.csv", function(error, experiments) {
+
+      var ndx           = crossfilter(experiments),
+          runDimension  = ndx.dimension(function(d) {return "run-"+d.Run;})
+      speedSumGroup = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run;});
+
+      chart
+          .width(768)
+          .height(480)
+          .slicesCap(4)
+          .innerRadius(100)
+          .externalLabels(50)
+          .externalRadiusPadding(50)
+          .drawPaths(true)
+          .dimension(runDimension)
+          .group(speedSumGroup)
+          .legend(dc.legend());
+
+      // example of formatting the legend via svg
+      // http://stackoverflow.com/questions/38430632/how-can-we-add-legends-value-beside-of-legend-with-proper-alignment
+      chart.on('pretransition', function(chart) {
+          chart.selectAll('.dc-legend-item text')
+              .text('')
+            .append('tspan')
+              .text(function(d) { return d.name; })
+            .append('tspan')
+              .attr('x', 100)
+              .attr('text-anchor', 'end')
+              .text(function(d) { return d.data; });
+      });
+      chart.render();
+  });
+
+</script>
+
+</div>
+</body>
+</html>

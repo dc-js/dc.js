@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Restrict Panning Test</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      #chart,
+      #range-chart { width: 100%; }
+    </style>
+  </head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="../examples/header.js"></script>
+    <div id="chart"></div>
+    <div id="range-chart"></div>
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript">
+      var data       = [
+          { date: "2014-02-01", value: 15000000 },
+          { date: "2014-02-02", value: 16487625 },
+          { date: "2014-02-03", value: 17097434 },
+          { date: "2014-02-04", value: 17694420 },
+          { date: "2014-02-05", value: 17014381 },
+          { date: "2014-02-06", value: 15578984 },
+          { date: "2014-02-07", value: 14718953 },
+          { date: "2014-02-08", value: 15020669 },
+          { date: "2014-02-09", value: 13889722 },
+          { date: "2014-02-10", value: 13979897 },
+          { date: "2014-02-11", value: 14595566 },
+          { date: "2014-02-12", value: 14123256 },
+          { date: "2014-02-13", value: 14083675 },
+          { date: "2014-02-14", value: 15068426 },
+          { date: "2014-02-15", value: 15368056 },
+          { date: "2014-02-16", value: 15277054 },
+          { date: "2014-02-17", value: 14376243 },
+          { date: "2014-02-18", value: 13058892 },
+          { date: "2014-02-19", value: 12367653 },
+          { date: "2014-02-20", value: 13184423 },
+          { date: "2014-02-21", value: 14367203 },
+          { date: "2014-02-22", value: 14656447 },
+          { date: "2014-02-23", value: 14724526 },
+          { date: "2014-02-24", value: 14938129 },
+          { date: "2014-02-25", value: 14205617 },
+          { date: "2014-02-26", value: 14596607 },
+          { date: "2014-02-27", value: 13982597 },
+          { date: "2014-02-28", value: 15107034 },
+          { date: "2014-03-01", value: 13646739 },
+          { date: "2014-03-02", value: 14214763 },
+          { date: "2014-03-03", value: 14952136 },
+          { date: "2014-03-04", value: 14643933 },
+          { date: "2014-03-05", value: 13611435 },
+          { date: "2014-03-06", value: 12569788 },
+          { date: "2014-03-07", value: 11344469 },
+          { date: "2014-03-08", value: 12687132 },
+          { date: "2014-03-09", value: 11831144 },
+          { date: "2014-03-10", value: 10480837 },
+          { date: "2014-03-11", value: 9051161 },
+          { date: "2014-03-12", value: 9964784 },
+          { date: "2014-03-13", value: 11035006 },
+          { date: "2014-03-14", value: 10081289 },
+          { date: "2014-03-15", value: 9793897 },
+          { date: "2014-03-16", value: 9177447 },
+          { date: "2014-03-17", value: 8035348 },
+          { date: "2014-03-18", value: 6770242 },
+          { date: "2014-03-19", value: 7272077 },
+          { date: "2014-03-20", value: 8216348 },
+          { date: "2014-03-21", value: 8576584 },
+          { date: "2014-03-22", value: 9421060 },
+          { date: "2014-03-23", value: 10872288 },
+          { date: "2014-03-24", value: 9537996 },
+          { date: "2014-03-25", value: 9560363 },
+          { date: "2014-03-26", value: 8182813 },
+          { date: "2014-03-27", value: 9068173 },
+          { date: "2014-03-28", value: 10390251 },
+          { date: "2014-03-29", value: 9714081 },
+          { date: "2014-03-30", value: 9994670 },
+          { date: "2014-03-31", value: 9317878 },
+          { date: "2014-04-01", value: 8209077 },
+          { date: "2014-04-02", value: 9230830 },
+          { date: "2014-04-03", value: 8978342 },
+          { date: "2014-04-04", value: 8361854 },
+          { date: "2014-04-05", value: 9345999 },
+          { date: "2014-04-06", value: 7965407 },
+          { date: "2014-04-07", value: 8909276 },
+          { date: "2014-04-08", value: 8935489 },
+          { date: "2014-04-09", value: 8634997 },
+          { date: "2014-04-10", value: 8795592 },
+          { date: "2014-04-11", value: 7513086 },
+          { date: "2014-04-12", value: 8408561 },
+          { date: "2014-04-13", value: 7780649 },
+          { date: "2014-04-14", value: 7524281 },
+          { date: "2014-04-15", value: 8498062 },
+          { date: "2014-04-16", value: 7922453 },
+          { date: "2014-04-17", value: 9304312 },
+          { date: "2014-04-18", value: 8199457 },
+          { date: "2014-04-19", value: 8926136 },
+          { date: "2014-04-20", value: 7558184 },
+          { date: "2014-04-21", value: 6417511 },
+          { date: "2014-04-22", value: 5748831 },
+          { date: "2014-04-23", value: 6503022 },
+          { date: "2014-04-24", value: 6429606 },
+          { date: "2014-04-25", value: 5057410 },
+          { date: "2014-04-26", value: 5924669 },
+          { date: "2014-04-27", value: 4728239 },
+          { date: "2014-04-28", value: 3918540 },
+          { date: "2014-04-29", value: 2821473 },
+          { date: "2014-04-30", value: 1995781 },
+          { date: "2014-05-01", value: 1123626 },
+          { date: "2014-05-02", value: 516067 },
+          { date: "2014-05-03", value: 816831 },
+          { date: "2014-05-04", value: 816831 },
+          { date: "2014-05-05", value: 816831 },
+          { date: "2014-05-06", value: 1103818 },
+          { date: "2014-05-07", value: 958188 },
+          { date: "2014-05-08", value: 592995 },
+          { date: "2014-05-09", value: 856066 },
+          { date: "2014-05-10", value: 1766761 },
+          { date: "2014-05-11", value: 1330557 }
+      ].map(function (d) {
+          d.date = new Date(d.date);
+          return d;
+      }),
+      chart      = dc.lineChart('#chart'),
+      rangeChart = dc.barChart('#range-chart'),
+      domain     = [ data[0].date, data.slice(-1)[0].date ],
+      dimension  = crossfilter(data).dimension(function (d) { return d.date; }),
+      group      = dimension.group().reduceSum(function(d) { return d.value; });
+
+      rangeChart
+      .height(40)
+      .dimension(dimension)
+      .group(group)
+      .x(d3.time.scale().domain(domain))
+      .xUnits(d3.time.month)
+      .centerBar(true)
+      .render();
+
+      chart
+      .height(150)
+      .dimension(dimension)
+      .group(group)
+      .rangeChart(rangeChart)
+      .x(d3.time.scale().domain(domain))
+      .xUnits(d3.time.day)
+      .brushOn(false)
+      .mouseZoomable(true)
+      .zoomScale([1, 100])
+      .zoomOutRestrict(true)
+      .transitionDuration(0)
+      .renderVerticalGridLines(true)
+      .render();
+    </script>
+
+</div>
+</body>
+</html>

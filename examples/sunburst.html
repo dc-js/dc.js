@@ -3,6 +3,7 @@
 <head>
     <title>dc.js - Sunburst Chart Example</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
     <style>
         .pie-slice path {
@@ -12,9 +13,12 @@
             stroke-width: 1;
             stroke:#fff;
         }
-    </style>    
+    </style>
 </head>
 <body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
 
 <div id="test"></div>
 <div id="test2"></div>
@@ -80,5 +84,6 @@ d3.csv("morley.csv").then(function(experiments) {
 
 </script>
 
+</div>
 </body>
 </html>

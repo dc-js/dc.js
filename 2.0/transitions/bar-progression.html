@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Area Progression Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
+
+    <div id="test"></div>
+    <button class="btn" onclick="transitionTest.stop()">stop</button>
+    <button class="btn" onclick="button1()">forward</button>
+    <button class="btn" onclick="button2()">reverse</button>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript" src="transition-test.js"></script>
+    <script type="text/javascript">
+
+      var chart = dc.barChart("#test");
+      var progression = transitionTest.progression(5, 20);
+      var noDimension = {};
+      var progressGroup = {
+          all: function() {
+              return progression.data();
+          }
+      };
+
+      function sel_stack(i) {
+          return function(d) {
+              return d.value[i];
+          };
+      }
+
+      chart
+          .transitionDuration(transitionTest.duration)
+          .width(768)
+          .height(480)
+          .x(d3.scale.linear())
+          .elasticX(true)
+          .elasticY(true)
+          .margins({left: 50, top: 10, right: 10, bottom: 20})
+          .brushOn(false)
+          .dimension(noDimension);
+
+      function all_stacks() {
+          chart.group(progressGroup, "0", sel_stack('0'));
+          for(var i = 1; i<5; ++i)
+              chart.stack(progressGroup, ''+i, sel_stack(i));
+      }
+      all_stacks();
+      chart.render();
+
+      window.button1 = function() {
+          progression
+              .reverse(false)
+              .start();
+      };
+      window.button2 = function() {
+          progression
+              .reverse(true)
+              .start();
+      };
+      window.button4 = transitionTest.oscillate(function() {
+          chart.group(progressGroup, '2', sel_stack('2'))
+              .stack(progressGroup, '4', sel_stack('4'));
+      }, all_stacks);
+
+    </script>
+    </div>
+  </body>
+</html>
