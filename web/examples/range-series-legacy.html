@@ -11,8 +11,7 @@
 <div class="container">
   <script type="text/javascript" src="header.js"></script>
 
-  <p>This page demonstrates a line chart used as a rangeChart after <a href="https://github.com/dc-js/dc.js/issues/479">#479</a>
-      is fixed by <a href="https://github.com/dc-js/dc.js/pull/1408">#1408</a>.</p>
+  <p>This page demonstrates a very hacky workaround for issue <a href="https://github.com/dc-js/dc.js/issues/479">#479</a>, using a series chart as a range chart.
 <div id="test"></div>
 <div id="test-overview"></div>
 
@@ -40,7 +39,6 @@ d3.csv("morley.csv").then(function(experiments) {
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")
-    .yAxisPadding("5%")
     .xAxisLabel("Run")
     .elasticY(true)
     .dimension(runDimension)
@@ -53,11 +51,47 @@ d3.csv("morley.csv").then(function(experiments) {
     .legend(dc.legend().x(350).y(350).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
   focusChart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
   focusChart.margins().left += 40;
-  
+
+  focusChart.elasticX = function() {
+    return arguments.length ? this : false;
+  };
+
+    function rangesEqual (range1, range2) {
+        if (!range1 && !range2) {
+            return true;
+        } else if (!range1 || !range2) {
+            return false;
+        } else if (range1.length === 0 && range2.length === 0) {
+            return true;
+        } else if (range1[0].valueOf() === range2[0].valueOf() &&
+            range1[1].valueOf() === range2[1].valueOf()) {
+            return true;
+        }
+        return false;
+    }
+
   overviewChart
     .width(768)
     .height(100)
-    .chart(function(c) { return dc.lineChart(c).curve(d3.curveCardinal); })
+    .chart(function(c,_,_,i) {
+    var chart = dc.lineChart(c).curve(d3.curveCardinal);
+    if(i===0)
+    	chart.on('filtered', function (chart) {
+            if (!chart.filter()) {
+                dc.events.trigger(function () {
+                    overviewChart.focusChart().x().domain(overviewChart.focusChart().xOriginalDomain());
+                    overviewChart.focusChart().redraw();
+                });
+            } else if (!rangesEqual(chart.filter(), overviewChart.focusChart().filter())) {
+                dc.events.trigger(function () {
+                    // The second parameter is quite important. It asks the focus operation not to propagate events
+                    // In absence of that it will cause infinite mutual recursion
+                    overviewChart.focusChart().focus(chart.filter(), true);
+                });
+            }
+        });
+    return chart;
+    })
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(true)
     .xAxisLabel("Run")
