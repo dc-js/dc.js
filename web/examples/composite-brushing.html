@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>dc.js - Composite Chart Brushing Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+
+  <p>Usually sub charts of a composite chart share the dimension of the parent.
+    However sometimes, especially when scatter plots are composed, the sub charts may
+    used different dimensions. This example uses two scatter plots both using array dimensions.
+    Typically scatter plots use two dimensional brushing (see <a href="scatter-brushing.html">scatter brushing</a>),
+    however, composite charts only support one dimensional (along x axis) brushing.</p>
+  <p>Try brushing on the chart and see data getting filtered on the right.</p>
+  <p>For the curious, you will notice that unlike other charts brushing removes points outside range of the brush
+    instead of just fading them.
+    The three dimensions used by different charts are actually related.
+    When brush applies filters on all these three dimensions, all data outside the brush range actually gets removed
+    by crossfilter. There is no easy way to currently avoid that.</p>
+  <div id="test1"></div>
+  <div id="test2"></div>
+
+  <script type="text/javascript" src="../js/d3.js"></script>
+  <script type="text/javascript" src="../js/crossfilter.js"></script>
+  <script type="text/javascript" src="../js/dc.js"></script>
+  <script type="text/javascript">
+
+var chart = dc.compositeChart("#test1");
+var dataTable = dc.dataTable("#test2");
+
+var data = [
+    {x: 1, y: 1, z: 3},
+    {x: 5, y: 2, z: 11},
+    {x: 13, y: 13, z: 14},
+    {x: 5, y: 3, z: 20},
+    {x: 12, y: 12, z: 10},
+    {x: 3, y: 6, z: 8},
+    {x: 15, y: 2, z: 9},
+    {x: 8, y: 6, z: 14},
+    {x: 1, y: 4, z: 9},
+    {x: 8, y: 8, z: 12}
+];
+
+var ndx = crossfilter(data),
+    dimXY = ndx.dimension(function (d) {
+        return [d.x, d.y];
+    }),
+    groupXY = dimXY.group(),
+    dimXZ = ndx.dimension(function (d) {
+        return [d.x, d.z];
+    }),
+    groupXZ = dimXZ.group(),
+    dimX = ndx.dimension(function (d) {
+        return d.x;
+    }),
+    groupX = dimX.group();
+
+chart.width(768)
+    .height(480)
+    .x(d3.scaleLinear().domain([0, 16]))
+    .yAxisLabel("y")
+    .xAxisLabel("x")
+    .clipPadding(10)
+    .dimension(dimXY)
+    .group(groupXY)
+    .compose([
+        dc.scatterPlot(chart)
+            .symbol(d3.symbolStar)
+            .ordinalColors(['red'])
+            .symbolSize(8)
+            .excludedOpacity(0.5),
+        dc.scatterPlot(chart)
+            .dimension(dimXZ)
+            .group(groupXZ)
+            .symbol(d3.symbolSquare)
+            .ordinalColors(['green'])
+            .symbolSize(8)
+            .excludedOpacity(0.5),
+        dc.barChart(chart)
+            .dimension(dimX)
+            .group(groupX)
+            .valueAccessor(function (d) { return d.value * 3; })
+            .ordinalColors(['#e7e4ff'])
+            .barPadding(8)
+    ]);
+
+dataTable
+    .dimension(dimX)
+    .group(function (d) { return d.x; })
+    .columns(['x', 'y', 'z']);
+
+dc.renderAll();
+
+  </script>
+
+</div>
+</body>
+</html>
