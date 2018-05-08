@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Row Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var chart = dc.rowChart("#test");
+d3.csv("morley.csv").then(function(experiments) {
+
+  experiments.forEach(function(x) {
+    x.Speed = +x.Speed;
+  });
+
+  var ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
+      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+
+  chart
+    .width(768)
+    .height(480)
+    .margins({top: 20, right: 20, bottom: 20, left: 20})
+    .x(d3.scaleLinear().domain([6,20]))
+    .xAxis(d3.axisTop())
+    .elasticX(true)
+    .dimension(runDimension)
+    .group(speedSumGroup);
+
+  chart.on('pretransition', function() {
+    chart.select('g.axis').attr('transform', 'translate(0,0)');
+    chart.selectAll('line.grid-line').attr('y2', chart.effectiveHeight());
+  });
+  chart
+    .render();
+});
+
+</script>
+
+</div>
+</body>
+</html>

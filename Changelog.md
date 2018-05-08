@@ -1,3 +1,6 @@
+## 3.0.2
+* Allow row chart `.xAxis` to be settable. Since the type of axis can't be detected by the chart, provide [example](https://dc-js.github.io/dc.js/examples/row-top-axis.html) of setting the position of axis and grid lines manually.
+
 ## 3.0.1
 * Test compatibility with D3v4 as well as D3v5, by Deepak Kumar ([#1430](https://github.com/dc-js/dc.js/pull/1430))
 * Add new charts/widgets to class hierarchy in documentation
