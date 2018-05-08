@@ -323,8 +323,8 @@ dc.coordinateGridMixin = function (_chart) {
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.axisBottom} [xAxis=d3.axisBottom]
-     * @returns {d3.axisBottom|dc.coordinateGridMixin}
+     * @param {d3.axis} [xAxis=d3.axisBottom()]
+     * @returns {d3.axis|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
