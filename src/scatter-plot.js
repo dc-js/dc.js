@@ -93,7 +93,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         symbols.call(renderTitles, _chart.data());
 
         symbols.each(function (d, i) {
-            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
+            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([_chart.keyAccessor()(d), _chart.valueAccessor()(d)]);
         });
 
         dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
