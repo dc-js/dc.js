@@ -49,6 +49,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _brush = d3.brushX();
     var _gBrush;
     var _brushOn = true;
+    var _parentBrushOn = false;
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -323,8 +324,8 @@ dc.coordinateGridMixin = function (_chart) {
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.axisBottom} [xAxis=d3.axisBottom]
-     * @returns {d3.axisBottom|dc.coordinateGridMixin}
+     * @param {d3.axis} [xAxis=d3.axisBottom()]
+     * @returns {d3.axis|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -1087,19 +1088,17 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart.redrawBrush(brushSelection, false);
 
-        if (_chart.brushIsEmpty(brushSelection)) {
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        } else {
-            var rangedFilter = dc.filters.RangedFilter(brushSelection[0], brushSelection[1]);
+        var rangedFilter = _chart.brushIsEmpty(brushSelection) ? null : dc.filters.RangedFilter(brushSelection[0], brushSelection[1]);
 
-            dc.events.trigger(function () {
-                _chart.replaceFilter(rangedFilter);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        }
+        dc.events.trigger(function () {
+            _chart.applyBrushSelection(rangedFilter);
+        }, dc.constants.EVENT_DELAY);
+    };
+
+    // This can be overridden in a derived chart. For example Composite chart overrides it
+    _chart.applyBrushSelection = function (rangedFilter) {
+        _chart.replaceFilter(rangedFilter);
+        _chart.redrawGroup();
     };
 
     _chart.setBrushExtents = function (doTransition) {
@@ -1460,6 +1459,24 @@ dc.coordinateGridMixin = function (_chart) {
             return _brushOn;
         }
         _brushOn = brushOn;
+        return _chart;
+    };
+
+    /**
+     * This will be internally used by composite chart onto children. Please go not invoke directly.
+     *
+     * @method parentBrushOn
+     * @memberof dc.coordinateGridMixin
+     * @protected
+     * @instance
+     * @param {Boolean} [brushOn=false]
+     * @returns {Boolean|dc.coordinateGridMixin}
+     */
+    _chart.parentBrushOn = function (brushOn) {
+        if (!arguments.length) {
+            return _parentBrushOn;
+        }
+        _parentBrushOn = brushOn;
         return _chart;
     };
 

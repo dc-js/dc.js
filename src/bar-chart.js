@@ -228,7 +228,7 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
-        } else if (_chart.brushOn()) {
+        } else if (_chart.brushOn() || _chart.parentBrushOn()) {
             if (!_chart.brushIsEmpty(brushSelection)) {
                 var start = brushSelection[0];
                 var end = brushSelection[1];

@@ -293,22 +293,28 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
+     * Get or sets the x axis for the row chart instance.
+     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.axisBottom}
+     * // use a top-oriented axis. Note: position of the axis and grid lines will need to
+     * // be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
+     * chart.xAxis(d3.axisTop())
+     * @returns {d3.axis}
      */
-    _chart.xAxis = function () {
-        return _xAxis;
+    _chart.xAxis = function (xAxis) {
+        if (!arguments.length) {
+            return _xAxis;
+        }
+        _xAxis = xAxis;
+        return this;
     };
 
     /**

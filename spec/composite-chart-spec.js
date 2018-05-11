@@ -704,6 +704,7 @@ describe('dc.compositeChart', function () {
             });
 
             it('should filter the child charts', function () {
+                jasmine.clock().tick(100);
                 expect(otherDimension.top(Infinity).length).toBe(4);
             });
 
@@ -714,6 +715,7 @@ describe('dc.compositeChart', function () {
                 });
 
                 it('should filter down to fewer points', function () {
+                    jasmine.clock().tick(100);
                     expect(otherDimension.top(Infinity).length).toBe(2);
                 });
 

@@ -40,7 +40,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .height(480)
     .chart(subChart)
     .x(d3.scaleLinear().domain([0,20]))
-    .brushOn(false)
+    .brushOn(true)
     .yAxisLabel("Measured Speed km/s")
     .xAxisLabel("Run")
     .clipPadding(10)
