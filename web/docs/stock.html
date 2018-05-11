@@ -2490,7 +2490,7 @@ changes, without re-rendering everything</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>d3.json(<span class="hljs-string">'https://api.github.com/repos/dc-js/dc.js/releases/latest'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error, latestRelease</span>) </span>{
+            <div class="content"><div class='highlight'><pre>d3.json(<span class="hljs-string">'https://api.github.com/repos/dc-js/dc.js/releases/latest'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">latestRelease</span>) </span>{
     <span class="hljs-comment">/*jshint camelcase: false */</span>
     <span class="hljs-comment">/* jscs:disable */</span>
     d3.selectAll(<span class="hljs-string">'#latest'</span>).text(latestRelease.tag_name);

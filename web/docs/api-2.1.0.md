@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.3  
+**Version**: 2.1.10  
 **Example**  
 ```js
 // Example chaining
@@ -21,16 +21,6 @@ chart.width(300)
 ```
 
 * [dc](#dc) : <code>object</code>
-    * [.logger](#dc.logger)
-        * [new logger()](#new_dc.logger_new)
-        * [.enableDebugLog](#dc.logger+enableDebugLog)
-        * [.warn([msg])](#dc.logger+warn) ⇒ [<code>logger</code>](#dc.logger)
-        * [.warnOnce([msg])](#dc.logger+warnOnce) ⇒ [<code>logger</code>](#dc.logger)
-        * [.debug([msg])](#dc.logger+debug) ⇒ [<code>logger</code>](#dc.logger)
-        * [.deprecate([fn], [msg])](#dc.logger+deprecate) ⇒ <code>function</code>
-    * [.config](#dc.config)
-        * [new config()](#new_dc.config_new)
-        * [.defaultColors([colors])](#dc.config+defaultColors) ⇒ <code>Array</code> \| [<code>config</code>](#dc.config)
     * [.pieChart](#dc.pieChart)
         * [new pieChart(parent, [chartGroup])](#new_dc.pieChart_new)
         * [.slicesCap([cap])](#dc.pieChart+slicesCap) ⇒ <code>Number</code> \| [<code>pieChart</code>](#dc.pieChart)
@@ -43,15 +33,6 @@ chart.width(300)
         * [.emptyTitle([title])](#dc.pieChart+emptyTitle) ⇒ <code>String</code> \| [<code>pieChart</code>](#dc.pieChart)
         * [.externalLabels([externalLabelRadius])](#dc.pieChart+externalLabels) ⇒ <code>Number</code> \| [<code>pieChart</code>](#dc.pieChart)
         * [.drawPaths([drawPaths])](#dc.pieChart+drawPaths) ⇒ <code>Boolean</code> \| [<code>pieChart</code>](#dc.pieChart)
-    * [.sunburstChart](#dc.sunburstChart)
-        * [new sunburstChart(parent, [chartGroup])](#new_dc.sunburstChart_new)
-        * [.innerRadius([innerRadius])](#dc.sunburstChart+innerRadius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-        * [.radius([radius])](#dc.sunburstChart+radius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-        * [.cx([cx])](#dc.sunburstChart+cx) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-        * [.cy([cy])](#dc.sunburstChart+cy) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-        * [.minAngleForLabel([minAngleForLabel])](#dc.sunburstChart+minAngleForLabel) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-        * [.emptyTitle([title])](#dc.sunburstChart+emptyTitle) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-        * [.externalLabels([externalLabelRadius])](#dc.sunburstChart+externalLabels) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
     * [.barChart](#dc.barChart)
         * [new barChart(parent, [chartGroup])](#new_dc.barChart_new)
         * [.centerBar([centerBar])](#dc.barChart+centerBar) ⇒ <code>Boolean</code> \| [<code>barChart</code>](#dc.barChart)
@@ -61,9 +42,8 @@ chart.width(300)
         * [.alwaysUseRounding([alwaysUseRounding])](#dc.barChart+alwaysUseRounding) ⇒ <code>Boolean</code> \| [<code>barChart</code>](#dc.barChart)
     * [.lineChart](#dc.lineChart)
         * [new lineChart(parent, [chartGroup])](#new_dc.lineChart_new)
-        * [.curve([curve])](#dc.lineChart+curve) ⇒ <code>d3.curve</code> \| [<code>lineChart</code>](#dc.lineChart)
-        * ~~[.interpolate([interpolate])](#dc.lineChart+interpolate) ⇒ <code>d3.curve</code> \| [<code>lineChart</code>](#dc.lineChart)~~
-        * ~~[.tension([tension])](#dc.lineChart+tension) ⇒ <code>Number</code> \| [<code>lineChart</code>](#dc.lineChart)~~
+        * [.interpolate([interpolate])](#dc.lineChart+interpolate) ⇒ <code>String</code> \| [<code>lineChart</code>](#dc.lineChart)
+        * [.tension([tension])](#dc.lineChart+tension) ⇒ <code>Number</code> \| [<code>lineChart</code>](#dc.lineChart)
         * [.defined([defined])](#dc.lineChart+defined) ⇒ <code>function</code> \| [<code>lineChart</code>](#dc.lineChart)
         * [.dashStyle([dashStyle])](#dc.lineChart+dashStyle) ⇒ <code>Array.&lt;Number&gt;</code> \| [<code>lineChart</code>](#dc.lineChart)
         * [.renderArea([renderArea])](#dc.lineChart+renderArea) ⇒ <code>Boolean</code> \| [<code>lineChart</code>](#dc.lineChart)
@@ -109,7 +89,7 @@ chart.width(300)
         * [.shareTitle([shareTitle])](#dc.compositeChart+shareTitle) ⇒ <code>Boolean</code> \| [<code>compositeChart</code>](#dc.compositeChart)
         * [.rightY([yScale])](#dc.compositeChart+rightY) ⇒ <code>d3.scale</code> \| [<code>compositeChart</code>](#dc.compositeChart)
         * [.alignYAxes([alignYAxes])](#dc.compositeChart+alignYAxes) ⇒ <code>Chart</code>
-        * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.axisRight</code> \| [<code>compositeChart</code>](#dc.compositeChart)
+        * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.svg.axis</code> \| [<code>compositeChart</code>](#dc.compositeChart)
     * [.seriesChart](#dc.seriesChart)
         * [new seriesChart(parent, [chartGroup])](#new_dc.seriesChart_new)
         * [.chart([chartFunction])](#dc.seriesChart+chart) ⇒ <code>function</code> \| [<code>seriesChart</code>](#dc.seriesChart)
@@ -119,9 +99,9 @@ chart.width(300)
     * [.geoChoroplethChart](#dc.geoChoroplethChart)
         * [new geoChoroplethChart(parent, [chartGroup])](#new_dc.geoChoroplethChart_new)
         * [.overlayGeoJson(json, name, keyAccessor)](#dc.geoChoroplethChart+overlayGeoJson) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
-        * [.projection([projection])](#dc.geoChoroplethChart+projection) ⇒ <code>d3.projection</code> \| [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
+        * [.projection([projection])](#dc.geoChoroplethChart+projection) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
         * [.geoJsons()](#dc.geoChoroplethChart+geoJsons) ⇒ <code>Array.&lt;{name:String, data: Object, accessor: function()}&gt;</code>
-        * [.geoPath()](#dc.geoChoroplethChart+geoPath) ⇒ <code>d3.geoPath</code>
+        * [.geoPath()](#dc.geoChoroplethChart+geoPath) ⇒ <code>d3.geo.path</code>
         * [.removeGeoJson(name)](#dc.geoChoroplethChart+removeGeoJson) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
     * [.bubbleOverlay](#dc.bubbleOverlay)
         * [new bubbleOverlay(parent, [chartGroup])](#new_dc.bubbleOverlay_new)
@@ -131,7 +111,7 @@ chart.width(300)
         * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
         * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-        * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code>
+        * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.svg.axis</code>
         * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -150,17 +130,13 @@ chart.width(300)
         * [.autoItemWidth([autoItemWidth])](#dc.legend+autoItemWidth) ⇒ <code>Boolean</code> \| [<code>legend</code>](#dc.legend)
         * [.legendText([legendText])](#dc.legend+legendText) ⇒ <code>function</code> \| [<code>legend</code>](#dc.legend)
         * [.maxItems([maxItems])](#dc.legend+maxItems) ⇒ [<code>legend</code>](#dc.legend)
-    * [.htmlLegend](#dc.htmlLegend)
-        * [new htmlLegend()](#new_dc.htmlLegend_new)
-        * [.legendText([legendText])](#dc.htmlLegend+legendText) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
-        * [.maxItems([maxItems])](#dc.htmlLegend+maxItems) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
     * [.scatterPlot](#dc.scatterPlot)
         * [new scatterPlot(parent, [chartGroup])](#new_dc.scatterPlot_new)
         * [.emptyColor](#dc.scatterPlot+emptyColor) ⇒ <code>String</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.emptyOpacity](#dc.scatterPlot+emptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.nonemptyOpacity](#dc.scatterPlot+nonemptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.existenceAccessor([accessor])](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
-        * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
+        * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.customSymbol([customSymbol])](#dc.scatterPlot+customSymbol) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
@@ -198,18 +174,6 @@ chart.width(300)
         * [.multiple](#dc.selectMenu+multiple)
         * [.promptValue](#dc.selectMenu+promptValue)
         * [.numberItems](#dc.selectMenu+numberItems)
-    * [.textFilterWidget](#dc.textFilterWidget)
-        * [new textFilterWidget(parent, [chartGroup])](#new_dc.textFilterWidget_new)
-        * [.normalize](#dc.textFilterWidget+normalize) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
-        * [.placeHolder](#dc.textFilterWidget+placeHolder) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>string</code>
-        * [.filterFunctionFactory](#dc.textFilterWidget+filterFunctionFactory) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
-    * [.cboxMenu](#dc.cboxMenu)
-        * [new cboxMenu(parent, [chartGroup])](#new_dc.cboxMenu_new)
-        * [.order](#dc.cboxMenu+order)
-        * [.promptText](#dc.cboxMenu+promptText)
-        * [.filterDisplayed](#dc.cboxMenu+filterDisplayed)
-        * [.multiple](#dc.cboxMenu+multiple)
-        * [.promptValue](#dc.cboxMenu+promptValue)
     * [.baseMixin](#dc.baseMixin) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.height([height])](#dc.baseMixin+height) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.width([width])](#dc.baseMixin+width) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -283,7 +247,7 @@ chart.width(300)
         * [.chartBodyG([chartBodyG])](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>SVGElement</code>
         * [.x([xScale])](#dc.coordinateGridMixin+x) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.xUnits([xUnits])](#dc.coordinateGridMixin+xUnits) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+        * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.elasticX([elasticX])](#dc.coordinateGridMixin+elasticX) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.xAxisPadding([padding])](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Number</code> \| <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.xAxisPaddingUnit([unit])](#dc.coordinateGridMixin+xAxisPaddingUnit) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -293,7 +257,7 @@ chart.width(300)
         * [.xAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
         * [.yAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.y([yScale])](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.axisLeft</code> \| <code>d3.axisRight</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+        * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.elasticY([elasticY])](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.renderHorizontalGridLines([renderHorizontalGridLines])](#dc.coordinateGridMixin+renderHorizontalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.renderVerticalGridLines([renderVerticalGridLines])](#dc.coordinateGridMixin+renderVerticalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -303,11 +267,9 @@ chart.width(300)
         * [.yAxisMax()](#dc.coordinateGridMixin+yAxisMax) ⇒ <code>\*</code>
         * [.yAxisPadding([padding])](#dc.coordinateGridMixin+yAxisPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.round([round])](#dc.coordinateGridMixin+round) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.brush([_])](#dc.coordinateGridMixin+brush) ⇒ <code>d3.brush</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
+        * [.focus([range])](#dc.coordinateGridMixin+focus)
         * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.parentBrushOn([brushOn])](#dc.coordinateGridMixin+parentBrushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.stackMixin](#dc.stackMixin) ⇒ [<code>stackMixin</code>](#dc.stackMixin)
         * [.stack(group, [name], [accessor])](#dc.stackMixin+stack) ⇒ <code>Array.&lt;{group: crossfilter.group, name: String, accessor: function()}&gt;</code> \| [<code>stackMixin</code>](#dc.stackMixin)
         * [.hidableStacks([hidableStacks])](#dc.stackMixin+hidableStacks) ⇒ <code>Boolean</code> \| [<code>stackMixin</code>](#dc.stackMixin)
@@ -339,25 +301,23 @@ chart.width(300)
         * [.fp](#dc.units.fp) : <code>object</code>
             * [.precision(precision)](#dc.units.fp.precision) ⇒ <code>function</code>
         * [.integers(start, end)](#dc.units.integers) ⇒ <code>Number</code>
-        * [.ordinal()](#dc.units.ordinal)
+        * [.ordinal(start, end, domain)](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
     * [.printers](#dc.printers) : <code>object</code>
         * [.filters(filters)](#dc.printers.filters) ⇒ <code>String</code>
         * [.filter(filter)](#dc.printers.filter) ⇒ <code>String</code>
     * [.utils](#dc.utils) : <code>object</code>
         * [.printSingleValue(filter)](#dc.utils.printSingleValue) ⇒ <code>String</code>
-        * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>Date</code> \| <code>Number</code>
-        * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>Date</code> \| <code>Number</code>
+        * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>String</code> \| <code>Date</code> \| <code>Number</code>
+        * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>String</code> \| <code>Date</code> \| <code>Number</code>
         * [.isNumber(n)](#dc.utils.isNumber) ⇒ <code>Boolean</code>
         * [.isFloat(n)](#dc.utils.isFloat) ⇒ <code>Boolean</code>
         * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
         * [.isNegligible(n)](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
         * [.clamp(val, min, max)](#dc.utils.clamp) ⇒ <code>any</code>
-        * [.constant(x)](#dc.utils.constant) ⇒ <code>function</code>
         * [.uniqueId()](#dc.utils.uniqueId) ⇒ <code>Number</code>
         * [.nameToId(name)](#dc.utils.nameToId) ⇒ <code>String</code>
         * [.appendOrSelect(parent, selector, tag)](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
         * [.safeNumber(n)](#dc.utils.safeNumber) ⇒ <code>Number</code>
-        * [.arraysEqual(a1, a2)](#dc.utils.arraysEqual) ⇒ <code>Boolean</code>
     * [.filters](#dc.filters) : <code>object</code>
         * [.RangedFilter](#dc.filters.RangedFilter)
             * [new RangedFilter(low, high)](#new_dc.filters.RangedFilter_new)
@@ -365,8 +325,6 @@ chart.width(300)
             * [new TwoDimensionalFilter(filter)](#new_dc.filters.TwoDimensionalFilter_new)
         * [.RangedTwoDimensionalFilter](#dc.filters.RangedTwoDimensionalFilter)
             * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
-        * [.HierarchyFilter](#dc.filters.HierarchyFilter)
-            * [new HierarchyFilter(path)](#new_dc.filters.HierarchyFilter_new)
     * [.registerChart(chart, [group])](#dc.registerChart)
     * [.deregisterChart(chart, [group])](#dc.deregisterChart)
     * [.hasChart(chart)](#dc.hasChart) ⇒ <code>Boolean</code>
@@ -378,132 +336,6 @@ chart.width(300)
     * [.transition(selection, [duration], [delay], [name])](#dc.transition) ⇒ <code>d3.transition</code> \| <code>d3.selection</code>
     * [.pluck(n, [f])](#dc.pluck) ⇒ <code>function</code>
 
-<a name="dc.logger"></a>
-
-### dc.logger
-**Kind**: static class of [<code>dc</code>](#dc)  
-
-* [.logger](#dc.logger)
-    * [new logger()](#new_dc.logger_new)
-    * [.enableDebugLog](#dc.logger+enableDebugLog)
-    * [.warn([msg])](#dc.logger+warn) ⇒ [<code>logger</code>](#dc.logger)
-    * [.warnOnce([msg])](#dc.logger+warnOnce) ⇒ [<code>logger</code>](#dc.logger)
-    * [.debug([msg])](#dc.logger+debug) ⇒ [<code>logger</code>](#dc.logger)
-    * [.deprecate([fn], [msg])](#dc.logger+deprecate) ⇒ <code>function</code>
-
-<a name="new_dc.logger_new"></a>
-
-#### new logger()
-Provides basis logging and deprecation utilities
-
-<a name="dc.logger+enableDebugLog"></a>
-
-#### logger.enableDebugLog
-Enable debug level logging. Set to `false` by default.
-
-**Kind**: instance property of [<code>logger</code>](#dc.logger)  
-<a name="dc.logger+warn"></a>
-
-#### logger.warn([msg]) ⇒ [<code>logger</code>](#dc.logger)
-Put a warning message to console
-
-**Kind**: instance method of [<code>logger</code>](#dc.logger)  
-
-| Param | Type |
-| --- | --- |
-| [msg] | <code>String</code> | 
-
-**Example**  
-```js
-dc.logger.warn('Invalid use of .tension on CurveLinear');
-```
-<a name="dc.logger+warnOnce"></a>
-
-#### logger.warnOnce([msg]) ⇒ [<code>logger</code>](#dc.logger)
-Put a warning message to console. It will warn only on unique messages.
-
-**Kind**: instance method of [<code>logger</code>](#dc.logger)  
-
-| Param | Type |
-| --- | --- |
-| [msg] | <code>String</code> | 
-
-**Example**  
-```js
-dc.logger.warnOnce('Invalid use of .tension on CurveLinear');
-```
-<a name="dc.logger+debug"></a>
-
-#### logger.debug([msg]) ⇒ [<code>logger</code>](#dc.logger)
-Put a debug message to console. It is controlled by `dc.logger.enableDebugLog`
-
-**Kind**: instance method of [<code>logger</code>](#dc.logger)  
-
-| Param | Type |
-| --- | --- |
-| [msg] | <code>String</code> | 
-
-**Example**  
-```js
-dc.logger.debug('Total number of slices: ' + numSlices);
-```
-<a name="dc.logger+deprecate"></a>
-
-#### logger.deprecate([fn], [msg]) ⇒ <code>function</code>
-Use it to deprecate a function. It will return a wrapped version of the function, which will
-will issue a warning when invoked. For each function, warning will be issued only once.
-
-**Kind**: instance method of [<code>logger</code>](#dc.logger)  
-
-| Param | Type |
-| --- | --- |
-| [fn] | <code>function</code> | 
-| [msg] | <code>String</code> | 
-
-**Example**  
-```js
-_chart.interpolate = dc.logger.deprecate(function (interpolate) {
-   if (!arguments.length) {
-       return _interpolate;
-   }
-   _interpolate = interpolate;
-   return _chart;
-}, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
-```
-<a name="dc.config"></a>
-
-### dc.config
-**Kind**: static class of [<code>dc</code>](#dc)  
-
-* [.config](#dc.config)
-    * [new config()](#new_dc.config_new)
-    * [.defaultColors([colors])](#dc.config+defaultColors) ⇒ <code>Array</code> \| [<code>config</code>](#dc.config)
-
-<a name="new_dc.config_new"></a>
-
-#### new config()
-General configuration
-
-<a name="dc.config+defaultColors"></a>
-
-#### config.defaultColors([colors]) ⇒ <code>Array</code> \| [<code>config</code>](#dc.config)
-Set the default color scheme for ordinal charts. Changing it will impact all ordinal charts.
-
-By default it is set to a copy of
-`d3.schemeCategory20c` for backward compatibility. This color scheme has been
-[removed from D3v5](https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50).
-In DC 3.1 release it will change to a more appropriate default.
-
-**Kind**: instance method of [<code>config</code>](#dc.config)  
-
-| Param | Type |
-| --- | --- |
-| [colors] | <code>Array</code> | 
-
-**Example**  
-```js
-dc.config.defaultColors(d3.schemeSet1)
-```
 <a name="dc.pieChart"></a>
 
 ### dc.pieChart
@@ -537,7 +369,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -664,129 +496,6 @@ Get or set whether to draw lines from pie slices to their labels.
 | --- | --- |
 | [drawPaths] | <code>Boolean</code> | 
 
-<a name="dc.sunburstChart"></a>
-
-### dc.sunburstChart
-**Kind**: static class of [<code>dc</code>](#dc)  
-**Mixes**: [<code>capMixin</code>](#dc.capMixin), [<code>colorMixin</code>](#dc.colorMixin), [<code>baseMixin</code>](#dc.baseMixin)  
-
-* [.sunburstChart](#dc.sunburstChart)
-    * [new sunburstChart(parent, [chartGroup])](#new_dc.sunburstChart_new)
-    * [.innerRadius([innerRadius])](#dc.sunburstChart+innerRadius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-    * [.radius([radius])](#dc.sunburstChart+radius) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-    * [.cx([cx])](#dc.sunburstChart+cx) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-    * [.cy([cy])](#dc.sunburstChart+cy) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-    * [.minAngleForLabel([minAngleForLabel])](#dc.sunburstChart+minAngleForLabel) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-    * [.emptyTitle([title])](#dc.sunburstChart+emptyTitle) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-    * [.externalLabels([externalLabelRadius])](#dc.sunburstChart+externalLabels) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-
-<a name="new_dc.sunburstChart_new"></a>
-
-#### new sunburstChart(parent, [chartGroup])
-The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
-chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
-slice relative to the sum of all values. Slices are ordered by [ordering](#dc.baseMixin+ordering) which defaults to sorting
-by key.
-
-The keys used in the sunburst chart should be arrays, representing paths in the tree.
-
-When filtering, the sunburst chart creates instances of [HierarchyFilter](#dc.filters.HierarchyFilter).
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
-| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
-
-**Example**  
-```js
-// create a sunburst chart under #chart-container1 element using the default global chart group
-var chart1 = dc.sunburstChart('#chart-container1');
-// create a sunburst chart under #chart-container2 element using chart group A
-var chart2 = dc.sunburstChart('#chart-container2', 'chartGroupA');
-```
-<a name="dc.sunburstChart+innerRadius"></a>
-
-#### sunburstChart.innerRadius([innerRadius]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
-sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
-
-**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [innerRadius] | <code>Number</code> | <code>0</code> | 
-
-<a name="dc.sunburstChart+radius"></a>
-
-#### sunburstChart.radius([radius]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
-chart width and height.
-
-**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
-
-| Param | Type |
-| --- | --- |
-| [radius] | <code>Number</code> | 
-
-<a name="dc.sunburstChart+cx"></a>
-
-#### sunburstChart.cx([cx]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-Get or set center x coordinate position. Default is center of svg.
-
-**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
-
-| Param | Type |
-| --- | --- |
-| [cx] | <code>Number</code> | 
-
-<a name="dc.sunburstChart+cy"></a>
-
-#### sunburstChart.cy([cy]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-Get or set center y coordinate position. Default is center of svg.
-
-**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
-
-| Param | Type |
-| --- | --- |
-| [cy] | <code>Number</code> | 
-
-<a name="dc.sunburstChart+minAngleForLabel"></a>
-
-#### sunburstChart.minAngleForLabel([minAngleForLabel]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
-display a slice label.
-
-**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [minAngleForLabel] | <code>Number</code> | <code>0.5</code> | 
-
-<a name="dc.sunburstChart+emptyTitle"></a>
-
-#### sunburstChart.emptyTitle([title]) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-Title to use for the only slice when there is no data.
-
-**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
-
-| Param | Type |
-| --- | --- |
-| [title] | <code>String</code> | 
-
-<a name="dc.sunburstChart+externalLabels"></a>
-
-#### sunburstChart.externalLabels([externalLabelRadius]) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
-Position slice labels offset from the outer edge of the chart.
-
-The argument specifies the extra radius to be added for slice labels.
-
-**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
-
-| Param | Type |
-| --- | --- |
-| [externalLabelRadius] | <code>Number</code> | 
-
 <a name="dc.barChart"></a>
 
 ### dc.barChart
@@ -813,7 +522,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#dc.compositeChart) then pass in the parent composite chart instance instead. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar chart is a sub-chart in a [Composite Chart](#dc.compositeChart) then pass in the parent composite chart instance instead. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -841,7 +550,7 @@ Whether the bar chart will render each bar centered around the data position on 
 #### barChart.barPadding([barPadding]) ⇒ <code>Number</code> \| [<code>barChart</code>](#dc.barChart)
 Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
 Setting this value will also remove any previously set [gap](#dc.barChart+gap). See the
-[d3 docs](https://github.com/d3/d3-scale/blob/master/README.md#scaleBand)
+[d3 docs](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
 **Kind**: instance method of [<code>barChart</code>](#dc.barChart)  
@@ -903,9 +612,8 @@ chart.round(function(n) { return Math.floor(n) + 0.5; });
 
 * [.lineChart](#dc.lineChart)
     * [new lineChart(parent, [chartGroup])](#new_dc.lineChart_new)
-    * [.curve([curve])](#dc.lineChart+curve) ⇒ <code>d3.curve</code> \| [<code>lineChart</code>](#dc.lineChart)
-    * ~~[.interpolate([interpolate])](#dc.lineChart+interpolate) ⇒ <code>d3.curve</code> \| [<code>lineChart</code>](#dc.lineChart)~~
-    * ~~[.tension([tension])](#dc.lineChart+tension) ⇒ <code>Number</code> \| [<code>lineChart</code>](#dc.lineChart)~~
+    * [.interpolate([interpolate])](#dc.lineChart+interpolate) ⇒ <code>String</code> \| [<code>lineChart</code>](#dc.lineChart)
+    * [.tension([tension])](#dc.lineChart+tension) ⇒ <code>Number</code> \| [<code>lineChart</code>](#dc.lineChart)
     * [.defined([defined])](#dc.lineChart+defined) ⇒ <code>function</code> \| [<code>lineChart</code>](#dc.lineChart)
     * [.dashStyle([dashStyle])](#dc.lineChart+dashStyle) ⇒ <code>Array.&lt;Number&gt;</code> \| [<code>lineChart</code>](#dc.lineChart)
     * [.renderArea([renderArea])](#dc.lineChart+renderArea) ⇒ <code>Boolean</code> \| [<code>lineChart</code>](#dc.lineChart)
@@ -925,7 +633,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection.  If the line chart is a sub-chart in a [Composite Chart](#dc.compositeChart) then pass in the parent composite chart instance instead. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection.  If the line chart is a sub-chart in a [Composite Chart](#dc.compositeChart) then pass in the parent composite chart instance instead. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -937,88 +645,44 @@ var chart2 = dc.lineChart('#chart-container2', 'chartGroupA');
 // create a sub-chart under a composite parent chart
 var chart3 = dc.lineChart(compositeChart);
 ```
-<a name="dc.lineChart+curve"></a>
+<a name="dc.lineChart+interpolate"></a>
 
-#### lineChart.curve([curve]) ⇒ <code>d3.curve</code> \| [<code>lineChart</code>](#dc.lineChart)
-Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
-functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
-provided by [d3 curves](https://github.com/d3/d3-shape/blob/master/README.md#curves).
-
-Replaces the use of [interpolate](#dc.lineChart+interpolate) and [tension](#dc.lineChart+tension)
-in dc.js < 3.0
-
-This is passed to
-[line.curve](https://github.com/d3/d3-shape/blob/master/README.md#line_curve) and
-[area.curve](https://github.com/d3/d3-shape/blob/master/README.md#area_curve).
+#### lineChart.interpolate([interpolate]) ⇒ <code>String</code> \| [<code>lineChart</code>](#dc.lineChart)
+Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+functions, splines, and cubic interpolation.  This is passed to
+[d3.svg.line.interpolate](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate) and
+[d3.svg.area.interpolate](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate),
+where you can find a complete list of valid arguments.
 
 **Kind**: instance method of [<code>lineChart</code>](#dc.lineChart)  
 **See**
 
-- [line.curve](https://github.com/d3/d3-shape/blob/master/README.md#line_curve)
-- [area.curve](https://github.com/d3/d3-shape/blob/master/README.md#area_curve)
+- [d3.svg.line.interpolate](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate)
+- [d3.svg.area.interpolate](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate)
 
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [curve] | <code>d3.curve</code> | <code>d3.curveLinear</code> | 
-
-**Example**  
-```js
-// default
-chart
-    .curve(d3.curveLinear);
-// Add tension to curves that support it
-chart
-    .curve(d3.curveCardinal.tension(0.5));
-// You can use some specialized variation like
-// https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
-chart
-    .curve(d3.curveCatmullRom.alpha(0.5));
-```
-<a name="dc.lineChart+interpolate"></a>
-
-#### ~~lineChart.interpolate([interpolate]) ⇒ <code>d3.curve</code> \| [<code>lineChart</code>](#dc.lineChart)~~
-***Deprecated***
-
-Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
-functions, splines, and cubic interpolation.
-
-Possible values are: 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis',
-'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
-'monotone'.
-
-This function exists for backward compatibility. Use [curve](#dc.lineChart+curve)
-which is generic and provides more options.
-Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
-
-**Kind**: instance method of [<code>lineChart</code>](#dc.lineChart)  
-**See**: [curve](#dc.lineChart+curve)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [interpolate] | <code>d3.curve</code> | <code>d3.curveLinear</code> | 
+| [interpolate] | <code>String</code> | <code>&#x27;linear&#x27;</code> | 
 
 <a name="dc.lineChart+tension"></a>
 
-#### ~~lineChart.tension([tension]) ⇒ <code>Number</code> \| [<code>lineChart</code>](#dc.lineChart)~~
-***Deprecated***
-
+#### lineChart.tension([tension]) ⇒ <code>Number</code> \| [<code>lineChart</code>](#dc.lineChart)
 Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-
-Passed to the [d3 curve function](https://github.com/d3/d3-shape/blob/master/README.md#curves)
-if it provides a `.tension` function. Example:
-[curveCardinal.tension](https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension).
-
-This function exists for backward compatibility. Use [curve](#dc.lineChart+curve)
-which is generic and provides more options.
-Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
+This parameter further customizes the interpolation behavior.  It is passed to
+[d3.svg.line.tension](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_tension) and
+[d3.svg.area.tension](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_tension).
 
 **Kind**: instance method of [<code>lineChart</code>](#dc.lineChart)  
-**See**: [curve](#dc.lineChart+curve)  
+**See**
+
+- [d3.svg.line.interpolate](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_interpolate)
+- [d3.svg.area.interpolate](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#area_interpolate)
+
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [tension] | <code>Number</code> | <code>0</code> | 
+| [tension] | <code>Number</code> | <code>0.7</code> | 
 
 <a name="dc.lineChart+defined"></a>
 
@@ -1026,7 +690,7 @@ Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
 Gets or sets a function that will determine discontinuities in the line which should be
 skipped: the path will be broken into separate subpaths if some points are undefined.
 This function is passed to
-[line.defined](https://github.com/d3/d3-shape/blob/master/README.md#line_defined)
+[d3.svg.line.defined](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined)
 
 Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
 custom reduce functions to get this to work, depending on your data. See
@@ -1034,7 +698,7 @@ custom reduce functions to get this to work, depending on your data. See
 for more details and an example.
 
 **Kind**: instance method of [<code>lineChart</code>](#dc.lineChart)  
-**See**: [line.defined](https://github.com/d3/d3-shape/blob/master/README.md#line_defined)  
+**See**: [d3.svg.line.defined](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#line_defined)  
 
 | Param | Type |
 | --- | --- |
@@ -1143,7 +807,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -1183,7 +847,7 @@ counter.html({
 Gets or sets an optional function to format the filter count and total count.
 
 **Kind**: instance method of [<code>dataCount</code>](#dc.dataCount)  
-**See**: [d3.format](https://github.com/d3/d3-format/blob/master/README.md#format)  
+**See**: [d3.format](https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -1217,7 +881,7 @@ The data table is a simple widget designed to list crossfilter focused data set 
 filtered) in a good old tabular fashion.
 
 Note: Unlike other charts, the data table (and data grid chart) use the [group](#dc.dataTable+group) attribute as a
-keying function for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data
+keying function for [nesting](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest) the data
 together in groups.  Do not pass in a crossfilter group as this will not work.
 
 Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
@@ -1233,14 +897,14 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 <a name="dc.dataTable+group"></a>
 
 #### dataTable.group(groupFunction) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
 Get or set the group function for the data table. The group function takes a data row and
-returns the key to specify to [d3.nest](https://github.com/d3/d3-collection/blob/master/README.md#nest)
+returns the key to specify to [d3.nest](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest)
 to split rows into groups.
 
 Do not pass in a crossfilter group as this will not work.
@@ -1406,8 +1070,8 @@ Get or set sort order. If the order is `d3.ascending`, the data table will use
 **Kind**: instance method of [<code>dataTable</code>](#dc.dataTable)  
 **See**
 
-- [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending)
-- [d3.descending](https://github.com/d3/d3-array/blob/master/README.md#descending)
+- [d3.ascending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending)
+- [d3.descending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending)
 
 
 | Param | Type | Default |
@@ -1460,7 +1124,7 @@ Data grid is a simple widget designed to list the filtered records, providing
 a simple way to define how the items are displayed.
 
 Note: Unlike other charts, the data grid chart (and data table) use the [group](#dc.dataGrid+group) attribute as a keying function
-for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data together in groups.
+for [nesting](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#nest) the data together in groups.
 Do not pass in a crossfilter group as this will not work.
 
 Examples:
@@ -1469,14 +1133,14 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 <a name="dc.dataGrid+group"></a>
 
 #### dataGrid.group(groupFunction) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
 Get or set the group function for the data grid. The group function takes a data row and
-returns the key to specify to [d3.nest](https://github.com/d3/d3-collection/blob/master/README.md#nest)
+returns the key to specify to [d3.nest](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_nest)
 to split rows into groups.
 
 Do not pass in a crossfilter group as this will not work.
@@ -1586,8 +1250,8 @@ Get or set sort the order function.
 **Kind**: instance method of [<code>dataGrid</code>](#dc.dataGrid)  
 **See**
 
-- [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending)
-- [d3.descending](https://github.com/d3/d3-array/blob/master/README.md#descending)
+- [d3.ascending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending)
+- [d3.descending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending)
 
 
 | Param | Type | Default |
@@ -1626,7 +1290,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -1677,7 +1341,7 @@ bubbles will be sorted by their radius, with smaller bubbles in front.
     * [.shareTitle([shareTitle])](#dc.compositeChart+shareTitle) ⇒ <code>Boolean</code> \| [<code>compositeChart</code>](#dc.compositeChart)
     * [.rightY([yScale])](#dc.compositeChart+rightY) ⇒ <code>d3.scale</code> \| [<code>compositeChart</code>](#dc.compositeChart)
     * [.alignYAxes([alignYAxes])](#dc.compositeChart+alignYAxes) ⇒ <code>Chart</code>
-    * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.axisRight</code> \| [<code>compositeChart</code>](#dc.compositeChart)
+    * [.rightYAxis([rightYAxis])](#dc.compositeChart+rightYAxis) ⇒ <code>d3.svg.axis</code> \| [<code>compositeChart</code>](#dc.compositeChart)
 
 <a name="new_dc.compositeChart_new"></a>
 
@@ -1689,7 +1353,7 @@ achieve some quite flexible charting effects.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -1806,7 +1470,7 @@ Get or set the y scale for the right axis. The right y scale is typically automa
 generated by the chart implementation.
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
-**See**: [d3.scale](https://github.com/d3/d3-scale/blob/master/README.md)  
+**See**: [d3.scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md)  
 
 | Param | Type |
 | --- | --- |
@@ -1826,24 +1490,21 @@ will be parallel to x axis. This only has effect when [elasticY](#dc.coordinateG
 
 <a name="dc.compositeChart+rightYAxis"></a>
 
-#### compositeChart.rightYAxis([rightYAxis]) ⇒ <code>d3.axisRight</code> \| [<code>compositeChart</code>](#dc.compositeChart)
+#### compositeChart.rightYAxis([rightYAxis]) ⇒ <code>d3.svg.axis</code> \| [<code>compositeChart</code>](#dc.compositeChart)
 Set or get the right y axis used by the composite chart. This function is most useful when y
-axis customization is required. The y axis in dc.js is an instance of a
-[d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight) therefore it supports any valid
+axis customization is required. The y axis in dc.js is an instance of a [d3 axis
+object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis) therefore it supports any valid
 d3 axis manipulation.
 
-**Caution**: The right y axis is usually generated internally by dc; resetting it may cause
-unexpected results.  Note also that when used as a getter, this function is not chainable: it
-returns the axis, not the chart,
-{@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
-so attempting to call chart functions after calling `.yAxis()` will fail}.
+**Caution**: The y axis is usually generated internally by dc; resetting it may cause
+unexpected results.
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
-**See**: [https://github.com/d3/d3-axis/blob/master/README.md#axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)  
+**See**: [d3.svg.axis](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis)  
 
 | Param | Type |
 | --- | --- |
-| [rightYAxis] | <code>d3.axisRight</code> | 
+| [rightYAxis] | <code>d3.svg.axis</code> | 
 
 **Example**  
 ```js
@@ -1878,7 +1539,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -1901,8 +1562,8 @@ Get or set the chart function, which generates the child charts.
 
 **Example**  
 ```js
-// put curve on the line charts used for the series
-chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
+// put interpolation on the line charts used for the series
+chart.chart(function(c) { return dc.lineChart(c).interpolate('basis'); })
 // do a scatter series chart
 chart.chart(dc.scatterPlot)
 ```
@@ -1933,8 +1594,8 @@ Get or set a function to sort the list of series by, given series values.
 **Kind**: instance method of [<code>seriesChart</code>](#dc.seriesChart)  
 **See**
 
-- [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending)
-- [d3.descending](https://github.com/d3/d3-array/blob/master/README.md#descending)
+- [d3.ascending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending)
+- [d3.descending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending)
 
 
 | Param | Type | Default |
@@ -1955,8 +1616,8 @@ rather than haphazardly.
 **Kind**: instance method of [<code>seriesChart</code>](#dc.seriesChart)  
 **See**
 
-- [d3.ascending](https://github.com/d3/d3-array/blob/master/README.md#ascending)
-- [d3.descending](https://github.com/d3/d3-array/blob/master/README.md#descending)
+- [d3.ascending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_ascending)
+- [d3.descending](https://github.com/d3/d3-3.x-api-reference/blob/master/Arrays.md#d3_descending)
 
 
 | Param | Type |
@@ -1979,9 +1640,9 @@ _chart.valueSort(function keySort (a, b) {
 * [.geoChoroplethChart](#dc.geoChoroplethChart)
     * [new geoChoroplethChart(parent, [chartGroup])](#new_dc.geoChoroplethChart_new)
     * [.overlayGeoJson(json, name, keyAccessor)](#dc.geoChoroplethChart+overlayGeoJson) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
-    * [.projection([projection])](#dc.geoChoroplethChart+projection) ⇒ <code>d3.projection</code> \| [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
+    * [.projection([projection])](#dc.geoChoroplethChart+projection) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
     * [.geoJsons()](#dc.geoChoroplethChart+geoJsons) ⇒ <code>Array.&lt;{name:String, data: Object, accessor: function()}&gt;</code>
-    * [.geoPath()](#dc.geoChoroplethChart+geoPath) ⇒ <code>d3.geoPath</code>
+    * [.geoPath()](#dc.geoChoroplethChart+geoPath) ⇒ <code>d3.geo.path</code>
     * [.removeGeoJson(name)](#dc.geoChoroplethChart+removeGeoJson) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
 
 <a name="new_dc.geoChoroplethChart_new"></a>
@@ -1997,7 +1658,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -2039,26 +1700,20 @@ chart.overlayGeoJson(statesJson.features, 'state', function(d) {
 ```
 <a name="dc.geoChoroplethChart+projection"></a>
 
-#### geoChoroplethChart.projection([projection]) ⇒ <code>d3.projection</code> \| [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
-Gets or sets a custom geo projection function. See the available
-[d3 geo projection functions](https://github.com/d3/d3-geo/blob/master/README.md#projections).
-
-Starting version 3.0 it has been deprecated to rely on the default projection being
-[d3.geoAlbersUsa()](https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa). Please
-set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
-Considering that `null` is also a valid value for projection}, if you need
-projection to be `null` please set it explicitly to `null`.
+#### geoChoroplethChart.projection([projection]) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
+Set custom geo projection function. See the available
+[d3 geo projection functions](https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md).
 
 **Kind**: instance method of [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)  
 **See**
 
-- [d3.projection](https://github.com/d3/d3-geo/blob/master/README.md#projections)
-- [d3-geo-projection](https://github.com/d3/d3-geo-projection)
+- [d3.geo.projection](https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Projections.md)
+- [Extended d3.geo.projection](https://github.com/d3/d3-geo-projection)
 
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [projection] | <code>d3.projection</code> | <code>d3.geoAlbersUsa()</code> | 
+| [projection] | <code>d3.projection</code> | <code>d3.geo.albersUsa()</code> | 
 
 <a name="dc.geoChoroplethChart+geoJsons"></a>
 
@@ -2070,13 +1725,13 @@ modify this chart's internal registration.
 **Kind**: instance method of [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)  
 <a name="dc.geoChoroplethChart+geoPath"></a>
 
-#### geoChoroplethChart.geoPath() ⇒ <code>d3.geoPath</code>
-Returns the [d3.geoPath](https://github.com/d3/d3-geo/blob/master/README.md#paths) object used to
+#### geoChoroplethChart.geoPath() ⇒ <code>d3.geo.path</code>
+Returns the [d3.geo.path](https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path) object used to
 render the projection and features.  Can be useful for figuring out the bounding box of the
 feature set and thus a way to calculate scale and translation for the projection.
 
 **Kind**: instance method of [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)  
-**See**: [d3.geoPath](https://github.com/d3/d3-geo/blob/master/README.md#paths)  
+**See**: [d3.geo.path](https://github.com/d3/d3-3.x-api-reference/blob/master/Geo-Paths.md#path)  
 <a name="dc.geoChoroplethChart+removeGeoJson"></a>
 
 #### geoChoroplethChart.removeGeoJson(name) ⇒ [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)
@@ -2113,7 +1768,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -2171,7 +1826,7 @@ value specified here are relative to the underlying svg.
     * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
     * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-    * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code>
+    * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.svg.axis</code>
     * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -2190,7 +1845,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -2204,10 +1859,10 @@ var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
 
 #### rowChart.x([scale]) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
 Gets or sets the x scale. The x scale can be any d3
-[d3.scale](https://github.com/d3/d3-scale/blob/master/README.md).
+[quantitive scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md).
 
 **Kind**: instance method of [<code>rowChart</code>](#dc.rowChart)  
-**See**: [d3.scale](https://github.com/d3/d3-scale/blob/master/README.md)  
+**See**: [quantitive scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md)  
 
 | Param | Type |
 | --- | --- |
@@ -2226,21 +1881,19 @@ Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
 
 <a name="dc.rowChart+xAxis"></a>
 
-#### rowChart.xAxis() ⇒ <code>d3.axis</code>
-Get or sets the x axis for the row chart instance.
-See the [d3.axis](https://github.com/d3/d3-axis/blob/master/README.md)
+#### rowChart.xAxis() ⇒ <code>d3.svg.axis</code>
+Get the x axis for the row chart instance.  Note: not settable for row charts.
+See the [d3 axis object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis)
 documention for more information.
 
 **Kind**: instance method of [<code>rowChart</code>](#dc.rowChart)  
+**See**: [d3.svg.axis](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis)  
 **Example**  
 ```js
 // customize x axis tick format
 chart.xAxis().tickFormat(function (v) {return v + '%';});
 // customize x axis tick values
 chart.xAxis().tickValues([0, 100, 200, 300]);
-// use a top-oriented axis. Note: position of the axis and grid lines will need to
-// be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
-chart.xAxis(d3.axisTop())
 ```
 <a name="dc.rowChart+fixedBarHeight"></a>
 
@@ -2472,61 +2125,6 @@ Maximum number of legend items to display
 | --- | --- |
 | [maxItems] | <code>Number</code> | 
 
-<a name="dc.htmlLegend"></a>
-
-### dc.htmlLegend
-**Kind**: static class of [<code>dc</code>](#dc)  
-
-* [.htmlLegend](#dc.htmlLegend)
-    * [new htmlLegend()](#new_dc.htmlLegend_new)
-    * [.legendText([legendText])](#dc.htmlLegend+legendText) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
-    * [.maxItems([maxItems])](#dc.htmlLegend+maxItems) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
-
-<a name="new_dc.htmlLegend_new"></a>
-
-#### new htmlLegend()
-htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
-labels.
-
-**Example**  
-```js
-chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
-```
-<a name="dc.htmlLegend+legendText"></a>
-
-#### htmlLegend.legendText([legendText]) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
-Set or get the legend text function. The legend widget uses this function to render the legend
-text for each item. If no function is specified the legend widget will display the names
-associated with each group.
-
-**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
-
-| Param | Type |
-| --- | --- |
-| [legendText] | <code>function</code> | 
-
-**Example**  
-```js
-// default legendText
-legend.legendText(dc.pluck('name'))
-
-// create numbered legend items
-chart.legend(dc.htmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
-
-// create legend displaying group counts
-chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
-```
-<a name="dc.htmlLegend+maxItems"></a>
-
-#### htmlLegend.maxItems([maxItems]) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
-Maximum number of legend items to display
-
-**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
-
-| Param | Type |
-| --- | --- |
-| [maxItems] | <code>Number</code> | 
-
 <a name="dc.scatterPlot"></a>
 
 ### dc.scatterPlot
@@ -2539,7 +2137,7 @@ Maximum number of legend items to display
     * [.emptyOpacity](#dc.scatterPlot+emptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.nonemptyOpacity](#dc.scatterPlot+nonemptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.existenceAccessor([accessor])](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
-    * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
+    * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.customSymbol([customSymbol])](#dc.scatterPlot+customSymbol) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.symbolSize([symbolSize])](#dc.scatterPlot+symbolSize) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.highlightedSize([highlightedSize])](#dc.scatterPlot+highlightedSize) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
@@ -2560,7 +2158,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -2633,43 +2231,43 @@ chart.existenceAccessor(function (d) { return d.value; });
 ```
 <a name="dc.scatterPlot+symbol"></a>
 
-#### scatterPlot.symbol([type]) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
-Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
+#### scatterPlot.symbol([type]) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
+Get or set the symbol type used for each point. By default the symbol is a circle.
 Type can be a constant or an accessor.
 
 **Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
-**See**: [symbol.type](https://github.com/d3/d3-shape/blob/master/README.md#symbol_type)  
+**See**: [d3.svg.symbol.type](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_type)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [type] | <code>function</code> | <code>d3.symbolCircle</code> | 
+| [type] | <code>String</code> \| <code>function</code> | <code>&#x27;circle&#x27;</code> | 
 
 **Example**  
 ```js
 // Circle type
-chart.symbol(d3.symbolCircle);
+chart.symbol('circle');
 // Square type
-chart.symbol(d3.symbolSquare);
+chart.symbol('square');
 ```
 <a name="dc.scatterPlot+customSymbol"></a>
 
 #### scatterPlot.customSymbol([customSymbol]) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
 Get or set the symbol generator. By default `dc.scatterPlot` will use
-[d3.symbol()](https://github.com/d3/d3-shape/blob/master/README.md#symbol)
+[d3.svg.symbol()](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol)
 to generate symbols. `dc.scatterPlot` will set the
-[symbol size accessor](https://github.com/d3/d3-shape/blob/master/README.md#symbol_size)
+[size accessor](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size)
 on the symbol generator.
 
 **Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
 **See**
 
-- [d3.symbol](https://github.com/d3/d3-shape/blob/master/README.md#symbol)
+- [d3.svg.symbol](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol)
 - [Create additional D3.js symbols](https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols)
 
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [customSymbol] | <code>String</code> \| <code>function</code> | <code>d3.symbol()</code> | 
+| [customSymbol] | <code>String</code> \| <code>function</code> | <code>d3.svg.symbol()</code> | 
 
 <a name="dc.scatterPlot+symbolSize"></a>
 
@@ -2677,7 +2275,7 @@ on the symbol generator.
 Set or get radius for symbols.
 
 **Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
-**See**: [d3.symbol.size](https://github.com/d3/d3-shape/blob/master/README.md#symbol_size)  
+**See**: [d3.svg.symbol.size](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -2689,7 +2287,7 @@ Set or get radius for symbols.
 Set or get radius for highlighted symbols.
 
 **Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
-**See**: [d3.symbol.size](https://github.com/d3/d3-shape/blob/master/README.md#symbol_size)  
+**See**: [d3.svg.symbol.size](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -2702,7 +2300,7 @@ Set or get size for symbols excluded from this chart's filter. If null, no
 special size is applied for symbols based on their filter status.
 
 **Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
-**See**: [d3.symbol.size](https://github.com/d3/d3-shape/blob/master/README.md#symbol_size)  
+**See**: [d3.svg.symbol.size](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -2737,7 +2335,7 @@ Set or get opacity for symbols excluded from this chart's filter.
 Set or get radius for symbols when the group is empty.
 
 **Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
-**See**: [d3.symbol.size](https://github.com/d3/d3-shape/blob/master/README.md#symbol_size)  
+**See**: [d3.svg.symbol.size](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#symbol_size)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -2765,7 +2363,7 @@ a valueAccessor that returns a single value.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -2807,7 +2405,7 @@ Calculate and return the underlying value of the display.
 Get or set a function to format the value for the display.
 
 **Kind**: instance method of [<code>numberDisplay</code>](#dc.numberDisplay)  
-**See**: [d3.format](https://github.com/d3/d3-format/blob/master/README.md#format)  
+**See**: [d3.format](https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -2839,7 +2437,7 @@ A heat map is matrix that represents the values of two dimensions of data using 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -3003,7 +2601,7 @@ Examples:
 
 | Param | Type | Description |
 | --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
+| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
 **Example**  
@@ -3017,11 +2615,11 @@ var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
 
 #### boxPlot.boxPadding([padding]) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
 Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-See the [d3 docs](https://github.com/d3/d3-scale/blob/master/README.md#scaleBand)
+See the [d3 docs](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands)
 for a visual description of how the padding is applied.
 
 **Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
-**See**: [d3.scaleBand](https://github.com/d3/d3-scale/blob/master/README.md#scaleBand)  
+**See**: [d3.scale.ordinal.rangeBands](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3217,225 +2815,6 @@ the `select` element. If `null` (the default), uses the browser's default height
 ```js
 chart.numberVisible(10);
 ```
-<a name="dc.textFilterWidget"></a>
-
-### dc.textFilterWidget
-**Kind**: static class of [<code>dc</code>](#dc)  
-**Mixes**: [<code>baseMixin</code>](#dc.baseMixin)  
-
-* [.textFilterWidget](#dc.textFilterWidget)
-    * [new textFilterWidget(parent, [chartGroup])](#new_dc.textFilterWidget_new)
-    * [.normalize](#dc.textFilterWidget+normalize) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
-    * [.placeHolder](#dc.textFilterWidget+placeHolder) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>string</code>
-    * [.filterFunctionFactory](#dc.textFilterWidget+filterFunctionFactory) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
-
-<a name="new_dc.textFilterWidget_new"></a>
-
-#### new textFilterWidget(parent, [chartGroup])
-Text Filter Widget
-
-The text filter widget is a simple widget designed to display an input field allowing to filter
-data that matches the text typed.
-As opposed to the other charts, this doesn't display any result and doesn't update its display,
-it's just to input an filter other charts.
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
-| [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
-
-**Example**  
-```js
-var data = [{"firstName":"John","lastName":"Coltrane"}{"firstName":"Miles",lastName:"Davis"}]
-var ndx = crossfilter(data);
-var dimension = ndx.dimension(function(d) {
-    return d.lastName.toLowerCase() + ' ' + d.firstName.toLowerCase();
-});
-
-dc.textFilterWidget('#search')
-    .dimension(dimension);
-    // you don't need the group() function
-```
-<a name="dc.textFilterWidget+normalize"></a>
-
-#### textFilterWidget.normalize ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
-This function will be called on values before calling the filter function.
-
-**Kind**: instance property of [<code>textFilterWidget</code>](#dc.textFilterWidget)  
-
-| Param | Type |
-| --- | --- |
-| [normalize] | <code>function</code> | 
-
-**Example**  
-```js
-// This is the default
-chart.normalize(function (s) {
-  return s.toLowerCase();
-});
-```
-<a name="dc.textFilterWidget+placeHolder"></a>
-
-#### textFilterWidget.placeHolder ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>string</code>
-Placeholder text in the search box.
-
-**Kind**: instance property of [<code>textFilterWidget</code>](#dc.textFilterWidget)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [placeHolder] | <code>function</code> | <code>&#x27;search&#x27;</code> | 
-
-**Example**  
-```js
-// This is the default
-chart.placeHolder('type to filter');
-```
-<a name="dc.textFilterWidget+filterFunctionFactory"></a>
-
-#### textFilterWidget.filterFunctionFactory ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
-This function will be called with the search text, it needs to return a function that will be used to
-filter the data. The default function checks presence of the search text.
-
-**Kind**: instance property of [<code>textFilterWidget</code>](#dc.textFilterWidget)  
-
-| Param | Type |
-| --- | --- |
-| [filterFunctionFactory] | <code>function</code> | 
-
-**Example**  
-```js
-// This is the default
-function (query) {
-    query = _normalize(query);
-    return function (d) {
-        return _normalize(d).indexOf(query) !== -1;
-    };
-};
-```
-<a name="dc.cboxMenu"></a>
-
-### dc.cboxMenu
-**Kind**: static class of [<code>dc</code>](#dc)  
-**Mixes**: [<code>baseMixin</code>](#dc.baseMixin)  
-
-* [.cboxMenu](#dc.cboxMenu)
-    * [new cboxMenu(parent, [chartGroup])](#new_dc.cboxMenu_new)
-    * [.order](#dc.cboxMenu+order)
-    * [.promptText](#dc.cboxMenu+promptText)
-    * [.filterDisplayed](#dc.cboxMenu+filterDisplayed)
-    * [.multiple](#dc.cboxMenu+multiple)
-    * [.promptValue](#dc.cboxMenu+promptValue)
-
-<a name="new_dc.cboxMenu_new"></a>
-
-#### new cboxMenu(parent, [chartGroup])
-The cboxMenu is a simple widget designed to filter a dimension by
-selecting option(s) from a set of HTML `<input />` elements. The menu can be
-made into a set of radio buttons (single select) or checkboxes (multiple).
-
-
-| Param | Type | Description |
-| --- | --- | --- |
-| parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>compositeChart</code>](#dc.compositeChart) | Any valid [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying a dom block element such as a div; or a dom element or d3 selection. |
-| [chartGroup] | <code>String</code> | The name of the chart group this widget should be placed in. Interaction with the widget will only trigger events and redraws within its group. |
-
-**Example**  
-```js
-// create a cboxMenu under #cbox-container using the default global chart group
-var cbox = dc.cboxMenu('#cbox-container')
-               .dimension(states)
-               .group(stateGroup);
-// the option text can be set via the title() function
-// by default the option text is '`key`: `value`'
-cbox.title(function (d){
-    return 'STATE: ' + d.key;
-})
-```
-<a name="dc.cboxMenu+order"></a>
-
-#### cboxMenu.order
-Get or set the function that controls the ordering of option tags in the
-cbox menu. By default options are ordered by the group key in ascending
-order.
-
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
-
-| Param | Type |
-| --- | --- |
-| [order] | <code>function</code> | 
-
-**Example**  
-```js
-// order by the group's value
-chart.order(function (a,b) {
-    return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
-});
-```
-<a name="dc.cboxMenu+promptText"></a>
-
-#### cboxMenu.promptText
-Get or set the text displayed in the options used to prompt selection.
-
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [promptText] | <code>String</code> | <code>&#x27;Select all&#x27;</code> | 
-
-**Example**  
-```js
-chart.promptText('All states');
-```
-<a name="dc.cboxMenu+filterDisplayed"></a>
-
-#### cboxMenu.filterDisplayed
-Get or set the function that filters options prior to display. By default options
-with a value of < 1 are not displayed.
-
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
-
-| Param | Type |
-| --- | --- |
-| [filterDisplayed] | <code>function</code> | 
-
-**Example**  
-```js
-// display all options override the `filterDisplayed` function:
-chart.filterDisplayed(function () {
-    return true;
-});
-```
-<a name="dc.cboxMenu+multiple"></a>
-
-#### cboxMenu.multiple
-Controls the type of input element. Setting it to true converts
-the HTML `input` tags from radio buttons to checkboxes.
-
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [multiple] | <code>boolean</code> | <code>false</code> | 
-
-**Example**  
-```js
-chart.multiple(true);
-```
-<a name="dc.cboxMenu+promptValue"></a>
-
-#### cboxMenu.promptValue
-Controls the default value to be used for
-[dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
-when only the prompt value is selected. If `null` (the default), no filtering will occur when
-just the prompt is selected.
-
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [promptValue] | <code>\*</code> | <code></code> | 
-
 <a name="dc.baseMixin"></a>
 
 ### dc.baseMixin ⇒ [<code>baseMixin</code>](#dc.baseMixin)
@@ -3721,7 +3100,7 @@ This function is **not chainable** since it does not return a chart instance; ho
 selection result can be chained to d3 function calls.
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
-**See**: [d3.select](https://github.com/d3/d3-selection/blob/master/README.md#select)  
+**See**: [d3.select](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_select)  
 **Example**  
 ```js
 // Has the same effect as d3.select('#chart-id').select(selector)
@@ -3736,7 +3115,7 @@ This function is **not chainable** since it does not return a chart instance; ho
 selection result can be chained to d3 function calls.
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
-**See**: [d3.selectAll](https://github.com/d3/d3-selection/blob/master/README.md#selectAll)  
+**See**: [d3.selectAll](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#d3_selectAll)  
 **Example**  
 ```js
 // Has the same effect as d3.select('#chart-id').selectAll(selector)
@@ -3746,7 +3125,7 @@ chart.selectAll(selector)
 
 #### baseMixin.anchor([parent], [chartGroup]) ⇒ <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>baseMixin</code>](#dc.baseMixin)
 Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
-selector](https://github.com/d3/d3-selection/blob/master/README.md#selecting-elements) specifying a dom
+selector](https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements) specifying a dom
 block element such as a div; or a dom element or d3 selection. Optionally registers the chart
 within the chartGroup. This class is called internally on chart initialization, but be called
 again to relocate the chart. However, it will orphan any previously created SVGElements.
@@ -4432,7 +3811,7 @@ including all renderlets' logic.
 * `zoomed` - This listener function will be invoked after a zoom is triggered.
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
-**See**: [d3.dispatch.on](https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on)  
+**See**: [d3.dispatch.on](https://github.com/d3/d3-3.x-api-reference/blob/master/Internals.md#dispatch_on)  
 
 | Param | Type |
 | --- | --- |
@@ -4510,18 +3889,18 @@ Retrieve current color scale or set a new color scale. This methods accepts any 
 operates like a d3 scale.
 
 **Kind**: instance method of [<code>colorMixin</code>](#dc.colorMixin)  
-**See**: [d3.scale](https://github.com/d3/d3-scale/blob/master/README.md)  
+**See**: [d3.scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [colorScale] | <code>d3.scale</code> | <code>d3.scaleOrdinal(d3.schemeCategory20c)</code> | 
+| [colorScale] | <code>d3.scale</code> | <code>d3.scale.category20c()</code> | 
 
 **Example**  
 ```js
 // alternate categorical scale
 chart.colors(d3.scale.category20b());
 // ordinal scale
-chart.colors(d3.scaleOrdinal().range(['red','green','blue']));
+chart.colors(d3.scale.ordinal().range(['red','green','blue']));
 // convenience method, the same as above
 chart.ordinalColors(['red','green','blue']);
 // set a linear scale
@@ -4531,7 +3910,7 @@ chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
 
 #### colorMixin.ordinalColors(r) ⇒ [<code>colorMixin</code>](#dc.colorMixin)
 Convenience method to set the color scale to
-[d3.scaleOrdinal](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales) with
+[d3.scale.ordinal](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal) with
 range `r`.
 
 **Kind**: instance method of [<code>colorMixin</code>](#dc.colorMixin)  
@@ -4644,7 +4023,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.chartBodyG([chartBodyG])](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>SVGElement</code>
     * [.x([xScale])](#dc.coordinateGridMixin+x) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.xUnits([xUnits])](#dc.coordinateGridMixin+xUnits) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+    * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.elasticX([elasticX])](#dc.coordinateGridMixin+elasticX) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.xAxisPadding([padding])](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Number</code> \| <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.xAxisPaddingUnit([unit])](#dc.coordinateGridMixin+xAxisPaddingUnit) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -4654,7 +4033,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.xAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
     * [.yAxisLabel([labelText], [padding])](#dc.coordinateGridMixin+yAxisLabel) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.y([yScale])](#dc.coordinateGridMixin+y) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.axisLeft</code> \| <code>d3.axisRight</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+    * [.yAxis([yAxis])](#dc.coordinateGridMixin+yAxis) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.elasticY([elasticY])](#dc.coordinateGridMixin+elasticY) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.renderHorizontalGridLines([renderHorizontalGridLines])](#dc.coordinateGridMixin+renderHorizontalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.renderVerticalGridLines([renderVerticalGridLines])](#dc.coordinateGridMixin+renderVerticalGridLines) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -4664,11 +4043,9 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.yAxisMax()](#dc.coordinateGridMixin+yAxisMax) ⇒ <code>\*</code>
     * [.yAxisPadding([padding])](#dc.coordinateGridMixin+yAxisPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.round([round])](#dc.coordinateGridMixin+round) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.brush([_])](#dc.coordinateGridMixin+brush) ⇒ <code>d3.brush</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
+    * [.focus([range])](#dc.coordinateGridMixin+focus)
     * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.parentBrushOn([brushOn])](#dc.coordinateGridMixin+parentBrushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 
 <a name="dc.coordinateGridMixin+rescale"></a>
 
@@ -4764,11 +4141,11 @@ Retrieve the svg group for the chart body.
 **mandatory**
 
 Get or set the x scale. The x scale can be any d3
-[d3.scale](https://github.com/d3/d3-scale/blob/master/README.md) or
-[ordinal scale](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales)
+[quantitive scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md) or
+[ordinal scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md).
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
-**See**: [d3.scale](https://github.com/d3/d3-scale/blob/master/README.md)  
+**See**: [d3.scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md)  
 
 | Param | Type |
 | --- | --- |
@@ -4777,30 +4154,27 @@ Get or set the x scale. The x scale can be any d3
 **Example**  
 ```js
 // set x to a linear scale
-chart.x(d3.scaleLinear().domain([-2500, 2500]))
+chart.x(d3.scale.linear().domain([-2500, 2500]))
 // set x to a time scale to generate histogram
-chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+chart.x(d3.time.scale().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
 ```
 <a name="dc.coordinateGridMixin+xUnits"></a>
 
 #### coordinateGridMixin.xUnits([xUnits]) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
-the number of data projections on the x axis such as the number of bars for a bar chart or the
-number of dots for a line chart.
-
-This function is expected to return a Javascript array of all data points on the x axis, or
-the number of points on the axis. d3 time range functions [d3.timeDays, d3.timeMonths, and
-d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
-xUnits functions.
-
-dc.js also provides a few units function, see the [Units Namespace](#dc.units) for
+the number of data projections on x axis such as the number of bars for a bar chart or the
+number of dots for a line chart. This function is expected to return a Javascript array of all
+data points on x axis, or the number of points on the axis. [d3 time range functions
+d3.time.days, d3.time.months, and
+d3.time.years](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#aliases) are all valid xUnits
+function. dc.js also provides a few units function, see the [Units Namespace](#dc.units) for
 a list of built-in units functions.
 
-Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
-possible to define this function compliant with the d3 range functions. It was already a
-magic value which caused charts to behave differently, and now it is completely so.
-
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
+**Todo**
+
+- [ ] Add docs for utilities
+
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -4809,30 +4183,29 @@ magic value which caused charts to behave differently, and now it is completely 
 **Example**  
 ```js
 // set x units to count days
-chart.xUnits(d3.timeDays);
+chart.xUnits(d3.time.days);
 // set x units to count months
-chart.xUnits(d3.timeMonths);
+chart.xUnits(d3.time.months);
 
 // A custom xUnits function can be used as long as it follows the following interface:
 // units in integer
-function(start, end) {
+function(start, end, xDomain) {
      // simply calculates how many integers in the domain
      return Math.abs(end - start);
-}
+};
 
 // fixed units
-function(start, end) {
+function(start, end, xDomain) {
      // be aware using fixed units will disable the focus/zoom ability on the chart
      return 1000;
-}
 ```
 <a name="dc.coordinateGridMixin+xAxis"></a>
 
-#### coordinateGridMixin.xAxis([xAxis]) ⇒ <code>d3.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+#### coordinateGridMixin.xAxis([xAxis]) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 Set or get the x axis used by a particular coordinate grid chart instance. This function is most
 useful when x axis customization is required. The x axis in dc.js is an instance of a
-[d3 bottom axis object](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom);
-therefore it supports any valid d3 axisBottom manipulation.
+[d3 axis object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis);
+therefore it supports any valid d3 axis manipulation.
 
 **Caution**: The x axis is usually generated internally by dc; resetting it may cause
 unexpected results. Note also that when used as a getter, this function is not chainable:
@@ -4841,11 +4214,11 @@ it returns the axis, not the chart,
 so attempting to call chart functions after calling `.xAxis()` will fail}.
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
-**See**: [d3.axisBottom](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom)  
+**See**: [d3.svg.axis](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [xAxis] | <code>d3.axis</code> | <code>d3.axisBottom()</code> | 
+| [xAxis] | <code>d3.svg.axis</code> | <code>d3.svg.axis().orient(&#x27;bottom&#x27;)</code> | 
 
 **Example**  
 ```js
@@ -4890,24 +4263,21 @@ Set or get x axis padding unit for the elastic x axis. The padding unit will det
 use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
 otherwise it is ignored.
 
-The padding unit should be a
-[d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
-For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
-('day', 'hour', etc). Available arguments are the
-[d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
+Padding unit is a string that will be used when the padding is calculated. Available parameters are
+the available d3 time intervals; see
+[d3.time.interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval).
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [unit] | <code>String</code> | <code>d3.timeDay</code> | 
+| [unit] | <code>String</code> | <code>&#x27;days&#x27;</code> | 
 
 <a name="dc.coordinateGridMixin+xUnitCount"></a>
 
 #### coordinateGridMixin.xUnitCount() ⇒ <code>Number</code>
-Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
-`dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
-x unit count is calculated using the [xUnits](#dc.coordinateGridMixin+xUnits) function.
+Returns the number of units displayed on the x axis using the unit measure configured by
+[xUnits](#dc.coordinateGridMixin+xUnits).
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 <a name="dc.coordinateGridMixin+useRightYAxis"></a>
@@ -4964,7 +4334,7 @@ text height.
 Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
-**See**: [d3.scale](https://github.com/d3/d3-scale/blob/master/README.md)  
+**See**: [d3.scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md)  
 
 | Param | Type |
 | --- | --- |
@@ -4972,11 +4342,10 @@ Get or set the y scale. The y scale is typically automatically determined by the
 
 <a name="dc.coordinateGridMixin+yAxis"></a>
 
-#### coordinateGridMixin.yAxis([yAxis]) ⇒ <code>d3.axisLeft</code> \| <code>d3.axisRight</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+#### coordinateGridMixin.yAxis([yAxis]) ⇒ <code>d3.svg.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 Set or get the y axis used by the coordinate grid chart instance. This function is most useful
-when y axis customization is required. Depending on `useRightYAxis` the y axis in dc.js is an instance of
-either [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft) or
-[d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight); therefore it supports any
+when y axis customization is required. The y axis in dc.js is simply an instance of a [d3 axis
+object](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis); therefore it supports any
 valid d3 axis manipulation.
 
 **Caution**: The y axis is usually generated internally by dc; resetting it may cause
@@ -4984,16 +4353,13 @@ unexpected results.  Note also that when used as a getter, this function is not 
 returns the axis, not the chart,
 {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
 so attempting to call chart functions after calling `.yAxis()` will fail}.
-In addition, depending on whether you are going to use the axis on left or right
-you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
-or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
-**See**: [d3.axis](https://github.com/d3/d3-axis/blob/master/README.md)  
+**See**: [d3.svg.axis](https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Axes.md#axis)  
 
-| Param | Type |
-| --- | --- |
-| [yAxis] | <code>d3.axisLeft</code> \| <code>d3.axisRight</code> | 
+| Param | Type | Default |
+| --- | --- | --- |
+| [yAxis] | <code>d3.svg.axis</code> | <code>d3.svg.axis().orient(&#x27;left&#x27;)</code> | 
 
 **Example**  
 ```js
@@ -5091,25 +4457,8 @@ Set or get the rounding function used to quantize the selection when brushing is
 ```js
 // set x unit round to by month, this will make sure range selection brush will
 // select whole months
-chart.round(d3.timeMonth.round);
+chart.round(d3.time.month.round);
 ```
-<a name="dc.coordinateGridMixin+brush"></a>
-
-#### coordinateGridMixin.brush([_]) ⇒ <code>d3.brush</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-Get or set the brush. Brush must be an instance of d3 brushes
-https://github.com/d3/d3-brush/blob/master/README.md
-You will use this only if you are writing a new chart type that supports brushing.
-
-**Caution**: dc creates and manages brushes internally. Go through and understand the source code
-if you want to pass a new brush object. Even if you are only using the getter,
-the brush object may not behave the way you expect.
-
-**Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
-
-| Param | Type |
-| --- | --- |
-| [_] | <code>d3.brush</code> | 
-
 <a name="dc.coordinateGridMixin+clipPadding"></a>
 
 #### coordinateGridMixin.clipPadding([padding]) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -5125,23 +4474,17 @@ will be exactly the chart body area minus the margins.
 
 <a name="dc.coordinateGridMixin+focus"></a>
 
-#### coordinateGridMixin.focus([range], [noRaiseEvents])
+#### coordinateGridMixin.focus([range])
 Zoom this chart to focus on the given range. The given range should be an array containing only
 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
 to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
 otherwise focus will be ignored.
 
-To avoid ping-pong volley of events between a pair of range and focus charts please set
-`noRaiseEvents` to `true`. In that case it will update this chart but will not fire `zoom` event
-and not try to update back the associated range chart.
-If you are calling it manually - typically you will leave it to `false` (the default).
-
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 
-| Param | Type | Default |
-| --- | --- | --- |
-| [range] | <code>Array.&lt;Number&gt;</code> |  | 
-| [noRaiseEvents] | <code>Boolean</code> | <code>false</code> | 
+| Param | Type |
+| --- | --- |
+| [range] | <code>Array.&lt;Number&gt;</code> | 
 
 **Example**  
 ```js
@@ -5169,22 +4512,10 @@ if enabled, but only via scrolling (panning will be disabled.)
 | --- | --- | --- |
 | [brushOn] | <code>Boolean</code> | <code>true</code> | 
 
-<a name="dc.coordinateGridMixin+parentBrushOn"></a>
-
-#### coordinateGridMixin.parentBrushOn([brushOn]) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-This will be internally used by composite chart onto children. Please go not invoke directly.
-
-**Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
-**Access**: protected  
-
-| Param | Type | Default |
-| --- | --- | --- |
-| [brushOn] | <code>Boolean</code> | <code>false</code> | 
-
 <a name="dc.stackMixin"></a>
 
 ### dc.stackMixin ⇒ [<code>stackMixin</code>](#dc.stackMixin)
-Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stackD3v3.
+Stack Mixin is an mixin that provides cross-chart support of stackability using d3.layout.stack.
 
 **Kind**: static mixin of [<code>dc</code>](#dc)  
 
@@ -5296,11 +4627,11 @@ Gets or sets the stack layout algorithm, which computes a baseline for each stac
 propagates it to the next.
 
 **Kind**: instance method of [<code>stackMixin</code>](#dc.stackMixin)  
-**See**: [d3.stackD3v3](https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md)  
+**See**: [d3.layout.stack](https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [stack] | <code>function</code> | <code>d3.stackD3v3</code> | 
+| [stack] | <code>function</code> | <code>d3.layout.stack</code> | 
 
 <a name="dc.stackMixin+evadeDomainFilter"></a>
 
@@ -5460,15 +4791,15 @@ This Mixin provides reusable functionalities for any chart that needs to visuali
 
 #### bubbleMixin.r([bubbleRadiusScale]) ⇒ <code>d3.scale</code> \| [<code>bubbleMixin</code>](#dc.bubbleMixin)
 Get or set the bubble radius scale. By default the bubble chart uses
-[d3.scaleLinear().domain([0, 100])](https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear)
+[d3.scale.linear().domain([0, 100])](https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md#linear)
 as its radius scale.
 
 **Kind**: instance method of [<code>bubbleMixin</code>](#dc.bubbleMixin)  
-**See**: [d3.scale](https://github.com/d3/d3-scale/blob/master/README.md)  
+**See**: [d3.scale](https://github.com/d3/d3-3.x-api-reference/blob/master/Scales.md)  
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [bubbleRadiusScale] | <code>d3.scale</code> | <code>d3.scaleLinear().domain([0, 100])</code> | 
+| [bubbleRadiusScale] | <code>d3.scale</code> | <code>d3.scale.linear().domain([0, 100])</code> | 
 
 <a name="dc.bubbleMixin+radiusValueAccessor"></a>
 
@@ -5533,7 +4864,7 @@ immediately.
 The default date format for dc.js
 
 **Kind**: static property of [<code>dc</code>](#dc)  
-**Default**: <code>d3.timeFormat(&#x27;%m/%d/%Y&#x27;)</code>  
+**Default**: <code>d3.time.format(&#x27;%m/%d/%Y&#x27;)</code>  
 <a name="dc.chartRegistry"></a>
 
 ### dc.chartRegistry : <code>object</code>
@@ -5625,7 +4956,7 @@ If no group is provided, the charts in the default group are returned.
     * [.fp](#dc.units.fp) : <code>object</code>
         * [.precision(precision)](#dc.units.fp.precision) ⇒ <code>function</code>
     * [.integers(start, end)](#dc.units.integers) ⇒ <code>Number</code>
-    * [.ordinal()](#dc.units.ordinal)
+    * [.ordinal(start, end, domain)](#dc.units.ordinal) ⇒ <code>Array.&lt;String&gt;</code>
 
 <a name="dc.units.fp"></a>
 
@@ -5678,27 +5009,31 @@ chart.xUnits(dc.units.integers) // already the default
 ```
 <a name="dc.units.ordinal"></a>
 
-#### units.ordinal()
-This argument can be passed to the [.xUnits](#dc.coordinateGridMixin+xUnits) function of a
-coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
-combination with passing
-[d3.scaleOrdinal](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales)
-to [.x](#dc.coordinateGridMixin+x).
-
-As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
-function is not called.
+#### units.ordinal(start, end, domain) ⇒ <code>Array.&lt;String&gt;</code>
+This argument can be passed to the [.xUnits](#dc.coordinateGridMixin+xUnits) function of the to
+specify ordinal units for the x axis. Usually this parameter is used in combination with passing
+[d3.scale.ordinal](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md) to
+[.x](#dc.coordinateGridMixin+x).
+It just returns the domain passed to it, which for ordinal charts is an array of all values.
 
 **Kind**: static method of [<code>units</code>](#dc.units)  
 **See**
 
-- [d3.scaleOrdinal](https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales)
+- [d3.scale.ordinal](https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md)
 - [coordinateGridMixin.xUnits](#dc.coordinateGridMixin+xUnits)
 - [coordinateGridMixin.x](#dc.coordinateGridMixin+x)
+
+
+| Param | Type |
+| --- | --- |
+| start | <code>\*</code> | 
+| end | <code>\*</code> | 
+| domain | <code>Array.&lt;String&gt;</code> | 
 
 **Example**  
 ```js
 chart.xUnits(dc.units.ordinal)
-     .x(d3.scaleOrdinal())
+     .x(d3.scale.ordinal())
 ```
 <a name="dc.printers"></a>
 
@@ -5738,19 +5073,17 @@ Converts a filter into a readable string.
 
 * [.utils](#dc.utils) : <code>object</code>
     * [.printSingleValue(filter)](#dc.utils.printSingleValue) ⇒ <code>String</code>
-    * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>Date</code> \| <code>Number</code>
-    * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>Date</code> \| <code>Number</code>
+    * [.add(l, r, [t])](#dc.utils.add) ⇒ <code>String</code> \| <code>Date</code> \| <code>Number</code>
+    * [.subtract(l, r, [t])](#dc.utils.subtract) ⇒ <code>String</code> \| <code>Date</code> \| <code>Number</code>
     * [.isNumber(n)](#dc.utils.isNumber) ⇒ <code>Boolean</code>
     * [.isFloat(n)](#dc.utils.isFloat) ⇒ <code>Boolean</code>
     * [.isInteger(n)](#dc.utils.isInteger) ⇒ <code>Boolean</code>
     * [.isNegligible(n)](#dc.utils.isNegligible) ⇒ <code>Boolean</code>
     * [.clamp(val, min, max)](#dc.utils.clamp) ⇒ <code>any</code>
-    * [.constant(x)](#dc.utils.constant) ⇒ <code>function</code>
     * [.uniqueId()](#dc.utils.uniqueId) ⇒ <code>Number</code>
     * [.nameToId(name)](#dc.utils.nameToId) ⇒ <code>String</code>
     * [.appendOrSelect(parent, selector, tag)](#dc.utils.appendOrSelect) ⇒ <code>d3.selection</code>
     * [.safeNumber(n)](#dc.utils.safeNumber) ⇒ <code>Number</code>
-    * [.arraysEqual(a1, a2)](#dc.utils.arraysEqual) ⇒ <code>Boolean</code>
 
 <a name="dc.utils.printSingleValue"></a>
 
@@ -5765,47 +5098,39 @@ Print a single value filter.
 
 <a name="dc.utils.add"></a>
 
-#### utils.add(l, r, [t]) ⇒ <code>Date</code> \| <code>Number</code>
+#### utils.add(l, r, [t]) ⇒ <code>String</code> \| <code>Date</code> \| <code>Number</code>
 Arbitrary add one value to another.
 
-If the value l is of type Date, adds r units to it. t becomes the unit.
-For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
+**Kind**: static method of [<code>utils</code>](#dc.utils)  
+**Todo**
 
-If l is of type numeric, t is ignored. In this case if r is of type string,
-it is assumed to be percentage (whether or not it includes %). For example
-dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.
-
+- [ ] These assume than any string r is a percentage (whether or not it includes %).
 They also generate strange results if l is a string.
 
-**Kind**: static method of [<code>utils</code>](#dc.utils)  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| l | <code>Date</code> \| <code>Number</code> |  | the value to modify |
-| r | <code>String</code> \| <code>Number</code> |  | the amount by which to modify the value |
-| [t] | <code>function</code> \| <code>String</code> | <code>d3.timeDay</code> | if `l` is a `Date`, then this should be a [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval). For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e. 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year' |
+| Param | Type | Description |
+| --- | --- | --- |
+| l | <code>String</code> \| <code>Date</code> \| <code>Number</code> | the value to modify |
+| r | <code>Number</code> | the amount by which to modify the value |
+| [t] | <code>String</code> | if `l` is a `Date`, the [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in the `d3.time` namespace |
 
 <a name="dc.utils.subtract"></a>
 
-#### utils.subtract(l, r, [t]) ⇒ <code>Date</code> \| <code>Number</code>
+#### utils.subtract(l, r, [t]) ⇒ <code>String</code> \| <code>Date</code> \| <code>Number</code>
 Arbitrary subtract one value from another.
 
-If the value l is of type Date, subtracts r units from it. t becomes the unit.
-For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
+**Kind**: static method of [<code>utils</code>](#dc.utils)  
+**Todo**
 
-If l is of type numeric, t is ignored. In this case if r is of type string,
-it is assumed to be percentage (whether or not it includes %). For example
-dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.
-
+- [ ] These assume than any string r is a percentage (whether or not it includes %).
 They also generate strange results if l is a string.
 
-**Kind**: static method of [<code>utils</code>](#dc.utils)  
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| l | <code>Date</code> \| <code>Number</code> |  | the value to modify |
-| r | <code>String</code> \| <code>Number</code> |  | the amount by which to modify the value |
-| [t] | <code>function</code> \| <code>String</code> | <code>d3.timeDay</code> | if `l` is a `Date`, then this should be a [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval). For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e. 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year' |
+| Param | Type | Description |
+| --- | --- | --- |
+| l | <code>String</code> \| <code>Date</code> \| <code>Number</code> | the value to modify |
+| r | <code>Number</code> | the amount by which to modify the value |
+| [t] | <code>String</code> | if `l` is a `Date`, the [interval](https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Intervals.md#interval) in the `d3.time` namespace |
 
 <a name="dc.utils.isNumber"></a>
 
@@ -5864,21 +5189,6 @@ Ensure the value is no greater or less than the min/max values.  If it is return
 | min | <code>any</code> | 
 | max | <code>any</code> | 
 
-<a name="dc.utils.constant"></a>
-
-#### utils.constant(x) ⇒ <code>function</code>
-Given `x`, return a function that always returns `x`.
-
-[`d3.functor` was removed in d3 version 4](https://github.com/d3/d3/blob/master/CHANGES.md#internals).
-This function helps to implement the replacement,
-`typeof x === "function" ? x : dc.utils.constant(x)`
-
-**Kind**: static method of [<code>utils</code>](#dc.utils)  
-
-| Param | Type |
-| --- | --- |
-| x | <code>any</code> | 
-
 <a name="dc.utils.uniqueId"></a>
 
 #### utils.uniqueId() ⇒ <code>Number</code>
@@ -5920,18 +5230,6 @@ Return the number if the value is a number; else 0.
 | --- | --- |
 | n | <code>Number</code> \| <code>any</code> | 
 
-<a name="dc.utils.arraysEqual"></a>
-
-#### utils.arraysEqual(a1, a2) ⇒ <code>Boolean</code>
-Return true if both arrays are equal, if both array are null these are considered equal
-
-**Kind**: static method of [<code>utils</code>](#dc.utils)  
-
-| Param | Type |
-| --- | --- |
-| a1 | <code>Array</code> \| <code>null</code> | 
-| a2 | <code>Array</code> \| <code>null</code> | 
-
 <a name="dc.filters"></a>
 
 ### dc.filters : <code>object</code>
@@ -5960,8 +5258,6 @@ can be used as long as they have the properties above.
         * [new TwoDimensionalFilter(filter)](#new_dc.filters.TwoDimensionalFilter_new)
     * [.RangedTwoDimensionalFilter](#dc.filters.RangedTwoDimensionalFilter)
         * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
-    * [.HierarchyFilter](#dc.filters.HierarchyFilter)
-        * [new HierarchyFilter(path)](#new_dc.filters.HierarchyFilter_new)
 
 <a name="dc.filters.RangedFilter"></a>
 
@@ -6023,22 +5319,6 @@ Its `filterType` is 'RangedTwoDimensionalFilter'
 | Param | Type |
 | --- | --- |
 | filter | <code>Array.&lt;Array.&lt;Number&gt;&gt;</code> | 
-
-<a name="dc.filters.HierarchyFilter"></a>
-
-#### filters.HierarchyFilter
-**Kind**: static class of [<code>filters</code>](#dc.filters)  
-<a name="new_dc.filters.HierarchyFilter_new"></a>
-
-##### new HierarchyFilter(path)
-HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
-child of, the given path. It is used by the [sunburst chart](#dc.sunburstChart) to include particular cells and all
-their children as they are clicked.
-
-
-| Param | Type |
-| --- | --- |
-| path | <code>String</code> | 
 
 <a name="dc.registerChart"></a>
 

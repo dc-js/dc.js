@@ -681,7 +681,7 @@ d3.csv('ndx.csv').then(function (data) {
 d3.selectAll('#version').text(dc.version);
 
 // Determine latest stable version in the repo via Github API
-d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest', function (error, latestRelease) {
+d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest').then(function (latestRelease) {
     /*jshint camelcase: false */
     /* jscs:disable */
     d3.selectAll('#latest').text(latestRelease.tag_name);
