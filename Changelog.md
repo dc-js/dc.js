@@ -1,5 +1,6 @@
 ## 3.0.2
 * Allow row chart `.xAxis` to be settable. Since the type of axis can't be detected by the chart, provide [example](https://dc-js.github.io/dc.js/examples/row-top-axis.html) of setting the position of axis and grid lines manually.
+* In a composite chart, the brush is only applied on the parent, by Deepak Kumar. This fixes many composite chart brushing issues, but let us know if it broke any of your use cases! ([#1408](https://github.com/dc-js/dc.js/pull/1408) / [#1424](https://github.com/dc-js/dc.js/issues/1424) / [#479](https://github.com/dc-js/dc.js/issues/479) / [#390](https://github.com/dc-js/dc.js/issues/390) / [#706](https://github.com/dc-js/dc.js/issues/706) / [#878](https://github.com/dc-js/dc.js/issues/878))
 
 ## 3.0.1
 * Test compatibility with D3v4 as well as D3v5, by Deepak Kumar ([#1430](https://github.com/dc-js/dc.js/pull/1430))
