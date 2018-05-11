@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.1  
+**Version**: 3.0.2  
 **Example**  
 ```js
 // Example chaining
@@ -131,7 +131,7 @@ chart.width(300)
         * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
         * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-        * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axisBottom</code>
+        * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code>
         * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -283,7 +283,7 @@ chart.width(300)
         * [.chartBodyG([chartBodyG])](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>SVGElement</code>
         * [.x([xScale])](#dc.coordinateGridMixin+x) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.xUnits([xUnits])](#dc.coordinateGridMixin+xUnits) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.axisBottom</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+        * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.elasticX([elasticX])](#dc.coordinateGridMixin+elasticX) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.xAxisPadding([padding])](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Number</code> \| <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.xAxisPaddingUnit([unit])](#dc.coordinateGridMixin+xAxisPaddingUnit) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -307,6 +307,7 @@ chart.width(300)
         * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
         * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+        * [.parentBrushOn([brushOn])](#dc.coordinateGridMixin+parentBrushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.stackMixin](#dc.stackMixin) ⇒ [<code>stackMixin</code>](#dc.stackMixin)
         * [.stack(group, [name], [accessor])](#dc.stackMixin+stack) ⇒ <code>Array.&lt;{group: crossfilter.group, name: String, accessor: function()}&gt;</code> \| [<code>stackMixin</code>](#dc.stackMixin)
         * [.hidableStacks([hidableStacks])](#dc.stackMixin+hidableStacks) ⇒ <code>Boolean</code> \| [<code>stackMixin</code>](#dc.stackMixin)
@@ -2170,7 +2171,7 @@ value specified here are relative to the underlying svg.
     * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
     * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-    * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axisBottom</code>
+    * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code>
     * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -2225,19 +2226,21 @@ Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
 
 <a name="dc.rowChart+xAxis"></a>
 
-#### rowChart.xAxis() ⇒ <code>d3.axisBottom</code>
-Get the x axis for the row chart instance.  Note: not settable for row charts.
-See the [d3.axisBottom](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom)
+#### rowChart.xAxis() ⇒ <code>d3.axis</code>
+Get or sets the x axis for the row chart instance.
+See the [d3.axis](https://github.com/d3/d3-axis/blob/master/README.md)
 documention for more information.
 
 **Kind**: instance method of [<code>rowChart</code>](#dc.rowChart)  
-**See**: [d3.axisBottom](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom)  
 **Example**  
 ```js
 // customize x axis tick format
 chart.xAxis().tickFormat(function (v) {return v + '%';});
 // customize x axis tick values
 chart.xAxis().tickValues([0, 100, 200, 300]);
+// use a top-oriented axis. Note: position of the axis and grid lines will need to
+// be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
+chart.xAxis(d3.axisTop())
 ```
 <a name="dc.rowChart+fixedBarHeight"></a>
 
@@ -4641,7 +4644,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.chartBodyG([chartBodyG])](#dc.coordinateGridMixin+chartBodyG) ⇒ <code>SVGElement</code>
     * [.x([xScale])](#dc.coordinateGridMixin+x) ⇒ <code>d3.scale</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.xUnits([xUnits])](#dc.coordinateGridMixin+xUnits) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.axisBottom</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+    * [.xAxis([xAxis])](#dc.coordinateGridMixin+xAxis) ⇒ <code>d3.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.elasticX([elasticX])](#dc.coordinateGridMixin+elasticX) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.xAxisPadding([padding])](#dc.coordinateGridMixin+xAxisPadding) ⇒ <code>Number</code> \| <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.xAxisPaddingUnit([unit])](#dc.coordinateGridMixin+xAxisPaddingUnit) ⇒ <code>String</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -4665,6 +4668,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
     * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+    * [.parentBrushOn([brushOn])](#dc.coordinateGridMixin+parentBrushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 
 <a name="dc.coordinateGridMixin+rescale"></a>
 
@@ -4824,7 +4828,7 @@ function(start, end) {
 ```
 <a name="dc.coordinateGridMixin+xAxis"></a>
 
-#### coordinateGridMixin.xAxis([xAxis]) ⇒ <code>d3.axisBottom</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+#### coordinateGridMixin.xAxis([xAxis]) ⇒ <code>d3.axis</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 Set or get the x axis used by a particular coordinate grid chart instance. This function is most
 useful when x axis customization is required. The x axis in dc.js is an instance of a
 [d3 bottom axis object](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom);
@@ -4841,7 +4845,7 @@ so attempting to call chart functions after calling `.xAxis()` will fail}.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [xAxis] | <code>d3.axisBottom</code> | <code>d3.axisBottom</code> | 
+| [xAxis] | <code>d3.axis</code> | <code>d3.axisBottom()</code> | 
 
 **Example**  
 ```js
@@ -5164,6 +5168,18 @@ if enabled, but only via scrolling (panning will be disabled.)
 | Param | Type | Default |
 | --- | --- | --- |
 | [brushOn] | <code>Boolean</code> | <code>true</code> | 
+
+<a name="dc.coordinateGridMixin+parentBrushOn"></a>
+
+#### coordinateGridMixin.parentBrushOn([brushOn]) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+This will be internally used by composite chart onto children. Please go not invoke directly.
+
+**Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
+**Access**: protected  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [brushOn] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="dc.stackMixin"></a>
 
