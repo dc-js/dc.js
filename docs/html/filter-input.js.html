@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>dc.js Source: logger.js</title>
+	<title>dc.js Source: filter-input.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.cboxMenu.html">dc.cboxMenu</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.HierarchyFilter.html">dc.filters.HierarchyFilter</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.htmlLegend.html">dc.htmlLegend</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li><li><a href="dc.sunburstChart.html">dc.sunburstChart</a></li><li><a href="dc.textFilterWidget.html">dc.textFilterWidget</a></li>
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.legend.html">dc.legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li>
 				</ul>
 			</li>
 			
@@ -79,129 +79,120 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: logger.js</h1>
+		<h1 class="page-title">Source: filter-input.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">/**
- * Provides basis logging and deprecation utilities
- * @class logger
- * @memberof dc
- * @returns {dc.logger}
- */
-dc.logger = (function () {
+## input Filter Widget
+Includes: [Base Mixin](#base-mixin)
 
-    var _logger = {};
+The input filter data widget is a simple widget designed to display an input field allowing to filter the data
+that matches the text typed. 
 
-    /**
-     * Enable debug level logging. Set to `false` by default.
-     * @name enableDebugLog
-     * @memberof dc.logger
-     * @instance
-     */
-    _logger.enableDebugLog = false;
+As opposed to the other graphs, this doesn't display any result and doesn't update its display, it's just to input an filter other graphs
 
-    /**
-     * Put a warning message to console
-     * @method warn
-     * @memberof dc.logger
-     * @instance
-     * @example
-     * dc.logger.warn('Invalid use of .tension on CurveLinear');
-     * @param {String} [msg]
-     * @returns {dc.logger}
-     */
-    _logger.warn = function (msg) {
-        if (console) {
-            if (console.warn) {
-                console.warn(msg);
-            } else if (console.log) {
-                console.log(msg);
-            }
-        }
+Examples:
 
-        return _logger;
+#### dc.inputFilter(parent[, chartGroup])
+Create an input widget and attach it to the given parent element.
+
+Parameters:
+
+* parent : string | node | selection - any valid
+ [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+ a dom block element such as a div; or a dom element or d3 selection.
+* chartGroup : string (optional) - name of the chart group this widget should be placed in.
+
+Returns:
+A newly created input widget instance
+#### .dimension(data) - **mandatory**
+
+```js
+var data=[{"firstname":"John","lastname":"Coltrane"}{"firstname":"Miles",lastname:"Davis"] 
+var ndx = crossfilter(data);
+var dimension = ndx.dimension(function(d) {
+  return d.lastname.toLowerCase() + " "+ d.firstname.toLowerCase();
+});
+
+dc.inputFilter('.search')
+    .dimension(dimension);
+    // you don't need the group() function
+```
+
+**/
+
+dc.inputFilter = function (parent, chartGroup) {
+    var _chart = dc.baseMixin({});
+    var _html = function() {return "&lt;input class='form-control input-lg' placeholder='search'/>"};
+    var _normalize = function (s) { return s.toLowerCase()};
+    var _filterFunction = function(q) { 
+      _chart.dimension().filterFunction(function (d){return d.indexOf (q) !== -1;});
+    };
+    var _throttleDuration=200;
+    var _throttleTimer;
+
+    _chart.group(function (){throw "the group function on inputFilter should never be called, please report the issue"});
+
+    _chart._doRender = function () {
+      _chart.root().html(_html());
+
+      _chart.root().selectAll("input").on("input", function() {
+        _filterFunction(_normalize(this.value));
+        _throttle();
+      });
+      return _chart;
     };
 
-    var _alreadyWarned = {};
+    function _throttle() {
+      window.clearTimeout(_throttleTimer);
+      _throttleTimer = window.setTimeout(function() {
+          dc.redrawAll();
+      }, _throttleDuration);
+    }
 
-    /**
-     * Put a warning message to console. It will warn only on unique messages.
-     * @method warnOnce
-     * @memberof dc.logger
-     * @instance
-     * @example
-     * dc.logger.warnOnce('Invalid use of .tension on CurveLinear');
-     * @param {String} [msg]
-     * @returns {dc.logger}
-     */
-    _logger.warnOnce = function (msg) {
-        if (!_alreadyWarned[msg]) {
-            _alreadyWarned[msg] = true;
-
-            dc.logger.warn(msg);
-        }
-
-        return _logger;
+    _chart._doRedraw = function () {
+      return _chart;
     };
 
-    /**
-     * Put a debug message to console. It is controlled by `dc.logger.enableDebugLog`
-     * @method debug
-     * @memberof dc.logger
-     * @instance
-     * @example
-     * dc.logger.debug('Total number of slices: ' + numSlices);
-     * @param {String} [msg]
-     * @returns {dc.logger}
-     */
-    _logger.debug = function (msg) {
-        if (_logger.enableDebugLog &amp;&amp; console) {
-            if (console.debug) {
-                console.debug(msg);
-            } else if (console.log) {
-                console.log(msg);
-            }
+    _chart.html = function (s) {
+        if (!arguments.length) {
+            return _html;
         }
-
-        return _logger;
+        if (typeof s == "string")
+          _html = function (){return s};
+        else
+          _html = s;
+        return _chart;
     };
 
-    /**
-     * Use it to deprecate a function. It will return a wrapped version of the function, which will
-     * will issue a warning when invoked. For each function, warning will be issued only once.
-     *
-     * @method deprecate
-     * @memberof dc.logger
-     * @instance
-     * @example
-     * _chart.interpolate = dc.logger.deprecate(function (interpolate) {
-     *    if (!arguments.length) {
-     *        return _interpolate;
-     *    }
-     *    _interpolate = interpolate;
-     *    return _chart;
-     * }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
-     * @param {Function} [fn]
-     * @param {String} [msg]
-     * @returns {Function}
-     */
-    _logger.deprecate = function (fn, msg) {
-        // Allow logging of deprecation
-        var warned = false;
-        function deprecated () {
-            if (!warned) {
-                _logger.warn(msg);
-                warned = true;
-            }
-            return fn.apply(this, arguments);
+    _chart.normalize = function (s) {
+        if (!arguments.length) {
+            return _normalize;
         }
-        return deprecated;
+        _normalize = s;
+        return _chart;
     };
 
-    return _logger;
-})();
+    _chart.filterFunction = function (s) {
+        if (!arguments.length) {
+            return _filterFunction;
+        }
+        _filterFunction = s;
+        return _chart;
+    };
+
+    _chart.throttleDuration = function (s) {
+        if (!arguments.length) {
+            return _throttleDuration;
+        }
+        _throttleDuration = s;
+        return _chart;
+    };
+
+    return _chart.anchor(parent, chartGroup);
+};
 </pre>
     </article>
 </section>
@@ -241,13 +232,13 @@ dc.logger = (function () {
 
 
 	<span class="copyright">
-	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
+	dc.js Copyright © 2012-2016 Copyright 2012-2016 Nick Zhu & the dc.js Developers
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Fri May 11th 2018
+		on Mon May 22nd 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

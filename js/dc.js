@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.1
+ *  dc 3.0.3
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.1
+ * @version 3.0.3
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.1',
+    version: '3.0.3',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3136,6 +3136,7 @@ dc.coordinateGridMixin = function (_chart) {
     var _brush = d3.brushX();
     var _gBrush;
     var _brushOn = true;
+    var _parentBrushOn = false;
     var _round;
 
     var _renderHorizontalGridLine = false;
@@ -3410,8 +3411,8 @@ dc.coordinateGridMixin = function (_chart) {
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.axisBottom} [xAxis=d3.axisBottom]
-     * @returns {d3.axisBottom|dc.coordinateGridMixin}
+     * @param {d3.axis} [xAxis=d3.axisBottom()]
+     * @returns {d3.axis|dc.coordinateGridMixin}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -4174,19 +4175,17 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart.redrawBrush(brushSelection, false);
 
-        if (_chart.brushIsEmpty(brushSelection)) {
-            dc.events.trigger(function () {
-                _chart.filter(null);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        } else {
-            var rangedFilter = dc.filters.RangedFilter(brushSelection[0], brushSelection[1]);
+        var rangedFilter = _chart.brushIsEmpty(brushSelection) ? null : dc.filters.RangedFilter(brushSelection[0], brushSelection[1]);
 
-            dc.events.trigger(function () {
-                _chart.replaceFilter(rangedFilter);
-                _chart.redrawGroup();
-            }, dc.constants.EVENT_DELAY);
-        }
+        dc.events.trigger(function () {
+            _chart.applyBrushSelection(rangedFilter);
+        }, dc.constants.EVENT_DELAY);
+    };
+
+    // This can be overridden in a derived chart. For example Composite chart overrides it
+    _chart.applyBrushSelection = function (rangedFilter) {
+        _chart.replaceFilter(rangedFilter);
+        _chart.redrawGroup();
     };
 
     _chart.setBrushExtents = function (doTransition) {
@@ -4547,6 +4546,24 @@ dc.coordinateGridMixin = function (_chart) {
             return _brushOn;
         }
         _brushOn = brushOn;
+        return _chart;
+    };
+
+    /**
+     * This will be internally used by composite chart onto children. Please go not invoke directly.
+     *
+     * @method parentBrushOn
+     * @memberof dc.coordinateGridMixin
+     * @protected
+     * @instance
+     * @param {Boolean} [brushOn=false]
+     * @returns {Boolean|dc.coordinateGridMixin}
+     */
+    _chart.parentBrushOn = function (brushOn) {
+        if (!arguments.length) {
+            return _parentBrushOn;
+        }
+        _parentBrushOn = brushOn;
         return _chart;
     };
 
@@ -6810,7 +6827,7 @@ dc.barChart = function (parent, chartGroup) {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
                 bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
-        } else if (_chart.brushOn()) {
+        } else if (_chart.brushOn() || _chart.parentBrushOn()) {
             if (!_chart.brushIsEmpty(brushSelection)) {
                 var start = brushSelection[0];
                 var end = brushSelection[1];
@@ -7317,7 +7334,7 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     function drawDots (chartBody, layers) {
-        if (_chart.xyTipsOn() === 'always' || (!_chart.brushOn() && _chart.xyTipsOn())) {
+        if (_chart.xyTipsOn() === 'always' || (!(_chart.brushOn() || _chart.parentBrushOn()) && _chart.xyTipsOn())) {
             var tooltipListClass = TOOLTIP_G_CLASS + '-list';
             var tooltips = chartBody.select('g.' + tooltipListClass);
 
@@ -8567,7 +8584,8 @@ dc.compositeChart = function (parent, chartGroup) {
             child.svg(_chart.svg());
             child.xUnits(_chart.xUnits());
             child.transitionDuration(_chart.transitionDuration(), _chart.transitionDelay());
-            child.brushOn(_chart.brushOn());
+            child.parentBrushOn(_chart.brushOn());
+            child.brushOn(false);
             child.renderTitle(_chart.renderTitle());
             child.elasticX(_chart.elasticX());
         }
@@ -8575,34 +8593,12 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
-    _chart._brushing = function () {
-        // Avoids infinite recursion (mutual recursion between range and focus operations)
-        // Source Event will be null when brush.move is called programmatically (see below as well).
-        if (!d3.event.sourceEvent) { return; }
-
-        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
-        // In this case we are more worried about this handler causing brush move programmatically which will
-        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
-        // This check avoids recursive calls
-        if (d3.event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
-            return;
-        }
-
-        var brushSelection = d3.event.selection;
-        if (brushSelection) {
-            brushSelection = brushSelection.map(_chart.x().invert);
-        }
-        brushSelection = _chart.extendBrush(brushSelection);
-
-        _chart.redrawBrush(brushSelection, false);
-
-        var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
-
-        _chart.replaceFilter(brushIsEmpty ? null : brushSelection);
-
+    _chart.applyBrushSelection = function (rangedFilter) {
+        _chart.replaceFilter(rangedFilter);
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(brushIsEmpty ? null : brushSelection);
+            _children[i].replaceFilter(rangedFilter);
         }
+        _chart.redrawGroup();
     };
 
     _chart._prepareYAxis = function () {
@@ -8792,10 +8788,11 @@ dc.compositeChart = function (parent, chartGroup) {
     };
 
     _chart.fadeDeselectedArea = function (brushSelection) {
-        for (var i = 0; i < _children.length; ++i) {
-            var child = _children[i];
-            child.brush(_chart.brush());
-            child.fadeDeselectedArea(brushSelection);
+        if (_chart.brushOn()) {
+            for (var i = 0; i < _children.length; ++i) {
+                var child = _children[i];
+                child.fadeDeselectedArea(brushSelection);
+            }
         }
     };
 
@@ -9133,7 +9130,7 @@ dc.seriesChart = function (parent, chartGroup) {
                     }, sub.key)
                     .keyAccessor(_chart.keyAccessor())
                     .valueAccessor(_chart.valueAccessor())
-                    .brushOn(_chart.brushOn());
+                    .brushOn(false);
             });
         // this works around the fact compositeChart doesn't really
         // have a removal interface
@@ -10070,22 +10067,28 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get the x axis for the row chart instance.  Note: not settable for row charts.
-     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
+     * Get or sets the x axis for the row chart instance.
+     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * documention for more information.
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
-     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @returns {d3.axisBottom}
+     * // use a top-oriented axis. Note: position of the axis and grid lines will need to
+     * // be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
+     * chart.xAxis(d3.axisTop())
+     * @returns {d3.axis}
      */
-    _chart.xAxis = function () {
-        return _xAxis;
+    _chart.xAxis = function (xAxis) {
+        if (!arguments.length) {
+            return _xAxis;
+        }
+        _xAxis = xAxis;
+        return this;
     };
 
     /**
@@ -10753,7 +10756,7 @@ dc.scatterPlot = function (parent, chartGroup) {
         symbols.call(renderTitles, _chart.data());
 
         symbols.each(function (d, i) {
-            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([d.key[0], d.key[1]]);
+            _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([_chart.keyAccessor()(d), _chart.valueAccessor()(d)]);
         });
 
         dc.transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
@@ -12259,7 +12262,7 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                if (!_chart.brushOn()) {
+                if (!(_chart.brushOn() || _chart.parentBrushOn())) {
                     return;
                 }
                 var start = brushSelection[0];
