@@ -1,6 +1,7 @@
 ## 3.0.4
 * Box plot enhancements: jittered data points, data point tooltips, bold outliers, by Chris Wolcott. 
 * Code cleanup - replaced `.rangesEqual` with `dc.utils.arraysEqual`, by Deepak Kumar ([#1436](https://github.com/dc-js/dc.js/pull/1436))
+* Propagate filters on composite chart to children, by Deepak Kumar ([#1435](https://github.com/dc-js/dc.js/pull/1435)). Fixes remaining parts of ([#390](https://github.com/dc-js/dc.js/issues/390) / [#706](https://github.com/dc-js/dc.js/issues/706)).
 
 ## 3.0.3
 * Update versions and release new fiddles and blocks pegged to dc@3 and d3@5
