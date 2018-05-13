@@ -69,11 +69,17 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
+    _chart.on('filtered', function (chart) {
+        // Propagate the filters onto the children
+        // Notice that on children the call is .replaceFilter and not .filter
+        //   the reason is that _chart.filter() returns the entire current set of filters not just the last added one
+        for (var i = 0; i < _children.length; ++i) {
+            _children[i].replaceFilter(_chart.filter());
+        }
+    });
+
     _chart.applyBrushSelection = function (rangedFilter) {
         _chart.replaceFilter(rangedFilter);
-        for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(rangedFilter);
-        }
         _chart.redrawGroup();
     };
 
