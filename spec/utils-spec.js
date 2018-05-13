@@ -136,6 +136,11 @@ describe('dc utils', function () {
             var a2 = null;
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
+        it('null and undefined should be equal', function () {
+            var a1 = null;
+            var a2; // undefined
+            expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
+        });
         it('null should not be equal to any array', function () {
             var a1 = null;
             var a2 = [];
