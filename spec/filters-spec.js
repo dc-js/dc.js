@@ -1,3 +1,5 @@
+/* global makeDate */
+
 describe('dc.filters', function () {
     describe('RangedFilter', function () {
         var filter;
@@ -24,6 +26,31 @@ describe('dc.filters', function () {
 
             it('should exclude the right bounds', function () {
                 expect(filter.isFiltered(10)).toBeFalsy();
+            });
+        });
+    });
+
+    describe('RangedFilter with Dates', function () {
+        var filter;
+        beforeEach(function () {
+            filter = dc.filters.RangedFilter(makeDate(2015, 7, 1), makeDate(2015, 8, 20));
+        });
+
+        describe('isFiltered', function () {
+            it('should return false when the date is out of range', function () {
+                expect(filter.isFiltered(makeDate(2015, 10, 1))).toBeFalsy();
+            });
+
+            it('should return true when the date is in range', function () {
+                expect(filter.isFiltered(makeDate(2015, 8, 1))).toBeTruthy();
+            });
+
+            it('should include the left bounds', function () {
+                expect(filter.isFiltered(makeDate(2015, 7, 1))).toBeTruthy();
+            });
+
+            it('should exclude the right bounds', function () {
+                expect(filter.isFiltered(makeDate(2015, 8, 20))).toBeFalsy();
             });
         });
     });
@@ -132,6 +159,83 @@ describe('dc.filters', function () {
                     expect(filter.isFiltered(10)).toBeTruthy();
                     expect(filter.isFiltered(15)).toBeTruthy();
                     expect(filter.isFiltered(20)).toBeFalsy();
+                });
+            });
+        });
+
+    });
+
+    describe('RangedTwoDimensionalFilter with Dates', function () {
+        var filter;
+
+        describe('two-dimensional filtering', function () {
+            beforeEach(function () {
+                filter = dc.filters.RangedTwoDimensionalFilter([[makeDate(2014, 5, 1), 1],[makeDate(2014, 5, 20), 20]]);
+            });
+
+            it('should return true if on bottom left of filter rectangle', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 1), 1])).toBeTruthy();
+            });
+
+            it('should return false if on bottom right of filter rectangle', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 20), 1])).toBeFalsy();
+            });
+
+            it('should return false for the top left of filter rectangle', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 1), 20])).toBeFalsy();
+            });
+
+            it('should return false for the top right of filter rectangle', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 20), 20])).toBeFalsy();
+            });
+
+            it('should return true for a point inside the filter rectangle', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 12), 5])).toBeTruthy();
+            });
+
+            it('should return false for a point to the right and above the filter rectangle', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 21), 21])).toBeFalsy();
+            });
+
+            it('should return false for a point to the left and below the filter rectangle', function () {
+                expect(filter.isFiltered([makeDate(2014, 4, 30), -1])).toBeFalsy();
+            });
+
+            describe('when a single value is considered', function () {
+                it('should filter that value using only x coordinates', function () {
+                    expect(filter.isFiltered(makeDate(2014, 5, 10))).toBeTruthy();
+                    expect(filter.isFiltered(makeDate(2014, 5, 1))).toBeTruthy();
+                    expect(filter.isFiltered(makeDate(2014, 5, 20))).toBeFalsy();
+                });
+            });
+        });
+
+        describe('one-dimensional filtering', function () {
+            beforeEach(function () {
+                filter = dc.filters.RangedTwoDimensionalFilter([makeDate(2014, 5, 1), makeDate(2014, 5, 20), 20]);
+            });
+
+            it('should return true while inside the range', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 15),10])).toBeTruthy();
+            });
+
+            it('should return false while to the left of the range', function () {
+                expect(filter.isFiltered([makeDate(2014, 4, 30),10])).toBeFalsy();
+            });
+
+            it('should return true while on the left edge of the range', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 1),10])).toBeTruthy();
+            });
+
+            it('should return false while on the right edge of the range', function () {
+                expect(filter.isFiltered([makeDate(2014, 5, 20),10])).toBeFalsy();
+            });
+
+            describe('when a single value is considered', function () {
+                it('should filter that value using only x coordinates', function () {
+                    expect(filter.isFiltered(makeDate(2014, 5, 10))).toBeTruthy();
+                    expect(filter.isFiltered(makeDate(2014, 5, 1))).toBeTruthy();
+                    expect(filter.isFiltered(makeDate(2014, 5, 20))).toBeFalsy();
                 });
             });
         });
