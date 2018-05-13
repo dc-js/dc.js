@@ -800,6 +800,24 @@ describe('dc.coordinateGridChart', function () {
             rangeChart.render();
         });
 
+        it('range filter should execute filtered listener and zoom focus chart', function() {
+            spyOn(chart, 'focus').and.callThrough();
+            var expectedCallbackSignature = function (callbackChart, callbackFilter) {
+                expect(callbackChart).toBe(rangeChart);
+                expect(callbackFilter).toEqual(selectedRange);
+            };
+            var filteredCallback = jasmine.createSpy().and.callFake(expectedCallbackSignature);
+            rangeChart.on('filtered', filteredCallback);
+            expect(filteredCallback).not.toHaveBeenCalled();
+
+            rangeChart.filter(selectedRange);
+            expect(filteredCallback).toHaveBeenCalled();
+
+            expect(chart.focus).toHaveBeenCalled();
+            var focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
+            expect(focus).toEqual(selectedRange);
+        });
+
         it('should zoom the focus chart when range chart is brushed', function () {
             spyOn(chart, 'focus').and.callThrough();
             simulateChartBrushing(rangeChart, selectedRange);
