@@ -1413,7 +1413,7 @@ dc.coordinateGridMixin = function (_chart) {
             return _focusChart;
         }
         _focusChart = c;
-        _chart.on('filtered.rangeChart', function (chart) {
+        _chart.on('filtered.dcjs-range-chart', function (chart) {
             if (!chart.filter()) {
                 dc.events.trigger(function () {
                     _focusChart.x().domain(_focusChart.xOriginalDomain(), true);
