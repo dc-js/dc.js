@@ -349,15 +349,19 @@ dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
  * @returns {Boolean}
  */
 dc.utils.arraysEqual = function (a1, a2) {
+    if (!a1 && !a2) {
+        return true;
+    }
+
     if (!a1 || !a2) {
-        return a1 === a2;
+        return false;
     }
 
     return a1.length === a2.length &&
         // If elements are not integers/strings, we hope that it will match because of toString
         // Test cases cover dates as well.
         a1.every(function (elem, i) {
-            return elem === a2[i] || elem.toString() === a2[i].toString();
+            return elem.valueOf() === a2[i].valueOf();
         });
 };
 
