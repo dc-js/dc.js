@@ -1306,7 +1306,7 @@ dc.coordinateGridMixin = function (_chart) {
         _chart.redraw();
 
         if (!noRaiseEvents) {
-            if (_rangeChart && !rangesEqual(_chart.filter(), _rangeChart.filter())) {
+            if (_rangeChart && !dc.utils.arraysEqual(_chart.filter(), _rangeChart.filter())) {
                 dc.events.trigger(function () {
                     _rangeChart.replaceFilter(domFilter);
                     _rangeChart.redraw();
@@ -1405,7 +1405,7 @@ dc.coordinateGridMixin = function (_chart) {
     };
 
     _chart.refocused = function () {
-        return !rangesEqual(_chart.x().domain(), _xOriginalDomain);
+        return !dc.utils.arraysEqual(_chart.x().domain(), _xOriginalDomain);
     };
 
     _chart.focusChart = function (c) {
@@ -1418,7 +1418,7 @@ dc.coordinateGridMixin = function (_chart) {
                 dc.events.trigger(function () {
                     _focusChart.x().domain(_focusChart.xOriginalDomain(), true);
                 });
-            } else if (!rangesEqual(chart.filter(), _focusChart.filter())) {
+            } else if (!dc.utils.arraysEqual(chart.filter(), _focusChart.filter())) {
                 dc.events.trigger(function () {
                     _focusChart.focus(chart.filter(), true);
                 });
@@ -1426,20 +1426,6 @@ dc.coordinateGridMixin = function (_chart) {
         });
         return _chart;
     };
-
-    function rangesEqual (range1, range2) {
-        if (!range1 && !range2) {
-            return true;
-        } else if (!range1 || !range2) {
-            return false;
-        } else if (range1.length === 0 && range2.length === 0) {
-            return true;
-        } else if (range1[0].valueOf() === range2[0].valueOf() &&
-            range1[1].valueOf() === range2[1].valueOf()) {
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
