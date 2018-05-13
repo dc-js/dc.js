@@ -1,3 +1,6 @@
+## 3.0.4
+* Propagate filters on composite chart to children, by Deepak Kumar ([#1435](https://github.com/dc-js/dc.js/pull/1435)). Fixes remaining parts of ([#390](https://github.com/dc-js/dc.js/issues/390) / [#706](https://github.com/dc-js/dc.js/issues/706)).
+
 ## 3.0.3
 * Update versions and release new fiddles and blocks pegged to dc@3 and d3@5
 
