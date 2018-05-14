@@ -14,7 +14,7 @@
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
  * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -43,19 +43,23 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _box = d3.box();
     var _tickFormat = null;
+    var _renderData = false;
+    var _dataBoxPercentage = 0.8;
+    var _renderTitle = false;
+    var _showOutliers = true;
+    var _boldOutlier = false;
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
+            // REVIEW: return _chart.x().bandwidth();
             return _chart.x().rangeBand();
         } else {
             return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
         }
     };
 
-    // default padding to handle min/max whisker text
-    _chart.yAxisPadding(12);
-
     // default to ordinal
+    // REVIEW: _chart.x(d3.scaleBand());
     _chart.x(d3.scale.ordinal());
     _chart.xUnits(dc.units.ordinal);
 
@@ -74,12 +78,12 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
+     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scale.ordinal.rangeBands}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
      * @param {Number} [padding=0.8]
      * @returns {Number|dc.boxPlot}
      */
@@ -118,6 +122,7 @@ dc.boxPlot = function (parent, chartGroup) {
         if (!arguments.length) {
             return _boxWidth;
         }
+        // REVIEW: _boxWidth = typeof boxWidth === 'function' ? boxWidth : dc.utils.constant(boxWidth);
         _boxWidth = d3.functor(boxWidth);
         return _chart;
     };
@@ -142,15 +147,22 @@ dc.boxPlot = function (parent, chartGroup) {
             .value(_chart.valueAccessor())
             .domain(_chart.y().domain())
             .duration(_chart.transitionDuration())
-            .tickFormat(_tickFormat);
+            .tickFormat(_tickFormat)
+            .renderData(_renderData)
+            .dataBoxPercentage(_dataBoxPercentage)
+            .renderTitle(_renderTitle)
+            .showOutliers(_showOutliers)
+            .boldOutlier(_boldOutlier);
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
+        // REVIEW: var boxesGEnterUpdate = renderBoxes(boxesG);
+        // REVIEW: updateBoxes(boxesGEnterUpdate);
         renderBoxes(boxesG);
         updateBoxes(boxesG);
         removeBoxes(boxesG);
 
-        _chart.fadeDeselectedArea();
+        _chart.fadeDeselectedArea(_chart.filter());
     };
 
     function renderBoxes (boxesG) {
@@ -164,6 +176,8 @@ dc.boxPlot = function (parent, chartGroup) {
                 _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
+
+        // REVIEW: return boxesGEnter.merge(boxesG);
     }
 
     function updateBoxes (boxesG) {
@@ -171,7 +185,15 @@ dc.boxPlot = function (parent, chartGroup) {
             .attr('transform', boxTransform)
             .call(_box)
             .each(function () {
-                d3.select(this).select('rect.box').attr('fill', _chart.getColor);
+
+                // TODO: Is there a better way to get a unique color, I don't like drilling down.
+                //d3.select(this).select('rect.box').attr('fill', _chart.getColor);
+
+                var color = _chart.getColor(d3.select(this).select('rect.box')[0][0].__data__, 0);
+                d3.select(this).select('rect.box').attr('fill', color);
+
+                // TODO: Change style to attr once we remove the fill attribute for .box circle from dc.css
+                d3.select(this).selectAll('circle.data').style('fill', color);
             });
     }
 
@@ -179,7 +201,23 @@ dc.boxPlot = function (parent, chartGroup) {
         boxesG.exit().remove().call(_box);
     }
 
-    _chart.fadeDeselectedArea = function () {
+    function minDataValue () {
+        return d3.min(_chart.data(), function (e) {
+            return d3.min(_chart.valueAccessor()(e));
+        });
+    }
+
+    function maxDataValue () {
+        return d3.max(_chart.data(), function (e) {
+            return d3.max(_chart.valueAccessor()(e));
+        });
+    }
+
+    function yAxisRangeRatio () {
+        return ((maxDataValue() - minDataValue()) / _chart.effectiveHeight());
+    }
+
+    _chart.fadeDeselectedArea = function (brushSelection) {
         if (_chart.hasFilter()) {
             if (_chart.isOrdinal()) {
                 _chart.g().selectAll('g.box').each(function (d) {
@@ -190,9 +228,11 @@ dc.boxPlot = function (parent, chartGroup) {
                     }
                 });
             } else {
-                var extent = _chart.brush().extent();
-                var start = extent[0];
-                var end = extent[1];
+                if (!(_chart.brushOn() || _chart.parentBrushOn())) {
+                    return;
+                }
+                var start = brushSelection[0];
+                var end = brushSelection[1];
                 var keyAccessor = _chart.keyAccessor();
                 _chart.g().selectAll('g.box').each(function (d) {
                     var key = keyAccessor(d);
@@ -215,17 +255,13 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.yAxisMin = function () {
-        var min = d3.min(_chart.data(), function (e) {
-            return d3.min(_chart.valueAccessor()(e));
-        });
-        return dc.utils.subtract(min, _chart.yAxisPadding());
+        var padding = 16 * yAxisRangeRatio();
+        return dc.utils.subtract(minDataValue() - padding, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
-        var max = d3.max(_chart.data(), function (e) {
-            return d3.max(_chart.valueAccessor()(e));
-        });
-        return dc.utils.add(max, _chart.yAxisPadding());
+        var padding = 16 * yAxisRangeRatio();
+        return dc.utils.add(maxDataValue() + padding, _chart.yAxisPadding());
     };
 
     /**
@@ -248,5 +284,86 @@ dc.boxPlot = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     * Get or set whether individual data points will be rendered.
+     * @method renderData
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Boolean} [show=true]
+     * @returns {Boolean|dc.boxPlot}
+     */
+    _chart.renderData = function (show) {
+        if (!arguments.length) {
+            return _renderData;
+        }
+        _renderData = show;
+        return _chart;
+    };
+
+    /**
+     * Get or set the percentage of the box to show data.
+     * @method dataBoxPercentage
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Number} [percentage=0.8]
+     * @returns {Number|dc.boxPlot}
+     */
+    _chart.dataBoxPercentage = function (percentage) {
+        if (!arguments.length) {
+            return _dataBoxPercentage;
+        }
+        _dataBoxPercentage = percentage;
+        return _chart;
+    };
+
+    /**
+     * Get or set whether tooltips will be rendered.
+     * @method renderTitle
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Boolean} [show=true]
+     * @returns {Boolean|dc.boxPlot}
+     */
+    _chart.renderTitle = function (show) {
+        if (!arguments.length) {
+            return _renderTitle;
+        }
+        _renderTitle = show;
+        return _chart;
+    };
+
+    /**
+     * Get or set whether outliers will be rendered.
+     * @method showOutliers
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Boolean} [show=true]
+     * @returns {Boolean|dc.boxPlot}
+     */
+    _chart.showOutliers = function (show) {
+        if (!arguments.length) {
+            return _showOutliers;
+        }
+        _showOutliers = show;
+        return _chart;
+    };
+
+    /**
+     * Get or set whether outliers will be bold.
+     * @method boldOutlier
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Boolean} [show=true]
+     * @returns {Boolean|dc.boxPlot}
+     */
+    _chart.boldOutlier = function (show) {
+        if (!arguments.length) {
+            return _boldOutlier;
+        }
+        _boldOutlier = show;
+        return _chart;
+    };
+
     return _chart.anchor(parent, chartGroup);
 };
+
