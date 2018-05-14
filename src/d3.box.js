@@ -1,4 +1,34 @@
 // https://github.com/d3/d3-plugins/blob/master/box/box.js
+// * Original source March 22, 2013
+// * Enhancements integrated on May 13, 2018 for dc.js library only
+
+// https://github.com/d3/d3-plugins/blob/master/LICENSE
+// Copyright (c) 2012-2015, Michael Bostock
+// All rights reserved.
+
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are met:
+//
+// * Redistributions of source code must retain the above copyright notice, this
+//   list of conditions and the following disclaimer.
+//
+// * Redistributions in binary form must reproduce the above copyright notice,
+//   this list of conditions and the following disclaimer in the documentation
+//   and/or other materials provided with the distribution.
+//
+// * The name Michael Bostock may not be used to endorse or promote products
+//   derived from this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+// DISCLAIMED. IN NO EVENT SHALL MICHAEL BOSTOCK BE LIABLE FOR ANY DIRECT,
+// INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+// BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
+// OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+// NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+// EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 (function () {
 
     // Inspired by http://informationandvisualization.de/blog/box-plot
@@ -11,7 +41,15 @@
             value = Number,
             whiskers = boxWhiskers,
             quartiles = boxQuartiles,
-            tickFormat = null;
+            tickFormat = null,
+
+            // Enhanced attributes
+            renderData = false,
+            dataRadius = 3,
+            dataBoxPercentage = 0.8,
+            renderTitle = false,
+            showOutliers = true,
+            boldOutlier = false;
 
         // For each small multiple…
         function box (g) {
@@ -19,8 +57,11 @@
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
                     n = d.length,
-                    min = d[0],
-                    max = d[n - 1];
+                    min,
+                    max;
+
+                // Leave if there are no items.
+                if (n === 0) {return;}
 
                 // Compute quartiles. Must return exactly 3 elements.
                 var quartileData = d.quartiles = quartiles(d);
@@ -33,6 +74,16 @@
                 // We compute the outliers as indices, so that we can join across transitions!
                 var outlierIndices = whiskerIndices ?
                     d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n)) : d3.range(n);
+
+                // Determine the maximum value based on if outliers are shown
+                if (showOutliers) {
+                    min = d[0];
+                    max = d[n - 1];
+                } else {
+                    min = d[whiskerIndices[0]];
+                    max = d[whiskerIndices[1]];
+                }
+                var pointIndices = d3.range(whiskerIndices[0], whiskerIndices[1] + 1);
 
                 // Compute the new x-scale.
                 var x1 = d3.scaleLinear()
@@ -97,7 +148,8 @@
                     .attr('y', function (d) { return x0(d[2]); })
                     .attr('width', width)
                     .attr('height', function (d) { return x0(d[0]) - x0(d[2]); })
-                  .transition()
+                    .style('fill-opacity', (renderData) ? 0.1 : 1)
+                    .transition()
                     .duration(duration)
                     .delay(delay)
                     .attr('y', function (d) { return x1(d[2]); })
@@ -145,7 +197,7 @@
                     .attr('x2', width)
                     .attr('y2', x0)
                     .style('opacity', 1e-6)
-                  .transition()
+                    .transition()
                     .duration(duration)
                     .delay(delay)
                     .attr('y1', x1)
@@ -170,34 +222,90 @@
                     .remove();
 
                 // Update outliers.
-                var outlier = g.selectAll('circle.outlier')
-                    .data(outlierIndices, Number);
+                if (showOutliers) {
+                    var outlierClass = boldOutlier ? 'outlierBold' : 'outlier';
+                    var outlierSize = boldOutlier ? 3 : 5;
+                    var outlierX = boldOutlier ?
+                        function () { return Math.floor(Math.random() *
+                            (width * dataBoxPercentage) +
+                            1 + ((width - (width * dataBoxPercentage)) / 2)); } :
+                        function () { return width / 2; };
 
-                outlier.enter().insert('circle', 'text')
-                    .attr('class', 'outlier')
-                    .attr('r', 5)
-                    .attr('cx', width / 2)
-                    .attr('cy', function (i) { return x0(d[i]); })
-                    .style('opacity', 1e-6)
-                    .transition()
-                    .duration(duration)
-                    .delay(delay)
-                    .attr('cy', function (i) { return x1(d[i]); })
-                    .style('opacity', 1);
+                    var outlier = g.selectAll('circle.' + outlierClass)
+                        .data(outlierIndices, Number);
 
-                outlier.transition()
-                    .duration(duration)
-                    .delay(delay)
-                    .attr('cx', width / 2)
-                    .attr('cy', function (i) { return x1(d[i]); })
-                    .style('opacity', 1);
+                    outlier.enter().insert('circle', 'text')
+                        .attr('class', outlierClass)
+                        .attr('r', outlierSize)
+                        .attr('cx', outlierX)
+                        .attr('cy', function (i) { return x0(d[i]); })
+                        .style('opacity', 1e-6)
+                        .transition()
+                        .duration(duration)
+                        .delay(delay)
+                        .attr('cy', function (i) { return x1(d[i]); })
+                        .style('opacity', 0.6);
 
-                outlier.exit().transition()
-                    .duration(duration)
-                    .delay(delay)
-                    .attr('cy', function (i) { return x1(d[i]); })
-                    .style('opacity', 1e-6)
-                    .remove();
+                    if (renderTitle) {
+                        outlier.selectAll('title').remove();
+                        outlier.append('title').text(function (i) {return d[i]; });
+                    }
+
+                    outlier.transition()
+                        .duration(duration)
+                        .delay(delay)
+                        .attr('cx', outlierX)
+                        .attr('cy', function (i) { return x1(d[i]); })
+                        .style('opacity', 0.6);
+
+                    outlier.exit().transition()
+                        .duration(duration)
+                        .delay(delay)
+                        .attr('cy', 0) //function (i) { return x1(d[i]); })
+                        .style('opacity', 1e-6)
+                        .remove();
+                }
+
+                // Update Values
+                if (renderData) {
+                    var point = g.selectAll('circle.data')
+                        .data(pointIndices);
+
+                    point.enter().insert('circle', 'text')
+                        .attr('class', 'data')
+                        .attr('r', dataRadius)
+                        .attr('cx', function () { return Math.floor(Math.random() *
+                            (width * dataBoxPercentage) +
+                            1 + ((width - (width * dataBoxPercentage)) / 2)); })
+                        .attr('cy', function (i) { return x0(d[i]); })
+                        .style('opacity', 1e-6)
+                        .transition()
+                        .duration(duration)
+                        .delay(delay)
+                        .attr('cy', function (i) { return x1(d[i]); })
+                        .style('opacity', 0.2);
+
+                    if (renderTitle) {
+                        point.selectAll('title').remove();
+                        point.append('title').text(function (i) { return d[i]; });
+                    }
+
+                    point.transition()
+                        .duration(duration)
+                        .delay(delay)
+                        .attr('cx', function () { return Math.floor(Math.random() *
+                            (width * dataBoxPercentage) +
+                            1 + ((width - (width * dataBoxPercentage)) / 2)); })
+                        .attr('cy', function (i) { return x1(d[i]); })
+                        .style('opacity', 0.2);
+
+                    point.exit().transition()
+                        .duration(duration)
+                        .delay(delay)
+                        .attr('cy', 0)
+                        .style('opacity', 1e-6)
+                        .remove();
+                }
 
                 // Compute the tick format.
                 var format = tickFormat || x1.tickFormat(8);
@@ -260,6 +368,9 @@
                     .attr('y', x1)
                     .style('opacity', 1e-6)
                     .remove();
+
+                // Remove temporary quartiles element from within data array.
+                delete d.quartiles;
             });
             d3.timerFlush();
         }
@@ -285,6 +396,46 @@
                 return tickFormat;
             }
             tickFormat = x;
+            return box;
+        };
+
+        box.showOutliers = function (x) {
+            if (!arguments.length) {
+                return showOutliers;
+            }
+            showOutliers = x;
+            return box;
+        };
+
+        box.boldOutlier = function (x) {
+            if (!arguments.length) {
+                return boldOutlier;
+            }
+            boldOutlier = x;
+            return box;
+        };
+
+        box.renderData = function (x) {
+            if (!arguments.length) {
+                return renderData;
+            }
+            renderData = x;
+            return box;
+        };
+
+        box.renderTitle = function (x) {
+            if (!arguments.length) {
+                return renderTitle;
+            }
+            renderTitle = x;
+            return box;
+        };
+
+        box.dataBoxPercentage = function (x) {
+            if (!arguments.length) {
+                return dataBoxPercentage;
+            }
+            dataBoxPercentage = x;
             return box;
         };
 
@@ -344,3 +495,4 @@
     }
 
 })();
+
