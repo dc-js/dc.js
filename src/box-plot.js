@@ -14,8 +14,8 @@
  * // create a box plot under #chart-container2 element using chart group A
  * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
  * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * * a dom block element such as a div; or a dom element or d3 selection.
  * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.boxPlot}
@@ -51,7 +51,6 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
-            // REVIEW: return _chart.x().bandwidth();
             return _chart.x().rangeBand();
         } else {
             return innerChartWidth / (1 + _chart.boxPadding()) / xUnits;
@@ -59,7 +58,6 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     // default to ordinal
-    // REVIEW: _chart.x(d3.scaleBand());
     _chart.x(d3.scale.ordinal());
     _chart.xUnits(dc.units.ordinal);
 
@@ -78,12 +76,12 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
+     * See the {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3 docs}
      * for a visual description of how the padding is applied.
      * @method boxPadding
      * @memberof dc.boxPlot
      * @instance
-     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
+     * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Ordinal-Scales.md#ordinal_rangeBands d3.scale.ordinal.rangeBands}
      * @param {Number} [padding=0.8]
      * @returns {Number|dc.boxPlot}
      */
@@ -122,7 +120,6 @@ dc.boxPlot = function (parent, chartGroup) {
         if (!arguments.length) {
             return _boxWidth;
         }
-        // REVIEW: _boxWidth = typeof boxWidth === 'function' ? boxWidth : dc.utils.constant(boxWidth);
         _boxWidth = d3.functor(boxWidth);
         return _chart;
     };
@@ -156,13 +153,11 @@ dc.boxPlot = function (parent, chartGroup) {
 
         var boxesG = _chart.chartBodyG().selectAll('g.box').data(_chart.data(), _chart.keyAccessor());
 
-        // REVIEW: var boxesGEnterUpdate = renderBoxes(boxesG);
-        // REVIEW: updateBoxes(boxesGEnterUpdate);
         renderBoxes(boxesG);
         updateBoxes(boxesG);
         removeBoxes(boxesG);
 
-        _chart.fadeDeselectedArea(_chart.filter());
+        _chart.fadeDeselectedArea();
     };
 
     function renderBoxes (boxesG) {
@@ -176,8 +171,6 @@ dc.boxPlot = function (parent, chartGroup) {
                 _chart.filter(_chart.keyAccessor()(d));
                 _chart.redrawGroup();
             });
-
-        // REVIEW: return boxesGEnter.merge(boxesG);
     }
 
     function updateBoxes (boxesG) {

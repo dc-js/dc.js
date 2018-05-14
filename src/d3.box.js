@@ -86,13 +86,11 @@
                 var pointIndices = d3.range(whiskerIndices[0], whiskerIndices[1] + 1);
 
                 // Compute the new x-scale.
-                // REVIEW: var x1 = d3.scaleLinear()
                 var x1 = d3.scale.linear()
                     .domain(domain && domain.call(this, d, i) || [min, max])
                     .range([height, 0]);
 
                 // Retrieve the old x-scale, if this is an update.
-                // REVIEW: var x0 = this.__chart__ || d3.scaleLinear()
                 var x0 = this.__chart__ || d3.scale.linear()
                     .domain([0, Infinity])
                     .range(x1.range());
@@ -454,7 +452,6 @@
             if (!arguments.length) {
                 return domain;
             }
-            //REVIEW: domain = x === null ? x :  typeof x === 'function' ? x : dc.utils.constant(x);
             domain = x === null ? x : d3.functor(x);
             return box;
         };
