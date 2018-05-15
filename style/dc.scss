@@ -210,9 +210,18 @@ div.dc-chart {
         .center {
             stroke-dasharray: 3, 3;
         }
+        .data {
+            fill: purple;
+            stroke: none;
+            stroke-width: 0px;
+        }
         .outlier {
             fill: none;
             stroke: $color_celeste;
+        }
+        .outlierBold {
+            fill: red;
+            stroke: none;
         }
         &.deselected {
             opacity: 0.5;
