@@ -44,6 +44,7 @@ dc.boxPlot = function (parent, chartGroup) {
     var _box = d3.box();
     var _tickFormat = null;
     var _renderData = false;
+    var _dataOpacity = 0.3;
     var _dataBoxPercentage = 0.8;
     var _renderTitle = false;
     var _showOutliers = true;
@@ -146,6 +147,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat)
             .renderData(_renderData)
+            .dataOpacity(_dataOpacity)
             .dataBoxPercentage(_dataBoxPercentage)
             .renderTitle(_renderTitle)
             .showOutliers(_showOutliers)
@@ -280,10 +282,13 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set whether individual data points will be rendered.
+     * @example
+     * // Enable rendering of individual data points
+     * chart.renderData(true);
      * @method renderData
      * @memberof dc.boxPlot
      * @instance
-     * @param {Boolean} [show=true]
+     * @param {Boolean} [show=false]
      * @returns {Boolean|dc.boxPlot}
      */
     _chart.renderData = function (show) {
@@ -295,7 +300,29 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     /**
+     * Get or set the opacity when rendering data.
+     * @example
+     * // If individual data points are rendered increase the opacity.
+     * chart.dataOpacity(0.7);
+     * @method dataOpacity
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Number} [opacity=0.3]
+     * @returns {Number|dc.boxPlot}
+     */
+    _chart.dataOpacity = function (opacity) {
+        if (!arguments.length) {
+            return _dataOpacity;
+        }
+        _dataOpacity = opacity;
+        return _chart;
+    };
+
+    /**
      * Get or set the percentage of the box to show data.
+     * @example
+     * // If individual data points are rendered increase the data box.
+     * chart.dataBoxPercentage(0.9);
      * @method dataBoxPercentage
      * @memberof dc.boxPlot
      * @instance
@@ -312,10 +339,13 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set whether tooltips will be rendered.
+     * @example
+     * // Enable tooltips of individual data points and outliers
+     * chart.renderTitle(true);
      * @method renderTitle
      * @memberof dc.boxPlot
      * @instance
-     * @param {Boolean} [show=true]
+     * @param {Boolean} [show=false]
      * @returns {Boolean|dc.boxPlot}
      */
     _chart.renderTitle = function (show) {
@@ -328,6 +358,9 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set whether outliers will be rendered.
+     * @example
+     * // Disable rendering of outliers
+     * chart.renderTitle(false);
      * @method showOutliers
      * @memberof dc.boxPlot
      * @instance
@@ -344,10 +377,13 @@ dc.boxPlot = function (parent, chartGroup) {
 
     /**
      * Get or set whether outliers will be bold.
+     * @example
+     * // If outliers are rendered display as bold
+     * chart.boldOutlier(true);
      * @method boldOutlier
      * @memberof dc.boxPlot
      * @instance
-     * @param {Boolean} [show=true]
+     * @param {Boolean} [show=false]
      * @returns {Boolean|dc.boxPlot}
      */
     _chart.boldOutlier = function (show) {

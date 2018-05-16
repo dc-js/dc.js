@@ -46,6 +46,7 @@
             // Enhanced attributes
             renderData = false,
             dataRadius = 3,
+            dataOpacity = 0.3,
             dataBoxPercentage = 0.8,
             renderTitle = false,
             showOutliers = true,
@@ -283,7 +284,7 @@
                         .duration(duration)
                         .delay(delay)
                         .attr('cy', function (i) { return x1(d[i]); })
-                        .style('opacity', 0.2);
+                        .style('opacity', dataOpacity);
 
                     if (renderTitle) {
                         point.selectAll('title').remove();
@@ -297,7 +298,7 @@
                             (width * dataBoxPercentage) +
                             1 + ((width - (width * dataBoxPercentage)) / 2)); })
                         .attr('cy', function (i) { return x1(d[i]); })
-                        .style('opacity', 0.2);
+                        .style('opacity', dataOpacity);
 
                     point.exit().transition()
                         .duration(duration)
@@ -428,6 +429,14 @@
                 return renderTitle;
             }
             renderTitle = x;
+            return box;
+        };
+
+        box.dataOpacity = function (x) {
+            if (!arguments.length) {
+                return dataOpacity;
+            }
+            dataOpacity = x;
             return box;
         };
 
