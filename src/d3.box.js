@@ -54,6 +54,7 @@
 
         // For each small multiple…
         function box (g) {
+            /* jshint -W074 */
             g.each(function (d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
@@ -373,6 +374,7 @@
                 // Remove temporary quartiles element from within data array.
                 delete d.quartiles;
             });
+            /* jshint +W074 */
             d3.timerFlush();
         }
 

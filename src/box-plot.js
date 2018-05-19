@@ -251,12 +251,12 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.yAxisMin = function () {
-        var padding = 16 * yAxisRangeRatio();
+        var padding = 8 * yAxisRangeRatio();
         return dc.utils.subtract(minDataValue() - padding, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
-        var padding = 16 * yAxisRangeRatio();
+        var padding = 8 * yAxisRangeRatio();
         return dc.utils.add(maxDataValue() + padding, _chart.yAxisPadding());
     };
 
