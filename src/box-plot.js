@@ -183,9 +183,8 @@ dc.boxPlot = function (parent, chartGroup) {
         dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
-            .each(function () {
-
-                var color = _chart.getColor(d3.select(this).datum(), 0);
+            .each(function (d) {
+                var color = _chart.getColor(d, 0);
                 d3.select(this).select('rect.box').attr('fill', color);
                 d3.select(this).selectAll('circle.data').attr('fill', color);
             });
