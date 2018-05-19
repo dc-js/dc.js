@@ -263,6 +263,7 @@
         .elasticX(true)
     ;
 
+    // Code to add/update number of rendered data points to the xAxis label
     bp04
         .on('preRender', function() {get_counts(bp04, bp04Counts)})
         .on('preRedraw', function() {get_counts(bp04, bp04Counts)})
