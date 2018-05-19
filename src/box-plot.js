@@ -46,7 +46,6 @@ dc.boxPlot = function (parent, chartGroup) {
     var _renderDataPoints = false;
     var _dataOpacity = 0.3;
     var _dataWidthPortion = 0.8;
-    var _renderTitle = false;
     var _showOutliers = true;
     var _boldOutlier = false;
 
@@ -153,7 +152,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .renderDataPoints(_renderDataPoints)
             .dataOpacity(_dataOpacity)
             .dataWidthPortion(_dataWidthPortion)
-            .renderTitle(_renderTitle)
+            .renderTitle(_chart.renderTitle())
             .showOutliers(_showOutliers)
             .boldOutlier(_boldOutlier);
 
@@ -333,25 +332,6 @@ dc.boxPlot = function (parent, chartGroup) {
             return _dataWidthPortion;
         }
         _dataWidthPortion = percentage;
-        return _chart;
-    };
-
-    /**
-     * Get or set whether tooltips will be rendered.
-     * @example
-     * // Enable tooltips of individual data points and outliers
-     * chart.renderTitle(true);
-     * @method renderTitle
-     * @memberof dc.boxPlot
-     * @instance
-     * @param {Boolean} [show=false]
-     * @returns {Boolean|dc.boxPlot}
-     */
-    _chart.renderTitle = function (show) {
-        if (!arguments.length) {
-            return _renderTitle;
-        }
-        _renderTitle = show;
         return _chart;
     };
 
