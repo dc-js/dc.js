@@ -73,7 +73,7 @@ describe('dc.boxPlot', function () {
             expect(box(1).select('rect.box').attr('x')).toBe('0');
         });
 
-        describe('with showOutlier disabled', function () {
+        describe('with showOutliers disabled', function () {
             beforeEach(function () {
                 chart.showOutliers(false).render();
             });
@@ -84,10 +84,10 @@ describe('dc.boxPlot', function () {
             });
         });
 
-        describe('with renderData enabled', function () {
+        describe('with renderDataPoints enabled', function () {
             beforeEach(function () {
                 chart
-                    .renderData(true)
+                    .renderDataPoints(true)
                     .renderTitle(true)
                     .boxWidth(100)
                     .render();
@@ -101,25 +101,25 @@ describe('dc.boxPlot', function () {
             });
             it('should display the data between 10 to 90 of the box (by default)', function () {
                 var w = box(1).select('rect.box').attr('width');
-                var min = (w / 2) - (w * chart.dataBoxPercentage() / 2);
-                var max = (w / 2) + (w * chart.dataBoxPercentage() / 2);
+                var min = (w / 2) - (w * chart.dataWidthPortion() / 2);
+                var max = (w / 2) + (w * chart.dataWidthPortion() / 2);
                 chart.selectAll('circle.data').each(function () {
                     expect(d3.select(this).attr('cx')).toBeGreaterThan(min - 0.1);
                     expect(d3.select(this).attr('cx')).toBeLessThan(max + 0.1);
                 });
             });
 
-            describe('and databoxPercentage set to 50%', function () {
+            describe('and dataWidthPortion set to 50%', function () {
                 beforeEach(function () {
                     chart
-                        .dataBoxPercentage(0.5)
+                        .dataWidthPortion(0.5)
                         .render();
                 });
 
                 it('should display the data between 25 to 75 of the box', function () {
                     var w = box(1).select('rect.box').attr('width');
-                    var min = (w / 2) - (w * chart.dataBoxPercentage() / 2);
-                    var max = (w / 2) + (w * chart.dataBoxPercentage() / 2);
+                    var min = (w / 2) - (w * chart.dataWidthPortion() / 2);
+                    var max = (w / 2) + (w * chart.dataWidthPortion() / 2);
                     chart.selectAll('circle.data').each(function () {
                         expect(d3.select(this).attr('cx')).toBeGreaterThan(min - 0.1);
                         expect(d3.select(this).attr('cx')).toBeLessThan(max + 0.1);
@@ -127,17 +127,17 @@ describe('dc.boxPlot', function () {
                 });
             });
 
-            describe('and databoxPercentage set to 10%', function () {
+            describe('and dataWidthPortion set to 10%', function () {
                 beforeEach(function () {
                     chart
-                        .dataBoxPercentage(0.1)
+                        .dataWidthPortion(0.1)
                         .render();
                 });
 
                 it('should display the data between 45 to 55 of the box', function () {
                     var w = box(1).select('rect.box').attr('width');
-                    var min = (w / 2) - (w * chart.dataBoxPercentage() / 2);
-                    var max = (w / 2) + (w * chart.dataBoxPercentage() / 2);
+                    var min = (w / 2) - (w * chart.dataWidthPortion() / 2);
+                    var max = (w / 2) + (w * chart.dataWidthPortion() / 2);
                     chart.selectAll('circle.data').each(function () {
                         expect(d3.select(this).attr('cx')).toBeGreaterThan(min - 0.1);
                         expect(d3.select(this).attr('cx')).toBeLessThan(max + 0.1);
