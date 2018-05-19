@@ -49,9 +49,9 @@ dc.boxPlot = function (parent, chartGroup) {
     var _showOutliers = true;
     var _boldOutlier = false;
 
-    // Magic number used in yAxisMin and yAxisMax to add a little additional
-    // padding so the min and max data points/whiskers are within the chart
-    var _internalRangePadding = 8;
+    // Used in yAxisMin and yAxisMax to add padding in pixel coordinates
+    // so the min and max data points/whiskers are within the chart
+    var _yRangePadding = 8;
 
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
@@ -248,12 +248,12 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.yAxisMin = function () {
-        var padding = _internalRangePadding * yAxisRangeRatio();
+        var padding = _yRangePadding * yAxisRangeRatio();
         return dc.utils.subtract(minDataValue() - padding, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
-        var padding = _internalRangePadding * yAxisRangeRatio();
+        var padding = _yRangePadding * yAxisRangeRatio();
         return dc.utils.add(maxDataValue() + padding, _chart.yAxisPadding());
     };
 
@@ -274,6 +274,26 @@ dc.boxPlot = function (parent, chartGroup) {
             return _tickFormat;
         }
         _tickFormat = tickFormat;
+        return _chart;
+    };
+
+    /**
+     * Get or set the amount of padding to add, in pixel coordinates, to the top and
+     * bottom of the chart to accommodate box/whisker labels.
+     * @example
+     * // allow more space for a bigger whisker font
+     * chart.yRangePadding(12);
+     * @method yRangePadding
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Function} [yRangePadding = 8]
+     * @returns {Number|Function|dc.boxPlot}
+     */
+    _chart.yRangePadding = function (yRangePadding) {
+        if (!arguments.length) {
+            return _yRangePadding;
+        }
+        _yRangePadding = yRangePadding;
         return _chart;
     };
 
