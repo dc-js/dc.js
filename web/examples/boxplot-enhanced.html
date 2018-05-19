@@ -38,7 +38,7 @@
     </div>
     <hr style="margin: 5px;">
     <div><p style="text-align: center">
-        <b>Enhanced:</b> <u>renderData</u> (<b><i>true</i></b>/false), <u>dataOpacity</u> (0.00 - 1.00) <b><i>[0.3]</i></b>, <u>dataBoxPercentage</u> (0.00 - 0.99) <b><i>[0.5]</i></b>, <u>renderTitle</u> (<b><i>true</i></b>/false)<br/>
+        <b>Enhanced:</b> <u>renderDataPoints</u> (<b><i>true</i></b>/false), <u>dataOpacity</u> (0.00 - 1.00) <b><i>[0.3]</i></b>, <u>dataWidthPortion</u> (0.00 - 0.99) <b><i>[0.5]</i></b>, <u>renderTitle</u> (<b><i>true</i></b>/false)<br/>
                          <u>showOutliers</u> (<b><i>true</i></b>/false), <u>boldOutlier</u> (<b><i>true</i></b>/false)</p>
     </div>
 
@@ -195,7 +195,7 @@
         .tickFormat(d3.format('.1f'))
         .renderDataPoints(true)
         .renderTitle(true)
-        .dataBoxPercentage(0.50)
+        .dataWidthPortion(0.50)
         .boldOutlier(true)
         .yAxisLabel("Age (years)")
         .xAxisLabel("Sport")
@@ -255,7 +255,7 @@
         .tickFormat(d3.format('.1f'))
         .renderDataPoints(true)
         .renderTitle(true)
-        .dataBoxPercentage(0.5)
+        .dataWidthPortion(0.5)
         .boldOutlier(true)
         .yAxisLabel("Age (years)")
         .xAxisLabel("Gender", 0)

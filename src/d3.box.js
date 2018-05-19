@@ -47,7 +47,7 @@
             renderDataPoints = false,
             dataRadius = 3,
             dataOpacity = 0.3,
-            dataBoxPercentage = 0.8,
+            dataWidthPortion = 0.8,
             renderTitle = false,
             showOutliers = true,
             boldOutlier = false;
@@ -229,8 +229,8 @@
                     var outlierSize = boldOutlier ? 3 : 5;
                     var outlierX = boldOutlier ?
                         function () { return Math.floor(Math.random() *
-                            (width * dataBoxPercentage) +
-                            1 + ((width - (width * dataBoxPercentage)) / 2)); } :
+                            (width * dataWidthPortion) +
+                            1 + ((width - (width * dataWidthPortion)) / 2)); } :
                         function () { return width / 2; };
 
                     var outlier = g.selectAll('circle.' + outlierClass)
@@ -277,8 +277,8 @@
                         .attr('class', 'data')
                         .attr('r', dataRadius)
                         .attr('cx', function () { return Math.floor(Math.random() *
-                            (width * dataBoxPercentage) +
-                            1 + ((width - (width * dataBoxPercentage)) / 2)); })
+                            (width * dataWidthPortion) +
+                            1 + ((width - (width * dataWidthPortion)) / 2)); })
                         .attr('cy', function (i) { return x0(d[i]); })
                         .style('opacity', 1e-6)
                         .transition()
@@ -296,8 +296,8 @@
                         .duration(duration)
                         .delay(delay)
                         .attr('cx', function () { return Math.floor(Math.random() *
-                            (width * dataBoxPercentage) +
-                            1 + ((width - (width * dataBoxPercentage)) / 2)); })
+                            (width * dataWidthPortion) +
+                            1 + ((width - (width * dataWidthPortion)) / 2)); })
                         .attr('cy', function (i) { return x1(d[i]); })
                         .style('opacity', dataOpacity);
 
@@ -442,11 +442,11 @@
             return box;
         };
 
-        box.dataBoxPercentage = function (x) {
+        box.dataWidthPortion = function (x) {
             if (!arguments.length) {
-                return dataBoxPercentage;
+                return dataWidthPortion;
             }
-            dataBoxPercentage = x;
+            dataWidthPortion = x;
             return box;
         };
 

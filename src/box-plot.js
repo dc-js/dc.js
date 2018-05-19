@@ -45,7 +45,7 @@ dc.boxPlot = function (parent, chartGroup) {
     var _tickFormat = null;
     var _renderDataPoints = false;
     var _dataOpacity = 0.3;
-    var _dataBoxPercentage = 0.8;
+    var _dataWidthPortion = 0.8;
     var _renderTitle = false;
     var _showOutliers = true;
     var _boldOutlier = false;
@@ -152,7 +152,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .tickFormat(_tickFormat)
             .renderDataPoints(_renderDataPoints)
             .dataOpacity(_dataOpacity)
-            .dataBoxPercentage(_dataBoxPercentage)
+            .dataWidthPortion(_dataWidthPortion)
             .renderTitle(_renderTitle)
             .showOutliers(_showOutliers)
             .boldOutlier(_boldOutlier);
@@ -317,21 +317,21 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the percentage of the box to show data.
+     * Get or set the portion of the width of the box to show data points.
      * @example
      * // If individual data points are rendered increase the data box.
-     * chart.dataBoxPercentage(0.9);
-     * @method dataBoxPercentage
+     * chart.dataWidthPortion(0.9);
+     * @method dataWidthPortion
      * @memberof dc.boxPlot
      * @instance
      * @param {Number} [percentage=0.8]
      * @returns {Number|dc.boxPlot}
      */
-    _chart.dataBoxPercentage = function (percentage) {
+    _chart.dataWidthPortion = function (percentage) {
         if (!arguments.length) {
-            return _dataBoxPercentage;
+            return _dataWidthPortion;
         }
-        _dataBoxPercentage = percentage;
+        _dataWidthPortion = percentage;
         return _chart;
     };
 
