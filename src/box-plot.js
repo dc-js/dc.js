@@ -50,6 +50,10 @@ dc.boxPlot = function (parent, chartGroup) {
     var _showOutliers = true;
     var _boldOutlier = false;
 
+    // Magic number used in yAxisMin and yAxisMax to add a little additional
+    // padding so the min and max data points/whiskers are within the chart
+    var _internalRangePadding = 8;
+
     var _boxWidth = function (innerChartWidth, xUnits) {
         if (_chart.isOrdinal()) {
             return _chart.x().bandwidth();
@@ -182,14 +186,9 @@ dc.boxPlot = function (parent, chartGroup) {
             .call(_box)
             .each(function () {
 
-                // TODO: Is there a better way to get a unique color, I don't like drilling down.
-                //d3.select(this).select('rect.box').attr('fill', _chart.getColor);
-
-                var color = _chart.getColor(d3.select(this).select('rect.box')[0][0].__data__, 0);
+                var color = _chart.getColor(d3.select(this).datum(), 0);
                 d3.select(this).select('rect.box').attr('fill', color);
-
-                // TODO: Change style to attr once we remove the fill attribute for .box circle from dc.css
-                d3.select(this).selectAll('circle.data').style('fill', color);
+                d3.select(this).selectAll('circle.data').attr('fill', color);
             });
     }
 
@@ -251,12 +250,12 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     _chart.yAxisMin = function () {
-        var padding = 8 * yAxisRangeRatio();
+        var padding = _internalRangePadding * yAxisRangeRatio();
         return dc.utils.subtract(minDataValue() - padding, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
-        var padding = 8 * yAxisRangeRatio();
+        var padding = _internalRangePadding * yAxisRangeRatio();
         return dc.utils.add(maxDataValue() + padding, _chart.yAxisPadding());
     };
 
