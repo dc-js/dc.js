@@ -44,7 +44,7 @@
             tickFormat = null,
 
             // Enhanced attributes
-            renderData = false,
+            renderDataPoints = false,
             dataRadius = 3,
             dataOpacity = 0.3,
             dataBoxPercentage = 0.8,
@@ -150,7 +150,7 @@
                     .attr('y', function (d) { return x0(d[2]); })
                     .attr('width', width)
                     .attr('height', function (d) { return x0(d[0]) - x0(d[2]); })
-                    .style('fill-opacity', (renderData) ? 0.1 : 1)
+                    .style('fill-opacity', (renderDataPoints) ? 0.1 : 1)
                     .transition()
                     .duration(duration)
                     .delay(delay)
@@ -269,7 +269,7 @@
                 }
 
                 // Update Values
-                if (renderData) {
+                if (renderDataPoints) {
                     var point = g.selectAll('circle.data')
                         .data(pointIndices);
 
@@ -418,11 +418,11 @@
             return box;
         };
 
-        box.renderData = function (x) {
+        box.renderDataPoints = function (x) {
             if (!arguments.length) {
-                return renderData;
+                return renderDataPoints;
             }
-            renderData = x;
+            renderDataPoints = x;
             return box;
         };
 

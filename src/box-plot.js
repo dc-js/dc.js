@@ -43,7 +43,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     var _box = d3.box();
     var _tickFormat = null;
-    var _renderData = false;
+    var _renderDataPoints = false;
     var _dataOpacity = 0.3;
     var _dataBoxPercentage = 0.8;
     var _renderTitle = false;
@@ -150,7 +150,7 @@ dc.boxPlot = function (parent, chartGroup) {
             .domain(_chart.y().domain())
             .duration(_chart.transitionDuration())
             .tickFormat(_tickFormat)
-            .renderData(_renderData)
+            .renderDataPoints(_renderDataPoints)
             .dataOpacity(_dataOpacity)
             .dataBoxPercentage(_dataBoxPercentage)
             .renderTitle(_renderTitle)
@@ -283,18 +283,18 @@ dc.boxPlot = function (parent, chartGroup) {
      * Get or set whether individual data points will be rendered.
      * @example
      * // Enable rendering of individual data points
-     * chart.renderData(true);
-     * @method renderData
+     * chart.renderDataPoints(true);
+     * @method renderDataPoints
      * @memberof dc.boxPlot
      * @instance
      * @param {Boolean} [show=false]
      * @returns {Boolean|dc.boxPlot}
      */
-    _chart.renderData = function (show) {
+    _chart.renderDataPoints = function (show) {
         if (!arguments.length) {
-            return _renderData;
+            return _renderDataPoints;
         }
-        _renderData = show;
+        _renderDataPoints = show;
         return _chart;
     };
 
