@@ -257,8 +257,8 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
-     * integer formatting.
+     * Get or set the numerical format of the boxplot median, whiskers and quartile labels. Defaults
+     * to integer formatting.
      * @example
      * // format ticks to 2 decimal places
      * chart.tickFormat(d3.format('.2f'));
@@ -357,7 +357,7 @@ dc.boxPlot = function (parent, chartGroup) {
      * Get or set whether outliers will be rendered.
      * @example
      * // Disable rendering of outliers
-     * chart.renderTitle(false);
+     * chart.showOutliers(false);
      * @method showOutliers
      * @memberof dc.boxPlot
      * @instance
@@ -373,7 +373,7 @@ dc.boxPlot = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set whether outliers will be bold.
+     * Get or set whether outliers will be drawn bold.
      * @example
      * // If outliers are rendered display as bold
      * chart.boldOutlier(true);
