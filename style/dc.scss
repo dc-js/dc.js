@@ -202,7 +202,7 @@ div.dc-chart {
             @include no-select;
             pointer-events: none;
         }
-        line, circle {
+        line {
             fill: $color_white;
         }
         rect, line, circle {
@@ -213,7 +213,6 @@ div.dc-chart {
             stroke-dasharray: 3, 3;
         }
         .data {
-            fill: purple;
             stroke: none;
             stroke-width: 0px;
         }
