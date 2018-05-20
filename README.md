@@ -33,17 +33,19 @@ Support
 *Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
 
 Get help faster with a working example! Fork these to get started:<br>
-[example jsFiddle](https://jsfiddle.net/gordonwoodhull/1hbjwxzy/) - [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/kk4j0bzn/) - [example bl.ock](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5) - [blank bl.ock](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
+[example jsFiddle](https://jsfiddle.net/gordonwoodhull/raxxxmk1/) - [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/ckf3d2cv/) - [example bl.ock](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5) - [blank bl.ock](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
 
-CDN location
---------------------
-For CDN URLs, please visit [dc.js on cdnjs.com](https://cdnjs.com/libraries/dc), select the version you want (3.0 is stable, 2.1 is legacy version), and copy the URLs from there.
+## Versioning
+Version 3.* is compatible with d3 versions 4 and 5. Use dc.js 2.* if you still need compatibility with d3 version 3.
 
-dc.js version 3 needs d3.js versions 4/5. dc.js version 2.1 only works with d3.js version 3.
+## CDN location
 
-Please do not use github.io as a CDN unless you need the bleeding-edge features.
+```
+http://unpkg.com/dc@3/dc.js
+http://unpkg.com/dc@3/dc.css
+```
 
-[More info on the Wiki.](https://github.com/dc-js/dc.js/wiki#cdn-location)
+or copy the latest links from [CDNJS](https://cdnjs.com/libraries/dc)
 
 
 Install with npm
