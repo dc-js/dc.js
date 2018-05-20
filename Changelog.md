@@ -1,6 +1,8 @@
 ## 3.0.4
-* Box plot enhancements: jittered data points, data point tooltips, bold outliers, by Chris Wolcott. 
-* Code cleanup - replaced `.rangesEqual` with `dc.utils.arraysEqual`, by Deepak Kumar ([#1436](https://github.com/dc-js/dc.js/pull/1436))
+* Box plot enhancements: jittered data points, data point tooltips, bold outliers, by Chris Wolcott. Also implements `yRangePadding` to fix problems with not enough/too much space for labels in box plots. ([#1439](https://github.com/dc-js/dc.js/pull/1439) / [#1370](https://github.com/dc-js/dc.js/issues/1370) / [#1120](https://github.com/dc-js/dc.js/issues/1120))
+* Code cleanup - replaced `.rangesEqual` with `dc.utils.arraysEqual`, by Deepak Kumar ([#1436](https://github.com/dc-js/dc.js/pull/1436) / [#1405](https://github.com/dc-js/dc.js/issues/1405))
+* New tests for range filters with dates, by Deepak Kumar. ([#1437](https://github.com/dc-js/dc.js/pull/1437) / [#1432](https://github.com/dc-js/dc.js/issues/1432))
+* Fix readme references to 3.0, by Deepak Kumar. ([#1441](https://github.com/dc-js/dc.js/pull/1441))
 
 ## 3.0.3
 * Update versions and release new fiddles and blocks pegged to dc@3 and d3@5
