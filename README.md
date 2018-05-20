@@ -25,7 +25,7 @@ Support
 * [Example Site](http://dc-js.github.com/dc.js/)
 * [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
 * [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
-* [v2.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([next - v2.1](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md))</sup> <sup>([last - v1.7](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md))</sup>
+* [v3.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([last - v2.1](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md))</sup>
 * [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - ask questions and get help
 * [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - discussion and longer topics
 * [GitHub Issues](https://github.com/dc-js/dc.js/issues) - bug reports and feature requests
@@ -37,7 +37,9 @@ Get help faster with a working example! Fork these to get started:<br>
 
 CDN location
 --------------------
-For CDN URLs, please visit [dc.js on cdnjs.com](https://cdnjs.com/libraries/dc), select the version you want (2.0 is stable, 2.1 has breaking changes), and copy the URLs from there.
+For CDN URLs, please visit [dc.js on cdnjs.com](https://cdnjs.com/libraries/dc), select the version you want (3.0 is stable, 2.1 is legacy version), and copy the URLs from there.
+
+dc.js version 3 needs d3.js versions 4/5. dc.js version 2.1 only works with d3.js version 3.
 
 Please do not use github.io as a CDN unless you need the bleeding-edge features.
 
