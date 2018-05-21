@@ -800,7 +800,7 @@ describe('dc.coordinateGridChart', function () {
             rangeChart.render();
         });
 
-        it('range filter should execute filtered listener and zoom focus chart', function() {
+        it('range filter should execute filtered listener and zoom focus chart', function () {
             spyOn(chart, 'focus').and.callThrough();
             var expectedCallbackSignature = function (callbackChart, callbackFilter) {
                 expect(callbackChart).toBe(rangeChart);
