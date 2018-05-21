@@ -262,8 +262,12 @@ describe('dc.compositeChart', function () {
             });
 
             describe('when filtering the chart', function () {
+                var filter1, filter2;
+
                 beforeEach(function () {
-                    chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
+                    filter1 = [makeDate(2012, 5, 1), makeDate(2012, 5, 30)];
+                    filter2 = [makeDate(2012, 6, 10), makeDate(2012, 6, 20)];
+                    chart.filter(filter1).redraw();
                 });
 
                 it('should set the extent height to chart height', function () {
@@ -276,6 +280,26 @@ describe('dc.compositeChart', function () {
 
                 it('should fade filtered bars into the background', function () {
                     expect(chart.selectAll('g.sub rect.deselected').size()).toBe(4);
+                });
+
+                it('should set the same filter for each children', function () {
+                    for (var i = 0; i < chart.children().length; ++i) {
+                        expect(chart.children()[i].filter()).toEqual(filter1);
+                    }
+                });
+
+                it('should reset filters for each children', function () {
+                    chart.filter(null);
+                    for (var i = 0; i < chart.children().length; ++i) {
+                        expect(chart.children()[i].filter()).toEqual(null);
+                    }
+                });
+
+                it('should replace filters for each children', function () {
+                    chart.replaceFilter(filter2);
+                    for (var i = 0; i < chart.children().length; ++i) {
+                        expect(chart.children()[i].filter()).toEqual(filter2);
+                    }
                 });
             });
 
@@ -708,6 +732,15 @@ describe('dc.compositeChart', function () {
                 expect(otherDimension.top(Infinity).length).toBe(4);
             });
 
+            it('should set correct filters in scatter plots', function () {
+                jasmine.clock().tick(100);
+                for (var i = 0; i < 2; ++i) {
+                    var filter = chart.children()[i].filter();
+                    expect(filter.filterType).toEqual('RangedTwoDimensionalFilter');
+                    expect(dc.utils.arraysEqual(filter, [22, 35])).toEqual(true);
+                }
+            });
+
             describe('brush decreases in size', function () {
                 beforeEach(function () {
                     simulateChartBrushing(chart, [22, 33]);
@@ -719,6 +752,14 @@ describe('dc.compositeChart', function () {
                     expect(otherDimension.top(Infinity).length).toBe(2);
                 });
 
+                it('should set correct filters in scatter plots', function () {
+                    jasmine.clock().tick(100);
+                    for (var i = 0; i < 2; ++i) {
+                        var filter = chart.children()[i].filter();
+                        expect(filter.filterType).toEqual('RangedTwoDimensionalFilter');
+                        expect(dc.utils.arraysEqual(filter, [22, 33])).toEqual(true);
+                    }
+                });
             });
 
             describe('brush disappears', function () {
@@ -730,6 +771,12 @@ describe('dc.compositeChart', function () {
                 it('should clear all filters', function () {
                     expect(otherDimension.top(Infinity).length).toBe(10);
                 });
+            });
+
+            it('should set clear filters in all children', function () {
+                for (var i = 0; i < chart.children().length; ++i) {
+                    expect(chart.children()[i].filter()).toEqual(null);
+                }
             });
         });
     });
