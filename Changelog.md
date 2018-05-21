@@ -4,7 +4,7 @@
 * New tests for range filters with dates, by Deepak Kumar. ([#1437](https://github.com/dc-js/dc.js/pull/1437) / [#1432](https://github.com/dc-js/dc.js/issues/1432))
 * Fix readme references to 3.0, by Deepak Kumar. ([#1441](https://github.com/dc-js/dc.js/pull/1441))
 * Propagate filters on composite chart to children, by Deepak Kumar ([#1435](https://github.com/dc-js/dc.js/pull/1435)). Fixes remaining parts of ([#390](https://github.com/dc-js/dc.js/issues/390) / [#706](https://github.com/dc-js/dc.js/issues/706)).
-* 
+* Listen to rangeChart's filtered event with a namespace, by Keith Dahlby ([#1366](https://github.com/dc-js/dc.js/pull/1366))
 
 ## 3.0.3
 * Update versions and release new fiddles and blocks pegged to dc@3 and d3@5
