@@ -25,7 +25,7 @@ Support
 * [Example Site](http://dc-js.github.com/dc.js/)
 * [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
 * [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
-* [v2.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([next - v2.1](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md))</sup> <sup>([last - v1.7](https://github.com/dc-js/dc.js/blob/master/web/docs/api-1.7.0.md))</sup>
+* [v3.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([last - v2.1](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md))</sup>
 * [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - ask questions and get help
 * [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - discussion and longer topics
 * [GitHub Issues](https://github.com/dc-js/dc.js/issues) - bug reports and feature requests
@@ -33,15 +33,19 @@ Support
 *Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
 
 Get help faster with a working example! Fork these to get started:<br>
-[example jsFiddle](https://jsfiddle.net/gordonwoodhull/1hbjwxzy/) - [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/kk4j0bzn/) - [example bl.ock](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5) - [blank bl.ock](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
+[example jsFiddle](https://jsfiddle.net/gordonwoodhull/raxxxmk1/) - [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/ckf3d2cv/) - [example bl.ock](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5) - [blank bl.ock](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
 
-CDN location
---------------------
-For CDN URLs, please visit [dc.js on cdnjs.com](https://cdnjs.com/libraries/dc), select the version you want (2.0 is stable, 2.1 has breaking changes), and copy the URLs from there.
+## Versioning
+Version 3.* is compatible with d3 versions 4 and 5. Use dc.js 2.* if you still need compatibility with d3 version 3.
 
-Please do not use github.io as a CDN unless you need the bleeding-edge features.
+## CDN location
 
-[More info on the Wiki.](https://github.com/dc-js/dc.js/wiki#cdn-location)
+```
+http://unpkg.com/dc@3/dc.js
+http://unpkg.com/dc@3/dc.css
+```
+
+or copy the latest links from [CDNJS](https://cdnjs.com/libraries/dc)
 
 
 Install with npm
