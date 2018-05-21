@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Enhanced Box Plot Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container" >
+    <script type="text/javascript" src="header.js"></script>
+    <div class='row'>
+        <div class="col-md-2" id='pie01' style="margin-left: 20%; text-align: center;">
+            <h5><strong>Club</strong></h5>
+        </div>
+        <div class="col-md-2" id='pie02' style="text-align: center;">
+            <h5><strong>Gender</strong></h5>
+        </div>
+        <div class="col-md-2" id='pie03' style="text-align: center;">
+            <h5><strong>Sport</strong></h5>
+        </div>
+    </div>
+    <hr style="margin: 5px;">
+    <div class='row'>
+        <div class="col-md-4" id='boxPlot01' style="text-align: center;">
+            <h6><u>Basic</u></h6>
+        </div>
+        <div class="col-md-4" id='boxPlot02' style="text-align: center;">
+            <h6><u>Enhanced</u></h6>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col-md-4" id='boxPlot03' style="text-align: center;">
+        </div>
+        <div class="col-md-4" id='boxPlot04' style="text-align: center;">
+        </div>
+    </div>
+    <hr style="margin: 5px;">
+    <div><p style="text-align: center">
+        <b>Enhanced:</b> <u>renderDataPoints</u> (<b><i>true</i></b>/false), <u>dataOpacity</u> (0.00 - 1.00) <b><i>[0.3]</i></b>, <u>dataWidthPortion</u> (0.00 - 0.99) <b><i>[0.5]</i></b>, <u>renderTitle</u> (<b><i>true</i></b>/false)<br/>
+                         <u>showOutliers</u> (<b><i>true</i></b>/false), <u>boldOutlier</u> (<b><i>true</i></b>/false)</p>
+    </div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+    let clubColors = [{'value': 'Tiny Tots', 'color': '#9be199'}, {'value': 'High Flyers', 'color': '#e17f7e'}];
+    let genderColors = [{'value': 'Female', 'color': '#efc3e2'}, {'value': 'Male', 'color': '#76bbe1'}];
+
+    let data = [
+        {"_id":  1, "club": 'Tiny Tots',   "sport": "Soccer",     "gender": "Male",   "age" : 5},
+        {"_id":  2, "club": 'Tiny Tots',   "sport": "Soccer",     "gender": "Male",   "age" : 6},
+        {"_id":  3, "club": 'Tiny Tots',   "sport": "Gymnastics", "gender": "Male",   "age" : 7},
+        {"_id":  4, "club": 'Tiny Tots',   "sport": "Gymnastics", "gender": "Female", "age" : 4},
+        {"_id":  5, "club": 'Tiny Tots',   "sport": "Gymnastics", "gender": "Female", "age" : 5},
+        {"_id":  6, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 6},
+        {"_id":  7, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 6},
+        {"_id":  8, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 7},
+        {"_id":  9, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 7},
+        {"_id": 10, "club": 'Tiny Tots',   "sport": "Basketball", "gender": "Female", "age" : 6},
+        {"_id": 11, "club": 'Tiny Tots',   "sport": "Basketball", "gender": "Female", "age" : 7},
+        {"_id": 12, "club": 'Tiny Tots',   "sport": "Basketball", "gender": "Female", "age" : 7},
+        {"_id": 13, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Male",   "age" : 3},
+        {"_id": 14, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Male",   "age" : 4},
+        {"_id": 15, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Male",   "age" : 1},
+        {"_id": 16, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : null},
+        {"_id": 17, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : 3},
+        {"_id": 18, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : 2},
+        {"_id": 19, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : 5},
+        {"_id": 20, "club": 'High Flyers', "sport": "Soccer",     "gender": "Male",   "age" : 11},
+        {"_id": 21, "club": 'High Flyers', "sport": "Soccer",     "gender": "Male",   "age" : 12},
+        {"_id": 22, "club": 'High Flyers', "sport": "Soccer",     "gender": "Male",   "age" : 13},
+        {"_id": 23, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Male",   "age" : 14},
+        {"_id": 24, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Female", "age" : 12},
+        {"_id": 25, "club": 'High Flyers', "sport": "Basketball", "gender": "Female", "age" : 15},
+        {"_id": 26, "club": 'High Flyers', "sport": "Basketball", "gender": "Female", "age" : 13},
+        {"_id": 27, "club": 'High Flyers', "sport": "Basketball", "gender": "Female", "age" : 13},
+        {"_id": 28, "club": 'High Flyers', "sport": "Soccer",     "gender": "Female", "age" : 14},
+        {"_id": 29, "club": 'High Flyers', "sport": "Soccer",     "gender": "Female", "age" : 14},
+        {"_id": 30, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Female", "age" : 14},
+        {"_id": 31, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Female", "age" : 15},
+        {"_id": 32, "club": 'High Flyers', "sport": "Soccer",     "gender": "Female", "age" : 27},
+        {"_id": 33, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 11},
+        {"_id": 34, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 11},
+        {"_id": 35, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 12},
+        {"_id": 36, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 12},
+        {"_id": 37, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 13},
+        {"_id": 38, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 12},
+        {"_id": 39, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 12},
+        {"_id": 40, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 13},
+        {"_id": 41, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 13},
+        {"_id": 42, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 13},
+        {"_id": 43, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 14},
+        {"_id": 44, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 14},
+        {"_id": 45, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 14},
+    ];
+
+    let ndx = crossfilter(data);
+
+    // -----------------------------------------------
+    var pie01 = dc.pieChart("#pie01");
+    var pie01Dim = ndx.dimension(function (d) {return d.club});
+    var pie01Group = pie01Dim.group();
+
+    pie01
+        .width(180)
+        .height(150)
+        .radius(70)
+        .dimension(pie01Dim)
+        .group(pie01Group)
+    ;
+
+    pie01.colorAccessor(data => data.key)
+        .colors(data => {
+            return colorSchema(clubColors, data);
+        })
+
+    // -----------------------------------------------
+    var pie02 = dc.pieChart("#pie02");
+    var pie02Dim = ndx.dimension(function (d) {return d.gender});
+    var pie02Group = pie02Dim.group();
+
+    pie02
+        .width(180)
+        .height(150)
+        .radius(70)
+        .dimension(pie02Dim)
+        .group(pie02Group)
+    ;
+
+    pie02.colorAccessor(data => data.key)
+        .colors(data => {
+            return colorSchema(genderColors, data);
+        })
+
+    // -----------------------------------------------
+    var pie03 = dc.pieChart("#pie03");
+    var pie03Dim = ndx.dimension(function (d) {return d.sport});
+    var pie03Group = pie03Dim.group();
+
+    pie03
+        .width(180)
+        .height(150)
+        .radius(70)
+        .dimension(pie03Dim)
+        .group(pie03Group)
+    ;
+
+    // -----------------------------------------------
+    let bpSportDim = ndx.dimension(function (d) {return d.sport;});
+    let bpSportGroup = bpSportDim.group().reduce(
+        function (p, v) {
+            // Retrieve the data value, if not Infinity or null add it.
+            let dv = v.age;
+            if (dv != Infinity && dv != null) p.push(dv);
+            return p;
+        },
+        function (p, v) {
+            // Retrieve the data value, if not Infinity or null remove it.
+            let dv = v.age;
+            if (dv != Infinity && dv != null) p.splice(p.indexOf(dv), 1);
+            return p;
+        },
+        function () {
+            return [];
+        }
+    );
+
+    // -----------------------------------------------
+    var bp01 = dc.boxPlot("#boxPlot01");
+
+    bp01
+        .width(480)
+        .height(300)
+        .dimension(bpSportDim)
+        .group(bpSportGroup)
+        .tickFormat(d3.format('.1f'))
+        .yAxisLabel("Age (years)")
+        .xAxisLabel("Sport")
+        .elasticY(true)
+        .elasticX(true)
+    ;
+
+    // -----------------------------------------------
+    var bp02 = dc.boxPlot("#boxPlot02");
+
+    bp02
+        .width(480)
+        .height(300)
+        .dimension(bpSportDim)
+        .group(bpSportGroup)
+        .tickFormat(d3.format('.1f'))
+        .renderDataPoints(true)
+        .renderTitle(true)
+        .dataWidthPortion(0.50)
+        .boldOutlier(true)
+        .yAxisLabel("Age (years)")
+        .xAxisLabel("Sport")
+        .elasticY(true)
+        .elasticX(true)
+    ;
+
+    // -----------------------------------------------
+    let bpGenderDim = ndx.dimension(function (d) {return d.gender;});
+    let bpGenderGroup = bpGenderDim.group().reduce(
+        function (p, v) {
+            // Retrieve the data value, if not Infinity or null add it.
+            let dv = v.age;
+            if (dv != Infinity && dv != null) p.push(dv);
+            return p;
+        },
+        function (p, v) {
+            // Retrieve the data value, if not Infinity or null remove it.
+            let dv = v.age;
+            if (dv != Infinity && dv != null) p.splice(p.indexOf(dv), 1);
+            return p;
+        },
+        function () {
+            return [];
+        }
+    );
+
+    // -----------------------------------------------
+    var bp03 = dc.boxPlot("#boxPlot03");
+
+    bp03
+        .width(480)
+        .height(250)
+        .dimension(bpGenderDim)
+        .group(bpGenderGroup)
+        .tickFormat(d3.format('.1f'))
+        .yAxisLabel("Age (years)")
+        .xAxisLabel("Gender", 0)
+        .elasticY(true)
+        .elasticX(true)
+    ;
+
+    bp03.colorAccessor(data => data.key)
+        .colors(data => {
+            return colorSchema(genderColors, data);
+        });
+
+    // -----------------------------------------------
+    var bp04 = dc.boxPlot("#boxPlot04");
+    var bp04Counts = {};
+
+    bp04
+        .width(480)
+        .height(250)
+        .dimension(bpGenderDim)
+        .group(bpGenderGroup)
+        .tickFormat(d3.format('.1f'))
+        .renderDataPoints(true)
+        .renderTitle(true)
+        .dataWidthPortion(0.5)
+        .boldOutlier(true)
+        .yAxisLabel("Age (years)")
+        .xAxisLabel("Gender", 0)
+        .elasticY(true)
+        .elasticX(true)
+    ;
+
+    // Code to add/update number of rendered data points to the xAxis label
+    bp04
+        .on('preRender', function() {get_counts(bp04, bp04Counts)})
+        .on('preRedraw', function() {get_counts(bp04, bp04Counts)})
+        .xAxis().tickFormat(v => v + ' [' + bp04Counts[v] + ']');
+
+    bp04.colorAccessor(data => data.key)
+        .colors(data => {
+            return colorSchema(genderColors, data);
+        });
+
+    // -----------------------------------------------
+    dc.renderAll();
+
+    function colorSchema(pref, aa) {
+        a = pref.find(i => i.value === aa);
+        return a.color;
+    }
+
+    function get_counts(chart, counts) {
+        chart.group().all().forEach(function(kv) {
+            counts[kv.key] = kv.value.length;
+        });
+    }
+
+</script>
+
+</div>
+</body>
+</html>

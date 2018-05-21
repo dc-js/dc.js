@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Box Plot Rendering Data Points</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container" >
+    <script type="text/javascript" src="header.js"></script>
+    <div class='row'>
+        <div class="col-md-4" id='boxPlot01' style="text-align: center;">
+            <h6>dataOpacity = 1<br/>dataWidthPortion = 0.9</h6>
+        </div>
+        <div class="col-md-4" id='boxPlot02' style="text-align: center;">
+            <h6>dataOpacity = 0.5<br/>dataWidthPortion = 0.5</h6>
+        </div>
+        <div class="col-md-4" id='boxPlot03' style="text-align: center;">
+            <h6>dataOpacity = 0.4<br/>dataWidthPortion = 0.1</h6>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+    let genderColors = [{'value': 'Female', 'color': '#efc3e2'}, {'value': 'Male', 'color': '#76bbe1'}];
+
+    let data = [
+        {"_id":  1, "club": 'Tiny Tots',   "sport": "Soccer",     "gender": "Male",   "age" : 5},
+        {"_id":  2, "club": 'Tiny Tots',   "sport": "Soccer",     "gender": "Male",   "age" : 6},
+        {"_id":  3, "club": 'Tiny Tots',   "sport": "Gymnastics", "gender": "Male",   "age" : 7},
+        {"_id":  4, "club": 'Tiny Tots',   "sport": "Gymnastics", "gender": "Female", "age" : 4},
+        {"_id":  5, "club": 'Tiny Tots',   "sport": "Gymnastics", "gender": "Female", "age" : 5},
+        {"_id":  6, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 6},
+        {"_id":  7, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 6},
+        {"_id":  8, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 7},
+        {"_id":  9, "club": 'Tiny Tots',   "sport": "Lacrosse",   "gender": "Male",   "age" : 7},
+        {"_id": 10, "club": 'Tiny Tots',   "sport": "Basketball", "gender": "Female", "age" : 6},
+        {"_id": 11, "club": 'Tiny Tots',   "sport": "Basketball", "gender": "Female", "age" : 7},
+        {"_id": 12, "club": 'Tiny Tots',   "sport": "Basketball", "gender": "Female", "age" : 7},
+        {"_id": 13, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Male",   "age" : 3},
+        {"_id": 14, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Male",   "age" : 4},
+        {"_id": 15, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Male",   "age" : 1},
+        {"_id": 16, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : null},
+        {"_id": 17, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : 3},
+        {"_id": 18, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : 2},
+        {"_id": 19, "club": 'Tiny Tots',   "sport": "Intro",      "gender": "Female", "age" : 5},
+        {"_id": 20, "club": 'High Flyers', "sport": "Soccer",     "gender": "Male",   "age" : 11},
+        {"_id": 21, "club": 'High Flyers', "sport": "Soccer",     "gender": "Male",   "age" : 12},
+        {"_id": 22, "club": 'High Flyers', "sport": "Soccer",     "gender": "Male",   "age" : 13},
+        {"_id": 23, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Male",   "age" : 14},
+        {"_id": 24, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Female", "age" : 12},
+        {"_id": 25, "club": 'High Flyers', "sport": "Basketball", "gender": "Female", "age" : 15},
+        {"_id": 26, "club": 'High Flyers', "sport": "Basketball", "gender": "Female", "age" : 13},
+        {"_id": 27, "club": 'High Flyers', "sport": "Basketball", "gender": "Female", "age" : 13},
+        {"_id": 28, "club": 'High Flyers', "sport": "Soccer",     "gender": "Female", "age" : 14},
+        {"_id": 29, "club": 'High Flyers', "sport": "Soccer",     "gender": "Female", "age" : 14},
+        {"_id": 30, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Female", "age" : 14},
+        {"_id": 31, "club": 'High Flyers', "sport": "Gymnastics", "gender": "Female", "age" : 15},
+        {"_id": 32, "club": 'High Flyers', "sport": "Soccer",     "gender": "Female", "age" : 27},
+        {"_id": 33, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 11},
+        {"_id": 34, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 11},
+        {"_id": 35, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 12},
+        {"_id": 36, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 12},
+        {"_id": 37, "club": 'High Flyers', "sport": "Lacrosse",   "gender": "Male",   "age" : 13},
+        {"_id": 38, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 12},
+        {"_id": 39, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 12},
+        {"_id": 40, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 13},
+        {"_id": 41, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 13},
+        {"_id": 42, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 13},
+        {"_id": 43, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 14},
+        {"_id": 44, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 14},
+        {"_id": 45, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 14},
+    ];
+
+    let ndx = crossfilter(data);
+
+
+    // -----------------------------------------------
+    let bpGenderDim = ndx.dimension(function (d) {return d.gender;});
+    let bpGenderGroup = bpGenderDim.group().reduce(
+        function (p, v) {
+            // Retrieve the data value, if not Infinity or null add it.
+            let dv = v.age;
+            if (dv != Infinity && dv != null) p.push(dv);
+            return p;
+        },
+        function (p, v) {
+            // Retrieve the data value, if not Infinity or null remove it.
+            let dv = v.age;
+            if (dv != Infinity && dv != null) p.splice(p.indexOf(dv), 1);
+            return p;
+        },
+        function () {
+            return [];
+        }
+    );
+
+    // -----------------------------------------------
+    var bp01 = dc.boxPlot("#boxPlot01");
+
+    bp01
+        .width(320)
+        .height(250)
+        .dimension(bpGenderDim)
+        .group(bpGenderGroup)
+        .tickFormat(d3.format('.1f'))
+        .renderDataPoints(true)
+        .renderTitle(true)
+        .dataOpacity(1)
+        .dataWidthPortion(0.9)
+        .yAxisLabel("Age (years)")
+        .xAxisLabel("Gender", 0)
+        .elasticY(true)
+        .elasticX(true)
+    ;
+
+    bp01.colorAccessor(data => data.key)
+        .colors(data => {
+            return colorSchema(genderColors, data);
+        });
+
+    // -----------------------------------------------
+    var bp02 = dc.boxPlot("#boxPlot02");
+
+    bp02
+        .width(320)
+        .height(250)
+        .dimension(bpGenderDim)
+        .group(bpGenderGroup)
+        .tickFormat(d3.format('.1f'))
+        .renderDataPoints(true)
+        .renderTitle(true)
+        .dataOpacity(0.5)
+        .dataWidthPortion(0.5)
+        .yAxisLabel("Age (years)")
+        .xAxisLabel("Gender", 0)
+        .elasticY(true)
+        .elasticX(true)
+    ;
+
+    bp02.colorAccessor(data => data.key)
+        .colors(data => {
+            return colorSchema(genderColors, data);
+        });
+
+    // -----------------------------------------------
+    var bp03 = dc.boxPlot("#boxPlot03");
+
+    bp03
+        .width(320)
+        .height(250)
+        .dimension(bpGenderDim)
+        .group(bpGenderGroup)
+        .tickFormat(d3.format('.1f'))
+        .renderDataPoints(true)
+        .renderTitle(true)
+        .dataOpacity(0.4)
+        .dataWidthPortion(0.1)
+        .yAxisLabel("Age (years)")
+        .xAxisLabel("Gender", 0)
+        .elasticY(true)
+        .elasticX(true)
+    ;
+
+    bp03.colorAccessor(data => data.key)
+        .colors(data => {
+            return colorSchema(genderColors, data);
+        });
+
+    // -----------------------------------------------
+    dc.renderAll();
+
+    function colorSchema(pref, aa) {
+        a = pref.find(i => i.value === aa);
+        return a.color;
+    }
+
+</script>
+
+</div>
+</body>
+</html>
