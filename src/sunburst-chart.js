@@ -45,8 +45,16 @@ dc.sunburstChart = function (parent, chartGroup) {
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
+    // Handle cases if value corresponds to generated parent nodes
+    function extendedValueAccessor (d) {
+        if (d.path) {
+            return d.value;
+        }
+        return _chart.cappedValueAccessor(d);
+    }
+
     _chart.title(function (d) {
-        return _chart.cappedKeyAccessor(d) + ': ' + _chart.cappedValueAccessor(d);
+        return _chart.cappedKeyAccessor(d) + ': ' + extendedValueAccessor(d);
     });
 
     _chart.label(_chart.cappedKeyAccessor);
@@ -431,7 +439,7 @@ dc.sunburstChart = function (parent, chartGroup) {
         // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
         var hierarchy = d3.hierarchy(data)
             .sum(function (d) {
-                return d.children ? 0 : _chart.cappedValueAccessor(d);
+                return d.children ? 0 : extendedValueAccessor(d);
             })
             .sort(function (a, b) {
                 return d3.ascending(a.data.path, b.data.path);
@@ -458,7 +466,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     function sliceHasNoData (d) {
-        return _chart.cappedValueAccessor(d) === 0;
+        return extendedValueAccessor(d) === 0;
     }
 
     function tweenSlice (b) {
