@@ -1,3 +1,9 @@
+## 2.2.0
+* Box plot enhancements: jittered data points, data point tooltips, bold outliers, by Chris Wolcott. Also implements `yRangePadding` to fix problems with not enough/too much space for labels in box plots. ([#1439](https://github.com/dc-js/dc.js/pull/1439) / [#1370](https://github.com/dc-js/dc.js/issues/1370) / [#1120](https://github.com/dc-js/dc.js/issues/1120))
+
+## 2.2
+This is the support branch for the D3v3-compatible version of dc.js. Hopefully people will move along to D3v4 and dc.js 3.x, but we understand (!), it takes time.
+
 ## 2.1.10
 * Update dependencies, including crossfilter2 v1.4
 * Example of adding a vertical line to a row chart
