@@ -69,13 +69,14 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
-    _chart.applyBrushSelection = function (rangedFilter) {
-        _chart.replaceFilter(rangedFilter);
+    _chart.on('filtered.dcjs-composite-chart', function (chart) {
+        // Propagate the filters onto the children
+        // Notice that on children the call is .replaceFilter and not .filter
+        //   the reason is that _chart.filter() returns the entire current set of filters not just the last added one
         for (var i = 0; i < _children.length; ++i) {
-            _children[i].replaceFilter(rangedFilter);
+            _children[i].replaceFilter(_chart.filter());
         }
-        _chart.redrawGroup();
-    };
+    });
 
     _chart._prepareYAxis = function () {
         var left = (leftYAxisChildren().length !== 0);

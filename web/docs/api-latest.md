@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.3  
+**Version**: 3.0.4  
 **Example**  
 ```js
 // Example chaining
@@ -190,6 +190,12 @@ chart.width(300)
         * [.outerPadding([padding])](#dc.boxPlot+outerPadding) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
         * [.boxWidth([boxWidth])](#dc.boxPlot+boxWidth) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
         * [.tickFormat([tickFormat])](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+        * [.yRangePadding([yRangePadding])](#dc.boxPlot+yRangePadding) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+        * [.renderDataPoints([show])](#dc.boxPlot+renderDataPoints) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+        * [.dataOpacity([opacity])](#dc.boxPlot+dataOpacity) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+        * [.dataWidthPortion([percentage])](#dc.boxPlot+dataWidthPortion) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+        * [.showOutliers([show])](#dc.boxPlot+showOutliers) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+        * [.boldOutlier([show])](#dc.boxPlot+boldOutlier) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
     * [.selectMenu](#dc.selectMenu)
         * [new selectMenu(parent, [chartGroup])](#new_dc.selectMenu_new)
         * [.order](#dc.selectMenu+order)
@@ -1718,6 +1724,8 @@ are present.
 Get or set chart-specific options for all child charts. This is equivalent to calling
 [.options](#dc.baseMixin+options) on each child chart.
 
+Note: currently you must call this before `compose` in order for the options to be propagated.
+
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
 
 | Param | Type |
@@ -1740,6 +1748,11 @@ Set or get the right y axis label.
 
 #### compositeChart.compose([subChartArray]) ⇒ [<code>compositeChart</code>](#dc.compositeChart)
 Combine the given charts into one single composite coordinate grid chart.
+
+Note: currently due to the way it is implemented, you must call this function at the end of
+initialization of the composite chart, in particular after `shareTitle`, `childOptions`,
+`width`, `height`, and `margins`, in order for the settings to get propagated to the children
+correctly.
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
 
@@ -1792,6 +1805,9 @@ specific to its order in the composition.
 #### compositeChart.shareTitle([shareTitle]) ⇒ <code>Boolean</code> \| [<code>compositeChart</code>](#dc.compositeChart)
 Get or set title sharing for the chart. If set, the [.title()](#dc.baseMixin+title) value from
 this chart will be shared with composed children.
+
+Note: currently you must call this before `compose` or the child will still get the parent's
+`title` function!
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
 
@@ -2990,6 +3006,12 @@ Gets or sets the Y border radius.  Set to 0 to get full rectangles.
     * [.outerPadding([padding])](#dc.boxPlot+outerPadding) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
     * [.boxWidth([boxWidth])](#dc.boxPlot+boxWidth) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
     * [.tickFormat([tickFormat])](#dc.boxPlot+tickFormat) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+    * [.yRangePadding([yRangePadding])](#dc.boxPlot+yRangePadding) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+    * [.renderDataPoints([show])](#dc.boxPlot+renderDataPoints) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+    * [.dataOpacity([opacity])](#dc.boxPlot+dataOpacity) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+    * [.dataWidthPortion([percentage])](#dc.boxPlot+dataWidthPortion) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+    * [.showOutliers([show])](#dc.boxPlot+showOutliers) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+    * [.boldOutlier([show])](#dc.boxPlot+boldOutlier) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
 
 <a name="new_dc.boxPlot_new"></a>
 
@@ -3063,8 +3085,8 @@ chart.boxWidth((innerChartWidth, xUnits) { ... });
 <a name="dc.boxPlot+tickFormat"></a>
 
 #### boxPlot.tickFormat([tickFormat]) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
-Set the numerical format of the boxplot median, whiskers and quartile labels. Defaults to
-integer formatting.
+Get or set the numerical format of the boxplot median, whiskers and quartile labels. Defaults
+to integer formatting.
 
 **Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
 
@@ -3076,6 +3098,103 @@ integer formatting.
 ```js
 // format ticks to 2 decimal places
 chart.tickFormat(d3.format('.2f'));
+```
+<a name="dc.boxPlot+yRangePadding"></a>
+
+#### boxPlot.yRangePadding([yRangePadding]) ⇒ <code>Number</code> \| <code>function</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+Get or set the amount of padding to add, in pixel coordinates, to the top and
+bottom of the chart to accommodate box/whisker labels.
+
+**Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [yRangePadding] | <code>function</code> | <code>8</code> | 
+
+**Example**  
+```js
+// allow more space for a bigger whisker font
+chart.yRangePadding(12);
+```
+<a name="dc.boxPlot+renderDataPoints"></a>
+
+#### boxPlot.renderDataPoints([show]) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+Get or set whether individual data points will be rendered.
+
+**Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [show] | <code>Boolean</code> | <code>false</code> | 
+
+**Example**  
+```js
+// Enable rendering of individual data points
+chart.renderDataPoints(true);
+```
+<a name="dc.boxPlot+dataOpacity"></a>
+
+#### boxPlot.dataOpacity([opacity]) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+Get or set the opacity when rendering data.
+
+**Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [opacity] | <code>Number</code> | <code>0.3</code> | 
+
+**Example**  
+```js
+// If individual data points are rendered increase the opacity.
+chart.dataOpacity(0.7);
+```
+<a name="dc.boxPlot+dataWidthPortion"></a>
+
+#### boxPlot.dataWidthPortion([percentage]) ⇒ <code>Number</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+Get or set the portion of the width of the box to show data points.
+
+**Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [percentage] | <code>Number</code> | <code>0.8</code> | 
+
+**Example**  
+```js
+// If individual data points are rendered increase the data box.
+chart.dataWidthPortion(0.9);
+```
+<a name="dc.boxPlot+showOutliers"></a>
+
+#### boxPlot.showOutliers([show]) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+Get or set whether outliers will be rendered.
+
+**Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [show] | <code>Boolean</code> | <code>true</code> | 
+
+**Example**  
+```js
+// Disable rendering of outliers
+chart.showOutliers(false);
+```
+<a name="dc.boxPlot+boldOutlier"></a>
+
+#### boxPlot.boldOutlier([show]) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
+Get or set whether outliers will be drawn bold.
+
+**Kind**: instance method of [<code>boxPlot</code>](#dc.boxPlot)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [show] | <code>Boolean</code> | <code>false</code> | 
+
+**Example**  
+```js
+// If outliers are rendered display as bold
+chart.boldOutlier(true);
 ```
 <a name="dc.selectMenu"></a>
 

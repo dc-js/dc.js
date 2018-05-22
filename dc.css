@@ -150,7 +150,7 @@ div.dc-chart {
   user-select: none;
   pointer-events: none; }
 
-.dc-chart .box line, .dc-chart .box circle {
+.dc-chart .box line {
   fill: #fff; }
 
 .dc-chart .box rect, .dc-chart .box line, .dc-chart .box circle {
@@ -160,9 +160,17 @@ div.dc-chart {
 .dc-chart .box .center {
   stroke-dasharray: 3, 3; }
 
+.dc-chart .box .data {
+  stroke: none;
+  stroke-width: 0px; }
+
 .dc-chart .box .outlier {
   fill: none;
   stroke: #ccc; }
+
+.dc-chart .box .outlierBold {
+  fill: red;
+  stroke: none; }
 
 .dc-chart .box.deselected {
   opacity: 0.5; }
