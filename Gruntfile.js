@@ -163,7 +163,6 @@ module.exports = function (grunt) {
                 src: [
                     '<%= conf.web %>/js/d3.js',
                     '<%= conf.web %>/js/crossfilter.js',
-                    '<%= conf.web %>/js/colorbrewer.js',
                     '<%= conf.pkg.name %>.js'
                 ]
             }
@@ -182,7 +181,6 @@ module.exports = function (grunt) {
                     // JS code dependencies
                     '<%= conf.web %>/js/d3.js',
                     '<%= conf.web %>/js/crossfilter.js',
-                    '<%= conf.web %>/js/colorbrewer.js',
                     // Code to be tested
                     '<%= conf.pkg.name %>.js',
                     // Jasmine spec files

@@ -2,7 +2,7 @@
 'use strict';
 
 /* jshint globalstrict: true */
-/* global dc,d3,crossfilter,colorbrewer */
+/* global dc,d3,crossfilter */
 
 // ### Create Chart Objects
 
@@ -220,7 +220,7 @@ d3.csv('ndx.csv').then(function (data) {
         //to generate x, y, and radius for each key (bubble) in the group
         .group(yearlyPerformanceGroup)
         // (_optional_) define color function or array for bubbles: [ColorBrewer](http://colorbrewer2.org/)
-        .colors(colorbrewer.RdYlGn[9])
+        .colors(d3.schemeRdYlGn[9])
         //(optional) define color domain to match your data domain if you want to bind data or color
         .colorDomain([-500, 500])
     //##### Accessors
