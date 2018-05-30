@@ -45,7 +45,7 @@ describe('dc.lineChart', function () {
                 chart.selectAll('circle.dot').each(function () {
                     var dot = d3.select(this);
                     expect(dot.style('fill-opacity')).toBeWithinDelta(0.8);
-                    expect(dot.style('stroke-opacity')).toBeWithinDelta(0.8);
+                    expect(dot.style('stroke-opacity')).toBeWithinDelta(0.0);
                     expect(dot.attr('r')).toBe('2');
                 });
             });
