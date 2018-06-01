@@ -227,7 +227,7 @@ module.exports = function (grunt) {
                 }
             },
             ci: {
-                browsers: ['ChromeNoSandboxHeadless', 'Firefox'],
+                browsers: ['ChromeNoSandboxHeadless', 'FirefoxHeadless'],
                 customLaunchers: {
                     // See https://github.com/karma-runner/karma/issues/2603
                     ChromeNoSandboxHeadless: {
@@ -240,6 +240,10 @@ module.exports = function (grunt) {
                             // Without a remote debugging port, Google Chrome exits immediately.
                             ' --remote-debugging-port=9222'
                         ]
+                    },
+                    FirefoxHeadless: {
+                        base: 'Firefox',
+                        flags: ['-headless']
                     }
                 },
                 concurrency: 1,
