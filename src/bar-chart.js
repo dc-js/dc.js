@@ -29,7 +29,7 @@ dc.barChart = function (parent, chartGroup) {
     var DEFAULT_GAP_BETWEEN_BARS = 2;
     var DEFAULT_GAP_BETWEEN_BAR_SERIES = 5;
     var LABEL_PADDING = 3;
-    var _type = "dc.BAR_CHART";
+    var _type = 'dc.BAR_CHART';
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
@@ -40,9 +40,8 @@ dc.barChart = function (parent, chartGroup) {
 
     var _barWidth;
 
-
     _chart.type = _type;
-    
+
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
@@ -88,12 +87,11 @@ dc.barChart = function (parent, chartGroup) {
         });
     };
 
-    function barHeight(d) {
+    function barHeight (d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
-
-    function getCharts() {
+    function getCharts () {
         if (dc.instanceOfChart(parent) && typeof parent.children === 'function') {
             var children = parent.children();
             if (children instanceof Array) {
@@ -103,10 +101,30 @@ dc.barChart = function (parent, chartGroup) {
             }
         }
         return [];
-
     }
 
-    function renderLabels(layer, layerIndex, d) {
+    function labelXPos (d) {
+        var x = _chart.x()(d.x);
+        if (!_centerBar) {
+            x += _barWidth / 2;
+        }
+        if (_chart.isOrdinal() && _gap !== undefined) {
+            x += _gap / 2;
+        }
+        return dc.utils.safeNumber(x);
+    }
+
+    function labelYPos (d) {
+        var y = _chart.y()(d.y + d.y0);
+
+        if (d.y < 0) {
+            y -= barHeight(d);
+        }
+
+        return dc.utils.safeNumber(y - LABEL_PADDING);
+    }
+
+    function renderLabels (layer, layerIndex, d) {
         var labels = layer.selectAll('text.barLabel')
             .data(d.values, dc.pluck('x'));
 
@@ -124,34 +142,9 @@ dc.barChart = function (parent, chartGroup) {
             labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
-        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                var charts = getCharts();
-                if (charts.length > 1) {
-                    x += _chart.serieGap() / 2;
-                    x += layerIndex * (_barWidth + _gap);
-                    x += _gap / 2;
-                }
-                x += _barWidth / 2;
-                if (_centerBar && !_chart.isOrdinal()) {
-                    if (charts.length > 1) {
-                        x -= ((_barWidth + _gap) * charts.length + _chart.serieGap()) / 2;
-                    } else {
-                        x -= _barWidth / 2;
-                    }
-                }
-                return dc.utils.safeNumber(x);
-            })
-            .attr('y', function (d) {
-                var y = _chart.y()(d.y + d.y0);
-
-                if (d.y < 0) {
-                    y -= barHeight(d);
-                }
-
-                return dc.utils.safeNumber(y - LABEL_PADDING);
-            })
+        dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', labelXPos)
+            .attr('y', labelYPos)
             .text(function (d) {
                 return _chart.label()(d);
             });
@@ -161,7 +154,38 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function renderBars(layer, layerIndex, d) {
+    function barXPos (d) {
+        var x = _chart.x()(d.x);
+        var charts = getCharts();
+        var chartIndex = charts.indexOf(_chart);
+        // A grouped chart
+        if (charts.length > 1) {
+            if (_gap !== undefined) {
+                x += _chart.serieGap() / 2;
+                x += chartIndex * (_barWidth + _gap);
+                x += _gap / 2;
+            } else {
+                var numberOfCharts = charts.length;
+                var barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
+                var barPadding = barWidth * (_chart.barPadding());
+
+                x += _chart.serieGap() / 2;
+                x += barPadding / 2;
+                x += chartIndex * (_barWidth + barPadding);
+            }
+        // Not a grouped chart
+        } else {
+            if (_centerBar) {
+                x -= _barWidth / 2;
+            }
+            if (_chart.isOrdinal() && _gap !== undefined) {
+                x += _gap / 2;
+            }
+        }
+        return dc.utils.safeNumber(x);
+    }
+
+    function renderBars (layer, layerIndex, d) {
         var bars = layer.selectAll('rect.bar')
             .data(d.values, dc.pluck('x'));
 
@@ -183,28 +207,8 @@ dc.barChart = function (parent, chartGroup) {
             barsEnterUpdate.on('click', _chart.onClick);
         }
 
-        dc.transition(bars, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) {
-                var x = _chart.x()(d.x);
-                var charts = getCharts();
-                var chartIndex = charts.indexOf(_chart);
-                if (charts.length > 1) {
-                    x += _chart.serieGap() / 2;
-                    x += chartIndex * (_barWidth + _gap);
-                    x += _gap / 2;
-                }
-                if (_centerBar && !_chart.isOrdinal()) {
-                    if (charts.length > 1) {
-                        x -= ((_barWidth + _gap) * charts.length + _chart.serieGap()) / 2;
-                    } else {
-                        x -= _barWidth / 2;
-                    }
-                }
-                if (_chart.isOrdinal() && _gap !== undefined) {
-                    x += _gap / 2;
-                }
-                return dc.utils.safeNumber(x);
-            })
+        dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', barXPos)
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
 
@@ -227,30 +231,32 @@ dc.barChart = function (parent, chartGroup) {
             .remove();
     }
 
-    function calculateBarWidth() {
+    function calculateBarWidth () {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
             var charts = getCharts();
+
+            // A grouped chart
             if (charts.length > 1) {
                 var numberOfCharts = charts.length;
-                if (_chart.isOrdinal()) {
-                    _barWidth = Math.floor((_chart.x().rangeBand() - _chart.serieGap()) / numberOfCharts - _gap);
+                var barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
+                if (_gap !== undefined) {
+                    _barWidth = Math.floor(barWidth - _gap);
                 } else {
-                    _barWidth = Math.floor((_chart.xAxisLength() - (_chart.xUnitCount() - 1) * _chart.serieGap() -
-                        (numberOfBars - 1) * (numberOfCharts) * _gap) / (numberOfBars * numberOfCharts));
+                    var barPadding = barWidth * (_chart.barPadding());
+                    _barWidth = Math.floor(barWidth - barPadding);
                 }
+            // Not a grouped chart
             } else {
                 // please can't we always use rangeBands for bar charts?
                 if (_chart.isOrdinal() && _gap === undefined) {
-                    _barWidth = Math.floor(_chart.x().rangeBand());
+                    _barWidth = Math.floor(_chart.x().bandwidth());
                 } else if (_gap) {
                     _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
                 } else {
                     _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
                 }
             }
-
-
 
             if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
                 _barWidth = MIN_BAR_WIDTH;
@@ -259,30 +265,54 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     _chart.fadeDeselectedArea = function (brushSelection) {
-        var bars = _chart.chartBodyG().selectAll('rect.bar');
+        var charts = getCharts();
+        var bars;
 
-        if (_chart.isOrdinal()) {
-            if (_chart.hasFilter()) {
-                bars.classed(dc.constants.SELECTED_CLASS, function (d) {
-                    return _chart.hasFilter(d.x);
-                });
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return !_chart.hasFilter(d.x);
-                });
-            } else {
-                bars.classed(dc.constants.SELECTED_CLASS, false);
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
-            }
-        } else if (_chart.brushOn() || _chart.parentBrushOn()) {
-            if (!_chart.brushIsEmpty(brushSelection)) {
-                var start = brushSelection[0];
-                var end = brushSelection[1];
+        // A grouped chart
+        if (charts.length > 1 && _chart.isOrdinal()) {
+            charts.forEach(function (chart, i) {
+                bars = chart.chartBodyG().selectAll('rect.bar');
 
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return d.x < start || d.x >= end;
-                });
-            } else {
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
+                if (chart.isOrdinal()) {
+                    if (chart.hasFilter()) {
+                        bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                            return chart.hasFilter(d.x);
+                        });
+                        bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                            return !chart.hasFilter(d.x);
+                        });
+                    } else {
+                        bars.classed(dc.constants.SELECTED_CLASS, false);
+                        bars.classed(dc.constants.DESELECTED_CLASS, false);
+                    }
+                }
+            });
+        // Not a grouped chart
+        } else {
+            bars = _chart.chartBodyG().selectAll('rect.bar');
+            if (_chart.isOrdinal()) {
+                if (_chart.hasFilter()) {
+                    bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                        return _chart.hasFilter(d.x);
+                    });
+                    bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                        return !_chart.hasFilter(d.x);
+                    });
+                } else {
+                    bars.classed(dc.constants.SELECTED_CLASS, false);
+                    bars.classed(dc.constants.DESELECTED_CLASS, false);
+                }
+            } else if (_chart.brushOn() || _chart.parentBrushOn()) {
+                if (!_chart.brushIsEmpty(brushSelection)) {
+                    var start = brushSelection[0];
+                    var end = brushSelection[1];
+
+                    bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                        return d.x < start || d.x >= end;
+                    });
+                } else {
+                    bars.classed(dc.constants.DESELECTED_CLASS, false);
+                }
             }
         }
     };
@@ -304,7 +334,18 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     dc.override(_chart, 'onClick', function (d) {
-        _chart._onClick(d.data);
+        var charts = getCharts();
+        // A grouped chart
+        if (charts.length > 1) {
+            charts.forEach(function (chart, i) {
+                var filter = chart.keyAccessor()(d.data);
+                chart.filter(filter);
+            });
+            _chart.redrawGroup();
+        // Not a grouped chart
+        } else {
+            _chart._onClick(d.data);
+        }
     });
 
     /**
@@ -378,14 +419,10 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.extendBrush = function () {
-        var extent = _chart.brush().extent();
-        if (_chart.round() && (!_centerBar || _alwaysUseRounding)) {
-            extent[0] = extent.map(_chart.round())[0];
-            extent[1] = extent.map(_chart.round())[1];
-
-            _chart.chartBodyG().select('.brush')
-                .call(_chart.brush().extent(extent));
+    _chart.extendBrush = function (brushSelection) {
+        if (brushSelection && _chart.round() && (!_centerBar || _alwaysUseRounding)) {
+            brushSelection[0] = _chart.round()(brushSelection[0]);
+            brushSelection[1] = _chart.round()(brushSelection[1]);
         }
         return brushSelection;
     };
@@ -413,7 +450,7 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    function colorFilter(color, inv) {
+    function colorFilter (color, inv) {
         return function () {
             var item = d3.select(this);
             var match = item.attr('fill') === color;
