@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Grouped Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var compositeChart = dc.compositeChart("#test");
+var subCharts = [];
+d3.csv("morley.csv").then(function(morley) {
+
+    var experiments = [];
+
+    // Filter out the first 9 runs
+    morley = morley.filter(function onlyFirst9Runs (value) {
+        return parseInt(value.Run) <= 9;
+    });
+
+    // Get all unique experiments and assign id, name and label
+    experiments = morley.map(function getExperiments (value){
+        return  value.Expt;
+    })
+    .filter(function onlyUnique (value, index, self) {
+        return self.indexOf(value) === index;
+    })
+    .map(function addLabelEtc (value){
+        return  {id: value, name: "Expt" + value, label: "Experiment " + value};
+    })
+
+    var ndx  = crossfilter(morley),
+        dim = ndx.dimension(function(d) {return "Run " + d.Run;}),
+        experimentsGroup = dim.group().reduce(
+            function add (p, v) {
+                p[v.Expt] += parseInt(v.Speed);
+                return p;
+            },
+            function remove (p, v) {
+                p[v.Expt] -= parseInt(v.Speed);
+                return p;
+            },
+            function init (p, v) {
+                var ret = {};
+                ret.count = 0;
+                for(var i = 0; i < experiments.length; i++){
+                    ret[experiments[i].id] = 0;
+                }
+                return ret;
+            }
+        );
+
+    function sel_stack (i) {
+        return function(d) {
+            return d.value[i];
+        };
+    }
+
+    for(var i = 0; i < experiments.length; i++){
+        var chart = self.dc.barChart(compositeChart);
+            chart
+                .dimension(dim)
+                .group(experimentsGroup, experiments[i].label)
+                .valueAccessor(sel_stack(experiments[i].id));
+
+            subCharts.push(chart);
+    }
+
+    compositeChart
+        .width(768)
+        .height(480)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .yAxisLabel("This is the Y Axis!")
+        .dimension(dim)
+        .group(experimentsGroup, 'Dummy group to make ordinal composite charts work')
+        .title(function(d, i) {
+            var measure = this.layer.replace("Experiment ", "");
+            var val = d.value[measure];
+            return  this.layer + " - " + d.key + ": " + val;
+
+        })
+        // or
+        // .shareTitle(false)
+        .compose(subCharts)
+
+    compositeChart.render();
+});
+
+</script>
+
+</div>
+</body>
+</html>
