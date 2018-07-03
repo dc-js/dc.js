@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Two Grouped Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="chart1"></div>
+<div id="chart2"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var chart1 = dc.compositeChart("#chart1");
+var chart2 = dc.compositeChart("#chart2");
+var subCharts1 = [];
+var subCharts2 = [];
+d3.csv("../crime/crime.csv").then(function(crime) {
+
+    var years = [];
+    var types = [];
+    var citys = [];
+
+    // Tweak the data a litle bit
+    crime = crime.filter(function onlyIncidentsAndLaterYears (value, index, self) {
+        return (value.sub_type === "Actual incidents" && parseInt(value.year) >= 2005);
+    }).map(function pivotData (value){
+        return {'year': value.year, 'city': value.city, 'type': value.type, 'incidents': parseInt(value.number)}
+    });
+
+    crime = crime.map(function evenOutBetweenTypes (value) {
+        if(value.type === "Total, all violations"){
+            value.incidents = Math.round(value.incidents/25);
+        } else if(value.type === "Total violent Criminal Code violations") {
+            value.incidents = Math.round(value.incidents/5);
+        } else if(value.type === "Homicide") {
+            value.incidents = Math.round(value.incidents*100);
+        }
+        return value;
+    });
+
+    // Get all unique years
+    years = crime.map(function getYears (value){
+        return value.year;
+    })
+    .filter(function onlyUnique (value, index, self) {
+        return self.indexOf(value) === index;
+    })
+
+    // Get all unique citys
+    citys = crime.map(function getYears (value){
+        return value.city;
+    })
+    .filter(function onlyUnique (value, index, self) {
+        return self.indexOf(value) === index;
+    })    
+
+    // Get all unique types
+    types = crime.map(function getYears (value){
+        return value.type;
+    })
+    .filter(function onlyUnique (value, index, self) {
+        return self.indexOf(value) === index;
+    })
+
+
+    var ndx  = crossfilter(crime);
+    var chart1Dim = ndx.dimension(function(d) {return d.year;})
+    var chart1Group = chart1Dim.group().reduce(
+            function add (p, v) {
+                p[v.type] += parseInt(v.incidents);
+                return p;
+            },
+            function remove (p, v) {
+                p[v.type] -= parseInt(v.incidents);
+                return p;
+            },
+            function init (p, v) {
+                var ret = {};
+                for(var i = 0; i < types.length; i++){
+                    ret[types[i]] = 0;
+                }
+                return ret;
+            }
+        );
+
+    var chart2Dim = ndx.dimension(function(d) {return d.city;})
+    var chart2Group = chart2Dim.group().reduce(
+        function add (p, v) {
+                p[v.type] += parseInt(v.incidents);
+                return p;
+            },
+            function remove (p, v) {
+                p[v.type] -= parseInt(v.incidents);
+                return p;
+            },
+            function init (p, v) {
+                var ret = {};
+                for(var i = 0; i < types.length; i++){
+                    ret[types[i]] = 0;
+                }
+                return ret;
+            }
+        );
+
+
+    function sel_stack (i) {
+        return function(d) {
+            return d.value[i];
+        };
+    }
+
+
+    // Setup chart1
+    for(var i = 0; i < types.length; i++){
+        var chart = dc.barChart(chart1);
+            chart
+                .dimension(chart1Dim)
+                .group(chart1Group, types[i])
+                .valueAccessor(sel_stack(types[i]));
+
+        subCharts1.push(chart);
+    }
+
+    chart1
+        .width(768)
+        .height(480)
+        .dimension(chart1Dim)
+        .group(chart1Group, 'Dummy group to make ordinal composite charts work')
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        // .brushOn(false)
+        .yAxisLabel("This is the Y Axis!")
+        .legend(dc.legend().x(550).y(10).itemHeight(13).gap(5))
+        .elasticY(true)
+        // .ordinalColors(d3.schemeDark2)
+        .shareColors(true)
+        .title(function(d, i) {
+            var measure = this.layer;
+            var val = d.value[measure];
+            return  this.layer + " - " + d.key + ": " + val;
+
+        })
+        // or
+        // .shareTitle(false)
+        .compose(subCharts1)
+
+    // Setup chart1
+    for(var i = 0; i < types.length; i++){
+        var chart = dc.barChart(chart2);
+            chart
+                .dimension(chart2Dim)
+                .group(chart2Group, types[i])
+                .valueAccessor(sel_stack(types[i]));
+
+        subCharts2.push(chart);
+    }
+
+    chart2
+        .width(768)
+        .height(480)
+        .dimension(chart2Dim)
+        .group(chart2Group, 'Dummy group to make ordinal composite charts work')
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        // .brushOn(false)
+        .yAxisLabel("This is the Y Axis!")
+        .elasticY(true)
+        // .ordinalColors(d3.schemeDark2)
+        .shareColors(true)
+        .margins({ top: 10, right: 60, bottom: 100, left: 60 })
+        // .title(function(d, i) {
+        //     var measure = this.layer;
+        //     var val = d.value[measure];
+        //     return  this.layer + " - " + d.key + ": " + val;
+
+        // })
+        // or
+        .shareTitle(false)
+        .compose(subCharts2)
+
+    chart2.on('pretransition', function(chart){
+        // Rotate X-axis
+        chart.selectAll("g.axis.x text")
+        .style("text-anchor", "start")
+        .attr("dx", "0.5em")
+        .attr("dy", "-0.5em")
+        .attr("transform", "rotate(90)")
+    });
+
+    chart1.render();
+    chart2.render();
+});
+
+</script>
+
+</div>
+</body>
+</html>
