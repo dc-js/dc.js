@@ -67,7 +67,7 @@ d3.csv("morley.csv").then(function(morley) {
     }
 
     for(var i = 0; i < experiments.length; i++){
-        var chart = self.dc.barChart(compositeChart);
+        var chart = dc.barChart(compositeChart);
             chart
                 .dimension(dim)
                 .group(experimentsGroup, experiments[i].label)
