@@ -68,12 +68,15 @@ d3.csv("morley.csv").then(function(morley) {
 
     for(var i = 0; i < experiments.length; i++){
         var chart = dc.barChart(compositeChart);
-            chart
-                .dimension(dim)
-                .group(experimentsGroup, experiments[i].label)
-                .valueAccessor(sel_stack(experiments[i].id));
+        chart
+            .dimension(dim)
+            .group(experimentsGroup, experiments[i].label)
+            // .barPadding(0.0)
+            // .serieGap(0)
+            .centerBar(true)
+            .valueAccessor(sel_stack(experiments[i].id));
 
-            subCharts.push(chart);
+        subCharts.push(chart);
     }
 
     compositeChart
