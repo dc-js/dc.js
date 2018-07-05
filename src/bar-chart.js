@@ -158,21 +158,35 @@ dc.barChart = function (parent, chartGroup) {
         var x = _chart.x()(d.x);
         var charts = getCharts();
         var chartIndex = charts.indexOf(_chart);
+
         // A grouped chart
         if (charts.length > 1) {
-            if (_gap !== undefined) {
-                x += _chart.serieGap() / 2;
-                x += chartIndex * (_barWidth + _gap);
-                x += _gap / 2;
-            } else {
-                var numberOfCharts = charts.length;
-                var barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
-                var barPadding = barWidth * (_chart.barPadding());
+            var numberOfCharts = charts.length;
+            var numberOfBars = _chart.xUnitCount();
+            var barWidth;
+            var barPadding;
 
+            if (_chart.isOrdinal()) {
+                barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
+            } else {
+                barWidth = ((_chart.xAxisLength() / numberOfBars) -  _chart.serieGap()) / numberOfCharts;
+            }
+
+            if (_gap === undefined) {
+                barPadding = barWidth * (_chart.barPadding());
+            } else {
+                barPadding = _gap;
+            }
+
+            x += chartIndex * (barWidth);
+            if (_chart.isOrdinal()) {
                 x += _chart.serieGap() / 2;
                 x += barPadding / 2;
-                x += chartIndex * (_barWidth + barPadding);
+            } else if (!_chart.isOrdinal() && _centerBar) {
+                x -= barWidth * numberOfCharts / 2;
+                x += barPadding / 2;
             }
+
         // Not a grouped chart
         } else {
             if (_centerBar) {
@@ -182,6 +196,7 @@ dc.barChart = function (parent, chartGroup) {
                 x += _gap / 2;
             }
         }
+
         return dc.utils.safeNumber(x);
     }
 
@@ -238,14 +253,23 @@ dc.barChart = function (parent, chartGroup) {
 
             // A grouped chart
             if (charts.length > 1) {
-                var numberOfCharts = charts.length;
-                var barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
-                if (_gap !== undefined) {
-                    _barWidth = Math.floor(barWidth - _gap);
+                var numberOfCharts = charts.length,
+                    barPadding,
+                    barWidth;
+
+                if (_chart.isOrdinal()) {
+                    barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
                 } else {
-                    var barPadding = barWidth * (_chart.barPadding());
-                    _barWidth = Math.floor(barWidth - barPadding);
+                    barWidth = ((_chart.xAxisLength() / numberOfBars) -  _chart.serieGap()) / numberOfCharts;
                 }
+
+                if (_gap === undefined) {
+                    barPadding = barWidth * (_chart.barPadding());
+                } else {
+                    barPadding = _gap;
+                }
+                _barWidth = Math.floor(barWidth - barPadding);
+
             // Not a grouped chart
             } else {
                 // please can't we always use rangeBands for bar charts?
@@ -287,6 +311,7 @@ dc.barChart = function (parent, chartGroup) {
                     }
                 }
             });
+
         // Not a grouped chart
         } else {
             bars = _chart.chartBodyG().selectAll('rect.bar');
