@@ -81,6 +81,9 @@ dc.scatterPlot = function (parent, chartGroup) {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
             .data(_chart.data());
 
+        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('opacity', 0).remove();
+
         symbols = symbols
             .enter()
                 .append('path')
@@ -117,9 +120,6 @@ dc.scatterPlot = function (parent, chartGroup) {
             })
             .attr('transform', _locator)
             .attr('d', _symbol);
-
-        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('opacity', 0).remove();
     };
 
     function renderTitles (symbol, d) {
