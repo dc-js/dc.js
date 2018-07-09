@@ -223,6 +223,48 @@ describe('dc.scatterPlot', function () {
             filteringAnotherDimension();
         });
 
+        function removeEmptyBins (sourceGroup) {
+            return {
+                all: function () {
+                    return sourceGroup.all().filter(function (d) {
+                        //return Math.abs(d.value) > 0.00001; // if using floating-point numbers
+                        return d.value !== 0; // if integers only
+                    });
+                }
+            };
+        }
+
+        describe('with empty bins removed', function () {
+            var otherDimension;
+            beforeEach(function () {
+                chart.group(removeEmptyBins(group))
+                    .render();
+                otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
+                var ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
+                otherDimension.filterFunction(ff);
+                chart.redraw();
+            });
+
+            it('should only contain the included points', function () {
+                var emptyPoints = symbolsMatching(function () { return true; });
+                expect(emptyPoints.length).toBe(2);
+            });
+            it('should show the included points', function () {
+                var shownPoints = symbolsOfRadius(10); // test symbolSize
+                expect(shownPoints.length).toBe(2);
+                expect(shownPoints[0].key).toEqual([22, -2]);
+                expect(shownPoints[1].key).toEqual([33, 1]);
+            });
+            it('should update the titles', function () {
+                var titles = chart.selectAll('path.symbol title');
+                var expected = ['22,-2: 1','33,1: 2'];
+                expect(titles.size()).toBe(expected.length);
+                titles.each(function (d) {
+                    expect(this.textContent).toBe(expected.shift());
+                });
+            });
+        });
+
         describe('brushing', function () {
             var otherDimension;
 

@@ -1,3 +1,7 @@
+## 3.0.5
+* Scatter plot symbols were not getting removed when group changed size, by Deepak Kumar. ([#1463](https://github.com/dc-js/dc.js/pull/1463) / [#1460](https://github.com/dc-js/dc.js/issues/1460))
+* Use Chrome and Firefox headless at Travis CI, by Deepak Kumar. See ([#1452](https://github.com/dc-js/dc.js/pull/1452)), an attempt to resolve ([#1451](https://github.com/dc-js/dc.js/pull/1451))
+
 ## 3.0.4
 * Box plot enhancements: jittered data points, data point tooltips, bold outliers, by Chris Wolcott. Also implements `yRangePadding` to fix problems with not enough/too much space for labels in box plots. ([#1439](https://github.com/dc-js/dc.js/pull/1439) / [#1370](https://github.com/dc-js/dc.js/issues/1370) / [#1120](https://github.com/dc-js/dc.js/issues/1120))
 * Code cleanup - replaced `.rangesEqual` with `dc.utils.arraysEqual`, by Deepak Kumar ([#1436](https://github.com/dc-js/dc.js/pull/1436) / [#1405](https://github.com/dc-js/dc.js/issues/1405))

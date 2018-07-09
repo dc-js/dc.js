@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.4  
+**Version**: 3.0.5  
 **Example**  
 ```js
 // Example chaining
@@ -3019,8 +3019,10 @@ Gets or sets the Y border radius.  Set to 0 to get full rectangles.
 A box plot is a chart that depicts numerical data via their quartile ranges.
 
 Examples:
-- [Box plot time example](http://dc-js.github.io/dc.js/examples/box-plot-time.html)
-- [Box plot example](http://dc-js.github.io/dc.js/examples/box-plot.html)
+- [Boxplot Basic example](http://dc-js.github.io/dc.js/examples/boxplot-basic.html)
+- [Boxplot Enhanced example](http://dc-js.github.io/dc.js/examples/boxplot-enhanced.html)
+- [Boxplot Render Data example](http://dc-js.github.io/dc.js/examples/boxplot-render-data.html)
+- [Boxplot time example](http://dc-js.github.io/dc.js/examples/boxplot-time.html)
 
 
 | Param | Type | Description |

@@ -3,8 +3,10 @@
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  *
  * Examples:
- * - {@link http://dc-js.github.io/dc.js/examples/box-plot-time.html Box plot time example}
- * - {@link http://dc-js.github.io/dc.js/examples/box-plot.html Box plot example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-basic.html Boxplot Basic example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-enhanced.html Boxplot Enhanced example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-render-data.html Boxplot Render Data example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-time.html Boxplot time example}
  * @class boxPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
