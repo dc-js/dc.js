@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.4
+ *  dc 3.0.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.4
+ * @version 3.0.5
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.4',
+    version: '3.0.5',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -10745,6 +10745,9 @@ dc.scatterPlot = function (parent, chartGroup) {
         var symbols = _chart.chartBodyG().selectAll('path.symbol')
             .data(_chart.data());
 
+        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('opacity', 0).remove();
+
         symbols = symbols
             .enter()
                 .append('path')
@@ -10781,9 +10784,6 @@ dc.scatterPlot = function (parent, chartGroup) {
             })
             .attr('transform', _locator)
             .attr('d', _symbol);
-
-        dc.transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('opacity', 0).remove();
     };
 
     function renderTitles (symbol, d) {
@@ -12237,8 +12237,10 @@ dc.heatMap = function (parent, chartGroup) {
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  *
  * Examples:
- * - {@link http://dc-js.github.io/dc.js/examples/box-plot-time.html Box plot time example}
- * - {@link http://dc-js.github.io/dc.js/examples/box-plot.html Box plot example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-basic.html Boxplot Basic example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-enhanced.html Boxplot Enhanced example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-render-data.html Boxplot Render Data example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-time.html Boxplot time example}
  * @class boxPlot
  * @memberof dc
  * @mixes dc.coordinateGridMixin
