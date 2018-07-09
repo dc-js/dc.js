@@ -1,4 +1,5 @@
 ## 3.0.5
+* Scatter plot symbols were not getting removed when group changed size, by Deepak Kumar. ([#1463](https://github.com/dc-js/dc.js/pull/1463) / [#1460](https://github.com/dc-js/dc.js/issues/1460))
 * Use Chrome and Firefox headless at Travis CI, by Deepak Kumar. See ([#1452](https://github.com/dc-js/dc.js/pull/1452)), an attempt to resolve ([#1451](https://github.com/dc-js/dc.js/pull/1451))
 
 ## 3.0.4
