@@ -48,11 +48,11 @@ dc.bubbleChart = function (parent, chartGroup) {
             bubbleG.order();
         }
 
+        removeNodes(bubbleG);
+
         bubbleG = renderNodes(bubbleG);
 
         updateNodes(bubbleG);
-
-        removeNodes(bubbleG);
 
         _chart.fadeDeselectedArea(_chart.filter());
     };
