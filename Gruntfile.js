@@ -340,7 +340,8 @@ module.exports = function (grunt) {
                             '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/' + d3pkgSubDir + '/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
-                            'node_modules/file-saver/FileSaver.js'
+                            'node_modules/file-saver/FileSaver.js',
+                            'node_modules/reductio/reductio.js'
                         ],
                         dest: '<%= conf.web %>/js/'
                     },
