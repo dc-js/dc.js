@@ -281,6 +281,34 @@ describe('dc.bubbleChart', function () {
             });
         });
 
+        describe('with empty bins removed', function () {
+            beforeEach(function () {
+                chart.group(removeEmptyBins(group))
+                    .redraw();
+            });
+
+            it('creates the right number of bubbles', function () {
+                expect(chart.selectAll('g.node').size()).toBe(1);
+            });
+
+            it('creates correct label for each bubble', function () {
+                expect(chart.selectAll('g.node title').text()).toBe('T: {count:2,value:77}');
+            });
+
+            it('fills bubbles with correct colors', function () {
+                expect(chart.selectAll('circle.bubble').attr('fill')).toMatch(/#ff4040/i);
+            });
+            function removeEmptyBins (sourceGroup) {
+                return {
+                    all: function () {
+                        return sourceGroup.all().filter(function (d) {
+                            return d.value.count !== 0;
+                        });
+                    }
+                };
+            }
+
+        });
     });
 
     describe('with no filter', function () {

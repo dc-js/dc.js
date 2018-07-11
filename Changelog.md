@@ -1,3 +1,9 @@
+## 3.0.6
+* Enable the stroke for line chart dots, making it possible to actually use `strokeOpacity` ([#1449](https://github.com/dc-js/dc.js/pull/1449) / [#1447](https://github.com/dc-js/dc.js/issues/1447))
+* Fix an error when horizontal grid lines were drawn on a chart with an ordinal Y scale, by the3ver ([#1448](https://github.com/dc-js/dc.js/pull/1448) / [#539](https://github.com/dc-js/dc.js/issues/539))
+* Bubbles were not disappearing when bins were removed from the group, by Brendan Heberton ([#1466](https://github.com/dc-js/dc.js/pull/1466))
+* Protect value accessor from `sunburstChart`'s virtual parent nodes, by Deepak Kumar ([#1444](https://github.com/dc-js/dc.js/pull/1444) / [#1440](https://github.com/dc-js/dc.js/issues/1440))
+
 ## 3.0.5
 * Scatter plot symbols were not getting removed when group changed size, by Deepak Kumar. ([#1463](https://github.com/dc-js/dc.js/pull/1463) / [#1460](https://github.com/dc-js/dc.js/issues/1460))
 * Use Chrome and Firefox headless at Travis CI, by Deepak Kumar. See ([#1452](https://github.com/dc-js/dc.js/pull/1452)), an attempt to resolve ([#1451](https://github.com/dc-js/dc.js/pull/1451))

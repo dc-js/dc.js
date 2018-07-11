@@ -695,8 +695,9 @@ dc.coordinateGridMixin = function (_chart) {
         var gridLineG = g.select('g.' + HORIZONTAL_CLASS);
 
         if (_renderHorizontalGridLine) {
-            // Last part copied from https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
-            var ticks = axis.tickValues() ? axis.tickValues() : scale.ticks.apply(scale, axis.tickArguments());
+            // see https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
+            var ticks = axis.tickValues() ? axis.tickValues() :
+                (scale.ticks ? scale.ticks.apply(scale, axis.tickArguments()) : scale.domain());
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')

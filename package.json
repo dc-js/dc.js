@@ -1,6 +1,6 @@
 {
   "name": "dc",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "license": "Apache-2.0",
   "copyright": "2017",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
@@ -64,6 +64,7 @@
     "karma-summary-reporter": "^1.5.0",
     "load-grunt-tasks": "~3.5",
     "marked": "~0.3.19",
+    "reductio": "0.6.x",
     "time-grunt": "~1.4",
     "uglify-js": "^3.3.26"
   },

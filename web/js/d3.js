@@ -1,11 +1,11 @@
-// https://d3js.org Version 5.3.0. Copyright 2018 Mike Bostock.
+// https://d3js.org Version 5.4.0. Copyright 2018 Mike Bostock.
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
 	(factory((global.d3 = global.d3 || {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "5.3.0";
+var version = "5.4.0";
 
 function ascending(a, b) {
   return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -13955,15 +13955,28 @@ var warm = cubehelixLong(cubehelix(-100, 0.75, 0.35), cubehelix(80, 1.50, 0.8));
 
 var cool = cubehelixLong(cubehelix(260, 0.75, 0.35), cubehelix(80, 1.50, 0.8));
 
-var rainbow = cubehelix();
+var c = cubehelix();
 
-function rainbow$1(t) {
+function rainbow(t) {
   if (t < 0 || t > 1) t -= Math.floor(t);
   var ts = Math.abs(t - 0.5);
-  rainbow.h = 360 * t - 100;
-  rainbow.s = 1.5 - 1.5 * ts;
-  rainbow.l = 0.8 - 0.9 * ts;
-  return rainbow + "";
+  c.h = 360 * t - 100;
+  c.s = 1.5 - 1.5 * ts;
+  c.l = 0.8 - 0.9 * ts;
+  return c + "";
+}
+
+var c$1 = rgb(),
+    pi_1_3 = Math.PI / 3,
+    pi_2_3 = Math.PI * 2 / 3;
+
+function sinebow(t) {
+  var x;
+  t = (0.5 - t) * Math.PI;
+  c$1.r = 255 * (x = Math.sin(t)) * x;
+  c$1.g = 255 * (x = Math.sin(t + pi_1_3)) * x;
+  c$1.b = 255 * (x = Math.sin(t + pi_2_3)) * x;
+  return c$1 + "";
 }
 
 function ramp$1(range) {
@@ -14790,7 +14803,7 @@ var triangle = {
   }
 };
 
-var c = -0.5,
+var c$2 = -0.5,
     s = Math.sqrt(3) / 2,
     k = 1 / Math.sqrt(12),
     a = (k / 2 + 1) * 3;
@@ -14807,12 +14820,12 @@ var wye = {
     context.moveTo(x0, y0);
     context.lineTo(x1, y1);
     context.lineTo(x2, y2);
-    context.lineTo(c * x0 - s * y0, s * x0 + c * y0);
-    context.lineTo(c * x1 - s * y1, s * x1 + c * y1);
-    context.lineTo(c * x2 - s * y2, s * x2 + c * y2);
-    context.lineTo(c * x0 + s * y0, c * y0 - s * x0);
-    context.lineTo(c * x1 + s * y1, c * y1 - s * x1);
-    context.lineTo(c * x2 + s * y2, c * y2 - s * x2);
+    context.lineTo(c$2 * x0 - s * y0, s * x0 + c$2 * y0);
+    context.lineTo(c$2 * x1 - s * y1, s * x1 + c$2 * y1);
+    context.lineTo(c$2 * x2 - s * y2, s * x2 + c$2 * y2);
+    context.lineTo(c$2 * x0 + s * y0, c$2 * y0 - s * x0);
+    context.lineTo(c$2 * x1 + s * y1, c$2 * y1 - s * x1);
+    context.lineTo(c$2 * x2 + s * y2, c$2 * y2 - s * x2);
     context.closePath();
   }
 };
@@ -17641,9 +17654,10 @@ exports.schemeReds = scheme$25;
 exports.interpolateOranges = Oranges;
 exports.schemeOranges = scheme$26;
 exports.interpolateCubehelixDefault = cubehelix$3;
-exports.interpolateRainbow = rainbow$1;
+exports.interpolateRainbow = rainbow;
 exports.interpolateWarm = warm;
 exports.interpolateCool = cool;
+exports.interpolateSinebow = sinebow;
 exports.interpolateViridis = viridis;
 exports.interpolateMagma = magma;
 exports.interpolateInferno = inferno;
