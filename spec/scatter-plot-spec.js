@@ -126,10 +126,6 @@ describe('dc.scatterPlot', function () {
             });
         });
 
-        function nthSymbol (i) {
-            return d3.select(chart.selectAll('path.symbol').nodes()[i]);
-        }
-
         describe('filtering the chart', function () {
             var otherDimension;
 
@@ -503,5 +499,41 @@ describe('dc.scatterPlot', function () {
             return subChart;
         }
     });
+    describe('with ordinal axes', function () {
+        beforeEach(function () {
+            dimension = data.dimension(function (d) { return [d.state, d.region]; });
+            group = dimension.group();
+            chart
+                .margins({left: 50, top: 10, right: 0, bottom: 20})
+                .dimension(dimension)
+                .group(group)
+                .x(d3.scaleBand())
+              // ordinal axes work but you have to set the padding for both axes & give the y domain
+                .y(d3.scaleBand().paddingInner(1).domain(group.all().map(function (kv) { return kv.key[1]; })))
+                .xUnits(dc.units.ordinal)
+                ._rangeBandPadding(1)
+                .render();
+        });
+        it('should correctly place the symbols', function () {
+            expect(nthSymbol(4).attr('transform')).toMatchTranslate(262.5, 75);
+            expect(nthSymbol(5).attr('transform')).toMatchTranslate(337.5, 37.5);
+            expect(nthSymbol(7).attr('transform')).toMatchTranslate(412.5, 0);
+        });
+        describe('with grid lines', function () {
+            beforeEach(function () {
+                chart
+                    .renderHorizontalGridLines(true)
+                    .renderVerticalGridLines(true)
+                    .render();
+            });
+            it('should draw the correct number of grid lines', function () {
+                expect(chart.selectAll('.grid-line.horizontal line').size()).toBe(5);
+                expect(chart.selectAll('.grid-line.vertical line').size()).toBe(6);
+            });
+        });
+    });
+    function nthSymbol (i) {
+        return d3.select(chart.selectAll('path.symbol').nodes()[i]);
+    }
 });
 
