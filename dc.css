@@ -197,9 +197,6 @@ div.dc-chart {
     fill: #fee;
     cursor: default; }
 
-.dc-chart circle.dot {
-  stroke: none; }
-
 .dc-data-count {
   float: right;
   margin-top: 15px;

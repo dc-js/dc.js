@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.2.0  
+**Version**: 2.2.1  
 **Example**  
 ```js
 // Example chaining
@@ -776,11 +776,11 @@ current `options` values are instead returned.
 
 | Param | Type | Default |
 | --- | --- | --- |
-| [options] | <code>Object</code> | <code>{fillOpacity: 0.8, strokeOpacity: 0.8, radius: 2}</code> | 
+| [options] | <code>Object</code> | <code>{fillOpacity: 0.8, strokeOpacity: 0.0, radius: 2}</code> | 
 
 **Example**  
 ```js
-chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.8})
+chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.0})
 ```
 <a name="dc.dataCount"></a>
 
