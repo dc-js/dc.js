@@ -1,3 +1,6 @@
+## 2.2.1
+* Enable the stroke for line chart dots, making it possible to actually use `strokeOpacity`, by R Manzano ([#1449](https://github.com/dc-js/dc.js/pull/1449) / [#1447](https://github.com/dc-js/dc.js/issues/1447))
+
 ## 2.2.0
 * Box plot enhancements: jittered data points, data point tooltips, bold outliers, by Chris Wolcott. Also implements `yRangePadding` to fix problems with not enough/too much space for labels in box plots. ([#1439](https://github.com/dc-js/dc.js/pull/1439) / [#1370](https://github.com/dc-js/dc.js/issues/1370) / [#1120](https://github.com/dc-js/dc.js/issues/1120))
 
