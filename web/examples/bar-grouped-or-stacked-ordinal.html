@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Bar Grouped Or Stacked Ordinal Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container"></div>
+<script type="text/javascript" src="header.js"></script>
+
+<div id="chart1">
+    <strong>Bar Grouped Or Stacked Ordinal</strong>
+    </br><button id="toggleGroupBars" class="btn btn-small" type="button" onclick="toggleGroupBars()">Toggle</button>
+    <div class="reset" style="visibility: hidden">selected: <span class="filter"></span>
+        <a href="javascript:chart.filterAll();dc.redrawAll();">reset</a>
+    </div>
+</div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var chart = dc.barChart("#chart1");
+d3.csv("morley.csv").then(function(experiments ) {
+
+
+    experiments = experiments.filter(function(v){
+        return parseInt(v.Run) <= 4;
+    });
+
+    experiments.forEach(function(x) {
+        x.Speed = parseInt(x.Expt) * 1 + (parseInt(x.Run) - 0) * 10;
+    });
+
+    var ndx             = crossfilter(experiments),
+        runDimension    = ndx.dimension(function(d) {return +d.Run;}),
+        speedSumGroup   = runDimension.group().reduce(function(p, v) {
+            p[v.Expt] = (p[v.Expt] || 0) + v.Speed;
+            return p;
+        }, function(p, v) {
+            p[v.Expt] = (p[v.Expt] || 0) - v.Speed;
+            return p;
+        }, function() {
+            return {};
+        });
+
+        function sel_stack(i) {
+            return function(d) {
+                return d.value[i];
+            };
+        }
+
+        chart
+            .width(768)
+            .height(480)
+            .x(d3.scaleBand())
+            .xUnits(dc.units.ordinal)
+            .margins({left: 50, top: 10, right: 10, bottom: 20})
+            .brushOn(false)
+            .title(function(d) {
+                return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
+            })
+            .yAxisLabel('This is the Y Axis!')
+            .yAxisPadding('5%')
+            .elasticY(true)
+            .groupBars(true)
+            .controlsUseVisibility(true)
+            .renderLabel(true)
+            .legend(dc.legend().x(100).y(10).itemHeight(13).gap(5))
+            .dimension(runDimension)
+            .group(speedSumGroup, 'Stack 1', sel_stack('1'));
+
+
+        for(var i = 2; i<5; ++i){
+            chart.stack(speedSumGroup, 'Stack ' +i, sel_stack(i));
+        }
+        chart.render();
+
+
+    });
+
+    function toggleGroupBars(arg1, arg2, arg3){
+        var groupBars = chart.groupBars() ? false : true;
+        chart.groupBars(groupBars);
+        chart.redraw();
+    }
+
+</script>
+</body>
+</html>

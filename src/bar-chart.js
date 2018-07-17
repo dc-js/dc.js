@@ -27,19 +27,34 @@
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
+    var DEFAULT_GAP_BETWEEN_BAR_GROUPS = 10;
     var LABEL_PADDING = 3;
+    var DEFAULT_SENSOR_BAR = true;
+    var DEFAULT_SENSOR_BAR_COLOR = '#fffff';
+    var DEFAULT_SENSOR_BAR_OPACITY = 0;
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
+    var _groupGap = DEFAULT_GAP_BETWEEN_BAR_GROUPS;
+    var _groupBars = false;
     var _centerBar = false;
+    var _sensorBars = DEFAULT_SENSOR_BAR;
+    var _sensorBarColor = DEFAULT_SENSOR_BAR_COLOR;
+    var _sensorBarOpacity = DEFAULT_SENSOR_BAR_OPACITY;
     var _alwaysUseRounding = false;
 
+    var _barPadding;
     var _barWidth;
+    var _sensorBarWidth;
+    var _sensorBarPadding;
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
+        _barPadding = undefined;
+        _sensorBarWidth = undefined;
+        _sensorBarPadding = undefined;
         return _chart;
     });
 
@@ -53,72 +68,104 @@ dc.barChart = function (parent, chartGroup) {
     });
 
     _chart.label(function (d) {
-        return dc.utils.printSingleValue(d.y0 + d.y);
+        if (_groupBars) {
+            return dc.utils.printSingleValue(d.y);
+        } else {
+            return dc.utils.printSingleValue(d.y0 + d.y);
+        }
     }, false);
 
     _chart.plotData = function () {
-        var layers = _chart.chartBodyG().selectAll('g.stack')
-            .data(_chart.data());
+        calculateBarWidths();
+        calculateSensorBarWidths();
+        var chartData = _chart.data(),
+            firstStack = _chart.data()[0],
+            barData = [],
+            sensorBarData = [];
 
-        calculateBarWidth();
+        // Pivot the data, so that each item in the barData array contains all bars for the same x-point.
+        // Also add attribute groupIndex, wich indicates the bars order within the group.
+        if (chartData.length > 0) {
+            firstStack.values.forEach(function (d, i) {
+                var values = [];
+                for (var j = 0; j < chartData.length; j++) {
+                    var value = chartData[j].values[i];
+                    value.groupIndex = j;
+                    values.push(value);
+                }
 
-        layers = layers
-            .enter()
+                barData.push({
+                    'values': values
+                });
+                // create an array containing "sensor bars", one bar for each group of bars.
+                sensorBarData.push({
+                    'values': [{
+                        'x': d.x,
+                        'y': 0,
+                        'y0': 0,
+                        'y1': 0,
+                        'groupIndex': -1,
+                        'layer': d.layer,
+                        'data': {
+                            'key': d.data.key,
+                            'value': []
+                        }
+                    }]
+                });
+            });
+
+            var barGroups = _chart.chartBodyG().selectAll('g.bar-group')
+                .data(barData);
+
+            var barGroupsEnter = barGroups.enter()
                 .append('g')
-                .attr('class', function (d, i) {
-                    return 'stack ' + '_' + i;
-                })
-            .merge(layers);
+                .attr('class', 'bar-group')
+                .merge(barGroups);
 
-        var last = layers.size() - 1;
-        layers.each(function (d, i) {
-            var layer = d3.select(this);
+            barGroups.exit()
+                .remove();
 
-            renderBars(layer, i, d);
+            barGroupsEnter.each(function (d, i) {
+                var barGroup = d3.select(this);
 
-            if (_chart.renderLabel() && last === i) {
-                renderLabels(layer, i, d);
-            }
-        });
+                renderSensorBar(barGroup, i, sensorBarData[i]);
+                renderBars(barGroup, i, d);
+
+                if (_chart.renderLabel()) {
+                    renderLabels(barGroup, i, d);
+                }
+            });
+        }
     };
 
     function barHeight (d) {
-        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
-    }
-
-    function labelXPos (d) {
-        var x = _chart.x()(d.x);
-        if (!_centerBar) {
-            x += _barWidth / 2;
+        var height;
+        if (_groupBars) {
+            height = dc.utils.safeNumber(Math.abs(_chart.y()(d.y) - _chart.y()(0)));
+        } else {
+            height = dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
         }
-        if (_chart.isOrdinal() && _gap !== undefined) {
-            x += _gap / 2;
-        }
-        return dc.utils.safeNumber(x);
-    }
-
-    function labelYPos (d) {
-        var y = _chart.y()(d.y + d.y0);
-
-        if (d.y < 0) {
-            y -= barHeight(d);
-        }
-
-        return dc.utils.safeNumber(y - LABEL_PADDING);
+        return height;
     }
 
     function renderLabels (layer, layerIndex, d) {
+        var labelValues = d.values.filter(function (d) {return d.groupIndex !== -1;});
+        if (false && !_groupBars) {
+            labelValues = [labelValues.pop()];
+        }
         var labels = layer.selectAll('text.barLabel')
-            .data(d.values, dc.pluck('x'));
+            .data(labelValues, dc.pluck('groupIndex'));
 
         var labelsEnterUpdate = labels
             .enter()
                 .append('text')
                 .attr('class', 'barLabel')
                 .attr('text-anchor', 'middle')
-                .attr('x', labelXPos)
-                .attr('y', labelYPos)
-            .merge(labels);
+                .attr('x', function (d) {
+                    return barXPos(d) + _barWidth / 2;
+                })
+                .attr('y', _chart.yAxisHeight())
+                .merge(labels);
 
         if (_chart.isOrdinal()) {
             labelsEnterUpdate.on('click', _chart.onClick);
@@ -126,9 +173,16 @@ dc.barChart = function (parent, chartGroup) {
         }
 
         dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', labelXPos)
-            .attr('y', labelYPos)
+            .attr('x', function (d) {
+                return dc.utils.safeNumber(barXPos(d) + _barWidth / 2);
+            })
+            .attr('y', function (d) {
+                return dc.utils.safeNumber(barYPos(d) - LABEL_PADDING);
+            })
             .text(function (d) {
+                if (!_groupBars && d.groupIndex !== labelValues.length - 1) {
+                    return '';
+                }
                 return _chart.label()(d);
             });
 
@@ -139,77 +193,228 @@ dc.barChart = function (parent, chartGroup) {
 
     function barXPos (d) {
         var x = _chart.x()(d.x);
-        if (_centerBar) {
-            x -= _barWidth / 2;
-        }
-        if (_chart.isOrdinal() && _gap !== undefined) {
-            x += _gap / 2;
+
+        if (_chart.groupBars()) {
+            var nuberOfBarsInGroup = _chart.stack().length,
+                xAxistStepLength,
+                groupIndex = d.groupIndex,
+                offset;
+
+            x += groupIndex * (_barWidth + _barPadding);
+            if (_chart.isOrdinal()) {
+                xAxistStepLength = _chart.x().step();
+                offset = xAxistStepLength - _chart.x().bandwidth();
+
+                x += _chart.groupGap() / 2;
+                x += _barPadding / 2;
+                x -= offset / 2;
+            } else if (!_chart.isOrdinal() && _centerBar) {
+                x -= (_barWidth + _barPadding) * nuberOfBarsInGroup / 2;
+                x += _barPadding / 2;
+            }
+
+        } else {
+
+            if (_centerBar) {
+                x -= _barWidth / 2;
+            }
+            if (_chart.isOrdinal()) {
+                x += _barPadding / 2;
+            }
         }
         return dc.utils.safeNumber(x);
     }
 
-    function renderBars (layer, layerIndex, d) {
-        var bars = layer.selectAll('rect.bar')
-            .data(d.values, dc.pluck('x'));
+    function barYPos (d) {
+        var y;
+        if (_groupBars) {
+            y = _chart.yAxisHeight() - barHeight(d);
+        } else {
+            y = _chart.y()(d.y + d.y0);
+        }
+        if (d.y < 0) {
+            y -= barHeight(d);
+        }
+        return dc.utils.safeNumber(y);
+    }
 
-        var enter = bars.enter()
+    function sensorBarXPos (d) {
+        var x = _chart.x()(d.x);
+
+        if (_chart.isOrdinal()) {
+            x += _barPadding / 2;
+        }
+        if (!_chart.isOrdinal() && _centerBar) {
+            x -= _sensorBarWidth / 2;
+        }
+
+        if (_chart.isOrdinal() && _groupBars) {
+            x += _chart.groupGap() / 2;
+        }
+
+        return dc.utils.safeNumber(x);
+    }
+
+    function renderBars (barGroup, barGroupIndex, d) {
+        var bars,
+            barData = d.values;
+
+        bars = barGroup.selectAll('rect.bar')
+            .data(barData, dc.pluck('groupIndex'));
+
+        var barsEnter = bars.enter()
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', dc.pluck('data', _chart.getColor))
             .attr('x', barXPos)
             .attr('y', _chart.yAxisHeight())
-            .attr('height', 0);
+            .attr('height', 0)
+            .attr('width', Math.floor(_barWidth));
 
-        var barsEnterUpdate = enter.merge(bars);
-
-        if (_chart.renderTitle()) {
-            enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
-        }
-
-        if (_chart.isOrdinal()) {
-            barsEnterUpdate.on('click', _chart.onClick);
-        }
+        var barsEnterUpdate = barsEnter.merge(bars);
 
         dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', barXPos)
-            .attr('y', function (d) {
-                var y = _chart.y()(d.y + d.y0);
-
-                if (d.y < 0) {
-                    y -= barHeight(d);
-                }
-
-                return dc.utils.safeNumber(y);
-            })
-            .attr('width', _barWidth)
-            .attr('height', function (d) {
-                return barHeight(d);
-            })
+            .attr('y', barYPos)
+            .attr('width', Math.floor(_barWidth))
+            .attr('height', function (d) {return barHeight(d);})
             .attr('fill', dc.pluck('data', _chart.getColor))
             .select('title').text(dc.pluck('data', _chart.title(d.name)));
 
         dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
-            .attr('x', function (d) { return _chart.x()(d.x); })
-            .attr('width', _barWidth * 0.9)
+            .attr('x', function (d) {return _chart.x()(d.x);})
+            .attr('width', Math.floor(_barWidth) * 0.9)
             .remove();
+
+        if (_chart.renderTitle()) {
+            barsEnter.append('title').text(dc.pluck('data', _chart.title(d.name)));
+        }
+
+        if (_chart.isOrdinal()) {
+            barsEnterUpdate.on('click', function (d, i) {
+                _chart.onClick(d, i);
+            });
+
+            barsEnterUpdate.on('mouseenter', function (d, i) {
+                d3.select(this.parentElement).classed('hoover', true);
+            });
+
+            barsEnterUpdate.on('mouseleave', function (d, i) {
+                d3.select(this.parentElement).classed('hoover', false);
+            });
+        }
     }
 
-    function calculateBarWidth () {
+    function renderSensorBar (barGroup, barGroupIndex, d) {
+        var bars,
+            barData = d.values;
+
+        bars = barGroup.selectAll('rect.sensor-bar')
+            .data(barData, dc.pluck('groupIndex'));
+
+        var barsEnter = bars.enter()
+            .append('rect')
+            .attr('class', 'sensor-bar')
+            .attr('fill', _sensorBarColor)
+            .attr('fill-opacity', _sensorBarOpacity)
+            .attr('x', sensorBarXPos)
+            .attr('y', 0)
+            .attr('height', _chart.yAxisHeight())
+            .attr('width', Math.floor(_sensorBarWidth));
+
+        var barsEnterUpdate = barsEnter.merge(bars);
+
+        dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', sensorBarXPos)
+            .attr('height', _chart.yAxisHeight())
+            .attr('width', Math.floor(_sensorBarWidth));
+
+        dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+            .attr('x', function (d) { return _chart.x()(d.x); })
+            .attr('width', Math.floor(_sensorBarWidth) * 0.9)
+            .remove();
+
+        if (_chart.isOrdinal()) {
+            barsEnterUpdate.on('click', function (d, i) {
+                _chart.onClick(d, i);
+            });
+
+            barsEnterUpdate.on('mouseenter', function (d, i) {
+                d3.select(this.parentElement).classed('hoover', true);
+            });
+
+            barsEnterUpdate.on('mouseleave', function (d, i) {
+                d3.select(this.parentElement).classed('hoover', false);
+            });
+        }
+    }
+
+    function calculateBarWidths () {
         if (_barWidth === undefined) {
-            var numberOfBars = _chart.xUnitCount();
+            var xUnits = _chart.xUnitCount(),
+                xAxistStepLength,
+                numberOfBarsInGroup,
+                groupWidth,
+                barPadding,
+                barWidth;
 
-            // please can't we always use rangeBands for bar charts?
-            if (_chart.isOrdinal() && _gap === undefined) {
-                _barWidth = Math.floor(_chart.x().bandwidth());
-            } else if (_gap) {
-                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
+            // Width
+            if (_chart.isOrdinal()) {
+                if (_groupBars) {
+                    xAxistStepLength = _chart.x().step();
+                    numberOfBarsInGroup = _chart.stack().length;
+                    groupWidth = (xAxistStepLength - _chart.groupGap());
+                    barWidth = groupWidth / numberOfBarsInGroup;
+                } else {
+                    groupWidth = _chart.x().bandwidth();
+                    barWidth = groupWidth;
+                }
             } else {
-                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
+                if (_groupBars) {
+                    numberOfBarsInGroup = _chart.stack().length;
+                    groupWidth = (_chart.xAxisLength() / xUnits) - _chart.groupGap();
+                    barWidth = groupWidth / numberOfBarsInGroup;
+                } else {
+                    groupWidth =  _chart.xAxisLength() / xUnits;
+                    barWidth = groupWidth;
+                }
             }
 
-            if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
-                _barWidth = MIN_BAR_WIDTH;
+            // Padding
+            if (_gap === undefined) {
+                barPadding = barWidth * (_chart.barPadding());
+            } else {
+                barPadding = _gap;
             }
+
+            if (barWidth === Infinity || isNaN(barWidth) || barWidth < MIN_BAR_WIDTH) {
+                barWidth = MIN_BAR_WIDTH;
+                barPadding = 0;
+            }
+
+            _barWidth = dc.utils.safeNumber(barWidth - barPadding);
+            _barPadding = dc.utils.safeNumber(barPadding);
+        }
+    }
+
+    function calculateSensorBarWidths () {
+        if (_sensorBarWidth === undefined) {
+            var sensorBarWidth,
+                sensorBarPadding = 0;
+
+            if (_groupBars) {
+                sensorBarWidth = (_barWidth + _barPadding) * _chart.stack().length - _barPadding;
+            } else {
+                sensorBarWidth = _barWidth;
+            }
+
+            if (sensorBarWidth === Infinity || isNaN(sensorBarWidth) || sensorBarWidth < MIN_BAR_WIDTH) {
+                sensorBarWidth = MIN_BAR_WIDTH;
+                sensorBarPadding = 0;
+            }
+
+            _sensorBarWidth = dc.utils.safeNumber(sensorBarWidth - sensorBarPadding);
+            _sensorBarPadding = dc.utils.safeNumber(sensorBarPadding);
         }
     }
 
@@ -324,6 +529,95 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     /**
+     * Group bars instead of stacking them. By default bars added through the stack function is stacked
+     * on top of each other. By setting groupedBars = true, the bars will instead be placed next to each other.
+     * Use groupGap and barPadding to adjust the spacing between bars and group of bars.
+     * @name groupBars
+     * @memberof dc.barChart
+     * @instance
+     * @param {Boolean} [groupBars=false]
+     * @return {Boolean|dc.barChart}
+     */
+    _chart.groupBars = function (groupBars) {
+        if (!arguments.length) {
+            return _groupBars;
+        }
+        _barWidth = undefined;
+        _barPadding = undefined;
+        _sensorBarWidth = undefined;
+        _sensorBarPadding = undefined;
+        _groupBars = groupBars;
+        return _chart;
+    };
+
+    /**
+     * Manually set fixed gap (in px) between bar groups instead of relying on the default auto-generated
+     * gap.  Only applicable for grouped bar charts.
+     * @name groupGap
+     * @memberof dc.barChart
+     * @instance
+     * @param {Number} [groupGap=5]
+     * @return {Number|dc.barChart}
+     */
+    _chart.groupGap = function (groupGap) {
+        if (!arguments.length) {
+            return _groupGap;
+        }
+        _groupGap = groupGap;
+        return _chart;
+    };
+
+    /**
+     * Set or get whether sensor bars is enabled. Sensor bars is placed behind the normal bars or groups of bars
+     * but has the same height as the chart. This enables selection of bars by hovering or clicking above them
+     * in the chart. Useful for instance when some of the bars are relativly short.
+     * @name sensorBars
+     * @memberof dc.barChart
+     * @instance
+     * @param {Boolean} [sensorBars=true]
+     * @return {Boolean|dc.barChart}
+     */
+    _chart.sensorBars = function (sensorBars) {
+        if (!arguments.length) {
+            return _sensorBars;
+        }
+        _sensorBars = sensorBars;
+        return _chart;
+    };
+
+    /**
+    * Set or get the fill color of the sensor bars
+    * @name sensorBarColor
+    * @memberof dc.barChart
+    * @instance
+    * @param {String} [sensorBarColor="#fffff"]
+    * @return {String|dc.barChart}
+    */
+    _chart.sensorBarColor = function (sensorBarColor) {
+        if (!arguments.length) {
+            return _sensorBarColor;
+        }
+        _sensorBarColor = sensorBarColor;
+        return _chart;
+    };
+
+    /**
+    * Set or get the fill color of the sensor bars
+    * @name sensorBarOpacity
+    * @memberof dc.barChart
+    * @instance
+    * @param {Number} [sensorBarOpacity=0]
+    * @return {Number|dc.barChart}
+    */
+    _chart.sensorBarOpacity = function (sensorBarOpacity) {
+        if (!arguments.length) {
+            return _sensorBarOpacity;
+        }
+        _sensorBarOpacity = sensorBarOpacity;
+        return _chart;
+    };
+
+    /**
      * Set or get whether rounding is enabled when bars are centered. If false, using
      * rounding with centered bars will result in a warning and rounding will be ignored.  This flag
      * has no effect if bars are not {@link dc.barChart#centerBar centered}.
@@ -376,6 +670,26 @@ dc.barChart = function (parent, chartGroup) {
         }
         return max;
     });
+
+    dc.override(_chart, 'yAxisMax', function () {
+        var max;
+        if (_groupBars) {
+            max = d3.max(flattenStack(), function (p) {
+                return p.y;
+            });
+        } else {
+            max = d3.max(flattenStack(), function (p) {
+                return (p.y > 0) ? (p.y + p.y0) : p.y0;
+            });
+        }
+
+        return dc.utils.add(max, _chart.yAxisPadding());
+    });
+
+    function flattenStack () {
+        var valueses = _chart.data().map(function (layer) { return layer.domainValues; });
+        return Array.prototype.concat.apply([], valueses);
+    }
 
     return _chart.anchor(parent, chartGroup);
 };

@@ -34,17 +34,24 @@ div.dc-chart {
 }
 
 .dc-chart {
-    rect {
-        &.bar {
-            stroke: none;
-            cursor: pointer;
-            &:hover {
-                fill-opacity: .5;
+    g.bar-group{
+        cursor: pointer;
+        rect {
+            &.bar {
+                stroke: none;
+                &:hover {
+                    fill-opacity: 1;
+                }
+            }
+            &.deselected {
+                stroke: none;
+                fill: $color_celeste;
             }
         }
-        &.deselected {
-            stroke: none;
-            fill: $color_celeste;
+        &.hoover {
+            rect.bar {
+                fill-opacity: .5;
+            }
         }
     }
     .pie-slice {
@@ -249,6 +256,9 @@ div.dc-chart {
             fill: $color_fair_pink;
             cursor: default;
         }
+    }
+    circle.dot {
+        stroke: none;
     }
 }
 
