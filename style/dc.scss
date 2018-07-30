@@ -54,6 +54,12 @@ div.dc-chart {
             }
         }
     }
+    rect {
+        &.deselected {
+            stroke: none;
+            fill: $color_celeste;
+        }
+    }
     .pie-slice {
         fill: $color_white;
         font-size: 12px;
