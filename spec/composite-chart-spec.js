@@ -179,21 +179,21 @@ describe('dc.compositeChart', function () {
         });
 
         it('should generate sub bar charts', function () {
-            expect(chart.selectAll('g.sub g._0 rect').size()).toBe(6);
+            expect(chart.selectAll('g.sub g.bar-group rect.bar').size()).toBe(6);
         });
 
         it('should render sub bar chart', function () {
             expect(chart.selectAll('g.sub rect.bar').size()).not.toBe(0);
-            chart.selectAll('g.sub rect.bar').each(function (d, i) {
+            chart.selectAll('g.sub g.bar-group rect.bar').each(function (d, i) {
                 switch (i) {
                     case 0:
-                        expect(d3.select(this).attr('x')).toBeCloseTo('22.637931034482758', 3);
+                        expect(d3.select(this).attr('x')).toBeCloseTo('22.224137931034484', 3);
                         expect(d3.select(this).attr('y')).toBe('93');
                         expect(d3.select(this).attr('width')).toBe('3');
                         expect(d3.select(this).attr('height')).toBe('17');
                         break;
                     case 5:
-                        expect(d3.select(this).attr('x')).toBeCloseTo('394.3620689655172', 3);
+                        expect(d3.select(this).attr('x')).toBeCloseTo('393.94827586206895', 3);
                         expect(d3.select(this).attr('y')).toBe('80');
                         expect(d3.select(this).attr('width')).toBe('3');
                         expect(d3.select(this).attr('height')).toBe('30');
@@ -409,7 +409,7 @@ describe('dc.compositeChart', function () {
         });
 
         it('should trigger the sub-chart renderlet', function () {
-            expect(d3.select(chart.selectAll('rect').nodes()[0]).attr('width')).toBe('10');
+            expect(d3.select(chart.selectAll('rect.bar').nodes()[0]).attr('width')).toBe('10');
         });
     });
 
