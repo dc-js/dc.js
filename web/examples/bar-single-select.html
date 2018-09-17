@@ -44,14 +44,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .dimension(runDimension)
     .group(speedSumGroup)
     .controlsUseVisibility(true)
-    .on('pretransition', function(chart) {
-        chart.selectAll("rect.bar").on("click", function (d) {
-            console.log('click');
-            chart.filter(null)
-                .filter(d.data.key)
-                .redrawGroup();
-        });
-    });
+    .addFilterHandler(function(filters, filter) {return [filter];});
     chart.render();
 });
 

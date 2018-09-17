@@ -6,6 +6,7 @@ describe('dc.rowChart', function () {
     var negativeGroupHolder = {groupType: 'negative signed'};
     var mixedGroupHolder = {groupType: 'mixed signed'};
     var largerGroupHolder = {groupType: 'larger'};
+    var statusDimension, statusMultiGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -21,6 +22,28 @@ describe('dc.rowChart', function () {
         nvdimension = data.dimension(function (d) { return +d.nvalue; });
         largerGroupHolder.group = nvdimension.group().reduceSum(function (d) {return +d.value;});
         largerGroupHolder.dimension = nvdimension;
+
+        statusDimension = data.dimension(function (d) {
+            return d.status;
+        });
+        statusMultiGroup = statusDimension.group().reduce(
+            //add
+            function (p, v) {
+                ++p.count;
+                p.total += +v.value;
+                return p;
+            },
+            //remove
+            function (p, v) {
+                --p.count;
+                p.total -= +v.value;
+                return p;
+            },
+            //init
+            function () {
+                return {count: 0, total: 0, getTotal: function () { return this.total; }};
+            }
+        );
 
         id = 'row-chart';
         appendChartID(id);
@@ -88,6 +111,71 @@ describe('dc.rowChart', function () {
 
         it('should render title label centered', function () {
             expect(chart.select('g.row .titlerow').attr('dy')).toBeDefined();
+        });
+    });
+
+    describe('row chart cap', function () {
+        beforeEach(function () {
+            chart.dimension(statusDimension)
+                .group(statusMultiGroup)
+                .othersLabel('small');
+            return chart;
+        });
+        describe('with custom valueAccessor', function () {
+            // statusMultiGroup has
+            // [{"key":"F","value":{"count":5,"total":220}},{"key":"T","value":{"count":5,"total":198}}]
+            beforeEach(function () {
+                chart.dimension(statusDimension).group(statusMultiGroup)
+                    .valueAccessor(function (d) {
+                        return d.value.total;
+                    })
+                    .ordering(function (d) {
+                        return -d.value.total;
+                    })
+                    .render();
+                return chart;
+            });
+            it('correct values, no others row', function () {
+                expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+                    .toEqual(['F: 220', 'T: 198']);
+            });
+            describe('with cap(1)', function () {
+                beforeEach(function () {
+                    chart.cap(1).render();
+                });
+                it('correct values, others row', function () {
+                    expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+                        .toEqual(['F: 220', 'small: 198']);
+                });
+            });
+        });
+        describe('with custom valueAccessor calling function', function () {
+            // statusMultiGroup has
+            // [{"key":"F","value":{"count":5,"total":220}},{"key":"T","value":{"count":5,"total":198}}]
+            beforeEach(function () {
+                chart.dimension(statusDimension).group(statusMultiGroup)
+                    .valueAccessor(function (d) {
+                        return d.value.getTotal();
+                    })
+                    .ordering(function (d) {
+                        return -d.value.getTotal();
+                    })
+                    .render();
+                return chart;
+            });
+            it('correct values, no others row', function () {
+                expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+                    .toEqual(['F: 220', 'T: 198']);
+            });
+            describe('with cap(1)', function () {
+                beforeEach(function () {
+                    chart.cap(1).render();
+                });
+                it('correct values, others row', function () {
+                    expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+                        .toEqual(['F: 220', 'small: 198']);
+                });
+            });
         });
     });
 

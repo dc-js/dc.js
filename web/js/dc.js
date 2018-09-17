@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.6
+ *  dc 3.0.7
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.6
+ * @version 3.0.7
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.6',
+    version: '3.0.7',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -539,7 +539,9 @@ dc.printers.filter = function (filter) {
     if (typeof filter !== 'undefined' && filter !== null) {
         if (filter instanceof Array) {
             if (filter.length >= 2) {
-                s = '[' + dc.utils.printSingleValue(filter[0]) + ' -> ' + dc.utils.printSingleValue(filter[1]) + ']';
+                s = '[' + filter.map(function (e) {
+                    return dc.utils.printSingleValue(e);
+                }).join(' -> ') + ']';
             } else if (filter.length >= 1) {
                 s = dc.utils.printSingleValue(filter[0]);
             }
@@ -5506,7 +5508,7 @@ dc.pieChart = function (parent, chartGroup) {
         var pie = pieLayout();
         var pieData;
         // if we have data...
-        if (d3.sum(_chart.data(), _chart.valueAccessor())) {
+        if (d3.sum(_chart.data(), _chart.cappedValueAccessor)) {
             pieData = pie(_chart.data());
             _g.classed(_emptyCssClass, false);
         } else {
@@ -6166,8 +6168,8 @@ dc.sunburstChart = function (parent, chartGroup) {
         var slicePath = slicesEnter.append('path')
             .attr('fill', fill)
             .on('click', onClick)
-            .attr('d', function (d, i) {
-                return safeArc(d, i, arc);
+            .attr('d', function (d) {
+                return safeArc(arc, d);
             });
 
         var transition = dc.transition(slicePath, _chart.transitionDuration());
@@ -6232,7 +6234,7 @@ dc.sunburstChart = function (parent, chartGroup) {
             .data(sunburstData)
             .select('path')
             .attr('d', function (d, i) {
-                return safeArc(d, i, arc);
+                return safeArc(arc, d);
             });
         var transition = dc.transition(slicePaths, _chart.transitionDuration());
         if (transition.attrTween) {
@@ -6483,27 +6485,30 @@ dc.sunburstChart = function (parent, chartGroup) {
         return extendedValueAccessor(d) === 0;
     }
 
-    function tweenSlice (b) {
-        b.innerRadius = _innerRadius; //?
+    function tweenSlice (d) {
         var current = this._current;
         if (isOffCanvas(current)) {
-            current = {x: 0, y: 0, dx: 0, dy: 0};
+            current = {x0: 0, x1: 0, y0: 0, y1: 0};
         }
-        // unfortunally, we can't tween an entire hierarchy since it has 2 way links.
-        var tweenTarget = {x: b.x, y: b.y, dx: b.dx, dy: b.dy};
+        var tweenTarget = {
+            x0: d.x0,
+            x1: d.x1,
+            y0: d.y0,
+            y1: d.y1
+        };
         var i = d3.interpolate(current, tweenTarget);
         this._current = i(0);
         return function (t) {
-            return safeArc(Object.assign({}, b, i(t)), 0, buildArcs());
+            return safeArc(buildArcs(), Object.assign({}, d, i(t)));
         };
     }
 
-    function isOffCanvas (current) {
-        return !current || isNaN(current.dx) || isNaN(current.dy);
+    function isOffCanvas (d) {
+        return !d || isNaN(d.x0) || isNaN(d.y0);
     }
 
     function fill (d, i) {
-        return _chart.getColor(d, i);
+        return _chart.getColor(d.data, i);
     }
 
     function _onClick (d) {
@@ -6540,8 +6545,8 @@ dc.sunburstChart = function (parent, chartGroup) {
         }
     }
 
-    function safeArc (d, i, arc) {
-        var path = arc(d, i);
+    function safeArc (arc, d) {
+        var path = arc(d);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
         }
@@ -9984,7 +9989,7 @@ dc.rowChart = function (parent, chartGroup) {
 
         dc.transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('width', function (d) {
-                return Math.abs(rootValue() - _x(_chart.valueAccessor()(d)));
+                return Math.abs(rootValue() - _x(_chart.cappedValueAccessor(d)));
             })
             .attr('transform', translateX);
 
@@ -11548,12 +11553,12 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .on('click', _chart.boxOnClick());
 
+        boxes = gEnter.merge(boxes);
+
         if (_chart.renderTitle()) {
             gEnter.append('title');
             boxes.select('title').text(_chart.title());
         }
-
-        boxes = gEnter.merge(boxes);
 
         dc.transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })

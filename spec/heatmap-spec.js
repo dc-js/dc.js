@@ -103,6 +103,13 @@ describe('dc.heatmap', function () {
             expect(xaxisTexts.nodes()[1].textContent).toEqual('2');
         });
 
+        it('should have tooltips (titles)', function () {
+            var titles = chart.selectAll('title');
+            expect(titles.nodes().length).toEqual(4);
+            expect(titles.nodes()[0].textContent).toEqual('1,1: 2');
+            expect(titles.nodes()[2].textContent).toEqual('2,1: 6');
+        });
+
         describe('with custom labels', function () {
             beforeEach(function () {
                 chart.colsLabel(function (x) { return 'col ' + x;})

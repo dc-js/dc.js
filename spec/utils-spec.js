@@ -46,6 +46,9 @@ describe('dc utils', function () {
         it('print zero', function () {
             expect(printer(0)).toEqual(0);
         });
+        it('print a multi-element array', function () {
+            expect(printer(['this', 'that', 'and', 'the', 'other'])).toEqual('[this -> that -> and -> the -> other]');
+        });
     });
 
     describe('dc.utils.nameToId', function () {

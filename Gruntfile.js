@@ -22,6 +22,8 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
+    const sass = require('node-sass');
+
     grunt.initConfig({
         conf: config,
 
@@ -48,6 +50,9 @@ module.exports = function (grunt) {
             }
         },
         sass: {
+            options: {
+                implementation: sass
+            },
             dist: {
                 files: {
                     '<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'

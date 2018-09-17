@@ -94,7 +94,7 @@ dc.pieChart = function (parent, chartGroup) {
         var pie = pieLayout();
         var pieData;
         // if we have data...
-        if (d3.sum(_chart.data(), _chart.valueAccessor())) {
+        if (d3.sum(_chart.data(), _chart.cappedValueAccessor)) {
             pieData = pie(_chart.data());
             _g.classed(_emptyCssClass, false);
         } else {
