@@ -1,11 +1,11 @@
-// https://d3js.org Version 5.4.0. Copyright 2018 Mike Bostock.
+// https://d3js.org v5.7.0 Copyright 2018 Mike Bostock
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
-	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global.d3 = global.d3 || {})));
+typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
+typeof define === 'function' && define.amd ? define(['exports'], factory) :
+(factory((global.d3 = global.d3 || {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "5.4.0";
+var version = "5.7.0";
 
 function ascending(a, b) {
   return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -269,7 +269,7 @@ function histogram() {
     // Convert number of thresholds into uniform thresholds.
     if (!Array.isArray(tz)) {
       tz = tickStep(x0, x1, tz);
-      tz = sequence(Math.ceil(x0 / tz) * tz, Math.floor(x1 / tz) * tz, tz); // exclusive
+      tz = sequence(Math.ceil(x0 / tz) * tz, x1, tz); // exclusive
     }
 
     // Remove any thresholds outside the domain.
@@ -622,16 +622,16 @@ function axis(orient, scale) {
 
     path = path.merge(path.enter().insert("path", ".tick")
         .attr("class", "domain")
-        .attr("stroke", "#000"));
+        .attr("stroke", "currentColor"));
 
     tick = tick.merge(tickEnter);
 
     line = line.merge(tickEnter.append("line")
-        .attr("stroke", "#000")
+        .attr("stroke", "currentColor")
         .attr(x + "2", k * tickSizeInner));
 
     text = text.merge(tickEnter.append("text")
-        .attr("fill", "#000")
+        .attr("fill", "currentColor")
         .attr(x, k * spacing)
         .attr("dy", orient === top ? "0em" : orient === bottom ? "0.71em" : "0.32em"));
 
@@ -654,8 +654,8 @@ function axis(orient, scale) {
 
     path
         .attr("d", orient === left || orient == right
-            ? "M" + k * tickSizeOuter + "," + range0 + "H0.5V" + range1 + "H" + k * tickSizeOuter
-            : "M" + range0 + "," + k * tickSizeOuter + "V0.5H" + range1 + "V" + k * tickSizeOuter);
+            ? (tickSizeOuter ? "M" + k * tickSizeOuter + "," + range0 + "H0.5V" + range1 + "H" + k * tickSizeOuter : "M0.5," + range0 + "V" + range1)
+            : (tickSizeOuter ? "M" + range0 + "," + k * tickSizeOuter + "V0.5H" + range1 + "V" + k * tickSizeOuter : "M" + range0 + ",0.5H" + range1));
 
     tick
         .attr("opacity", 1)
@@ -2672,7 +2672,7 @@ function date(a, b) {
   };
 }
 
-function reinterpolate(a, b) {
+function interpolateNumber(a, b) {
   return a = +a, b -= a, function(t) {
     return a + b * t;
   };
@@ -2740,7 +2740,7 @@ function interpolateString(a, b) {
       else s[++i] = bm;
     } else { // interpolate non-matching numbers
       s[++i] = null;
-      q.push({i: i, x: reinterpolate(am, bm)});
+      q.push({i: i, x: interpolateNumber(am, bm)});
     }
     bi = reB.lastIndex;
   }
@@ -2766,13 +2766,28 @@ function interpolateString(a, b) {
 function interpolateValue(a, b) {
   var t = typeof b, c;
   return b == null || t === "boolean" ? constant$3(b)
-      : (t === "number" ? reinterpolate
+      : (t === "number" ? interpolateNumber
       : t === "string" ? ((c = color(b)) ? (b = c, interpolateRgb) : interpolateString)
       : b instanceof color ? interpolateRgb
       : b instanceof Date ? date
       : Array.isArray(b) ? array$1
       : typeof b.valueOf !== "function" && typeof b.toString !== "function" || isNaN(b) ? object
-      : reinterpolate)(a, b);
+      : interpolateNumber)(a, b);
+}
+
+function discrete(range) {
+  var n = range.length;
+  return function(t) {
+    return range[Math.max(0, Math.min(n - 1, Math.floor(t * n)))];
+  };
+}
+
+function hue$1(a, b) {
+  var i = hue(+a, +b);
+  return function(t) {
+    var x = i(t);
+    return x - 360 * Math.floor(x / 360);
+  };
 }
 
 function interpolateRound(a, b) {
@@ -2841,7 +2856,7 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
   function translate(xa, ya, xb, yb, s, q) {
     if (xa !== xb || ya !== yb) {
       var i = s.push("translate(", null, pxComma, null, pxParen);
-      q.push({i: i - 4, x: reinterpolate(xa, xb)}, {i: i - 2, x: reinterpolate(ya, yb)});
+      q.push({i: i - 4, x: interpolateNumber(xa, xb)}, {i: i - 2, x: interpolateNumber(ya, yb)});
     } else if (xb || yb) {
       s.push("translate(" + xb + pxComma + yb + pxParen);
     }
@@ -2850,7 +2865,7 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
   function rotate(a, b, s, q) {
     if (a !== b) {
       if (a - b > 180) b += 360; else if (b - a > 180) a += 360; // shortest path
-      q.push({i: s.push(pop(s) + "rotate(", null, degParen) - 2, x: reinterpolate(a, b)});
+      q.push({i: s.push(pop(s) + "rotate(", null, degParen) - 2, x: interpolateNumber(a, b)});
     } else if (b) {
       s.push(pop(s) + "rotate(" + b + degParen);
     }
@@ -2858,7 +2873,7 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
 
   function skewX(a, b, s, q) {
     if (a !== b) {
-      q.push({i: s.push(pop(s) + "skewX(", null, degParen) - 2, x: reinterpolate(a, b)});
+      q.push({i: s.push(pop(s) + "skewX(", null, degParen) - 2, x: interpolateNumber(a, b)});
     } else if (b) {
       s.push(pop(s) + "skewX(" + b + degParen);
     }
@@ -2867,7 +2882,7 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
   function scale(xa, ya, xb, yb, s, q) {
     if (xa !== xb || ya !== yb) {
       var i = s.push(pop(s) + "scale(", null, ",", null, ")");
-      q.push({i: i - 4, x: reinterpolate(xa, xb)}, {i: i - 2, x: reinterpolate(ya, yb)});
+      q.push({i: i - 4, x: interpolateNumber(xa, xb)}, {i: i - 2, x: interpolateNumber(ya, yb)});
     } else if (xb !== 1 || yb !== 1) {
       s.push(pop(s) + "scale(" + xb + "," + yb + ")");
     }
@@ -3449,7 +3464,7 @@ function tweenValue(transition, name, value) {
 
 function interpolate(a, b) {
   var c;
-  return (typeof b === "number" ? reinterpolate
+  return (typeof b === "number" ? interpolateNumber
       : b instanceof color ? interpolateRgb
       : (c = color(b)) ? (b = c, interpolateRgb)
       : interpolateString)(a, b);
@@ -4909,7 +4924,7 @@ Path.prototype = path.prototype = {
     }
 
     // Or, is (x1,y1) coincident with (x0,y0)? Do nothing.
-    else if (!(l01_2 > epsilon$1)) {}
+    else if (!(l01_2 > epsilon$1));
 
     // Or, are (x0,y0), (x1,y1) and (x2,y2) collinear?
     // Equivalently, is (x1,y1) coincident with (x2,y2)?
@@ -5061,7 +5076,7 @@ function ribbon() {
   };
 
   ribbon.context = function(_) {
-    return arguments.length ? (context = _ == null ? null : _, ribbon) : context;
+    return arguments.length ? ((context = _ == null ? null : _), ribbon) : context;
   };
 
   return ribbon;
@@ -5565,9 +5580,14 @@ function defaultY(d) {
   return d[1];
 }
 
+function defaultWeight() {
+  return 1;
+}
+
 function density() {
   var x = defaultX,
       y = defaultY,
+      weight = defaultWeight,
       dx = 960,
       dy = 500,
       r = 20, // blur radius
@@ -5582,10 +5602,11 @@ function density() {
         values1 = new Float32Array(n * m);
 
     data.forEach(function(d, i, data) {
-      var xi = (x(d, i, data) + o) >> k,
-          yi = (y(d, i, data) + o) >> k;
+      var xi = (+x(d, i, data) + o) >> k,
+          yi = (+y(d, i, data) + o) >> k,
+          wi = +weight(d, i, data);
       if (xi >= 0 && xi < n && yi >= 0 && yi < m) {
-        ++values0[xi + yi * n];
+        values0[xi + yi * n] += wi;
       }
     });
 
@@ -5647,6 +5668,10 @@ function density() {
 
   density.y = function(_) {
     return arguments.length ? (y = typeof _ === "function" ? _ : constant$6(+_), density) : y;
+  };
+
+  density.weight = function(_) {
+    return arguments.length ? (weight = typeof _ === "function" ? _ : constant$6(+_), density) : weight;
   };
 
   density.size = function(_) {
@@ -6219,7 +6244,7 @@ function tree_remove(d) {
   if (next = node.next) delete node.next;
 
   // If there are multiple coincident points, remove just the point.
-  if (previous) return next ? previous.next = next : delete previous.next, this;
+  if (previous) return (next ? previous.next = next : delete previous.next), this;
 
   // If this is the root point, remove it.
   if (!parent) return this._root = next, this;
@@ -6683,7 +6708,7 @@ function simulation(nodes) {
     },
 
     force: function(name, _) {
-      return arguments.length > 1 ? (_ == null ? forces.remove(name) : forces.set(name, initializeForce(_)), simulation) : forces.get(name);
+      return arguments.length > 1 ? ((_ == null ? forces.remove(name) : forces.set(name, initializeForce(_))), simulation) : forces.get(name);
     },
 
     find: function(x, y, radius) {
@@ -7008,7 +7033,7 @@ function formatNumerals(numerals) {
 }
 
 // [[fill]align][sign][symbol][0][width][,][.precision][~][type]
-var re = /^(?:(.)?([<>=^]))?([+\-\( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i;
+var re = /^(?:(.)?([<>=^]))?([+\-( ])?([$#])?(0)?(\d+)?(,)?(\.\d+)?(~)?([a-z%])?$/i;
 
 function formatSpecifier(specifier) {
   return new FormatSpecifier(specifier);
@@ -9875,7 +9900,8 @@ function albersUsa() {
 
   function albersUsa(coordinates) {
     var x = coordinates[0], y = coordinates[1];
-    return point = null, (lower48Point.point(x, y), point)
+    return point = null,
+        (lower48Point.point(x, y), point)
         || (alaskaPoint.point(x, y), point)
         || (hawaiiPoint.point(x, y), point);
   }
@@ -10039,7 +10065,7 @@ function mercatorProjection(project) {
   };
 
   m.clipExtent = function(_) {
-    return arguments.length ? (_ == null ? x0 = y0 = x1 = y1 = null : (x0 = +_[0][0], y0 = +_[0][1], x1 = +_[1][0], y1 = +_[1][1]), reclip()) : x0 == null ? null : [[x0, y0], [x1, y1]];
+    return arguments.length ? ((_ == null ? x0 = y0 = x1 = y1 = null : (x0 = +_[0][0], y0 = +_[0][1], x1 = +_[1][0], y1 = +_[1][1])), reclip()) : x0 == null ? null : [[x0, y0], [x1, y1]];
   };
 
   function reclip() {
@@ -10121,6 +10147,40 @@ function conicEquidistant() {
   return conicProjection(conicEquidistantRaw)
       .scale(131.154)
       .center([0, 13.9389]);
+}
+
+var A1 = 1.340264,
+    A2 = -0.081106,
+    A3 = 0.000893,
+    A4 = 0.003796,
+    M = sqrt(3) / 2,
+    iterations = 12;
+
+function equalEarthRaw(lambda, phi) {
+  var l = asin(M * sin$1(phi)), l2 = l * l, l6 = l2 * l2 * l2;
+  return [
+    lambda * cos$1(l) / (M * (A1 + 3 * A2 * l2 + l6 * (7 * A3 + 9 * A4 * l2))),
+    l * (A1 + A2 * l2 + l6 * (A3 + A4 * l2))
+  ];
+}
+
+equalEarthRaw.invert = function(x, y) {
+  var l = y, l2 = l * l, l6 = l2 * l2 * l2;
+  for (var i = 0, delta, fy, fpy; i < iterations; ++i) {
+    fy = l * (A1 + A2 * l2 + l6 * (A3 + A4 * l2)) - y;
+    fpy = A1 + 3 * A2 * l2 + l6 * (7 * A3 + 9 * A4 * l2);
+    l -= delta = fy / fpy, l2 = l * l, l6 = l2 * l2 * l2;
+    if (abs(delta) < epsilon2$1) break;
+  }
+  return [
+    M * x * (A1 + 3 * A2 * l2 + l6 * (7 * A3 + 9 * A4 * l2)) / cos$1(l),
+    asin(sin$1(l) / M)
+  ];
+};
+
+function equalEarth() {
+  return projection(equalEarthRaw)
+      .scale(177.158);
 }
 
 function gnomonicRaw(x, y) {
@@ -11916,7 +11976,7 @@ function point$1() {
   return pointish(band().paddingInner(1));
 }
 
-function constant$10(x) {
+function constant$a(x) {
   return function() {
     return x;
   };
@@ -11931,7 +11991,7 @@ var unit = [0, 1];
 function deinterpolateLinear(a, b) {
   return (b -= (a = +a))
       ? function(x) { return (x - a) / b; }
-      : constant$10(b);
+      : constant$a(b);
 }
 
 function deinterpolateClamp(deinterpolate) {
@@ -11941,21 +12001,21 @@ function deinterpolateClamp(deinterpolate) {
   };
 }
 
-function reinterpolateClamp(reinterpolate$$1) {
+function reinterpolateClamp(reinterpolate) {
   return function(a, b) {
-    var r = reinterpolate$$1(a = +a, b = +b);
+    var r = reinterpolate(a = +a, b = +b);
     return function(t) { return t <= 0 ? a : t >= 1 ? b : r(t); };
   };
 }
 
-function bimap(domain, range, deinterpolate, reinterpolate$$1) {
+function bimap(domain, range, deinterpolate, reinterpolate) {
   var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
-  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate$$1(r1, r0);
-  else d0 = deinterpolate(d0, d1), r0 = reinterpolate$$1(r0, r1);
+  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
+  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
   return function(x) { return r0(d0(x)); };
 }
 
-function polymap(domain, range, deinterpolate, reinterpolate$$1) {
+function polymap(domain, range, deinterpolate, reinterpolate) {
   var j = Math.min(domain.length, range.length) - 1,
       d = new Array(j),
       r = new Array(j),
@@ -11969,7 +12029,7 @@ function polymap(domain, range, deinterpolate, reinterpolate$$1) {
 
   while (++i < j) {
     d[i] = deinterpolate(domain[i], domain[i + 1]);
-    r[i] = reinterpolate$$1(range[i], range[i + 1]);
+    r[i] = reinterpolate(range[i], range[i + 1]);
   }
 
   return function(x) {
@@ -11988,7 +12048,7 @@ function copy(source, target) {
 
 // deinterpolate(a, b)(x) takes a domain value x in [a,b] and returns the corresponding parameter t in [0,1].
 // reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
-function continuous(deinterpolate, reinterpolate$$1) {
+function continuous(deinterpolate, reinterpolate) {
   var domain = unit,
       range = unit,
       interpolate$$1 = interpolateValue,
@@ -12008,7 +12068,7 @@ function continuous(deinterpolate, reinterpolate$$1) {
   }
 
   scale.invert = function(y) {
-    return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate$$1) : reinterpolate$$1)))(+y);
+    return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
   };
 
   scale.domain = function(_) {
@@ -12119,7 +12179,7 @@ function linearish(scale) {
 }
 
 function linear$2() {
-  var scale = continuous(deinterpolateLinear, reinterpolate);
+  var scale = continuous(deinterpolateLinear, interpolateNumber);
 
   scale.copy = function() {
     return copy(scale, linear$2());
@@ -12170,10 +12230,10 @@ function nice(domain, interval) {
 function deinterpolate(a, b) {
   return (b = Math.log(b / a))
       ? function(x) { return Math.log(x / a) / b; }
-      : constant$10(b);
+      : constant$a(b);
 }
 
-function reinterpolate$1(a, b) {
+function reinterpolate(a, b) {
   return a < 0
       ? function(t) { return -Math.pow(-b, t) * Math.pow(-a, 1 - t); }
       : function(t) { return Math.pow(b, t) * Math.pow(a, 1 - t); };
@@ -12203,7 +12263,7 @@ function reflect(f) {
 }
 
 function log$1() {
-  var scale = continuous(deinterpolate, reinterpolate$1).domain([1, 10]),
+  var scale = continuous(deinterpolate, reinterpolate).domain([1, 10]),
       domain = scale.domain,
       base = 10,
       logs = logp(10),
@@ -12302,7 +12362,7 @@ function pow$1() {
   function deinterpolate(a, b) {
     return (b = raise$1(b, exponent) - (a = raise$1(a, exponent)))
         ? function(x) { return (raise$1(x, exponent) - a) / b; }
-        : constant$10(b);
+        : constant$a(b);
   }
 
   function reinterpolate(a, b) {
@@ -13435,7 +13495,7 @@ function number$3(t) {
 }
 
 function calendar(year$$1, month$$1, week, day$$1, hour$$1, minute$$1, second$$1, millisecond$$1, format) {
-  var scale = continuous(deinterpolateLinear, reinterpolate),
+  var scale = continuous(deinterpolateLinear, interpolateNumber),
       invert = scale.invert,
       domain = scale.domain;
 
@@ -13553,15 +13613,16 @@ function utcTime() {
 function sequential(interpolator) {
   var x0 = 0,
       x1 = 1,
+      k10 = 1,
       clamp = false;
 
   function scale(x) {
-    var t = (x - x0) / (x1 - x0);
+    var t = (x - x0) * k10;
     return interpolator(clamp ? Math.max(0, Math.min(1, t)) : t);
   }
 
   scale.domain = function(_) {
-    return arguments.length ? (x0 = +_[0], x1 = +_[1], scale) : [x0, x1];
+    return arguments.length ? (x0 = +_[0], x1 = +_[1], k10 = x0 === x1 ? 0 : 1 / (x1 - x0), scale) : [x0, x1];
   };
 
   scale.clamp = function(_) {
@@ -13574,6 +13635,38 @@ function sequential(interpolator) {
 
   scale.copy = function() {
     return sequential(interpolator).domain([x0, x1]).clamp(clamp);
+  };
+
+  return linearish(scale);
+}
+
+function diverging(interpolator) {
+  var x0 = 0,
+      x1 = 0.5,
+      x2 = 1,
+      k10 = 1,
+      k21 = 1,
+      clamp = false;
+
+  function scale(x) {
+    var t = 0.5 + ((x = +x) - x1) * (x < x1 ? k10 : k21);
+    return interpolator(clamp ? Math.max(0, Math.min(1, t)) : t);
+  }
+
+  scale.domain = function(_) {
+    return arguments.length ? (x0 = +_[0], x1 = +_[1], x2 = +_[2], k10 = x0 === x1 ? 0 : 0.5 / (x1 - x0), k21 = x1 === x2 ? 0 : 0.5 / (x2 - x1), scale) : [x0, x1, x2];
+  };
+
+  scale.clamp = function(_) {
+    return arguments.length ? (clamp = !!_, scale) : clamp;
+  };
+
+  scale.interpolator = function(_) {
+    return arguments.length ? (interpolator = _, scale) : interpolator;
+  };
+
+  scale.copy = function() {
+    return diverging(interpolator).domain([x0, x1, x2]).clamp(clamp);
   };
 
   return linearish(scale);
@@ -13745,7 +13838,7 @@ var scheme$9 = new Array(3).concat(
 
 var BuGn = ramp(scheme$9);
 
-var scheme$10 = new Array(3).concat(
+var scheme$a = new Array(3).concat(
   "e0ecf49ebcda8856a7",
   "edf8fbb3cde38c96c688419d",
   "edf8fbb3cde38c96c68856a7810f7c",
@@ -13755,9 +13848,9 @@ var scheme$10 = new Array(3).concat(
   "f7fcfde0ecf4bfd3e69ebcda8c96c68c6bb188419d810f7c4d004b"
 ).map(colors);
 
-var BuPu = ramp(scheme$10);
+var BuPu = ramp(scheme$a);
 
-var scheme$11 = new Array(3).concat(
+var scheme$b = new Array(3).concat(
   "e0f3dba8ddb543a2ca",
   "f0f9e8bae4bc7bccc42b8cbe",
   "f0f9e8bae4bc7bccc443a2ca0868ac",
@@ -13767,9 +13860,9 @@ var scheme$11 = new Array(3).concat(
   "f7fcf0e0f3dbccebc5a8ddb57bccc44eb3d32b8cbe0868ac084081"
 ).map(colors);
 
-var GnBu = ramp(scheme$11);
+var GnBu = ramp(scheme$b);
 
-var scheme$12 = new Array(3).concat(
+var scheme$c = new Array(3).concat(
   "fee8c8fdbb84e34a33",
   "fef0d9fdcc8afc8d59d7301f",
   "fef0d9fdcc8afc8d59e34a33b30000",
@@ -13779,9 +13872,9 @@ var scheme$12 = new Array(3).concat(
   "fff7ecfee8c8fdd49efdbb84fc8d59ef6548d7301fb300007f0000"
 ).map(colors);
 
-var OrRd = ramp(scheme$12);
+var OrRd = ramp(scheme$c);
 
-var scheme$13 = new Array(3).concat(
+var scheme$d = new Array(3).concat(
   "ece2f0a6bddb1c9099",
   "f6eff7bdc9e167a9cf02818a",
   "f6eff7bdc9e167a9cf1c9099016c59",
@@ -13791,9 +13884,9 @@ var scheme$13 = new Array(3).concat(
   "fff7fbece2f0d0d1e6a6bddb67a9cf3690c002818a016c59014636"
 ).map(colors);
 
-var PuBuGn = ramp(scheme$13);
+var PuBuGn = ramp(scheme$d);
 
-var scheme$14 = new Array(3).concat(
+var scheme$e = new Array(3).concat(
   "ece7f2a6bddb2b8cbe",
   "f1eef6bdc9e174a9cf0570b0",
   "f1eef6bdc9e174a9cf2b8cbe045a8d",
@@ -13803,9 +13896,9 @@ var scheme$14 = new Array(3).concat(
   "fff7fbece7f2d0d1e6a6bddb74a9cf3690c00570b0045a8d023858"
 ).map(colors);
 
-var PuBu = ramp(scheme$14);
+var PuBu = ramp(scheme$e);
 
-var scheme$15 = new Array(3).concat(
+var scheme$f = new Array(3).concat(
   "e7e1efc994c7dd1c77",
   "f1eef6d7b5d8df65b0ce1256",
   "f1eef6d7b5d8df65b0dd1c77980043",
@@ -13815,9 +13908,9 @@ var scheme$15 = new Array(3).concat(
   "f7f4f9e7e1efd4b9dac994c7df65b0e7298ace125698004367001f"
 ).map(colors);
 
-var PuRd = ramp(scheme$15);
+var PuRd = ramp(scheme$f);
 
-var scheme$16 = new Array(3).concat(
+var scheme$g = new Array(3).concat(
   "fde0ddfa9fb5c51b8a",
   "feebe2fbb4b9f768a1ae017e",
   "feebe2fbb4b9f768a1c51b8a7a0177",
@@ -13827,9 +13920,9 @@ var scheme$16 = new Array(3).concat(
   "fff7f3fde0ddfcc5c0fa9fb5f768a1dd3497ae017e7a017749006a"
 ).map(colors);
 
-var RdPu = ramp(scheme$16);
+var RdPu = ramp(scheme$g);
 
-var scheme$17 = new Array(3).concat(
+var scheme$h = new Array(3).concat(
   "edf8b17fcdbb2c7fb8",
   "ffffcca1dab441b6c4225ea8",
   "ffffcca1dab441b6c42c7fb8253494",
@@ -13839,9 +13932,9 @@ var scheme$17 = new Array(3).concat(
   "ffffd9edf8b1c7e9b47fcdbb41b6c41d91c0225ea8253494081d58"
 ).map(colors);
 
-var YlGnBu = ramp(scheme$17);
+var YlGnBu = ramp(scheme$h);
 
-var scheme$18 = new Array(3).concat(
+var scheme$i = new Array(3).concat(
   "f7fcb9addd8e31a354",
   "ffffccc2e69978c679238443",
   "ffffccc2e69978c67931a354006837",
@@ -13851,9 +13944,9 @@ var scheme$18 = new Array(3).concat(
   "ffffe5f7fcb9d9f0a3addd8e78c67941ab5d238443006837004529"
 ).map(colors);
 
-var YlGn = ramp(scheme$18);
+var YlGn = ramp(scheme$i);
 
-var scheme$19 = new Array(3).concat(
+var scheme$j = new Array(3).concat(
   "fff7bcfec44fd95f0e",
   "ffffd4fed98efe9929cc4c02",
   "ffffd4fed98efe9929d95f0e993404",
@@ -13863,9 +13956,9 @@ var scheme$19 = new Array(3).concat(
   "ffffe5fff7bcfee391fec44ffe9929ec7014cc4c02993404662506"
 ).map(colors);
 
-var YlOrBr = ramp(scheme$19);
+var YlOrBr = ramp(scheme$j);
 
-var scheme$20 = new Array(3).concat(
+var scheme$k = new Array(3).concat(
   "ffeda0feb24cf03b20",
   "ffffb2fecc5cfd8d3ce31a1c",
   "ffffb2fecc5cfd8d3cf03b20bd0026",
@@ -13875,9 +13968,9 @@ var scheme$20 = new Array(3).concat(
   "ffffccffeda0fed976feb24cfd8d3cfc4e2ae31a1cbd0026800026"
 ).map(colors);
 
-var YlOrRd = ramp(scheme$20);
+var YlOrRd = ramp(scheme$k);
 
-var scheme$21 = new Array(3).concat(
+var scheme$l = new Array(3).concat(
   "deebf79ecae13182bd",
   "eff3ffbdd7e76baed62171b5",
   "eff3ffbdd7e76baed63182bd08519c",
@@ -13887,9 +13980,9 @@ var scheme$21 = new Array(3).concat(
   "f7fbffdeebf7c6dbef9ecae16baed64292c62171b508519c08306b"
 ).map(colors);
 
-var Blues = ramp(scheme$21);
+var Blues = ramp(scheme$l);
 
-var scheme$22 = new Array(3).concat(
+var scheme$m = new Array(3).concat(
   "e5f5e0a1d99b31a354",
   "edf8e9bae4b374c476238b45",
   "edf8e9bae4b374c47631a354006d2c",
@@ -13899,9 +13992,9 @@ var scheme$22 = new Array(3).concat(
   "f7fcf5e5f5e0c7e9c0a1d99b74c47641ab5d238b45006d2c00441b"
 ).map(colors);
 
-var Greens = ramp(scheme$22);
+var Greens = ramp(scheme$m);
 
-var scheme$23 = new Array(3).concat(
+var scheme$n = new Array(3).concat(
   "f0f0f0bdbdbd636363",
   "f7f7f7cccccc969696525252",
   "f7f7f7cccccc969696636363252525",
@@ -13911,9 +14004,9 @@ var scheme$23 = new Array(3).concat(
   "fffffff0f0f0d9d9d9bdbdbd969696737373525252252525000000"
 ).map(colors);
 
-var Greys = ramp(scheme$23);
+var Greys = ramp(scheme$n);
 
-var scheme$24 = new Array(3).concat(
+var scheme$o = new Array(3).concat(
   "efedf5bcbddc756bb1",
   "f2f0f7cbc9e29e9ac86a51a3",
   "f2f0f7cbc9e29e9ac8756bb154278f",
@@ -13923,9 +14016,9 @@ var scheme$24 = new Array(3).concat(
   "fcfbfdefedf5dadaebbcbddc9e9ac8807dba6a51a354278f3f007d"
 ).map(colors);
 
-var Purples = ramp(scheme$24);
+var Purples = ramp(scheme$o);
 
-var scheme$25 = new Array(3).concat(
+var scheme$p = new Array(3).concat(
   "fee0d2fc9272de2d26",
   "fee5d9fcae91fb6a4acb181d",
   "fee5d9fcae91fb6a4ade2d26a50f15",
@@ -13935,9 +14028,9 @@ var scheme$25 = new Array(3).concat(
   "fff5f0fee0d2fcbba1fc9272fb6a4aef3b2ccb181da50f1567000d"
 ).map(colors);
 
-var Reds = ramp(scheme$25);
+var Reds = ramp(scheme$p);
 
-var scheme$26 = new Array(3).concat(
+var scheme$q = new Array(3).concat(
   "fee6cefdae6be6550d",
   "feeddefdbe85fd8d3cd94701",
   "feeddefdbe85fd8d3ce6550da63603",
@@ -13947,7 +14040,7 @@ var scheme$26 = new Array(3).concat(
   "fff5ebfee6cefdd0a2fdae6bfd8d3cf16913d94801a636037f2704"
 ).map(colors);
 
-var Oranges = ramp(scheme$26);
+var Oranges = ramp(scheme$q);
 
 var cubehelix$3 = cubehelixLong(cubehelix(300, 0.5, 0.0), cubehelix(-240, 0.5, 1.0));
 
@@ -13994,7 +14087,7 @@ var inferno = ramp$1(colors("00000401000501010601010802010a02020c02020e030210040
 
 var plasma = ramp$1(colors("0d088710078813078916078a19068c1b068d1d068e20068f2206902406912605912805922a05932c05942e05952f059631059733059735049837049938049a3a049a3c049b3e049c3f049c41049d43039e44039e46039f48039f4903a04b03a14c02a14e02a25002a25102a35302a35502a45601a45801a45901a55b01a55c01a65e01a66001a66100a76300a76400a76600a76700a86900a86a00a86c00a86e00a86f00a87100a87201a87401a87501a87701a87801a87a02a87b02a87d03a87e03a88004a88104a78305a78405a78606a68707a68808a68a09a58b0aa58d0ba58e0ca48f0da4910ea3920fa39410a29511a19613a19814a099159f9a169f9c179e9d189d9e199da01a9ca11b9ba21d9aa31e9aa51f99a62098a72197a82296aa2395ab2494ac2694ad2793ae2892b02991b12a90b22b8fb32c8eb42e8db52f8cb6308bb7318ab83289ba3388bb3488bc3587bd3786be3885bf3984c03a83c13b82c23c81c33d80c43e7fc5407ec6417dc7427cc8437bc9447aca457acb4679cc4778cc4977cd4a76ce4b75cf4c74d04d73d14e72d24f71d35171d45270d5536fd5546ed6556dd7566cd8576bd9586ada5a6ada5b69db5c68dc5d67dd5e66de5f65de6164df6263e06363e16462e26561e26660e3685fe4695ee56a5de56b5de66c5ce76e5be76f5ae87059e97158e97257ea7457eb7556eb7655ec7754ed7953ed7a52ee7b51ef7c51ef7e50f07f4ff0804ef1814df1834cf2844bf3854bf3874af48849f48948f58b47f58c46f68d45f68f44f79044f79143f79342f89441f89540f9973ff9983ef99a3efa9b3dfa9c3cfa9e3bfb9f3afba139fba238fca338fca537fca636fca835fca934fdab33fdac33fdae32fdaf31fdb130fdb22ffdb42ffdb52efeb72dfeb82cfeba2cfebb2bfebd2afebe2afec029fdc229fdc328fdc527fdc627fdc827fdca26fdcb26fccd25fcce25fcd025fcd225fbd324fbd524fbd724fad824fada24f9dc24f9dd25f8df25f8e125f7e225f7e425f6e626f6e826f5e926f5eb27f4ed27f3ee27f3f027f2f227f1f426f1f525f0f724f0f921"));
 
-function constant$11(x) {
+function constant$b(x) {
   return function constant() {
     return x;
   };
@@ -14094,7 +14187,7 @@ function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
 function arc() {
   var innerRadius = arcInnerRadius,
       outerRadius = arcOuterRadius,
-      cornerRadius = constant$11(0),
+      cornerRadius = constant$b(0),
       padRadius = null,
       startAngle = arcStartAngle,
       endAngle = arcEndAngle,
@@ -14243,35 +14336,35 @@ function arc() {
   };
 
   arc.innerRadius = function(_) {
-    return arguments.length ? (innerRadius = typeof _ === "function" ? _ : constant$11(+_), arc) : innerRadius;
+    return arguments.length ? (innerRadius = typeof _ === "function" ? _ : constant$b(+_), arc) : innerRadius;
   };
 
   arc.outerRadius = function(_) {
-    return arguments.length ? (outerRadius = typeof _ === "function" ? _ : constant$11(+_), arc) : outerRadius;
+    return arguments.length ? (outerRadius = typeof _ === "function" ? _ : constant$b(+_), arc) : outerRadius;
   };
 
   arc.cornerRadius = function(_) {
-    return arguments.length ? (cornerRadius = typeof _ === "function" ? _ : constant$11(+_), arc) : cornerRadius;
+    return arguments.length ? (cornerRadius = typeof _ === "function" ? _ : constant$b(+_), arc) : cornerRadius;
   };
 
   arc.padRadius = function(_) {
-    return arguments.length ? (padRadius = _ == null ? null : typeof _ === "function" ? _ : constant$11(+_), arc) : padRadius;
+    return arguments.length ? (padRadius = _ == null ? null : typeof _ === "function" ? _ : constant$b(+_), arc) : padRadius;
   };
 
   arc.startAngle = function(_) {
-    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$11(+_), arc) : startAngle;
+    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$b(+_), arc) : startAngle;
   };
 
   arc.endAngle = function(_) {
-    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$11(+_), arc) : endAngle;
+    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$b(+_), arc) : endAngle;
   };
 
   arc.padAngle = function(_) {
-    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$11(+_), arc) : padAngle;
+    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$b(+_), arc) : padAngle;
   };
 
   arc.context = function(_) {
-    return arguments.length ? (context = _ == null ? null : _, arc) : context;
+    return arguments.length ? ((context = _ == null ? null : _), arc) : context;
   };
 
   return arc;
@@ -14320,7 +14413,7 @@ function y$3(p) {
 function line() {
   var x$$1 = x$3,
       y$$1 = y$3,
-      defined = constant$11(true),
+      defined = constant$b(true),
       context = null,
       curve = curveLinear,
       output = null;
@@ -14346,15 +14439,15 @@ function line() {
   }
 
   line.x = function(_) {
-    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant$11(+_), line) : x$$1;
+    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant$b(+_), line) : x$$1;
   };
 
   line.y = function(_) {
-    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant$11(+_), line) : y$$1;
+    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant$b(+_), line) : y$$1;
   };
 
   line.defined = function(_) {
-    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$11(!!_), line) : defined;
+    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$b(!!_), line) : defined;
   };
 
   line.curve = function(_) {
@@ -14371,9 +14464,9 @@ function line() {
 function area$3() {
   var x0 = x$3,
       x1 = null,
-      y0 = constant$11(0),
+      y0 = constant$b(0),
       y1 = y$3,
-      defined = constant$11(true),
+      defined = constant$b(true),
       context = null,
       curve = curveLinear,
       output = null;
@@ -14421,27 +14514,27 @@ function area$3() {
   }
 
   area.x = function(_) {
-    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$11(+_), x1 = null, area) : x0;
+    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$b(+_), x1 = null, area) : x0;
   };
 
   area.x0 = function(_) {
-    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$11(+_), area) : x0;
+    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$b(+_), area) : x0;
   };
 
   area.x1 = function(_) {
-    return arguments.length ? (x1 = _ == null ? null : typeof _ === "function" ? _ : constant$11(+_), area) : x1;
+    return arguments.length ? (x1 = _ == null ? null : typeof _ === "function" ? _ : constant$b(+_), area) : x1;
   };
 
   area.y = function(_) {
-    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$11(+_), y1 = null, area) : y0;
+    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$b(+_), y1 = null, area) : y0;
   };
 
   area.y0 = function(_) {
-    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$11(+_), area) : y0;
+    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$b(+_), area) : y0;
   };
 
   area.y1 = function(_) {
-    return arguments.length ? (y1 = _ == null ? null : typeof _ === "function" ? _ : constant$11(+_), area) : y1;
+    return arguments.length ? (y1 = _ == null ? null : typeof _ === "function" ? _ : constant$b(+_), area) : y1;
   };
 
   area.lineX0 =
@@ -14458,7 +14551,7 @@ function area$3() {
   };
 
   area.defined = function(_) {
-    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$11(!!_), area) : defined;
+    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$b(!!_), area) : defined;
   };
 
   area.curve = function(_) {
@@ -14484,9 +14577,9 @@ function pie() {
   var value = identity$7,
       sortValues = descending$1,
       sort = null,
-      startAngle = constant$11(0),
-      endAngle = constant$11(tau$4),
-      padAngle = constant$11(0);
+      startAngle = constant$b(0),
+      endAngle = constant$b(tau$4),
+      padAngle = constant$b(0);
 
   function pie(data) {
     var i,
@@ -14529,7 +14622,7 @@ function pie() {
   }
 
   pie.value = function(_) {
-    return arguments.length ? (value = typeof _ === "function" ? _ : constant$11(+_), pie) : value;
+    return arguments.length ? (value = typeof _ === "function" ? _ : constant$b(+_), pie) : value;
   };
 
   pie.sortValues = function(_) {
@@ -14541,15 +14634,15 @@ function pie() {
   };
 
   pie.startAngle = function(_) {
-    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$11(+_), pie) : startAngle;
+    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$b(+_), pie) : startAngle;
   };
 
   pie.endAngle = function(_) {
-    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$11(+_), pie) : endAngle;
+    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$b(+_), pie) : endAngle;
   };
 
   pie.padAngle = function(_) {
-    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$11(+_), pie) : padAngle;
+    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$b(+_), pie) : padAngle;
   };
 
   return pie;
@@ -14670,15 +14763,15 @@ function link$2(curve) {
   };
 
   link.x = function(_) {
-    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant$11(+_), link) : x$$1;
+    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant$b(+_), link) : x$$1;
   };
 
   link.y = function(_) {
-    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant$11(+_), link) : y$$1;
+    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant$b(+_), link) : y$$1;
   };
 
   link.context = function(_) {
-    return arguments.length ? (context = _ == null ? null : _, link) : context;
+    return arguments.length ? ((context = _ == null ? null : _), link) : context;
   };
 
   return link;
@@ -14841,8 +14934,8 @@ var symbols = [
 ];
 
 function symbol() {
-  var type = constant$11(circle$2),
-      size = constant$11(64),
+  var type = constant$b(circle$2),
+      size = constant$b(64),
       context = null;
 
   function symbol() {
@@ -14853,11 +14946,11 @@ function symbol() {
   }
 
   symbol.type = function(_) {
-    return arguments.length ? (type = typeof _ === "function" ? _ : constant$11(_), symbol) : type;
+    return arguments.length ? (type = typeof _ === "function" ? _ : constant$b(_), symbol) : type;
   };
 
   symbol.size = function(_) {
-    return arguments.length ? (size = typeof _ === "function" ? _ : constant$11(+_), symbol) : size;
+    return arguments.length ? (size = typeof _ === "function" ? _ : constant$b(+_), symbol) : size;
   };
 
   symbol.context = function(_) {
@@ -15720,7 +15813,7 @@ function stackValue(d, key) {
 }
 
 function stack() {
-  var keys = constant$11([]),
+  var keys = constant$b([]),
       order = none$2,
       offset = none$1,
       value = stackValue;
@@ -15750,15 +15843,15 @@ function stack() {
   }
 
   stack.keys = function(_) {
-    return arguments.length ? (keys = typeof _ === "function" ? _ : constant$11(slice$6.call(_)), stack) : keys;
+    return arguments.length ? (keys = typeof _ === "function" ? _ : constant$b(slice$6.call(_)), stack) : keys;
   };
 
   stack.value = function(_) {
-    return arguments.length ? (value = typeof _ === "function" ? _ : constant$11(+_), stack) : value;
+    return arguments.length ? (value = typeof _ === "function" ? _ : constant$b(+_), stack) : value;
   };
 
   stack.order = function(_) {
-    return arguments.length ? (order = _ == null ? none$2 : typeof _ === "function" ? _ : constant$11(slice$6.call(_)), stack) : order;
+    return arguments.length ? (order = _ == null ? none$2 : typeof _ === "function" ? _ : constant$b(slice$6.call(_)), stack) : order;
   };
 
   stack.offset = function(_) {
@@ -15777,7 +15870,7 @@ function expand(series, order) {
   none$1(series, order);
 }
 
-function diverging(series, order) {
+function diverging$1(series, order) {
   if (!((n = series.length) > 1)) return;
   for (var i, j = 0, d, dy, yp, yn, n, m = series[order[0]].length; j < m; ++j) {
     for (yp = yn = 0, i = 0; i < n; ++i) {
@@ -15868,7 +15961,7 @@ function reverse(series) {
   return none$2(series).reverse();
 }
 
-function constant$12(x) {
+function constant$c(x) {
   return function() {
     return x;
   };
@@ -16837,11 +16930,11 @@ function voronoi() {
   };
 
   voronoi.x = function(_) {
-    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant$12(+_), voronoi) : x$$1;
+    return arguments.length ? (x$$1 = typeof _ === "function" ? _ : constant$c(+_), voronoi) : x$$1;
   };
 
   voronoi.y = function(_) {
-    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant$12(+_), voronoi) : y$$1;
+    return arguments.length ? (y$$1 = typeof _ === "function" ? _ : constant$c(+_), voronoi) : y$$1;
   };
 
   voronoi.extent = function(_) {
@@ -16855,7 +16948,7 @@ function voronoi() {
   return voronoi;
 }
 
-function constant$13(x) {
+function constant$d(x) {
   return function() {
     return x;
   };
@@ -17296,19 +17389,19 @@ function zoom() {
   }
 
   zoom.wheelDelta = function(_) {
-    return arguments.length ? (wheelDelta = typeof _ === "function" ? _ : constant$13(+_), zoom) : wheelDelta;
+    return arguments.length ? (wheelDelta = typeof _ === "function" ? _ : constant$d(+_), zoom) : wheelDelta;
   };
 
   zoom.filter = function(_) {
-    return arguments.length ? (filter = typeof _ === "function" ? _ : constant$13(!!_), zoom) : filter;
+    return arguments.length ? (filter = typeof _ === "function" ? _ : constant$d(!!_), zoom) : filter;
   };
 
   zoom.touchable = function(_) {
-    return arguments.length ? (touchable = typeof _ === "function" ? _ : constant$13(!!_), zoom) : touchable;
+    return arguments.length ? (touchable = typeof _ === "function" ? _ : constant$d(!!_), zoom) : touchable;
   };
 
   zoom.extent = function(_) {
-    return arguments.length ? (extent = typeof _ === "function" ? _ : constant$13([[+_[0][0], +_[0][1]], [+_[1][0], +_[1][1]]]), zoom) : extent;
+    return arguments.length ? (extent = typeof _ === "function" ? _ : constant$d([[+_[0][0], +_[0][1]], [+_[1][0], +_[1][1]]]), zoom) : extent;
   };
 
   zoom.scaleExtent = function(_) {
@@ -17503,6 +17596,8 @@ exports.geoConicEqualArea = conicEqualArea;
 exports.geoConicEqualAreaRaw = conicEqualAreaRaw;
 exports.geoConicEquidistant = conicEquidistant;
 exports.geoConicEquidistantRaw = conicEquidistantRaw;
+exports.geoEqualEarth = equalEarth;
+exports.geoEqualEarthRaw = equalEarthRaw;
 exports.geoEquirectangular = equirectangular;
 exports.geoEquirectangularRaw = equirectangularRaw;
 exports.geoGnomonic = gnomonic;
@@ -17543,7 +17638,9 @@ exports.interpolateArray = array$1;
 exports.interpolateBasis = basis$1;
 exports.interpolateBasisClosed = basisClosed;
 exports.interpolateDate = date;
-exports.interpolateNumber = reinterpolate;
+exports.interpolateDiscrete = discrete;
+exports.interpolateHue = hue$1;
+exports.interpolateNumber = interpolateNumber;
 exports.interpolateObject = object;
 exports.interpolateRound = interpolateRound;
 exports.interpolateString = interpolateString;
@@ -17590,6 +17687,7 @@ exports.scaleThreshold = threshold$1;
 exports.scaleTime = time;
 exports.scaleUtc = utcTime;
 exports.scaleSequential = sequential;
+exports.scaleDiverging = diverging;
 exports.schemeCategory10 = category10;
 exports.schemeAccent = Accent;
 exports.schemeDark2 = Dark2;
@@ -17620,39 +17718,39 @@ exports.schemeSpectral = scheme$8;
 exports.interpolateBuGn = BuGn;
 exports.schemeBuGn = scheme$9;
 exports.interpolateBuPu = BuPu;
-exports.schemeBuPu = scheme$10;
+exports.schemeBuPu = scheme$a;
 exports.interpolateGnBu = GnBu;
-exports.schemeGnBu = scheme$11;
+exports.schemeGnBu = scheme$b;
 exports.interpolateOrRd = OrRd;
-exports.schemeOrRd = scheme$12;
+exports.schemeOrRd = scheme$c;
 exports.interpolatePuBuGn = PuBuGn;
-exports.schemePuBuGn = scheme$13;
+exports.schemePuBuGn = scheme$d;
 exports.interpolatePuBu = PuBu;
-exports.schemePuBu = scheme$14;
+exports.schemePuBu = scheme$e;
 exports.interpolatePuRd = PuRd;
-exports.schemePuRd = scheme$15;
+exports.schemePuRd = scheme$f;
 exports.interpolateRdPu = RdPu;
-exports.schemeRdPu = scheme$16;
+exports.schemeRdPu = scheme$g;
 exports.interpolateYlGnBu = YlGnBu;
-exports.schemeYlGnBu = scheme$17;
+exports.schemeYlGnBu = scheme$h;
 exports.interpolateYlGn = YlGn;
-exports.schemeYlGn = scheme$18;
+exports.schemeYlGn = scheme$i;
 exports.interpolateYlOrBr = YlOrBr;
-exports.schemeYlOrBr = scheme$19;
+exports.schemeYlOrBr = scheme$j;
 exports.interpolateYlOrRd = YlOrRd;
-exports.schemeYlOrRd = scheme$20;
+exports.schemeYlOrRd = scheme$k;
 exports.interpolateBlues = Blues;
-exports.schemeBlues = scheme$21;
+exports.schemeBlues = scheme$l;
 exports.interpolateGreens = Greens;
-exports.schemeGreens = scheme$22;
+exports.schemeGreens = scheme$m;
 exports.interpolateGreys = Greys;
-exports.schemeGreys = scheme$23;
+exports.schemeGreys = scheme$n;
 exports.interpolatePurples = Purples;
-exports.schemePurples = scheme$24;
+exports.schemePurples = scheme$o;
 exports.interpolateReds = Reds;
-exports.schemeReds = scheme$25;
+exports.schemeReds = scheme$p;
 exports.interpolateOranges = Oranges;
-exports.schemeOranges = scheme$26;
+exports.schemeOranges = scheme$q;
 exports.interpolateCubehelixDefault = cubehelix$3;
 exports.interpolateRainbow = rainbow;
 exports.interpolateWarm = warm;
@@ -17721,7 +17819,7 @@ exports.curveStepAfter = stepAfter;
 exports.curveStepBefore = stepBefore;
 exports.stack = stack;
 exports.stackOffsetExpand = expand;
-exports.stackOffsetDiverging = diverging;
+exports.stackOffsetDiverging = diverging$1;
 exports.stackOffsetNone = none$1;
 exports.stackOffsetSilhouette = silhouette;
 exports.stackOffsetWiggle = wiggle;

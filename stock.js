@@ -32,9 +32,10 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 // set on the chart (e.g. slice selection for pie chart and brush
 // selection for bar chart). Enable this with `chart.turnOnControls(true)`
 
-// dc.js >=2.1 uses `visibility: hidden` to hide/show controls without
-// disrupting the layout. To return the old `display: none` behavior,
-// set `chart.controlsUseVisibility(false)` and use that style instead.
+// By default, dc.js >=2.1 uses `display: none` to control whether or not chart
+// controls are shown. To use `visibility: hidden` to hide/show controls
+// without disrupting the layout, set `chart.controlsUseVisibility(true)`.
+
     <div id='chart'>
        <a class='reset'
           href='javascript:myChart.filterAll();dc.redrawAll();'
