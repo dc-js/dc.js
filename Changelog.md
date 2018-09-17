@@ -1,3 +1,7 @@
+## 3.0.7
+* Title tooltips were not shown on heatmap the first time ([#1482](https://github.com/dc-js/dc.js/issues/1482))
+* Simpler, improved method for "bar single select" example, by Leung Chan ([#1477](https://github.com/dc-js/dc.js/pull/1477)
+
 ## 3.0.6
 * Enable the stroke for line chart dots, making it possible to actually use `strokeOpacity` ([#1449](https://github.com/dc-js/dc.js/pull/1449) / [#1447](https://github.com/dc-js/dc.js/issues/1447))
 * Fix an error when horizontal grid lines were drawn on a chart with an ordinal Y scale, by the3ver ([#1448](https://github.com/dc-js/dc.js/pull/1448) / [#539](https://github.com/dc-js/dc.js/issues/539))
