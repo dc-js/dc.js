@@ -1,4 +1,8 @@
 ## 3.0.7
+* Sunburst has animated transitions, by Amelia Ireland ([#1481](https://github.com/dc-js/dc.js/pull/1481))
+* Filter printer now prints more than 2 elements, by Amelia Ireland ([#1475](https://github.com/dc-js/dc.js/pull/1475))
+* `controlsUseVisibility` was incorrectly documented as defaulting true, by Amelia Ireland ([#1474](https://github.com/dc-js/dc.js/issues/1474))
+* Pie charts and row charts should always use `cappedValueAccessor` or custom `valueAccessor` will crash by Alex Campana ([#1335](https://github.com/dc-js/dc.js/pull/1335))
 * Title tooltips were not shown on heatmap the first time ([#1482](https://github.com/dc-js/dc.js/issues/1482))
 * Simpler, improved method for "bar single select" example, by Leung Chan ([#1477](https://github.com/dc-js/dc.js/pull/1477)
 
