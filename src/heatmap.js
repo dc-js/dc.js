@@ -226,12 +226,12 @@ dc.heatMap = function (parent, chartGroup) {
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .on('click', _chart.boxOnClick());
 
+        boxes = gEnter.merge(boxes);
+
         if (_chart.renderTitle()) {
             gEnter.append('title');
             boxes.select('title').text(_chart.title());
         }
-
-        boxes = gEnter.merge(boxes);
 
         dc.transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
