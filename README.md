@@ -82,12 +82,12 @@ Make sure the following packages are installed on your machine
 
 ### Install dependencies
 ```
-dc.js$ npm install
+$ npm install
 ```
 
 ### Build and Test
 ```
-dc.js$ grunt test
+$ grunt test
 ```
 
 Developing dc.js
@@ -95,7 +95,7 @@ Developing dc.js
 
 ### Start the development server
 ```
-dc.js$ grunt server
+$ grunt server
 ```
 
 * Jasmine specs are hosted at http://localhost:8888/spec
