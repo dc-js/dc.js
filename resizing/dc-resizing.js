@@ -32,8 +32,8 @@ function apply_resizing(chart, adjustX, adjustY, onresize) {
                 onresize(chart);
             }
             chart
-                .width(window.innerWidth - 20)
-                .height(window.innerHeight - 20);
+                .width(window.innerWidth - adjustX)
+                .height(window.innerHeight - adjustY);
 
             if (chart.rescale) {
                 chart.rescale();
