@@ -125,6 +125,9 @@ dc.sunburstChart = function (parent, chartGroup) {
             removeElements(slices);
 
             highlightFilter();
+
+	    dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');	    
         }
     }
 
