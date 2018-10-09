@@ -1,5 +1,6 @@
 ## 3.0.8
 * Sunburst was not centering responsively on redraw, by Frozenlock ([#1491](https://github.com/dc-js/dc.js/pull/1491) / [#1490](https://github.com/dc-js/dc.js/issues/1490))
+* Composite chart with no `id` was not clipping its children, by Frozenlock ([#1488](https://github.com/dc-js/dc.js/issues/1488))
 
 ## 3.0.7
 * Sunburst has animated transitions, by Amelia Ireland ([#1481](https://github.com/dc-js/dc.js/pull/1481))
