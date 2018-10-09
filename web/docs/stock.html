@@ -210,9 +210,10 @@ any html element with its css class set to <code>filter</code></p>
               </div>
               <p>Data can be loaded through regular means with your
 favorite javascript library</p>
-<pre><code class="language-javascript">d3.csv(<span class="hljs-string">'data.csv'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{...});
+<pre><code class="lang-javascript">d3.csv(<span class="hljs-string">'data.csv'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{...});
 d3.json(<span class="hljs-string">'data.json'</span>).then(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>) </span>{...});
-jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{...});</code></pre>
+jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">data</span>)</span>{...});
+</code></pre>
 
             </div>
             
@@ -1595,10 +1596,11 @@ an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
 on other charts within the same chart group.
 <br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-count-widget">Data Count Widget</a></p>
-<pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'dc-data-count'</span>&gt;</span>
+<pre><code class="lang-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'dc-data-count'</span>&gt;</span>
  <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'filter-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
  selected out of <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'total-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> records.
-<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
 
             </div>
             
@@ -1656,7 +1658,7 @@ to a specific group then any interaction with such chart will only trigger redra
 on other charts within the same chart group.
 <br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-table-widget">Data Table Widget</a></p>
 <p>You can statically define the headers like in</p>
-<pre><code class="language-html">   <span class="hljs-comment">&lt;!-- anchor div for data table --&gt;</span>
+<pre><code class="lang-html">   <span class="hljs-comment">&lt;!-- anchor div for data table --&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'data-table'</span>&gt;</span>
       <span class="hljs-comment">&lt;!-- create a custom header --&gt;</span>
       <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'header'</span>&gt;</span>
@@ -1667,7 +1669,8 @@ on other charts within the same chart group.
           <span class="hljs-tag">&lt;<span class="hljs-name">span</span>&gt;</span>Volume<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
       <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
       <span class="hljs-comment">&lt;!-- data rows will filled in here --&gt;</span>
-   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+   <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
 <p>or do it programmatically using <code>.columns()</code>.</p>
 
             </div>
