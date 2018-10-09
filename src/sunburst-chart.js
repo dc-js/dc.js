@@ -34,6 +34,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
+        _givenRadius, // given radius, if any
         _innerRadius = 0;
 
     var _g;
@@ -92,8 +93,9 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     function drawChart () {
-        // set radius on basis of chart dimension if missing
-        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+        // set radius from chart size if none given, or if given radius is too large
+        var maxRadius =  d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius && _givenRadius < maxRadius ? _givenRadius : maxRadius;
 
         var arc = buildArcs();
 
@@ -126,8 +128,8 @@ dc.sunburstChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-	    dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');	    
+            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
@@ -297,9 +299,9 @@ dc.sunburstChart = function (parent, chartGroup) {
      */
     _chart.radius = function (radius) {
         if (!arguments.length) {
-            return _radius;
+            return _givenRadius;
         }
-        _radius = radius;
+        _givenRadius = radius;
         return _chart;
     };
 
