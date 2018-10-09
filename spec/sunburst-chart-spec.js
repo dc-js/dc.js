@@ -104,8 +104,8 @@ describe('dc.sunburstChart', function () {
         it('height should be set', function () {
             expect(chart.height()).toEqual(height);
         });
-        it('radius should be set', function () {
-            expect(chart.radius()).toEqual(radius);
+        it('radius should not be set', function () {
+            expect(chart.radius()).toBeFalsy();
         });
         it('cx should be set', function () {
             expect(chart.cx()).toEqual(defaultCenter.x);
@@ -182,6 +182,16 @@ describe('dc.sunburstChart', function () {
             });
             it('root g should be translated to ' + newCenter.x + ',' + newCenter.y, function () {
                 expect(chart.select('svg g').attr('transform')).toMatchTranslate(newCenter.x, newCenter.y);
+            });
+        });
+
+        describe('with radius', function () {
+            beforeEach(function () {
+                chart.radius(100)
+                    .render();
+            });
+            it('should take', function () {
+                expect(chart.radius()).toEqual(radius);
             });
         });
 
