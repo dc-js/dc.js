@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Two Grouped Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+
+<div id="chart1">
+    <strong>Ordinal chart</strong>
+    <div class="reset" style="visibility: hidden">selected: <span class="filter"></span>
+        <a href="javascript:chart1.filterAll();dc.redrawAll();">reset</a>
+    </div>
+</div>
+<div id="chart2">
+    <strong>Ordinal chart</strong>
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+        <a href="javascript:chart2.filterAll();dc.redrawAll();">reset</a>
+    </div>
+</div>
+<div id="chart3">
+    <strong>Non ordinal chart with centerbar and brush on</strong>
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+        <a href="javascript:chart3.filterAll();dc.redrawAll();">reset</a>
+    </div>
+</div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+var chart1 = dc.compositeChart("#chart1");
+var chart2 = dc.compositeChart("#chart2");
+var chart3 = dc.compositeChart("#chart3");
+var subCharts1 = [];
+var subCharts2 = [];
+var subCharts3 = [];
+d3.csv("../crime/crime.csv").then(function(crime) {
+
+    var years = [];
+    var types = [];
+    var citys = [];
+
+    // Tweak the data a litle bit
+    crime = crime.filter(function onlyIncidentsAndLaterYears (value, index, self) {
+        return (value.sub_type === "Actual incidents" && parseInt(value.year) >= 2008);
+    }).map(function pivotData (value){
+        return {'year': value.year, 'city': value.city, 'type': value.type, 'incidents': parseInt(value.number)}
+    });
+
+    crime = crime.map(function evenOutBetweenTypes (value) {
+        if(value.type === "Total, all violations"){
+            value.incidents = Math.round(value.incidents/25);
+        } else if(value.type === "Total violent Criminal Code violations") {
+            value.incidents = Math.round(value.incidents/5);
+        } else if(value.type === "Homicide") {
+            value.incidents = Math.round(value.incidents*100);
+        }
+        return value;
+    });
+
+    // Get all unique years
+    years = crime.map(function getYears (value){
+        return value.year;
+    })
+    .filter(function onlyUnique (value, index, self) {
+        return self.indexOf(value) === index;
+    })
+
+    // Get all unique citys
+    citys = crime.map(function getYears (value){
+        return value.city;
+    })
+    .filter(function onlyUnique (value, index, self) {
+        return self.indexOf(value) === index;
+    })    
+
+    // Get all unique types
+    types = crime.map(function getYears (value){
+        return value.type;
+    })
+    .filter(function onlyUnique (value, index, self) {
+        return self.indexOf(value) === index;
+    })
+
+
+    var ndx  = crossfilter(crime);
+
+    function sel_stack (i) {
+        return function(d) {
+            return d.value[i];
+        };
+    }
+
+    // Setup chart1
+    var chart1Dim = ndx.dimension(function(d) {return d.city;})
+    var chart1Group = chart1Dim.group().reduce(
+        function add (p, v) {
+                p[v.type] += parseInt(v.incidents);
+                return p;
+            },
+            function remove (p, v) {
+                p[v.type] -= parseInt(v.incidents);
+                return p;
+            },
+            function init (p, v) {
+                var ret = {};
+                for(var i = 0; i < types.length; i++){
+                    ret[types[i]] = 0;
+                }
+                return ret;
+            }
+        );
+
+    for(var i = 0; i < types.length; i++){
+        var chart = dc.barChart(chart1);
+            chart
+                .dimension(chart1Dim)
+                .group(chart1Group, types[i])
+                .valueAccessor(sel_stack(types[i]))
+                .controlsUseVisibility(true);
+
+        subCharts1.push(chart);
+    }
+
+    chart1
+        .width(768)
+        .height(480)
+        .dimension(chart1Dim)
+        .group(chart1Group, 'Dummy group to make ordinal composite charts work')
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        // .brushOn(false)
+        .yAxisLabel("This is the Y Axis!")
+        .elasticY(true)
+        .legend(dc.legend().x(100).y(10).itemHeight(13).gap(5))
+        // .ordinalColors(d3.schemeDark2)
+        .shareColors(true)
+        .controlsUseVisibility(true)
+        .margins({ top: 10, right: 60, bottom: 100, left: 60 })
+        // .title(function(d, i) {
+        //     var measure = this.layer;
+        //     var val = d.value[measure];
+        //     return  this.layer + " - " + d.key + ": " + val;
+
+        // })
+        // or
+        .shareTitle(false)
+        .compose(subCharts1)
+
+    chart1.on('pretransition', function(chart){
+        // Rotate X-axis
+        chart.selectAll("g.axis.x text")
+        .style("text-anchor", "start")
+        .attr("dx", "0.5em")
+        .attr("dy", "-0.5em")
+        .attr("transform", "rotate(90)")
+    });
+
+    // Setup chart2
+    var chart2Dim = ndx.dimension(function(d) {return d.year;})
+    var chart2Group = chart2Dim.group().reduce(
+            function add (p, v) {
+                p[v.type] += parseInt(v.incidents);
+                return p;
+            },
+            function remove (p, v) {
+                p[v.type] -= parseInt(v.incidents);
+                return p;
+            },
+            function init (p, v) {
+                var ret = {};
+                for(var i = 0; i < types.length; i++){
+                    ret[types[i]] = 0;
+                }
+                return ret;
+            }
+        );
+
+    for(var i = 0; i < types.length; i++){
+        var chart = dc.barChart(chart2);
+            chart
+                .dimension(chart2Dim)
+                .group(chart2Group, types[i])
+                .valueAccessor(sel_stack(types[i]))
+                .controlsUseVisibility(true);
+
+        subCharts2.push(chart);
+    }
+
+    chart2
+        .width(768/2)
+        .height(480)
+        .dimension(chart2Dim)
+        .group(chart2Group, 'Dummy group to make ordinal composite charts work')
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .yAxisLabel("This is the Y Axis!")
+        .elasticY(true)
+        // .ordinalColors(d3.schemeDark2)
+        .shareColors(true)
+        .controlsUseVisibility(true)
+        .title(function(d, i) {
+            var measure = this.layer;
+            var val = d.value[measure];
+            return  this.layer + " - " + d.key + ": " + val;
+
+        })
+        // or
+        // .shareTitle(false)
+        .compose(subCharts2)
+
+    // Setup chart3
+    var chart3Dim = ndx.dimension(function(d) {return d.year;})
+    var chart3Group = chart3Dim.group().reduce(
+            function add (p, v) {
+                p[v.type] += parseInt(v.incidents);
+                return p;
+            },
+            function remove (p, v) {
+                p[v.type] -= parseInt(v.incidents);
+                return p;
+            },
+            function init (p, v) {
+                var ret = {};
+                for(var i = 0; i < types.length; i++){
+                    ret[types[i]] = 0;
+                }
+                return ret;
+            }
+        );
+
+    for(var i = 0; i < types.length; i++){
+        var chart = dc.barChart(chart3);
+            chart
+                .dimension(chart3Dim)
+                .group(chart3Group, types[i])
+                .valueAccessor(sel_stack(types[i]))
+                .centerBar(true)
+                .serieGap(5)
+                .controlsUseVisibility(true);
+
+        subCharts3.push(chart);
+    }
+
+    chart3
+        .width(768/2)
+        .height(480)
+        .dimension(chart3Dim)
+        // .group(chart3Group, 'Dummy group to make ordinal composite charts work')
+        // .x(d3.scaleBand())
+        // .xUnits(dc.units.ordinal)
+        .x(d3.scaleLinear().domain([2007, 2012]))
+        .xUnits(function () {return 5;})
+        .yAxisLabel("This is the Y Axis!")
+        .legend(dc.legend().x(550).y(10).itemHeight(13).gap(5))
+        .elasticY(true)
+        // .ordinalColors(d3.schemeDark2)
+        .shareColors(true)
+        .controlsUseVisibility(true)
+        .title(function(d, i) {
+            var measure = this.layer;
+            var val = d.value[measure];
+            return  this.layer + " - " + d.key + ": " + val;
+
+        })
+        // or
+        // .shareTitle(false)
+        .compose(subCharts3)
+
+    chart3.xAxis().tickFormat(function(v) { return v;});
+    chart3.xAxis().tickValues([2008, 2009, 2010, 2011]);
+
+
+    chart1.render();
+    chart2.render();
+    chart3.render();
+});
+
+</script>
+
+</div>
+</body>
+</html>
