@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.7
+ *  dc 3.0.8
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.7
+ * @version 3.0.8
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.7',
+    version: '3.0.8',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1739,6 +1739,9 @@ dc.baseMixin = function (_chart) {
         }
         if (dc.instanceOfChart(parent)) {
             _anchor = parent.anchor();
+            if (_anchor.children) { // is _anchor a div?
+                _anchor = '#' + parent.anchorName();
+            }
             _root = parent.root();
             _isChild = true;
         } else if (parent) {
@@ -6050,6 +6053,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     var _emptyTitle = 'empty';
 
     var _radius,
+        _givenRadius, // given radius, if any
         _innerRadius = 0;
 
     var _g;
@@ -6108,8 +6112,9 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     function drawChart () {
-        // set radius on basis of chart dimension if missing
-        _radius = _radius ? _radius : d3.min([_chart.width(), _chart.height()]) / 2;
+        // set radius from chart size if none given, or if given radius is too large
+        var maxRadius =  d3.min([_chart.width(), _chart.height()]) / 2;
+        _radius = _givenRadius && _givenRadius < maxRadius ? _givenRadius : maxRadius;
 
         var arc = buildArcs();
 
@@ -6141,6 +6146,9 @@ dc.sunburstChart = function (parent, chartGroup) {
             removeElements(slices);
 
             highlightFilter();
+
+            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
+                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
 
@@ -6310,9 +6318,9 @@ dc.sunburstChart = function (parent, chartGroup) {
      */
     _chart.radius = function (radius) {
         if (!arguments.length) {
-            return _radius;
+            return _givenRadius;
         }
-        _radius = radius;
+        _givenRadius = radius;
         return _chart;
     };
 
