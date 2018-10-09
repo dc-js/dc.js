@@ -432,6 +432,8 @@ dc.baseMixin = function (_chart) {
         }
         if (dc.instanceOfChart(parent)) {
             _anchor = parent.anchor();
+            if(_anchor.children) // is _anchor a div?
+                _anchor = '#' + parent.anchorName();
             _root = parent.root();
             _isChild = true;
         } else if (parent) {
