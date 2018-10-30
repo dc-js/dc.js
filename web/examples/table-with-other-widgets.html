@@ -49,7 +49,7 @@
           .dimension(experimentDimension).group(experimentGroup)
           .legend(dc.legend())
           .controlsUseVisibility(true)
-          .on('filtered', function(chart, filter){update();});
+          .on('filtered', function(chart, filter){update(true);});
 
         chart
           .width(300)
@@ -90,7 +90,10 @@
             d3.select('#totalsize').text(''); 
           }
       }
-      function update() {
+      function update(reset=false) {
+          if(reset){
+            ofs=0;
+          }
           chart.beginSlice(ofs);
           chart.endSlice(ofs+pag);
           display();
