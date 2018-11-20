@@ -314,6 +314,7 @@ describe('dc.coordinateGridChart', function () {
                     chart
                         .renderHorizontalGridLines(true)
                         .renderVerticalGridLines(true)
+                        .transitionDuration(300)
                         .render();
                 });
 
@@ -351,6 +352,22 @@ describe('dc.coordinateGridChart', function () {
                             expect(nthGridLine(2).attr('y1')).toBe('43');
                         });
                     });
+
+                    describe('after renderlet', function () {
+                        var opacityValue;
+                        beforeEach(function (done) {
+                            chart.on('renderlet', function (chart) {
+                                opacityValue = chart.select(".grid-line.horizontal line").attr("opacity");
+
+                                done();
+                          });
+                        });
+            
+                        it('should have 0.5 opacity', function () {
+                          expect(opacityValue).toBe('0.5');
+                        });
+                    });
+
                 });
 
                 describe('vertical grid lines', function () {
@@ -396,6 +413,21 @@ describe('dc.coordinateGridChart', function () {
                         });
                         it('should render without errors', function () {
                             expect(chart.selectAll('.grid-line.vertical line').size()).toBe(6);
+                        });
+                    });
+
+                    describe('after renderlet', function () {
+                        var opacityValue;
+                        beforeEach(function (done) {
+                            chart.on('renderlet', function (chart) {
+                                opacityValue = chart.select(".grid-line.vertical line").attr("opacity");
+
+                                done();
+                          });
+                        });
+            
+                        it('should have 0.5 opacity', function () {
+                          expect(opacityValue).toBe('0.5');
                         });
                     });
                 });
