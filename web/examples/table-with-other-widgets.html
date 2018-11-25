@@ -48,8 +48,7 @@
           .innerRadius(100).externalLabels(50).externalRadiusPadding(50).drawPaths(true)
           .dimension(experimentDimension).group(experimentGroup)
           .legend(dc.legend())
-          .controlsUseVisibility(true)
-          .on('filtered', function(chart, filter){update();});
+          .controlsUseVisibility(true);
 
         chart
           .width(300)
@@ -60,7 +59,8 @@
           .showGroups(false)
           .columns(['Expt', 'Run', 'Speed'])
           .sortBy(function (d) { return [fmt(+d.Expt),fmt(+d.Run)]; })
-          .order(d3.ascending);
+          .order(d3.ascending)
+          .on('pretransition', function(){ display(); });
 
         update();
         dc.renderAll();
