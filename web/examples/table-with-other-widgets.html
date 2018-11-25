@@ -10,13 +10,13 @@
 
   <div class="container">
     <script type="text/javascript" src="header.js"></script>
-      
+
     <div class="row">
       <div id="piechart"><h4>Expt:</h4>
         <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
           <a href="javascript:piechart.filterAll();dc.redrawAll();">reset</a>
         </div>
-      </div>      
+      </div>
     </div>
     <div class="row">
       <div id="paging">
@@ -26,7 +26,7 @@
       </div>
       <table id="test" class="table table-striped"></table>
     </div>
-  
+
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
@@ -85,9 +85,9 @@
               .attr('disabled', ofs+pag>=totFilteredRecs ? 'true' : null);
           d3.select('#size').text(totFilteredRecs);
           if(totFilteredRecs != ndx.size()){
-            d3.select('#totalsize').text("(filtered Total: " + ndx.size() + " )"); 
+            d3.select('#totalsize').text("(filtered Total: " + ndx.size() + " )");
           }else{
-            d3.select('#totalsize').text(''); 
+            d3.select('#totalsize').text('');
           }
       }
       function update() {
