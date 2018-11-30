@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.8-groupstack
+ *  dc 3.0.9
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.8-groupstack
+ * @version 3.0.9
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.8-groupstack',
+    version: '3.0.9',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3672,11 +3672,10 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('y2', 0)
                 .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', 1);
+                .attr('opacity', 0.5);
 
             // update
-            var linesGEnterUpdate = linesGEnter.merge(lines);
-            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -3817,11 +3816,10 @@ dc.coordinateGridMixin = function (_chart) {
                 })
                 .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', 1);
+                .attr('opacity', 0.5);
 
             // update
-            var linesGEnterUpdate = linesGEnter.merge(lines);
-            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -6638,20 +6636,15 @@ dc.sunburstChart = function (parent, chartGroup) {
 dc.barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
-    var DEFAULT_GAP_BETWEEN_BAR_SERIES = 5;
     var LABEL_PADDING = 3;
-    var _type = 'dc.BAR_CHART';
 
     var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
-    var _serieGap = DEFAULT_GAP_BETWEEN_BAR_SERIES;
     var _centerBar = false;
     var _alwaysUseRounding = false;
 
     var _barWidth;
-
-    _chart.type = _type;
 
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
@@ -6662,7 +6655,7 @@ dc.barChart = function (parent, chartGroup) {
     dc.override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
             dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
-                'See dc.js bar chart API documentation for details.');
+                         'See dc.js bar chart API documentation for details.');
         }
 
         return _chart._render();
@@ -6700,18 +6693,6 @@ dc.barChart = function (parent, chartGroup) {
 
     function barHeight (d) {
         return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
-    }
-
-    function getCharts () {
-        if (dc.instanceOfChart(parent) && typeof parent.children === 'function') {
-            var children = parent.children();
-            if (children instanceof Array) {
-                return children.filter(function (chart) {
-                    return chart.type === _type;
-                });
-            }
-        }
-        return [];
     }
 
     function labelXPos (d) {
@@ -6767,47 +6748,12 @@ dc.barChart = function (parent, chartGroup) {
 
     function barXPos (d) {
         var x = _chart.x()(d.x);
-        var charts = getCharts();
-        var chartIndex = charts.indexOf(_chart);
-
-        // A grouped chart
-        if (charts.length > 1) {
-            var numberOfCharts = charts.length;
-            var numberOfBars = _chart.xUnitCount();
-            var barWidth;
-            var barPadding;
-
-            if (_chart.isOrdinal()) {
-                barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
-            } else {
-                barWidth = ((_chart.xAxisLength() / numberOfBars) -  _chart.serieGap()) / numberOfCharts;
-            }
-
-            if (_gap === undefined) {
-                barPadding = barWidth * (_chart.barPadding());
-            } else {
-                barPadding = _gap;
-            }
-
-            x += chartIndex * (barWidth);
-            if (_chart.isOrdinal()) {
-                x += _chart.serieGap() / 2;
-                x += barPadding / 2;
-            } else if (!_chart.isOrdinal() && _centerBar) {
-                x -= barWidth * numberOfCharts / 2;
-                x += barPadding / 2;
-            }
-
-        // Not a grouped chart
-        } else {
-            if (_centerBar) {
-                x -= _barWidth / 2;
-            }
-            if (_chart.isOrdinal() && _gap !== undefined) {
-                x += _gap / 2;
-            }
+        if (_centerBar) {
+            x -= _barWidth / 2;
         }
-
+        if (_chart.isOrdinal() && _gap !== undefined) {
+            x += _gap / 2;
+        }
         return dc.utils.safeNumber(x);
     }
 
@@ -6860,37 +6806,14 @@ dc.barChart = function (parent, chartGroup) {
     function calculateBarWidth () {
         if (_barWidth === undefined) {
             var numberOfBars = _chart.xUnitCount();
-            var charts = getCharts();
 
-            // A grouped chart
-            if (charts.length > 1) {
-                var numberOfCharts = charts.length,
-                    barPadding,
-                    barWidth;
-
-                if (_chart.isOrdinal()) {
-                    barWidth = (_chart.x().bandwidth() - _chart.serieGap()) / (numberOfCharts);
-                } else {
-                    barWidth = ((_chart.xAxisLength() / numberOfBars) -  _chart.serieGap()) / numberOfCharts;
-                }
-
-                if (_gap === undefined) {
-                    barPadding = barWidth * (_chart.barPadding());
-                } else {
-                    barPadding = _gap;
-                }
-                _barWidth = Math.floor(barWidth - barPadding);
-
-            // Not a grouped chart
+            // please can't we always use rangeBands for bar charts?
+            if (_chart.isOrdinal() && _gap === undefined) {
+                _barWidth = Math.floor(_chart.x().bandwidth());
+            } else if (_gap) {
+                _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
             } else {
-                // please can't we always use rangeBands for bar charts?
-                if (_chart.isOrdinal() && _gap === undefined) {
-                    _barWidth = Math.floor(_chart.x().bandwidth());
-                } else if (_gap) {
-                    _barWidth = Math.floor((_chart.xAxisLength() - (numberOfBars - 1) * _gap) / numberOfBars);
-                } else {
-                    _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
-                }
+                _barWidth = Math.floor(_chart.xAxisLength() / (1 + _chart.barPadding()) / numberOfBars);
             }
 
             if (_barWidth === Infinity || isNaN(_barWidth) || _barWidth < MIN_BAR_WIDTH) {
@@ -6900,55 +6823,30 @@ dc.barChart = function (parent, chartGroup) {
     }
 
     _chart.fadeDeselectedArea = function (brushSelection) {
-        var charts = getCharts();
-        var bars;
+        var bars = _chart.chartBodyG().selectAll('rect.bar');
 
-        // A grouped chart
-        if (charts.length > 1 && _chart.isOrdinal()) {
-            charts.forEach(function (chart, i) {
-                bars = chart.chartBodyG().selectAll('rect.bar');
+        if (_chart.isOrdinal()) {
+            if (_chart.hasFilter()) {
+                bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                    return _chart.hasFilter(d.x);
+                });
+                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                    return !_chart.hasFilter(d.x);
+                });
+            } else {
+                bars.classed(dc.constants.SELECTED_CLASS, false);
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
+            }
+        } else if (_chart.brushOn() || _chart.parentBrushOn()) {
+            if (!_chart.brushIsEmpty(brushSelection)) {
+                var start = brushSelection[0];
+                var end = brushSelection[1];
 
-                if (chart.isOrdinal()) {
-                    if (chart.hasFilter()) {
-                        bars.classed(dc.constants.SELECTED_CLASS, function (d) {
-                            return chart.hasFilter(d.x);
-                        });
-                        bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                            return !chart.hasFilter(d.x);
-                        });
-                    } else {
-                        bars.classed(dc.constants.SELECTED_CLASS, false);
-                        bars.classed(dc.constants.DESELECTED_CLASS, false);
-                    }
-                }
-            });
-
-        // Not a grouped chart
-        } else {
-            bars = _chart.chartBodyG().selectAll('rect.bar');
-            if (_chart.isOrdinal()) {
-                if (_chart.hasFilter()) {
-                    bars.classed(dc.constants.SELECTED_CLASS, function (d) {
-                        return _chart.hasFilter(d.x);
-                    });
-                    bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                        return !_chart.hasFilter(d.x);
-                    });
-                } else {
-                    bars.classed(dc.constants.SELECTED_CLASS, false);
-                    bars.classed(dc.constants.DESELECTED_CLASS, false);
-                }
-            } else if (_chart.brushOn() || _chart.parentBrushOn()) {
-                if (!_chart.brushIsEmpty(brushSelection)) {
-                    var start = brushSelection[0];
-                    var end = brushSelection[1];
-
-                    bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                        return d.x < start || d.x >= end;
-                    });
-                } else {
-                    bars.classed(dc.constants.DESELECTED_CLASS, false);
-                }
+                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                    return d.x < start || d.x >= end;
+                });
+            } else {
+                bars.classed(dc.constants.DESELECTED_CLASS, false);
             }
         }
     };
@@ -6970,18 +6868,7 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     dc.override(_chart, 'onClick', function (d) {
-        var charts = getCharts();
-        // A grouped chart
-        if (charts.length > 1) {
-            charts.forEach(function (chart, i) {
-                var filter = chart.keyAccessor()(d.data);
-                chart.filter(filter);
-            });
-            _chart.redrawGroup();
-        // Not a grouped chart
-        } else {
-            _chart._onClick(d.data);
-        }
+        _chart._onClick(d.data);
     });
 
     /**
@@ -7034,24 +6921,6 @@ dc.barChart = function (parent, chartGroup) {
             return _gap;
         }
         _gap = gap;
-        return _chart;
-    };
-
-    /**
-     * Manually set fixed gap (in px) between bar groups instead of relying on the default auto-generated
-     * gap.  Only applicable for grouped bar charts.
-     * @name serieGap
-     * @memberof dc.barChart
-     * @instance
-     * @param {Number} [serieGap=5]
-     * @return {Number}
-     * @return {dc.barChart}
-     */
-    _chart.serieGap = function (serieGap) {
-        if (!arguments.length) {
-            return _serieGap;
-        }
-        _serieGap = serieGap;
         return _chart;
     };
 
@@ -10757,7 +10626,7 @@ dc.htmlLegend = function () {
 
     /**
      #### .horizontal([boolean])
-     Display the legend horizontally instead of horizontally
+     Display the legend horizontally instead of vertically
      **/
     _legend.horizontal = function (b) {
         if (!arguments.length) {
