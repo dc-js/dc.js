@@ -51,7 +51,6 @@ div.dc-chart {
 .dc-chart .grid-line, .dc-chart .axis .grid-line, .dc-chart .grid-line line, .dc-chart .axis .grid-line line {
   fill: none;
   stroke: #ccc;
-  opacity: .5;
   shape-rendering: crispEdges; }
 
 .dc-chart .brush rect.selection {
