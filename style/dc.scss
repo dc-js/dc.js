@@ -91,7 +91,6 @@ div.dc-chart {
     .grid-line, .axis .grid-line, .grid-line line, .axis .grid-line line {
         fill: none;
         stroke: $color_celeste;
-        opacity: .5;
         shape-rendering: crispEdges;
     }
     .brush {

@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.8
+ *  dc 3.0.9
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2016 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.8
+ * @version 3.0.9
  * @example
  * // Example chaining
  * chart.width(300)
@@ -38,7 +38,7 @@
  */
 /*jshint -W079*/
 var dc = {
-    version: '3.0.8',
+    version: '3.0.9',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -3672,11 +3672,10 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('y2', 0)
                 .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', 1);
+                .attr('opacity', 0.5);
 
             // update
-            var linesGEnterUpdate = linesGEnter.merge(lines);
-            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -3817,11 +3816,10 @@ dc.coordinateGridMixin = function (_chart) {
                 })
                 .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', 1);
+                .attr('opacity', 0.5);
 
             // update
-            var linesGEnterUpdate = linesGEnter.merge(lines);
-            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
@@ -10628,7 +10626,7 @@ dc.htmlLegend = function () {
 
     /**
      #### .horizontal([boolean])
-     Display the legend horizontally instead of horizontally
+     Display the legend horizontally instead of vertically
      **/
     _legend.horizontal = function (b) {
         if (!arguments.length) {
