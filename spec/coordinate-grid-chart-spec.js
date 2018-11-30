@@ -357,14 +357,14 @@ describe('dc.coordinateGridChart', function () {
                         var opacityValue;
                         beforeEach(function (done) {
                             chart.on('renderlet', function (chart) {
-                                opacityValue = chart.select(".grid-line.horizontal line").attr("opacity");
+                                opacityValue = chart.select('.grid-line.horizontal line').attr('opacity');
 
                                 done();
-                          });
+                            });
                         });
-            
+
                         it('should have 0.5 opacity', function () {
-                          expect(opacityValue).toBe('0.5');
+                            expect(opacityValue).toBe('0.5');
                         });
                     });
 
@@ -420,14 +420,14 @@ describe('dc.coordinateGridChart', function () {
                         var opacityValue;
                         beforeEach(function (done) {
                             chart.on('renderlet', function (chart) {
-                                opacityValue = chart.select(".grid-line.vertical line").attr("opacity");
+                                opacityValue = chart.select('.grid-line.vertical line').attr('opacity');
 
                                 done();
-                          });
+                            });
                         });
-            
+
                         it('should have 0.5 opacity', function () {
-                          expect(opacityValue).toBe('0.5');
+                            expect(opacityValue).toBe('0.5');
                         });
                     });
                 });
