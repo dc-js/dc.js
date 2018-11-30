@@ -1,3 +1,8 @@
+## 3.0.9
+* Updated Table Pagination example, with filtering, by Sudeep Mandal and Arcuri Davide ([#1492](https://github.com/dc-js/dc.js/pull/1492))
+* Fade-in and correct opacity for grid lines, by Lou Moxy ([#1501](https://github.com/dc-js/dc.js/pull/1501) / [#1500](https://github.com/dc-js/dc.js/issues/1500))
+* Thanks to Rohan Shewale for a doc typo fix
+
 ## 3.0.8
 * Sunburst was not centering responsively on redraw, by Frozenlock ([#1491](https://github.com/dc-js/dc.js/pull/1491) / [#1490](https://github.com/dc-js/dc.js/issues/1490))
 * Composite chart with no `id` was not clipping its children, by Frozenlock ([#1488](https://github.com/dc-js/dc.js/issues/1488))

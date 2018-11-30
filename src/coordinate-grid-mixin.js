@@ -576,11 +576,10 @@ dc.coordinateGridMixin = function (_chart) {
                 .attr('y2', 0)
                 .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', 1);
+                .attr('opacity', 0.5);
 
             // update
-            var linesGEnterUpdate = linesGEnter.merge(lines);
-            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', function (d) {
                     return _x(d);
                 })
@@ -721,11 +720,10 @@ dc.coordinateGridMixin = function (_chart) {
                 })
                 .attr('opacity', 0);
             dc.transition(linesGEnter, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', 1);
+                .attr('opacity', 0.5);
 
             // update
-            var linesGEnterUpdate = linesGEnter.merge(lines);
-            dc.transition(linesGEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+            dc.transition(lines, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('x1', 1)
                 .attr('y1', function (d) {
                     return scale(d);
