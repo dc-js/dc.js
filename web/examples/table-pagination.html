@@ -60,21 +60,27 @@
           .columns(['Expt', 'Run', 'Speed'])
           .sortBy(function (d) { return [fmt(+d.Expt),fmt(+d.Run)]; })
           .order(d3.ascending)
-          .on('pretransition', function(){ display(); });
+          .on('preRedraw', update_offset)
+          .on('pretransition', display);
 
-        update();
         dc.renderAll();
       });
 
       // use odd page size to show the effect better
       var ofs = 0, pag = 17;
-      function display() {
 
+      function update_offset() {
           var totFilteredRecs = ndx.groupAll().value();
           var end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
           ofs = ofs >= totFilteredRecs ? Math.floor((totFilteredRecs - 1) / pag) * pag : ofs;
           ofs = ofs < 0 ? 0 : ofs;
 
+          chart.beginSlice(ofs);
+          chart.endSlice(ofs+pag);
+      }
+      function display() {
+          var totFilteredRecs = ndx.groupAll().value();
+          var end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
           d3.select('#begin')
               .text(end === 0? ofs : ofs + 1);
           d3.select('#end')
@@ -90,19 +96,14 @@
             d3.select('#totalsize').text('');
           }
       }
-      function update() {
-          chart.beginSlice(ofs);
-          chart.endSlice(ofs+pag);
-          display();
-      }
       function next() {
           ofs += pag;
-          update();
+          update_offset();
           chart.redraw();
       }
       function last() {
           ofs -= pag;
-          update();
+          update_offset();
           chart.redraw();
       }
 
