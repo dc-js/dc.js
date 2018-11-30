@@ -60,6 +60,7 @@
           .columns(['Expt', 'Run', 'Speed'])
           .sortBy(function (d) { return [fmt(+d.Expt),fmt(+d.Run)]; })
           .order(d3.ascending)
+          .on('preRender', update_offset)
           .on('preRedraw', update_offset)
           .on('pretransition', display);
 
