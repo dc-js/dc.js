@@ -167,8 +167,6 @@
                                         .dimension(dim)
                                         .group(lgroup)
                                         .x(d3.scaleLinear())
-                                        .elasticX(true)
-                                        .elasticY(true)
                                         .yAxisPadding(1)
                                         .on('pretransition', function(chart) {
                                             draw_horizontals(chart, [
@@ -182,8 +180,6 @@
                                         .group(rgroup)
                                         .x(d3.scaleLinear())
                                         .ordinalColors(["darkorange"])
-                                        .elasticX(true)
-                                        .elasticY(true)
                                         .yAxisPadding(10)
                                         .useRightYAxis(true)
                                         .on('pretransition', function(chart) {
