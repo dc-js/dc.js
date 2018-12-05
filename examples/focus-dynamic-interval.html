@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>dc.js - Bar Chart Example</title>
+    <title>dc.js - Focus Chart with Dynamic Intervals</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -100,6 +100,7 @@
             .height(300)
             .dimension(dimension)
             .group(choose_group(fullDomain))
+            .yAxisPadding(0.1)
             .valueAccessor(kv => kv.value.total / kv.value.count)
             .rangeChart(rangeChart)
             .x(d3.scaleTime().domain(fullDomain))
@@ -119,6 +120,7 @@
             .height(100)
             .dimension(dimension)
             .group(groups_by_min_interval[0].group)
+            .yAxisPadding(1)
             .valueAccessor(kv => kv.value.total / kv.value.count)
             .x(d3.scaleTime().domain(fullDomain))
             .xUnits(d3.timeDay);
@@ -141,4 +143,3 @@
     </div>
   </body>
 </html>
-
