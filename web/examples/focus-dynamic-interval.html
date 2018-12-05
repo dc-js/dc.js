@@ -56,20 +56,20 @@
         var groups_by_min_interval = [
             {
                 name: 'minutes',
-                min: 60*60*1000,
+                threshold: 60*60*1000,
                 interval: d3.timeMinute
             }, {
                 name: 'seconds',
-                min: 60*1000,
+                threshold: 60*1000,
                 interval: d3.timeSecond
             }, {
                 name: 'milliseconds',
-                min: 0,
+                threshold: 0,
                 interval: d3.timeMillisecond
             }
         ];
-        groups_by_min_interval.forEach(function(mg) {
-            mg.group = dimension.group(mg.interval).reduce(
+        function make_group(interval) {
+            return dimension.group(interval).reduce(
                 function(p, v) {
                     p.count++;
                     p.total += v.value;
@@ -84,12 +84,14 @@
                     return {count: 0, total: 0};
                 }
             );
-        })
+        }
         function choose_group(extent) {
             var d = extent[1].getTime() - extent[0].getTime();
-            var found = groups_by_min_interval.find(mg => mg.min < d);
-            console.log('interval ' + d + ' is more than ' + found.min + ' ms; choosing ' + found.name +
+            var found = groups_by_min_interval.find(mg => mg.threshold < d);
+            console.log('interval ' + d + ' is more than ' + found.threshold + ' ms; choosing ' + found.name +
                         ' for ' + found.interval.range(extent[0], extent[1]).length + ' points');
+            if(!found.group)
+                found.group = make_group(found.interval);
             return found.group;
         }
 
