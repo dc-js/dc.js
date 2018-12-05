@@ -33,7 +33,7 @@
       throw new TypeError('Invalid argument expected string');
     }
     if (!semver.test(version)) {
-      throw new Error('Invalid argument not valid semver');
+      throw new Error('Invalid argument not valid semver (\''+version+'\' received)');
     }
   }
 
