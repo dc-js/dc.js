@@ -123,7 +123,7 @@
             .x(d3.scaleTime().domain(fullDomain))
             .xUnits(d3.timeDay);
 
-        rangeChart.on('filtered', function(_, filter) {
+        rangeChart.on('filtered.dynamic-interval', function(_, filter) {
             chart.group(choose_group(filter || fullDomain));
         });
 
