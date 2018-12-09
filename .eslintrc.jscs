@@ -1,0 +1,20 @@
+{
+  "rules": {
+    "max-len": [
+      2,
+      140
+    ],
+    "indent": [
+      2,
+      4,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "space-before-function-paren": [
+      2,
+      "always"
+    ],
+    "valid-jsdoc": 2
+  }
+}
