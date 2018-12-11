@@ -355,7 +355,7 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
+     * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescale to auto-fit the
      * data range when filtered.
      * @method elasticX
      * @memberof dc.rowChart
