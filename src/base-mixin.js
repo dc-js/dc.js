@@ -1,3 +1,84 @@
+dc.wrapDimension = function (_dimension) {
+    var _filters = [];
+
+    var applyFilters = function () {
+        if (_filters.length === 0) {
+            _dimension.filter(null);
+        } else if (_filters.length === 1 && !_filters[0].isFiltered) {
+            // single value and not a function-based filter
+            _dimension.filterExact(_filters[0]);
+        } else if (_filters.length === 1 && _filters[0].filterType === 'RangedFilter') {
+            // single range-based filter
+            _dimension.filterRange(_filters[0]);
+        } else {
+            _dimension.filterFunction(function (d) {
+                for (var i = 0; i < _filters.length; i++) {
+                    var filter = _filters[i];
+                    if (filter.isFiltered && filter.isFiltered(d)) {
+                        return true;
+                    } else if (filter <= d && filter >= d) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+    };
+
+    var removeFilter = function (filter) {
+        for (var i = 0; i < _filters.length; i++) {
+            if (_filters[i] <= filter && _filters[i] >= filter) {
+                _filters.splice(i, 1);
+                break;
+            }
+        }
+    };
+
+    var addFilter = function (filter) {
+        _filters.push(filter);
+    };
+
+    _dimension.hasFilter = function (filter) {
+        if (filter === null || typeof(filter) === 'undefined') {
+            return _filters.length > 0;
+        }
+        return _filters.some(function (f) {
+            return filter <= f && filter >= f;
+        });
+    };
+
+    _dimension.exFilter = function (filter) {
+        if (!arguments.length) {
+            return _filters.length > 0 ? _filters[0] : null;
+        }
+        if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
+            // toggle each filter
+            filter[0].forEach(function (f) {
+                if (_dimension.hasFilter(f)) {
+                    removeFilter(f);
+                } else {
+                    addFilter(f);
+                }
+            });
+        } else if (filter === null) {
+            _filters = [];
+        } else {
+            if (_dimension.hasFilter(filter)) {
+                removeFilter(filter);
+            } else {
+                addFilter(filter);
+            }
+        }
+        applyFilters();
+    };
+
+    _dimension.filters = function () {
+        return _filters;
+    };
+
+    return _dimension;
+};
+
 /**
  * `dc.baseMixin` is an abstract functional object representing a basic `dc` chart object
  * for all chart and widget implementations. Methods from the {@link #dc.baseMixin dc.baseMixin} are inherited
@@ -72,32 +153,6 @@ dc.baseMixin = function (_chart) {
 
     var _legend;
     var _commitHandler;
-
-    var _filters = [];
-    var _filterHandler = function (dimension, filters) {
-        if (filters.length === 0) {
-            dimension.filter(null);
-        } else if (filters.length === 1 && !filters[0].isFiltered) {
-            // single value and not a function-based filter
-            dimension.filterExact(filters[0]);
-        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-            // single range-based filter
-            dimension.filterRange(filters[0]);
-        } else {
-            dimension.filterFunction(function (d) {
-                for (var i = 0; i < filters.length; i++) {
-                    var filter = filters[i];
-                    if (filter.isFiltered && filter.isFiltered(d)) {
-                        return true;
-                    } else if (filter <= d && filter >= d) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-        }
-        return filters;
-    };
 
     var _data = function (group) {
         return group.all();
@@ -263,7 +318,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _dimension;
         }
-        _dimension = dimension;
+        _dimension = dc.wrapDimension(dimension);
         _chart.expireCache();
         return _chart;
     };
@@ -832,48 +887,6 @@ dc.baseMixin = function (_chart) {
         _listeners.call('zoomed', _chart, _chart);
     };
 
-    var _hasFilterHandler = function (filters, filter) {
-        if (filter === null || typeof(filter) === 'undefined') {
-            return filters.length > 0;
-        }
-        return filters.some(function (f) {
-            return filter <= f && filter >= f;
-        });
-    };
-
-    /**
-     * Set or get the has-filter handler. The has-filter handler is a function that checks to see if
-     * the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
-     * you to change the way filters are checked for and replaced.
-     * @method hasFilterHandler
-     * @memberof dc.baseMixin
-     * @instance
-     * @example
-     * // default has-filter handler
-     * chart.hasFilterHandler(function (filters, filter) {
-     *     if (filter === null || typeof(filter) === 'undefined') {
-     *         return filters.length > 0;
-     *     }
-     *     return filters.some(function (f) {
-     *         return filter <= f && filter >= f;
-     *     });
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.hasFilterHandler(function(filters, filter) {
-     *     return false;
-     * });
-     * @param {Function} [hasFilterHandler]
-     * @returns {Function|dc.baseMixin}
-     */
-    _chart.hasFilterHandler = function (hasFilterHandler) {
-        if (!arguments.length) {
-            return _hasFilterHandler;
-        }
-        _hasFilterHandler = hasFilterHandler;
-        return _chart;
-    };
-
     /**
      * Check whether any active filter or a specific filter is associated with particular chart instance.
      * This function is **not chainable**.
@@ -885,137 +898,8 @@ dc.baseMixin = function (_chart) {
      * @returns {Boolean}
      */
     _chart.hasFilter = function (filter) {
-        return _hasFilterHandler(_filters, filter);
+        return _dimension.hasFilter(filter);
     };
-
-    var _removeFilterHandler = function (filters, filter) {
-        for (var i = 0; i < filters.length; i++) {
-            if (filters[i] <= filter && filters[i] >= filter) {
-                filters.splice(i, 1);
-                break;
-            }
-        }
-        return filters;
-    };
-
-    /**
-     * Set or get the remove filter handler. The remove filter handler is a function that removes a
-     * filter from the chart's current filters. Using a custom remove filter handler allows you to
-     * change how filters are removed or perform additional work when removing a filter, e.g. when
-     * using a filter server other than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @method removeFilterHandler
-     * @memberof dc.baseMixin
-     * @instance
-     * @example
-     * // default remove filter handler
-     * chart.removeFilterHandler(function (filters, filter) {
-     *     for (var i = 0; i < filters.length; i++) {
-     *         if (filters[i] <= filter && filters[i] >= filter) {
-     *             filters.splice(i, 1);
-     *             break;
-     *         }
-     *     }
-     *     return filters;
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.removeFilterHandler(function(filters, filter) {
-     *     return filters;
-     * });
-     * @param {Function} [removeFilterHandler]
-     * @returns {Function|dc.baseMixin}
-     */
-    _chart.removeFilterHandler = function (removeFilterHandler) {
-        if (!arguments.length) {
-            return _removeFilterHandler;
-        }
-        _removeFilterHandler = removeFilterHandler;
-        return _chart;
-    };
-
-    var _addFilterHandler = function (filters, filter) {
-        filters.push(filter);
-        return filters;
-    };
-
-    /**
-     * Set or get the add filter handler. The add filter handler is a function that adds a filter to
-     * the chart's filter list. Using a custom add filter handler allows you to change the way filters
-     * are added or perform additional work when adding a filter, e.g. when using a filter server other
-     * than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @method addFilterHandler
-     * @memberof dc.baseMixin
-     * @instance
-     * @example
-     * // default add filter handler
-     * chart.addFilterHandler(function (filters, filter) {
-     *     filters.push(filter);
-     *     return filters;
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.addFilterHandler(function(filters, filter) {
-     *     return filters;
-     * });
-     * @param {Function} [addFilterHandler]
-     * @returns {Function|dc.baseMixin}
-     */
-    _chart.addFilterHandler = function (addFilterHandler) {
-        if (!arguments.length) {
-            return _addFilterHandler;
-        }
-        _addFilterHandler = addFilterHandler;
-        return _chart;
-    };
-
-    var _resetFilterHandler = function (filters) {
-        return [];
-    };
-
-    /**
-     * Set or get the reset filter handler. The reset filter handler is a function that resets the
-     * chart's filter list by returning a new list. Using a custom reset filter handler allows you to
-     * change the way filters are reset, or perform additional work when resetting the filters,
-     * e.g. when using a filter server other than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @method resetFilterHandler
-     * @memberof dc.baseMixin
-     * @instance
-     * @example
-     * // default remove filter handler
-     * function (filters) {
-     *     return [];
-     * }
-     *
-     * // custom filter handler (no-op)
-     * chart.resetFilterHandler(function(filters) {
-     *     return filters;
-     * });
-     * @param {Function} [resetFilterHandler]
-     * @returns {dc.baseMixin}
-     */
-    _chart.resetFilterHandler = function (resetFilterHandler) {
-        if (!arguments.length) {
-            return _resetFilterHandler;
-        }
-        _resetFilterHandler = resetFilterHandler;
-        return _chart;
-    };
-
-    function applyFilters (filters) {
-        if (_chart.dimension() && _chart.dimension().filter) {
-            var fs = _filterHandler(_chart.dimension(), filters);
-            if (fs) {
-                filters = fs;
-            }
-        }
-        return filters;
-    }
 
     /**
      * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
@@ -1028,7 +912,7 @@ dc.baseMixin = function (_chart) {
      * @returns {dc.baseMixin}
      **/
     _chart.replaceFilter = function (filter) {
-        _filters = _resetFilterHandler(_filters);
+        _chart.filter(null);
         _chart.filter(filter);
         return _chart;
     };
@@ -1088,28 +972,11 @@ dc.baseMixin = function (_chart) {
      */
     _chart.filter = function (filter) {
         if (!arguments.length) {
-            return _filters.length > 0 ? _filters[0] : null;
+            return _chart.dimension().exFilter();
         }
-        var filters = _filters;
-        if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
-            // toggle each filter
-            filter[0].forEach(function (f) {
-                if (_hasFilterHandler(filters, f)) {
-                    filters = _removeFilterHandler(filters, f);
-                } else {
-                    filters = _addFilterHandler(filters, f);
-                }
-            });
-        } else if (filter === null) {
-            filters = _resetFilterHandler(filters);
-        } else {
-            if (_hasFilterHandler(filters, filter)) {
-                filters = _removeFilterHandler(filters, filter);
-            } else {
-                filters = _addFilterHandler(filters, filter);
-            }
-        }
-        _filters = applyFilters(filters);
+
+        _chart.dimension().exFilter(filter);
+
         _chart._invokeFilteredListener(filter);
 
         if (_root !== null && _chart.hasFilter()) {
@@ -1131,7 +998,7 @@ dc.baseMixin = function (_chart) {
      * @returns {Array<*>}
      */
     _chart.filters = function () {
-        return _filters;
+        return _chart.dimension().filters();
     };
 
     _chart.highlightSelected = function (e) {
@@ -1163,61 +1030,6 @@ dc.baseMixin = function (_chart) {
             _chart.filter(filter);
             _chart.redrawGroup();
         });
-    };
-
-    /**
-     * Set or get the filter handler. The filter handler is a function that performs the filter action
-     * on a specific dimension. Using a custom filter handler allows you to perform additional logic
-     * before or after filtering.
-     * @method filterHandler
-     * @memberof dc.baseMixin
-     * @instance
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
-     * @example
-     * // the default filter handler handles all possible cases for the charts in dc.js
-     * // you can replace it with something more specialized for your own chart
-     * chart.filterHandler(function (dimension, filters) {
-     *     if (filters.length === 0) {
-     *         // the empty case (no filtering)
-     *         dimension.filter(null);
-     *     } else if (filters.length === 1 && !filters[0].isFiltered) {
-     *         // single value and not a function-based filter
-     *         dimension.filterExact(filters[0]);
-     *     } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-     *         // single range-based filter
-     *         dimension.filterRange(filters[0]);
-     *     } else {
-     *         // an array of values, or an array of filter objects
-     *         dimension.filterFunction(function (d) {
-     *             for (var i = 0; i < filters.length; i++) {
-     *                 var filter = filters[i];
-     *                 if (filter.isFiltered && filter.isFiltered(d)) {
-     *                     return true;
-     *                 } else if (filter <= d && filter >= d) {
-     *                     return true;
-     *                 }
-     *             }
-     *             return false;
-     *         });
-     *     }
-     *     return filters;
-     * });
-     *
-     * // custom filter handler
-     * chart.filterHandler(function(dimension, filter){
-     *     var newFilter = filter + 10;
-     *     dimension.filter(newFilter);
-     *     return newFilter; // set the actual filter value to the new value
-     * });
-     * @param {Function} [filterHandler]
-     * @returns {Function|dc.baseMixin}
-     */
-    _chart.filterHandler = function (filterHandler) {
-        if (!arguments.length) {
-            return _filterHandler;
-        }
-        _filterHandler = filterHandler;
-        return _chart;
     };
 
     // abstract function stub
