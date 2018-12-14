@@ -1419,7 +1419,7 @@ dc.coordinateGridMixin = function (_chart) {
                 dc.events.trigger(function () {
                     _focusChart.x().domain(_focusChart.xOriginalDomain(), true);
                 });
-            } else if (!dc.utils.arraysEqual(chart.filter(), _focusChart.filter())) {
+            } else {
                 dc.events.trigger(function () {
                     _focusChart.focus(chart.filter(), true);
                 });

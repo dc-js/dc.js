@@ -529,6 +529,7 @@ module.exports.jsFiles = [
     'src/logger.js',
     'src/config.js',
     'src/events.js',
+    'src/crossfilter-adapter.js',
     'src/filters.js',
     'src/base-mixin.js',
     'src/margin-mixin.js',

@@ -1,84 +1,3 @@
-dc.wrapDimension = function (_dimension) {
-    var _filters = [];
-
-    var applyFilters = function () {
-        if (_filters.length === 0) {
-            _dimension.filter(null);
-        } else if (_filters.length === 1 && !_filters[0].isFiltered) {
-            // single value and not a function-based filter
-            _dimension.filterExact(_filters[0]);
-        } else if (_filters.length === 1 && _filters[0].filterType === 'RangedFilter') {
-            // single range-based filter
-            _dimension.filterRange(_filters[0]);
-        } else {
-            _dimension.filterFunction(function (d) {
-                for (var i = 0; i < _filters.length; i++) {
-                    var filter = _filters[i];
-                    if (filter.isFiltered && filter.isFiltered(d)) {
-                        return true;
-                    } else if (filter <= d && filter >= d) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-        }
-    };
-
-    var removeFilter = function (filter) {
-        for (var i = 0; i < _filters.length; i++) {
-            if (_filters[i] <= filter && _filters[i] >= filter) {
-                _filters.splice(i, 1);
-                break;
-            }
-        }
-    };
-
-    var addFilter = function (filter) {
-        _filters.push(filter);
-    };
-
-    _dimension.hasFilter = function (filter) {
-        if (filter === null || typeof(filter) === 'undefined') {
-            return _filters.length > 0;
-        }
-        return _filters.some(function (f) {
-            return filter <= f && filter >= f;
-        });
-    };
-
-    _dimension.exFilter = function (filter) {
-        if (!arguments.length) {
-            return _filters.length > 0 ? _filters[0] : null;
-        }
-        if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
-            // toggle each filter
-            filter[0].forEach(function (f) {
-                if (_dimension.hasFilter(f)) {
-                    removeFilter(f);
-                } else {
-                    addFilter(f);
-                }
-            });
-        } else if (filter === null) {
-            _filters = [];
-        } else {
-            if (_dimension.hasFilter(filter)) {
-                removeFilter(filter);
-            } else {
-                addFilter(filter);
-            }
-        }
-        applyFilters();
-    };
-
-    _dimension.filters = function () {
-        return _filters;
-    };
-
-    return _dimension;
-};
-
 /**
  * `dc.baseMixin` is an abstract functional object representing a basic `dc` chart object
  * for all chart and widget implementations. Methods from the {@link #dc.baseMixin dc.baseMixin} are inherited
@@ -318,7 +237,7 @@ dc.baseMixin = function (_chart) {
         if (!arguments.length) {
             return _dimension;
         }
-        _dimension = dc.wrapDimension(dimension);
+        _dimension = dimension;
         _chart.expireCache();
         return _chart;
     };

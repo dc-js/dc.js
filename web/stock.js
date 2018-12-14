@@ -77,7 +77,7 @@ d3.csv('ndx.csv').then(function (data) {
     //### Create Crossfilter Dimensions and Groups
 
     //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
-    var ndx = crossfilter(data);
+    var ndx = dc.crossfilterAdapter(crossfilter(data));
     var all = ndx.groupAll();
 
     // Dimension by year
