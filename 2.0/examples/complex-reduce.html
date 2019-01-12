@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Complex Reductions Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      label {
+          display: inline;
+          padding-left: 1em;
+      }
+      label input {
+          vertical-align: top;
+      }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<script type="text/javascript" src="header.js"></script>
+  <p>Frequently asked question: how to show the minimum/maximum of some value in the rows?</p>
+
+  <p>Some kinds of reductions require the entire set of values at every step: median, mode, minimum,
+  maximum. (The mean just needs a running sum.)</p>
+
+  <p>This example shows how to keep the set of values.</p>
+
+  <div id="select-operation">
+    <label><input type=radio name="operation" value="median" checked="true">&nbsp;median</label>
+    <label><input type=radio name="operation" value="mode">&nbsp;mode</label>
+    <label><input type=radio name="operation" value="min">&nbsp;min</label>
+    <label><input type=radio name="operation" value="max">&nbsp;max</label>
+  </div>
+  <div id="test-run">
+    <h4>Run</h4>
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:runChart.filterAll().redrawGroup();">reset</a>
+    </div>
+  </div>
+  <div id="test-expt">
+    <h4>Experiment</h4>
+    <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+      <a href="javascript:exptChart.filterAll().redrawGroup();">reset</a>
+    </div>
+  </div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+  // reduction functions that keep a sorted array of rows. the rows must either have a unique key,
+  // or it must not matter if the same row is removed as was added previously
+
+  // instead of calculating the desired metric on every change, which is slow, we'll just maintain
+  // these arrays of rows and calculate the metrics when needed in the accessor
+  function groupArrayAdd(keyfn) {
+      var bisect = d3.bisector(keyfn);
+      return function(elements, item) {
+          var pos = bisect.right(elements, keyfn(item));
+          elements.splice(pos, 0, item);
+          return elements;
+      };
+  }
+
+  function groupArrayRemove(keyfn) {
+      var bisect = d3.bisector(keyfn);
+      return function(elements, item) {
+          var pos = bisect.left(elements, keyfn(item));
+          if(keyfn(elements[pos])===keyfn(item))
+              elements.splice(pos, 1);
+          return elements;
+      };
+  }
+
+  function groupArrayInit() {
+      return [];
+  }
+
+  // adapted from Code Review: Finding the mode of an array
+  // http://codereview.stackexchange.com/a/68431/108362
+  var mode = function mode(arr, acc) {
+      return arr.reduce(function(current, item) {
+          item = acc(item);
+          var val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+          if (val > current.greatestFreq) {
+              current.greatestFreq = val;
+              current.mode = item;
+          }
+          return current;
+      }, {mode: null, greatestFreq: -Infinity, numMapping: {}}, arr).mode;
+  };
+
+  var runChart = dc.barChart("#test-run"), exptChart = dc.barChart("#test-expt");
+  d3.csv("morley.csv", function(error, experiments) {
+      experiments.forEach(function(x) {
+          x.Speed = +x.Speed;
+      });
+
+      var ndx = crossfilter(experiments),
+          runKey = function(d) {return +d.Run;},
+          exptKey = function(d) {return +d.Expt;},
+          speedValue = function(d) {return d.Speed;},
+          runDimension = ndx.dimension(runKey),
+          exptDimension = ndx.dimension(exptKey),
+          runAvgGroup = runDimension.group().reduce(groupArrayAdd(exptKey), groupArrayRemove(exptKey), groupArrayInit),
+          exptAvgGroup = exptDimension.group().reduce(groupArrayAdd(runKey), groupArrayRemove(runKey), groupArrayInit);
+
+      function medianSpeed(kv) {
+          return d3.median(kv.value, speedValue);
+      }
+      function modeSpeed(kv) {
+          return mode(kv.value, speedValue);
+      }
+      function minSpeed(kv) {
+          return d3.min(kv.value, speedValue);
+      }
+      function maxSpeed(kv) {
+          return d3.max(kv.value, speedValue);
+      }
+      var accessors = {
+          median: medianSpeed,
+          mode: modeSpeed,
+          min: minSpeed,
+          max: maxSpeed
+      };
+
+      d3.selectAll('#select-operation input')
+          .on('click', function() {
+              runChart.valueAccessor(accessors[this.value]);
+              exptChart.valueAccessor(accessors[this.value]);
+              dc.redrawAll();
+          });
+
+      runChart
+          .width(400)
+          .height(300)
+          .x(d3.scale.ordinal())
+          .xUnits(dc.units.ordinal)
+          .valueAccessor(medianSpeed)
+          .elasticY(true)
+          .brushOn(true)
+          .controlsUseVisibility(true)
+          .dimension(runDimension)
+          .group(runAvgGroup);
+
+      exptChart
+          .width(400)
+          .height(300)
+          .x(d3.scale.ordinal())
+          .xUnits(dc.units.ordinal)
+          .valueAccessor(medianSpeed)
+          .elasticY(true)
+          .brushOn(true)
+          .controlsUseVisibility(true)
+          .dimension(exptDimension)
+          .group(exptAvgGroup);
+
+      runChart.margins().left = exptChart.margins().left = 35;
+
+      dc.renderAll();
+  });
+
+</script>
+
+</div>
+</body>
+</html>
