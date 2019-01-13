@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Row Chart Example</title>
+    <title>dc.js - Row Chart with Target Lines</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -32,10 +32,14 @@ d3.csv("morley.csv").then(function(experiments) {
 
   // use your keys in this map. or your could reduce these in your data
   var _targets = {
+      5: 20,
       7: 15,
       9: 22,
-      11: 7
+      11: 7,
+      13: 40,
+      20: 70
   };
+
   chart
     .width(768)
     .height(480)
@@ -60,8 +64,11 @@ d3.csv("morley.csv").then(function(experiments) {
             }).merge(target);
         // move into position (also move any targets that changed)
         target.transition().duration(chart.transitionDuration())
+            .attr('visibility', function(d) {
+                return (d.value.target !== undefined || _targets[d.key] !== undefined) ? 'visible' : 'hidden';
+            })
             .attr('d', function(d) {
-                return 'M' + chart.x()(d.value.target || _targets[d.key] || 0) + ',0 v' + height;
+                return 'M' + (chart.x()(d.value.target || _targets[d.key] || 0)+0.5) + ',0 v' + height;
             });
     });
     chart.render();
