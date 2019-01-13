@@ -64,6 +64,9 @@ d3.csv("morley.csv").then(function(experiments) {
             }).merge(target);
         // move into position (also move any targets that changed)
         target.transition().duration(chart.transitionDuration())
+            .attr('visibility', function(d) {
+                return (d.value.target !== undefined || _targets[d.key] !== undefined) ? 'visible' : 'hidden';
+            })
             .attr('d', function(d) {
                 return 'M' + (chart.x()(d.value.target || _targets[d.key] || 0)+0.5) + ',0 v' + height;
             });
