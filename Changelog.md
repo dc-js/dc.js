@@ -1,3 +1,13 @@
+## 3.0.10
+This mostly updates examples and tests, and updates compatiblity polyfills for IE.
+* Compatible with d3 5.8
+* Various test failures across all browsers fixed, due to changes in D3 and browsers
+* New [row targets](http://dc-js.github.io/dc.js/examples/row-targets.html) example shows how to superimpose lines on individual row chart items
+* [Focus dynamic interval](http://dc-js.github.io/dc.js/examples/focus-dynamic-interval.html) example builds on [switching time intervals](http://dc-js.github.io/dc.js/examples/switching-time-intervals.html) to show how to change the aggregation in response to brushing on a range chart
+* Many examples were mistitled
+* Removed arrow functions and polyfilled missing functions (eg Fetch) for IE. Note that IE support won't last forever since D3v6 will no longer support it!
+* Fixed typo, thanks Rimian Perkins!
+
 ## 3.0.9
 * Updated Table Pagination example, with filtering, by Sudeep Mandal and Arcuri Davide ([#1492](https://github.com/dc-js/dc.js/pull/1492))
 * Fade-in and correct opacity for grid lines, by Lou Moxy ([#1501](https://github.com/dc-js/dc.js/pull/1501) / [#1500](https://github.com/dc-js/dc.js/issues/1500))

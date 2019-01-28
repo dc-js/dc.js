@@ -461,6 +461,26 @@ dc.instanceOfChart = function (o) {
     return o instanceof Object && o.__dcFlag__ && true;
 };
 
+// polyfill for IE
+// from https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill
+if (!Element.prototype.matches) {
+    Element.prototype.matches =
+        Element.prototype.matchesSelector ||
+        Element.prototype.mozMatchesSelector ||
+        Element.prototype.msMatchesSelector ||
+        Element.prototype.oMatchesSelector ||
+        Element.prototype.webkitMatchesSelector ||
+        function (s) {
+            var matches = (this.document || this.ownerDocument).querySelectorAll(s),
+                i = matches.length;
+            do {
+                --i;
+            }
+            while (i >= 0 && matches.item(i) !== this);
+            return i > -1;
+        };
+}
+
 dc.errors = {};
 
 dc.errors.Exception = function (msg) {
@@ -10181,7 +10201,7 @@ dc.rowChart = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
+     * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescale to auto-fit the
      * data range when filtered.
      * @method elasticX
      * @memberof dc.rowChart
