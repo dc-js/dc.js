@@ -57,9 +57,9 @@ describe('dc.colorMixin', function () {
 
         it('linear', function () {
             // GIGO: mapping ordinal domain to linear scale is nonsensical
-            // actually it gets scaled to NaN and then d3 corrects it
+            // d3 pre-5.8: scaled to NaN and corrected to black; 5.8+: scale returns undefined
             chart.linearColors(['#ff0000','#00ff00']);
-            expect(colorTest(chart, domain)).toMatchColors(['#000000', '#000000', '#000000', '#000000', '#000000']);
+            expect(colorTest(chart, domain)).toEqual([undefined, undefined, undefined, undefined, undefined]);
         });
     });
     describe('with numeric domain' , function () {
