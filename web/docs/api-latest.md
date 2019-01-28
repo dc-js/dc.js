@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.2.1  
+**Version**: 2.2.1-pyramid-paired  
 **Example**  
 ```js
 // Example chaining
@@ -109,6 +109,7 @@ chart.width(300)
         * [.point(name, x, y)](#dc.bubbleOverlay+point) ⇒ [<code>bubbleOverlay</code>](#dc.bubbleOverlay)
     * [.rowChart](#dc.rowChart)
         * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
+        * [.useRightYAxis](#dc.rowChart+useRightYAxis) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.svg.axis</code>
@@ -244,6 +245,7 @@ chart.width(300)
         * [.getColor(d, [i])](#dc.colorMixin+getColor) ⇒ <code>String</code>
         * [.colorCalculator([colorCalculator])](#dc.colorMixin+colorCalculator) ⇒ <code>function</code> \| [<code>colorMixin</code>](#dc.colorMixin)
     * [.coordinateGridMixin](#dc.coordinateGridMixin) ⇒ [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+        * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
         * [.rescale()](#dc.coordinateGridMixin+rescale) ⇒ [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.rangeChart([rangeChart])](#dc.coordinateGridMixin+rangeChart) ⇒ [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.zoomScale([extent])](#dc.coordinateGridMixin+zoomScale) ⇒ <code>Array.&lt;(Number\|Date)&gt;</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -1830,6 +1832,7 @@ value specified here are relative to the underlying svg.
 
 * [.rowChart](#dc.rowChart)
     * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
+    * [.useRightYAxis](#dc.rowChart+useRightYAxis) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.svg.axis</code>
@@ -1861,6 +1864,17 @@ var chart1 = dc.rowChart('#chart-container1');
 // create a row chart under #chart-container2 element using chart group A
 var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
 ```
+<a name="dc.rowChart+useRightYAxis"></a>
+
+#### rowChart.useRightYAxis ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
+Gets or sets whether the chart should be drawn with a right axis instead of a left axis.
+
+**Kind**: instance property of [<code>rowChart</code>](#dc.rowChart)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [useRightYAxis] | <code>Number</code> | <code>false</code> | 
+
 <a name="dc.rowChart+x"></a>
 
 #### rowChart.x([scale]) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -4123,6 +4137,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
 
 
 * [.coordinateGridMixin](#dc.coordinateGridMixin) ⇒ [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+    * [.xAxisLabel](#dc.coordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
     * [.rescale()](#dc.coordinateGridMixin+rescale) ⇒ [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.rangeChart([rangeChart])](#dc.coordinateGridMixin+rangeChart) ⇒ [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.zoomScale([extent])](#dc.coordinateGridMixin+zoomScale) ⇒ <code>Array.&lt;(Number\|Date)&gt;</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
@@ -4155,6 +4170,19 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.focus([range])](#dc.coordinateGridMixin+focus)
     * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
+
+<a name="dc.coordinateGridMixin+xAxisLabel"></a>
+
+#### coordinateGridMixin.xAxisLabel ⇒ <code>String</code>
+Set or get the x axis label. If setting the label, you may optionally include additional padding to
+the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
+
+**Kind**: instance property of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [labelText] | <code>String</code> |  | 
+| [padding] | <code>Number</code> | <code>12</code> | 
 
 <a name="dc.coordinateGridMixin+rescale"></a>
 

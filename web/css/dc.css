@@ -197,6 +197,10 @@ div.dc-chart {
     fill: #fee;
     cursor: default; }
 
+.dc-chart .dc-chart .titlerow {
+  pointer-events: none;
+  opacity: 0; }
+
 .dc-data-count {
   float: right;
   margin-top: 15px;
