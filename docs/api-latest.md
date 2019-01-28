@@ -2290,7 +2290,7 @@ Get or set the vertical gap space between rows on a particular row chart instanc
 <a name="dc.rowChart+elasticX"></a>
 
 #### rowChart.elasticX([elasticX]) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescle to auto-fit the
+Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescale to auto-fit the
 data range when filtered.
 
 **Kind**: instance method of [<code>rowChart</code>](#dc.rowChart)  
