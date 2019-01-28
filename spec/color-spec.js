@@ -59,7 +59,11 @@ describe('dc.colorMixin', function () {
             // GIGO: mapping ordinal domain to linear scale is nonsensical
             // d3 pre-5.8: scaled to NaN and corrected to black; 5.8+: scale returns undefined
             chart.linearColors(['#ff0000','#00ff00']);
-            expect(colorTest(chart, domain)).toEqual([undefined, undefined, undefined, undefined, undefined]);
+            if (compareVersions(d3.version, '5.8') === -1) {
+                expect(colorTest(chart, domain)).toMatchColors(['#000000', '#000000', '#000000', '#000000', '#000000']);
+            } else {
+                expect(colorTest(chart, domain)).toEqual([undefined, undefined, undefined, undefined, undefined]);
+            }
         });
     });
     describe('with numeric domain' , function () {
