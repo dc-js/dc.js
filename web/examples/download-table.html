@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Filtering Example</title>
+    <title>dc.js - Downloading Data Table Contents</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -43,6 +43,8 @@
   </div>
 
 
+    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -55,7 +57,7 @@ var yearRingChart   = dc.pieChart("#chart-ring-year"),
 
 var table = dc.dataTable('#table');
 
-// use static or load via d3.csv("spendData.csv", function(error, spendData) {/* do stuff */});
+// use static or load via d3.csv("spendData.csv").then(function(spendData) {/* do stuff */});
 var spendData = [
     {Name: 'Mr A', Spent: '$40', Year: 2011},
     {Name: 'Mr B', Spent: '$10', Year: 2011},

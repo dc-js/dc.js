@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Bar Chart Example</title>
+    <title>dc.js - Single Selection in a Bar Chart</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -18,6 +18,8 @@
   </div>
 </div>
 
+    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -44,7 +46,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .dimension(runDimension)
     .group(speedSumGroup)
     .controlsUseVisibility(true)
-    .addFilterHandler(function(filters, filter) {return [filter];});
+    .addFilterHandler(function(filters, filter) {return [filter];}); // this
     chart.render();
 });
 

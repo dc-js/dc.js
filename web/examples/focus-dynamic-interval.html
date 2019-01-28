@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Focus Chart with Dynamic Intervals</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+
+    <div class="container">
+      <script type="text/javascript" src="header.js"></script>
+
+      <p>Zoom test</p>
+      <div id="chart"></div>
+      <div id="range-chart"></div>
+
+
+    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="../js/fetch.umd.js"></script>
+  <script type="text/javascript" src="../js/d3.js"></script>
+  <script type="text/javascript" src="../js/crossfilter.js"></script>
+  <script type="text/javascript" src="../js/dc.js"></script>
+  <script type="text/javascript">
+
+// polyfill Array.find for IE
+// https://tc39.github.io/ecma262/#sec-array.prototype.find
+if (!Array.prototype.find) {
+  Object.defineProperty(Array.prototype, 'find', {
+    value: function(predicate) {
+     // 1. Let O be ? ToObject(this value).
+      if (this == null) {
+        throw new TypeError('"this" is null or not defined');
+      }
+
+      var o = Object(this);
+
+      // 2. Let len be ? ToLength(? Get(O, "length")).
+      var len = o.length >>> 0;
+
+      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
+      if (typeof predicate !== 'function') {
+        throw new TypeError('predicate must be a function');
+      }
+
+      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
+      var thisArg = arguments[1];
+
+      // 5. Let k be 0.
+      var k = 0;
+
+      // 6. Repeat, while k < len
+      while (k < len) {
+        // a. Let Pk be ! ToString(k).
+        // b. Let kValue be ? Get(O, Pk).
+        // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
+        // d. If testResult is true, return kValue.
+        var kValue = o[k];
+        if (predicate.call(thisArg, kValue, k, o)) {
+          return kValue;
+        }
+        // e. Increase k by 1.
+        k++;
+      }
+
+      // 7. Return undefined.
+      return undefined;
+    },
+    configurable: true,
+    writable: true
+  });
+}
+
+    (function() { // for emacs indenting (sorry)
+        function nonzero_min(chart) {
+            dc.override(chart, "yAxisMin", function() {
+                var min = d3.min(chart.data(), function(layer) {
+                    return d3.min(layer.values, function(p) {
+                        return p.y + p.y0;
+                    });
+                });
+                return dc.utils.subtract(min, chart.yAxisPadding());
+            });
+            return chart;
+        }
+
+        var data = [];
+        var items = 500000; // way way too much
+
+        var start = Date.now();
+        for (i = 0; i < items; i++) {
+            var t = start + i*50;
+            var d = new Date(t);
+            data.push({
+                value: 10 * Math.sin(2 * Math.PI * t / (60*60*1000)),
+                date: d
+            });
+        }
+
+        var chart = dc.lineChart("#chart");
+        var rangeChart = dc.lineChart("#range-chart");
+        var fullDomain = [data[0].date, data.slice(-1)[0].date];
+        var dimension = crossfilter(data).dimension(function(d) {
+            return d.date;
+        });
+        var groups_by_min_interval = [
+            {
+                name: 'minutes',
+                threshold: 60*60*1000,
+                interval: d3.timeMinute
+            }, {
+                name: 'seconds',
+                threshold: 60*1000,
+                interval: d3.timeSecond
+            }, {
+                name: 'milliseconds',
+                threshold: 0,
+                interval: d3.timeMillisecond
+            }
+        ];
+        function make_group(interval) {
+            return dimension.group(interval).reduce(
+                function(p, v) {
+                    p.count++;
+                    p.total += v.value;
+                    return p;
+                },
+                function(p, v) {
+                    p.count--;
+                    p.total += v.value;
+                    return p;
+                },
+                function() {
+                    return {count: 0, total: 0};
+                }
+            );
+        }
+        function choose_group(extent) {
+            var d = extent[1].getTime() - extent[0].getTime();
+            var found = groups_by_min_interval.find(function(mg) { return mg.threshold < d; });
+            console.log('interval ' + d + ' is more than ' + found.threshold + ' ms; choosing ' + found.name +
+                        ' for ' + found.interval.range(extent[0], extent[1]).length + ' points');
+            if(!found.group)
+                found.group = make_group(found.interval);
+            return found.group;
+        }
+
+        chart
+            .width(800)
+            .height(300)
+            .dimension(dimension)
+            .group(choose_group(fullDomain))
+            .yAxisPadding(0.1)
+            .valueAccessor(function(kv) { return kv.value.total / kv.value.count; })
+            .rangeChart(rangeChart)
+            .x(d3.scaleTime().domain(fullDomain))
+            .xUnits(d3.timeDay)
+            .brushOn(false)
+            .mouseZoomable(true)
+            .zoomScale([1, 100])
+            .zoomOutRestrict(true)
+            .renderVerticalGridLines(true)
+            .elasticY(true)
+            .transitionDuration(100);
+
+        nonzero_min(chart);
+
+        rangeChart
+            .width(800)
+            .height(100)
+            .dimension(dimension)
+            .group(groups_by_min_interval[0].group)
+            .yAxisPadding(1)
+            .valueAccessor(function(kv) { return kv.value.total / kv.value.count; })
+            .x(d3.scaleTime().domain(fullDomain))
+            .xUnits(d3.timeDay);
+
+        rangeChart.on('filtered.dynamic-interval', function(_, filter) {
+            chart.group(choose_group(filter || fullDomain));
+        });
+
+        chart.yAxis().tickFormat(function(t) {
+            return t.toFixed(0);
+        });
+        rangeChart.yAxis().tickFormat(function(t) {
+            return "";
+        });
+        rangeChart.yAxis().ticks(0);
+        dc.renderAll();
+    })();
+  </script>
+
+    </div>
+  </body>
+</html>

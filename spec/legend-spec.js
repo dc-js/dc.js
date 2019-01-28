@@ -235,8 +235,8 @@ describe('dc.legend', function () {
         });
 
         it('should style legend line correctly', function () {
-            expect(legendLine(0).attr('stroke-dasharray')).toEqualIntList('10,1');
-            expect(legendLine(1).attr('stroke-dasharray')).toEqualIntList('2,1');
+            expect(legendLine(0).attr('stroke-dasharray')).toEqualIntOrPixelList('10,1');
+            expect(legendLine(1).attr('stroke-dasharray')).toEqualIntOrPixelList('2,1');
         });
     });
 

@@ -127,8 +127,7 @@ function findSubPath (actual, expected, delta) {
     };
 }
 
-// actually number list, but presumably you'd want closeness if you need that
-function compareIntList (actual, expected) {
+function compareIntListOptSuffix (actual, expected, suffix) {
     var aparts = actual.split(/, */),
         eparts = expected.split(/, */);
     if (aparts.length !== eparts.length) {
@@ -138,8 +137,10 @@ function compareIntList (actual, expected) {
                 ' did not match expected number ' + eparts.length
         };
     }
+    var suffixRE = suffix ? new RegExp(suffix + '$') : '';
     for (var i = 0; i < eparts.length; ++i) {
-        if (+aparts[i] !== +eparts[i]) {
+        var apart = aparts[i].replace(suffixRE, '');
+        if (+apart !== +eparts[i]) {
             return {
                 pass: false,
                 message: 'list item[' + i + '] value ' + aparts[i] + ' did not equal expected value ' + eparts[i]
@@ -147,6 +148,15 @@ function compareIntList (actual, expected) {
         }
     }
     return {pass: true};
+}
+// actually number list, but presumably you'd want closeness if you need that
+function compareIntList (actual, expected) {
+    return compareIntListOptSuffix(actual, expected);
+}
+
+// Edge will tack 'px' onto dash array items; I'm sure this is technically more correct
+function compareIntOrPixelList (actual, expected) {
+    return compareIntListOptSuffix(actual, expected, 'px');
 }
 
 function normalizeColor (c) {
@@ -225,6 +235,11 @@ beforeEach(function () {
         toEqualIntList: function () {
             return {
                 compare: compareIntList
+            };
+        },
+        toEqualIntOrPixelList: function () {
+            return {
+                compare: compareIntOrPixelList
             };
         },
         toMatchColor: function () {

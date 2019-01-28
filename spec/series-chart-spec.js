@@ -90,8 +90,8 @@ describe('dc.seriesChart', function () {
             var lines = chart.selectAll('path.line');
             var areas = chart.selectAll('path.area');
 
-            expect(d3.select(lines.nodes()[0]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
-            expect(d3.select(lines.nodes()[1]).attr('stroke-dasharray')).toEqualIntList('3,1,1');
+            expect(d3.select(lines.nodes()[0]).attr('stroke-dasharray')).toEqualIntOrPixelList('3,1,1');
+            expect(d3.select(lines.nodes()[1]).attr('stroke-dasharray')).toEqualIntOrPixelList('3,1,1');
 
             expect(d3.select(areas.nodes()[0]).attr('fill')).toMatch(/#000001/i);
             expect(d3.select(areas.nodes()[1]).attr('fill')).toMatch(/#000002/i);

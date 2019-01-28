@@ -29,7 +29,7 @@ describe('dc.lineChart', function () {
             });
 
             it('should be dash-dot-dot-dot to match the specified style', function () {
-                expect(chart.selectAll('path.line').attr('stroke-dasharray')).toEqualIntList('3,1,1,1');
+                expect(chart.selectAll('path.line').attr('stroke-dasharray')).toEqualIntOrPixelList('3,1,1,1');
             });
         });
 
@@ -243,8 +243,8 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should have a stroke dash', function () {
-                    expect(chart.selectAll('path.xRef').attr('stroke-dasharray')).toEqualIntList('5,5');
-                    expect(chart.selectAll('path.yRef').attr('stroke-dasharray')).toEqualIntList('5,5');
+                    expect(chart.selectAll('path.xRef').attr('stroke-dasharray')).toEqualIntOrPixelList('5,5');
+                    expect(chart.selectAll('path.yRef').attr('stroke-dasharray')).toEqualIntOrPixelList('5,5');
                 });
 
                 describe('when dot is hovered over', function () {
