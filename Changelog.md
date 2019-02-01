@@ -1,3 +1,6 @@
+## 3.0.11
+* Remove the deprecation on `colorMixin.colorCalculator`, and implement it in a reasonable way ([#1493](https://github.com/dc-js/dc.js/issues/1493))
+
 ## 3.0.10
 This mostly updates examples and tests, and updates compatiblity polyfills for IE.
 * Compatible with d3 5.8
