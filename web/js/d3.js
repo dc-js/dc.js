@@ -1,11 +1,11 @@
-// https://d3js.org v5.8.0 Copyright 2019 Mike Bostock
+// https://d3js.org v5.7.0 Copyright 2018 Mike Bostock
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 typeof define === 'function' && define.amd ? define(['exports'], factory) :
 (factory((global.d3 = global.d3 || {})));
 }(this, (function (exports) { 'use strict';
 
-var version = "5.8.0";
+var version = "5.7.0";
 
 function ascending(a, b) {
   return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -903,14 +903,31 @@ function selection_selectAll(select) {
   return new Selection(subgroups, parents);
 }
 
-function matcher(selector) {
+var matcher = function(selector) {
   return function() {
     return this.matches(selector);
   };
+};
+
+if (typeof document !== "undefined") {
+  var element = document.documentElement;
+  if (!element.matches) {
+    var vendorMatches = element.webkitMatchesSelector
+        || element.msMatchesSelector
+        || element.mozMatchesSelector
+        || element.oMatchesSelector;
+    matcher = function(selector) {
+      return function() {
+        return vendorMatches.call(this, selector);
+      };
+    };
+  }
 }
 
+var matcher$1 = matcher;
+
 function selection_filter(match) {
-  if (typeof match !== "function") match = matcher(match);
+  if (typeof match !== "function") match = matcher$1(match);
 
   for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) {
     for (var group = groups[j], n = group.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) {
@@ -1072,14 +1089,6 @@ function selection_exit() {
   return new Selection(this._exit || this._groups.map(sparse), this._parents);
 }
 
-function selection_join(onenter, onupdate, onexit) {
-  var enter = this.enter(), update = this, exit = this.exit();
-  enter = typeof onenter === "function" ? onenter(enter) : enter.append(onenter + "");
-  if (onupdate != null) update = onupdate(update);
-  if (onexit == null) exit.remove(); else onexit(exit);
-  return enter && update ? enter.merge(update).order() : update;
-}
-
 function selection_merge(selection$$1) {
 
   for (var groups0 = this._groups, groups1 = selection$$1._groups, m0 = groups0.length, m1 = groups1.length, m = Math.min(m0, m1), merges = new Array(m0), j = 0; j < m; ++j) {
@@ -1102,7 +1111,7 @@ function selection_order() {
   for (var groups = this._groups, j = -1, m = groups.length; ++j < m;) {
     for (var group = groups[j], i = group.length - 1, next = group[i], node; --i >= 0;) {
       if (node = group[i]) {
-        if (next && node.compareDocumentPosition(next) ^ 4) next.parentNode.insertBefore(node, next);
+        if (next && next !== node.nextSibling) next.parentNode.insertBefore(node, next);
         next = node;
       }
     }
@@ -1500,8 +1509,8 @@ var filterEvents = {};
 exports.event = null;
 
 if (typeof document !== "undefined") {
-  var element = document.documentElement;
-  if (!("onmouseenter" in element)) {
+  var element$1 = document.documentElement;
+  if (!("onmouseenter" in element$1)) {
     filterEvents = {mouseenter: "mouseover", mouseleave: "mouseout"};
   }
 }
@@ -1655,7 +1664,6 @@ Selection.prototype = selection.prototype = {
   data: selection_data,
   enter: selection_enter,
   exit: selection_exit,
-  join: selection_join,
   merge: selection_merge,
   order: selection_order,
   sort: selection_sort,
@@ -3192,7 +3200,7 @@ function interval$1(callback, delay, time) {
   return t;
 }
 
-var emptyOn = dispatch("start", "end", "cancel", "interrupt");
+var emptyOn = dispatch("start", "end", "interrupt");
 var emptyTween = [];
 
 var CREATED = 0;
@@ -3230,7 +3238,7 @@ function init(node, id) {
 
 function set$1(node, id) {
   var schedule = get$1(node, id);
-  if (schedule.state > STARTED) throw new Error("too late; already running");
+  if (schedule.state > STARTING) throw new Error("too late; already started");
   return schedule;
 }
 
@@ -3273,6 +3281,7 @@ function create$1(node, id, self) {
       if (o.state === STARTED) return timeout$1(start);
 
       // Interrupt the active transition, if any.
+      // Dispatch the interrupt event.
       if (o.state === RUNNING) {
         o.state = ENDED;
         o.timer.stop();
@@ -3280,11 +3289,12 @@ function create$1(node, id, self) {
         delete schedules[i];
       }
 
-      // Cancel any pre-empted transitions.
+      // Cancel any pre-empted transitions. No interrupt event is dispatched
+      // because the cancelled transitions never started. Note that this also
+      // removes this transition from the pending list!
       else if (+i < id) {
         o.state = ENDED;
         o.timer.stop();
-        o.on.call("cancel", node, node.__data__, o.index, o.group);
         delete schedules[i];
       }
     }
@@ -3324,7 +3334,7 @@ function create$1(node, id, self) {
         n = tween.length;
 
     while (++i < n) {
-      tween[i].call(node, t);
+      tween[i].call(null, t);
     }
 
     // Dispatch the end event.
@@ -3359,7 +3369,7 @@ function interrupt(node, name) {
     active = schedule$$1.state > STARTING && schedule$$1.state < ENDING;
     schedule$$1.state = ENDED;
     schedule$$1.timer.stop();
-    schedule$$1.on.call(active ? "interrupt" : "cancel", node, node.__data__, schedule$$1.index, schedule$$1.group);
+    if (active) schedule$$1.on.call("interrupt", node, node.__data__, schedule$$1.index, schedule$$1.group);
     delete schedules[i];
   }
 
@@ -3473,56 +3483,52 @@ function attrRemoveNS$1(fullname) {
 }
 
 function attrConstant$1(name, interpolate$$1, value1) {
-  var string00,
-      string1 = value1 + "",
+  var value00,
       interpolate0;
   return function() {
-    var string0 = this.getAttribute(name);
-    return string0 === string1 ? null
-        : string0 === string00 ? interpolate0
-        : interpolate0 = interpolate$$1(string00 = string0, value1);
+    var value0 = this.getAttribute(name);
+    return value0 === value1 ? null
+        : value0 === value00 ? interpolate0
+        : interpolate0 = interpolate$$1(value00 = value0, value1);
   };
 }
 
 function attrConstantNS$1(fullname, interpolate$$1, value1) {
-  var string00,
-      string1 = value1 + "",
+  var value00,
       interpolate0;
   return function() {
-    var string0 = this.getAttributeNS(fullname.space, fullname.local);
-    return string0 === string1 ? null
-        : string0 === string00 ? interpolate0
-        : interpolate0 = interpolate$$1(string00 = string0, value1);
+    var value0 = this.getAttributeNS(fullname.space, fullname.local);
+    return value0 === value1 ? null
+        : value0 === value00 ? interpolate0
+        : interpolate0 = interpolate$$1(value00 = value0, value1);
   };
 }
 
 function attrFunction$1(name, interpolate$$1, value) {
-  var string00,
-      string10,
+  var value00,
+      value10,
       interpolate0;
   return function() {
-    var string0, value1 = value(this), string1;
+    var value0, value1 = value(this);
     if (value1 == null) return void this.removeAttribute(name);
-    string0 = this.getAttribute(name);
-    string1 = value1 + "";
-    return string0 === string1 ? null
-        : string0 === string00 && string1 === string10 ? interpolate0
-        : (string10 = string1, interpolate0 = interpolate$$1(string00 = string0, value1));
+    value0 = this.getAttribute(name);
+    return value0 === value1 ? null
+        : value0 === value00 && value1 === value10 ? interpolate0
+        : interpolate0 = interpolate$$1(value00 = value0, value10 = value1);
   };
 }
 
 function attrFunctionNS$1(fullname, interpolate$$1, value) {
-  var string00,
-      string10,
+  var value00,
+      value10,
       interpolate0;
   return function() {
-    var string0, value1 = value(this), string1;
+    var value0, value1 = value(this);
     if (value1 == null) return void this.removeAttributeNS(fullname.space, fullname.local);
-    string0 = this.getAttributeNS(fullname.space, fullname.local);
-    string1 = value1 + "";
-    return string0 === string1 ? null
-        : string0 === string00 && string1 === string10 ? interpolate0
-        : (string10 = string1, interpolate0 = interpolate$$1(string00 = string0, value1));
+    value0 = this.getAttributeNS(fullname.space, fullname.local);
+    return value0 === value1 ? null
+        : value0 === value00 && value1 === value10 ? interpolate0
+        : interpolate0 = interpolate$$1(value00 = value0, value10 = value1);
   };
 }
 
@@ -3531,38 +3537,26 @@ function transition_attr(name, value) {
   return this.attrTween(name, typeof value === "function"
       ? (fullname.local ? attrFunctionNS$1 : attrFunction$1)(fullname, i, tweenValue(this, "attr." + name, value))
       : value == null ? (fullname.local ? attrRemoveNS$1 : attrRemove$1)(fullname)
-      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value));
-}
-
-function attrInterpolate(name, i) {
-  return function(t) {
-    this.setAttribute(name, i(t));
-  };
-}
-
-function attrInterpolateNS(fullname, i) {
-  return function(t) {
-    this.setAttributeNS(fullname.space, fullname.local, i(t));
-  };
+      : (fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, i, value + ""));
 }
 
 function attrTweenNS(fullname, value) {
-  var t0, i0;
   function tween() {
-    var i = value.apply(this, arguments);
-    if (i !== i0) t0 = (i0 = i) && attrInterpolateNS(fullname, i);
-    return t0;
+    var node = this, i = value.apply(node, arguments);
+    return i && function(t) {
+      node.setAttributeNS(fullname.space, fullname.local, i(t));
+    };
   }
   tween._value = value;
   return tween;
 }
 
 function attrTween(name, value) {
-  var t0, i0;
   function tween() {
-    var i = value.apply(this, arguments);
-    if (i !== i0) t0 = (i0 = i) && attrInterpolate(name, i);
-    return t0;
+    var node = this, i = value.apply(node, arguments);
+    return i && function(t) {
+      node.setAttribute(name, i(t));
+    };
   }
   tween._value = value;
   return tween;
@@ -3637,7 +3631,7 @@ function transition_ease(value) {
 }
 
 function transition_filter(match) {
-  if (typeof match !== "function") match = matcher(match);
+  if (typeof match !== "function") match = matcher$1(match);
 
   for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) {
     for (var group = groups[j], n = group.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) {
@@ -3759,93 +3753,66 @@ function transition_selection() {
   return new Selection$1(this._groups, this._parents);
 }
 
-function styleNull(name, interpolate$$1) {
-  var string00,
-      string10,
+function styleRemove$1(name, interpolate$$1) {
+  var value00,
+      value10,
       interpolate0;
   return function() {
-    var string0 = styleValue(this, name),
-        string1 = (this.style.removeProperty(name), styleValue(this, name));
-    return string0 === string1 ? null
-        : string0 === string00 && string1 === string10 ? interpolate0
-        : interpolate0 = interpolate$$1(string00 = string0, string10 = string1);
+    var value0 = styleValue(this, name),
+        value1 = (this.style.removeProperty(name), styleValue(this, name));
+    return value0 === value1 ? null
+        : value0 === value00 && value1 === value10 ? interpolate0
+        : interpolate0 = interpolate$$1(value00 = value0, value10 = value1);
   };
 }
 
-function styleRemove$1(name) {
+function styleRemoveEnd(name) {
   return function() {
     this.style.removeProperty(name);
   };
 }
 
 function styleConstant$1(name, interpolate$$1, value1) {
-  var string00,
-      string1 = value1 + "",
+  var value00,
       interpolate0;
   return function() {
-    var string0 = styleValue(this, name);
-    return string0 === string1 ? null
-        : string0 === string00 ? interpolate0
-        : interpolate0 = interpolate$$1(string00 = string0, value1);
+    var value0 = styleValue(this, name);
+    return value0 === value1 ? null
+        : value0 === value00 ? interpolate0
+        : interpolate0 = interpolate$$1(value00 = value0, value1);
   };
 }
 
 function styleFunction$1(name, interpolate$$1, value) {
-  var string00,
-      string10,
+  var value00,
+      value10,
       interpolate0;
   return function() {
-    var string0 = styleValue(this, name),
-        value1 = value(this),
-        string1 = value1 + "";
-    if (value1 == null) string1 = value1 = (this.style.removeProperty(name), styleValue(this, name));
-    return string0 === string1 ? null
-        : string0 === string00 && string1 === string10 ? interpolate0
-        : (string10 = string1, interpolate0 = interpolate$$1(string00 = string0, value1));
-  };
-}
-
-function styleMaybeRemove(id, name) {
-  var on0, on1, listener0, key = "style." + name, event = "end." + key, remove;
-  return function() {
-    var schedule$$1 = set$1(this, id),
-        on = schedule$$1.on,
-        listener = schedule$$1.value[key] == null ? remove || (remove = styleRemove$1(name)) : undefined;
-
-    // If this node shared a dispatch with the previous node,
-    // just assign the updated shared dispatch and we’re done!
-    // Otherwise, copy-on-write.
-    if (on !== on0 || listener0 !== listener) (on1 = (on0 = on).copy()).on(event, listener0 = listener);
-
-    schedule$$1.on = on1;
+    var value0 = styleValue(this, name),
+        value1 = value(this);
+    if (value1 == null) value1 = (this.style.removeProperty(name), styleValue(this, name));
+    return value0 === value1 ? null
+        : value0 === value00 && value1 === value10 ? interpolate0
+        : interpolate0 = interpolate$$1(value00 = value0, value10 = value1);
   };
 }
 
 function transition_style(name, value, priority) {
   var i = (name += "") === "transform" ? interpolateTransformCss : interpolate;
   return value == null ? this
-      .styleTween(name, styleNull(name, i))
-      .on("end.style." + name, styleRemove$1(name))
-    : typeof value === "function" ? this
-      .styleTween(name, styleFunction$1(name, i, tweenValue(this, "style." + name, value)))
-      .each(styleMaybeRemove(this._id, name))
-    : this
-      .styleTween(name, styleConstant$1(name, i, value), priority)
-      .on("end.style." + name, null);
-}
-
-function styleInterpolate(name, i, priority) {
-  return function(t) {
-    this.style.setProperty(name, i(t), priority);
-  };
+          .styleTween(name, styleRemove$1(name, i))
+          .on("end.style." + name, styleRemoveEnd(name))
+      : this.styleTween(name, typeof value === "function"
+          ? styleFunction$1(name, i, tweenValue(this, "style." + name, value))
+          : styleConstant$1(name, i, value + ""), priority);
 }
 
 function styleTween(name, value, priority) {
-  var t, i0;
   function tween() {
-    var i = value.apply(this, arguments);
-    if (i !== i0) t = (i0 = i) && styleInterpolate(name, i, priority);
-    return t;
+    var node = this, i = value.apply(node, arguments);
+    return i && function(t) {
+      node.style.setProperty(name, i(t), priority);
+    };
   }
   tween._value = value;
   return tween;
@@ -3900,31 +3867,6 @@ function transition_transition() {
   return new Transition(groups, this._parents, name, id1);
 }
 
-function transition_end() {
-  var on0, on1, that = this, id = that._id, size = that.size();
-  return new Promise(function(resolve, reject) {
-    var cancel = {value: reject},
-        end = {value: function() { if (--size === 0) resolve(); }};
-
-    that.each(function() {
-      var schedule$$1 = set$1(this, id),
-          on = schedule$$1.on;
-
-      // If this node shared a dispatch with the previous node,
-      // just assign the updated shared dispatch and we’re done!
-      // Otherwise, copy-on-write.
-      if (on !== on0) {
-        on1 = (on0 = on).copy();
-        on1._.cancel.push(cancel);
-        on1._.interrupt.push(cancel);
-        on1._.end.push(end);
-      }
-
-      schedule$$1.on = on1;
-    });
-  });
-}
-
 var id = 0;
 
 function Transition(groups, parents, name, id) {
@@ -3968,8 +3910,7 @@ Transition.prototype = transition.prototype = {
   tween: transition_tween,
   delay: transition_delay,
   duration: transition_duration,
-  ease: transition_ease,
-  end: transition_end
+  ease: transition_ease
 };
 
 function linear$1(t) {
@@ -6692,35 +6633,27 @@ function simulation(nodes) {
     }
   }
 
-  function tick(iterations) {
+  function tick() {
     var i, n = nodes.length, node;
 
-    if (iterations === undefined) iterations = 1;
+    alpha += (alphaTarget - alpha) * alphaDecay;
 
-    for (var k = 0; k < iterations; ++k) {
-      alpha += (alphaTarget - alpha) * alphaDecay;
+    forces.each(function(force) {
+      force(alpha);
+    });
 
-      forces.each(function (force) {
-        force(alpha);
-      });
-
-      for (i = 0; i < n; ++i) {
-        node = nodes[i];
-        if (node.fx == null) node.x += node.vx *= velocityDecay;
-        else node.x = node.fx, node.vx = 0;
-        if (node.fy == null) node.y += node.vy *= velocityDecay;
-        else node.y = node.fy, node.vy = 0;
-      }
+    for (i = 0; i < n; ++i) {
+      node = nodes[i];
+      if (node.fx == null) node.x += node.vx *= velocityDecay;
+      else node.x = node.fx, node.vx = 0;
+      if (node.fy == null) node.y += node.vy *= velocityDecay;
+      else node.y = node.fy, node.vy = 0;
     }
-
-    return simulation;
   }
 
   function initializeNodes() {
     for (var i = 0, n = nodes.length, node; i < n; ++i) {
       node = nodes[i], node.index = i;
-      if (!isNaN(node.fx)) node.x = node.fx;
-      if (!isNaN(node.fy)) node.y = node.fy;
       if (isNaN(node.x) || isNaN(node.y)) {
         var radius = initialRadius * Math.sqrt(i), angle = i * initialAngle;
         node.x = radius * Math.cos(angle);
@@ -7934,7 +7867,7 @@ function compose(a, b) {
 }
 
 function rotationIdentity(lambda, phi) {
-  return [abs(lambda) > pi$3 ? lambda + Math.round(-lambda / tau$3) * tau$3 : lambda, phi];
+  return [lambda > pi$3 ? lambda - tau$3 : lambda < -pi$3 ? lambda + tau$3 : lambda, phi];
 }
 
 rotationIdentity.invert = rotationIdentity;
@@ -11895,24 +11828,6 @@ var exponential$1 = (function sourceRandomExponential(source) {
   return randomExponential;
 })(defaultSource$1);
 
-function initRange(domain, range) {
-  switch (arguments.length) {
-    case 0: break;
-    case 1: this.range(domain); break;
-    default: this.range(range).domain(domain); break;
-  }
-  return this;
-}
-
-function initInterpolator(domain, interpolator) {
-  switch (arguments.length) {
-    case 0: break;
-    case 1: this.interpolator(domain); break;
-    default: this.interpolator(interpolator).domain(domain); break;
-  }
-  return this;
-}
-
 var array$3 = Array.prototype;
 
 var map$2 = array$3.map;
@@ -11920,11 +11835,12 @@ var slice$5 = array$3.slice;
 
 var implicit = {name: "implicit"};
 
-function ordinal() {
+function ordinal(range) {
   var index = map$1(),
       domain = [],
-      range = [],
       unknown = implicit;
+
+  range = range == null ? [] : slice$5.call(range);
 
   function scale(d) {
     var key = d + "", i = index.get(key);
@@ -11952,10 +11868,11 @@ function ordinal() {
   };
 
   scale.copy = function() {
-    return ordinal(domain, range).unknown(unknown);
+    return ordinal()
+        .domain(domain)
+        .range(range)
+        .unknown(unknown);
   };
-
-  initRange.apply(scale, arguments);
 
   return scale;
 }
@@ -12013,15 +11930,15 @@ function band() {
   };
 
   scale.padding = function(_) {
-    return arguments.length ? (paddingInner = Math.min(1, paddingOuter = +_), rescale()) : paddingInner;
+    return arguments.length ? (paddingInner = paddingOuter = Math.max(0, Math.min(1, _)), rescale()) : paddingInner;
   };
 
   scale.paddingInner = function(_) {
-    return arguments.length ? (paddingInner = Math.min(1, _), rescale()) : paddingInner;
+    return arguments.length ? (paddingInner = Math.max(0, Math.min(1, _)), rescale()) : paddingInner;
   };
 
   scale.paddingOuter = function(_) {
-    return arguments.length ? (paddingOuter = +_, rescale()) : paddingOuter;
+    return arguments.length ? (paddingOuter = Math.max(0, Math.min(1, _)), rescale()) : paddingOuter;
   };
 
   scale.align = function(_) {
@@ -12029,14 +11946,16 @@ function band() {
   };
 
   scale.copy = function() {
-    return band(domain(), range$$1)
+    return band()
+        .domain(domain())
+        .range(range$$1)
         .round(round)
         .paddingInner(paddingInner)
         .paddingOuter(paddingOuter)
         .align(align);
   };
 
-  return initRange.apply(rescale(), arguments);
+  return rescale();
 }
 
 function pointish(scale) {
@@ -12054,7 +11973,7 @@ function pointish(scale) {
 }
 
 function point$1() {
-  return pointish(band.apply(null, arguments).paddingInner(1));
+  return pointish(band().paddingInner(1));
 }
 
 function constant$a(x) {
@@ -12069,32 +11988,34 @@ function number$2(x) {
 
 var unit = [0, 1];
 
-function identity$6(x) {
-  return x;
-}
-
-function normalize(a, b) {
+function deinterpolateLinear(a, b) {
   return (b -= (a = +a))
       ? function(x) { return (x - a) / b; }
-      : constant$a(isNaN(b) ? NaN : 0.5);
+      : constant$a(b);
 }
 
-function clamper(domain) {
-  var a = domain[0], b = domain[domain.length - 1], t;
-  if (a > b) t = a, a = b, b = t;
-  return function(x) { return Math.max(a, Math.min(b, x)); };
+function deinterpolateClamp(deinterpolate) {
+  return function(a, b) {
+    var d = deinterpolate(a = +a, b = +b);
+    return function(x) { return x <= a ? 0 : x >= b ? 1 : d(x); };
+  };
 }
 
-// normalize(a, b)(x) takes a domain value x in [a,b] and returns the corresponding parameter t in [0,1].
-// interpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding range value x in [a,b].
-function bimap(domain, range, interpolate$$1) {
+function reinterpolateClamp(reinterpolate) {
+  return function(a, b) {
+    var r = reinterpolate(a = +a, b = +b);
+    return function(t) { return t <= 0 ? a : t >= 1 ? b : r(t); };
+  };
+}
+
+function bimap(domain, range, deinterpolate, reinterpolate) {
   var d0 = domain[0], d1 = domain[1], r0 = range[0], r1 = range[1];
-  if (d1 < d0) d0 = normalize(d1, d0), r0 = interpolate$$1(r1, r0);
-  else d0 = normalize(d0, d1), r0 = interpolate$$1(r0, r1);
+  if (d1 < d0) d0 = deinterpolate(d1, d0), r0 = reinterpolate(r1, r0);
+  else d0 = deinterpolate(d0, d1), r0 = reinterpolate(r0, r1);
   return function(x) { return r0(d0(x)); };
 }
 
-function polymap(domain, range, interpolate$$1) {
+function polymap(domain, range, deinterpolate, reinterpolate) {
   var j = Math.min(domain.length, range.length) - 1,
       d = new Array(j),
       r = new Array(j),
@@ -12107,8 +12028,8 @@ function polymap(domain, range, interpolate$$1) {
   }
 
   while (++i < j) {
-    d[i] = normalize(domain[i], domain[i + 1]);
-    r[i] = interpolate$$1(range[i], range[i + 1]);
+    d[i] = deinterpolate(domain[i], domain[i + 1]);
+    r[i] = reinterpolate(range[i], range[i + 1]);
   }
 
   return function(x) {
@@ -12122,18 +12043,16 @@ function copy(source, target) {
       .domain(source.domain())
       .range(source.range())
       .interpolate(source.interpolate())
-      .clamp(source.clamp())
-      .unknown(source.unknown());
+      .clamp(source.clamp());
 }
 
-function transformer$1() {
+// deinterpolate(a, b)(x) takes a domain value x in [a,b] and returns the corresponding parameter t in [0,1].
+// reinterpolate(a, b)(t) takes a parameter t in [0,1] and returns the corresponding domain value x in [a,b].
+function continuous(deinterpolate, reinterpolate) {
   var domain = unit,
       range = unit,
       interpolate$$1 = interpolateValue,
-      transform,
-      untransform,
-      unknown,
-      clamp = identity$6,
+      clamp = false,
       piecewise$$1,
       output,
       input;
@@ -12145,15 +12064,15 @@ function transformer$1() {
   }
 
   function scale(x) {
-    return isNaN(x = +x) ? unknown : (output || (output = piecewise$$1(domain.map(transform), range, interpolate$$1)))(transform(clamp(x)));
+    return (output || (output = piecewise$$1(domain, range, clamp ? deinterpolateClamp(deinterpolate) : deinterpolate, interpolate$$1)))(+x);
   }
 
   scale.invert = function(y) {
-    return clamp(untransform((input || (input = piecewise$$1(range, domain.map(transform), interpolateNumber)))(y)));
+    return (input || (input = piecewise$$1(range, domain, deinterpolateLinear, clamp ? reinterpolateClamp(reinterpolate) : reinterpolate)))(+y);
   };
 
   scale.domain = function(_) {
-    return arguments.length ? (domain = map$2.call(_, number$2), clamp === identity$6 || (clamp = clamper(domain)), rescale()) : domain.slice();
+    return arguments.length ? (domain = map$2.call(_, number$2), rescale()) : domain.slice();
   };
 
   scale.range = function(_) {
@@ -12165,29 +12084,20 @@ function transformer$1() {
   };
 
   scale.clamp = function(_) {
-    return arguments.length ? (clamp = _ ? clamper(domain) : identity$6, scale) : clamp !== identity$6;
+    return arguments.length ? (clamp = !!_, rescale()) : clamp;
   };
 
   scale.interpolate = function(_) {
     return arguments.length ? (interpolate$$1 = _, rescale()) : interpolate$$1;
   };
 
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : unknown;
-  };
-
-  return function(t, u) {
-    transform = t, untransform = u;
-    return rescale();
-  };
+  return rescale();
 }
 
-function continuous(transform, untransform) {
-  return transformer$1()(transform, untransform);
-}
-
-function tickFormat(start, stop, count, specifier) {
-  var step = tickStep(start, stop, count),
+function tickFormat(domain, count, specifier) {
+  var start = domain[0],
+      stop = domain[domain.length - 1],
+      step = tickStep(start, stop, count == null ? 10 : count),
       precision;
   specifier = formatSpecifier(specifier == null ? ",f" : specifier);
   switch (specifier.type) {
@@ -12222,8 +12132,7 @@ function linearish(scale) {
   };
 
   scale.tickFormat = function(count, specifier) {
-    var d = domain();
-    return tickFormat(d[0], d[d.length - 1], count == null ? 10 : count, specifier);
+    return tickFormat(domain(), count, specifier);
   };
 
   scale.nice = function(count) {
@@ -12270,22 +12179,20 @@ function linearish(scale) {
 }
 
 function linear$2() {
-  var scale = continuous(identity$6, identity$6);
+  var scale = continuous(deinterpolateLinear, interpolateNumber);
 
   scale.copy = function() {
     return copy(scale, linear$2());
   };
 
-  initRange.apply(scale, arguments);
-
   return linearish(scale);
 }
 
-function identity$7(domain) {
-  var unknown;
+function identity$6() {
+  var domain = [0, 1];
 
   function scale(x) {
-    return isNaN(x = +x) ? unknown : x;
+    return +x;
   }
 
   scale.invert = scale;
@@ -12294,15 +12201,9 @@ function identity$7(domain) {
     return arguments.length ? (domain = map$2.call(_, number$2), scale) : domain.slice();
   };
 
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : unknown;
-  };
-
   scale.copy = function() {
-    return identity$7(domain).unknown(unknown);
+    return identity$6().domain(domain);
   };
-
-  domain = arguments.length ? map$2.call(domain, number$2) : [0, 1];
 
   return linearish(scale);
 }
@@ -12326,20 +12227,16 @@ function nice(domain, interval) {
   return domain;
 }
 
-function transformLog(x) {
-  return Math.log(x);
+function deinterpolate(a, b) {
+  return (b = Math.log(b / a))
+      ? function(x) { return Math.log(x / a) / b; }
+      : constant$a(b);
 }
 
-function transformExp(x) {
-  return Math.exp(x);
-}
-
-function transformLogn(x) {
-  return -Math.log(-x);
-}
-
-function transformExpn(x) {
-  return -Math.exp(-x);
+function reinterpolate(a, b) {
+  return a < 0
+      ? function(t) { return -Math.pow(-b, t) * Math.pow(-a, 1 - t); }
+      : function(t) { return Math.pow(b, t) * Math.pow(a, 1 - t); };
 }
 
 function pow10(x) {
@@ -12365,21 +12262,16 @@ function reflect(f) {
   };
 }
 
-function loggish(transform) {
-  var scale = transform(transformLog, transformExp),
+function log$1() {
+  var scale = continuous(deinterpolate, reinterpolate).domain([1, 10]),
       domain = scale.domain,
       base = 10,
-      logs,
-      pows;
+      logs = logp(10),
+      pows = powp(10);
 
   function rescale() {
     logs = logp(base), pows = powp(base);
-    if (domain()[0] < 0) {
-      logs = reflect(logs), pows = reflect(pows);
-      transform(transformLogn, transformExpn);
-    } else {
-      transform(transformLog, transformExp);
-    }
+    if (domain()[0] < 0) logs = reflect(logs), pows = reflect(pows);
     return scale;
   }
 
@@ -12451,105 +12343,52 @@ function loggish(transform) {
     }));
   };
 
-  return scale;
-}
-
-function log$1() {
-  var scale = loggish(transformer$1()).domain([1, 10]);
-
   scale.copy = function() {
-    return copy(scale, log$1()).base(scale.base());
+    return copy(scale, log$1().base(base));
   };
-
-  initRange.apply(scale, arguments);
 
   return scale;
 }
 
-function transformSymlog(c) {
-  return function(x) {
-    return Math.sign(x) * Math.log1p(Math.abs(x / c));
-  };
-}
-
-function transformSymexp(c) {
-  return function(x) {
-    return Math.sign(x) * Math.expm1(Math.abs(x)) * c;
-  };
-}
-
-function symlogish(transform) {
-  var c = 1, scale = transform(transformSymlog(c), transformSymexp(c));
-
-  scale.constant = function(_) {
-    return arguments.length ? transform(transformSymlog(c = +_), transformSymexp(c)) : c;
-  };
-
-  return linearish(scale);
-}
-
-function symlog() {
-  var scale = symlogish(transformer$1());
-
-  scale.copy = function() {
-    return copy(scale, symlog()).constant(scale.constant());
-  };
-
-  return initRange.apply(scale, arguments);
-}
-
-function transformPow(exponent) {
-  return function(x) {
-    return x < 0 ? -Math.pow(-x, exponent) : Math.pow(x, exponent);
-  };
-}
-
-function transformSqrt(x) {
-  return x < 0 ? -Math.sqrt(-x) : Math.sqrt(x);
-}
-
-function transformSquare(x) {
-  return x < 0 ? -x * x : x * x;
-}
-
-function powish(transform) {
-  var scale = transform(identity$6, identity$6),
-      exponent = 1;
-
-  function rescale() {
-    return exponent === 1 ? transform(identity$6, identity$6)
-        : exponent === 0.5 ? transform(transformSqrt, transformSquare)
-        : transform(transformPow(exponent), transformPow(1 / exponent));
-  }
-
-  scale.exponent = function(_) {
-    return arguments.length ? (exponent = +_, rescale()) : exponent;
-  };
-
-  return linearish(scale);
+function raise$1(x, exponent) {
+  return x < 0 ? -Math.pow(-x, exponent) : Math.pow(x, exponent);
 }
 
 function pow$1() {
-  var scale = powish(transformer$1());
+  var exponent = 1,
+      scale = continuous(deinterpolate, reinterpolate),
+      domain = scale.domain;
 
-  scale.copy = function() {
-    return copy(scale, pow$1()).exponent(scale.exponent());
+  function deinterpolate(a, b) {
+    return (b = raise$1(b, exponent) - (a = raise$1(a, exponent)))
+        ? function(x) { return (raise$1(x, exponent) - a) / b; }
+        : constant$a(b);
+  }
+
+  function reinterpolate(a, b) {
+    b = raise$1(b, exponent) - (a = raise$1(a, exponent));
+    return function(t) { return raise$1(a + b * t, 1 / exponent); };
+  }
+
+  scale.exponent = function(_) {
+    return arguments.length ? (exponent = +_, domain(domain())) : exponent;
   };
 
-  initRange.apply(scale, arguments);
+  scale.copy = function() {
+    return copy(scale, pow$1().exponent(exponent));
+  };
 
-  return scale;
+  return linearish(scale);
 }
 
 function sqrt$1() {
-  return pow$1.apply(null, arguments).exponent(0.5);
+  return pow$1().exponent(0.5);
 }
 
 function quantile$$1() {
   var domain = [],
       range = [],
-      thresholds = [],
-      unknown;
+      thresholds = [];
 
   function rescale() {
     var i = 0, n = Math.max(1, range.length);
@@ -12559,7 +12398,7 @@ function quantile$$1() {
   }
 
   function scale(x) {
-    return isNaN(x = +x) ? unknown : range[bisectRight(thresholds, x)];
+    if (!isNaN(x = +x)) return range[bisectRight(thresholds, x)];
   }
 
   scale.invertExtent = function(y) {
@@ -12582,10 +12421,6 @@ function quantile$$1() {
     return arguments.length ? (range = slice$5.call(_), rescale()) : range.slice();
   };
 
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : unknown;
-  };
-
   scale.quantiles = function() {
     return thresholds.slice();
   };
@@ -12593,11 +12428,10 @@ function quantile$$1() {
   scale.copy = function() {
     return quantile$$1()
         .domain(domain)
-        .range(range)
-        .unknown(unknown);
+        .range(range);
   };
 
-  return initRange.apply(scale, arguments);
+  return scale;
 }
 
 function quantize$1() {
@@ -12605,11 +12439,10 @@ function quantize$1() {
       x1 = 1,
       n = 1,
       domain = [0.5],
-      range = [0, 1],
-      unknown;
+      range = [0, 1];
 
   function scale(x) {
-    return x <= x ? range[bisectRight(domain, x, 0, n)] : unknown;
+    if (x <= x) return range[bisectRight(domain, x, 0, n)];
   }
 
   function rescale() {
@@ -12635,32 +12468,22 @@ function quantize$1() {
         : [domain[i - 1], domain[i]];
   };
 
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : scale;
-  };
-
-  scale.thresholds = function() {
-    return domain.slice();
-  };
-
   scale.copy = function() {
     return quantize$1()
         .domain([x0, x1])
-        .range(range)
-        .unknown(unknown);
+        .range(range);
   };
 
-  return initRange.apply(linearish(scale), arguments);
+  return linearish(scale);
 }
 
 function threshold$1() {
   var domain = [0.5],
       range = [0, 1],
-      unknown,
       n = 1;
 
   function scale(x) {
-    return x <= x ? range[bisectRight(domain, x, 0, n)] : unknown;
+    if (x <= x) return range[bisectRight(domain, x, 0, n)];
   }
 
   scale.domain = function(_) {
@@ -12676,18 +12499,13 @@ function threshold$1() {
     return [domain[i - 1], domain[i]];
   };
 
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : unknown;
-  };
-
   scale.copy = function() {
     return threshold$1()
         .domain(domain)
-        .range(range)
-        .unknown(unknown);
+        .range(range);
   };
 
-  return initRange.apply(scale, arguments);
+  return scale;
 }
 
 var t0$1 = new Date,
@@ -13677,7 +13495,7 @@ function number$3(t) {
 }
 
 function calendar(year$$1, month$$1, week, day$$1, hour$$1, minute$$1, second$$1, millisecond$$1, format) {
-  var scale = continuous(identity$6, identity$6),
+  var scale = continuous(deinterpolateLinear, interpolateNumber),
       invert = scale.invert,
       domain = scale.domain;
 
@@ -13711,14 +13529,14 @@ function calendar(year$$1, month$$1, week, day$$1, hour$$1, minute$$1, second$$1
     [  year$$1,  1,      durationYear  ]
   ];
 
-  function tickFormat(date) {
-    return (second$$1(date) < date ? formatMillisecond
-        : minute$$1(date) < date ? formatSecond
-        : hour$$1(date) < date ? formatMinute
-        : day$$1(date) < date ? formatHour
-        : month$$1(date) < date ? (week(date) < date ? formatDay : formatWeek)
-        : year$$1(date) < date ? formatMonth
-        : formatYear)(date);
+  function tickFormat(date$$1) {
+    return (second$$1(date$$1) < date$$1 ? formatMillisecond
+        : minute$$1(date$$1) < date$$1 ? formatSecond
+        : hour$$1(date$$1) < date$$1 ? formatMinute
+        : day$$1(date$$1) < date$$1 ? formatHour
+        : month$$1(date$$1) < date$$1 ? (week(date$$1) < date$$1 ? formatDay : formatWeek)
+        : year$$1(date$$1) < date$$1 ? formatMonth
+        : formatYear)(date$$1);
   }
 
   function tickInterval(interval, start, stop, step) {
@@ -13785,30 +13603,26 @@ function calendar(year$$1, month$$1, week, day$$1, hour$$1, minute$$1, second$$1
 }
 
 function time() {
-  return initRange.apply(calendar(year, month, sunday, day, hour, minute, second, millisecond, exports.timeFormat).domain([new Date(2000, 0, 1), new Date(2000, 0, 2)]), arguments);
+  return calendar(year, month, sunday, day, hour, minute, second, millisecond, exports.timeFormat).domain([new Date(2000, 0, 1), new Date(2000, 0, 2)]);
 }
 
 function utcTime() {
-  return initRange.apply(calendar(utcYear, utcMonth, utcSunday, utcDay, utcHour, utcMinute, second, millisecond, exports.utcFormat).domain([Date.UTC(2000, 0, 1), Date.UTC(2000, 0, 2)]), arguments);
+  return calendar(utcYear, utcMonth, utcSunday, utcDay, utcHour, utcMinute, second, millisecond, exports.utcFormat).domain([Date.UTC(2000, 0, 1), Date.UTC(2000, 0, 2)]);
 }
 
-function transformer$2() {
+function sequential(interpolator) {
   var x0 = 0,
       x1 = 1,
-      t0,
-      t1,
-      k10,
-      transform,
-      interpolator = identity$6,
-      clamp = false,
-      unknown;
+      k10 = 1,
+      clamp = false;
 
   function scale(x) {
-    return isNaN(x = +x) ? unknown : interpolator(k10 === 0 ? 0.5 : (x = (transform(x) - t0) * k10, clamp ? Math.max(0, Math.min(1, x)) : x));
+    var t = (x - x0) * k10;
+    return interpolator(clamp ? Math.max(0, Math.min(1, t)) : t);
   }
 
   scale.domain = function(_) {
-    return arguments.length ? (t0 = transform(x0 = +_[0]), t1 = transform(x1 = +_[1]), k10 = t0 === t1 ? 0 : 1 / (t1 - t0), scale) : [x0, x1];
+    return arguments.length ? (x0 = +_[0], x1 = +_[1], k10 = x0 === x1 ? 0 : 1 / (x1 - x0), scale) : [x0, x1];
   };
 
   scale.clamp = function(_) {
@@ -13819,115 +13633,28 @@ function transformer$2() {
     return arguments.length ? (interpolator = _, scale) : interpolator;
   };
 
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : unknown;
-  };
-
-  return function(t) {
-    transform = t, t0 = t(x0), t1 = t(x1), k10 = t0 === t1 ? 0 : 1 / (t1 - t0);
-    return scale;
-  };
-}
-
-function copy$1(source, target) {
-  return target
-      .domain(source.domain())
-      .interpolator(source.interpolator())
-      .clamp(source.clamp())
-      .unknown(source.unknown());
-}
-
-function sequential() {
-  var scale = linearish(transformer$2()(identity$6));
-
   scale.copy = function() {
-    return copy$1(scale, sequential());
+    return sequential(interpolator).domain([x0, x1]).clamp(clamp);
   };
 
-  return initInterpolator.apply(scale, arguments);
+  return linearish(scale);
 }
 
-function sequentialLog() {
-  var scale = loggish(transformer$2()).domain([1, 10]);
-
-  scale.copy = function() {
-    return copy$1(scale, sequentialLog()).base(scale.base());
-  };
-
-  return initInterpolator.apply(scale, arguments);
-}
-
-function sequentialSymlog() {
-  var scale = symlogish(transformer$2());
-
-  scale.copy = function() {
-    return copy$1(scale, sequentialSymlog()).constant(scale.constant());
-  };
-
-  return initInterpolator.apply(scale, arguments);
-}
-
-function sequentialPow() {
-  var scale = powish(transformer$2());
-
-  scale.copy = function() {
-    return copy$1(scale, sequentialPow()).exponent(scale.exponent());
-  };
-
-  return initInterpolator.apply(scale, arguments);
-}
-
-function sequentialSqrt() {
-  return sequentialPow.apply(null, arguments).exponent(0.5);
-}
-
-function sequentialQuantile() {
-  var domain = [],
-      interpolator = identity$6;
-
-  function scale(x) {
-    if (!isNaN(x = +x)) return interpolator((bisectRight(domain, x) - 1) / (domain.length - 1));
-  }
-
-  scale.domain = function(_) {
-    if (!arguments.length) return domain.slice();
-    domain = [];
-    for (var i = 0, n = _.length, d; i < n; ++i) if (d = _[i], d != null && !isNaN(d = +d)) domain.push(d);
-    domain.sort(ascending);
-    return scale;
-  };
-
-  scale.interpolator = function(_) {
-    return arguments.length ? (interpolator = _, scale) : interpolator;
-  };
-
-  scale.copy = function() {
-    return sequentialQuantile(interpolator).domain(domain);
-  };
-
-  return initInterpolator.apply(scale, arguments);
-}
-
-function transformer$3() {
+function diverging(interpolator) {
   var x0 = 0,
       x1 = 0.5,
       x2 = 1,
-      t0,
-      t1,
-      t2,
-      k10,
-      k21,
-      interpolator = identity$6,
-      transform,
-      clamp = false,
-      unknown;
+      k10 = 1,
+      k21 = 1,
+      clamp = false;
 
   function scale(x) {
-    return isNaN(x = +x) ? unknown : (x = 0.5 + ((x = +transform(x)) - t1) * (x < t1 ? k10 : k21), interpolator(clamp ? Math.max(0, Math.min(1, x)) : x));
+    var t = 0.5 + ((x = +x) - x1) * (x < x1 ? k10 : k21);
+    return interpolator(clamp ? Math.max(0, Math.min(1, t)) : t);
   }
 
   scale.domain = function(_) {
-    return arguments.length ? (t0 = transform(x0 = +_[0]), t1 = transform(x1 = +_[1]), t2 = transform(x2 = +_[2]), k10 = t0 === t1 ? 0 : 0.5 / (t1 - t0), k21 = t1 === t2 ? 0 : 0.5 / (t2 - t1), scale) : [x0, x1, x2];
+    return arguments.length ? (x0 = +_[0], x1 = +_[1], x2 = +_[2], k10 = x0 === x1 ? 0 : 0.5 / (x1 - x0), k21 = x1 === x2 ? 0 : 0.5 / (x2 - x1), scale) : [x0, x1, x2];
   };
 
   scale.clamp = function(_) {
@@ -13938,58 +13665,11 @@ function transformer$3() {
     return arguments.length ? (interpolator = _, scale) : interpolator;
   };
 
-  scale.unknown = function(_) {
-    return arguments.length ? (unknown = _, scale) : unknown;
-  };
-
-  return function(t) {
-    transform = t, t0 = t(x0), t1 = t(x1), t2 = t(x2), k10 = t0 === t1 ? 0 : 0.5 / (t1 - t0), k21 = t1 === t2 ? 0 : 0.5 / (t2 - t1);
-    return scale;
-  };
-}
-
-function diverging() {
-  var scale = linearish(transformer$3()(identity$6));
-
   scale.copy = function() {
-    return copy$1(scale, diverging());
+    return diverging(interpolator).domain([x0, x1, x2]).clamp(clamp);
   };
 
-  return initInterpolator.apply(scale, arguments);
-}
-
-function divergingLog() {
-  var scale = loggish(transformer$3()).domain([0.1, 1, 10]);
-
-  scale.copy = function() {
-    return copy$1(scale, divergingLog()).base(scale.base());
-  };
-
-  return initInterpolator.apply(scale, arguments);
-}
-
-function divergingSymlog() {
-  var scale = symlogish(transformer$3());
-
-  scale.copy = function() {
-    return copy$1(scale, divergingSymlog()).constant(scale.constant());
-  };
-
-  return initInterpolator.apply(scale, arguments);
-}
-
-function divergingPow() {
-  var scale = powish(transformer$3());
-
-  scale.copy = function() {
-    return copy$1(scale, divergingPow()).exponent(scale.exponent());
-  };
-
-  return initInterpolator.apply(scale, arguments);
-}
-
-function divergingSqrt() {
-  return divergingPow.apply(null, arguments).exponent(0.5);
+  return linearish(scale);
 }
 
 function colors(specifier) {
@@ -14457,9 +14137,7 @@ function arcPadAngle(d) {
 function intersect(x0, y0, x1, y1, x2, y2, x3, y3) {
   var x10 = x1 - x0, y10 = y1 - y0,
       x32 = x3 - x2, y32 = y3 - y2,
-      t = y32 * x10 - x32 * y10;
-  if (t * t < epsilon$3) return;
-  t = (x32 * (y0 - y2) - y32 * (x0 - x2)) / t;
+      t = (x32 * (y0 - y2) - y32 * (x0 - x2)) / (y32 * x10 - x32 * y10);
   return [x0 + t * x10, y0 + t * y10];
 }
 
@@ -14580,12 +14258,12 @@ function arc() {
         var x11 = r1 * cos$2(a11),
             y11 = r1 * sin$2(a11),
             x00 = r0 * cos$2(a00),
-            y00 = r0 * sin$2(a00),
-            oc;
+            y00 = r0 * sin$2(a00);
 
         // Restrict the corner radius according to the sector angle.
-        if (da <= tau$4 - epsilon$3 && (oc = intersect(x01, y01, x00, y00, x11, y11, x10, y10))) {
-          var ax = x01 - oc[0],
+        if (da < pi$4) {
+          var oc = da0 > epsilon$3 ? intersect(x01, y01, x00, y00, x11, y11, x10, y10) : [x10, y10],
+              ax = x01 - oc[0],
               ay = y01 - oc[1],
               bx = x11 - oc[0],
               by = y11 - oc[1],
@@ -14891,12 +14569,12 @@ function descending$1(a, b) {
   return b < a ? -1 : b > a ? 1 : b >= a ? 0 : NaN;
 }
 
-function identity$8(d) {
+function identity$7(d) {
   return d;
 }
 
 function pie() {
-  var value = identity$8,
+  var value = identity$7,
       sortValues = descending$1,
       sort = null,
       startAngle = constant$b(0),
@@ -16239,17 +15917,6 @@ function wiggle(series, order) {
   none$1(series, order);
 }
 
-function appearance(series) {
-  var peaks = series.map(peak);
-  return none$2(series).sort(function(a, b) { return peaks[a] - peaks[b]; });
-}
-
-function peak(series) {
-  var i = -1, j = 0, n = series.length, vi, vj = -Infinity;
-  while (++i < n) if ((vi = +series[i][1]) > vj) vj = vi, j = i;
-  return j;
-}
-
 function ascending$3(series) {
   var sums = series.map(sum$2);
   return none$2(series).sort(function(a, b) { return sums[a] - sums[b]; });
@@ -16270,7 +15937,7 @@ function insideOut(series) {
       i,
       j,
       sums = series.map(sum$2),
-      order = appearance(series),
+      order = none$2(series).sort(function(a, b) { return sums[b] - sums[a]; }),
       top = 0,
       bottom = 0,
       tops = [],
@@ -17336,12 +17003,12 @@ Transform.prototype = {
   }
 };
 
-var identity$9 = new Transform(1, 0, 0);
+var identity$8 = new Transform(1, 0, 0);
 
 transform$1.prototype = Transform.prototype;
 
 function transform$1(node) {
-  return node.__zoom || identity$9;
+  return node.__zoom || identity$8;
 }
 
 function nopropagation$2() {
@@ -17372,7 +17039,7 @@ function defaultExtent$1() {
 }
 
 function defaultTransform() {
-  return this.__zoom || identity$9;
+  return this.__zoom || identity$8;
 }
 
 function defaultWheelDelta() {
@@ -17474,7 +17141,7 @@ function zoom() {
       var e = extent.apply(this, arguments),
           t = this.__zoom,
           p = centroid(e);
-      return constrain(identity$9.translate(p[0], p[1]).scale(t.k).translate(
+      return constrain(identity$8.translate(p[0], p[1]).scale(t.k).translate(
         typeof x === "function" ? -x.apply(this, arguments) : -x,
         typeof y === "function" ? -y.apply(this, arguments) : -y
       ), e, translateExtent);
@@ -18007,10 +17674,9 @@ exports.randomIrwinHall = irwinHall;
 exports.randomExponential = exponential$1;
 exports.scaleBand = band;
 exports.scalePoint = point$1;
-exports.scaleIdentity = identity$7;
+exports.scaleIdentity = identity$6;
 exports.scaleLinear = linear$2;
 exports.scaleLog = log$1;
-exports.scaleSymlog = symlog;
 exports.scaleOrdinal = ordinal;
 exports.scaleImplicit = implicit;
 exports.scalePow = pow$1;
@@ -18021,17 +17687,7 @@ exports.scaleThreshold = threshold$1;
 exports.scaleTime = time;
 exports.scaleUtc = utcTime;
 exports.scaleSequential = sequential;
-exports.scaleSequentialLog = sequentialLog;
-exports.scaleSequentialPow = sequentialPow;
-exports.scaleSequentialSqrt = sequentialSqrt;
-exports.scaleSequentialSymlog = sequentialSymlog;
-exports.scaleSequentialQuantile = sequentialQuantile;
 exports.scaleDiverging = diverging;
-exports.scaleDivergingLog = divergingLog;
-exports.scaleDivergingPow = divergingPow;
-exports.scaleDivergingSqrt = divergingSqrt;
-exports.scaleDivergingSymlog = divergingSymlog;
-exports.tickFormat = tickFormat;
 exports.schemeCategory10 = category10;
 exports.schemeAccent = Accent;
 exports.schemeDark2 = Dark2;
@@ -18107,7 +17763,7 @@ exports.interpolatePlasma = plasma;
 exports.create = create;
 exports.creator = creator;
 exports.local = local;
-exports.matcher = matcher;
+exports.matcher = matcher$1;
 exports.mouse = mouse;
 exports.namespace = namespace;
 exports.namespaces = namespaces;
@@ -18167,7 +17823,6 @@ exports.stackOffsetDiverging = diverging$1;
 exports.stackOffsetNone = none$1;
 exports.stackOffsetSilhouette = silhouette;
 exports.stackOffsetWiggle = wiggle;
-exports.stackOrderAppearance = appearance;
 exports.stackOrderAscending = ascending$3;
 exports.stackOrderDescending = descending$2;
 exports.stackOrderInsideOut = insideOut;
@@ -18249,7 +17904,7 @@ exports.interrupt = interrupt;
 exports.voronoi = voronoi;
 exports.zoom = zoom;
 exports.zoomTransform = transform$1;
-exports.zoomIdentity = identity$9;
+exports.zoomIdentity = identity$8;
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
