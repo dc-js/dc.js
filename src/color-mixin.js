@@ -12,6 +12,7 @@ dc.colorMixin = function (_chart) {
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
+    var _colorCalculator;
 
     /**
      * Retrieve current color scale or set a new color scale. This methods accepts any function that
@@ -146,28 +147,30 @@ dc.colorMixin = function (_chart) {
      * @returns {String}
      */
     _chart.getColor = function (d, i) {
-        return _colors(_colorAccessor.call(this, d, i));
+        return _colorCalculator ? _colorCalculator.call(this, d, i) : _colors(_colorAccessor.call(this, d, i));
     };
 
     /**
-     * **Deprecated.** Get/set the color calculator. This actually replaces the
-     * {@link dc.colorMixin#getColor getColor} method!
+     * Overrides the color selection algorithm, replacing it with a simple function.
      *
-     * This is not recommended, since using a {@link dc.colorMixin#colorAccessor colorAccessor} and
-     * color scale ({@link dc.colorMixin#colors .colors}) is more powerful and idiomatic d3.
+     * Normally colors will be determined by calling the `colorAccessor` to get a value, and then passing that
+     * value through the `colorScale`.
+     *
+     * But sometimes it is difficult to get a color scale to produce the desired effect. The `colorCalculator`
+     * takes the datum and index and returns a color directly.
      * @method colorCalculator
      * @memberof dc.colorMixin
      * @instance
      * @param {*} [colorCalculator]
      * @returns {Function|dc.colorMixin}
      */
-    _chart.colorCalculator = dc.logger.deprecate(function (colorCalculator) {
+    _chart.colorCalculator = function (colorCalculator) {
         if (!arguments.length) {
-            return _chart.getColor;
+            return _colorCalculator || _chart.getColor;
         }
-        _chart.getColor = colorCalculator;
+        _colorCalculator = colorCalculator;
         return _chart;
-    }, 'colorMixin.colorCalculator has been deprecated. Please colorMixin.colors and colorMixin.colorAccessor instead');
+    };
 
     return _chart;
 };
