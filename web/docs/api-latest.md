@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 2.2.1  
+**Version**: 2.2.2  
 **Example**  
 ```js
 // Example chaining
@@ -4096,11 +4096,13 @@ Get the color for the datum d and counter i. This is used internally by charts t
 <a name="dc.colorMixin+colorCalculator"></a>
 
 #### colorMixin.colorCalculator([colorCalculator]) ⇒ <code>function</code> \| [<code>colorMixin</code>](#dc.colorMixin)
-**Deprecated.** Get/set the color calculator. This actually replaces the
-[getColor](#dc.colorMixin+getColor) method!
+Overrides the color selection algorithm, replacing it with a simple function.
 
-This is not recommended, since using a [colorAccessor](#dc.colorMixin+colorAccessor) and
-color scale ([.colors](#dc.colorMixin+colors)) is more powerful and idiomatic d3.
+Normally colors will be determined by calling the `colorAccessor` to get a value, and then passing that
+value through the `colorScale`.
+
+But sometimes it is difficult to get a color scale to produce the desired effect. The `colorCalculator`
+takes the datum and index and returns a color directly.
 
 **Kind**: instance method of [<code>colorMixin</code>](#dc.colorMixin)  
 
