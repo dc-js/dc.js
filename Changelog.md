@@ -1,3 +1,6 @@
+## 2.2.2
+* Remove the deprecation on `colorMixin.colorCalculator`, and implement it in a reasonable way ([#1493](https://github.com/dc-js/dc.js/issues/1493))
+
 ## 2.2.1
 * Enable the stroke for line chart dots, making it possible to actually use `strokeOpacity`, by R Manzano ([#1449](https://github.com/dc-js/dc.js/pull/1449) / [#1447](https://github.com/dc-js/dc.js/issues/1447))
 
