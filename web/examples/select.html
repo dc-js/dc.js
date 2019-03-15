@@ -109,7 +109,7 @@
 
   datatable
     .dimension(letterDimension2)
-    .group(function(d) { return d.letter; })
+    .section(function(d) { return d.letter; })
     .columns(['color', 'state'])
     .size(data.length);
 

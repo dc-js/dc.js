@@ -915,7 +915,7 @@ dc.dataCount(".dc-data-count")
 
 dc.dataTable(".dc-data-table")
         .dimension(dateDimension)
-        .group(function (d) {
+        .section(function (d) {
             return dateFormat(d3.timeDay(d.dd));
         })
         .size(3)

@@ -2,14 +2,14 @@
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
  *
- * Note: Unlike other charts, the data table (and data grid chart) use the {@link dc.dataTable#group group} attribute as a
- * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
- * together in groups.  Do not pass in a crossfilter group as this will not work.
- *
- * Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
+ * An interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
  * long as you specify the {@link dc.dataTable#order order} as `d3.descending`, since the data
  * table will use `dimension.top()` to fetch the data in that case, and the method is equally
  * supported on the crossfilter group as the crossfilter dimension.
+ *
+ * Note: Formerly the data table (and data grid chart) used the {@link dc.dataTable#group group} attribute as a
+ * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
+ * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
@@ -29,7 +29,7 @@ dc.dataTable = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-table-label';
     var ROW_CSS_CLASS = 'dc-table-row';
     var COLUMN_CSS_CLASS = 'dc-table-column';
-    var GROUP_CSS_CLASS = 'dc-table-group';
+    var SECTION_CSS_CLASS = 'dc-table-section dc-table-group';
     var HEAD_CSS_CLASS = 'dc-table-head';
 
     var _chart = dc.baseMixin({});
@@ -42,12 +42,15 @@ dc.dataTable = function (parent, chartGroup) {
     var _order = d3.ascending;
     var _beginSlice = 0;
     var _endSlice;
-    var _showGroups = true;
+    var _showSections = true;
+    var _section = function() { return ''; }; // all in one section
+
+    _chart._mandatoryAttributes(['dimension']);
 
     _chart._doRender = function () {
         _chart.selectAll('tbody').remove();
 
-        renderRows(renderGroups());
+        renderRows(renderSections());
 
         return _chart;
     };
@@ -94,7 +97,7 @@ dc.dataTable = function (parent, chartGroup) {
         return s;
     };
 
-    function renderGroups () {
+    function renderSections () {
         // The 'original' example uses all 'functions'.
         // If all 'functions' are used, then don't remove/add a header, and leave
         // the html alone. This preserves the functionality of earlier releases.
@@ -134,19 +137,19 @@ dc.dataTable = function (parent, chartGroup) {
                     });
         }
 
-        var groups = _chart.root().selectAll('tbody')
+        var sections = _chart.root().selectAll('tbody')
             .data(nestEntries(), function (d) {
                 return _chart.keyAccessor()(d);
             });
 
-        var rowGroup = groups
+        var rowSection = sections
             .enter()
             .append('tbody');
 
-        if (_showGroups === true) {
-            rowGroup
+        if (_showSections === true) {
+            rowSection
                 .append('tr')
-                .attr('class', GROUP_CSS_CLASS)
+                .attr('class', SECTION_CSS_CLASS)
                     .append('td')
                     .attr('class', LABEL_CSS_CLASS)
                     .attr('colspan', _columns.length)
@@ -155,9 +158,9 @@ dc.dataTable = function (parent, chartGroup) {
                     });
         }
 
-        groups.exit().remove();
+        sections.exit().remove();
 
-        return rowGroup;
+        return rowSection;
     }
 
     function nestEntries () {
@@ -169,15 +172,15 @@ dc.dataTable = function (parent, chartGroup) {
         }
 
         return d3.nest()
-            .key(_chart.group())
+            .key(_chart.section())
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
             }).slice(_beginSlice, _endSlice));
     }
 
-    function renderRows (groups) {
-        var rows = groups.order()
+    function renderRows (sections) {
+        var rows = sections.order()
             .selectAll('tr.' + ROW_CSS_CLASS)
             .data(function (d) {
                 return d.values;
@@ -205,21 +208,41 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the group function for the data table. The group function takes a data row and
+     * Get or set the section function for the data table. The section function takes a data row and
      * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
-     * to split rows into groups.
+     * to split rows into sections. By default there will be only one section with no name.
      *
-     * Do not pass in a crossfilter group as this will not work.
-     * @method group
+     * Set {@link dc.dataTable#showSections showSections} to false to hide the section headers
+     *
+     * @method section
      * @memberof dc.dataTable
      * @instance
      * @example
-     * // group rows by the value of their field
+     * // section rows by the value of their field
      * chart
-     *     .group(function(d) { return d.field; })
+     *     .section(function(d) { return d.field; })
+     * @param {Function} sectionFunction Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataTable}
+     */
+    _chart.section = function (section) {
+        if (!arguments.length) {
+            return _section;
+        }
+        _section = section;
+        return _chart;
+    };
+
+    /**
+     * Backward-compatible synonym for {@link dc.dataTable#section section}.
+     *
+     * @method group
+     * @memberof dc.dataTable
+     * @instance
      * @param {Function} groupFunction Function taking a row of data and returning the nest key.
      * @returns {Function|dc.dataTable}
      */
+    _chart.group = dc.logger.annotate(_chart.section,
+                                      'consider using dataTable.section instead of dataTable.group for clarity');
 
     /**
      * Get or set the table size which determines the number of rows displayed by the widget.
@@ -406,25 +429,33 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set if group rows will be shown. The dataTable {@link dc.dataTable#group group}
-     * function must be specified even if groups are not shown.
-     * @method showGroups
+     * Get or set if section header rows will be shown.
+     * @method showSections
      * @memberof dc.dataTable
      * @instance
      * @example
      * chart
-     *     .group([value], [name])
-     *     .showGroups(true|false);
+     *     .section([value], [name])
+     *     .showSections(true|false);
+     * @param {Boolean} [showSections=true]
+     * @returns {Boolean|dc.dataTable}
+     */
+    _chart.showSections = _chart.showGroups = function (showSections) {
+        if (!arguments.length) {
+            return _showSections;
+        }
+        _showSections = showSections;
+        return _chart;
+    };
+
+    /**
+     * Backward-compatible synonym for {@link dc.dataTable#showSections showSections}.
+     * @method showGroups
+     * @memberof dc.dataTable
+     * @instance
      * @param {Boolean} [showGroups=true]
      * @returns {Boolean|dc.dataTable}
      */
-    _chart.showGroups = function (showGroups) {
-        if (!arguments.length) {
-            return _showGroups;
-        }
-        _showGroups = showGroups;
-        return _chart;
-    };
 
     return _chart.anchor(parent, chartGroup);
 };

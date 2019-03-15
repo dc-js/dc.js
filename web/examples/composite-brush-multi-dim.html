@@ -91,7 +91,7 @@ chart.width(768)
 
 dataTable
     .dimension(dimX)
-    .group(function (d) { return d.x; })
+    .section(function (d) { return d.x; })
     .columns(['x', 'y', 'z'])
     .on('renderlet', function (table) {
         table.selectAll('.dc-table-group').classed('info', true);

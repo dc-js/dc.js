@@ -522,9 +522,8 @@ d3.csv('ndx.csv').then(function (data) {
 
     nasdaqTable /* dc.dataTable('.dc-data-table', 'chartGroup') */
         .dimension(dateDimension)
-        // Data table does not use crossfilter group but rather a closure
-        // as a grouping function
-        .group(function (d) {
+        // Specify a section function to nest rows of the table
+        .section(function (d) {
             var format = d3.format('02d');
             return d.dd.getFullYear() + '/' + format((d.dd.getMonth() + 1));
         })

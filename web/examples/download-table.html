@@ -110,9 +110,6 @@ var allDollars = ndx.groupAll().reduceSum(function(d) { return +d.Spent; });
 
 table
     .dimension(spendDim)
-    .group(function(d) {
-        return d.value;
-    })
     .sortBy(function(d) { return +d.Spent; })
     .showGroups(false)
     .columns(['Name',
