@@ -440,7 +440,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @param {Boolean} [showSections=true]
      * @returns {Boolean|dc.dataTable}
      */
-    _chart.showSections = _chart.showGroups = function (showSections) {
+    _chart.showSections = function (showSections) {
         if (!arguments.length) {
             return _showSections;
         }
@@ -456,6 +456,8 @@ dc.dataTable = function (parent, chartGroup) {
      * @param {Boolean} [showGroups=true]
      * @returns {Boolean|dc.dataTable}
      */
+    _chart.showGroups = dc.logger.annotate(_chart.showSections,
+                                           'consider using dataTable.showSections instead of dataTable.showGroups for clarity');
 
     return _chart.anchor(parent, chartGroup);
 };
