@@ -43,7 +43,7 @@ dc.dataTable = function (parent, chartGroup) {
     var _beginSlice = 0;
     var _endSlice;
     var _showSections = true;
-    var _section = function() { return ''; }; // all in one section
+    var _section = function () { return ''; }; // all in one section
 
     _chart._mandatoryAttributes(['dimension']);
 
@@ -221,7 +221,7 @@ dc.dataTable = function (parent, chartGroup) {
      * // section rows by the value of their field
      * chart
      *     .section(function(d) { return d.field; })
-     * @param {Function} sectionFunction Function taking a row of data and returning the nest key.
+     * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|dc.dataTable}
      */
     _chart.section = function (section) {
