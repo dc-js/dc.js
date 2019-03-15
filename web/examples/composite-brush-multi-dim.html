@@ -12,17 +12,16 @@
 
   <p>Usually sub charts of a composite chart share the dimension of the parent.
     However sometimes, especially when scatter plots are composed, the sub charts may
-    used different dimensions. This example uses two scatter plots both using array dimensions.
-    Typically scatter plots use two dimensional brushing (see <a href="scatter-brushing.html">scatter brushing</a>),
-    however, composite charts only support one dimensional (along x axis) brushing.</p>
-  <p>Try brushing on the chart and see data getting filtered on the right.</p>
-  <p>For the curious, you will notice that unlike other charts brushing removes points outside range of the brush
+    use different dimensions. This example uses two scatter plots both using array dimensions.
+    Typically scatter plots use two dimensional brushing (see <a href="scatter-brushing.html">scatter brushing</a>);
+    however, composite charts only support one dimensional brushing along the x axis.</p>
+  <p>Try brushing on the chart and see data getting filtered in the table on the right.</p>
+  <p>Notice that unlike in other charts, brushing removes points outside range of the brush
     instead of just fading them.
-    The three dimensions used by different charts are actually related.
-    When brush applies filters on all these three dimensions, all data outside the brush range actually gets removed
-    by crossfilter. There is no easy way to currently avoid that.</p>
+    This is because the composite chart uses three different dimensions for the child charts,
+    so each observes the filter applied to the others.</p>
   <div id="test1"></div>
-  <div id="test2"></div>
+  <div id="test2" class="table table-hover" style="width:auto"></div>
 
     <script type="text/javascript" src="../js/promise-polyfill.js"></script>
     <script type="text/javascript" src="../js/fetch.umd.js"></script>
@@ -93,7 +92,10 @@ chart.width(768)
 dataTable
     .dimension(dimX)
     .group(function (d) { return d.x; })
-    .columns(['x', 'y', 'z']);
+    .columns(['x', 'y', 'z'])
+    .on('renderlet', function (table) {
+        table.selectAll('.dc-table-group').classed('info', true);
+    });
 
 dc.renderAll();
 
