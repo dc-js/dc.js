@@ -1,3 +1,8 @@
+## 3.0.12
+* Provide alternate, more descriptive names for properties so that the meaning is not overloaded, to reduce confusion and improve code clarity:
+  * `dataTable.group` and `dataGrid.group` took a nesting function, not a crossfilter group, so they are replaced with a new property called `section`  ([#855](https://github.com/dc-js/dc.js/issues/855)). Additionally, `dataTable.section` is no longer mandatory and defaults to the empty string.
+The old property names are still supported, but they emit an informational message recommending the better name. They could be deprecated in the future (but there is probably no need).
+
 ## 3.0.11
 * Remove the deprecation on `colorMixin.colorCalculator`, and implement it in a reasonable way ([#1493](https://github.com/dc-js/dc.js/issues/1493))
 
