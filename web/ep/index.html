@@ -148,7 +148,7 @@ function grid (selector,data) {
 
   dc.dataGrid(".dc-data-grid")
     .dimension(country)
-    .group(function (d) {
+    .section(function (d) {
         return d.country;
         })
   .size(1000)
