@@ -47,7 +47,7 @@
   <div class="row">
     <div class="span4">
       <div id="chart-11" style="width:100%;">
-        <div id="chart-11-title"></div>
+        <h5 class="chart-title"></h5>
         <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
           <a href="javascript:chart_11.filterAll();dc.redrawAll();">reset</a>
         </div>
@@ -55,7 +55,7 @@
     </div>
     <div class="span4">
       <div id="chart-12" style="width:100%;">
-        <div id="chart-12-title"></div>
+        <h5 class="chart-title"></h5>
         <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
           <a href="javascript:chart_12.filterAll();dc.redrawAll();">reset</a>
         </div>
@@ -63,7 +63,7 @@
     </div>
     <div class="span4">
       <div id="chart-13" style="width:100%;">
-        <div id="chart-13-title"></div>
+        <h5 class="chart-title"></h5>
         <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
           <a href="javascript:chart_13.filterAll();dc.redrawAll();">reset</a>
         </div>
@@ -75,7 +75,7 @@
   <div class="row">
     <div class="span4">
       <div id="chart-21" style="width:100%;">
-        <div id="chart-21-title"></div>
+        <h5 class="chart-title"></h5>
         <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
           <a href="javascript:chart_21.filterAll();dc.redrawAll();">reset</a>
         </div>
@@ -83,7 +83,7 @@
     </div>
     <div class="span4">
       <div id="chart-22" style="width:100%;">
-        <div id="chart-22-title"></div>
+        <h5 class="chart-title"></h5>
         <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
           <a href="javascript:chart_22.filterAll();dc.redrawAll();">reset</a>
         </div>
@@ -91,7 +91,7 @@
     </div>
     <div class="span4">
       <div id="chart-23"style="width:100%;">
-        <div id="chart-23-title"></div>
+        <h5 class="chart-title"></h5>
         <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
           <a href="javascript:chart_23.filterAll();dc.redrawAll();">reset</a>
         </div>
@@ -116,12 +116,12 @@
 
       var var_names = ['x', 'y', 'z', 'a', 'b', 'c'];
 
-      d3.select('#chart-11-title').append('h5').text(var_names[0]);
-      d3.select('#chart-12-title').append('h5').text(var_names[1]);
-      d3.select('#chart-13-title').append('h5').text(var_names[2]);
-      d3.select('#chart-21-title').append('h5').text(var_names[3]);
-      d3.select('#chart-22-title').append('h5').text(var_names[4]);
-      d3.select('#chart-23-title').append('h5').text(var_names[5]);
+      d3.select('#chart-11 h5.chart-title').text(var_names[0]);
+      d3.select('#chart-12 h5.chart-title').text(var_names[1]);
+      d3.select('#chart-13 h5.chart-title').text(var_names[2]);
+      d3.select('#chart-21 h5.chart-title').text(var_names[3]);
+      d3.select('#chart-22 h5.chart-title').text(var_names[4]);
+      d3.select('#chart-23 h5.chart-title').text(var_names[5]);
 
       var c11_bin = 10,
           c12_bin = 10,
