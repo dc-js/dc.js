@@ -32,7 +32,8 @@
   <script type="text/javascript" src="../js/dc.js"></script>
 
   <div class="row">
-    <h2>Data Exploration Tool</h2>
+    <h2>Comparing filtered data against unfiltered</h2>
+    <p>by copying the initial group values into a fake group, and displaying them in a composite bar chart.</p>
     <div class="col-md-3 well well-sm">
       <div class="dc-data-count" id="data-count">
         <span class="filter-count"></span>
@@ -115,51 +116,48 @@
       }
   }
 
+  var chart_specs = [
+      {
+          variable: 'x',
+          selector: '#chart-11',
+          resolution: 10
+      },
+      {
+          variable: 'y',
+          selector: '#chart-12',
+          resolution: 10
+      },
+      {
+          variable: 'z',
+          selector: '#chart-13',
+          resolution: 500
+      },
+      {
+          variable: 'a',
+          selector: '#chart-21',
+          resolution: 100
+      },
+      {
+          variable: 'b',
+          selector: '#chart-22',
+          resolution: 20
+      },
+      {
+          variable: 'c',
+          selector: '#chart-23',
+          resolution: 1000
+      }
+  ];
+
   d3.csv('six-dim.csv').then(function(data) {
-
-      //var var_names = ['x', 'y', 'z', 'a', 'b', 'c'];
-      var chart_specs = [
-          {
-              variable: 'x',
-              selector: '#chart-11',
-              resolution: 10
-          },
-          {
-              variable: 'y',
-              selector: '#chart-12',
-              resolution: 10
-          },
-          {
-              variable: 'z',
-              selector: '#chart-13',
-              resolution: 500
-          },
-          {
-              variable: 'a',
-              selector: '#chart-21',
-              resolution: 100
-          },
-          {
-              variable: 'b',
-              selector: '#chart-22',
-              resolution: 20
-          },
-          {
-              variable: 'c',
-              selector: '#chart-23',
-              resolution: 1000
-          }
-      ];
-
       data.forEach(function(d) {
           chart_specs.forEach(function(spec) {
               d[spec.variable] = +d[spec.variable];
           });
       });
 
-      var cf = crossfilter(data);
-
-      var all = cf.groupAll();
+      var cf = crossfilter(data),
+          all = cf.groupAll();
 
       data_count.dimension(cf)
           .group(all);
@@ -167,15 +165,6 @@
       var charts = chart_specs.map(function(spec) {
           return dc.compositeChart(spec.selector);
       });
-
-      function any_filters() {
-          return charts.some(chart => chart.filters().length);
-      }
-
-      function hide_second_chart(chart) {
-          chart.select('.sub._1')
-              .attr('visibility', any_filters() ? 'visible' : 'hidden')
-      }
 
       var breathing_room = 0.05;
 
@@ -188,7 +177,11 @@
               }).reduceCount(),
               static_group = static_copy_group(group);
 
-          charts[i].on('pretransition', hide_second_chart);
+          charts[i].on('pretransition', function(chart) {
+              var any_filters = charts.some(chart => chart.filters().length);
+              chart.select('.sub._1')
+                  .attr('visibility', any_filters ? 'visible' : 'hidden')
+          });
 
           charts[i]
               .compose([
@@ -207,7 +200,6 @@
           var min = dim.bottom(1)[0][spec.variable],
               max = dim.top(1)[0][spec.variable];
 
-
           charts[i]
               .dimension(dim)
               .group(group)
@@ -218,7 +210,6 @@
       });
 
       dc.renderAll();
-
   });
 </script>
 
