@@ -140,12 +140,12 @@
 
       var var_names = ['x', 'y', 'z', 'a', 'b', 'c'];
 
-      d3.select('#chart-11-title').append('h5').html([var_names[0], '<br>Subtitle'].join(''));
-      d3.select('#chart-12-title').append('h5').html([var_names[1], '<br>Subtitle'].join(''));
-      d3.select('#chart-13-title').append('h5').html([var_names[2], '<br>Subtitle'].join(''));
-      d3.select('#chart-21-title').append('h5').html([var_names[3], '<br>Subtitle'].join(''));
-      d3.select('#chart-22-title').append('h5').html([var_names[4], '<br>Subtitle'].join(''));
-      d3.select('#chart-23-title').append('h5').html([var_names[5], '<br>Subtitle'].join(''));
+      d3.select('#chart-11-title').append('h5').text(var_names[0]);
+      d3.select('#chart-12-title').append('h5').text(var_names[1]);
+      d3.select('#chart-13-title').append('h5').text(var_names[2]);
+      d3.select('#chart-21-title').append('h5').text(var_names[3]);
+      d3.select('#chart-22-title').append('h5').text(var_names[4]);
+      d3.select('#chart-23-title').append('h5').text(var_names[5]);
 
       var c11_bin = 10,
           c12_bin = 10,
