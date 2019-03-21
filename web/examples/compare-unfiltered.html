@@ -30,7 +30,6 @@
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 
   <div class="row">
     <h2>Data Exploration Tool</h2>
@@ -141,12 +140,12 @@ d3.csv("six-dim.csv").then(function(data) {
 
 var var_names = ["x", "y", "z", "a", "b", "c"];
 
-$("#chart-11-title").append(["<h5>", var_names[0], "<br>Subtitle</h5>"].join(""));
-$("#chart-12-title").append(["<h5>", var_names[1], "<br>Subtitle</h5>"].join(""));
-$("#chart-13-title").append(["<h5>", var_names[2], "<br>Subtitle</h5>"].join(""));
-$("#chart-21-title").append(["<h5>", var_names[3], "<br>Subtitle</h5>"].join(""));
-$("#chart-22-title").append(["<h5>", var_names[4], "<br>Subtitle</h5>"].join(""));
-$("#chart-23-title").append(["<h5>", var_names[5], "<br>Subtitle</h5>"].join(""));
+d3.select("#chart-11-title").append("h5").html([var_names[0], "<br>Subtitle"].join(""));
+d3.select("#chart-12-title").append("h5").html([var_names[1], "<br>Subtitle"].join(""));
+d3.select("#chart-13-title").append("h5").html([var_names[2], "<br>Subtitle"].join(""));
+d3.select("#chart-21-title").append("h5").html([var_names[3], "<br>Subtitle"].join(""));
+d3.select("#chart-22-title").append("h5").html([var_names[4], "<br>Subtitle"].join(""));
+d3.select("#chart-23-title").append("h5").html([var_names[5], "<br>Subtitle"].join(""));
 
 var c11_bin = 10,
     c12_bin = 10,
