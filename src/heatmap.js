@@ -111,16 +111,17 @@ dc.heatMap = function (parent, chartGroup) {
         });
     }
 
-    var nonstandard_filter = _logger.deprecate(function(filter) {
+    var nonstandardFilter = dc.logger.deprecate(function (filter) {
         return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
     }, 'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
     dc.override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
             return _chart._filter();
         }
-        if(filter.filterType !== 'TwoDimensionalFilter' &&
-           !(Array.isArray(filter) && filter[0].filterType === 'TwoDimensionalFilter'))
-            return nonstandard_filter(filter);
+        if (filter.filterType !== 'TwoDimensionalFilter' &&
+           !(Array.isArray(filter) && filter[0].filterType === 'TwoDimensionalFilter')) {
+            return nonstandardFilter(filter);
+        }
         return _chart._filter(filter);
     });
 

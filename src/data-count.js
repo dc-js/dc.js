@@ -108,8 +108,9 @@ dc.dataCount = function (parent, chartGroup) {
     };
 
     _chart.crossfilter = function (cf) {
-        if (!arguments.length)
+        if (!arguments.length) {
             return _crossfilter;
+        }
         _crossfilter = cf;
         return this;
     };
@@ -117,8 +118,9 @@ dc.dataCount = function (parent, chartGroup) {
                                           'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
 
     _chart.groupAll = function (groupAll) {
-        if (!arguments.length)
+        if (!arguments.length) {
             return _groupAll;
+        }
         _groupAll = groupAll;
         return this;
     };
