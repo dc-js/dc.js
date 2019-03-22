@@ -143,8 +143,8 @@ function grid (selector,data) {
   }
 
   dc.dataCount(".dc-data-count")
-    .dimension(ndx)
-    .group(all);
+    .crossfilter(ndx)
+    .groupAll(all);
 
   dc.dataGrid(".dc-data-grid")
     .dimension(country)

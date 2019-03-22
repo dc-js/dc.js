@@ -159,8 +159,8 @@
       var cf = crossfilter(data),
           all = cf.groupAll();
 
-      data_count.dimension(cf)
-          .group(all);
+      data_count.crossfilter(cf)
+          .groupAll(all);
 
       var charts = chart_specs.map(function(spec) {
           return dc.compositeChart(spec.selector);
