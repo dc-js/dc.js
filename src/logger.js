@@ -83,8 +83,8 @@ dc.logger = (function () {
     };
 
     /**
-     * Use it to deprecate a function. It will return a wrapped version of the function, which will
-     * will issue a warning when invoked. For each function, warning will be issued only once.
+     * Used to deprecate a function. It will return a wrapped version of the function, which will
+     * will issue a warning when invoked. The warning will be issued only once.
      *
      * @method deprecate
      * @memberof dc.logger
@@ -112,6 +112,41 @@ dc.logger = (function () {
             return fn.apply(this, arguments);
         }
         return deprecated;
+    };
+
+    /**
+     * Used to provide an informational message for a function. It will return a wrapped version of
+     * the function, which will will issue a messsage with stack when invoked. The message will be
+     * issued only once.
+     *
+     * @method annotate
+     * @memberof dc.logger
+     * @instance
+     * @example
+     * _chart.interpolate = dc.logger.annotate(function (interpolate) {
+     *    if (!arguments.length) {
+     *        return _interpolate;
+     *    }
+     *    _interpolate = interpolate;
+     *    return _chart;
+     * }, 'dc.lineChart.interpolate has been annotated since version 3.0 use dc.lineChart.curve instead');
+     * @param {Function} [fn]
+     * @param {String} [msg]
+     * @returns {Function}
+     */
+    _logger.annotate = function (fn, msg) {
+        // Allow logging of deprecation
+        var warned = false;
+        function annotated () {
+            if (!warned) {
+                console.groupCollapsed(msg);
+                console.trace();
+                console.groupEnd();
+                warned = true;
+            }
+            return fn.apply(this, arguments);
+        }
+        return annotated;
     };
 
     return _logger;

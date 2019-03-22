@@ -1,3 +1,11 @@
+## 3.0.12
+* heatmap takes ordinary filter objects and conversion of coordinates is deprecated ([#1515](https://github.com/dc-js/dc.js/issues/1515))
+* [Example](http://dc-js.github.io/dc.js/examples/compare-unfiltered.html) of comparing the current filters against the unfiltered values [using a fake group to copy original values](https://github.com/dc-js/dc.js/wiki/FAQ#static-copy-of-a-group)
+* Provide alternate, more descriptive names for properties so that the meaning is not overloaded, to reduce confusion and improve code clarity:
+  * `dataTable.group` and `dataGrid.group` took a nesting function, not a crossfilter group, so they are replaced with a new property called `section`  ([#855](https://github.com/dc-js/dc.js/issues/855)). Additionally, `dataTable.section` is no longer mandatory and defaults to the empty string.
+  * `dataCount.dimension` took a crossfilter instance, and `dataCount.group` really took a groupAll object, so they are replaced with properties with those names ([#1499](https://github.com/dc-js/dc.js/issues/1499))
+The old property names are still supported, but they emit an informational message recommending the better name. They could be deprecated in the future (but there is probably no need).
+
 ## 3.0.11
 * Remove the deprecation on `colorMixin.colorCalculator`, and implement it in a reasonable way ([#1493](https://github.com/dc-js/dc.js/issues/1493))
 

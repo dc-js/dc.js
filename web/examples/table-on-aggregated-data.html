@@ -59,14 +59,13 @@ d3.csv("morley.csv").then(function(experiments) {
           },
           function () {
               return {number: 0, total: 0, avg: 0}
-      }),
-      rank = function (p) { return "rank" };
+          });
 
   chart
     .width(768)
     .height(480)
+    .showSections(false)
     .dimension(groupedDimension)
-    .group(rank)
     .columns([function (d) { return d.key },
               function (d) { return d.value.number },
               function (d) { return d.value.avg }])

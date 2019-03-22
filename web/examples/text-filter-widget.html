@@ -56,9 +56,7 @@
     var i = 0;
     dc.dataTable('.dc-data-grid')
         .dimension(dimension)
-        .group(function (d) {
-            return 'Jazz';
-        })
+        .showSections(false)
         .columns([
             function (d) {
                 i = i + 1;

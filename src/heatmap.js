@@ -89,7 +89,7 @@ dc.heatMap = function (parent, chartGroup) {
     var _boxOnClick = function (d) {
         var filter = d.key;
         dc.events.trigger(function () {
-            _chart.filter(filter);
+            _chart.filter(dc.filters.TwoDimensionalFilter(filter));
             _chart.redrawGroup();
         });
     };
@@ -106,17 +106,23 @@ dc.heatMap = function (parent, chartGroup) {
             var filters = selection.data().map(function (kv) {
                 return dc.filters.TwoDimensionalFilter(kv.key);
             });
-            _chart._filter([filters]);
+            _chart.filter([filters]);
             _chart.redrawGroup();
         });
     }
 
+    var nonstandardFilter = dc.logger.deprecate(function (filter) {
+        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+    }, 'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
     dc.override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
             return _chart._filter();
         }
-
-        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+        if (filter !== null && filter.filterType !== 'TwoDimensionalFilter' &&
+           !(Array.isArray(filter) && Array.isArray(filter[0]) && filter[0][0].filterType === 'TwoDimensionalFilter')) {
+            return nonstandardFilter(filter);
+        }
+        return _chart._filter(filter);
     });
 
     /**
