@@ -106,17 +106,22 @@ dc.heatMap = function (parent, chartGroup) {
             var filters = selection.data().map(function (kv) {
                 return dc.filters.TwoDimensionalFilter(kv.key);
             });
-            _chart._filter([filters]);
+            _chart.filter([filters]);
             _chart.redrawGroup();
         });
     }
 
+    var nonstandard_filter = _logger.deprecate(function(filter) {
+        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+    }, 'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
     dc.override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
             return _chart._filter();
         }
-
-        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+        if(filter.filterType !== 'TwoDimensionalFilter' &&
+           !(Array.isArray(filter) && filter[0].filterType === 'TwoDimensionalFilter'))
+            return nonstandard_filter(filter);
+        return _chart._filter(filter);
     });
 
     /**
