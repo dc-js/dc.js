@@ -89,7 +89,7 @@ dc.heatMap = function (parent, chartGroup) {
     var _boxOnClick = function (d) {
         var filter = d.key;
         dc.events.trigger(function () {
-            _chart.filter(filter);
+            _chart.filter(dc.filters.TwoDimensionalFilter(filter));
             _chart.redrawGroup();
         });
     };
@@ -118,8 +118,8 @@ dc.heatMap = function (parent, chartGroup) {
         if (!arguments.length) {
             return _chart._filter();
         }
-        if (filter.filterType !== 'TwoDimensionalFilter' &&
-           !(Array.isArray(filter) && filter[0].filterType === 'TwoDimensionalFilter')) {
+        if (filter !== null && filter.filterType !== 'TwoDimensionalFilter' &&
+           !(Array.isArray(filter) && Array.isArray(filter[0]) && filter[0][0].filterType === 'TwoDimensionalFilter')) {
             return nonstandardFilter(filter);
         }
         return _chart._filter(filter);
