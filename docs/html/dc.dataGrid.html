@@ -110,9 +110,9 @@
     <div class="description">
         <p>Data grid is a simple widget designed to list the filtered records, providing
 a simple way to define how the items are displayed.</p>
-<p>Note: Unlike other charts, the data grid chart (and data table) use the <a href="dc.dataGrid.html#group">group</a> attribute as a keying function
-for <a href="https://github.com/d3/d3-collection/blob/master/README.md#nest">nesting</a> the data together in groups.
-Do not pass in a crossfilter group as this will not work.</p>
+<p>Note: Formerly the data grid chart (and data table) used the <a href="dc.dataGrid.html#group">group</a> attribute as a
+keying function for <a href="https://github.com/d3/d3-collection/blob/master/README.md#nest">nesting</a> the data
+together in sections.  This was confusing so it has been renamed to <code>section</code>, although <code>group</code> still works.</p>
 <p>Examples:</p>
 <ul>
 <li><a href="http://europarl.me/dc.js/web/ep/index.html">List of members of the european parliament</a></li>
@@ -471,7 +471,7 @@ Useful when implementing pagination.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-125">line 125</a>
+				 <a href="data-grid.js.html#sunlight-1-line-148">line 148</a>
 			</li>
 		</ul>
 	</dd>
@@ -645,7 +645,7 @@ Useful when implementing pagination.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-142">line 142</a>
+				 <a href="data-grid.js.html#sunlight-1-line-165">line 165</a>
 			</li>
 		</ul>
 	</dd>
@@ -709,10 +709,7 @@ Useful when implementing pagination.</p>
 
     
     <div class="description">
-        <p>Get or set the group function for the data grid. The group function takes a data row and
-returns the key to specify to <a href="https://github.com/d3/d3-collection/blob/master/README.md#nest">d3.nest</a>
-to split rows into groups.</p>
-<p>Do not pass in a crossfilter group as this will not work.</p>
+        <p>Backward-compatible synonym for <a href="dc.dataGrid.html#section">section</a>.</p>
     </div>
     
 
@@ -809,7 +806,7 @@ to split rows into groups.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-108">line 108</a>
+				 <a href="data-grid.js.html#sunlight-1-line-136">line 136</a>
 			</li>
 		</ul>
 	</dd>
@@ -848,7 +845,7 @@ to split rows into groups.</p>
 <span class="param-type">function</span>
 |
 
-<span class="param-type"><a href="dc.dataTable.html">dc.dataTable</a></span>
+<span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
 
 
 
@@ -857,14 +854,6 @@ to split rows into groups.</p>
 
 
         
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">// group rows by the value of their field
-chart
-    .group(function(d) { return d.field; })</pre>
-
 
     
 </dd>
@@ -992,7 +981,7 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-175">line 175</a>
+				 <a href="data-grid.js.html#sunlight-1-line-198">line 198</a>
 			</li>
 		</ul>
 	</dd>
@@ -1062,7 +1051,7 @@ generate the string directly.</p>
 
     
     <div class="description">
-        <p>Get or set the function that formats a group label.</p>
+        <p>Backward-compatible synonym for <a href="dc.dataGrid.html#htmlSection">htmlSection</a>.</p>
     </div>
     
 
@@ -1171,7 +1160,180 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-195">line 195</a>
+				 <a href="data-grid.js.html#sunlight-1-line-236">line 236</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+|
+
+<span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="htmlSection"><span class="type-signature"></span>htmlSection( [htmlSection])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Get or set the function that formats a section label.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>htmlSection</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-218">line 218</a>
 			</li>
 		</ul>
 	</dd>
@@ -1223,7 +1385,7 @@ generate the string directly.</p>
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">chart.htmlGroup (function (d) { return &#x27;&lt;h2&gt;&#x27;.d.key . &#x27;with &#x27; . d.values.length .&#x27; items&lt;/h2&gt;&#x27;});</pre>
+    <pre class="sunlight-highlight-javascript">chart.htmlSection (function (d) { return &#x27;&lt;h2&gt;&#x27;.d.key . &#x27;with &#x27; . d.values.length .&#x27; items&lt;/h2&gt;&#x27;});</pre>
 
 
     
@@ -1358,7 +1520,7 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-234">line 234</a>
+				 <a href="data-grid.js.html#sunlight-1-line-268">line 268</a>
 			</li>
 		</ul>
 	</dd>
@@ -1420,6 +1582,178 @@ generate the string directly.</p>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">chart.order(d3.descending);</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="section"><span class="type-signature"></span>section(section)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Get or set the section function for the data grid. The section function takes a data row and
+returns the key to specify to <a href="https://github.com/d3/d3-collection/blob/master/README.md#nest">d3.nest</a>
+to split rows into sections.</p>
+<p>Do not pass in a crossfilter section as this will not work.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>section</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Function taking a row of data and returning the nest key.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="data-grid.js.html">data-grid.js</a>,
+				 <a href="data-grid.js.html#sunlight-1-line-112">line 112</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+|
+
+<span class="param-type"><a href="dc.dataGrid.html">dc.dataGrid</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// section rows by the value of their field
+chart
+    .section(function(d) { return d.field; })</pre>
 
 
     
@@ -1554,7 +1888,7 @@ generate the string directly.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-159">line 159</a>
+				 <a href="data-grid.js.html#sunlight-1-line-182">line 182</a>
 			</li>
 		</ul>
 	</dd>
@@ -1728,7 +2062,7 @@ level and returns a particular field to be sorted.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-grid.js.html">data-grid.js</a>,
-				 <a href="data-grid.js.html#sunlight-1-line-213">line 213</a>
+				 <a href="data-grid.js.html#sunlight-1-line-247">line 247</a>
 			</li>
 		</ul>
 	</dd>
@@ -1842,7 +2176,7 @@ level and returns a particular field to be sorted.</p>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Fri Feb 1st 2019
+		on Fri Mar 22nd 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

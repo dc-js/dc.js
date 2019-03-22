@@ -910,12 +910,12 @@ scatterPlot.width(500)
 
 
 dc.dataCount(".dc-data-count")
-        .dimension(data)
-        .group(groupAll);
+        .crossfilter(data)
+        .groupAll(groupAll);
 
 dc.dataTable(".dc-data-table")
         .dimension(dateDimension)
-        .group(function (d) {
+        .section(function (d) {
             return dateFormat(d3.timeDay(d.dd));
         })
         .size(3)

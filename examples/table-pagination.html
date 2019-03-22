@@ -43,7 +43,6 @@
         var fmt = d3.format('02d');
         var runDimension = ndx.dimension(function(d) {return [fmt(+d.Expt),fmt(+d.Run)];}),
         experimentDimension = ndx.dimension(function(d) {return d.Expt;}),
-        grouping = function (d) {return d.Expt;},
         experimentGroup = experimentDimension.group().reduceCount();
 
         piechart.width(300).height(280)
@@ -56,9 +55,8 @@
           .width(300)
           .height(480)
           .dimension(runDimension)
-          .group(grouping)
           .size(Infinity)
-          .showGroups(false)
+          .showSections(false)
           .columns(['Expt', 'Run', 'Speed'])
           .sortBy(function (d) { return [fmt(+d.Expt),fmt(+d.Run)]; })
           .order(d3.ascending)

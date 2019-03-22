@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Comparing Against Unfiltered Data</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      #data-count {
+        margin-top: 0;
+        text-align: left;
+        float: none;
+      }
+
+      table {
+        table-layout: fixed;
+      }
+
+      td {
+        width: 1%;
+      }
+    </style>
+</head>
+<body>
+
+<div class="container">
+  <script type="text/javascript" src="header.js"></script>
+  <script type="text/javascript" src="../js/promise-polyfill.js"></script>
+  <script type="text/javascript" src="../js/fetch.umd.js"></script>
+  <script type="text/javascript" src="../js/d3.js"></script>
+  <script type="text/javascript" src="../js/crossfilter.js"></script>
+  <script type="text/javascript" src="../js/dc.js"></script>
+
+  <div class="row">
+    <h2>Comparing filtered data against unfiltered</h2>
+    <p>by copying the initial group values into a fake group, and displaying them in a composite bar chart.</p>
+    <div class="col-md-3 well well-sm">
+      <div class="dc-data-count" id="data-count">
+        <span class="filter-count"></span>
+        selected out of
+        <span class="total-count"></span>
+        points |
+        <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a><br>
+      </div>
+    </div>
+  </div>
+  <!-- First row of charts -->
+  <div class="row">
+    <div class="span4">
+      <div id="chart-11" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+          <a href="javascript:chart_11.filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-12" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:chart_12.filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-13" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:chart_13.filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second row of chart -->
+  <div class="row">
+    <div class="span4">
+      <div id="chart-21" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:chart_21.filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-22" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+          <a href="javascript:chart_22.filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-23"style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:chart_23.filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  dc.config.defaultColors(d3.schemeSet1);
+
+  var data_count = dc.dataCount('.dc-data-count');
+
+  function static_copy_group(group) {
+      var all = group.all().map(kv => ({key: kv.key, value: kv.value}));
+      return {
+          all: function() {
+              return all;
+          }
+      }
+  }
+
+  var chart_specs = [
+      {
+          variable: 'x',
+          selector: '#chart-11',
+          resolution: 10
+      },
+      {
+          variable: 'y',
+          selector: '#chart-12',
+          resolution: 10
+      },
+      {
+          variable: 'z',
+          selector: '#chart-13',
+          resolution: 500
+      },
+      {
+          variable: 'a',
+          selector: '#chart-21',
+          resolution: 100
+      },
+      {
+          variable: 'b',
+          selector: '#chart-22',
+          resolution: 20
+      },
+      {
+          variable: 'c',
+          selector: '#chart-23',
+          resolution: 1000
+      }
+  ];
+
+  d3.csv('six-dim.csv').then(function(data) {
+      data.forEach(function(d) {
+          chart_specs.forEach(function(spec) {
+              d[spec.variable] = +d[spec.variable];
+          });
+      });
+
+      var cf = crossfilter(data),
+          all = cf.groupAll();
+
+      data_count.crossfilter(cf)
+          .groupAll(all);
+
+      var charts = chart_specs.map(function(spec) {
+          return dc.compositeChart(spec.selector);
+      });
+
+      var breathing_room = 0.05;
+
+      chart_specs.forEach(function(spec, i) {
+          d3.select(spec.selector).select('h5.chart-title').text(spec.variable);
+
+          var dim = cf.dimension(function(d) { return d[spec.variable]; }),
+              group = dim.group(function(d) {
+                  return Math.floor(d / spec.resolution) * spec.resolution;
+              }).reduceCount(),
+              static_group = static_copy_group(group);
+
+          charts[i].on('pretransition', function(chart) {
+              var any_filters = charts.some(chart => chart.filters().length);
+              chart.select('.sub._1')
+                  .attr('visibility', any_filters ? 'visible' : 'hidden')
+          });
+
+          charts[i]
+              .compose([
+                  dc.barChart(charts[i])
+                      .dimension(dim)
+                      .group(static_group)
+                      .controlsUseVisibility(true),
+                  dc.barChart(charts[i])
+                      .dimension(dim)
+                      .group(group)
+                      .colors('red')
+                      .controlsUseVisibility(true)
+                      .brushOn(false)
+              ]);
+
+          var min = dim.bottom(1)[0][spec.variable],
+              max = dim.top(1)[0][spec.variable];
+
+          charts[i]
+              .dimension(dim)
+              .group(group)
+              .round(dc.round.floor)
+              .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
+              .xUnits(function(start, end, xDomain) { return (end - start) / spec.resolution; })
+              .controlsUseVisibility(true);
+      });
+
+      dc.renderAll();
+  });
+</script>
+
+</div>
+</body>
+</html>

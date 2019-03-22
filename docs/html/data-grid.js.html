@@ -88,9 +88,10 @@
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
  *
- * Note: Unlike other charts, the data grid chart (and data table) use the {@link dc.dataGrid#group group} attribute as a keying function
- * for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data together in groups.
- * Do not pass in a crossfilter group as this will not work.
+ *
+ * Note: Formerly the data grid chart (and data table) used the {@link dc.dataGrid#group group} attribute as a
+ * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
+ * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
  *
  * Examples:
  * - {@link http://europarl.me/dc.js/web/ep/index.html List of members of the european parliament}
@@ -107,11 +108,12 @@
 dc.dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
     var ITEM_CSS_CLASS = 'dc-grid-item';
-    var GROUP_CSS_CLASS = 'dc-grid-group';
+    var SECTION_CSS_CLASS = 'dc-grid-section dc-grid-group';
     var GRID_CSS_CLASS = 'dc-grid-top';
 
     var _chart = dc.baseMixin({});
 
+    var _section = null;
     var _size = 999; // shouldn't be needed, but you might
     var _html = function (d) { return 'you need to provide an html() handling param:  ' + JSON.stringify(d); };
     var _sortBy = function (d) {
@@ -120,54 +122,56 @@ dc.dataGrid = function (parent, chartGroup) {
     var _order = d3.ascending;
     var _beginSlice = 0, _endSlice;
 
-    var _htmlGroup = function (d) {
-        return '&lt;div class=\'' + GROUP_CSS_CLASS + '\'>&lt;h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
+    var _htmlSection = function (d) {
+        return '&lt;div class=\'' + SECTION_CSS_CLASS + '\'>&lt;h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
             _chart.keyAccessor()(d) + '&lt;/h1>&lt;/div>';
     };
+
+    _chart._mandatoryAttributes(['dimension', 'section']);
 
     _chart._doRender = function () {
         _chart.selectAll('div.' + GRID_CSS_CLASS).remove();
 
-        renderItems(renderGroups());
+        renderItems(renderSections());
 
         return _chart;
     };
 
-    function renderGroups () {
-        var groups = _chart.root().selectAll('div.' + GRID_CSS_CLASS)
+    function renderSections () {
+        var sections = _chart.root().selectAll('div.' + GRID_CSS_CLASS)
                 .data(nestEntries(), function (d) {
                     return _chart.keyAccessor()(d);
                 });
 
-        var itemGroup = groups
+        var itemSection = sections
                 .enter()
                 .append('div')
                 .attr('class', GRID_CSS_CLASS);
 
-        if (_htmlGroup) {
-            itemGroup
+        if (_htmlSection) {
+            itemSection
                 .html(function (d) {
-                    return _htmlGroup(d);
+                    return _htmlSection(d);
                 });
         }
 
-        groups.exit().remove();
-        return itemGroup;
+        sections.exit().remove();
+        return itemSection;
     }
 
     function nestEntries () {
         var entries = _chart.dimension().top(_size);
 
         return d3.nest()
-            .key(_chart.group())
+            .key(_chart.section())
             .sortKeys(_order)
             .entries(entries.sort(function (a, b) {
                 return _order(_sortBy(a), _sortBy(b));
             }).slice(_beginSlice, _endSlice));
     }
 
-    function renderItems (groups) {
-        var items = groups.order()
+    function renderItems (sections) {
+        var items = sections.order()
                 .selectAll('div.' + ITEM_CSS_CLASS)
                 .data(function (d) {
                     return d.values;
@@ -192,21 +196,40 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the group function for the data grid. The group function takes a data row and
+     * Get or set the section function for the data grid. The section function takes a data row and
      * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
-     * to split rows into groups.
+     * to split rows into sections.
      *
-     * Do not pass in a crossfilter group as this will not work.
-     * @method group
+     * Do not pass in a crossfilter section as this will not work.
+     * @method section
      * @memberof dc.dataGrid
      * @instance
      * @example
-     * // group rows by the value of their field
+     * // section rows by the value of their field
      * chart
-     *     .group(function(d) { return d.field; })
-     * @param {Function} groupFunction Function taking a row of data and returning the nest key.
-     * @returns {Function|dc.dataTable}
+     *     .section(function(d) { return d.field; })
+     * @param {Function} section Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataGrid}
      */
+    _chart.section = function (section) {
+        if (!arguments.length) {
+            return _section;
+        }
+        _section = section;
+        return _chart;
+    };
+
+    /**
+     * Backward-compatible synonym for {@link dc.dataGrid#section section}.
+     *
+     * @method group
+     * @memberof dc.dataGrid
+     * @instance
+     * @param {Function} groupFunction Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataGrid}
+     */
+    _chart.group = dc.logger.annotate(_chart.section,
+                                      'consider using dataGrid.section instead of dataGrid.group for clarity');
 
     /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
@@ -279,22 +302,33 @@ dc.dataGrid = function (parent, chartGroup) {
     };
 
     /**
-     * Get or set the function that formats a group label.
-     * @method htmlGroup
+     * Get or set the function that formats a section label.
+     * @method htmlSection
      * @memberof dc.dataGrid
      * @instance
      * @example
-     * chart.htmlGroup (function (d) { return '&lt;h2>'.d.key . 'with ' . d.values.length .' items&lt;/h2>'});
+     * chart.htmlSection (function (d) { return '&lt;h2>'.d.key . 'with ' . d.values.length .' items&lt;/h2>'});
+     * @param {Function} [htmlSection]
+     * @returns {Function|dc.dataGrid}
+     */
+    _chart.htmlSection = function (htmlSection) {
+        if (!arguments.length) {
+            return _htmlSection;
+        }
+        _htmlSection = htmlSection;
+        return _chart;
+    };
+
+    /**
+     * Backward-compatible synonym for {@link dc.dataGrid#htmlSection htmlSection}.
+     * @method htmlGroup
+     * @memberof dc.dataGrid
+     * @instance
      * @param {Function} [htmlGroup]
      * @returns {Function|dc.dataGrid}
      */
-    _chart.htmlGroup = function (htmlGroup) {
-        if (!arguments.length) {
-            return _htmlGroup;
-        }
-        _htmlGroup = htmlGroup;
-        return _chart;
-    };
+    _chart.htmlGroup = dc.logger.annotate(_chart.htmlSection,
+                                          'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
 
     /**
      * Get or set sort-by function. This function works as a value accessor at the item
@@ -384,7 +418,7 @@ dc.dataGrid = function (parent, chartGroup) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on Fri Feb 1st 2019
+		on Fri Mar 22nd 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
