@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.11  
+**Version**: 3.0.12  
 **Example**  
 ```js
 // Example chaining
@@ -28,6 +28,7 @@ chart.width(300)
         * [.warnOnce([msg])](#dc.logger+warnOnce) ⇒ [<code>logger</code>](#dc.logger)
         * [.debug([msg])](#dc.logger+debug) ⇒ [<code>logger</code>](#dc.logger)
         * [.deprecate([fn], [msg])](#dc.logger+deprecate) ⇒ <code>function</code>
+        * [.annotate([fn], [msg])](#dc.logger+annotate) ⇒ <code>function</code>
     * [.config](#dc.config)
         * [new config()](#new_dc.config_new)
         * [.defaultColors([colors])](#dc.config+defaultColors) ⇒ <code>Array</code> \| [<code>config</code>](#dc.config)
@@ -76,6 +77,7 @@ chart.width(300)
         * [.formatNumber([formatter])](#dc.dataCount+formatNumber) ⇒ <code>function</code> \| [<code>dataCount</code>](#dc.dataCount)
     * [.dataTable](#dc.dataTable)
         * [new dataTable(parent, [chartGroup])](#new_dc.dataTable_new)
+        * [.section(section)](#dc.dataTable+section) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
         * [.group(groupFunction)](#dc.dataTable+group) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
         * [.size([size])](#dc.dataTable+size) ⇒ <code>Number</code> \| [<code>dataTable</code>](#dc.dataTable)
         * [.beginSlice([beginSlice])](#dc.dataTable+beginSlice) ⇒ <code>Number</code> \| [<code>dataTable</code>](#dc.dataTable)
@@ -83,14 +85,17 @@ chart.width(300)
         * [.columns([columns])](#dc.dataTable+columns) ⇒ <code>Array.&lt;function()&gt;</code>
         * [.sortBy([sortBy])](#dc.dataTable+sortBy) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
         * [.order([order])](#dc.dataTable+order) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
+        * [.showSections([showSections])](#dc.dataTable+showSections) ⇒ <code>Boolean</code> \| [<code>dataTable</code>](#dc.dataTable)
         * [.showGroups([showGroups])](#dc.dataTable+showGroups) ⇒ <code>Boolean</code> \| [<code>dataTable</code>](#dc.dataTable)
     * [.dataGrid](#dc.dataGrid)
         * [new dataGrid(parent, [chartGroup])](#new_dc.dataGrid_new)
-        * [.group(groupFunction)](#dc.dataGrid+group) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
+        * [.section(section)](#dc.dataGrid+section) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
+        * [.group(groupFunction)](#dc.dataGrid+group) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
         * [.beginSlice([beginSlice])](#dc.dataGrid+beginSlice) ⇒ <code>Number</code> \| [<code>dataGrid</code>](#dc.dataGrid)
         * [.endSlice([endSlice])](#dc.dataGrid+endSlice) ⇒ <code>Number</code> \| [<code>dataGrid</code>](#dc.dataGrid)
         * [.size([size])](#dc.dataGrid+size) ⇒ <code>Number</code> \| [<code>dataGrid</code>](#dc.dataGrid)
         * [.html([html])](#dc.dataGrid+html) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
+        * [.htmlSection([htmlSection])](#dc.dataGrid+htmlSection) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
         * [.htmlGroup([htmlGroup])](#dc.dataGrid+htmlGroup) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
         * [.sortBy([sortByFunction])](#dc.dataGrid+sortBy) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
         * [.order([order])](#dc.dataGrid+order) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
@@ -396,6 +401,7 @@ chart.width(300)
     * [.warnOnce([msg])](#dc.logger+warnOnce) ⇒ [<code>logger</code>](#dc.logger)
     * [.debug([msg])](#dc.logger+debug) ⇒ [<code>logger</code>](#dc.logger)
     * [.deprecate([fn], [msg])](#dc.logger+deprecate) ⇒ <code>function</code>
+    * [.annotate([fn], [msg])](#dc.logger+annotate) ⇒ <code>function</code>
 
 <a name="new_dc.logger_new"></a>
 
@@ -456,8 +462,8 @@ dc.logger.debug('Total number of slices: ' + numSlices);
 <a name="dc.logger+deprecate"></a>
 
 #### logger.deprecate([fn], [msg]) ⇒ <code>function</code>
-Use it to deprecate a function. It will return a wrapped version of the function, which will
-will issue a warning when invoked. For each function, warning will be issued only once.
+Used to deprecate a function. It will return a wrapped version of the function, which will
+will issue a warning when invoked. The warning will be issued only once.
 
 **Kind**: instance method of [<code>logger</code>](#dc.logger)  
 
@@ -475,6 +481,30 @@ _chart.interpolate = dc.logger.deprecate(function (interpolate) {
    _interpolate = interpolate;
    return _chart;
 }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+```
+<a name="dc.logger+annotate"></a>
+
+#### logger.annotate([fn], [msg]) ⇒ <code>function</code>
+Used to provide an informational message for a function. It will return a wrapped version of
+the function, which will will issue a messsage with stack when invoked. The message will be
+issued only once.
+
+**Kind**: instance method of [<code>logger</code>](#dc.logger)  
+
+| Param | Type |
+| --- | --- |
+| [fn] | <code>function</code> | 
+| [msg] | <code>String</code> | 
+
+**Example**  
+```js
+_chart.interpolate = dc.logger.annotate(function (interpolate) {
+   if (!arguments.length) {
+       return _interpolate;
+   }
+   _interpolate = interpolate;
+   return _chart;
+}, 'dc.lineChart.interpolate has been annotated since version 3.0 use dc.lineChart.curve instead');
 ```
 <a name="dc.config"></a>
 
@@ -1158,8 +1188,8 @@ var ndx = crossfilter(data);
 var all = ndx.groupAll();
 
 dc.dataCount('.dc-data-count')
-    .dimension(ndx)
-    .group(all);
+    .crossfilter(ndx)
+    .groupAll(all);
 ```
 <a name="dc.dataCount+html"></a>
 
@@ -1207,6 +1237,7 @@ counter.formatNumber(d3.format('.2g'))
 
 * [.dataTable](#dc.dataTable)
     * [new dataTable(parent, [chartGroup])](#new_dc.dataTable_new)
+    * [.section(section)](#dc.dataTable+section) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
     * [.group(groupFunction)](#dc.dataTable+group) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
     * [.size([size])](#dc.dataTable+size) ⇒ <code>Number</code> \| [<code>dataTable</code>](#dc.dataTable)
     * [.beginSlice([beginSlice])](#dc.dataTable+beginSlice) ⇒ <code>Number</code> \| [<code>dataTable</code>](#dc.dataTable)
@@ -1214,6 +1245,7 @@ counter.formatNumber(d3.format('.2g'))
     * [.columns([columns])](#dc.dataTable+columns) ⇒ <code>Array.&lt;function()&gt;</code>
     * [.sortBy([sortBy])](#dc.dataTable+sortBy) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
     * [.order([order])](#dc.dataTable+order) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
+    * [.showSections([showSections])](#dc.dataTable+showSections) ⇒ <code>Boolean</code> \| [<code>dataTable</code>](#dc.dataTable)
     * [.showGroups([showGroups])](#dc.dataTable+showGroups) ⇒ <code>Boolean</code> \| [<code>dataTable</code>](#dc.dataTable)
 
 <a name="new_dc.dataTable_new"></a>
@@ -1222,14 +1254,14 @@ counter.formatNumber(d3.format('.2g'))
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
-Note: Unlike other charts, the data table (and data grid chart) use the [group](#dc.dataTable+group) attribute as a
-keying function for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data
-together in groups.  Do not pass in a crossfilter group as this will not work.
-
-Another interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
+An interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
 long as you specify the [order](#dc.dataTable+order) as `d3.descending`, since the data
 table will use `dimension.top()` to fetch the data in that case, and the method is equally
 supported on the crossfilter group as the crossfilter dimension.
+
+Note: Formerly the data table (and data grid chart) used the [group](#dc.dataTable+group) attribute as a
+keying function for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data
+together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
 
 Examples:
 - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
@@ -1242,14 +1274,31 @@ Examples:
 | parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
+<a name="dc.dataTable+section"></a>
+
+#### dataTable.section(section) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
+Get or set the section function for the data table. The section function takes a data row and
+returns the key to specify to [d3.nest](https://github.com/d3/d3-collection/blob/master/README.md#nest)
+to split rows into sections. By default there will be only one section with no name.
+
+Set [showSections](#dc.dataTable+showSections) to false to hide the section headers
+
+**Kind**: instance method of [<code>dataTable</code>](#dc.dataTable)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| section | <code>function</code> | Function taking a row of data and returning the nest key. |
+
+**Example**  
+```js
+// section rows by the value of their field
+chart
+    .section(function(d) { return d.field; })
+```
 <a name="dc.dataTable+group"></a>
 
 #### dataTable.group(groupFunction) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
-Get or set the group function for the data table. The group function takes a data row and
-returns the key to specify to [d3.nest](https://github.com/d3/d3-collection/blob/master/README.md#nest)
-to split rows into groups.
-
-Do not pass in a crossfilter group as this will not work.
+Backward-compatible synonym for [section](#dc.dataTable+section).
 
 **Kind**: instance method of [<code>dataTable</code>](#dc.dataTable)  
 
@@ -1257,12 +1306,6 @@ Do not pass in a crossfilter group as this will not work.
 | --- | --- | --- |
 | groupFunction | <code>function</code> | Function taking a row of data and returning the nest key. |
 
-**Example**  
-```js
-// group rows by the value of their field
-chart
-    .group(function(d) { return d.field; })
-```
 <a name="dc.dataTable+size"></a>
 
 #### dataTable.size([size]) ⇒ <code>Number</code> \| [<code>dataTable</code>](#dc.dataTable)
@@ -1424,11 +1467,27 @@ Get or set sort order. If the order is `d3.ascending`, the data table will use
 ```js
 chart.order(d3.descending);
 ```
+<a name="dc.dataTable+showSections"></a>
+
+#### dataTable.showSections([showSections]) ⇒ <code>Boolean</code> \| [<code>dataTable</code>](#dc.dataTable)
+Get or set if section header rows will be shown.
+
+**Kind**: instance method of [<code>dataTable</code>](#dc.dataTable)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [showSections] | <code>Boolean</code> | <code>true</code> | 
+
+**Example**  
+```js
+chart
+    .section([value], [name])
+    .showSections(true|false);
+```
 <a name="dc.dataTable+showGroups"></a>
 
 #### dataTable.showGroups([showGroups]) ⇒ <code>Boolean</code> \| [<code>dataTable</code>](#dc.dataTable)
-Get or set if group rows will be shown. The dataTable [group](#dc.dataTable+group)
-function must be specified even if groups are not shown.
+Backward-compatible synonym for [showSections](#dc.dataTable+showSections).
 
 **Kind**: instance method of [<code>dataTable</code>](#dc.dataTable)  
 
@@ -1436,12 +1495,6 @@ function must be specified even if groups are not shown.
 | --- | --- | --- |
 | [showGroups] | <code>Boolean</code> | <code>true</code> | 
 
-**Example**  
-```js
-chart
-    .group([value], [name])
-    .showGroups(true|false);
-```
 <a name="dc.dataGrid"></a>
 
 ### dc.dataGrid
@@ -1450,11 +1503,13 @@ chart
 
 * [.dataGrid](#dc.dataGrid)
     * [new dataGrid(parent, [chartGroup])](#new_dc.dataGrid_new)
-    * [.group(groupFunction)](#dc.dataGrid+group) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
+    * [.section(section)](#dc.dataGrid+section) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
+    * [.group(groupFunction)](#dc.dataGrid+group) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
     * [.beginSlice([beginSlice])](#dc.dataGrid+beginSlice) ⇒ <code>Number</code> \| [<code>dataGrid</code>](#dc.dataGrid)
     * [.endSlice([endSlice])](#dc.dataGrid+endSlice) ⇒ <code>Number</code> \| [<code>dataGrid</code>](#dc.dataGrid)
     * [.size([size])](#dc.dataGrid+size) ⇒ <code>Number</code> \| [<code>dataGrid</code>](#dc.dataGrid)
     * [.html([html])](#dc.dataGrid+html) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
+    * [.htmlSection([htmlSection])](#dc.dataGrid+htmlSection) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
     * [.htmlGroup([htmlGroup])](#dc.dataGrid+htmlGroup) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
     * [.sortBy([sortByFunction])](#dc.dataGrid+sortBy) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
     * [.order([order])](#dc.dataGrid+order) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
@@ -1465,9 +1520,10 @@ chart
 Data grid is a simple widget designed to list the filtered records, providing
 a simple way to define how the items are displayed.
 
-Note: Unlike other charts, the data grid chart (and data table) use the [group](#dc.dataGrid+group) attribute as a keying function
-for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data together in groups.
-Do not pass in a crossfilter group as this will not work.
+
+Note: Formerly the data grid chart (and data table) used the [group](#dc.dataGrid+group) attribute as a
+keying function for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data
+together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
 
 Examples:
 - [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
@@ -1478,14 +1534,31 @@ Examples:
 | parent | <code>String</code> \| <code>node</code> \| <code>d3.selection</code> | Any valid [d3 single selector](https://github.com/d3/d3-selection/blob/master/README.md#select) specifying a dom block element such as a div; or a dom element or d3 selection. |
 | [chartGroup] | <code>String</code> | The name of the chart group this chart instance should be placed in. Interaction with a chart will only trigger events and redraws within the chart's group. |
 
+<a name="dc.dataGrid+section"></a>
+
+#### dataGrid.section(section) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
+Get or set the section function for the data grid. The section function takes a data row and
+returns the key to specify to [d3.nest](https://github.com/d3/d3-collection/blob/master/README.md#nest)
+to split rows into sections.
+
+Do not pass in a crossfilter section as this will not work.
+
+**Kind**: instance method of [<code>dataGrid</code>](#dc.dataGrid)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| section | <code>function</code> | Function taking a row of data and returning the nest key. |
+
+**Example**  
+```js
+// section rows by the value of their field
+chart
+    .section(function(d) { return d.field; })
+```
 <a name="dc.dataGrid+group"></a>
 
-#### dataGrid.group(groupFunction) ⇒ <code>function</code> \| [<code>dataTable</code>](#dc.dataTable)
-Get or set the group function for the data grid. The group function takes a data row and
-returns the key to specify to [d3.nest](https://github.com/d3/d3-collection/blob/master/README.md#nest)
-to split rows into groups.
-
-Do not pass in a crossfilter group as this will not work.
+#### dataGrid.group(groupFunction) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
+Backward-compatible synonym for [section](#dc.dataGrid+section).
 
 **Kind**: instance method of [<code>dataGrid</code>](#dc.dataGrid)  
 
@@ -1493,12 +1566,6 @@ Do not pass in a crossfilter group as this will not work.
 | --- | --- | --- |
 | groupFunction | <code>function</code> | Function taking a row of data and returning the nest key. |
 
-**Example**  
-```js
-// group rows by the value of their field
-chart
-    .group(function(d) { return d.field; })
-```
 <a name="dc.dataGrid+beginSlice"></a>
 
 #### dataGrid.beginSlice([beginSlice]) ⇒ <code>Number</code> \| [<code>dataGrid</code>](#dc.dataGrid)
@@ -1551,10 +1618,25 @@ generate the string directly.
 ```js
 chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
 ```
+<a name="dc.dataGrid+htmlSection"></a>
+
+#### dataGrid.htmlSection([htmlSection]) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
+Get or set the function that formats a section label.
+
+**Kind**: instance method of [<code>dataGrid</code>](#dc.dataGrid)  
+
+| Param | Type |
+| --- | --- |
+| [htmlSection] | <code>function</code> | 
+
+**Example**  
+```js
+chart.htmlSection (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
+```
 <a name="dc.dataGrid+htmlGroup"></a>
 
 #### dataGrid.htmlGroup([htmlGroup]) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)
-Get or set the function that formats a group label.
+Backward-compatible synonym for [htmlSection](#dc.dataGrid+htmlSection).
 
 **Kind**: instance method of [<code>dataGrid</code>](#dc.dataGrid)  
 
@@ -1562,10 +1644,6 @@ Get or set the function that formats a group label.
 | --- | --- |
 | [htmlGroup] | <code>function</code> | 
 
-**Example**  
-```js
-chart.htmlGroup (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
-```
 <a name="dc.dataGrid+sortBy"></a>
 
 #### dataGrid.sortBy([sortByFunction]) ⇒ <code>function</code> \| [<code>dataGrid</code>](#dc.dataGrid)

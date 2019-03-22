@@ -1604,8 +1604,8 @@ on other charts within the same chart group.
             
             <div class="content"><div class='highlight'><pre>
     nasdaqCount <span class="hljs-comment">/* dc.dataCount('.dc-data-count', 'chartGroup'); */</span>
-        .dimension(ndx)
-        .group(all)</pre></div></div>
+        .crossfilter(ndx)
+        .groupAll(all)</pre></div></div>
             
         </li>
         
@@ -1685,12 +1685,11 @@ on other charts within the same chart group.
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-94">&#182;</a>
               </div>
-              <p>Data table does not use crossfilter group but rather a closure
-as a grouping function</p>
+              <p>Specify a section function to nest rows of the table</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        .group(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d</span>) </span>{
+            <div class="content"><div class='highlight'><pre>        .section(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">d</span>) </span>{
             <span class="hljs-keyword">var</span> format = d3.format(<span class="hljs-string">'02d'</span>);
             <span class="hljs-keyword">return</span> d.dd.getFullYear() + <span class="hljs-string">'/'</span> + format((d.dd.getMonth() + <span class="hljs-number">1</span>));
         })</pre></div></div>
