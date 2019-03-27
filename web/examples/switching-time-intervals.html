@@ -44,12 +44,12 @@
             function (date) {
                 date.setDate(1);
                 date.setHours(0, 0, 0, 0);
-                var currentMounth = date.getMonth()
-                if (currentMounth <= 2) {
+                var current_month = date.getMonth()
+                if (current_month <= 2) {
                     date.setMonth(0) // 'Q1'
-                } else if (currentMounth <= 5) {
+                } else if (current_month <= 5) {
                     date.setMonth(3) // 'Q2'
-                } else if (currentMounth <= 8) {
+                } else if (current_month <= 8) {
                     date.setMonth(6) // 'Q3'
                 } else {
                     date.setMonth(9) // 'Q4'
@@ -63,14 +63,14 @@
             // The optional count function takes a start date and an end date, already floored to the current interval,
             // and returns the number of boundaries between the start (exclusive) and end (inclusive).
             function (start, end) {
-                return (end.getMonth() - start.getMonth()) / 3 + (end.getFullYear() - start.getFullYear()) * 4;;
+                return (end.getMonth() - start.getMonth()) / 3 + (end.getFullYear() - start.getFullYear()) * 4;
             },
             // The optional field function takes a date, already floored to the current interval, and returns the
             // field value of the specified date, corresponding to the number of boundaries between this date
             // (exclusive) and the latest previous parent boundary. For example, for the d3.timeDay interval,
             // this returns the number of days since the start of the month.
             function (date) {
-                return date.getMonth() * 3;
+                return Math.floor(date.getMonth() / 3);
             }
         );
 
