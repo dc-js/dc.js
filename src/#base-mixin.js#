@@ -84,7 +84,7 @@ dc.baseMixin = function (_chart) {
                 // single range-based filter
                 dimension.filterRange(filters[0]);
             else dimension.filterFunction(filters[0].isFiltered); // any other custom filter
-        } else // many ordinals (or Dates
+        } else // many ordinals (or Dates)
             dimension.filterFunction(function (d) {
                 return filters.some(function(f) {
                     return f <= d && f >= d;
