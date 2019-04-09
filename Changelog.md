@@ -1,3 +1,7 @@
+## 3.0.13
+* Keep track of individual values efficiently in boxplot examples ([#543](https://github.com/dc-js/dc.js/issues/543))
+* Series progression [example](https://dc-js.github.io/dc.js/transitions/series-progression.html)
+
 ## 3.0.12
 * heatmap takes ordinary filter objects and conversion of coordinates is deprecated ([#1515](https://github.com/dc-js/dc.js/issues/1515))
 * [Example](http://dc-js.github.io/dc.js/examples/compare-unfiltered.html) of comparing the current filters against the unfiltered values [using a fake group to copy original values](https://github.com/dc-js/dc.js/wiki/FAQ#static-copy-of-a-group). Thanks to Jason Aizkalns for the [SO](https://stackoverflow.com/questions/55066391/display-original-conditional-brushed-unbrushed-crossfilter-bars-with-dc-js-wit) and [CodeReview](https://codereview.stackexchange.com/questions/215041/dc-js-and-crossfilter-app-to-display-multiple-charts) questions and the example!
