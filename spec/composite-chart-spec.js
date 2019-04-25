@@ -873,4 +873,45 @@ describe('dc.compositeChart', function () {
             });
         });
     });
+
+    describe('title and shareTitle', function () {
+        function f (value) { return function () { return value; } }
+
+        it('should propagate existing title', function () {
+            chart.children().forEach(function (child, i) {
+                child.title(f('Title ' + i));
+            });
+
+            chart.shareTitle(false);
+            chart.title(f('Share Me'));
+
+            chart.children().forEach(function (child, i) {
+                console.log(child.title());
+                expect(child.title()()).toBe('Title ' + i);
+            });
+
+            chart.shareTitle(true);
+
+            expect(chart.title()()).toBe('Share Me');
+
+            chart.children().forEach(function (child) {
+                expect(child.title()()).toBe('Share Me');
+            });
+        });
+
+        it('should propagate new title', function () {
+            chart.shareTitle(true);
+            chart.children().forEach(function (child, i) {
+                child.title(f('Title ' + i));
+            });
+
+            chart.title(f('Share Me'));
+
+            expect(chart.title()()).toBe('Share Me');
+
+            chart.children().forEach(function (child) {
+                expect(child.title()()).toBe('Share Me');
+            });
+        });
+    });
 });
