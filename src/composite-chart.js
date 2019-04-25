@@ -431,8 +431,24 @@ dc.compositeChart = function (parent, chartGroup) {
             return _shareTitle;
         }
         _shareTitle = shareTitle;
+        // Reassign title to propagate to children (if necessary)
+        _chart.title(_chart.title());
         return _chart;
     };
+
+    dc.override(_chart, 'title', function (title) {
+        if (!arguments.length) {
+            return _chart._title();
+        }
+        _chart._title(title);
+
+        if (_shareTitle) {
+            _chart.children().forEach(function (child) {
+                child.title(title);
+            });
+        }
+        return _chart;
+    });
 
     /**
      * Get or set the y scale for the right axis. The right y scale is typically automatically
