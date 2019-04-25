@@ -72,11 +72,9 @@ dc.compositeChart = function (parent, chartGroup) {
     dc.override(_chart, 'rescale', function () {
         _chart._rescale();
 
-        var _children = _chart.children();
-        _children.forEach(function (child) {
+        _chart.children().forEach(function (child) {
             child.rescale();
         });
-
         return _chart;
     });
 
@@ -86,11 +84,9 @@ dc.compositeChart = function (parent, chartGroup) {
         }
         _chart._resizing(resizing);
 
-        var _children = _chart.children();
-        _children.forEach(function (child) {
+        _chart.children().forEach(function (child) {
             child.resizing(resizing);
         });
-
         return _chart;
     });
 
@@ -379,8 +375,7 @@ dc.compositeChart = function (parent, chartGroup) {
 
             _chart[_prop](value);
 
-            var _children = _chart.children();
-            _children.forEach(function (child) {
+            _chart.children().forEach(function (child) {
                 child[prop](value);
             });
 
