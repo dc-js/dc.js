@@ -350,9 +350,9 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart.compose = function (subChartArray) {
         _children = subChartArray;
         _children.forEach(function (child) {
-            child.height(_chart.height());
-            child.width(_chart.width());
-            child.margins(_chart.margins());
+            passThruProperties.forEach(function (prop) {
+                child[prop](_chart[prop]());
+            });
 
             if (_shareTitle) {
                 child.title(_chart.title());
@@ -365,8 +365,9 @@ dc.compositeChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    var passThruProperties = ['height', 'width', 'margins'];
     // properties passed through in compose()
-    ['height', 'width', 'margins'].forEach(function (prop) {
+    passThruProperties.forEach(function (prop) {
         var _prop = '_' + prop;
         dc.override(_chart, prop, function (value) {
             if (!arguments.length) {
