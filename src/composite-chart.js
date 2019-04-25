@@ -269,7 +269,6 @@ dc.compositeChart = function (parent, chartGroup) {
      * Get or set chart-specific options for all child charts. This is equivalent to calling
      * {@link dc.baseMixin#options .options} on each child chart.
      *
-     * Note: currently you must call this before `compose` in order for the options to be propagated.
      * @method childOptions
      * @memberof dc.compositeChart
      * @instance
@@ -319,10 +318,6 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Combine the given charts into one single composite coordinate grid chart.
      *
-     * Note: currently due to the way it is implemented, you must call this function at the end of
-     * initialization of the composite chart, in particular after `shareTitle`, `childOptions`,
-     * `width`, `height`, and `margins`, in order for the settings to get propagated to the children
-     * correctly.
      * @method compose
      * @memberof dc.compositeChart
      * @instance
