@@ -82,7 +82,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-        jscs: {
+        eslint: {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
@@ -91,24 +91,9 @@ module.exports = function (grunt) {
                     'Gruntfile.js',
                     'grunt/*.js',
                     '<%= conf.web %>/stock.js'],
-                options: {
-                    config: '.jscsrc'
-                }
-            }
-        },
-        jshint: {
-            source: {
-                src: [
-                    '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer,d3v3-compat}.js',
-                    '<%= conf.spec %>/**/*.js',
-                    'Gruntfile.js',
-                    'grunt/*.js',
-                    '<%= conf.web %>/stock.js'
-                ],
-                options: {
-                    jshintrc: '.jshintrc'
-                }
+            },
+            options: {
+                configFile: '.eslintrc'
             }
         },
         watch: {
@@ -521,7 +506,7 @@ module.exports = function (grunt) {
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
-    grunt.registerTask('lint', ['jshint', 'jscs']);
+    grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };
