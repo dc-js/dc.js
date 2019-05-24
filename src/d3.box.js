@@ -29,6 +29,7 @@
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/*eslint complexity: 0*/
 (function () {
 
     // Inspired by http://informationandvisualization.de/blog/box-plot
@@ -54,7 +55,6 @@
 
         // For each small multiple…
         function box (g) {
-            /* jshint -W074 */
             g.each(function (d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
@@ -374,7 +374,6 @@
                 // Remove temporary quartiles element from within data array.
                 delete d.quartiles;
             });
-            /* jshint +W074 */
             d3.timerFlush();
         }
 

@@ -56,23 +56,18 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     _chart._doColumnValueFormat = function (v, d) {
-        return ((typeof v === 'function') ?
-                v(d) :                          // v as function
-                ((typeof v === 'string') ?
-                 d[v] :                         // v is field name string
-                 v.format(d)                        // v is Object, use fn (element 2)
-                )
-               );
+        return (typeof v === 'function') ? v(d) :  // v as function
+            (typeof v === 'string') ? d[v] :       // v is field name string
+            v.format(d);                           // v is Object, use fn (element 2)
     };
 
     _chart._doColumnHeaderFormat = function (d) {
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
-        return (typeof d === 'function') ?
-                _chart._doColumnHeaderFnToString(d) :
-                ((typeof d === 'string') ?
-                 _chart._doColumnHeaderCapitalize(d) : String(d.label));
+        return (typeof d === 'function') ? _chart._doColumnHeaderFnToString(d) :
+            (typeof d === 'string') ? _chart._doColumnHeaderCapitalize(d) :
+            String(d.label);
     };
 
     _chart._doColumnHeaderCapitalize = function (s) {

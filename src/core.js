@@ -15,7 +15,6 @@
  *      .height(300)
  *      .filter('sunday');
  */
-/*jshint -W079*/
 var dc = {
     version: '<%= conf.pkg.version %>',
     constants: {
@@ -32,7 +31,6 @@ var dc = {
     },
     _renderlet: null
 };
-/*jshint +W079*/
 
 /**
  * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups

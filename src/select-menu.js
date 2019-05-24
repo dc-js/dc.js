@@ -33,9 +33,9 @@ dc.selectMenu = function (parent, chartGroup) {
     var _promptValue = null;
     var _numberVisible = null;
     var _order = function (a, b) {
-        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
-             1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
-            -1 : 0;
+        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ? 1 :
+            _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ? -1 :
+            0;
     };
 
     var _filterDisplayed = function (d) {

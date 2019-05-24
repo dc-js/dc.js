@@ -36,9 +36,9 @@ dc.cboxMenu = function (parent, chartGroup) {
     // generate a random number to use as an ID
     var _randVal = Math.floor(Math.random() * (100000)) + 1;
     var _order = function (a, b) {
-        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
-             1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
-            -1 : 0;
+        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ? 1 :
+            _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ? -1 :
+            0;
     };
 
     var _filterDisplayed = function (d) {
@@ -92,8 +92,8 @@ dc.cboxMenu = function (parent, chartGroup) {
         var options = _cbox
         .selectAll('li.' + ITEM_CSS_CLASS)
             .data(_chart.data(), function (d) {
-            return _chart.keyAccessor()(d);
-        });
+                return _chart.keyAccessor()(d);
+            });
 
         options.exit().remove();
 

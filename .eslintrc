@@ -36,7 +36,10 @@
       4,
       {
         "SwitchCase": 1,
-        "MemberExpression": "off"
+        "MemberExpression": "off",
+        "CallExpression": {"arguments": "first"},
+        "ArrayExpression": "first",
+        "flatTernaryExpressions": true
       }
     ],
     "no-use-before-define": 0,
@@ -87,7 +90,7 @@
     "valid-typeof": 0,
     "no-proto": 0,
     "no-script-url": 0,
-    "no-shadow": 2,
+    "no-shadow": 0,
     "no-new-func": 0,
     "no-new-wrappers": 0,
     "dot-notation": 0,

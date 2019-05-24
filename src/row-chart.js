@@ -185,8 +185,8 @@ dc.rowChart = function (parent, chartGroup) {
         }
 
         var rect = rows.attr('transform', function (d, i) {
-                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
-            }).select('rect')
+            return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
+        }).select('rect')
             .attr('height', height)
             .attr('fill', _chart.getColor)
             .on('click', onClick)
