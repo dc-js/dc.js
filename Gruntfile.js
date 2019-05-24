@@ -161,7 +161,6 @@ module.exports = function (grunt) {
                     styles: [
                         '<%= conf.web %>/css/dc.css'
                     ],
-                    version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
                 },
