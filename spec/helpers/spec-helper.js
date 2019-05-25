@@ -1,4 +1,5 @@
 /* global parseTranslate */
+/* eslint "no-unused-vars": 0 */
 
 /*exported appendChartID, coordsFromTranslate, makeDate, cleanDateRange, flushAllD3Transitions */
 /*exported simulateChartBrushing, simulateChart2DBrushing */
@@ -8,10 +9,8 @@ beforeEach(function () {
 
     // If we're using browserify bundle, pull d3 and crossfilter out of it,
     // so that tests don't have to deal with this incidental complexity.
-    /* jshint -W020 */
     if (typeof d3 === 'undefined') { d3 = dc.d3; }
     if (typeof crossfilter === 'undefined') { crossfilter = dc.crossfilter; }
-    /* jshint +W020 */
     d3.select('body').append('div').attr('id', 'test-content');
 });
 

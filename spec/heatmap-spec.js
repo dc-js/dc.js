@@ -221,7 +221,7 @@ describe('dc.heatmap', function () {
     });
 
     describe('change crossfilter', function () {
-        var data2, dimension2, group2, originalDomain, newDomain;
+        var data2, dimension2, group2, originalDomain;
 
         var reduceDimensionValues = function (dimension) {
             return dimension.top(Infinity).reduce(function (p, d) {
@@ -236,7 +236,6 @@ describe('dc.heatmap', function () {
             dimension2 = data2.dimension(function (d) { return [+d.colData, +d.rowData]; });
             group2 = dimension2.group().reduceSum(function (d) { return +d.colorData; });
             originalDomain = reduceDimensionValues(dimension);
-            newDomain = reduceDimensionValues(dimension2);
 
             chart.dimension(dimension2).group(group2);
             chart.render();
@@ -266,10 +265,9 @@ describe('dc.heatmap', function () {
     });
 
     describe('indirect filtering', function () {
-        var dimension2, group2;
+        var dimension2;
         beforeEach(function () {
             dimension2 = data.dimension(function (d) { return +d.colorData; });
-            group2 = dimension2.group().reduceSum(function (d) { return +d.colorData; });
 
             chart.dimension(dimension).group(group);
             chart.render();
@@ -426,8 +424,7 @@ describe('dc.heatmap', function () {
         });
     });
     describe('iris filtering', function () {
-        /* jshint camelcase: false */
-        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        /* eslint camelcase: 0 */
         // 2-chart version of from http://bl.ocks.org/gordonwoodhull/14c623b95993808d69620563508edba6
         var irisData, bubbleChart, petalDim, petalGroup;
         var fields = {
@@ -619,7 +616,5 @@ describe('dc.heatmap', function () {
                 testRectTitlesBubble12(chart);
             });
         });
-        /* jshint camelcase: true */
-        // jscs enable: requireCamelCaseOrUpperCaseIdentifiers
     });
 });

@@ -3,7 +3,6 @@ describe('dc.textFilterWidget', function () {
     var dateFixture;
     var id, chart, data;
     var dimension, group;
-    var countryDimension;
 
     beforeEach(function () {
         dateFixture = loadDateFixture();
@@ -13,9 +12,6 @@ describe('dc.textFilterWidget', function () {
         });
         group = dimension.group().reduceSum(function (d) {
             return 1;
-        });
-        countryDimension = data.dimension(function (d) {
-            return d.countrycode;
         });
 
         id = 'input-filter';

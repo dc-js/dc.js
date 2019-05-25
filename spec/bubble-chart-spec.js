@@ -540,8 +540,7 @@ describe('dc.bubbleChart', function () {
     });
 
     describe('iris filtering', function () {
-        /* jshint camelcase: false */
-        // jscs:disable requireCamelCaseOrUpperCaseIdentifiers
+        /* eslint camelcase: 0 */
         // 2-chart version of from http://bl.ocks.org/gordonwoodhull/14c623b95993808d69620563508edba6
         var irisData, heatMap, sepalDim, sepalGroup;
         beforeEach(function () {
@@ -756,7 +755,5 @@ describe('dc.bubbleChart', function () {
                 testBubbleLabelsCol3(chart);
             });
         });
-        /* jshint camelcase: true */
-        // jscs enable: requireCamelCaseOrUpperCaseIdentifiers
     });
 });

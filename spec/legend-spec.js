@@ -145,14 +145,12 @@ describe('dc.legend', function () {
 
         describe('with .horizontal(true) and .autoItemWidth(true)', function () {
 
-            var fixedWidthOffset1, fixedWidthOffset2,
-                autoWidthCoords;
+            var fixedWidthOffset1, autoWidthCoords;
 
             beforeEach(function () {
                 chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
                 chart.render();
                 fixedWidthOffset1 = coordsFromTranslate(legendItem(1).attr('transform')).x;
-                fixedWidthOffset2 = coordsFromTranslate(legendItem(2).attr('transform')).x;
                 chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true).legendWidth(160));
                 chart.render();
                 autoWidthCoords = d3.range(3).map(function (i) {

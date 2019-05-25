@@ -1,5 +1,4 @@
-/* jscs:disable validateQuoteMarks, maximumLineLength */
-/* jshint -W109, -W101, -W098 */
+/* eslint "max-len": 0, "quotes": 0, "no-unused-vars": 0 */
 function dateCleaner (e) {
     e.dd = d3.isoParse(e.date);
 }
@@ -233,6 +232,3 @@ function loadIrisFixture () {
             "5.9,3,5.1,1.8,virginica"
     );
 }
-
-/* jscs:enable validateQuoteMarks, maximumLineLength */
-/* jshint +W109, +W101, +W098 */

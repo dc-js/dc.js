@@ -87,6 +87,7 @@ dc.chartRegistry = (function () {
          * @memberof dc.chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
+         * @return {undefined}
          */
         register: function (chart, group) {
             group = initializeChartGroup(group);
@@ -100,6 +101,7 @@ dc.chartRegistry = (function () {
          * @memberof dc.chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
+         * @return {undefined}
          */
         deregister: function (chart, group) {
             group = initializeChartGroup(group);
@@ -116,6 +118,7 @@ dc.chartRegistry = (function () {
          * @method clear
          * @memberof dc.chartRegistry
          * @param {String} group Group name
+         * @return {undefined}
          */
         clear: function (group) {
             if (group) {
@@ -147,6 +150,7 @@ dc.chartRegistry = (function () {
  * @method registerChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
+ * @return {undefined}
  */
 dc.registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
@@ -159,7 +163,8 @@ dc.registerChart = function (chart, group) {
  * @method deregisterChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
- */
+ * @return {undefined}
+*/
 dc.deregisterChart = function (chart, group) {
     dc.chartRegistry.deregister(chart, group);
 };
@@ -180,6 +185,7 @@ dc.hasChart = function (chart) {
  * @memberof dc
  * @method deregisterAllCharts
  * @param {String} group Group name
+ * @return {undefined}
  */
 dc.deregisterAllCharts = function (group) {
     dc.chartRegistry.clear(group);
@@ -191,6 +197,7 @@ dc.deregisterAllCharts = function (group) {
  * @memberof dc
  * @method filterAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -205,6 +212,7 @@ dc.filterAll = function (group) {
  * @memberof dc
  * @method refocusAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.refocusAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -221,6 +229,7 @@ dc.refocusAll = function (group) {
  * @memberof dc
  * @method renderAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.renderAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -241,6 +250,7 @@ dc.renderAll = function (group) {
  * @memberof dc
  * @method redrawAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.redrawAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -361,6 +371,7 @@ dc.units.integers = function (start, end) {
  * function is not called.
  * @method ordinal
  * @memberof dc.units
+ * @return {uncallable}
  * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}

@@ -10,7 +10,6 @@ describe('dc.sunburstChart', function () {
     var countryRegionStateDimension, countryRegionStateGroup;
     var statusDimension;
     var dateDimension;
-    var statusGroup, statusMultiGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -33,25 +32,6 @@ describe('dc.sunburstChart', function () {
             return d3.utcDay(d.dd);
         });
 
-        statusGroup = statusDimension.group();
-        statusMultiGroup = statusGroup.reduce(
-            //add
-            function (p, v) {
-                ++p.count;
-                p.value += +v.value;
-                return p;
-            },
-            //remove
-            function (p, v) {
-                --p.count;
-                p.value -= +v.value;
-                return p;
-            },
-            //init
-            function () {
-                return {count: 0, value: 0};
-            }
-        );
     });
 
     function buildChart (id) {

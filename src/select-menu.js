@@ -156,10 +156,11 @@ dc.selectMenu = function (parent, chartGroup) {
      * Get or set the function that controls the ordering of option tags in the
      * select menu. By default options are ordered by the group key in ascending
      * order.
-     * @name order
+     * @method order
      * @memberof dc.selectMenu
      * @instance
      * @param {Function} [order]
+     * @returns {Function|dc.selectMenu}
      * @example
      * // order by the group's value
      * chart.order(function (a,b) {
@@ -176,28 +177,30 @@ dc.selectMenu = function (parent, chartGroup) {
 
     /**
      * Get or set the text displayed in the options used to prompt selection.
-     * @name promptText
+     * @method promptText
      * @memberof dc.selectMenu
      * @instance
      * @param {String} [promptText='Select all']
+     * @returns {String|dc.selectMenu}
      * @example
      * chart.promptText('All states');
      **/
-    _chart.promptText = function (_) {
+    _chart.promptText = function (promptText) {
         if (!arguments.length) {
             return _promptText;
         }
-        _promptText = _;
+        _promptText = promptText;
         return _chart;
     };
 
     /**
      * Get or set the function that filters option tags prior to display. By default options
      * with a value of < 1 are not displayed.
-     * @name filterDisplayed
+     * @method filterDisplayed
      * @memberof dc.selectMenu
      * @instance
      * @param {function} [filterDisplayed]
+     * @returns {Function|dc.selectMenu}
      * @example
      * // display all options override the `filterDisplayed` function:
      * chart.filterDisplayed(function () {
@@ -215,10 +218,11 @@ dc.selectMenu = function (parent, chartGroup) {
     /**
      * Controls the type of select menu. Setting it to true converts the underlying
      * HTML tag into a multiple select.
-     * @name multiple
+     * @method multiple
      * @memberof dc.selectMenu
      * @instance
      * @param {boolean} [multiple=false]
+     * @returns {boolean|dc.selectMenu}
      * @example
      * chart.multiple(true);
      **/
@@ -236,10 +240,11 @@ dc.selectMenu = function (parent, chartGroup) {
      * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
      * when only the prompt value is selected. If `null` (the default), no filtering will occur when
      * just the prompt is selected.
-     * @name promptValue
+     * @method promptValue
      * @memberof dc.selectMenu
      * @instance
      * @param {?*} [promptValue=null]
+     * @returns {*|dc.selectMenu}
      **/
     _chart.promptValue = function (promptValue) {
         if (!arguments.length) {
@@ -254,10 +259,11 @@ dc.selectMenu = function (parent, chartGroup) {
      * Controls the number of items to show in the select menu, when `.multiple()` is true. This
      * controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
      * the `select` element. If `null` (the default), uses the browser's default height.
-     * @name numberItems
+     * @method numberItems
      * @memberof dc.selectMenu
      * @instance
      * @param {?number} [numberVisible=null]
+     * @returns {number|dc.selectMenu}
      * @example
      * chart.numberVisible(10);
      **/
