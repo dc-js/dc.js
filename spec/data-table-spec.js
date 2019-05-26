@@ -16,8 +16,8 @@ describe('dc.dataTable', function () {
             return d.countrycode;
         });
         valueGroup = function () {
-                return 'Data Table';
-            };
+            return 'Data Table';
+        };
 
         id = 'data-table';
         appendChartID(id);

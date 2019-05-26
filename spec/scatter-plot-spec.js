@@ -301,11 +301,14 @@ describe('dc.scatterPlot', function () {
 
                 var isOpaque = function () {
                     return +d3.select(this).attr('opacity') === 0.9; // test nonemptyOpacity
-                }, isTranslucent = function () {
+                };
+                var isTranslucent = function () {
                     return +d3.select(this).attr('opacity') === 0.25; // test excludedOpacity
-                }, isBlue = function () {
+                };
+                var isBlue = function () {
                     return d3.select(this).attr('fill') === '#1f77b4';
-                }, isGrey = function () {
+                };
+                var isGrey = function () {
                     return d3.select(this).attr('fill') === '#ccc'; // test excludedColor
                 };
 
@@ -508,7 +511,7 @@ describe('dc.scatterPlot', function () {
                 .dimension(dimension)
                 .group(group)
                 .x(d3.scaleBand())
-              // ordinal axes work but you have to set the padding for both axes & give the y domain
+            // ordinal axes work but you have to set the padding for both axes & give the y domain
                 .y(d3.scaleBand().paddingInner(1).domain(group.all().map(function (kv) { return kv.key[1]; })))
                 .xUnits(dc.units.ordinal)
                 ._rangeBandPadding(1)

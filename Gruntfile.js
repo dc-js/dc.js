@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    const sass = require('node-sass');
+    var sass = require('node-sass');
 
     grunt.initConfig({
         conf: config,
@@ -115,10 +115,10 @@ module.exports = function (grunt) {
             },
             reload: {
                 files: ['<%= conf.pkg.name %>.js',
-                    '<%= conf.pkg.name %>.css',
-                    '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
-                    '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
-                    '<%= conf.pkg.name %>.min.js'],
+                        '<%= conf.pkg.name %>.css',
+                        '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
+                        '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
+                        '<%= conf.pkg.name %>.min.js'],
                 options: {
                     livereload: true
                 }
@@ -270,8 +270,13 @@ module.exports = function (grunt) {
                         platform: 'Windows 10'
                     }
                 },
-                browsers: ['slInternetExplorer11', 'slInternetExplorer11win8', 'slMicrosoftEdge',
-                    'slFirefoxLinux', 'slSafari'],
+                browsers: [
+                    'slInternetExplorer11',
+                    'slInternetExplorer11win8',
+                    'slMicrosoftEdge',
+                    'slFirefoxLinux',
+                    'slSafari'
+                ],
                 concurrency: 2,
                 browserNoActivityTimeout: 120000,
                 reporters: ['saucelabs', 'summary'],
@@ -471,8 +476,10 @@ module.exports = function (grunt) {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
     });
-    grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a ' +
-        'baseline rendering', function (option) {
+    grunt.registerTask(
+        'test-stock-example',
+        'Test a new rendering of the stock example web page against a baseline rendering',
+        function (option) {
             require('./regression/stock-regression-test.js').testStockExample(this.async(), option === 'diff');
         });
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {

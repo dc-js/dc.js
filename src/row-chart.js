@@ -299,6 +299,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
+     * @param {d3.axis} [xAxis]
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
@@ -307,7 +308,7 @@ dc.rowChart = function (parent, chartGroup) {
      * // use a top-oriented axis. Note: position of the axis and grid lines will need to
      * // be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
      * chart.xAxis(d3.axisTop())
-     * @returns {d3.axis}
+     * @returns {d3.axis|dc.rowChart}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {

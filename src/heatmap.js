@@ -144,14 +144,19 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     /**
-     #### .rowOrdering([orderFunction])
-     Get or set an accessor to order the rows.  Default is d3.ascending.
+     * Get or set a comparator to order the rows.
+     * Default is {@link https://github.com/d3/d3-array#ascending d3.ascending}.
+     * @method rowOrdering
+     * @memberof dc.heatMap
+     * @instance
+     * @param  {Function} [rowOrdering]
+     * @returns {Function|dc.heatMap}
      */
-    _chart.rowOrdering = function (_) {
+    _chart.rowOrdering = function (rowOrdering) {
         if (!arguments.length) {
             return _rowOrdering;
         }
-        _rowOrdering = _;
+        _rowOrdering = rowOrdering;
         return _chart;
     };
 
@@ -173,14 +178,19 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     /**
-     #### .colOrdering([orderFunction])
-     Get or set an accessor to order the cols.  Default is ascending.
+     * Get or set a comparator to order the columns.
+     * Default is  {@link https://github.com/d3/d3-array#ascending d3.ascending}.
+     * @method colOrdering
+     * @memberof dc.heatMap
+     * @instance
+     * @param  {Function} [colOrdering]
+     * @returns {Function|dc.heatMap}
      */
-    _chart.colOrdering = function (_) {
+    _chart.colOrdering = function (colOrdering) {
         if (!arguments.length) {
             return _colOrdering;
         }
-        _colOrdering = _;
+        _colOrdering = colOrdering;
         return _chart;
     };
 

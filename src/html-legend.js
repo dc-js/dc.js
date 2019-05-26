@@ -1,7 +1,6 @@
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
  * labels.
- *
  * @class htmlLegend
  * @memberof dc
  * @example
@@ -70,52 +69,71 @@ dc.htmlLegend = function () {
     };
 
     /**
-     #### .container([selector])
-     Set the container selector for the legend widget. Required.
+     * Set the container selector for the legend widget. Required.
+     * @method container
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [container]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.container = function (c) {
+    _legend.container = function (container) {
         if (!arguments.length) {
             return _container;
         }
-        _container = d3.select(c);
+        _container = d3.select(container);
         return _legend;
     };
 
     /**
-     #### .legendItemClass([selector])
-     This can be optionally used to override class for legenditem and just use this class style.
-     The reason to have this is so this can be done for a particular chart rather than overriding the style for all charts
-     Setting this will disable the highlighting of selected items also.
+     * This can be optionally used to override class for legenditem and just use this class style.
+     * This is helpful for overriding the style of a particular chart rather than overriding
+     * the style for all charts.
+     *
+     * Setting this will disable the highlighting of selected items also.
+     * @method legendItemClass
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [legendItemClass]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.legendItemClass = function (c) {
+    _legend.legendItemClass = function (legendItemClass) {
         if (!arguments.length) {
             return _legendItemClass;
         }
-        _legendItemClass = c;
+        _legendItemClass = legendItemClass;
         return _legend;
     };
 
     /**
-     #### .highlightSelected([boolean])
-     This can be optionally used to enable highlighting legends for the selections/filters for the chart.
+     * This can be optionally used to enable highlighting legends for the selections/filters for the
+     * chart.
+     * @method highlightSelected
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [highlightSelected]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.highlightSelected = function (c) {
+    _legend.highlightSelected = function (highlightSelected) {
         if (!arguments.length) {
             return _highlightSelected;
         }
-        _highlightSelected = c;
+        _highlightSelected = highlightSelected;
         return _legend;
     };
 
     /**
-     #### .horizontal([boolean])
-     Display the legend horizontally instead of vertically
+     * Display the legend horizontally instead of vertically
+     * @method horizontal
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [horizontal]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.horizontal = function (b) {
+    _legend.horizontal = function (horizontal) {
         if (!arguments.length) {
             return _horizontal;
         }
-        _horizontal = b;
+        _horizontal = horizontal;
         return _legend;
     };
 

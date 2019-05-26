@@ -80,7 +80,7 @@ describe('dc.pieChart', function () {
 
     describe('generation', function () {
         var chart,
-          countryChart;
+            countryChart;
 
         beforeEach(function () {
             chart = buildChart('pie-chart-age');
