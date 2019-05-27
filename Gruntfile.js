@@ -141,6 +141,7 @@ module.exports = function (grunt) {
                     helpers: [
                         '<%= conf.web %>/js/jasmine-jsreporter.js',
                         '<%= conf.web %>/js/compare-versions.js',
+                        '<%= conf.web %>/js/jasmine-fake-sendMessage.js',
                         '<%= conf.spec %>/helpers/*.js'
                     ],
                     styles: [
