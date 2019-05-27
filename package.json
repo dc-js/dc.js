@@ -46,7 +46,7 @@
     "grunt-fileindex": "~0.1",
     "grunt-gh-pages": "^3.1.0",
     "grunt-jsdoc": "^2.4.0",
-    "grunt-jsdoc-to-markdown": "4.x",
+    "grunt-jsdoc-to-markdown": "github:dc-js/grunt-jsdoc-to-markdown",
     "grunt-karma": "^3.0.2",
     "grunt-sass": "^3.0.2",
     "grunt-shell": "~2.1",
