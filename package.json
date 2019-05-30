@@ -65,7 +65,7 @@
     "promise-polyfill": "^8.1.0",
     "reductio": "0.6.x",
     "time-grunt": "~1.4",
-    "uglify-js": "^3.5.15",
+    "uglify-js": "^3.6.0",
     "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
