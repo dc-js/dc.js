@@ -206,13 +206,13 @@ if (!Array.prototype.find) {
         function (p, v) {
             // Retrieve the data value, if not Infinity or null add it.
             let dv = v.age;
-            if (dv != Infinity && dv != null) p.push(dv);
+            if (dv != Infinity && dv != null) p.splice(d3.bisectLeft(p, dv), 0, dv);
             return p;
         },
         function (p, v) {
             // Retrieve the data value, if not Infinity or null remove it.
             let dv = v.age;
-            if (dv != Infinity && dv != null) p.splice(p.indexOf(dv), 1);
+            if (dv != Infinity && dv != null) p.splice(d3.bisectLeft(p, dv), 1);
             return p;
         },
         function () {
@@ -260,13 +260,13 @@ if (!Array.prototype.find) {
         function (p, v) {
             // Retrieve the data value, if not Infinity or null add it.
             let dv = v.age;
-            if (dv != Infinity && dv != null) p.push(dv);
+            if (dv != Infinity && dv != null) p.splice(d3.bisectLeft(p, dv), 0, dv);
             return p;
         },
         function (p, v) {
             // Retrieve the data value, if not Infinity or null remove it.
             let dv = v.age;
-            if (dv != Infinity && dv != null) p.splice(p.indexOf(dv), 1);
+            if (dv != Infinity && dv != null) p.splice(d3.bisectLeft(p, dv), 1);
             return p;
         },
         function () {

@@ -34,11 +34,12 @@ d3.csv("morley.csv").then(function(experiments) {
       experimentDimension = ndx.dimension(function(d) {return "exp-" + d.Expt;}),
       speedArrayGroup     = experimentDimension.group().reduce(
         function(p,v) {
-          p.push(v.Speed);
+          // keep array sorted for efficiency
+          p.splice(d3.bisectLeft(p, v.Speed), 0, v.Speed);
           return p;
         },
         function(p,v) {
-          p.splice(p.indexOf(v.Speed), 1);
+          p.splice(d3.bisectLeft(p, v.Speed), 1);
           return p;
         },
         function() {

@@ -938,7 +938,7 @@ module.exports = result;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
-module.exports={"version":"1.4.6"}
+module.exports={"version":"1.4.7"}
 },{}],4:[function(require,module,exports){
 if (typeof Uint8Array !== "undefined") {
   var crossfilter_array8 = function(n) { return new Uint8Array(n); };

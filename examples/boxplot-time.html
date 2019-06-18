@@ -38,11 +38,11 @@ d3.csv("monthly-move.csv").then(function(data) {
       monthDimension  = ndx.dimension(function(d) {return d3.timeMonth(d.date); }),
       closeGroup      = monthDimension.group().reduce(
         function(p,v) {
-          p.push(v.close);
+          p.splice(d3.bisectLeft(p, v.close), 0, v.close);
           return p;
         },
         function(p,v) {
-          p.splice(p.indexOf(v.close), 1);
+          p.splice(d3.bisectLeft(p, v.close), 1);
           return p;
         },
         function() {

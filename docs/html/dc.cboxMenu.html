@@ -348,23 +348,93 @@ cbox.title(function (d){
     
 
     
-        <h3 class="subsection-title">Members</h3>
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
             
 <hr>
-<dt class="name" id="filterDisplayed">
-    <h4 id="filterDisplayed"><span class="type-signature"></span>filterDisplayed<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="filterDisplayed"><span class="type-signature"></span>filterDisplayed( [filterDisplayed])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Get or set the function that filters options prior to display. By default options
 with a value of &lt; 1 are not displayed.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>filterDisplayed</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -404,7 +474,7 @@ with a value of &lt; 1 are not displayed.</p>
 		<ul class="dummy">
 			<li>
 				<a href="cbox-menu.js.html">cbox-menu.js</a>,
-				 <a href="cbox-menu.js.html#sunlight-1-line-230">line 230</a>
+				 <a href="cbox-menu.js.html#sunlight-1-line-232">line 232</a>
 			</li>
 		</ul>
 	</dd>
@@ -417,6 +487,41 @@ with a value of &lt; 1 are not displayed.</p>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+|
+
+<span class="param-type"><a href="dc.cboxMenu.html">dc.cboxMenu</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Example</h5>
@@ -433,18 +538,94 @@ chart.filterDisplayed(function () {
         
             
 <hr>
-<dt class="name" id="multiple">
-    <h4 id="multiple"><span class="type-signature"></span>multiple<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="multiple"><span class="type-signature"></span>multiple( [multiple])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Controls the type of input element. Setting it to true converts
 the HTML <code>input</code> tags from radio buttons to checkboxes.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>multiple</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -484,7 +665,7 @@ the HTML <code>input</code> tags from radio buttons to checkboxes.</p>
 		<ul class="dummy">
 			<li>
 				<a href="cbox-menu.js.html">cbox-menu.js</a>,
-				 <a href="cbox-menu.js.html#sunlight-1-line-251">line 251</a>
+				 <a href="cbox-menu.js.html#sunlight-1-line-254">line 254</a>
 			</li>
 		</ul>
 	</dd>
@@ -499,6 +680,41 @@ the HTML <code>input</code> tags from radio buttons to checkboxes.</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+|
+
+<span class="param-type"><a href="dc.cboxMenu.html">dc.cboxMenu</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">chart.multiple(true);</pre>
@@ -510,12 +726,13 @@ the HTML <code>input</code> tags from radio buttons to checkboxes.</p>
         
             
 <hr>
-<dt class="name" id="order">
-    <h4 id="order"><span class="type-signature"></span>order<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="order"><span class="type-signature"></span>order( [order])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Get or set the function that controls the ordering of option tags in the
@@ -523,6 +740,73 @@ cbox menu. By default options are ordered by the group key in ascending
 order.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>order</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -577,6 +861,41 @@ order.</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+|
+
+<span class="param-type"><a href="dc.cboxMenu.html">dc.cboxMenu</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// order by the group&#x27;s value
@@ -591,17 +910,93 @@ chart.order(function (a,b) {
         
             
 <hr>
-<dt class="name" id="promptText">
-    <h4 id="promptText"><span class="type-signature"></span>promptText<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="promptText"><span class="type-signature"></span>promptText( [promptText])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Get or set the text displayed in the options used to prompt selection.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>promptText</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    'Select all'
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -641,7 +1036,7 @@ chart.order(function (a,b) {
 		<ul class="dummy">
 			<li>
 				<a href="cbox-menu.js.html">cbox-menu.js</a>,
-				 <a href="cbox-menu.js.html#sunlight-1-line-213">line 213</a>
+				 <a href="cbox-menu.js.html#sunlight-1-line-214">line 214</a>
 			</li>
 		</ul>
 	</dd>
@@ -654,6 +1049,41 @@ chart.order(function (a,b) {
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">String</span>
+|
+
+<span class="param-type"><a href="dc.cboxMenu.html">dc.cboxMenu</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Example</h5>
@@ -667,12 +1097,13 @@ chart.order(function (a,b) {
         
             
 <hr>
-<dt class="name" id="promptValue">
-    <h4 id="promptValue"><span class="type-signature"></span>promptValue<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="promptValue"><span class="type-signature"></span>promptValue( [promptValue])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Controls the default value to be used for
@@ -681,6 +1112,83 @@ when only the prompt value is selected. If <code>null</code> (the default), no f
 just the prompt is selected.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>promptValue</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">*</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                    null
+                
+                </td>
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -720,7 +1228,7 @@ just the prompt is selected.</p>
 		<ul class="dummy">
 			<li>
 				<a href="cbox-menu.js.html">cbox-menu.js</a>,
-				 <a href="cbox-menu.js.html#sunlight-1-line-274">line 274</a>
+				 <a href="cbox-menu.js.html#sunlight-1-line-278">line 278</a>
 			</li>
 		</ul>
 	</dd>
@@ -735,11 +1243,44 @@ just the prompt is selected.</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+|
+
+<span class="param-type"><a href="dc.cboxMenu.html">dc.cboxMenu</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         </dl>
-    
-
     
 
     
@@ -791,9 +1332,9 @@ just the prompt is selected.</p>
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.2</a>
 	
-		on Fri Mar 22nd 2019
+		on Tue Jun 18th 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
