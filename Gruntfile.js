@@ -36,17 +36,6 @@ module.exports = function (grunt) {
                     sourceMap: true,
                     banner: '<%= conf.banner %>'
                 }
-            },
-            welcome: {
-                src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
-                dest: 'welcome.md',
-                options: {
-                    process: function (src, filepath) {
-                        return /svg/.test(filepath) ?
-                            src.split('\n').slice(5).join('\n') :
-                            src;
-                    }
-                }
             }
         },
         sass: {
@@ -98,7 +87,7 @@ module.exports = function (grunt) {
         },
         watch: {
             jsdoc2md: {
-                files: ['welcome.md', '<%= conf.src %>/**/*.js'],
+                files: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js'],
                 tasks: ['build', 'jsdoc', 'jsdoc2md']
             },
             scripts: {
@@ -285,7 +274,7 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                src: ['welcome.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
+                src: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
                 options: {
                     destination: 'web/docs/html',
                     template: 'node_modules/ink-docstrap/template',
