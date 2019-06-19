@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.0.12  
+**Version**: 3.0.13  
 **Example**  
 ```js
 // Example chaining
@@ -136,7 +136,7 @@ chart.width(300)
         * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
         * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-        * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code>
+        * [.xAxis([xAxis])](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
         * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -157,6 +157,10 @@ chart.width(300)
         * [.maxItems([maxItems])](#dc.legend+maxItems) ⇒ [<code>legend</code>](#dc.legend)
     * [.htmlLegend](#dc.htmlLegend)
         * [new htmlLegend()](#new_dc.htmlLegend_new)
+        * [.container([container])](#dc.htmlLegend+container) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+        * [.legendItemClass([legendItemClass])](#dc.htmlLegend+legendItemClass) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+        * [.highlightSelected([highlightSelected])](#dc.htmlLegend+highlightSelected) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+        * [.horizontal([horizontal])](#dc.htmlLegend+horizontal) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
         * [.legendText([legendText])](#dc.htmlLegend+legendText) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
         * [.maxItems([maxItems])](#dc.htmlLegend+maxItems) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
     * [.scatterPlot](#dc.scatterPlot)
@@ -183,7 +187,9 @@ chart.width(300)
         * [.colsLabel([labelFunction])](#dc.heatMap+colsLabel) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
         * [.rowsLabel([labelFunction])](#dc.heatMap+rowsLabel) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
         * [.rows([rows])](#dc.heatMap+rows) ⇒ <code>Array.&lt;(String\|Number)&gt;</code> \| [<code>heatMap</code>](#dc.heatMap)
+        * [.rowOrdering([rowOrdering])](#dc.heatMap+rowOrdering) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
         * [.cols([cols])](#dc.heatMap+cols) ⇒ <code>Array.&lt;(String\|Number)&gt;</code> \| [<code>heatMap</code>](#dc.heatMap)
+        * [.colOrdering([colOrdering])](#dc.heatMap+colOrdering) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
         * [.boxOnClick([handler])](#dc.heatMap+boxOnClick) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
         * [.xAxisOnClick([handler])](#dc.heatMap+xAxisOnClick) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
         * [.yAxisOnClick([handler])](#dc.heatMap+yAxisOnClick) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
@@ -203,12 +209,12 @@ chart.width(300)
         * [.boldOutlier([show])](#dc.boxPlot+boldOutlier) ⇒ <code>Boolean</code> \| [<code>boxPlot</code>](#dc.boxPlot)
     * [.selectMenu](#dc.selectMenu)
         * [new selectMenu(parent, [chartGroup])](#new_dc.selectMenu_new)
-        * [.order](#dc.selectMenu+order)
-        * [.promptText](#dc.selectMenu+promptText)
-        * [.filterDisplayed](#dc.selectMenu+filterDisplayed)
-        * [.multiple](#dc.selectMenu+multiple)
-        * [.promptValue](#dc.selectMenu+promptValue)
-        * [.numberItems](#dc.selectMenu+numberItems)
+        * [.order([order])](#dc.selectMenu+order) ⇒ <code>function</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+        * [.promptText([promptText])](#dc.selectMenu+promptText) ⇒ <code>String</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+        * [.filterDisplayed([filterDisplayed])](#dc.selectMenu+filterDisplayed) ⇒ <code>function</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+        * [.multiple([multiple])](#dc.selectMenu+multiple) ⇒ <code>boolean</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+        * [.promptValue([promptValue])](#dc.selectMenu+promptValue) ⇒ <code>\*</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+        * [.numberItems([numberVisible])](#dc.selectMenu+numberItems) ⇒ <code>number</code> \| [<code>selectMenu</code>](#dc.selectMenu)
     * [.textFilterWidget](#dc.textFilterWidget)
         * [new textFilterWidget(parent, [chartGroup])](#new_dc.textFilterWidget_new)
         * [.normalize](#dc.textFilterWidget+normalize) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
@@ -216,11 +222,11 @@ chart.width(300)
         * [.filterFunctionFactory](#dc.textFilterWidget+filterFunctionFactory) ⇒ [<code>textFilterWidget</code>](#dc.textFilterWidget) \| <code>function</code>
     * [.cboxMenu](#dc.cboxMenu)
         * [new cboxMenu(parent, [chartGroup])](#new_dc.cboxMenu_new)
-        * [.order](#dc.cboxMenu+order)
-        * [.promptText](#dc.cboxMenu+promptText)
-        * [.filterDisplayed](#dc.cboxMenu+filterDisplayed)
-        * [.multiple](#dc.cboxMenu+multiple)
-        * [.promptValue](#dc.cboxMenu+promptValue)
+        * [.order([order])](#dc.cboxMenu+order) ⇒ <code>function</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+        * [.promptText([promptText])](#dc.cboxMenu+promptText) ⇒ <code>String</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+        * [.filterDisplayed([filterDisplayed])](#dc.cboxMenu+filterDisplayed) ⇒ <code>function</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+        * [.multiple([multiple])](#dc.cboxMenu+multiple) ⇒ <code>Boolean</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+        * [.promptValue([promptValue])](#dc.cboxMenu+promptValue) ⇒ <code>\*</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
     * [.baseMixin](#dc.baseMixin) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.height([height])](#dc.baseMixin+height) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.width([width])](#dc.baseMixin+width) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -232,8 +238,8 @@ chart.width(300)
         * [.group([group], [name])](#dc.baseMixin+group) ⇒ <code>crossfilter.group</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.ordering([orderFunction])](#dc.baseMixin+ordering) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.filterAll()](#dc.baseMixin+filterAll) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
-        * [.select()](#dc.baseMixin+select) ⇒ <code>d3.selection</code>
-        * [.selectAll()](#dc.baseMixin+selectAll) ⇒ <code>d3.selection</code>
+        * [.select(sel)](#dc.baseMixin+select) ⇒ <code>d3.selection</code>
+        * [.selectAll(sel)](#dc.baseMixin+selectAll) ⇒ <code>d3.selection</code>
         * [.anchor([parent], [chartGroup])](#dc.baseMixin+anchor) ⇒ <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.anchorName()](#dc.baseMixin+anchorName) ⇒ <code>String</code>
         * [.root([rootElement])](#dc.baseMixin+root) ⇒ <code>HTMLElement</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -247,7 +253,7 @@ chart.width(300)
         * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.render()](#dc.baseMixin+render) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.redraw()](#dc.baseMixin+redraw) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
-        * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
+        * [.commitHandler(commitHandler)](#dc.baseMixin+commitHandler) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.redrawGroup()](#dc.baseMixin+redrawGroup) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.renderGroup()](#dc.baseMixin+renderGroup) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.hasFilterHandler([hasFilterHandler])](#dc.baseMixin+hasFilterHandler) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -258,7 +264,7 @@ chart.width(300)
         * [.replaceFilter([filter])](#dc.baseMixin+replaceFilter) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.filter([filter])](#dc.baseMixin+filter) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
         * [.filters()](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
-        * [.onClick(datum)](#dc.baseMixin+onClick)
+        * [.onClick(datum)](#dc.baseMixin+onClick) ⇒ <code>undefined</code>
         * [.filterHandler([filterHandler])](#dc.baseMixin+filterHandler) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.keyAccessor([keyAccessor])](#dc.baseMixin+keyAccessor) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
         * [.valueAccessor([valueAccessor])](#dc.baseMixin+valueAccessor) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -316,7 +322,7 @@ chart.width(300)
         * [.round([round])](#dc.coordinateGridMixin+round) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.brush([_])](#dc.coordinateGridMixin+brush) ⇒ <code>d3.brush</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-        * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
+        * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus) ⇒ <code>undefined</code>
         * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
         * [.parentBrushOn([brushOn])](#dc.coordinateGridMixin+parentBrushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.stackMixin](#dc.stackMixin) ⇒ [<code>stackMixin</code>](#dc.stackMixin)
@@ -342,15 +348,15 @@ chart.width(300)
     * [.dateFormat](#dc.dateFormat) : <code>function</code>
     * [.chartRegistry](#dc.chartRegistry) : <code>object</code>
         * [.has(chart)](#dc.chartRegistry.has) ⇒ <code>Boolean</code>
-        * [.register(chart, [group])](#dc.chartRegistry.register)
-        * [.deregister(chart, [group])](#dc.chartRegistry.deregister)
-        * [.clear(group)](#dc.chartRegistry.clear)
+        * [.register(chart, [group])](#dc.chartRegistry.register) ⇒ <code>undefined</code>
+        * [.deregister(chart, [group])](#dc.chartRegistry.deregister) ⇒ <code>undefined</code>
+        * [.clear(group)](#dc.chartRegistry.clear) ⇒ <code>undefined</code>
         * [.list([group])](#dc.chartRegistry.list) ⇒ <code>Array.&lt;Object&gt;</code>
     * [.units](#dc.units) : <code>object</code>
         * [.fp](#dc.units.fp) : <code>object</code>
             * [.precision(precision)](#dc.units.fp.precision) ⇒ <code>function</code>
         * [.integers(start, end)](#dc.units.integers) ⇒ <code>Number</code>
-        * [.ordinal()](#dc.units.ordinal)
+        * [.ordinal()](#dc.units.ordinal) ⇒ <code>uncallable</code>
     * [.printers](#dc.printers) : <code>object</code>
         * [.filters(filters)](#dc.printers.filters) ⇒ <code>String</code>
         * [.filter(filter)](#dc.printers.filter) ⇒ <code>String</code>
@@ -378,14 +384,14 @@ chart.width(300)
             * [new RangedTwoDimensionalFilter(filter)](#new_dc.filters.RangedTwoDimensionalFilter_new)
         * [.HierarchyFilter](#dc.filters.HierarchyFilter)
             * [new HierarchyFilter(path)](#new_dc.filters.HierarchyFilter_new)
-    * [.registerChart(chart, [group])](#dc.registerChart)
-    * [.deregisterChart(chart, [group])](#dc.deregisterChart)
+    * [.registerChart(chart, [group])](#dc.registerChart) ⇒ <code>undefined</code>
+    * [.deregisterChart(chart, [group])](#dc.deregisterChart) ⇒ <code>undefined</code>
     * [.hasChart(chart)](#dc.hasChart) ⇒ <code>Boolean</code>
-    * [.deregisterAllCharts(group)](#dc.deregisterAllCharts)
-    * [.filterAll([group])](#dc.filterAll)
-    * [.refocusAll([group])](#dc.refocusAll)
-    * [.renderAll([group])](#dc.renderAll)
-    * [.redrawAll([group])](#dc.redrawAll)
+    * [.deregisterAllCharts(group)](#dc.deregisterAllCharts) ⇒ <code>undefined</code>
+    * [.filterAll([group])](#dc.filterAll) ⇒ <code>undefined</code>
+    * [.refocusAll([group])](#dc.refocusAll) ⇒ <code>undefined</code>
+    * [.renderAll([group])](#dc.renderAll) ⇒ <code>undefined</code>
+    * [.redrawAll([group])](#dc.redrawAll) ⇒ <code>undefined</code>
     * [.transition(selection, [duration], [delay], [name])](#dc.transition) ⇒ <code>d3.transition</code> \| <code>d3.selection</code>
     * [.pluck(n, [f])](#dc.pluck) ⇒ <code>function</code>
 
@@ -1254,10 +1260,15 @@ counter.formatNumber(d3.format('.2g'))
 The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.
 
-An interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
-long as you specify the [order](#dc.dataTable+order) as `d3.descending`, since the data
-table will use `dimension.top()` to fetch the data in that case, and the method is equally
-supported on the crossfilter group as the crossfilter dimension.
+An interesting feature of the data table is that you can pass a crossfilter group to the
+`dimension`, if you want to show aggregated data instead of raw data rows. This requires no
+special code as long as you specify the [order](#dc.dataTable+order) as `d3.descending`,
+since the data table will use `dimension.top()` to fetch the data in that case, and the method is
+equally supported on the crossfilter group as the crossfilter dimension.
+
+If you want to display aggregated data in ascending order, you will need to wrap the group
+in a [fake dimension](https://github.com/dc-js/dc.js/wiki/FAQ#fake-dimensions) to support the
+`.bottom()` method. See the example linked below for more details.
 
 Note: Formerly the data table (and data grid chart) used the [group](#dc.dataTable+group) attribute as a
 keying function for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data
@@ -2265,7 +2276,7 @@ value specified here are relative to the underlying svg.
     * [new rowChart(parent, [chartGroup])](#new_dc.rowChart_new)
     * [.x([scale])](#dc.rowChart+x) ⇒ <code>d3.scale</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.renderTitleLabel([renderTitleLabel])](#dc.rowChart+renderTitleLabel) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
-    * [.xAxis()](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code>
+    * [.xAxis([xAxis])](#dc.rowChart+xAxis) ⇒ <code>d3.axis</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.fixedBarHeight([fixedBarHeight])](#dc.rowChart+fixedBarHeight) ⇒ <code>Boolean</code> \| <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.gap([gap])](#dc.rowChart+gap) ⇒ <code>Number</code> \| [<code>rowChart</code>](#dc.rowChart)
     * [.elasticX([elasticX])](#dc.rowChart+elasticX) ⇒ <code>Boolean</code> \| [<code>rowChart</code>](#dc.rowChart)
@@ -2320,12 +2331,17 @@ Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
 
 <a name="dc.rowChart+xAxis"></a>
 
-#### rowChart.xAxis() ⇒ <code>d3.axis</code>
+#### rowChart.xAxis([xAxis]) ⇒ <code>d3.axis</code> \| [<code>rowChart</code>](#dc.rowChart)
 Get or sets the x axis for the row chart instance.
 See the [d3.axis](https://github.com/d3/d3-axis/blob/master/README.md)
 documention for more information.
 
 **Kind**: instance method of [<code>rowChart</code>](#dc.rowChart)  
+
+| Param | Type |
+| --- | --- |
+| [xAxis] | <code>d3.axis</code> | 
+
 **Example**  
 ```js
 // customize x axis tick format
@@ -2573,6 +2589,10 @@ Maximum number of legend items to display
 
 * [.htmlLegend](#dc.htmlLegend)
     * [new htmlLegend()](#new_dc.htmlLegend_new)
+    * [.container([container])](#dc.htmlLegend+container) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+    * [.legendItemClass([legendItemClass])](#dc.htmlLegend+legendItemClass) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+    * [.highlightSelected([highlightSelected])](#dc.htmlLegend+highlightSelected) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+    * [.horizontal([horizontal])](#dc.htmlLegend+horizontal) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
     * [.legendText([legendText])](#dc.htmlLegend+legendText) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
     * [.maxItems([maxItems])](#dc.htmlLegend+maxItems) ⇒ [<code>htmlLegend</code>](#dc.htmlLegend)
 
@@ -2586,6 +2606,55 @@ labels.
 ```js
 chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
 ```
+<a name="dc.htmlLegend+container"></a>
+
+#### htmlLegend.container([container]) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+Set the container selector for the legend widget. Required.
+
+**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
+
+| Param | Type |
+| --- | --- |
+| [container] | <code>String</code> | 
+
+<a name="dc.htmlLegend+legendItemClass"></a>
+
+#### htmlLegend.legendItemClass([legendItemClass]) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+This can be optionally used to override class for legenditem and just use this class style.
+This is helpful for overriding the style of a particular chart rather than overriding
+the style for all charts.
+
+Setting this will disable the highlighting of selected items also.
+
+**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
+
+| Param | Type |
+| --- | --- |
+| [legendItemClass] | <code>String</code> | 
+
+<a name="dc.htmlLegend+highlightSelected"></a>
+
+#### htmlLegend.highlightSelected([highlightSelected]) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+This can be optionally used to enable highlighting legends for the selections/filters for the
+chart.
+
+**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
+
+| Param | Type |
+| --- | --- |
+| [highlightSelected] | <code>String</code> | 
+
+<a name="dc.htmlLegend+horizontal"></a>
+
+#### htmlLegend.horizontal([horizontal]) ⇒ <code>String</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
+Display the legend horizontally instead of vertically
+
+**Kind**: instance method of [<code>htmlLegend</code>](#dc.htmlLegend)  
+
+| Param | Type |
+| --- | --- |
+| [horizontal] | <code>String</code> | 
+
 <a name="dc.htmlLegend+legendText"></a>
 
 #### htmlLegend.legendText([legendText]) ⇒ <code>function</code> \| [<code>htmlLegend</code>](#dc.htmlLegend)
@@ -2918,7 +2987,9 @@ Get or set a function to format the value for the display.
     * [.colsLabel([labelFunction])](#dc.heatMap+colsLabel) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
     * [.rowsLabel([labelFunction])](#dc.heatMap+rowsLabel) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
     * [.rows([rows])](#dc.heatMap+rows) ⇒ <code>Array.&lt;(String\|Number)&gt;</code> \| [<code>heatMap</code>](#dc.heatMap)
+    * [.rowOrdering([rowOrdering])](#dc.heatMap+rowOrdering) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
     * [.cols([cols])](#dc.heatMap+cols) ⇒ <code>Array.&lt;(String\|Number)&gt;</code> \| [<code>heatMap</code>](#dc.heatMap)
+    * [.colOrdering([colOrdering])](#dc.heatMap+colOrdering) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
     * [.boxOnClick([handler])](#dc.heatMap+boxOnClick) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
     * [.xAxisOnClick([handler])](#dc.heatMap+xAxisOnClick) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
     * [.yAxisOnClick([handler])](#dc.heatMap+yAxisOnClick) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
@@ -2989,6 +3060,18 @@ the values will be fetched from the data using the value accessor.
 | --- | --- |
 | [rows] | <code>Array.&lt;(String\|Number)&gt;</code> | 
 
+<a name="dc.heatMap+rowOrdering"></a>
+
+#### heatMap.rowOrdering([rowOrdering]) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
+Get or set a comparator to order the rows.
+Default is [d3.ascending](https://github.com/d3/d3-array#ascending).
+
+**Kind**: instance method of [<code>heatMap</code>](#dc.heatMap)  
+
+| Param | Type |
+| --- | --- |
+| [rowOrdering] | <code>function</code> | 
+
 <a name="dc.heatMap+cols"></a>
 
 #### heatMap.cols([cols]) ⇒ <code>Array.&lt;(String\|Number)&gt;</code> \| [<code>heatMap</code>](#dc.heatMap)
@@ -3000,6 +3083,18 @@ the values will be fetched from the data using the key accessor.
 | Param | Type |
 | --- | --- |
 | [cols] | <code>Array.&lt;(String\|Number)&gt;</code> | 
+
+<a name="dc.heatMap+colOrdering"></a>
+
+#### heatMap.colOrdering([colOrdering]) ⇒ <code>function</code> \| [<code>heatMap</code>](#dc.heatMap)
+Get or set a comparator to order the columns.
+Default is  [d3.ascending](https://github.com/d3/d3-array#ascending).
+
+**Kind**: instance method of [<code>heatMap</code>](#dc.heatMap)  
+
+| Param | Type |
+| --- | --- |
+| [colOrdering] | <code>function</code> | 
 
 <a name="dc.heatMap+boxOnClick"></a>
 
@@ -3284,12 +3379,12 @@ chart.boldOutlier(true);
 
 * [.selectMenu](#dc.selectMenu)
     * [new selectMenu(parent, [chartGroup])](#new_dc.selectMenu_new)
-    * [.order](#dc.selectMenu+order)
-    * [.promptText](#dc.selectMenu+promptText)
-    * [.filterDisplayed](#dc.selectMenu+filterDisplayed)
-    * [.multiple](#dc.selectMenu+multiple)
-    * [.promptValue](#dc.selectMenu+promptValue)
-    * [.numberItems](#dc.selectMenu+numberItems)
+    * [.order([order])](#dc.selectMenu+order) ⇒ <code>function</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+    * [.promptText([promptText])](#dc.selectMenu+promptText) ⇒ <code>String</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+    * [.filterDisplayed([filterDisplayed])](#dc.selectMenu+filterDisplayed) ⇒ <code>function</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+    * [.multiple([multiple])](#dc.selectMenu+multiple) ⇒ <code>boolean</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+    * [.promptValue([promptValue])](#dc.selectMenu+promptValue) ⇒ <code>\*</code> \| [<code>selectMenu</code>](#dc.selectMenu)
+    * [.numberItems([numberVisible])](#dc.selectMenu+numberItems) ⇒ <code>number</code> \| [<code>selectMenu</code>](#dc.selectMenu)
 
 <a name="new_dc.selectMenu_new"></a>
 
@@ -3317,12 +3412,12 @@ select.title(function (d){
 ```
 <a name="dc.selectMenu+order"></a>
 
-#### selectMenu.order
+#### selectMenu.order([order]) ⇒ <code>function</code> \| [<code>selectMenu</code>](#dc.selectMenu)
 Get or set the function that controls the ordering of option tags in the
 select menu. By default options are ordered by the group key in ascending
 order.
 
-**Kind**: instance property of [<code>selectMenu</code>](#dc.selectMenu)  
+**Kind**: instance method of [<code>selectMenu</code>](#dc.selectMenu)  
 
 | Param | Type |
 | --- | --- |
@@ -3337,10 +3432,10 @@ chart.order(function (a,b) {
 ```
 <a name="dc.selectMenu+promptText"></a>
 
-#### selectMenu.promptText
+#### selectMenu.promptText([promptText]) ⇒ <code>String</code> \| [<code>selectMenu</code>](#dc.selectMenu)
 Get or set the text displayed in the options used to prompt selection.
 
-**Kind**: instance property of [<code>selectMenu</code>](#dc.selectMenu)  
+**Kind**: instance method of [<code>selectMenu</code>](#dc.selectMenu)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3352,11 +3447,11 @@ chart.promptText('All states');
 ```
 <a name="dc.selectMenu+filterDisplayed"></a>
 
-#### selectMenu.filterDisplayed
+#### selectMenu.filterDisplayed([filterDisplayed]) ⇒ <code>function</code> \| [<code>selectMenu</code>](#dc.selectMenu)
 Get or set the function that filters option tags prior to display. By default options
 with a value of < 1 are not displayed.
 
-**Kind**: instance property of [<code>selectMenu</code>](#dc.selectMenu)  
+**Kind**: instance method of [<code>selectMenu</code>](#dc.selectMenu)  
 
 | Param | Type |
 | --- | --- |
@@ -3371,11 +3466,11 @@ chart.filterDisplayed(function () {
 ```
 <a name="dc.selectMenu+multiple"></a>
 
-#### selectMenu.multiple
+#### selectMenu.multiple([multiple]) ⇒ <code>boolean</code> \| [<code>selectMenu</code>](#dc.selectMenu)
 Controls the type of select menu. Setting it to true converts the underlying
 HTML tag into a multiple select.
 
-**Kind**: instance property of [<code>selectMenu</code>](#dc.selectMenu)  
+**Kind**: instance method of [<code>selectMenu</code>](#dc.selectMenu)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3387,13 +3482,13 @@ chart.multiple(true);
 ```
 <a name="dc.selectMenu+promptValue"></a>
 
-#### selectMenu.promptValue
+#### selectMenu.promptValue([promptValue]) ⇒ <code>\*</code> \| [<code>selectMenu</code>](#dc.selectMenu)
 Controls the default value to be used for
 [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
 when only the prompt value is selected. If `null` (the default), no filtering will occur when
 just the prompt is selected.
 
-**Kind**: instance property of [<code>selectMenu</code>](#dc.selectMenu)  
+**Kind**: instance method of [<code>selectMenu</code>](#dc.selectMenu)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3401,12 +3496,12 @@ just the prompt is selected.
 
 <a name="dc.selectMenu+numberItems"></a>
 
-#### selectMenu.numberItems
+#### selectMenu.numberItems([numberVisible]) ⇒ <code>number</code> \| [<code>selectMenu</code>](#dc.selectMenu)
 Controls the number of items to show in the select menu, when `.multiple()` is true. This
 controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
 the `select` element. If `null` (the default), uses the browser's default height.
 
-**Kind**: instance property of [<code>selectMenu</code>](#dc.selectMenu)  
+**Kind**: instance method of [<code>selectMenu</code>](#dc.selectMenu)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3520,11 +3615,11 @@ function (query) {
 
 * [.cboxMenu](#dc.cboxMenu)
     * [new cboxMenu(parent, [chartGroup])](#new_dc.cboxMenu_new)
-    * [.order](#dc.cboxMenu+order)
-    * [.promptText](#dc.cboxMenu+promptText)
-    * [.filterDisplayed](#dc.cboxMenu+filterDisplayed)
-    * [.multiple](#dc.cboxMenu+multiple)
-    * [.promptValue](#dc.cboxMenu+promptValue)
+    * [.order([order])](#dc.cboxMenu+order) ⇒ <code>function</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+    * [.promptText([promptText])](#dc.cboxMenu+promptText) ⇒ <code>String</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+    * [.filterDisplayed([filterDisplayed])](#dc.cboxMenu+filterDisplayed) ⇒ <code>function</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+    * [.multiple([multiple])](#dc.cboxMenu+multiple) ⇒ <code>Boolean</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
+    * [.promptValue([promptValue])](#dc.cboxMenu+promptValue) ⇒ <code>\*</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
 
 <a name="new_dc.cboxMenu_new"></a>
 
@@ -3553,12 +3648,12 @@ cbox.title(function (d){
 ```
 <a name="dc.cboxMenu+order"></a>
 
-#### cboxMenu.order
+#### cboxMenu.order([order]) ⇒ <code>function</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
 Get or set the function that controls the ordering of option tags in the
 cbox menu. By default options are ordered by the group key in ascending
 order.
 
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+**Kind**: instance method of [<code>cboxMenu</code>](#dc.cboxMenu)  
 
 | Param | Type |
 | --- | --- |
@@ -3573,10 +3668,10 @@ chart.order(function (a,b) {
 ```
 <a name="dc.cboxMenu+promptText"></a>
 
-#### cboxMenu.promptText
+#### cboxMenu.promptText([promptText]) ⇒ <code>String</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
 Get or set the text displayed in the options used to prompt selection.
 
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+**Kind**: instance method of [<code>cboxMenu</code>](#dc.cboxMenu)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3588,11 +3683,11 @@ chart.promptText('All states');
 ```
 <a name="dc.cboxMenu+filterDisplayed"></a>
 
-#### cboxMenu.filterDisplayed
+#### cboxMenu.filterDisplayed([filterDisplayed]) ⇒ <code>function</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
 Get or set the function that filters options prior to display. By default options
 with a value of < 1 are not displayed.
 
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+**Kind**: instance method of [<code>cboxMenu</code>](#dc.cboxMenu)  
 
 | Param | Type |
 | --- | --- |
@@ -3607,11 +3702,11 @@ chart.filterDisplayed(function () {
 ```
 <a name="dc.cboxMenu+multiple"></a>
 
-#### cboxMenu.multiple
+#### cboxMenu.multiple([multiple]) ⇒ <code>Boolean</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
 Controls the type of input element. Setting it to true converts
 the HTML `input` tags from radio buttons to checkboxes.
 
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+**Kind**: instance method of [<code>cboxMenu</code>](#dc.cboxMenu)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3623,13 +3718,13 @@ chart.multiple(true);
 ```
 <a name="dc.cboxMenu+promptValue"></a>
 
-#### cboxMenu.promptValue
+#### cboxMenu.promptValue([promptValue]) ⇒ <code>\*</code> \| [<code>cboxMenu</code>](#dc.cboxMenu)
 Controls the default value to be used for
 [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
 when only the prompt value is selected. If `null` (the default), no filtering will occur when
 just the prompt is selected.
 
-**Kind**: instance property of [<code>cboxMenu</code>](#dc.cboxMenu)  
+**Kind**: instance method of [<code>cboxMenu</code>](#dc.cboxMenu)  
 
 | Param | Type | Default |
 | --- | --- | --- |
@@ -3660,8 +3755,8 @@ and available on all chart implementations in the `dc` library.
     * [.group([group], [name])](#dc.baseMixin+group) ⇒ <code>crossfilter.group</code> \| [<code>baseMixin</code>](#dc.baseMixin)
     * [.ordering([orderFunction])](#dc.baseMixin+ordering) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
     * [.filterAll()](#dc.baseMixin+filterAll) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
-    * [.select()](#dc.baseMixin+select) ⇒ <code>d3.selection</code>
-    * [.selectAll()](#dc.baseMixin+selectAll) ⇒ <code>d3.selection</code>
+    * [.select(sel)](#dc.baseMixin+select) ⇒ <code>d3.selection</code>
+    * [.selectAll(sel)](#dc.baseMixin+selectAll) ⇒ <code>d3.selection</code>
     * [.anchor([parent], [chartGroup])](#dc.baseMixin+anchor) ⇒ <code>String</code> \| <code>node</code> \| <code>d3.selection</code> \| [<code>baseMixin</code>](#dc.baseMixin)
     * [.anchorName()](#dc.baseMixin+anchorName) ⇒ <code>String</code>
     * [.root([rootElement])](#dc.baseMixin+root) ⇒ <code>HTMLElement</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -3675,7 +3770,7 @@ and available on all chart implementations in the `dc` library.
     * [.transitionDelay([delay])](#dc.baseMixin+transitionDelay) ⇒ <code>Number</code> \| [<code>baseMixin</code>](#dc.baseMixin)
     * [.render()](#dc.baseMixin+render) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
     * [.redraw()](#dc.baseMixin+redraw) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
-    * [.commitHandler()](#dc.baseMixin+commitHandler) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
+    * [.commitHandler(commitHandler)](#dc.baseMixin+commitHandler) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
     * [.redrawGroup()](#dc.baseMixin+redrawGroup) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
     * [.renderGroup()](#dc.baseMixin+renderGroup) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
     * [.hasFilterHandler([hasFilterHandler])](#dc.baseMixin+hasFilterHandler) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -3686,7 +3781,7 @@ and available on all chart implementations in the `dc` library.
     * [.replaceFilter([filter])](#dc.baseMixin+replaceFilter) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
     * [.filter([filter])](#dc.baseMixin+filter) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
     * [.filters()](#dc.baseMixin+filters) ⇒ <code>Array.&lt;\*&gt;</code>
-    * [.onClick(datum)](#dc.baseMixin+onClick)
+    * [.onClick(datum)](#dc.baseMixin+onClick) ⇒ <code>undefined</code>
     * [.filterHandler([filterHandler])](#dc.baseMixin+filterHandler) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
     * [.keyAccessor([keyAccessor])](#dc.baseMixin+keyAccessor) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
     * [.valueAccessor([valueAccessor])](#dc.baseMixin+valueAccessor) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -3912,7 +4007,7 @@ Clear all filters associated with this chart. The same effect can be achieved by
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
 <a name="dc.baseMixin+select"></a>
 
-#### baseMixin.select() ⇒ <code>d3.selection</code>
+#### baseMixin.select(sel) ⇒ <code>d3.selection</code>
 Execute d3 single selection in the chart's scope using the given selector and return the d3
 selection.
 
@@ -3921,6 +4016,11 @@ selection result can be chained to d3 function calls.
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
 **See**: [d3.select](https://github.com/d3/d3-selection/blob/master/README.md#select)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sel | <code>String</code> | CSS selector string |
+
 **Example**  
 ```js
 // Has the same effect as d3.select('#chart-id').select(selector)
@@ -3928,7 +4028,7 @@ chart.select(selector)
 ```
 <a name="dc.baseMixin+selectAll"></a>
 
-#### baseMixin.selectAll() ⇒ <code>d3.selection</code>
+#### baseMixin.selectAll(sel) ⇒ <code>d3.selection</code>
 Execute in scope d3 selectAll using the given selector and return d3 selection result.
 
 This function is **not chainable** since it does not return a chart instance; however the d3
@@ -3936,6 +4036,11 @@ selection result can be chained to d3 function calls.
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
 **See**: [d3.selectAll](https://github.com/d3/d3-selection/blob/master/README.md#selectAll)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| sel | <code>String</code> | CSS selector string |
+
 **Example**  
 ```js
 // Has the same effect as d3.select('#chart-id').selectAll(selector)
@@ -4104,16 +4209,21 @@ data is loaded in the background using
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
 <a name="dc.baseMixin+commitHandler"></a>
 
-#### baseMixin.commitHandler() ⇒ [<code>baseMixin</code>](#dc.baseMixin)
+#### baseMixin.commitHandler(commitHandler) ⇒ [<code>baseMixin</code>](#dc.baseMixin)
 Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
 the chart's filters have changed, in order to send the filter data asynchronously to a server.
 
 Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
 a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
-triggered once the commit is filtered. The callback has the standard node.js continuation signature
+triggered once the commit is done. The callback has the standard node.js continuation signature
 with error first and result second.
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
+
+| Param | Type |
+| --- | --- |
+| commitHandler | <code>function</code> | 
+
 <a name="dc.baseMixin+redrawGroup"></a>
 
 #### baseMixin.redrawGroup() ⇒ [<code>baseMixin</code>](#dc.baseMixin)
@@ -4346,9 +4456,11 @@ chart's internal filter storage.
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
 <a name="dc.baseMixin+onClick"></a>
 
-#### baseMixin.onClick(datum)
+#### baseMixin.onClick(datum) ⇒ <code>undefined</code>
 This function is passed to d3 as the onClick handler for each chart. The default behavior is to
 filter on the clicked datum (passed to the callback) and redraw the chart group.
+
+This function can be replaced in order to change the click behavior (but first look at
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
 
@@ -4356,6 +4468,12 @@ filter on the clicked datum (passed to the callback) and redraw the chart group.
 | --- | --- |
 | datum | <code>\*</code> | 
 
+**Example**  
+```js
+var oldHandler = chart.onClick;
+chart.onClick = function(datum) {
+  // use datum.
+```
 <a name="dc.baseMixin+filterHandler"></a>
 
 #### baseMixin.filterHandler([filterHandler]) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
@@ -4867,7 +4985,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.round([round])](#dc.coordinateGridMixin+round) ⇒ <code>function</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.brush([_])](#dc.coordinateGridMixin+brush) ⇒ <code>d3.brush</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.clipPadding([padding])](#dc.coordinateGridMixin+clipPadding) ⇒ <code>Number</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
-    * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus)
+    * [.focus([range], [noRaiseEvents])](#dc.coordinateGridMixin+focus) ⇒ <code>undefined</code>
     * [.brushOn([brushOn])](#dc.coordinateGridMixin+brushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
     * [.parentBrushOn([brushOn])](#dc.coordinateGridMixin+parentBrushOn) ⇒ <code>Boolean</code> \| [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)
 
@@ -5326,7 +5444,7 @@ will be exactly the chart body area minus the margins.
 
 <a name="dc.coordinateGridMixin+focus"></a>
 
-#### coordinateGridMixin.focus([range], [noRaiseEvents])
+#### coordinateGridMixin.focus([range], [noRaiseEvents]) ⇒ <code>undefined</code>
 Zoom this chart to focus on the given range. The given range should be an array containing only
 2 elements (`[start, end]`) defining a range in the x domain. If the range is not given or set
 to null, then the zoom will be reset. _For focus to work elasticX has to be turned off;
@@ -5752,9 +5870,9 @@ global functions [filterAll](#dc.filterAll), [refocusAll](#dc.refocusAll),
 
 * [.chartRegistry](#dc.chartRegistry) : <code>object</code>
     * [.has(chart)](#dc.chartRegistry.has) ⇒ <code>Boolean</code>
-    * [.register(chart, [group])](#dc.chartRegistry.register)
-    * [.deregister(chart, [group])](#dc.chartRegistry.deregister)
-    * [.clear(group)](#dc.chartRegistry.clear)
+    * [.register(chart, [group])](#dc.chartRegistry.register) ⇒ <code>undefined</code>
+    * [.deregister(chart, [group])](#dc.chartRegistry.deregister) ⇒ <code>undefined</code>
+    * [.clear(group)](#dc.chartRegistry.clear) ⇒ <code>undefined</code>
     * [.list([group])](#dc.chartRegistry.list) ⇒ <code>Array.&lt;Object&gt;</code>
 
 <a name="dc.chartRegistry.has"></a>
@@ -5770,7 +5888,7 @@ Determine if a given chart instance resides in any group in the registry.
 
 <a name="dc.chartRegistry.register"></a>
 
-#### chartRegistry.register(chart, [group])
+#### chartRegistry.register(chart, [group]) ⇒ <code>undefined</code>
 Add given chart instance to the given group, creating the group if necessary.
 If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
 
@@ -5783,7 +5901,7 @@ If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` wi
 
 <a name="dc.chartRegistry.deregister"></a>
 
-#### chartRegistry.deregister(chart, [group])
+#### chartRegistry.deregister(chart, [group]) ⇒ <code>undefined</code>
 Remove given chart instance from the given group, creating the group if necessary.
 If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
 
@@ -5796,7 +5914,7 @@ If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` wi
 
 <a name="dc.chartRegistry.clear"></a>
 
-#### chartRegistry.clear(group)
+#### chartRegistry.clear(group) ⇒ <code>undefined</code>
 Clear given group if one is provided, otherwise clears all groups.
 
 **Kind**: static method of [<code>chartRegistry</code>](#dc.chartRegistry)  
@@ -5826,7 +5944,7 @@ If no group is provided, the charts in the default group are returned.
     * [.fp](#dc.units.fp) : <code>object</code>
         * [.precision(precision)](#dc.units.fp.precision) ⇒ <code>function</code>
     * [.integers(start, end)](#dc.units.integers) ⇒ <code>Number</code>
-    * [.ordinal()](#dc.units.ordinal)
+    * [.ordinal()](#dc.units.ordinal) ⇒ <code>uncallable</code>
 
 <a name="dc.units.fp"></a>
 
@@ -5879,7 +5997,7 @@ chart.xUnits(dc.units.integers) // already the default
 ```
 <a name="dc.units.ordinal"></a>
 
-#### units.ordinal()
+#### units.ordinal() ⇒ <code>uncallable</code>
 This argument can be passed to the [.xUnits](#dc.coordinateGridMixin+xUnits) function of a
 coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
 combination with passing
@@ -6243,7 +6361,7 @@ their children as they are clicked.
 
 <a name="dc.registerChart"></a>
 
-### dc.registerChart(chart, [group])
+### dc.registerChart(chart, [group]) ⇒ <code>undefined</code>
 Add given chart instance to the given group, creating the group if necessary.
 If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
 
@@ -6256,7 +6374,7 @@ If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` wi
 
 <a name="dc.deregisterChart"></a>
 
-### dc.deregisterChart(chart, [group])
+### dc.deregisterChart(chart, [group]) ⇒ <code>undefined</code>
 Remove given chart instance from the given group, creating the group if necessary.
 If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
 
@@ -6280,7 +6398,7 @@ Determine if a given chart instance resides in any group in the registry.
 
 <a name="dc.deregisterAllCharts"></a>
 
-### dc.deregisterAllCharts(group)
+### dc.deregisterAllCharts(group) ⇒ <code>undefined</code>
 Clear given group if one is provided, otherwise clears all groups.
 
 **Kind**: static method of [<code>dc</code>](#dc)  
@@ -6291,7 +6409,7 @@ Clear given group if one is provided, otherwise clears all groups.
 
 <a name="dc.filterAll"></a>
 
-### dc.filterAll([group])
+### dc.filterAll([group]) ⇒ <code>undefined</code>
 Clear all filters on all charts within the given chart group. If the chart group is not given then
 only charts that belong to the default chart group will be reset.
 
@@ -6303,7 +6421,7 @@ only charts that belong to the default chart group will be reset.
 
 <a name="dc.refocusAll"></a>
 
-### dc.refocusAll([group])
+### dc.refocusAll([group]) ⇒ <code>undefined</code>
 Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
 not given then only charts that belong to the default chart group will be reset.
 
@@ -6315,7 +6433,7 @@ not given then only charts that belong to the default chart group will be reset.
 
 <a name="dc.renderAll"></a>
 
-### dc.renderAll([group])
+### dc.renderAll([group]) ⇒ <code>undefined</code>
 Re-render all charts belong to the given chart group. If the chart group is not given then only
 charts that belong to the default chart group will be re-rendered.
 
@@ -6327,7 +6445,7 @@ charts that belong to the default chart group will be re-rendered.
 
 <a name="dc.redrawAll"></a>
 
-### dc.redrawAll([group])
+### dc.redrawAll([group]) ⇒ <code>undefined</code>
 Redraw all charts belong to the given chart group. If the chart group is not given then only charts
 that belong to the default chart group will be re-drawn. Redraw is different from re-render since
 when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
