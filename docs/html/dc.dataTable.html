@@ -110,10 +110,14 @@
     <div class="description">
         <p>The data table is a simple widget designed to list crossfilter focused data set (rows being
 filtered) in a good old tabular fashion.</p>
-<p>An interesting feature of the data table is that you can pass a crossfilter group to the <code>dimension</code>, as
-long as you specify the <a href="dc.dataTable.html#order">order</a> as <code>d3.descending</code>, since the data
-table will use <code>dimension.top()</code> to fetch the data in that case, and the method is equally
-supported on the crossfilter group as the crossfilter dimension.</p>
+<p>An interesting feature of the data table is that you can pass a crossfilter group to the
+<code>dimension</code>, if you want to show aggregated data instead of raw data rows. This requires no
+special code as long as you specify the <a href="dc.dataTable.html#order">order</a> as <code>d3.descending</code>,
+since the data table will use <code>dimension.top()</code> to fetch the data in that case, and the method is
+equally supported on the crossfilter group as the crossfilter dimension.</p>
+<p>If you want to display aggregated data in ascending order, you will need to wrap the group
+in a <a href="https://github.com/dc-js/dc.js/wiki/FAQ#fake-dimensions">fake dimension</a> to support the
+<code>.bottom()</code> method. See the example linked below for more details.</p>
 <p>Note: Formerly the data table (and data grid chart) used the <a href="dc.dataTable.html#group">group</a> attribute as a
 keying function for <a href="https://github.com/d3/d3-collection/blob/master/README.md#nest">nesting</a> the data
 together in sections.  This was confusing so it has been renamed to <code>section</code>, although <code>group</code> still works.</p>
@@ -480,7 +484,7 @@ to see how to implement the pagination user interface using <code>beginSlice</co
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-258">line 258</a>
+				 <a href="data-table.js.html#sunlight-1-line-263">line 263</a>
 			</li>
 		</ul>
 	</dd>
@@ -725,7 +729,7 @@ data, unformatted.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-297">line 297</a>
+				 <a href="data-table.js.html#sunlight-1-line-302">line 302</a>
 			</li>
 		</ul>
 	</dd>
@@ -903,7 +907,7 @@ widget. Useful when implementing pagination. See <a href="dc.dataTable.html#begi
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-280">line 280</a>
+				 <a href="data-table.js.html#sunlight-1-line-285">line 285</a>
 			</li>
 		</ul>
 	</dd>
@@ -1064,7 +1068,7 @@ widget. Useful when implementing pagination. See <a href="dc.dataTable.html#begi
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-230">line 230</a>
+				 <a href="data-table.js.html#sunlight-1-line-235">line 235</a>
 			</li>
 		</ul>
 	</dd>
@@ -1246,7 +1250,7 @@ widget. Useful when implementing pagination. See <a href="dc.dataTable.html#begi
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-405">line 405</a>
+				 <a href="data-table.js.html#sunlight-1-line-410">line 410</a>
 			</li>
 		</ul>
 	</dd>
@@ -1425,7 +1429,7 @@ to split rows into sections. By default there will be only one section with no n
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-205">line 205</a>
+				 <a href="data-table.js.html#sunlight-1-line-210">line 210</a>
 			</li>
 		</ul>
 	</dd>
@@ -1614,7 +1618,7 @@ chart
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-446">line 446</a>
+				 <a href="data-table.js.html#sunlight-1-line-451">line 451</a>
 			</li>
 		</ul>
 	</dd>
@@ -1795,7 +1799,7 @@ chart
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-426">line 426</a>
+				 <a href="data-table.js.html#sunlight-1-line-431">line 431</a>
 			</li>
 		</ul>
 	</dd>
@@ -1984,7 +1988,7 @@ chart
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-242">line 242</a>
+				 <a href="data-table.js.html#sunlight-1-line-247">line 247</a>
 			</li>
 		</ul>
 	</dd>
@@ -2166,7 +2170,7 @@ particular field to be sorted by.</p>
 		<ul class="dummy">
 			<li>
 				<a href="data-table.js.html">data-table.js</a>,
-				 <a href="data-table.js.html#sunlight-1-line-384">line 384</a>
+				 <a href="data-table.js.html#sunlight-1-line-389">line 389</a>
 			</li>
 		</ul>
 	</dd>

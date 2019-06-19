@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>dc.js Source: paired-row-chart.js</title>
+	<title>dc.js Source: filter-input.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -79,241 +79,117 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: paired-row-chart.js</h1>
+		<h1 class="page-title">Source: filter-input.js</h1>
     
 <section>
     <article>
         <pre
             class="sunlight-highlight-javascript linenums">/**
-## Paired Row Chart
-Includes: [Cap Mixin](#cap-mixin), [Margin Mixin](#margin-mixin), [Color Mixin](#color-mixin), [Base Mixin](#base-mixin)
+## input Filter Widget
+Includes: [Base Mixin](#base-mixin)
 
-Concrete paired row chart implementation.
-#### dc.pairedRowChart(parent[, chartGroup])
-Create a paired row chart instance and attach it to the given parent element.
+The input filter data widget is a simple widget designed to display an input field allowing to filter the data
+that matches the text typed. 
+
+As opposed to the other graphs, this doesn't display any result and doesn't update its display, it's just to input an filter other graphs
+
+Examples:
+
+#### dc.inputFilter(parent[, chartGroup])
+Create an input widget and attach it to the given parent element.
 
 Parameters:
 
 * parent : string | node | selection - any valid
  [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
  a dom block element such as a div; or a dom element or d3 selection.
-
-* chartGroup : string (optional) - name of the chart group this chart instance should be placed in.
- Interaction with a chart will only trigger events and redraws within the chart's group.
+* chartGroup : string (optional) - name of the chart group this widget should be placed in.
 
 Returns:
-A newly created paired row chart instance
+A newly created input widget instance
+#### .dimension(data) - **mandatory**
 
 ```js
-// create a paired row chart under #chart-container1 element using the default global chart group
-var chart1 = dc.pairedRowChart('#chart-container1');
-// create a paired row chart under #chart-container2 element using chart group A
-var chart2 = dc.pairedRowChart('#chart-container2', 'chartGroupA');
+var data=[{"firstname":"John","lastname":"Coltrane"}{"firstname":"Miles",lastname:"Davis"] 
+var ndx = crossfilter(data);
+var dimension = ndx.dimension(function(d) {
+  return d.lastname.toLowerCase() + " "+ d.firstname.toLowerCase();
+});
+
+dc.inputFilter('.search')
+    .dimension(dimension);
+    // you don't need the group() function
 ```
+
 **/
-dc.pairedRowChart = function (parent, chartGroup) {
-    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
 
-    var _leftChartWrapper = d3.select(parent).append('div').style('width', '50%').style('display', 'inline-block');
-    var _rightChartWrapper = d3.select(parent).append('div').style('width', '50%').style('display', 'inline-block');
+dc.inputFilter = function (parent, chartGroup) {
+    var _chart = dc.baseMixin({});
+    var _html = function() {return "&lt;input class='form-control input-lg' placeholder='search'/>"};
+    var _normalize = function (s) { return s.toLowerCase()};
+    var _filterFunction = function(q) { 
+      _chart.dimension().filterFunction(function (d){return d.indexOf (q) !== -1;});
+    };
+    var _throttleDuration=200;
+    var _throttleTimer;
 
-    var _leftChart = dc.rowChart(_leftChartWrapper[0][0], chartGroup);
-    var _rightChart = dc.rowChart(_rightChartWrapper[0][0], chartGroup);
+    _chart.group(function (){throw "the group function on inputFilter should never be called, please report the issue"});
 
-    _leftChart.useRightYAxis(true);
+    _chart._doRender = function () {
+      _chart.root().html(_html());
 
-    // data filtering
-
-    // we need a way to know which data belongs on the left chart and which data belongs on the right
-    var _leftKeyFilter = function (d) {
-        return d.key[0];
+      _chart.root().selectAll("input").on("input", function() {
+        _filterFunction(_normalize(this.value));
+        _throttle();
+      });
+      return _chart;
     };
 
-    var _rightKeyFilter = function (d) {
-        return d.key[0];
-    };
-
-    /**
-    #### .leftKeyFilter([value]) - **mandatory**
-    Set or get the left key filter attribute of a chart.
-
-    For example
-    function(d) {
-        return d.key[0] === 'Male';
+    function _throttle() {
+      window.clearTimeout(_throttleTimer);
+      _throttleTimer = window.setTimeout(function() {
+          dc.redrawAll();
+      }, _throttleDuration);
     }
 
-    If a value is given, then it will be used as the new left key filter. If no value is specified then
-    the current left key filter will be returned.
+    _chart._doRedraw = function () {
+      return _chart;
+    };
 
-    **/
-    _chart.leftKeyFilter = function (_) {
+    _chart.html = function (s) {
         if (!arguments.length) {
-            return _leftKeyFilter;
+            return _html;
         }
-
-        _leftKeyFilter = _;
+        if (typeof s == "string")
+          _html = function (){return s};
+        else
+          _html = s;
         return _chart;
     };
 
-    /**
-    #### .rightKeyFilter([value]) - **mandatory**
-    Set or get the right key filter attribute of a chart.
-
-    For example
-    function(d) {
-        return d.key[0] === 'Female';
-    }
-
-    If a value is given, then it will be used as the new right key filter. If no value is specified then
-    the current right key filter will be returned.
-
-    **/
-    _chart.rightKeyFilter = function (_) {
+    _chart.normalize = function (s) {
         if (!arguments.length) {
-            return _rightKeyFilter;
+            return _normalize;
         }
-
-        _rightKeyFilter = _;
+        _normalize = s;
         return _chart;
     };
 
-    // when trying to get the data for the left chart then filter all data using the leftKeyFilter function
-    _leftChart.data(function (data) {
-        var cap = _leftChart.cap(),
-            d = data.all().filter(function (d) {
-            return _chart.leftKeyFilter()(d);
-        });
-
-        if (cap === Infinity) {
-            return d;
+    _chart.filterFunction = function (s) {
+        if (!arguments.length) {
+            return _filterFunction;
         }
+        _filterFunction = s;
+        return _chart;
+    };
 
-        return d.slice(0, cap);
-    });
-
-    // when trying to get the data for the right chart then filter all data using the rightKeyFilter function
-    _rightChart.data(function (data) {
-        var cap = _rightChart.cap(),
-            d = data.all().filter(function (d) {
-            return _chart.rightKeyFilter()(d);
-        });
-
-        if (cap === Infinity) {
-            return d;
+    _chart.throttleDuration = function (s) {
+        if (!arguments.length) {
+            return _throttleDuration;
         }
-
-        return d.slice(0, cap);
-    });
-
-    // chart filtering
-    // on clicking either chart then filter both
-
-    _leftChart.onClick = _rightChart.onClick = function (d) {
-        var filter = _leftChart.keyAccessor()(d);
-        dc.events.trigger(function () {
-            _leftChart.filter(filter);
-            _rightChart.filter(filter);
-            _leftChart.redrawGroup();
-        });
+        _throttleDuration = s;
+        return _chart;
     };
-
-    // margins
-    var leftMargins = _leftChart.margins;
-    var rightMargins = _rightChart.margins;
-
-    _leftChart.margins = function () {
-        var margins = leftMargins();
-        margins.right = 0;
-        return margins;
-    };
-
-    _rightChart.margins = function () {
-        var margins = rightMargins();
-        margins.left = 0;
-        return margins;
-    };
-
-    // svg
-    // return an array of both the sub chart svgs
-
-    _chart.svg = function () {
-        return d3.selectAll([_leftChart.svg()[0][0], _rightChart.svg()[0][0]]);
-    };
-
-    // we need to make sure that the extent is the same for both charts
-    _leftChart.calculateAxisScaleData = _rightChart.calculateAxisScaleData = function () {
-        return _leftChart.data().concat(_rightChart.data());
-    };
-
-    // get the charts - mainly used for testing
-    _chart.leftChart = function () {
-        return _leftChart;
-    };
-
-    _chart.rightChart = function () {
-        return _rightChart;
-    };
-
-    _chart.leftXAxisLabel = function (labelText, padding) {
-        return _leftChart.xAxisLabel(labelText, padding);
-    };
-
-    _chart.rightXAxisLabel = function (labelText, padding) {
-        return _rightChart.xAxisLabel(labelText, padding);
-    };
-
-    // functions that we just want to pass on to both sub charts
-
-    var _getterSetterPassOn = [
-        // display
-        'height', 'minHeight', 'renderTitleLabel', 'fixedBarHeight', 'gap', 'othersLabel',
-        'transitionDuration', 'label', 'renderLabel', 'title', 'renderTitle', 'chartGroup',
-        //colors
-        'colors', 'ordinalColors', 'linearColors', 'colorAccessor', 'colorDomain', 'getColor', 'colorCalculator',
-        // x axis
-        'x', 'elasticX', 'valueAccessor', 'labelOffsetX', 'titleLabelOffsetx', 'xAxis',
-        // y axis
-        'keyAccessor', 'labelOffsetY', 'yAxis',
-        // data
-        'cap', 'ordering' , 'dimension', 'group', 'othersGrouper', 'data'
-    ];
-
-    function addGetterSetterFunction (functionName) {
-        _chart[functionName] = function (_) {
-            if (!arguments.length) {
-                return [_leftChart[functionName](), _rightChart[functionName]()];
-            }
-            _leftChart[functionName](_);
-            _rightChart[functionName](_);
-            return _chart;
-        };
-    }
-
-    for (var i = 0; i &lt; _getterSetterPassOn.length; i++) {
-        addGetterSetterFunction(_getterSetterPassOn[i]);
-    }
-
-    var _passOnFunctions = [
-        '_doRedraw', 'redraw', '_doRender', 'render', 'calculateColorDomain', 'filterAll', 'resetSvg', 'expireCache'
-    ];
-
-    function addPassOnFunctions (functionName) {
-        _chart[functionName] = function () {
-            _leftChart[functionName]();
-            _rightChart[functionName]();
-            return _chart;
-        };
-    }
-
-    for (i = 0; i &lt; _passOnFunctions.length; i++) {
-        addPassOnFunctions(_passOnFunctions[i]);
-    }
-
-    dc.override(_chart, 'width', function (width) {
-        _leftChart.width(width / 2);
-        _rightChart.width(width / 2);
-        return _chart._width(width);
-    });
 
     return _chart.anchor(parent, chartGroup);
 };
@@ -360,9 +236,9 @@ dc.pairedRowChart = function (parent, chartGroup) {
 	</span>
 
 <span class="jsdoc-message">
-	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on Mon Jan 28th 2019
+		on Mon May 22nd 2017
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

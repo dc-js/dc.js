@@ -7846,10 +7846,15 @@ dc.dataCount = function (parent, chartGroup) {
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
  *
- * An interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
- * long as you specify the {@link dc.dataTable#order order} as `d3.descending`, since the data
- * table will use `dimension.top()` to fetch the data in that case, and the method is equally
- * supported on the crossfilter group as the crossfilter dimension.
+ * An interesting feature of the data table is that you can pass a crossfilter group to the
+ * `dimension`, if you want to show aggregated data instead of raw data rows. This requires no
+ * special code as long as you specify the {@link dc.dataTable#order order} as `d3.descending`,
+ * since the data table will use `dimension.top()` to fetch the data in that case, and the method is
+ * equally supported on the crossfilter group as the crossfilter dimension.
+ *
+ * If you want to display aggregated data in ascending order, you will need to wrap the group
+ * in a [fake dimension](https://github.com/dc-js/dc.js/wiki/FAQ#fake-dimensions) to support the
+ * `.bottom()` method. See the example linked below for more details.
  *
  * Note: Formerly the data table (and data grid chart) used the {@link dc.dataTable#group group} attribute as a
  * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
