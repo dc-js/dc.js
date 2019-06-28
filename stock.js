@@ -411,7 +411,7 @@ d3.csv('ndx.csv').then(function (data) {
     // [Line Chart](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#line-chart)
     moveChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
         .renderArea(true)
-        .width(300)
+        .width(990)
         .height(200)
         .transitionDuration(1000)
         .margins({top: 30, right: 50, bottom: 25, left: 40})
