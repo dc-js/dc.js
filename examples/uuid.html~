@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Ordinal Bar Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+  var chart = dc.barChart('#test');
+
+  d3.csv('pg_uuid.csv', function(error, rows) {
+      if(error)
+          throw new Error(error);
+
+      var idField = "uuid", parentField = "parent_uuid";
+      var output = ['digraph g {', '  compound=true;'], invariant = {};
+      rows.forEach(function(r) {
+          output.push(['  "', r[idField], '" [label="', r.object_name, '"]'].join(""));
+          if(!invariant[r.invariant_uuid])
+              invariant[r.invariant_uuid] = {uuids: []};
+          invariant[r.invariant_uuid].uuids.push(r.uuid);
+      });
+      function cluster_name(invuid) {
+          return 'cluster_' + invuid.replace(/-/g, '');
+      }
+      Object.keys(invariant).forEach(function(inv) {
+          output.push(['  subgraph "', cluster_name(inv), '" { ', invariant[inv].uuids.map(function(s) { return '"' + s + '"'; }).join('; '), ' }'].join(''));
+      });
+      rows.forEach(function(r) {
+          if(r.parent_uuid !== "N/A")
+              output.push(['  "', r[parentField], '" -> "', r[idField], '"'].join(''));
+          if(invariant[r.invariant_uuid].uuids.indexOf(r.uuid)<0)
+              console.warn('uuid not found in its own invariant', r.invariant_uuid);
+          if(r.invariant_parent_uuid === "N/A")
+              return;
+          if(invariant[r.invariant_parent_uuid].uuids.indexOf(r.invariant_parent_uuid)<0)
+              console.warn('uuid parent not found in its own invariant', r.invariant_uuid, r.invariant_parent_uuid);
+          if(!invariant[r.invariant_uuid].drawn) {
+              output.push(['  "', r.parent_uuid, '" -> "', r.uuid, '" [ltail="', cluster_name(r.invariant_parent_uuid), '", lhead="', cluster_name(r.invariant_uuid), '"]'].join(''));
+              invariant[r.invariant_uuid].drawn = true;
+          }
+      });
+      output.push('}');
+      d3.select(".container").append("pre").text(output.join("\n"));
+  });
+
+</script>
+
+</div>
+</body>
+</html>
