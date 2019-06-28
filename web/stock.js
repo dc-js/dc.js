@@ -1,7 +1,6 @@
 //# dc.js Getting Started and How-To Guide
 'use strict';
 
-/* jshint globalstrict: true */
 /* global dc,d3,crossfilter */
 
 // ### Create Chart Objects
@@ -226,7 +225,7 @@ d3.csv('ndx.csv').then(function (data) {
         .colorDomain([-500, 500])
     //##### Accessors
 
-        //Accessor functions are applied to each value returned by the grouping
+    //Accessor functions are applied to each value returned by the grouping
 
         // `.colorAccessor` - the returned value will be passed to the `.colors()` scale to determine a fill color
         .colorAccessor(function (d) {
@@ -682,7 +681,6 @@ d3.selectAll('#version').text(dc.version);
 
 // Determine latest stable version in the repo via Github API
 d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest').then(function (latestRelease) {
-    /*jshint camelcase: false */
-    /* jscs:disable */
+    /* eslint camelcase: 0 */
     d3.selectAll('#latest').text(latestRelease.tag_name);
 });

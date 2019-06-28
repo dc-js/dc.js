@@ -389,10 +389,11 @@ dc.baseMixin = function (_chart) {
      * @example
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
+     * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    _chart.select = function (s) {
-        return _root.select(s);
+    _chart.select = function (sel) {
+        return _root.select(sel);
     };
 
     /**
@@ -407,10 +408,11 @@ dc.baseMixin = function (_chart) {
      * @example
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
+     * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    _chart.selectAll = function (s) {
-        return _root ? _root.selectAll(s) : null;
+    _chart.selectAll = function (sel) {
+        return _root ? _root.selectAll(sel) : null;
     };
 
     /**
@@ -583,11 +585,11 @@ dc.baseMixin = function (_chart) {
      * @param {Boolean} [controlsUseVisibility=false]
      * @returns {Boolean|dc.baseMixin}
      **/
-    _chart.controlsUseVisibility = function (useVisibility) {
+    _chart.controlsUseVisibility = function (controlsUseVisibility) {
         if (!arguments.length) {
             return _controlsUseVisibility;
         }
-        _controlsUseVisibility = useVisibility;
+        _controlsUseVisibility = controlsUseVisibility;
         return _chart;
     };
 
@@ -760,9 +762,10 @@ dc.baseMixin = function (_chart) {
      *
      * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
      * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
-     * triggered once the commit is filtered. The callback has the standard node.js continuation signature
+     * triggered once the commit is done. The callback has the standard node.js continuation signature
      * with error first and result second.
      * @method commitHandler
+     * @param {Function} commitHandler
      * @memberof dc.baseMixin
      * @instance
      * @returns {dc.baseMixin}
@@ -1152,10 +1155,17 @@ dc.baseMixin = function (_chart) {
     /**
      * This function is passed to d3 as the onClick handler for each chart. The default behavior is to
      * filter on the clicked datum (passed to the callback) and redraw the chart group.
+     *
+     * This function can be replaced in order to change the click behavior (but first look at 
      * @method onClick
      * @memberof dc.baseMixin
      * @instance
+     * @example
+     * var oldHandler = chart.onClick;
+     * chart.onClick = function(datum) {
+     *   // use datum.
      * @param {*} datum
+     * @return {undefined}
      */
     _chart.onClick = function (datum) {
         var filter = _chart.keyAccessor()(datum);

@@ -20,6 +20,7 @@ dc.events = {
  * })
  * @param {Function} closure
  * @param {Number} [delay]
+ * @return {undefined}
  */
 dc.events.trigger = function (closure, delay) {
     if (!delay) {

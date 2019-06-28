@@ -38,7 +38,7 @@ var transitionTest = (function() {
         };
     }
     // generate continuous data
-    function progression(N, initial) {
+    function progression(N, initial, series) {
         var _steps = 5, // number of data points to add each tick
             _interval = 1, // distance in x between points
             _magnitude = 1, // maximum change in y per observation
@@ -53,21 +53,49 @@ var transitionTest = (function() {
             return a;
         }
         function drop() {
-            _data.splice(_reverse ? _data.length-1 : 0, 1);
+            if(series)
+                _data.splice(_reverse ? _data.length-N : 0, N);
+            else
+                _data.splice(_reverse ? _data.length-1 : 0, 1);
         }
         function generate() {
-            var basis = _data.length ?
-                    _data[_reverse ? 0 : _data.length-1] :
-                {key: 0, value: startval()};
-            var obs = [], key = basis.key + (_reverse ? -1 : 1) * _interval;
-            for(var i = 0; i<N; ++i) {
-                obs[i] = Math.max(basis.value[i] + rand() * _magnitude, 0);
+            var bkey, basis;
+            if(_data.length) {
+                if(series) {
+                    bkey = _data[_reverse ? 0 : _data.length-N].key[1];
+                    basis = _data.slice(_reverse ? 0 : _data.length-N, _reverse ? N : _data.length).map(dc.pluck('value'));
+                }
+                else {
+                    var kv = _data[_reverse ? 0 : _data.length-1];
+                    bkey = kv.key;
+                    basis = kv.value;
+                }
             }
-            var datum = {key: key, value: obs};
-            if(_reverse)
-                _data.unshift(datum);
-            else
-                _data.push(datum);
+            else {
+                bkey = 0;
+                basis = startval();
+            }
+            var obs = [], key = bkey + (_reverse ? -1 : 1) * _interval;
+            for(var i = 0; i<N; ++i) {
+                obs[i] = basis[i] + rand() * _magnitude;
+                if(!series)
+                    obs[i] = Math.max(obs[i], 0);
+            }
+            if(series) {
+                var block = obs.map(function(o, i) {
+                    return {key: [i, key], value: o};
+                });
+                if(_reverse)
+                    Array.prototype.unshift.apply(_data, block);
+                else
+                    Array.prototype.push.apply(_data, block);
+            } else {
+                var datum = {key: key, value: obs};
+                if(_reverse)
+                    _data.unshift(datum);
+                else
+                    _data.push(datum);
+            }
         }
         while(initial--) generate();
         return {

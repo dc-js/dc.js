@@ -226,8 +226,8 @@ describe('dc.cboxMenu', function () {
 
     function getSelectedOptions (chart) {
         return chart.selectAll('.dc-cbox-item input').nodes().filter(function (d) {
-                return d.value && d.checked;
-            });
+            return d.value && d.checked;
+        });
     }
 
     function getOption (chart, i) {

@@ -1,6 +1,25 @@
+## 3.1.0
+* Remove `float: left` from dc.css; add it to individual examples where needed.
+
+It's not appropriate to set this in the library, because charts will be used in all sorts of different layouts, and this sometimes required people to use `div.dc-chart { float: none!important; }` which is horrible. ([#673](https://github.com/dc-js/dc.js/issues/673))
+
+Fixing this will break a lot of dashboard layouts, thus the version bump. Add
+
+```css
+div.dc-chart {
+    float: left;
+}
+```
+to your page CSS to restore the old layout!
+* Fix mixed content loading, by Rohan Shewale ([#1529](https://github.com/dc-js/dc.js/pull/1529))
+
+## 3.0.13
+* Keep track of individual values efficiently in boxplot examples ([#543](https://github.com/dc-js/dc.js/issues/543))
+* Series progression [example](https://dc-js.github.io/dc.js/transitions/series-progression.html)
+
 ## 3.0.12
 * heatmap takes ordinary filter objects and conversion of coordinates is deprecated ([#1515](https://github.com/dc-js/dc.js/issues/1515))
-* [Example](http://dc-js.github.io/dc.js/examples/compare-unfiltered.html) of comparing the current filters against the unfiltered values [using a fake group to copy original values](https://github.com/dc-js/dc.js/wiki/FAQ#static-copy-of-a-group)
+* [Example](http://dc-js.github.io/dc.js/examples/compare-unfiltered.html) of comparing the current filters against the unfiltered values [using a fake group to copy original values](https://github.com/dc-js/dc.js/wiki/FAQ#static-copy-of-a-group). Thanks to Jason Aizkalns for the [SO](https://stackoverflow.com/questions/55066391/display-original-conditional-brushed-unbrushed-crossfilter-bars-with-dc-js-wit) and [CodeReview](https://codereview.stackexchange.com/questions/215041/dc-js-and-crossfilter-app-to-display-multiple-charts) questions and the example!
 * Provide alternate, more descriptive names for properties so that the meaning is not overloaded, to reduce confusion and improve code clarity:
   * `dataTable.group` and `dataGrid.group` took a nesting function, not a crossfilter group, so they are replaced with a new property called `section`  ([#855](https://github.com/dc-js/dc.js/issues/855)). Additionally, `dataTable.section` is no longer mandatory and defaults to the empty string.
   * `dataCount.dimension` took a crossfilter instance, and `dataCount.group` really took a groupAll object, so they are replaced with properties with those names ([#1499](https://github.com/dc-js/dc.js/issues/1499))

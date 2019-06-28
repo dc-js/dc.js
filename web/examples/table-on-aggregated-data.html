@@ -10,6 +10,12 @@
 
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
+
+  <div id="select-direction">
+    <label><input type=radio name="direction" value="descending" checked="true">&nbsp;descending</label>
+    <label><input type=radio name="direction" value="ascending">&nbsp;ascending</label>
+  </div>
+
   <table id="test">
         <thead>
             <tr>
@@ -29,22 +35,27 @@
 
 var chart = dc.dataTable("#test");
 d3.csv("morley.csv").then(function(experiments) {
-  /* We will create a table that sorts the experiments
-     from the one that has the highest average speed
-     to the one that has the lowest average speed
-  */
-  /* To do so, we need:
-     - that the .group() is defined, and returns the same value for all elements
-     - the .order() is defined & defined to something else than the default value which seems to
-       be either d3.ascending or descending. (a method that is undefined for .reduce()-d
-       dimension groups is called else).
+  /* Ordinarily a data table will show raw rows of data. But it can also show
+     aggregated data, by passing a group as the dimension.
 
-     This demonstrates that a crossfilter group can (oddly, but usefully) be passed
-     as the dimension for a dc.dataTable, because it's just using `dimension.all()`.
+     This example creates a table that sorts the experiments
+     from the highest average speed to the lowest average speed.
+
+     The `avgGroup` produces the averages for each experiment.
+
+     To display the items in descending order, just specify
+     `.order(d3.descending)` and the data table will use `group.top()`
+     to fetch the data.
+
+     In order to display the items in ascending order, we need to
+     create a "fake dimension" wrapping the group, because crossfilter
+     groups don't have a `.bottom(N)` method
+
+     https://github.com/dc-js/dc.js/wiki/FAQ#fake-dimensions
   */
   var ndx              = crossfilter(experiments),
       exptDimension    = ndx.dimension(function(d) {return +d.Expt;}),
-      groupedDimension = exptDimension.group().reduce(
+      avgGroup = exptDimension.group().reduce(
           function (p, v) {
               ++p.number;
               p.total += +v.Speed;
@@ -65,13 +76,30 @@ d3.csv("morley.csv").then(function(experiments) {
     .width(768)
     .height(480)
     .showSections(false)
-    .dimension(groupedDimension)
+    .dimension(reversible_group(avgGroup))
     .columns([function (d) { return d.key },
               function (d) { return d.value.number },
               function (d) { return d.value.avg }])
     .sortBy(function (d) { return d.value.avg })
     .order(d3.descending)
-    chart.render();
+  chart.render();
+
+  function reversible_group(group) {
+      return {
+          top: function(N) {
+              return group.top(N);
+          },
+          bottom: function(N) {
+              return group.top(Infinity).slice(-N).reverse();
+          }
+      };
+  }
+
+  d3.selectAll('#select-direction input')
+      .on('click', function() {
+          // this.value is 'ascending' or 'descending'
+          chart.order(d3[this.value]).redraw()
+      });
 });
 
 </script>

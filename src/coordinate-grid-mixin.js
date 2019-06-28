@@ -1387,6 +1387,7 @@ dc.coordinateGridMixin = function (_chart) {
      * })
      * @param {Array<Number>} [range]
      * @param {Boolean} [noRaiseEvents = false]
+     * @return {undefined}
      */
     _chart.focus = function (range, noRaiseEvents) {
         if (_zoomOutRestrict) {

@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    const sass = require('node-sass');
+    var sass = require('node-sass');
 
     grunt.initConfig({
         conf: config,
@@ -35,17 +35,6 @@ module.exports = function (grunt) {
                     process: true,
                     sourceMap: true,
                     banner: '<%= conf.banner %>'
-                }
-            },
-            welcome: {
-                src: ['docs/welcome.base.md', 'web/img/class-hierarchy.svg'],
-                dest: 'welcome.md',
-                options: {
-                    process: function (src, filepath) {
-                        return /svg/.test(filepath) ?
-                            src.split('\n').slice(5).join('\n') :
-                            src;
-                    }
                 }
             }
         },
@@ -82,7 +71,7 @@ module.exports = function (grunt) {
                 }
             }
         },
-        jscs: {
+        eslint: {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
@@ -91,29 +80,14 @@ module.exports = function (grunt) {
                     'Gruntfile.js',
                     'grunt/*.js',
                     '<%= conf.web %>/stock.js'],
-                options: {
-                    config: '.jscsrc'
-                }
-            }
-        },
-        jshint: {
-            source: {
-                src: [
-                    '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer,d3v3-compat}.js',
-                    '<%= conf.spec %>/**/*.js',
-                    'Gruntfile.js',
-                    'grunt/*.js',
-                    '<%= conf.web %>/stock.js'
-                ],
-                options: {
-                    jshintrc: '.jshintrc'
-                }
+            },
+            options: {
+                configFile: '.eslintrc'
             }
         },
         watch: {
             jsdoc2md: {
-                files: ['welcome.md', '<%= conf.src %>/**/*.js'],
+                files: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js'],
                 tasks: ['build', 'jsdoc', 'jsdoc2md']
             },
             scripts: {
@@ -130,10 +104,10 @@ module.exports = function (grunt) {
             },
             reload: {
                 files: ['<%= conf.pkg.name %>.js',
-                    '<%= conf.pkg.name %>.css',
-                    '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
-                    '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
-                    '<%= conf.pkg.name %>.min.js'],
+                        '<%= conf.pkg.name %>.css',
+                        '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
+                        '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
+                        '<%= conf.pkg.name %>.min.js'],
                 options: {
                     livereload: true
                 }
@@ -161,7 +135,6 @@ module.exports = function (grunt) {
                     styles: [
                         '<%= conf.web %>/css/dc.css'
                     ],
-                    version: '2.0.0',
                     outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
                 },
@@ -286,8 +259,13 @@ module.exports = function (grunt) {
                         platform: 'Windows 10'
                     }
                 },
-                browsers: ['slInternetExplorer11', 'slInternetExplorer11win8', 'slMicrosoftEdge',
-                    'slFirefoxLinux', 'slSafari'],
+                browsers: [
+                    'slInternetExplorer11',
+                    'slInternetExplorer11win8',
+                    'slMicrosoftEdge',
+                    'slFirefoxLinux',
+                    'slSafari'
+                ],
                 concurrency: 2,
                 browserNoActivityTimeout: 120000,
                 reporters: ['saucelabs', 'summary'],
@@ -296,7 +274,7 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                src: ['welcome.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
+                src: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
                 options: {
                     destination: 'web/docs/html',
                     template: 'node_modules/ink-docstrap/template',
@@ -487,8 +465,10 @@ module.exports = function (grunt) {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
     });
-    grunt.registerTask('test-stock-example', 'Test a new rendering of the stock example web page against a ' +
-        'baseline rendering', function (option) {
+    grunt.registerTask(
+        'test-stock-example',
+        'Test a new rendering of the stock example web page against a baseline rendering',
+        function (option) {
             require('./regression/stock-regression-test.js').testStockExample(this.async(), option === 'diff');
         });
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
@@ -522,7 +502,7 @@ module.exports = function (grunt) {
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
-    grunt.registerTask('lint', ['jshint', 'jscs']);
+    grunt.registerTask('lint', ['eslint']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };
