@@ -1,5 +1,5 @@
 /*!
- *  dc 3.0.12
+ *  dc 3.0.13
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,16 +29,15 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.0.12
+ * @version 3.0.13
  * @example
  * // Example chaining
  * chart.width(300)
  *      .height(300)
  *      .filter('sunday');
  */
-/*jshint -W079*/
 var dc = {
-    version: '3.0.12',
+    version: '3.0.13',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -53,7 +52,6 @@ var dc = {
     },
     _renderlet: null
 };
-/*jshint +W079*/
 
 /**
  * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups
@@ -110,6 +108,7 @@ dc.chartRegistry = (function () {
          * @memberof dc.chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
+         * @return {undefined}
          */
         register: function (chart, group) {
             group = initializeChartGroup(group);
@@ -123,6 +122,7 @@ dc.chartRegistry = (function () {
          * @memberof dc.chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
+         * @return {undefined}
          */
         deregister: function (chart, group) {
             group = initializeChartGroup(group);
@@ -139,6 +139,7 @@ dc.chartRegistry = (function () {
          * @method clear
          * @memberof dc.chartRegistry
          * @param {String} group Group name
+         * @return {undefined}
          */
         clear: function (group) {
             if (group) {
@@ -170,6 +171,7 @@ dc.chartRegistry = (function () {
  * @method registerChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
+ * @return {undefined}
  */
 dc.registerChart = function (chart, group) {
     dc.chartRegistry.register(chart, group);
@@ -182,7 +184,8 @@ dc.registerChart = function (chart, group) {
  * @method deregisterChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
- */
+ * @return {undefined}
+*/
 dc.deregisterChart = function (chart, group) {
     dc.chartRegistry.deregister(chart, group);
 };
@@ -203,6 +206,7 @@ dc.hasChart = function (chart) {
  * @memberof dc
  * @method deregisterAllCharts
  * @param {String} group Group name
+ * @return {undefined}
  */
 dc.deregisterAllCharts = function (group) {
     dc.chartRegistry.clear(group);
@@ -214,6 +218,7 @@ dc.deregisterAllCharts = function (group) {
  * @memberof dc
  * @method filterAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -228,6 +233,7 @@ dc.filterAll = function (group) {
  * @memberof dc
  * @method refocusAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.refocusAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -244,6 +250,7 @@ dc.refocusAll = function (group) {
  * @memberof dc
  * @method renderAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.renderAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -264,6 +271,7 @@ dc.renderAll = function (group) {
  * @memberof dc
  * @method redrawAll
  * @param {String} [group]
+ * @return {undefined}
  */
 dc.redrawAll = function (group) {
     var charts = dc.chartRegistry.list(group);
@@ -384,6 +392,7 @@ dc.units.integers = function (start, end) {
  * function is not called.
  * @method ordinal
  * @memberof dc.units
+ * @return {uncallable}
  * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
  * @see {@link dc.coordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link dc.coordinateGridMixin#x coordinateGridMixin.x}
@@ -1217,6 +1226,7 @@ dc.events = {
  * })
  * @param {Function} closure
  * @param {Number} [delay]
+ * @return {undefined}
  */
 dc.events.trigger = function (closure, delay) {
     if (!delay) {
@@ -1781,10 +1791,11 @@ dc.baseMixin = function (_chart) {
      * @example
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
+     * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    _chart.select = function (s) {
-        return _root.select(s);
+    _chart.select = function (sel) {
+        return _root.select(sel);
     };
 
     /**
@@ -1799,10 +1810,11 @@ dc.baseMixin = function (_chart) {
      * @example
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
+     * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    _chart.selectAll = function (s) {
-        return _root ? _root.selectAll(s) : null;
+    _chart.selectAll = function (sel) {
+        return _root ? _root.selectAll(sel) : null;
     };
 
     /**
@@ -1975,11 +1987,11 @@ dc.baseMixin = function (_chart) {
      * @param {Boolean} [controlsUseVisibility=false]
      * @returns {Boolean|dc.baseMixin}
      **/
-    _chart.controlsUseVisibility = function (useVisibility) {
+    _chart.controlsUseVisibility = function (controlsUseVisibility) {
         if (!arguments.length) {
             return _controlsUseVisibility;
         }
-        _controlsUseVisibility = useVisibility;
+        _controlsUseVisibility = controlsUseVisibility;
         return _chart;
     };
 
@@ -2152,9 +2164,10 @@ dc.baseMixin = function (_chart) {
      *
      * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
      * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
-     * triggered once the commit is filtered. The callback has the standard node.js continuation signature
+     * triggered once the commit is done. The callback has the standard node.js continuation signature
      * with error first and result second.
      * @method commitHandler
+     * @param {Function} commitHandler
      * @memberof dc.baseMixin
      * @instance
      * @returns {dc.baseMixin}
@@ -2544,10 +2557,17 @@ dc.baseMixin = function (_chart) {
     /**
      * This function is passed to d3 as the onClick handler for each chart. The default behavior is to
      * filter on the clicked datum (passed to the callback) and redraw the chart group.
+     *
+     * This function can be replaced in order to change the click behavior (but first look at 
      * @method onClick
      * @memberof dc.baseMixin
      * @instance
+     * @example
+     * var oldHandler = chart.onClick;
+     * chart.onClick = function(datum) {
+     *   // use datum.
      * @param {*} datum
+     * @return {undefined}
      */
     _chart.onClick = function (datum) {
         var filter = _chart.keyAccessor()(datum);
@@ -4571,6 +4591,7 @@ dc.coordinateGridMixin = function (_chart) {
      * })
      * @param {Array<Number>} [range]
      * @param {Boolean} [noRaiseEvents = false]
+     * @return {undefined}
      */
     _chart.focus = function (range, noRaiseEvents) {
         if (_zoomOutRestrict) {
@@ -7473,11 +7494,13 @@ dc.lineChart = function (parent, chartGroup) {
                         .attr('stroke', _chart.getColor)
                         .on('mousemove', function () {
                             var dot = d3.select(this);
+                            console.log('mm', _chart.keyAccessor()(dot.datum().data));
                             showDot(dot);
                             showRefLines(dot, g);
                         })
                         .on('mouseout', function () {
                             var dot = d3.select(this);
+                            console.log('mo', _chart.keyAccessor()(dot.datum().data));
                             hideDot(dot);
                             hideRefLines(g);
                         })
@@ -7823,10 +7846,15 @@ dc.dataCount = function (parent, chartGroup) {
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
  *
- * An interesting feature of the data table is that you can pass a crossfilter group to the `dimension`, as
- * long as you specify the {@link dc.dataTable#order order} as `d3.descending`, since the data
- * table will use `dimension.top()` to fetch the data in that case, and the method is equally
- * supported on the crossfilter group as the crossfilter dimension.
+ * An interesting feature of the data table is that you can pass a crossfilter group to the
+ * `dimension`, if you want to show aggregated data instead of raw data rows. This requires no
+ * special code as long as you specify the {@link dc.dataTable#order order} as `d3.descending`,
+ * since the data table will use `dimension.top()` to fetch the data in that case, and the method is
+ * equally supported on the crossfilter group as the crossfilter dimension.
+ *
+ * If you want to display aggregated data in ascending order, you will need to wrap the group
+ * in a [fake dimension](https://github.com/dc-js/dc.js/wiki/FAQ#fake-dimensions) to support the
+ * `.bottom()` method. See the example linked below for more details.
  *
  * Note: Formerly the data table (and data grid chart) used the {@link dc.dataTable#group group} attribute as a
  * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
@@ -7877,23 +7905,18 @@ dc.dataTable = function (parent, chartGroup) {
     };
 
     _chart._doColumnValueFormat = function (v, d) {
-        return ((typeof v === 'function') ?
-                v(d) :                          // v as function
-                ((typeof v === 'string') ?
-                 d[v] :                         // v is field name string
-                 v.format(d)                        // v is Object, use fn (element 2)
-                )
-               );
+        return (typeof v === 'function') ? v(d) :  // v as function
+            (typeof v === 'string') ? d[v] :       // v is field name string
+            v.format(d);                           // v is Object, use fn (element 2)
     };
 
     _chart._doColumnHeaderFormat = function (d) {
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
-        return (typeof d === 'function') ?
-                _chart._doColumnHeaderFnToString(d) :
-                ((typeof d === 'string') ?
-                 _chart._doColumnHeaderCapitalize(d) : String(d.label));
+        return (typeof d === 'function') ? _chart._doColumnHeaderFnToString(d) :
+            (typeof d === 'string') ? _chart._doColumnHeaderCapitalize(d) :
+            String(d.label);
     };
 
     _chart._doColumnHeaderCapitalize = function (s) {
@@ -10159,8 +10182,8 @@ dc.rowChart = function (parent, chartGroup) {
         }
 
         var rect = rows.attr('transform', function (d, i) {
-                return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
-            }).select('rect')
+            return 'translate(0,' + ((i + 1) * _gap + i * height) + ')';
+        }).select('rect')
             .attr('height', height)
             .attr('fill', _chart.getColor)
             .on('click', onClick)
@@ -10273,6 +10296,7 @@ dc.rowChart = function (parent, chartGroup) {
      * @method xAxis
      * @memberof dc.rowChart
      * @instance
+     * @param {d3.axis} [xAxis]
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
@@ -10281,7 +10305,7 @@ dc.rowChart = function (parent, chartGroup) {
      * // use a top-oriented axis. Note: position of the axis and grid lines will need to
      * // be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
      * chart.xAxis(d3.axisTop())
-     * @returns {d3.axis}
+     * @returns {d3.axis|dc.rowChart}
      */
     _chart.xAxis = function (xAxis) {
         if (!arguments.length) {
@@ -10696,7 +10720,6 @@ dc.legend = function () {
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
  * labels.
- *
  * @class htmlLegend
  * @memberof dc
  * @example
@@ -10765,52 +10788,71 @@ dc.htmlLegend = function () {
     };
 
     /**
-     #### .container([selector])
-     Set the container selector for the legend widget. Required.
+     * Set the container selector for the legend widget. Required.
+     * @method container
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [container]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.container = function (c) {
+    _legend.container = function (container) {
         if (!arguments.length) {
             return _container;
         }
-        _container = d3.select(c);
+        _container = d3.select(container);
         return _legend;
     };
 
     /**
-     #### .legendItemClass([selector])
-     This can be optionally used to override class for legenditem and just use this class style.
-     The reason to have this is so this can be done for a particular chart rather than overriding the style for all charts
-     Setting this will disable the highlighting of selected items also.
+     * This can be optionally used to override class for legenditem and just use this class style.
+     * This is helpful for overriding the style of a particular chart rather than overriding
+     * the style for all charts.
+     *
+     * Setting this will disable the highlighting of selected items also.
+     * @method legendItemClass
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [legendItemClass]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.legendItemClass = function (c) {
+    _legend.legendItemClass = function (legendItemClass) {
         if (!arguments.length) {
             return _legendItemClass;
         }
-        _legendItemClass = c;
+        _legendItemClass = legendItemClass;
         return _legend;
     };
 
     /**
-     #### .highlightSelected([boolean])
-     This can be optionally used to enable highlighting legends for the selections/filters for the chart.
+     * This can be optionally used to enable highlighting legends for the selections/filters for the
+     * chart.
+     * @method highlightSelected
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [highlightSelected]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.highlightSelected = function (c) {
+    _legend.highlightSelected = function (highlightSelected) {
         if (!arguments.length) {
             return _highlightSelected;
         }
-        _highlightSelected = c;
+        _highlightSelected = highlightSelected;
         return _legend;
     };
 
     /**
-     #### .horizontal([boolean])
-     Display the legend horizontally instead of vertically
+     * Display the legend horizontally instead of vertically
+     * @method horizontal
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [horizontal]
+     * @return {String|dc.htmlLegend}
      **/
-    _legend.horizontal = function (b) {
+    _legend.horizontal = function (horizontal) {
         if (!arguments.length) {
             return _horizontal;
         }
-        _horizontal = b;
+        _horizontal = horizontal;
         return _legend;
     };
 
@@ -11655,14 +11697,19 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     /**
-     #### .rowOrdering([orderFunction])
-     Get or set an accessor to order the rows.  Default is d3.ascending.
+     * Get or set a comparator to order the rows.
+     * Default is {@link https://github.com/d3/d3-array#ascending d3.ascending}.
+     * @method rowOrdering
+     * @memberof dc.heatMap
+     * @instance
+     * @param  {Function} [rowOrdering]
+     * @returns {Function|dc.heatMap}
      */
-    _chart.rowOrdering = function (_) {
+    _chart.rowOrdering = function (rowOrdering) {
         if (!arguments.length) {
             return _rowOrdering;
         }
-        _rowOrdering = _;
+        _rowOrdering = rowOrdering;
         return _chart;
     };
 
@@ -11684,14 +11731,19 @@ dc.heatMap = function (parent, chartGroup) {
     };
 
     /**
-     #### .colOrdering([orderFunction])
-     Get or set an accessor to order the cols.  Default is ascending.
+     * Get or set a comparator to order the columns.
+     * Default is  {@link https://github.com/d3/d3-array#ascending d3.ascending}.
+     * @method colOrdering
+     * @memberof dc.heatMap
+     * @instance
+     * @param  {Function} [colOrdering]
+     * @returns {Function|dc.heatMap}
      */
-    _chart.colOrdering = function (_) {
+    _chart.colOrdering = function (colOrdering) {
         if (!arguments.length) {
             return _colOrdering;
         }
-        _colOrdering = _;
+        _colOrdering = colOrdering;
         return _chart;
     };
 
@@ -11958,6 +12010,7 @@ dc.heatMap = function (parent, chartGroup) {
 // OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 // EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+/*eslint complexity: 0*/
 (function () {
 
     // Inspired by http://informationandvisualization.de/blog/box-plot
@@ -11983,7 +12036,6 @@ dc.heatMap = function (parent, chartGroup) {
 
         // For each small multiple…
         function box (g) {
-            /* jshint -W074 */
             g.each(function (d, i) {
                 d = d.map(value).sort(d3.ascending);
                 var g = d3.select(this),
@@ -12303,7 +12355,6 @@ dc.heatMap = function (parent, chartGroup) {
                 // Remove temporary quartiles element from within data array.
                 delete d.quartiles;
             });
-            /* jshint +W074 */
             d3.timerFlush();
         }
 
@@ -12872,9 +12923,9 @@ dc.selectMenu = function (parent, chartGroup) {
     var _promptValue = null;
     var _numberVisible = null;
     var _order = function (a, b) {
-        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
-             1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
-            -1 : 0;
+        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ? 1 :
+            _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ? -1 :
+            0;
     };
 
     var _filterDisplayed = function (d) {
@@ -12995,10 +13046,11 @@ dc.selectMenu = function (parent, chartGroup) {
      * Get or set the function that controls the ordering of option tags in the
      * select menu. By default options are ordered by the group key in ascending
      * order.
-     * @name order
+     * @method order
      * @memberof dc.selectMenu
      * @instance
      * @param {Function} [order]
+     * @returns {Function|dc.selectMenu}
      * @example
      * // order by the group's value
      * chart.order(function (a,b) {
@@ -13015,28 +13067,30 @@ dc.selectMenu = function (parent, chartGroup) {
 
     /**
      * Get or set the text displayed in the options used to prompt selection.
-     * @name promptText
+     * @method promptText
      * @memberof dc.selectMenu
      * @instance
      * @param {String} [promptText='Select all']
+     * @returns {String|dc.selectMenu}
      * @example
      * chart.promptText('All states');
      **/
-    _chart.promptText = function (_) {
+    _chart.promptText = function (promptText) {
         if (!arguments.length) {
             return _promptText;
         }
-        _promptText = _;
+        _promptText = promptText;
         return _chart;
     };
 
     /**
      * Get or set the function that filters option tags prior to display. By default options
      * with a value of < 1 are not displayed.
-     * @name filterDisplayed
+     * @method filterDisplayed
      * @memberof dc.selectMenu
      * @instance
      * @param {function} [filterDisplayed]
+     * @returns {Function|dc.selectMenu}
      * @example
      * // display all options override the `filterDisplayed` function:
      * chart.filterDisplayed(function () {
@@ -13054,10 +13108,11 @@ dc.selectMenu = function (parent, chartGroup) {
     /**
      * Controls the type of select menu. Setting it to true converts the underlying
      * HTML tag into a multiple select.
-     * @name multiple
+     * @method multiple
      * @memberof dc.selectMenu
      * @instance
      * @param {boolean} [multiple=false]
+     * @returns {boolean|dc.selectMenu}
      * @example
      * chart.multiple(true);
      **/
@@ -13075,10 +13130,11 @@ dc.selectMenu = function (parent, chartGroup) {
      * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
      * when only the prompt value is selected. If `null` (the default), no filtering will occur when
      * just the prompt is selected.
-     * @name promptValue
+     * @method promptValue
      * @memberof dc.selectMenu
      * @instance
      * @param {?*} [promptValue=null]
+     * @returns {*|dc.selectMenu}
      **/
     _chart.promptValue = function (promptValue) {
         if (!arguments.length) {
@@ -13093,10 +13149,11 @@ dc.selectMenu = function (parent, chartGroup) {
      * Controls the number of items to show in the select menu, when `.multiple()` is true. This
      * controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
      * the `select` element. If `null` (the default), uses the browser's default height.
-     * @name numberItems
+     * @method numberItems
      * @memberof dc.selectMenu
      * @instance
      * @param {?number} [numberVisible=null]
+     * @returns {number|dc.selectMenu}
      * @example
      * chart.numberVisible(10);
      **/
@@ -13298,9 +13355,9 @@ dc.cboxMenu = function (parent, chartGroup) {
     // generate a random number to use as an ID
     var _randVal = Math.floor(Math.random() * (100000)) + 1;
     var _order = function (a, b) {
-        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ?
-             1 : _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ?
-            -1 : 0;
+        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ? 1 :
+            _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ? -1 :
+            0;
     };
 
     var _filterDisplayed = function (d) {
@@ -13354,8 +13411,8 @@ dc.cboxMenu = function (parent, chartGroup) {
         var options = _cbox
         .selectAll('li.' + ITEM_CSS_CLASS)
             .data(_chart.data(), function (d) {
-            return _chart.keyAccessor()(d);
-        });
+                return _chart.keyAccessor()(d);
+            });
 
         options.exit().remove();
 
@@ -13454,10 +13511,11 @@ dc.cboxMenu = function (parent, chartGroup) {
      * Get or set the function that controls the ordering of option tags in the
      * cbox menu. By default options are ordered by the group key in ascending
      * order.
-     * @name order
+     * @method order
      * @memberof dc.cboxMenu
      * @instance
      * @param {Function} [order]
+     * @returns {Function|dc.cboxMenu}
      * @example
      * // order by the group's value
      * chart.order(function (a,b) {
@@ -13474,28 +13532,30 @@ dc.cboxMenu = function (parent, chartGroup) {
 
     /**
      * Get or set the text displayed in the options used to prompt selection.
-     * @name promptText
+     * @method promptText
      * @memberof dc.cboxMenu
      * @instance
      * @param {String} [promptText='Select all']
+     * @returns {String|dc.cboxMenu}
      * @example
      * chart.promptText('All states');
      **/
-    _chart.promptText = function (_) {
+    _chart.promptText = function (promptText) {
         if (!arguments.length) {
             return _promptText;
         }
-        _promptText = _;
+        _promptText = promptText;
         return _chart;
     };
 
     /**
      * Get or set the function that filters options prior to display. By default options
      * with a value of < 1 are not displayed.
-     * @name filterDisplayed
+     * @method filterDisplayed
      * @memberof dc.cboxMenu
      * @instance
      * @param {function} [filterDisplayed]
+     * @returns {Function|dc.cboxMenu}
      * @example
      * // display all options override the `filterDisplayed` function:
      * chart.filterDisplayed(function () {
@@ -13513,10 +13573,11 @@ dc.cboxMenu = function (parent, chartGroup) {
     /**
      * Controls the type of input element. Setting it to true converts
      * the HTML `input` tags from radio buttons to checkboxes.
-     * @name multiple
+     * @method multiple
      * @memberof dc.cboxMenu
      * @instance
      * @param {boolean} [multiple=false]
+     * @returns {Boolean|dc.cboxMenu}
      * @example
      * chart.multiple(true);
      **/
@@ -13538,10 +13599,11 @@ dc.cboxMenu = function (parent, chartGroup) {
      * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
      * when only the prompt value is selected. If `null` (the default), no filtering will occur when
      * just the prompt is selected.
-     * @name promptValue
+     * @method promptValue
      * @memberof dc.cboxMenu
      * @instance
      * @param {?*} [promptValue=null]
+     * @returns {*|dc.cboxMenu}
      **/
     _chart.promptValue = function (promptValue) {
         if (!arguments.length) {
