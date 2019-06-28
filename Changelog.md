@@ -10,8 +10,8 @@ div.dc-chart {
     float: left;
 }
 ```
-
 to your page CSS to restore the old layout!
+* Fix mixed content loading, by Rohan Shewale ([#1529](https://github.com/dc-js/dc.js/pull/1529))
 
 ## 3.0.13
 * Keep track of individual values efficiently in boxplot examples ([#543](https://github.com/dc-js/dc.js/issues/543))
