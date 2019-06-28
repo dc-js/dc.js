@@ -1,3 +1,18 @@
+## 3.1.0
+* Remove `float: left` from dc.css; add it to individual examples where needed.
+
+It's not appropriate to set this in the library, because charts will be used in all sorts of different layouts, and this sometimes required people to use `div.dc-chart { float: none!important; }` which is horrible. ([#673](https://github.com/dc-js/dc.js/issues/673))
+
+Fixing this will break a lot of dashboard layouts, thus the version bump. Add
+
+```css
+div.dc-chart {
+    float: left;
+}
+```
+
+to your page CSS to restore the old layout!
+
 ## 3.0.13
 * Keep track of individual values efficiently in boxplot examples ([#543](https://github.com/dc-js/dc.js/issues/543))
 * Series progression [example](https://dc-js.github.io/dc.js/transitions/series-progression.html)
