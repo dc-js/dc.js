@@ -12,6 +12,7 @@ div.dc-chart {
 ```
 to your page CSS to restore the old layout!
 * Fix mixed content loading, by Rohan Shewale ([#1529](https://github.com/dc-js/dc.js/pull/1529))
+* Update all dependencies and move to eslint, to eliminate npm security audit complaints
 
 ## 3.0.13
 * Keep track of individual values efficiently in boxplot examples ([#543](https://github.com/dc-js/dc.js/issues/543))
