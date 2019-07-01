@@ -28,8 +28,9 @@
   }
   </style>
 <script type="text/javascript">
+    dc.constants.EVENT_DELAY = 10;
     // phrases generated with https://www.fourmilab.ch/javascrypt/pass_phrase.html
-    var chart, range;
+    var focus, range;
     d3.json("wide-ordinal.json").then(function(wide) {
         // map ordinals to integers so that zooming will work
         var ord2int = {}, int2ord = [];
@@ -43,10 +44,10 @@
             dimension = cf.dimension(function(d) {return d.key;}),
             group = dimension.group().reduceSum(function(d) {return d.value;});
 
-        chart = dc.barChart('#focus');
-        chart
-            .width(1000).height(400)
-            .margins({left: 30, top: 10, right: 10, bottom: 220})
+        focus = dc.barChart('#focus');
+        focus
+            .width(1000).height(350)
+            .margins({left: 40, top: 10, right: 10, bottom: 175})
             .x(d3.scaleLinear().domain([0, int2ord.length+1]))
             .xUnits(dc.units.integers)
             .keyAccessor(kv => ord2int[kv.key])
@@ -56,10 +57,12 @@
             .brushOn(false)
             .dimension(dimension)
             .mouseZoomable(true)
+            .zoomScale([4,8])
             .group(group)
-            .title(kv => kv.key);
+            .title(kv => kv.key)
+            .transitionDuration(0);
 
-        chart.xAxis()
+        focus.xAxis()
             .tickValues(d3.range(int2ord.length))
             .tickFormat(function(d) { return int2ord[d]; });
 
@@ -73,11 +76,16 @@
             .elasticY(true)
             .brushOn(true)
             .dimension(dimension)
-            .group(group);
+            .group(group)
+            .transitionDuration(0);
 
-        chart.rangeChart(range);
+        focus
+            .rangeChart(range)
 
         dc.renderAll();
+        focus
+            .focus([0,60])
+
     });
 
 </script>
