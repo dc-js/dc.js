@@ -394,13 +394,11 @@ dc.lineChart = function (parent, chartGroup) {
                         .attr('stroke', _chart.getColor)
                         .on('mousemove', function () {
                             var dot = d3.select(this);
-                            console.log('mm', _chart.keyAccessor()(dot.datum().data));
                             showDot(dot);
                             showRefLines(dot, g);
                         })
                         .on('mouseout', function () {
                             var dot = d3.select(this);
-                            console.log('mo', _chart.keyAccessor()(dot.datum().data));
                             hideDot(dot);
                             hideRefLines(g);
                         })
