@@ -98,7 +98,6 @@
             .transitionDuration(0);
 
         focus.xAxis()
-            .tickValues(d3.range(wide.length))
             .tickFormat(function(d) { return group.int2ord(d); });
 
         // unfortunately we have to recreate click-selection, since a focus chart
@@ -134,6 +133,12 @@
                 else chart.dimension().filter(null);
                 chart.redrawGroup();
             });
+        });
+
+        focus.on('preRedraw', function(chart) {
+            var domain = chart.x().domain(),
+                min = Math.ceil(domain[0]), max = Math.floor(domain[1]);
+            chart.xAxis().tickValues(d3.range(min, max+1));
         });
 
         range = dc.barChart('#range');
