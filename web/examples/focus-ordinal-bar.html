@@ -10,8 +10,14 @@
 
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
-<div id="focus"></div>
+<p>This example demonstrates using range and focus charts to scroll an ordinal bar chart
+  with too many items. Instead of filtering, the brush only changes the view; bars are
+  clickable as in an ordinary ordinal bar chart.</p>
+<p>Since ordinal-scale charts are not ordinarily brushable or zoomable, the example maps
+  the ordinal values to integers, and then maps the integers back to the values for the
+  axis ticks.</p>
 <div id="range"></div>
+<div id="focus"></div>
 <div id="first-letters"></div>
 
     <script type="text/javascript" src="../js/promise-polyfill.js"></script>
@@ -26,6 +32,9 @@
   }
   #range.dc-chart .axis {
     display: none;
+  }
+  #range svg {
+      display: block; /* default inline causes padding? */
   }
   </style>
   <script type="text/javascript">
@@ -51,7 +60,7 @@
         var linear_domain = [-0.5, int2ord.length - 0.5];
         focus
             .width(1000).height(350)
-            .margins({left: 40, top: 10, right: 10, bottom: 175})
+            .margins({left: 40, top: 0, right: 10, bottom: 175})
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
             .keyAccessor(kv => ord2int[kv.key])
@@ -108,8 +117,8 @@
         range = dc.barChart('#range');
         range.filterHandler(function() {}); // disable built-in filtering
         range
-            .margins({left: 0, top: 0, right: 0, bottom: 0})
-            .width(1000).height(50)
+            .margins({left: 54, top: 0, right: 20, bottom: 2})
+            .width(1000).height(20)
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
             .keyAccessor(kv => ord2int[kv.key])
