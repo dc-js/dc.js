@@ -2922,8 +2922,17 @@ Set or get radius for symbols when the group is empty.
 
 #### new numberDisplay(parent, [chartGroup])
 A display of a single numeric value.
+
 Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
 a valueAccessor that returns a single value.
+
+If the group is a [groupAll](https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_groupAll)
+then its `.value()` will be displayed. This is the recommended usage.
+
+However, if it is given an ordinary group, the `numberDisplay` will show the last bin's value, after
+sorting with the [ordering](https://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#ordering__anchor)
+function. `numberDisplay` defaults the `ordering` function to sorting by value, so this will display
+the largest value if the values are numeric.
 
 
 | Param | Type | Description |
