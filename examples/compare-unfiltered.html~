@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Downloading Data Table Contents</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      #data-count {
+        margin-top: 0;
+        text-align: left;
+        float: none;
+      }
+
+      table {
+        table-layout: fixed;
+      }
+
+      td {
+        width: 1%;
+      }
+    </style>
+</head>
+<body>
+
+<div class="container">
+  <script type="text/javascript" src="header.js"></script>
+  <script type="text/javascript" src="../js/promise-polyfill.js"></script>
+  <script type="text/javascript" src="../js/fetch.umd.js"></script>
+  <script type="text/javascript" src="../js/d3.js"></script>
+  <script type="text/javascript" src="../js/crossfilter.js"></script>
+  <script type="text/javascript" src="../js/dc.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+
+  <div class="row">
+    <h2>Data Exploration Tool</h2>
+    <div class="col-md-3 well well-sm">
+      <div class="dc-data-count" id="data-count">
+          <span class="filter-count"></span>
+           selected out of
+          <span class="total-count"></span>
+           points |
+          <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a><br>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-12">
+
+      <!-- First row of charts -->
+      <div class="row">
+        <div class="col-md-3">
+          <div id="chart-11" style="width:100%;">
+            <div id="chart-11-title"></div>
+            <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+              <a href="javascript:chart_11.filterAll();dc.redrawAll();">reset</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div id="chart-12" style="width:100%;">
+            <div id="chart-12-title"></div>
+            <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+              <a href="javascript:chart_12.filterAll();dc.redrawAll();">reset</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div id="chart-13" style="width:100%;">
+              <div id="chart-13-title"></div>
+            <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+              <a href="javascript:chart_13.filterAll();dc.redrawAll();">reset</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+            <div id="chart-14" style="width:100%;">
+                <div id="chart-14-title"></div>
+              <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+                <a href="javascript:chart_14.filterAll();dc.redrawAll();">reset</a>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <!-- Second row of chart -->
+      <div class="row">
+        <div class="col-md-3">
+          <div id="chart-21" style="width:100%;">
+            <div id="chart-21-title"></div>
+            <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+              <a href="javascript:chart_21.filterAll();dc.redrawAll();">reset</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div id="chart-22" style="width:100%;">
+            <div id="chart-22-title"></div>
+            <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+              <a href="javascript:chart_22.filterAll();dc.redrawAll();">reset</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div id="chart-23"style="width:100%;">
+            <div id="chart-23-title"></div>
+            <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+              <a href="javascript:chart_23.filterAll();dc.redrawAll();">reset</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+            <div id="chart-24"style="width:100%;">
+              <div id="chart-24-title"></div>
+              <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+                <a href="javascript:chart_24.filterAll();dc.redrawAll();">reset</a>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script type="text/javascript">
+
+dc.config.defaultColors(d3.schemeSet1);
+
+var chart_11   = dc.compositeChart("#chart-11"),
+    chart_12   = dc.compositeChart("#chart-12"),
+    chart_13   = dc.compositeChart("#chart-13"),
+    chart_21   = dc.compositeChart("#chart-21"),
+    chart_22   = dc.compositeChart("#chart-22"),
+    chart_23   = dc.compositeChart("#chart-23"),
+    data_count = dc.dataCount(".dc-data-count");
+
+d3.csv("https://gist.githubusercontent.com/JasonAizkalns/32ece5c815f9ac5d540c41dc0825bbab/raw/362050300ddcb99f195044c00d9f26b0d7d489ca/data.csv").then(function(data) {
+
+var var_names = ["x", "y", "z", "a", "b", "c"];
+
+$("#chart-11-title").append(["<h5>", var_names[0], "<br>Subtitle</h5>"].join(""));
+$("#chart-12-title").append(["<h5>", var_names[1], "<br>Subtitle</h5>"].join(""));
+$("#chart-13-title").append(["<h5>", var_names[2], "<br>Subtitle</h5>"].join(""));
+$("#chart-21-title").append(["<h5>", var_names[3], "<br>Subtitle</h5>"].join(""));
+$("#chart-22-title").append(["<h5>", var_names[4], "<br>Subtitle</h5>"].join(""));
+$("#chart-23-title").append(["<h5>", var_names[5], "<br>Subtitle</h5>"].join(""));
+
+var c11_bin = 10,
+    c12_bin = 10,
+    c13_bin = 500,
+    c21_bin = 100,
+    c22_bin = 20,
+    c23_bin = 1000;
+
+
+var ndx = crossfilter(data),
+
+    chart_11_dim = ndx.dimension(function(d) { return +d[var_names[0]]; }),
+    chart_12_dim = ndx.dimension(function(d) { return +d[var_names[1]]; }),
+    chart_13_dim = ndx.dimension(function(d) { return +d[var_names[2]]; }),
+    chart_21_dim = ndx.dimension(function(d) { return +d[var_names[3]]; }),
+    chart_22_dim = ndx.dimension(function(d) { return +d[var_names[4]]; }),
+    chart_23_dim = ndx.dimension(function(d) { return +d[var_names[5]]; }),
+
+    chart_11_grp = chart_11_dim.group(function(d) { return Math.floor(d / c11_bin) * c11_bin }).reduceCount(),
+    chart_12_grp = chart_12_dim.group(function(d) { return Math.floor(d / c12_bin) * c12_bin }).reduceCount(),
+    chart_13_grp = chart_13_dim.group(function(d) { return Math.floor(d / c13_bin) * c13_bin }).reduceCount(),
+    chart_21_grp = chart_21_dim.group(function(d) { return Math.floor(d / c21_bin) * c21_bin }).reduceCount(),
+    chart_22_grp = chart_22_dim.group(function(d) { return Math.floor(d / c22_bin) * c22_bin }).reduceCount(),
+    chart_23_grp = chart_23_dim.group(function(d) { return Math.floor(d / c23_bin) * c23_bin }).reduceCount();
+    
+function static_copy_group(group) {
+    var all = group.all().map(kv => ({key: kv.key, value: kv.value}));
+    return {
+    		all: function() {
+            return all;
+        }
+    }
+}
+
+var chart_11_grp_copy = static_copy_group(chart_11_grp),
+		chart_12_grp_copy = static_copy_group(chart_12_grp),
+		chart_13_grp_copy = static_copy_group(chart_13_grp),
+		chart_21_grp_copy = static_copy_group(chart_21_grp),
+		chart_22_grp_copy = static_copy_group(chart_22_grp),
+		chart_23_grp_copy = static_copy_group(chart_23_grp);
+
+var all = ndx.groupAll();
+
+data_count.dimension(ndx)
+  .group(all);
+  
+function any_filters() {
+    return [chart_11, chart_12, chart_13, chart_21, chart_22, chart_23]
+        .some(chart => chart.filters().length);
+}
+
+function hide_second_chart(chart) {
+    chart.select('.sub._1')
+        .attr('visibility', any_filters() ? 'visible' : 'hidden')
+}
+
+[chart_11, chart_12, chart_13, chart_21, chart_22, chart_23].forEach(function(chart) {
+   chart.on('pretransition', hide_second_chart)
+})
+  
+chart_11
+    .compose([
+        dc.barChart(chart_11)
+            .dimension(chart_11_dim)
+            .group(chart_11_grp_copy)
+					  .controlsUseVisibility(true)
+        ,
+        dc.barChart(chart_11)
+            .dimension(chart_11_dim)
+            .group(chart_11_grp)
+            .colors('red')
+					  .controlsUseVisibility(true)
+            .brushOn(false)
+    ]);
+
+chart_12
+    .compose([
+        dc.barChart(chart_12)
+            .dimension(chart_12_dim)
+            .group(chart_12_grp_copy)
+					  .controlsUseVisibility(true)
+        ,
+        dc.barChart(chart_12)
+            .dimension(chart_12_dim)
+            .group(chart_12_grp)
+            .colors('red')
+					  .controlsUseVisibility(true)
+            .brushOn(false)
+    ]);
+
+chart_13
+    .compose([
+        dc.barChart(chart_13)
+            .dimension(chart_13_dim)
+            .group(chart_13_grp_copy)
+					  .controlsUseVisibility(true)
+        ,
+        dc.barChart(chart_13)
+            .dimension(chart_13_dim)
+            .group(chart_13_grp)
+            .colors('red')
+					  .controlsUseVisibility(true)
+            .brushOn(false)
+    ]);
+
+chart_21
+    .compose([
+        dc.barChart(chart_21)
+            .dimension(chart_21_dim)
+            .group(chart_21_grp_copy)
+					  .controlsUseVisibility(true)
+        ,
+        dc.barChart(chart_21)
+            .dimension(chart_21_dim)
+            .group(chart_21_grp)
+            .colors('red')
+					  .controlsUseVisibility(true)
+            .brushOn(false)
+    ]);
+
+chart_22
+    .compose([
+        dc.barChart(chart_22)
+            .dimension(chart_22_dim)
+            .group(chart_22_grp_copy)
+					  .controlsUseVisibility(true)
+        ,
+        dc.barChart(chart_22)
+            .dimension(chart_22_dim)
+            .group(chart_22_grp)
+            .colors('red')
+					  .controlsUseVisibility(true)
+            .brushOn(false)
+    ]);
+
+chart_23
+    .compose([
+        dc.barChart(chart_23)
+            .dimension(chart_23_dim)
+            .group(chart_23_grp_copy)
+					  .controlsUseVisibility(true)
+        ,
+        dc.barChart(chart_23)
+            .dimension(chart_23_dim)
+            .group(chart_23_grp)
+            .colors('red')
+					  .controlsUseVisibility(true)
+            .brushOn(false)
+    ]);
+
+
+var chart_11_min = +chart_11_dim.bottom(1)[0][var_names[0]],
+    chart_11_max = +chart_11_dim.top(1)[0][var_names[0]],
+    chart_12_min = +chart_12_dim.bottom(1)[0][var_names[1]],
+    chart_12_max = +chart_12_dim.top(1)[0][var_names[1]],
+    chart_13_min = +chart_13_dim.bottom(1)[0][var_names[2]],
+    chart_13_max = +chart_13_dim.top(1)[0][var_names[2]],
+    chart_21_min = +chart_21_dim.bottom(1)[0][var_names[3]],
+    chart_21_max = +chart_21_dim.top(1)[0][var_names[3]],
+    chart_22_min = +chart_22_dim.bottom(1)[0][var_names[4]],
+    chart_22_max = +chart_22_dim.top(1)[0][var_names[4]],
+    chart_23_min = +chart_23_dim.bottom(1)[0][var_names[5]],
+    chart_23_max = +chart_23_dim.top(1)[0][var_names[5]];
+
+var breathing_room = 0.05;
+
+chart_11
+  .dimension(chart_11_dim)
+  .group(chart_11_grp)
+  .round(dc.round.floor)
+  .x(d3.scaleLinear().domain([chart_11_min - ((chart_11_max - chart_11_min) * breathing_room), chart_11_max + ((chart_11_max - chart_11_min) * breathing_room)]))
+  .xUnits(function(start, end, xDomain) { return (end - start) / c11_bin; })
+  .controlsUseVisibility(true);
+
+chart_12
+  .dimension(chart_12_dim)
+  .group(chart_12_grp)
+  .round(dc.round.floor)
+  .x(d3.scaleLinear().domain([chart_12_min - ((chart_12_max - chart_12_min) * breathing_room), chart_12_max + ((chart_12_max - chart_12_min) * breathing_room)]))
+  .xUnits(function(start, end, xDomain) { return (end - start) / c12_bin; })
+  .controlsUseVisibility(true);
+
+chart_13
+  .dimension(chart_13_dim)
+  .group(chart_13_grp)
+  .round(dc.round.floor)
+  .x(d3.scaleLinear().domain([chart_13_min - ((chart_13_max - chart_13_min) * breathing_room), chart_13_max + ((chart_13_max - chart_13_min) * breathing_room)]))
+  .xUnits(function(start, end, xDomain) { return (end - start) / c13_bin; })
+  .controlsUseVisibility(true);
+
+chart_21
+  .dimension(chart_21_dim)
+  .group(chart_21_grp)
+  .round(dc.round.floor)
+  .x(d3.scaleLinear().domain([chart_21_min - ((chart_21_max - chart_21_min) * breathing_room), chart_21_max + ((chart_21_max - chart_21_min) * breathing_room)]))
+  .xUnits(function(start, end, xDomain) { return (end - start) / c21_bin; })
+  .controlsUseVisibility(true);
+
+chart_22
+  .dimension(chart_22_dim)
+  .group(chart_22_grp)
+  .round(dc.round.floor)
+  .x(d3.scaleLinear().domain([chart_22_min - ((chart_22_max - chart_22_min) * breathing_room), chart_22_max + ((chart_22_max - chart_22_min) * breathing_room)]))
+  .xUnits(function(start, end, xDomain) { return (end - start) / c22_bin; })
+  .controlsUseVisibility(true);
+
+chart_23
+  .dimension(chart_23_dim)
+  .group(chart_23_grp)
+  .round(dc.round.floor)
+  .x(d3.scaleLinear().domain([chart_23_min - ((chart_23_max - chart_23_min) * breathing_room), chart_23_max + ((chart_23_max - chart_23_min) * breathing_room)]))
+  .xUnits(function(start, end, xDomain) { return (end - start) / c23_bin; })
+  .controlsUseVisibility(true);
+
+dc.renderAll();
+
+});
+</script>
+
+</div>
+</body>
+</html>
