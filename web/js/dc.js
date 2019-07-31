@@ -1,5 +1,5 @@
 /*!
- *  dc 3.1.0
+ *  dc 3.1.1
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.1.0
+ * @version 3.1.1
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  *      .filter('sunday');
  */
 var dc = {
-    version: '3.1.0',
+    version: '3.1.1',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -11392,8 +11392,17 @@ dc.scatterPlot = function (parent, chartGroup) {
 
 /**
  * A display of a single numeric value.
+ *
  * Unlike other charts, you do not need to set a dimension. Instead a group object must be provided and
  * a valueAccessor that returns a single value.
+ *
+ * If the group is a {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_groupAll groupAll}
+ * then its `.value()` will be displayed. This is the recommended usage.
+ *
+ * However, if it is given an ordinary group, the `numberDisplay` will show the last bin's value, after
+ * sorting with the {@link https://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#ordering__anchor ordering}
+ * function. `numberDisplay` defaults the `ordering` function to sorting by value, so this will display
+ * the largest value if the values are numeric.
  * @class numberDisplay
  * @memberof dc
  * @mixes dc.baseMixin
