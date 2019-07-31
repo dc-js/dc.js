@@ -37,7 +37,7 @@
     }
   }
 
-  return function compareVersions(v1, v2) {
+  function compareVersions(v1, v2) {
     [v1, v2].forEach(validate);
 
     var s1 = split(v1);
@@ -72,4 +72,42 @@
     return 0;
   };
 
+  var allowedOperators = [
+    '>',
+    '>=',
+    '=',
+    '<',
+    '<='
+  ];
+
+  function validateOperator(op) {
+    if (typeof op !== 'string') {
+      throw new TypeError('Invalid operator type, expected string but got ' + typeof op);
+    }
+    if (allowedOperators.indexOf(op) === -1) {
+      throw new TypeError('Invalid operator, expected one of ' + allowedOperators.join('|'));
+    }
+  }
+
+  compareVersions.compare = function (v1, v2, operator) {
+    // Validate operator
+    validateOperator(operator);
+
+    // TODO: there might be a better way instead of doing this
+    switch(operator) {
+      case '>':
+        return compareVersions(v1, v2) > 0;
+      case '>=':
+        return compareVersions(v1, v2) >= 0;
+      case '<':
+        return compareVersions(v1, v2) < 0;
+      case '<=':
+        return compareVersions(v1, v2) <= 0;
+      default:
+        // Since validateOperator already checks the operator, this case in the switch checks for the '=' operator
+        return compareVersions(v1, v2) === 0;
+    }
+  }
+
+  return compareVersions;
 }));
