@@ -1,4 +1,3 @@
-[![Dependency Status](https://gemnasium.com/dc-js/dc.js.svg)](https://gemnasium.com/dc-js/dc.js)
 [![Build Status](https://api.travis-ci.org/dc-js/dc.js.svg?branch=master)](http://travis-ci.org/dc-js/dc.js)
 [![Sauce Status](https://saucelabs.com/buildstatus/sclevine)](https://saucelabs.com/u/sclevine)
 [![NPM Status](https://badge.fury.io/js/dc.svg)](http://badge.fury.io/js/dc)

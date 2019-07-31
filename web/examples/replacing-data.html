@@ -50,19 +50,26 @@ var data2 = [
     {Name: 'Mr C', Spent: 50, Year: 2013}
 ];
 
+// Prior to crossfilter 1.4, the following workaround was necessary: 
 // "Grab the filters from the charts, set the filters on the charts to null,
 // do your Crossfilter data removal, then add the filters back to the charts.
 // The exact filter format is kind of screwy, and the fact that you have to put
 // the output of .filters() in an array to make it work with .filter() is a bit strange."
-function resetData(ndx, dimensions) {
-    var yearChartFilters = yearRingChart.filters();
-    var spenderChartFilters = spenderRowChart.filters();
-    yearRingChart.filter(null);
-    spenderRowChart.filter(null);
-    ndx.remove();
-    yearRingChart.filter([yearChartFilters]);
-    spenderRowChart.filter([spenderChartFilters]);
-    console.log(spenderRowChart.filters());
+// function resetData(ndx, dimensions) {
+//     var yearChartFilters = yearRingChart.filters();
+//     var spenderChartFilters = spenderRowChart.filters();
+//     yearRingChart.filter(null);
+//     spenderRowChart.filter(null);
+//     ndx.remove();
+//     yearRingChart.filter([yearChartFilters]);
+//     spenderRowChart.filter([spenderChartFilters]);
+//     console.log(spenderRowChart.filters());
+// }
+
+// As of crossfilter 1.4, there is no need for this messy (and potentially buggy) workaround.
+// Use the predicate form and there is no need to mess with dimension filters:
+function resetData(ndx) {
+    ndx.remove(() => true);
 }
 
 // set crossfilter with first dataset

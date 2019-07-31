@@ -1,3 +1,9 @@
+## 3.1.1
+* Update [replacing data](https://dc-js.github.io/dc.js/examples/replacing-data.html) and [series](https://dc-js.github.io/dc.js/examples/series.html) examples with the robust way to replace data as of crossfilter 1.4 ([#1536](https://github.com/dc-js/dc.js/issues/1536))
+* The [focus ordinal bar example](https://dc-js.github.io/dc.js/examples/focus-ordinal-bar.html) demonstrates scrolling through a wide bar chart using a range chart.
+* The [brush ordinal example](https://dc-js.github.io/dc.js/examples/brush-ordinal.html) demonstrates using a range brush on ordinal data, by transforming the data to a linear scale.
+* Remove leftover debugging logs, thanks Adrián de la Rosa! ([#1534](https://github.com/dc-js/dc.js/pull/1534))
+
 ## 3.1.0
 * Remove `float: left` from dc.css; add it to individual examples where needed.
 
