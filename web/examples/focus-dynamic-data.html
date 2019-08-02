@@ -11,8 +11,10 @@
     <div class="container">
       <script type="text/javascript" src="header.js"></script>
       <p>This example shows how to display dynamically changing data with a range/focus chart
-      pair. In particular, the focus chart should display the changing X domain unless a brush is
-      active in the range chart.</p>
+        pair. In particular, the focus chart should display the changing X domain unless a brush is
+        active in the range chart.</p>
+      <p>By default, data is only added; append `?remove=1` to the URL to remove data as well
+        (exhibits weird transitions due to <a href="https://github.com/dc-js/dc.js/issues/507">#507</a>).</p>
       <div id="focus"></div>
       <div id="range"></div>
 
