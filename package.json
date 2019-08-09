@@ -48,6 +48,7 @@
     "grunt-jsdoc": "^2.4.0",
     "grunt-jsdoc-to-markdown": "github:dc-js/grunt-jsdoc-to-markdown",
     "grunt-karma": "^3.0.2",
+    "grunt-rollup": "^10.0.0",
     "grunt-sass": "^3.0.2",
     "grunt-shell": "~2.1",
     "ink-docstrap": "^1.3.2",
