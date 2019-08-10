@@ -1,3 +1,5 @@
+import * as d3 from 'd3';
+
 /**
  * The default date format for dc.js
  * @name dateFormat
@@ -5,14 +7,14 @@
  * @type {Function}
  * @default d3.timeFormat('%m/%d/%Y')
  */
-dc.dateFormat = d3.timeFormat('%m/%d/%Y');
+export const dateFormat = d3.timeFormat('%m/%d/%Y');
 
 /**
  * @namespace printers
  * @memberof dc
  * @type {{}}
  */
-dc.printers = {};
+export const printers = {};
 
 /**
  * Converts a list of filters into a readable string.
@@ -21,14 +23,14 @@ dc.printers = {};
  * @param {Array<dc.filters>} filters
  * @returns {String}
  */
-dc.printers.filters = function (filters) {
+printers.filters = function (filters) {
     var s = '';
 
     for (var i = 0; i < filters.length; ++i) {
         if (i > 0) {
             s += ', ';
         }
-        s += dc.printers.filter(filters[i]);
+        s += printers.filter(filters[i]);
     }
 
     return s;
@@ -41,20 +43,20 @@ dc.printers.filters = function (filters) {
  * @param {dc.filters|any|Array<any>} filter
  * @returns {String}
  */
-dc.printers.filter = function (filter) {
+printers.filter = function (filter) {
     var s = '';
 
     if (typeof filter !== 'undefined' && filter !== null) {
         if (filter instanceof Array) {
             if (filter.length >= 2) {
                 s = '[' + filter.map(function (e) {
-                    return dc.utils.printSingleValue(e);
+                    return utils.printSingleValue(e);
                 }).join(' -> ') + ']';
             } else if (filter.length >= 1) {
-                s = dc.utils.printSingleValue(filter[0]);
+                s = utils.printSingleValue(filter[0]);
             }
         } else {
-            s = dc.utils.printSingleValue(filter);
+            s = utils.printSingleValue(filter);
         }
     }
 
@@ -84,7 +86,7 @@ dc.printers.filter = function (filter) {
  * @param {Function} [f]
  * @returns {Function}
  */
-dc.pluck = function (n, f) {
+export const pluck = function (n, f) {
     if (!f) {
         return function (d) { return d[n]; };
     }
@@ -96,7 +98,7 @@ dc.pluck = function (n, f) {
  * @memberof dc
  * @type {{}}
  */
-dc.utils = {};
+export const utils = {};
 
 /**
  * Print a single value filter.
@@ -105,25 +107,25 @@ dc.utils = {};
  * @param {any} filter
  * @returns {String}
  */
-dc.utils.printSingleValue = function (filter) {
+utils.printSingleValue = function (filter) {
     var s = '' + filter;
 
     if (filter instanceof Date) {
-        s = dc.dateFormat(filter);
+        s = dateFormat(filter);
     } else if (typeof(filter) === 'string') {
         s = filter;
-    } else if (dc.utils.isFloat(filter)) {
-        s = dc.utils.printSingleValue.fformat(filter);
-    } else if (dc.utils.isInteger(filter)) {
+    } else if (utils.isFloat(filter)) {
+        s = utils.printSingleValue.fformat(filter);
+    } else if (utils.isInteger(filter)) {
         s = Math.round(filter);
     }
 
     return s;
 };
-dc.utils.printSingleValue.fformat = d3.format('.2f');
+utils.printSingleValue.fformat = d3.format('.2f');
 
 // convert 'day' to 'timeDay' and similar
-dc.utils.toTimeFunc = function (t) {
+utils.toTimeFunc = function (t) {
     return 'time' + t.charAt(0).toUpperCase() + t.slice(1);
 };
 
@@ -148,7 +150,7 @@ dc.utils.toTimeFunc = function (t) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-dc.utils.add = function (l, r, t) {
+utils.add = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -162,7 +164,7 @@ dc.utils.add = function (l, r, t) {
         }
         t = t || d3.timeDay;
         if (typeof t !== 'function') {
-            t = d3[dc.utils.toTimeFunc(t)];
+            t = d3[utils.toTimeFunc(t)];
         }
         return t.offset(l, r);
     } else if (typeof r === 'string') {
@@ -194,7 +196,7 @@ dc.utils.add = function (l, r, t) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-dc.utils.subtract = function (l, r, t) {
+utils.subtract = function (l, r, t) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -208,7 +210,7 @@ dc.utils.subtract = function (l, r, t) {
         }
         t = t || d3.timeDay;
         if (typeof t !== 'function') {
-            t = d3[dc.utils.toTimeFunc(t)];
+            t = d3[utils.toTimeFunc(t)];
         }
         return t.offset(l, -r);
     } else if (typeof r === 'string') {
@@ -226,7 +228,7 @@ dc.utils.subtract = function (l, r, t) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isNumber = function (n) {
+utils.isNumber = function (n) {
     return n === +n;
 };
 
@@ -237,7 +239,7 @@ dc.utils.isNumber = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isFloat = function (n) {
+utils.isFloat = function (n) {
     return n === +n && n !== (n | 0);
 };
 
@@ -248,7 +250,7 @@ dc.utils.isFloat = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isInteger = function (n) {
+utils.isInteger = function (n) {
     return n === +n && n === (n | 0);
 };
 
@@ -259,8 +261,8 @@ dc.utils.isInteger = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-dc.utils.isNegligible = function (n) {
-    return !dc.utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
+utils.isNegligible = function (n) {
+    return !utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
 };
 
 /**
@@ -272,7 +274,7 @@ dc.utils.isNegligible = function (n) {
  * @param {any} max
  * @returns {any}
  */
-dc.utils.clamp = function (val, min, max) {
+utils.clamp = function (val, min, max) {
     return val < min ? min : (val > max ? max : val);
 };
 
@@ -287,7 +289,7 @@ dc.utils.clamp = function (val, min, max) {
  * @param {any} x
  * @returns {Function}
  */
-dc.utils.constant = function (x) {
+utils.constant = function (x) {
     return function () {
         return x;
     };
@@ -299,8 +301,8 @@ dc.utils.constant = function (x) {
  * @memberof dc.utils
  * @returns {Number}
  */
-var _idCounter = 0;
-dc.utils.uniqueId = function () {
+let _idCounter = 0;
+utils.uniqueId = function () {
     return ++_idCounter;
 };
 
@@ -311,7 +313,7 @@ dc.utils.uniqueId = function () {
  * @param {String} name
  * @returns {String}
  */
-dc.utils.nameToId = function (name) {
+utils.nameToId = function (name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
 };
 
@@ -324,7 +326,7 @@ dc.utils.nameToId = function (name) {
  * @param {String} tag
  * @returns {d3.selection}
  */
-dc.utils.appendOrSelect = function (parent, selector, tag) {
+utils.appendOrSelect = function (parent, selector, tag) {
     tag = tag || selector;
     var element = parent.select(selector);
     if (element.empty()) {
@@ -340,7 +342,7 @@ dc.utils.appendOrSelect = function (parent, selector, tag) {
  * @param {Number|any} n
  * @returns {Number}
  */
-dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
+utils.safeNumber = function (n) { return utils.isNumber(+n) ? +n : 0;};
 
 /**
  * Return true if both arrays are equal, if both array are null these are considered equal
@@ -350,7 +352,7 @@ dc.utils.safeNumber = function (n) { return dc.utils.isNumber(+n) ? +n : 0;};
  * @param {Array|null} a2
  * @returns {Boolean}
  */
-dc.utils.arraysEqual = function (a1, a2) {
+utils.arraysEqual = function (a1, a2) {
     if (!a1 && !a2) {
         return true;
     }
@@ -368,13 +370,13 @@ dc.utils.arraysEqual = function (a1, a2) {
 };
 
 // ******** Sunburst Chart ********
-dc.utils.allChildren = function (node) {
+utils.allChildren = function (node) {
     var paths = [];
     paths.push(node.path);
     console.log('currentNode', node);
     if (node.children) {
         for (var i = 0; i < node.children.length; i++) {
-            paths = paths.concat(dc.utils.allChildren(node.children[i]));
+            paths = paths.concat(utils.allChildren(node.children[i]));
         }
     }
     return paths;
@@ -382,7 +384,7 @@ dc.utils.allChildren = function (node) {
 
 // builds a d3 Hierarchy from a collection
 // TODO: turn this monster method something better.
-dc.utils.toHierarchy = function (list, accessor) {
+utils.toHierarchy = function (list, accessor) {
     var root = {'key': 'root', 'children': []};
     for (var i = 0; i < list.length; i++) {
         var data = list[i];
@@ -422,7 +424,7 @@ function findChild (children, nodeName) {
     }
 }
 
-dc.utils.getAncestors = function (node) {
+utils.getAncestors = function (node) {
     var path = [];
     var current = node;
     while (current.parent) {
@@ -432,7 +434,7 @@ dc.utils.getAncestors = function (node) {
     return path;
 };
 
-dc.utils.arraysIdentical = function (a, b) {
+utils.arraysIdentical = function (a, b) {
     var i = a.length;
     if (i !== b.length) {
         return false;
@@ -445,6 +447,7 @@ dc.utils.arraysIdentical = function (a, b) {
     return true;
 };
 
+/* ES6: can be dropped, works on all except IE */
 if (typeof Object.assign !== 'function') {
     // Must be writable: true, enumerable: false, configurable: true
     Object.defineProperty(Object, 'assign', {

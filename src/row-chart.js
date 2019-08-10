@@ -1,3 +1,11 @@
+import * as d3 from 'd3';
+
+import {baseMixin} from './base-mixin';
+import {capMixin} from './cap-mixin';
+import {marginMixin} from './margin-mixin';
+import {colorMixin} from './color-mixin';
+import {transition} from './core';
+
 /**
  * Concrete row chart implementation.
  *
@@ -21,7 +29,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.rowChart}
  */
-dc.rowChart = function (parent, chartGroup) {
+export const rowChart = function (parent, chartGroup) {
 
     var _g;
 
@@ -38,7 +46,7 @@ dc.rowChart = function (parent, chartGroup) {
     var _titleRowCssClass = 'titlerow';
     var _renderTitleLabel = false;
 
-    var _chart = dc.capMixin(dc.marginMixin(dc.colorMixin(dc.baseMixin({}))));
+    var _chart = capMixin(marginMixin(colorMixin(baseMixin({}))));
 
     var _x;
 
@@ -75,7 +83,7 @@ dc.rowChart = function (parent, chartGroup) {
         }
         axisG.attr('transform', 'translate(0, ' + _chart.effectiveHeight() + ')');
 
-        dc.transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(axisG, _chart.transitionDuration(), _chart.transitionDelay())
             .call(_xAxis);
     }
 
@@ -197,7 +205,7 @@ dc.rowChart = function (parent, chartGroup) {
                 return (_chart.hasFilter()) ? isSelectedRow(d) : false;
             });
 
-        dc.transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(rect, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('width', function (d) {
                 return Math.abs(rootValue() - _x(_chart.cappedValueAccessor(d)));
             })
@@ -239,7 +247,7 @@ dc.rowChart = function (parent, chartGroup) {
                 .text(function (d) {
                     return _chart.label()(d);
                 });
-            dc.transition(lab, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(lab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
         if (_chart.renderTitleLabel()) {
@@ -255,7 +263,7 @@ dc.rowChart = function (parent, chartGroup) {
                     .text(function (d) {
                         return _chart.title()(d);
                     });
-            dc.transition(titlelab, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(titlelab, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', translateX);
         }
     }

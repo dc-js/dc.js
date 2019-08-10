@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+
+import {logger} from './logger';
+import {baseMixin} from './base-mixin';
+
 /**
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
  * filtered) in a good old tabular fashion.
@@ -30,14 +35,14 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.dataTable}
  */
-dc.dataTable = function (parent, chartGroup) {
+export const dataTable = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-table-label';
     var ROW_CSS_CLASS = 'dc-table-row';
     var COLUMN_CSS_CLASS = 'dc-table-column';
     var SECTION_CSS_CLASS = 'dc-table-section dc-table-group';
     var HEAD_CSS_CLASS = 'dc-table-head';
 
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
 
     var _size = 25;
     var _columns = [];
@@ -241,7 +246,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @param {Function} groupFunction Function taking a row of data and returning the nest key.
      * @returns {Function|dc.dataTable}
      */
-    _chart.group = dc.logger.annotate(_chart.section,
+    _chart.group = logger.annotate(_chart.section,
                                       'consider using dataTable.section instead of dataTable.group for clarity');
 
     /**
@@ -456,7 +461,7 @@ dc.dataTable = function (parent, chartGroup) {
      * @param {Boolean} [showGroups=true]
      * @returns {Boolean|dc.dataTable}
      */
-    _chart.showGroups = dc.logger.annotate(_chart.showSections,
+    _chart.showGroups = logger.annotate(_chart.showSections,
                                            'consider using dataTable.showSections instead of dataTable.showGroups for clarity');
 
     return _chart.anchor(parent, chartGroup);

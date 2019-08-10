@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+
+import { config } from './config';
+import { utils } from './utils';
+
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
  * as a mix-in for any concrete chart implementation.
@@ -7,8 +12,8 @@
  * @param {Object} _chart
  * @returns {dc.colorMixin}
  */
-dc.colorMixin = function (_chart) {
-    var _colors = d3.scaleOrdinal(dc.config.defaultColors());
+export const colorMixin = function (_chart) {
+    var _colors = d3.scaleOrdinal(config.defaultColors());
     var _defaultAccessor = true;
 
     var _colorAccessor = function (d) { return _chart.keyAccessor()(d); };
@@ -40,7 +45,7 @@ dc.colorMixin = function (_chart) {
         if (colorScale instanceof Array) {
             _colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
         } else {
-            _colors = typeof colorScale === 'function' ? colorScale : dc.utils.constant(colorScale);
+            _colors = typeof colorScale === 'function' ? colorScale : utils.constant(colorScale);
         }
         return _chart;
     };

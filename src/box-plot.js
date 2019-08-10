@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+
+import {d3Box} from './d3.box'
+import {coordinateGridMixin} from './coordinate-grid-mixin';
+import {transition, units} from './core';
+import {utils} from './utils';
 
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.
@@ -22,8 +28,8 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.boxPlot}
  */
-dc.boxPlot = function (parent, chartGroup) {
-    var _chart = dc.coordinateGridMixin({});
+export const boxPlot = function (parent, chartGroup) {
+    var _chart = coordinateGridMixin({});
 
     // Returns a function to compute the interquartile range.
     function DEFAULT_WHISKERS_IQR (k) {
@@ -43,7 +49,7 @@ dc.boxPlot = function (parent, chartGroup) {
     var _whiskersIqr = DEFAULT_WHISKERS_IQR;
     var _whiskers = _whiskersIqr(_whiskerIqrFactor);
 
-    var _box = d3.box();
+    var _box = d3Box();
     var _tickFormat = null;
     var _renderDataPoints = false;
     var _dataOpacity = 0.3;
@@ -65,7 +71,7 @@ dc.boxPlot = function (parent, chartGroup) {
 
     // default to ordinal
     _chart.x(d3.scaleBand());
-    _chart.xUnits(dc.units.ordinal);
+    _chart.xUnits(units.ordinal);
 
     // valueAccessor should return an array of values that can be coerced into numbers
     // or if data is overloaded for a static array of arrays, it should be `Number`.
@@ -126,7 +132,7 @@ dc.boxPlot = function (parent, chartGroup) {
         if (!arguments.length) {
             return _boxWidth;
         }
-        _boxWidth = typeof boxWidth === 'function' ? boxWidth : dc.utils.constant(boxWidth);
+        _boxWidth = typeof boxWidth === 'function' ? boxWidth : utils.constant(boxWidth);
         return _chart;
     };
 
@@ -182,7 +188,7 @@ dc.boxPlot = function (parent, chartGroup) {
     }
 
     function updateBoxes (boxesG) {
-        dc.transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(boxesG, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', boxTransform)
             .call(_box)
             .each(function (d) {
@@ -251,12 +257,12 @@ dc.boxPlot = function (parent, chartGroup) {
 
     _chart.yAxisMin = function () {
         var padding = _yRangePadding * yAxisRangeRatio();
-        return dc.utils.subtract(minDataValue() - padding, _chart.yAxisPadding());
+        return utils.subtract(minDataValue() - padding, _chart.yAxisPadding());
     };
 
     _chart.yAxisMax = function () {
         var padding = _yRangePadding * yAxisRangeRatio();
-        return dc.utils.add(maxDataValue() + padding, _chart.yAxisPadding());
+        return utils.add(maxDataValue() + padding, _chart.yAxisPadding());
     };
 
     /**

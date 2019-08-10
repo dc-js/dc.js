@@ -1,3 +1,5 @@
+import {pluck} from './utils';
+import {utils} from './utils';
 /**
  * Legend is a attachable widget that can be added to other dc charts to render horizontal legend
  * labels.
@@ -11,7 +13,7 @@
  * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
  * @returns {dc.legend}
  */
-dc.legend = function () {
+export const legend = function () {
     var LABEL_GAP = 2;
 
     var _legend = {},
@@ -24,7 +26,7 @@ dc.legend = function () {
         _legendWidth = 560,
         _itemWidth = 70,
         _autoItemWidth = false,
-        _legendText = dc.pluck('name'),
+        _legendText = pluck('name'),
         _maxItems;
 
     var _g;
@@ -68,7 +70,7 @@ dc.legend = function () {
                 return d.chart.isLegendableHidden(d);
             });
 
-        if (legendables.some(dc.pluck('dashstyle'))) {
+        if (legendables.some(pluck('dashstyle'))) {
             itemEnter
                 .append('line')
                 .attr('x1', 0)
@@ -76,8 +78,8 @@ dc.legend = function () {
                 .attr('x2', _itemHeight)
                 .attr('y2', _itemHeight / 2)
                 .attr('stroke-width', 2)
-                .attr('stroke-dasharray', dc.pluck('dashstyle'))
-                .attr('stroke', dc.pluck('color'));
+                .attr('stroke-dasharray', pluck('dashstyle'))
+                .attr('stroke', pluck('color'));
         } else {
             itemEnter
                 .append('rect')
@@ -283,7 +285,7 @@ dc.legend = function () {
         if (!arguments.length) {
             return _maxItems;
         }
-        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
+        _maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 

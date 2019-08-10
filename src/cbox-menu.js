@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+
+import {events} from './events';
+import {baseMixin} from './base-mixin';
+
 /**
  * The cboxMenu is a simple widget designed to filter a dimension by
  * selecting option(s) from a set of HTML `<input />` elements. The menu can be
@@ -22,11 +27,12 @@
  * Interaction with the widget will only trigger events and redraws within its group.
  * @returns {cboxMenu}
  **/
-dc.cboxMenu = function (parent, chartGroup) {
+
+export const cboxMenu = function (parent, chartGroup) {
     var GROUP_CSS_CLASS = 'dc-cbox-group';
     var ITEM_CSS_CLASS = 'dc-cbox-item';
 
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
 
     var _cbox;
     var _promptText = 'Select all';
@@ -183,7 +189,7 @@ dc.cboxMenu = function (parent, chartGroup) {
         } else {
             _chart.filterAll();
         }
-        dc.events.trigger(function () {
+        events.trigger(function () {
             _chart.redrawGroup();
         });
     };

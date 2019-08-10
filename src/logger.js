@@ -4,9 +4,9 @@
  * @memberof dc
  * @returns {dc.logger}
  */
-dc.logger = (function () {
+export const logger = (function () {
 
-    var _logger = {};
+    const _logger = {};
 
     /**
      * Enable debug level logging. Set to `false` by default.
@@ -38,7 +38,7 @@ dc.logger = (function () {
         return _logger;
     };
 
-    var _alreadyWarned = {};
+    const _alreadyWarned = {};
 
     /**
      * Put a warning message to console. It will warn only on unique messages.

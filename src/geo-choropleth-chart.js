@@ -1,3 +1,12 @@
+import * as d3 from 'd3';
+
+import {baseMixin} from './base-mixin';
+import {colorMixin} from './color-mixin';
+import {transition} from './core';
+import {logger} from './logger';
+import {events} from './events';
+import {utils} from './utils';
+
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
  * from GeoJson data. This chart implementation was inspired by
@@ -21,8 +30,8 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.geoChoroplethChart}
  */
-dc.geoChoroplethChart = function (parent, chartGroup) {
-    var _chart = dc.colorMixin(dc.baseMixin({}));
+export const geoChoroplethChart = function (parent, chartGroup) {
+    var _chart = colorMixin(baseMixin({}));
 
     _chart.colorAccessor(function (d) {
         return d || 0;
@@ -96,7 +105,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
             })
             .attr('class', function (d) {
                 var layerNameClass = geoJson(layerIndex).name;
-                var regionClass = dc.utils.nameToId(geoJson(layerIndex).keyAccessor(d));
+                var regionClass = utils.nameToId(geoJson(layerIndex).keyAccessor(d));
                 var baseClasses = layerNameClass + ' ' + regionClass;
                 if (isSelected(layerIndex, d)) {
                     baseClasses += ' selected';
@@ -143,14 +152,14 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
                 return _chart.onClick(d, layerIndex);
             });
 
-        dc.transition(paths, _chart.transitionDuration(), _chart.transitionDelay()).attr('fill', function (d, i) {
+        transition(paths, _chart.transitionDuration(), _chart.transitionDelay()).attr('fill', function (d, i) {
             return _chart.getColor(data[geoJson(layerIndex).keyAccessor(d)], i);
         });
     }
 
     _chart.onClick = function (d, layerIndex) {
         var selectedRegion = geoJson(layerIndex).keyAccessor(d);
-        dc.events.trigger(function () {
+        events.trigger(function () {
             _chart.filter(selectedRegion);
             _chart.redrawGroup();
         });
@@ -240,7 +249,7 @@ dc.geoChoroplethChart = function (parent, chartGroup) {
 
     var _getGeoPath = function () {
         if (_projection === undefined) {
-            dc.logger.warn('choropleth projection default of geoAlbers is deprecated,' +
+            logger.warn('choropleth projection default of geoAlbers is deprecated,' +
                 ' in next version projection will need to be set explicitly');
             return _geoPath.projection(d3.geoAlbersUsa());
         }

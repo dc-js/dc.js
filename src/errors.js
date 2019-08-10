@@ -1,6 +1,6 @@
-dc.errors = {};
+export const errors = {};
 
-dc.errors.Exception = function (msg) {
+errors.Exception = function (msg) {
     var _msg = msg || 'Unexpected internal error';
 
     this.message = _msg;
@@ -10,19 +10,19 @@ dc.errors.Exception = function (msg) {
     };
     this.stack = (new Error()).stack;
 };
-dc.errors.Exception.prototype = Object.create(Error.prototype);
-dc.errors.Exception.prototype.constructor = dc.errors.Exception;
+errors.Exception.prototype = Object.create(Error.prototype);
+errors.Exception.prototype.constructor = errors.Exception;
 
-dc.errors.InvalidStateException = function () {
-    dc.errors.Exception.apply(this, arguments);
+errors.InvalidStateException = function () {
+    errors.Exception.apply(this, arguments);
 };
 
-dc.errors.InvalidStateException.prototype = Object.create(dc.errors.Exception.prototype);
-dc.errors.InvalidStateException.prototype.constructor = dc.errors.InvalidStateException;
+errors.InvalidStateException.prototype = Object.create(errors.Exception.prototype);
+errors.InvalidStateException.prototype.constructor = errors.InvalidStateException;
 
-dc.errors.BadArgumentException = function () {
-    dc.errors.Exception.apply(this, arguments);
+errors.BadArgumentException = function () {
+    errors.Exception.apply(this, arguments);
 };
 
-dc.errors.BadArgumentException.prototype = Object.create(dc.errors.Exception.prototype);
-dc.errors.BadArgumentException.prototype.constructor = dc.errors.BadArgumentException;
+errors.BadArgumentException.prototype = Object.create(errors.Exception.prototype);
+errors.BadArgumentException.prototype.constructor = errors.BadArgumentException;

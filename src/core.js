@@ -1,3 +1,5 @@
+import { utils } from './utils';
+
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
  * anything else into the global name space.
@@ -15,9 +17,8 @@
  *      .height(300)
  *      .filter('sunday');
  */
-var dc = {
-    version: '<%= conf.pkg.version %>',
-    constants: {
+export const version = '<%= conf.pkg.version %>';
+export const constants = {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
         STACK_CLASS: 'stack',
@@ -28,9 +29,9 @@ var dc = {
         DEFAULT_CHART_GROUP: '__default_chart_group__',
         EVENT_DELAY: 40,
         NEGLIGIBLE_NUMBER: 1e-10
-    },
-    _renderlet: null
-};
+    };
+
+let _renderlet = null;
 
 /**
  * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups
@@ -47,13 +48,13 @@ var dc = {
  * @memberof dc
  * @type {{has, register, deregister, clear, list}}
  */
-dc.chartRegistry = (function () {
+export const chartRegistry = (function () {
     // chartGroup:string => charts:array
     var _chartMap = {};
 
     function initializeChartGroup (group) {
         if (!group) {
-            group = dc.constants.DEFAULT_CHART_GROUP;
+            group = constants.DEFAULT_CHART_GROUP;
         }
 
         if (!_chartMap[group]) {
@@ -72,7 +73,7 @@ dc.chartRegistry = (function () {
          * @returns {Boolean}
          */
         has: function (chart) {
-            for (var e in _chartMap) {
+            for (let e in _chartMap) {
                 if (_chartMap[e].indexOf(chart) >= 0) {
                     return true;
                 }
@@ -152,8 +153,8 @@ dc.chartRegistry = (function () {
  * @param {String} [group] Group name
  * @return {undefined}
  */
-dc.registerChart = function (chart, group) {
-    dc.chartRegistry.register(chart, group);
+export const registerChart = function (chart, group) {
+    chartRegistry.register(chart, group);
 };
 
 /**
@@ -165,8 +166,8 @@ dc.registerChart = function (chart, group) {
  * @param {String} [group] Group name
  * @return {undefined}
 */
-dc.deregisterChart = function (chart, group) {
-    dc.chartRegistry.deregister(chart, group);
+export const deregisterChart = function (chart, group) {
+    chartRegistry.deregister(chart, group);
 };
 
 /**
@@ -176,8 +177,8 @@ dc.deregisterChart = function (chart, group) {
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
-dc.hasChart = function (chart) {
-    return dc.chartRegistry.has(chart);
+export const hasChart = function (chart) {
+    return chartRegistry.has(chart);
 };
 
 /**
@@ -187,8 +188,8 @@ dc.hasChart = function (chart) {
  * @param {String} group Group name
  * @return {undefined}
  */
-dc.deregisterAllCharts = function (group) {
-    dc.chartRegistry.clear(group);
+export const deregisterAllCharts = function (group) {
+    chartRegistry.clear(group);
 };
 
 /**
@@ -199,8 +200,8 @@ dc.deregisterAllCharts = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-dc.filterAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export const filterAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
     }
@@ -214,8 +215,8 @@ dc.filterAll = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-dc.refocusAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export const refocusAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         if (charts[i].focus) {
             charts[i].focus();
@@ -231,14 +232,14 @@ dc.refocusAll = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-dc.renderAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export const renderAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -252,14 +253,14 @@ dc.renderAll = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-dc.redrawAll = function (group) {
-    var charts = dc.chartRegistry.list(group);
+export const redrawAll = function (group) {
+    var charts = chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
 
-    if (dc._renderlet !== null) {
-        dc._renderlet(group);
+    if (_renderlet !== null) {
+        _renderlet(group);
     }
 };
 
@@ -271,7 +272,7 @@ dc.redrawAll = function (group) {
  * @type {Boolean}
  * @default false
  */
-dc.disableTransitions = false;
+export const disableTransitions = false;
 
 /**
  * Start a transition on a selection if transitions are globally enabled
@@ -289,8 +290,8 @@ dc.disableTransitions = false;
  * elements are needed)
  * @returns {d3.transition|d3.selection}
  */
-dc.transition = function (selection, duration, delay, name) {
-    if (dc.disableTransitions || duration <= 0) {
+export const transition = function (selection, duration, delay, name) {
+    if (disableTransitions || duration <= 0) {
         return selection;
     }
 
@@ -307,10 +308,10 @@ dc.transition = function (selection, duration, delay, name) {
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-dc.optionalTransition = function (enable, duration, delay, name) {
+export const optionalTransition = function (enable, duration, delay, name) {
     if (enable) {
         return function (selection) {
-            return dc.transition(selection, duration, delay, name);
+            return transition(selection, duration, delay, name);
         };
     } else {
         return function (selection) {
@@ -320,7 +321,7 @@ dc.optionalTransition = function (enable, duration, delay, name) {
 };
 
 // See http://stackoverflow.com/a/20773846
-dc.afterTransition = function (transition, callback) {
+export const afterTransition = function (transition, callback) {
     if (transition.empty() || !transition.duration) {
         callback.call(transition);
     } else {
@@ -340,7 +341,7 @@ dc.afterTransition = function (transition, callback) {
  * @memberof dc
  * @type {{}}
  */
-dc.units = {};
+export const units = {};
 
 /**
  * The default value for {@link dc.coordinateGridMixin#xUnits .xUnits} for the
@@ -356,7 +357,7 @@ dc.units = {};
  * @param {Number} end
  * @returns {Number}
  */
-dc.units.integers = function (start, end) {
+units.integers = function (start, end) {
     return Math.abs(end - start);
 };
 
@@ -379,7 +380,7 @@ dc.units.integers = function (start, end) {
  * chart.xUnits(dc.units.ordinal)
  *      .x(d3.scaleOrdinal())
  */
-dc.units.ordinal = function () {
+units.ordinal = function () {
     throw new Error('dc.units.ordinal should not be called - it is a placeholder');
 };
 
@@ -388,7 +389,7 @@ dc.units.ordinal = function () {
  * @memberof dc.units
  * @type {{}}
  */
-dc.units.fp = {};
+units.fp = {};
 /**
  * This function generates an argument for the {@link dc.coordinateGridMixin Coordinate Grid Chart}
  * {@link dc.coordinateGridMixin#xUnits .xUnits} function specifying that the x values are floating-point
@@ -407,10 +408,10 @@ dc.units.fp = {};
  * @param {Number} precision
  * @returns {Function} start-end unit function
  */
-dc.units.fp.precision = function (precision) {
+units.fp.precision = function (precision) {
     var _f = function (s, e) {
         var d = Math.abs((e - s) / _f.resolution);
-        if (dc.utils.isNegligible(d - Math.floor(d))) {
+        if (utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
         } else {
             return Math.ceil(d);
@@ -420,35 +421,36 @@ dc.units.fp.precision = function (precision) {
     return _f;
 };
 
-dc.round = {};
-dc.round.floor = function (n) {
+export const round = {};
+round.floor = function (n) {
     return Math.floor(n);
 };
-dc.round.ceil = function (n) {
+round.ceil = function (n) {
     return Math.ceil(n);
 };
-dc.round.round = function (n) {
+round.round = function (n) {
     return Math.round(n);
 };
 
-dc.override = function (obj, functionName, newFunction) {
-    var existingFunction = obj[functionName];
+export const override = function (obj, functionName, newFunction) {
+    const existingFunction = obj[functionName];
     obj['_' + functionName] = existingFunction;
     obj[functionName] = newFunction;
 };
 
-dc.renderlet = function (_) {
+export const renderlet = function (_) {
     if (!arguments.length) {
-        return dc._renderlet;
+        return _renderlet;
     }
-    dc._renderlet = _;
-    return dc;
+    _renderlet = _;
+    return null;
 };
 
-dc.instanceOfChart = function (o) {
+export const instanceOfChart = function (o) {
     return o instanceof Object && o.__dcFlag__ && true;
 };
 
+/* ES6: probably can be dropped */
 // polyfill for IE
 // from https://developer.mozilla.org/en-US/docs/Web/API/Element/matches#Polyfill
 if (!Element.prototype.matches) {

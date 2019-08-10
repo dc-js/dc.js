@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+
+import {logger} from './logger';
+import {baseMixin} from './base-mixin';
+
 /**
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
@@ -19,13 +24,13 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.dataGrid}
  */
-dc.dataGrid = function (parent, chartGroup) {
+export const dataGrid = function (parent, chartGroup) {
     var LABEL_CSS_CLASS = 'dc-grid-label';
     var ITEM_CSS_CLASS = 'dc-grid-item';
     var SECTION_CSS_CLASS = 'dc-grid-section dc-grid-group';
     var GRID_CSS_CLASS = 'dc-grid-top';
 
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
 
     var _section = null;
     var _size = 999; // shouldn't be needed, but you might
@@ -142,7 +147,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @param {Function} groupFunction Function taking a row of data and returning the nest key.
      * @returns {Function|dc.dataGrid}
      */
-    _chart.group = dc.logger.annotate(_chart.section,
+    _chart.group = logger.annotate(_chart.section,
                                       'consider using dataGrid.section instead of dataGrid.group for clarity');
 
     /**
@@ -241,7 +246,7 @@ dc.dataGrid = function (parent, chartGroup) {
      * @param {Function} [htmlGroup]
      * @returns {Function|dc.dataGrid}
      */
-    _chart.htmlGroup = dc.logger.annotate(_chart.htmlSection,
+    _chart.htmlGroup = logger.annotate(_chart.htmlSection,
                                           'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
 
     /**

@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 /**
  * General configuration
  *
@@ -5,7 +7,7 @@
  * @memberof dc
  * @returns {dc.config}
  */
-dc.config = (function () {
+export const config = (function () {
     var _config = {};
 
     // D3v5 has removed schemeCategory20c, copied here for backward compatibility
@@ -37,7 +39,7 @@ dc.config = (function () {
         if (!arguments.length) {
             // Issue warning if it uses _schemeCategory20c
             if (_defaultColors === _schemeCategory20c) {
-                dc.logger.warnOnce('You are using d3.schemeCategory20c, which has been removed in D3v5. ' +
+                logger.warnOnce('You are using d3.schemeCategory20c, which has been removed in D3v5. ' +
                     'See the explanation at https://github.com/d3/d3/blob/master/CHANGES.md#changes-in-d3-50. ' +
                     'DC is using it for backward compatibility, however it will be changed in DCv3.1. ' +
                     'You can change it by calling dc.config.defaultColors(newScheme). ' +

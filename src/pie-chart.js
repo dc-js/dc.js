@@ -1,3 +1,10 @@
+import * as d3 from 'd3';
+import {capMixin} from './cap-mixin';
+import {colorMixin} from './color-mixin';
+import {baseMixin} from './base-mixin';
+import {transition} from './core';
+
+
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -23,7 +30,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.pieChart}
  */
-dc.pieChart = function (parent, chartGroup) {
+export const pieChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = 'pie-slice';
@@ -44,7 +51,7 @@ dc.pieChart = function (parent, chartGroup) {
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
     var _drawPaths = false;
-    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+    var _chart = capMixin(colorMixin(baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
@@ -121,7 +128,7 @@ dc.pieChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
@@ -154,9 +161,9 @@ dc.pieChart = function (parent, chartGroup) {
                 return safeArc(d, i, arc);
             });
 
-        var transition = dc.transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
-        if (transition.attrTween) {
-            transition.attrTween('d', tweenPie);
+        var tranNodes = transition(slicePath, _chart.transitionDuration(), _chart.transitionDelay());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', tweenPie);
         }
     }
 
@@ -181,7 +188,7 @@ dc.pieChart = function (parent, chartGroup) {
 
     function positionLabels (labels, arc) {
         _chart._applyLabelText(labels);
-        dc.transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(labels, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
@@ -243,10 +250,10 @@ dc.pieChart = function (parent, chartGroup) {
         var arc2 = d3.arc()
                 .outerRadius(_radius - _externalRadiusPadding + _externalLabelRadius)
                 .innerRadius(_radius - _externalRadiusPadding);
-        var transition = dc.transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
+        var tranNodes = transition(polyline, _chart.transitionDuration(), _chart.transitionDelay());
         // this is one rare case where d3.selection differs from d3.transition
-        if (transition.attrTween) {
-            transition
+        if (tranNodes.attrTween) {
+            tranNodes
                 .attrTween('points', function (d) {
                     var current = this._current || d;
                     current = {startAngle: current.startAngle, endAngle: current.endAngle};
@@ -258,11 +265,11 @@ dc.pieChart = function (parent, chartGroup) {
                     };
                 });
         } else {
-            transition.attr('points', function (d) {
+            tranNodes.attr('points', function (d) {
                 return [arc.centroid(d), arc2.centroid(d)];
             });
         }
-        transition.style('visibility', function (d) {
+        tranNodes.style('visibility', function (d) {
             return d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible';
         });
 
@@ -281,11 +288,11 @@ dc.pieChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(d, i, arc);
             });
-        var transition = dc.transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
-        if (transition.attrTween) {
-            transition.attrTween('d', tweenPie);
+        var tranNodes = transition(slicePaths, _chart.transitionDuration(), _chart.transitionDelay());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', tweenPie);
         }
-        transition.attr('fill', fill);
+        tranNodes.attr('fill', fill);
     }
 
     function updateLabels (pieData, arc) {

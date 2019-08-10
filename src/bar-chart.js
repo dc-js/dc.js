@@ -1,3 +1,11 @@
+import * as d3 from 'd3';
+
+import {stackMixin} from './stack-mixin';
+import {coordinateGridMixin} from './coordinate-grid-mixin';
+import {constants, override, transition} from './core';
+import {logger} from './logger';
+import {pluck, utils} from './utils';
+
 /**
  * Concrete bar chart/histogram implementation.
  *
@@ -24,12 +32,12 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.barChart}
  */
-dc.barChart = function (parent, chartGroup) {
+export const barChart = function (parent, chartGroup) {
     var MIN_BAR_WIDTH = 1;
     var DEFAULT_GAP_BETWEEN_BARS = 2;
     var LABEL_PADDING = 3;
 
-    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+    var _chart = stackMixin(coordinateGridMixin({}));
 
     var _gap = DEFAULT_GAP_BETWEEN_BARS;
     var _centerBar = false;
@@ -37,15 +45,15 @@ dc.barChart = function (parent, chartGroup) {
 
     var _barWidth;
 
-    dc.override(_chart, 'rescale', function () {
+    override(_chart, 'rescale', function () {
         _chart._rescale();
         _barWidth = undefined;
         return _chart;
     });
 
-    dc.override(_chart, 'render', function () {
+    override(_chart, 'render', function () {
         if (_chart.round() && _centerBar && !_alwaysUseRounding) {
-            dc.logger.warn('By default, brush rounding is disabled if bars are centered. ' +
+            logger.warn('By default, brush rounding is disabled if bars are centered. ' +
                          'See dc.js bar chart API documentation for details.');
         }
 
@@ -53,7 +61,7 @@ dc.barChart = function (parent, chartGroup) {
     });
 
     _chart.label(function (d) {
-        return dc.utils.printSingleValue(d.y0 + d.y);
+        return utils.printSingleValue(d.y0 + d.y);
     }, false);
 
     _chart.plotData = function () {
@@ -83,7 +91,7 @@ dc.barChart = function (parent, chartGroup) {
     };
 
     function barHeight (d) {
-        return dc.utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
+        return utils.safeNumber(Math.abs(_chart.y()(d.y + d.y0) - _chart.y()(d.y0)));
     }
 
     function labelXPos (d) {
@@ -94,7 +102,7 @@ dc.barChart = function (parent, chartGroup) {
         if (_chart.isOrdinal() && _gap !== undefined) {
             x += _gap / 2;
         }
-        return dc.utils.safeNumber(x);
+        return utils.safeNumber(x);
     }
 
     function labelYPos (d) {
@@ -104,12 +112,12 @@ dc.barChart = function (parent, chartGroup) {
             y -= barHeight(d);
         }
 
-        return dc.utils.safeNumber(y - LABEL_PADDING);
+        return utils.safeNumber(y - LABEL_PADDING);
     }
 
     function renderLabels (layer, layerIndex, d) {
         var labels = layer.selectAll('text.barLabel')
-            .data(d.values, dc.pluck('x'));
+            .data(d.values, pluck('x'));
 
         var labelsEnterUpdate = labels
             .enter()
@@ -125,14 +133,14 @@ dc.barChart = function (parent, chartGroup) {
             labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
-        dc.transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(labelsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', labelXPos)
             .attr('y', labelYPos)
             .text(function (d) {
                 return _chart.label()(d);
             });
 
-        dc.transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+        transition(labels.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('height', 0)
             .remove();
     }
@@ -145,17 +153,17 @@ dc.barChart = function (parent, chartGroup) {
         if (_chart.isOrdinal() && _gap !== undefined) {
             x += _gap / 2;
         }
-        return dc.utils.safeNumber(x);
+        return utils.safeNumber(x);
     }
 
     function renderBars (layer, layerIndex, d) {
         var bars = layer.selectAll('rect.bar')
-            .data(d.values, dc.pluck('x'));
+            .data(d.values, pluck('x'));
 
         var enter = bars.enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', dc.pluck('data', _chart.getColor))
+            .attr('fill', pluck('data', _chart.getColor))
             .attr('x', barXPos)
             .attr('y', _chart.yAxisHeight())
             .attr('height', 0);
@@ -163,14 +171,14 @@ dc.barChart = function (parent, chartGroup) {
         var barsEnterUpdate = enter.merge(bars);
 
         if (_chart.renderTitle()) {
-            enter.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            enter.append('title').text(pluck('data', _chart.title(d.name)));
         }
 
         if (_chart.isOrdinal()) {
             barsEnterUpdate.on('click', _chart.onClick);
         }
 
-        dc.transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(barsEnterUpdate, _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', barXPos)
             .attr('y', function (d) {
                 var y = _chart.y()(d.y + d.y0);
@@ -179,16 +187,16 @@ dc.barChart = function (parent, chartGroup) {
                     y -= barHeight(d);
                 }
 
-                return dc.utils.safeNumber(y);
+                return utils.safeNumber(y);
             })
             .attr('width', _barWidth)
             .attr('height', function (d) {
                 return barHeight(d);
             })
-            .attr('fill', dc.pluck('data', _chart.getColor))
-            .select('title').text(dc.pluck('data', _chart.title(d.name)));
+            .attr('fill', pluck('data', _chart.getColor))
+            .select('title').text(pluck('data', _chart.title(d.name)));
 
-        dc.transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
+        transition(bars.exit(), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d) { return _chart.x()(d.x); })
             .attr('width', _barWidth * 0.9)
             .remove();
@@ -218,26 +226,26 @@ dc.barChart = function (parent, chartGroup) {
 
         if (_chart.isOrdinal()) {
             if (_chart.hasFilter()) {
-                bars.classed(dc.constants.SELECTED_CLASS, function (d) {
+                bars.classed(constants.SELECTED_CLASS, function (d) {
                     return _chart.hasFilter(d.x);
                 });
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                bars.classed(constants.DESELECTED_CLASS, function (d) {
                     return !_chart.hasFilter(d.x);
                 });
             } else {
-                bars.classed(dc.constants.SELECTED_CLASS, false);
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
+                bars.classed(constants.SELECTED_CLASS, false);
+                bars.classed(constants.DESELECTED_CLASS, false);
             }
         } else if (_chart.brushOn() || _chart.parentBrushOn()) {
             if (!_chart.brushIsEmpty(brushSelection)) {
                 var start = brushSelection[0];
                 var end = brushSelection[1];
 
-                bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
+                bars.classed(constants.DESELECTED_CLASS, function (d) {
                     return d.x < start || d.x >= end;
                 });
             } else {
-                bars.classed(dc.constants.DESELECTED_CLASS, false);
+                bars.classed(constants.DESELECTED_CLASS, false);
             }
         }
     };
@@ -258,7 +266,7 @@ dc.barChart = function (parent, chartGroup) {
         return _chart;
     };
 
-    dc.override(_chart, 'onClick', function (d) {
+    override(_chart, 'onClick', function (d) {
         _chart._onClick(d.data);
     });
 
@@ -368,7 +376,7 @@ dc.barChart = function (parent, chartGroup) {
             .classed('fadeout', false);
     };
 
-    dc.override(_chart, 'xAxisMax', function () {
+    override(_chart, 'xAxisMax', function () {
         var max = this._xAxisMax();
         if ('resolution' in _chart.xUnits()) {
             var res = _chart.xUnits().resolution;
