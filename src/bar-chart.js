@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 
 import {stackMixin} from './stack-mixin';
 import {coordinateGridMixin} from './coordinate-grid-mixin';
-import {constants, override, transition} from './core';
+import {override, transition} from './core';
+import {constants} from './constants';
 import {logger} from './logger';
 import {pluck, utils} from './utils';
 

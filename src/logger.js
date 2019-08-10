@@ -54,7 +54,7 @@ export const logger = (function () {
         if (!_alreadyWarned[msg]) {
             _alreadyWarned[msg] = true;
 
-            dc.logger.warn(msg);
+            logger.warn(msg);
         }
 
         return _logger;

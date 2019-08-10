@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import {constants} from './constants';
 
 /**
  * The default date format for dc.js
@@ -262,7 +263,7 @@ utils.isInteger = function (n) {
  * @returns {Boolean}
  */
 utils.isNegligible = function (n) {
-    return !utils.isNumber(n) || (n < dc.constants.NEGLIGIBLE_NUMBER && n > -dc.constants.NEGLIGIBLE_NUMBER);
+    return !utils.isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
 };
 
 /**

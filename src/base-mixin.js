@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 
 import { printers, utils } from './utils';
 import { pluck } from './utils';
-import { constants, deregisterChart, instanceOfChart, renderAll, redrawAll, registerChart } from './core';
+import { deregisterChart, instanceOfChart, renderAll, redrawAll, registerChart } from './core';
+import { constants } from './constants';
 import { errors } from './errors';
 import { events } from './events';
 import { logger } from './logger';

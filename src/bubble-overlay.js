@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 
 import {baseMixin} from './base-mixin';
 import {bubbleMixin} from './bubble-mixin';
-import {constants, transition} from './core';
+import {transition} from './core';
+import {constants} from './constants';
 import {utils} from './utils';
 
 /**
