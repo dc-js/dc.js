@@ -114,10 +114,10 @@ export const heatMap = function (parent, chartGroup) {
         });
         events.trigger(function () {
             var selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
-            var filters = selection.data().map(function (kv) {
+            var filtersList = selection.data().map(function (kv) {
                 return filters.TwoDimensionalFilter(kv.key);
             });
-            _chart.filter([filters]);
+            _chart.filter([filtersList]);
             _chart.redrawGroup();
         });
     }
