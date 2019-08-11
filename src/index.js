@@ -1,4 +1,4 @@
-export * from './version';
+export * from '../generated/version';
 export * from './constants';
 export * from './core';
 export * from './errors';
@@ -57,5 +57,3 @@ dc.d3 = d3;
 dc.crossfilter = crossfilter;
 
  */
-
-

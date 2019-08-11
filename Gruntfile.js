@@ -31,7 +31,7 @@ module.exports = function (grunt) {
         concat: {
             'version.js': {
                 src: '<%= conf.src %>/version.templ.js',
-                dest: '<%= conf.src %>/version.js',
+                dest: 'generated/version.js',
                 options: {
                     process: true
                 }

@@ -40,4 +40,4 @@ web/docs/public
 web/docs/html
 
 # It is a generated file
-src/version.js
+generated/
