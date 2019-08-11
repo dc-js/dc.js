@@ -39,16 +39,17 @@ export * from './series-chart';
 export * from './sunburst-chart';
 export * from './text-filter-widget';
 
-/* Older renames and exports, probably can be dropped
+/* ES6: Older renames and exports, probably can be dropped */
 
-dc.abstractBubbleChart = dc.bubbleMixin;
-dc.baseChart = dc.baseMixin;
-dc.capped = dc.capMixin;
-dc.colorChart = dc.colorMixin;
-dc.coordinateGridChart = dc.coordinateGridMixin;
-dc.marginable = dc.marginMixin;
-dc.stackableChart = dc.stackMixin;
+export {bubbleMixin as abstractBubbleChart} from './bubble-mixin';
+export {baseMixin as baseChart} from './base-mixin';
+export {capMixin as capped} from './cap-mixin';
+export {colorMixin as colorChart} from './color-mixin';
+export {coordinateGridMixin as coordinateGridChart} from './coordinate-grid-mixin';
+export {marginMixin as marginable} from './margin-mixin';
+export {stackMixin as stackableChart} from './stack-mixin';
 
+/*
 // Expose d3 and crossfilter, so that clients in browserify
 // case can obtain them if they need them.
 dc.d3 = d3;
