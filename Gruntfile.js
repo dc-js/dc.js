@@ -7,6 +7,7 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     grunt.loadNpmTasks('grunt-karma');
+    grunt.loadNpmTasks('grunt-rollup');
 
     var formatFileList = require('./grunt/format-file-list')(grunt);
 
@@ -27,14 +28,19 @@ module.exports = function (grunt) {
     grunt.initConfig({
         conf: config,
 
-        concat: {
+        rollup: {
             js: {
-                src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js',
                 options: {
-                    process: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
+                    external: ['d3'],
+                    format: 'umd',
+                    name: 'dc',
+                    sourcemap: true,
+                    globals: {
+                        d3: 'd3'
+                    }
+                },
+                files: {
+                    '<%= conf.pkg.name %>.js': ['<%= conf.src %>/index.js']
                 }
             }
         },
@@ -319,8 +325,8 @@ module.exports = function (grunt) {
                         src: [
                             '<%= conf.pkg.name %>.js',
                             '<%= conf.pkg.name %>.js.map',
-                            '<%= conf.pkg.name %>.min.js',
-                            '<%= conf.pkg.name %>.min.js.map',
+                            // '<%= conf.pkg.name %>.min.js',
+                            // '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/' + d3pkgSubDir + '/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
@@ -493,7 +499,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'sass', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['rollup:js', 'sass', /*'uglify',*/ 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:scripts-sass-docs']);
@@ -508,7 +514,7 @@ module.exports = function (grunt) {
 };
 
 module.exports.jsFiles = [
-    'src/banner.js',   // NOTE: keep this first
+    // 'src/banner.js',   // NOTE: keep this first
     'src/core.js',
     'src/errors.js',
     'src/utils.js',
@@ -546,5 +552,5 @@ module.exports.jsFiles = [
     'src/select-menu.js',
     'src/text-filter-widget.js',
     'src/cbox-menu.js',
-    'src/footer.js'  // NOTE: keep this last
+    // 'src/footer.js'  // NOTE: keep this last
 ];
