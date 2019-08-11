@@ -334,8 +334,8 @@ module.exports = function (grunt) {
                         src: [
                             '<%= conf.pkg.name %>.js',
                             '<%= conf.pkg.name %>.js.map',
-                            // '<%= conf.pkg.name %>.min.js',
-                            // '<%= conf.pkg.name %>.min.js.map',
+                            '<%= conf.pkg.name %>.min.js',
+                            '<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/' + d3pkgSubDir + '/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
@@ -508,7 +508,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat:version.js', 'rollup:js', 'sass', /*'uglify',*/ 'cssmin']);
+    grunt.registerTask('build', ['concat:version.js', 'rollup:js', 'sass', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:scripts-sass-docs']);

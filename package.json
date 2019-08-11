@@ -39,7 +39,7 @@
     "grunt-contrib-copy": "~1.0",
     "grunt-contrib-cssmin": "3.x",
     "grunt-contrib-jasmine": "github:gruntjs/grunt-contrib-jasmine#master",
-    "grunt-contrib-uglify": "^4.0.1",
+    "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-docco2": "^0.2.1",
     "grunt-eslint": "^21.1.0",
