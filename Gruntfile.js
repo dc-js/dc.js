@@ -28,6 +28,15 @@ module.exports = function (grunt) {
     grunt.initConfig({
         conf: config,
 
+        concat: {
+            'version.js': {
+                src: '<%= conf.src %>/version.templ.js',
+                dest: '<%= conf.src %>/version.js',
+                options: {
+                    process: true
+                }
+            }
+        },
         rollup: {
             js: {
                 options: {
@@ -499,7 +508,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['rollup:js', 'sass', /*'uglify',*/ 'cssmin']);
+    grunt.registerTask('build', ['concat:version.js', 'rollup:js', 'sass', /*'uglify',*/ 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:scripts-sass-docs']);

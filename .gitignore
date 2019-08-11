@@ -39,3 +39,5 @@ web/docs/public
 # html docs are only checked into gh-pages branch
 web/docs/html
 
+# It is a generated file
+src/version.js

@@ -18,7 +18,6 @@ import {constants} from './constants';
  *      .height(300)
  *      .filter('sunday');
  */
-export const version = '<%= conf.pkg.version %>';
 
 let _renderlet = null;
 
