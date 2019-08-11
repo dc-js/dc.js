@@ -148,7 +148,7 @@ export const dataGrid = function (parent, chartGroup) {
      * @returns {Function|dc.dataGrid}
      */
     _chart.group = logger.annotate(_chart.section,
-                                      'consider using dataGrid.section instead of dataGrid.group for clarity');
+                                   'consider using dataGrid.section instead of dataGrid.group for clarity');
 
     /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
@@ -247,7 +247,7 @@ export const dataGrid = function (parent, chartGroup) {
      * @returns {Function|dc.dataGrid}
      */
     _chart.htmlGroup = logger.annotate(_chart.htmlSection,
-                                          'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
+                                       'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
 
     /**
      * Get or set sort-by function. This function works as a value accessor at the item

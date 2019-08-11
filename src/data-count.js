@@ -120,7 +120,7 @@ export const dataCount = function (parent, chartGroup) {
         return this;
     };
     _chart.dimension = logger.annotate(_chart.crossfilter,
-                                          'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
+                                       'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
 
     _chart.groupAll = function (groupAll) {
         if (!arguments.length) {
@@ -130,7 +130,7 @@ export const dataCount = function (parent, chartGroup) {
         return this;
     };
     _chart.group = logger.annotate(_chart.groupAll,
-                                      'consider using dataCount.groupAll instead of dataCount.group for clarity');
+                                   'consider using dataCount.groupAll instead of dataCount.group for clarity');
 
     return _chart.anchor(parent, chartGroup);
 };

@@ -247,7 +247,7 @@ export const dataTable = function (parent, chartGroup) {
      * @returns {Function|dc.dataTable}
      */
     _chart.group = logger.annotate(_chart.section,
-                                      'consider using dataTable.section instead of dataTable.group for clarity');
+                                   'consider using dataTable.section instead of dataTable.group for clarity');
 
     /**
      * Get or set the table size which determines the number of rows displayed by the widget.
@@ -462,7 +462,7 @@ export const dataTable = function (parent, chartGroup) {
      * @returns {Boolean|dc.dataTable}
      */
     _chart.showGroups = logger.annotate(_chart.showSections,
-                                           'consider using dataTable.showSections instead of dataTable.showGroups for clarity');
+                                        'consider using dataTable.showSections instead of dataTable.showGroups for clarity');
 
     return _chart.anchor(parent, chartGroup);
 };
