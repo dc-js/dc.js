@@ -1,3 +1,9 @@
+import * as d3 from 'd3';
+
+import {logger} from './logger';
+import {events} from './events';
+import {baseMixin} from './base-mixin';
+
 /**
  * The select menu is a simple widget designed to filter a dimension by selecting an option from
  * an HTML `<select/>` menu. The menu can be optionally turned into a multiselect.
@@ -21,11 +27,11 @@
  * Interaction with the widget will only trigger events and redraws within its group.
  * @returns {selectMenu}
  **/
-dc.selectMenu = function (parent, chartGroup) {
+export const selectMenu = function (parent, chartGroup) {
     var SELECT_CSS_CLASS = 'dc-select-menu';
     var OPTION_CSS_CLASS = 'dc-select-option';
 
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
 
     var _select;
     var _promptText = 'Select all';
@@ -134,7 +140,7 @@ dc.selectMenu = function (parent, chartGroup) {
         } else {
             _chart.filterAll();
         }
-        dc.events.trigger(function () {
+        events.trigger(function () {
             _chart.redrawGroup();
         });
     };
@@ -276,7 +282,7 @@ dc.selectMenu = function (parent, chartGroup) {
         return _chart;
     };
 
-    _chart.size = dc.logger.deprecate(_chart.numberVisible, 'selectMenu.size is ambiguous - use numberVisible instead');
+    _chart.size = logger.deprecate(_chart.numberVisible, 'selectMenu.size is ambiguous - use numberVisible instead');
 
     return _chart.anchor(parent, chartGroup);
 };

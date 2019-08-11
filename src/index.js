@@ -22,12 +22,22 @@ export * from './bar-chart';
 export * from './box-plot';
 export * from './bubble-chart';
 export * from './cbox-menu';
+export * from './composite-chart';
 export * from './data-count';
 export * from './data-grid';
 export * from './data-table';
 export * from './geo-choropleth-chart';
+export * from './heatmap';
+export * from './html-legend';
+export * from './line-chart';
+export * from './number-display';
 export * from './pie-chart';
 export * from './row-chart';
+export * from './scatter-plot';
+export * from './select-menu';
+export * from './series-chart';
+export * from './sunburst-chart';
+export * from './text-filter-widget';
 
 /* Older renames and exports, probably can be dropped
 

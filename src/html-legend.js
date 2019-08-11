@@ -1,3 +1,8 @@
+import * as d3 from 'd3';
+
+import {pluck, utils} from './utils';
+import {constants} from './constants';
+
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
  * labels.
@@ -7,14 +12,14 @@
  * chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
  * @returns {dc.htmlLegend}
  */
-dc.htmlLegend = function () {
+export const htmlLegend = function () {
     var _legend = {},
         _htmlLegendDivCssClass = 'dc-html-legend',
         _legendItemCssClassHorizontal = 'dc-legend-item-horizontal',
         _legendItemCssClassVertical = 'dc-legend-item-vertical',
         _parent,
         _container,
-        _legendText = dc.pluck('name'),
+        _legendText = pluck('name'),
         _maxItems,
         _horizontal = false,
         _legendItemClass,
@@ -53,14 +58,14 @@ dc.htmlLegend = function () {
             .on('click', _parent.legendToggle);
 
         if (_highlightSelected) {
-            itemEnter.classed(dc.constants.SELECTED_CLASS, function (d) {
+            itemEnter.classed(constants.SELECTED_CLASS, function (d) {
                 return filters.indexOf(d.name) !== -1;
             });
         }
 
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-color')
-            .style('background-color', dc.pluck('color'));
+            .style('background-color', pluck('color'));
 
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-label')
@@ -176,7 +181,7 @@ dc.htmlLegend = function () {
         if (!arguments.length) {
             return _maxItems;
         }
-        _maxItems = dc.utils.isNumber(maxItems) ? maxItems : undefined;
+        _maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
         return _legend;
     };
 

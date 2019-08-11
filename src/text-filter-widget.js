@@ -1,3 +1,8 @@
+import {baseMixin} from './base-mixin';
+import {constants} from './constants';
+import {events} from './events';
+import {redrawAll} from './core';
+
 /**
  * Text Filter Widget
  *
@@ -29,10 +34,10 @@
  * @returns {dc.textFilterWidget}
  **/
 
-dc.textFilterWidget = function (parent, chartGroup) {
+export const textFilterWidget = function (parent, chartGroup) {
     var INPUT_CSS_CLASS = 'dc-text-filter-input';
 
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
 
     var _normalize = function (s) {
         return s.toLowerCase();
@@ -59,9 +64,9 @@ dc.textFilterWidget = function (parent, chartGroup) {
 
         _input.on('input', function () {
             _chart.dimension().filterFunction(_filterFunctionFactory(this.value));
-            dc.events.trigger(function () {
-                dc.redrawAll();
-            }, dc.constants.EVENT_DELAY);
+            events.trigger(function () {
+                redrawAll();
+            }, constants.EVENT_DELAY);
         });
 
         _chart._doRedraw();

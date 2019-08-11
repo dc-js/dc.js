@@ -1,3 +1,14 @@
+import * as d3 from 'd3';
+
+import {transition} from './core';
+import {logger} from './logger';
+import {filters} from './filters';
+import {events} from './events';
+import {override} from './core';
+import {colorMixin} from './color-mixin';
+import {marginMixin} from './margin-mixin';
+import {baseMixin} from './base-mixin';
+
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
  * @class heatMap
@@ -17,7 +28,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.heatMap}
  */
-dc.heatMap = function (parent, chartGroup) {
+export const heatMap = function (parent, chartGroup) {
 
     var DEFAULT_BORDER_RADIUS = 6.75;
 
@@ -33,7 +44,7 @@ dc.heatMap = function (parent, chartGroup) {
     var _xBorderRadius = DEFAULT_BORDER_RADIUS;
     var _yBorderRadius = DEFAULT_BORDER_RADIUS;
 
-    var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin({})));
+    var _chart = colorMixin(marginMixin(baseMixin({})));
     _chart._mandatoryAttributes(['group']);
     _chart.title(_chart.colorAccessor());
 
@@ -88,8 +99,8 @@ dc.heatMap = function (parent, chartGroup) {
     var _yAxisOnClick = function (d) { filterAxis(1, d); };
     var _boxOnClick = function (d) {
         var filter = d.key;
-        dc.events.trigger(function () {
-            _chart.filter(dc.filters.TwoDimensionalFilter(filter));
+        events.trigger(function () {
+            _chart.filter(filters.TwoDimensionalFilter(filter));
             _chart.redrawGroup();
         });
     };
@@ -101,20 +112,20 @@ dc.heatMap = function (parent, chartGroup) {
         var unfilteredCellsOnAxis = cellsOnAxis.filter(function (d) {
             return !_chart.hasFilter(d.key);
         });
-        dc.events.trigger(function () {
+        events.trigger(function () {
             var selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
             var filters = selection.data().map(function (kv) {
-                return dc.filters.TwoDimensionalFilter(kv.key);
+                return filters.TwoDimensionalFilter(kv.key);
             });
             _chart.filter([filters]);
             _chart.redrawGroup();
         });
     }
 
-    var nonstandardFilter = dc.logger.deprecate(function (filter) {
-        return _chart._filter(dc.filters.TwoDimensionalFilter(filter));
+    var nonstandardFilter = logger.deprecate(function (filter) {
+        return _chart._filter(filters.TwoDimensionalFilter(filter));
     }, 'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
-    dc.override(_chart, 'filter', function (filter) {
+    override(_chart, 'filter', function (filter) {
         if (!arguments.length) {
             return _chart._filter();
         }
@@ -249,7 +260,7 @@ dc.heatMap = function (parent, chartGroup) {
             boxes.select('title').text(_chart.title());
         }
 
-        dc.transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
+        transition(boxes.select('rect'), _chart.transitionDuration(), _chart.transitionDelay())
             .attr('x', function (d, i) { return cols(_chart.keyAccessor()(d, i)); })
             .attr('y', function (d, i) { return rows(_chart.valueAccessor()(d, i)); })
             .attr('rx', _xBorderRadius)
@@ -279,7 +290,7 @@ dc.heatMap = function (parent, chartGroup) {
                 .text(_chart.colsLabel())
             .merge(gColsText);
 
-        dc.transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(gColsText, _chart.transitionDuration(), _chart.transitionDelay())
                .text(_chart.colsLabel())
                .attr('x', function (d) { return cols(d) + boxWidth / 2; })
                .attr('y', _chart.effectiveHeight());
@@ -305,7 +316,7 @@ dc.heatMap = function (parent, chartGroup) {
                 .text(_chart.rowsLabel())
             .merge(gRowsText);
 
-        dc.transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
+        transition(gRowsText, _chart.transitionDuration(), _chart.transitionDelay())
               .text(_chart.rowsLabel())
               .attr('y', function (d) { return rows(d) + boxHeight / 2; });
 

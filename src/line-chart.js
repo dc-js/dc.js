@@ -1,3 +1,11 @@
+import * as d3 from 'd3';
+
+import {logger} from './logger';
+import {pluck, utils} from './utils';
+import {stackMixin} from './stack-mixin';
+import {coordinateGridMixin} from './coordinate-grid-mixin';
+import {override, transition} from './core';
+
 /**
  * Concrete line/area chart implementation.
  *
@@ -24,7 +32,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.lineChart}
  */
-dc.lineChart = function (parent, chartGroup) {
+export const lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_RADIUS = 5;
     var TOOLTIP_G_CLASS = 'dc-tooltip';
     var DOT_CIRCLE_CLASS = 'dot';
@@ -33,7 +41,7 @@ dc.lineChart = function (parent, chartGroup) {
     var DEFAULT_DOT_OPACITY = 1e-6;
     var LABEL_PADDING = 3;
 
-    var _chart = dc.stackMixin(dc.coordinateGridMixin({}));
+    var _chart = stackMixin(coordinateGridMixin({}));
     var _renderArea = false;
     var _dotRadius = DEFAULT_DOT_RADIUS;
     var _dataPointRadius = null;
@@ -137,7 +145,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @param  {d3.curve} [interpolate=d3.curveLinear]
      * @returns {d3.curve|dc.lineChart}
      */
-    _chart.interpolate = dc.logger.deprecate(function (interpolate) {
+    _chart.interpolate = logger.deprecate(function (interpolate) {
         if (!arguments.length) {
             return _interpolate;
         }
@@ -163,7 +171,7 @@ dc.lineChart = function (parent, chartGroup) {
      * @param  {Number} [tension=0]
      * @returns {Number|dc.lineChart}
      */
-    _chart.tension = dc.logger.deprecate(function (tension) {
+    _chart.tension = logger.deprecate(function (tension) {
         if (!arguments.length) {
             return _tension;
         }
@@ -279,7 +287,7 @@ dc.lineChart = function (parent, chartGroup) {
 
         if (_tension !== null) {
             if (typeof curve.tension !== 'function') {
-                dc.logger.warn('tension was specified but the curve/interpolate does not support it.');
+                logger.warn('tension was specified but the curve/interpolate does not support it.');
             } else {
                 curve = curve.tension(_tension);
             }
@@ -307,7 +315,7 @@ dc.lineChart = function (parent, chartGroup) {
             path.attr('stroke-dasharray', _dashStyle);
         }
 
-        dc.transition(layers.select('path.line'), _chart.transitionDuration(), _chart.transitionDelay())
+        transition(layers.select('path.line'), _chart.transitionDuration(), _chart.transitionDelay())
             //.ease('linear')
             .attr('stroke', colors)
             .attr('d', function (d) {
@@ -339,7 +347,7 @@ dc.lineChart = function (parent, chartGroup) {
                     return safeD(area(d.values));
                 });
 
-            dc.transition(layers.select('path.area'), _chart.transitionDuration(), _chart.transitionDelay())
+            transition(layers.select('path.area'), _chart.transitionDuration(), _chart.transitionDelay())
                 //.ease('linear')
                 .attr('fill', colors)
                 .attr('d', function (d) {
@@ -375,17 +383,17 @@ dc.lineChart = function (parent, chartGroup) {
                 createRefLines(g);
 
                 var dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
-                    .data(points, dc.pluck('x'));
+                    .data(points, pluck('x'));
 
                 var dotsEnterModify = dots
                     .enter()
                         .append('circle')
                         .attr('class', DOT_CIRCLE_CLASS)
                         .attr('cx', function (d) {
-                            return dc.utils.safeNumber(_chart.x()(d.x));
+                            return utils.safeNumber(_chart.x()(d.x));
                         })
                         .attr('cy', function (d) {
-                            return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                            return utils.safeNumber(_chart.y()(d.y + d.y0));
                         })
                         .attr('r', getDotRadius())
                         .style('fill-opacity', _dataPointFillOpacity)
@@ -406,12 +414,12 @@ dc.lineChart = function (parent, chartGroup) {
 
                 dotsEnterModify.call(renderTitle, d);
 
-                dc.transition(dotsEnterModify, _chart.transitionDuration())
+                transition(dotsEnterModify, _chart.transitionDuration())
                     .attr('cx', function (d) {
-                        return dc.utils.safeNumber(_chart.x()(d.x));
+                        return utils.safeNumber(_chart.x()(d.x));
                     })
                     .attr('cy', function (d) {
-                        return dc.utils.safeNumber(_chart.y()(d.y + d.y0));
+                        return utils.safeNumber(_chart.y()(d.y + d.y0));
                     })
                     .attr('fill', _chart.getColor);
 
@@ -421,14 +429,14 @@ dc.lineChart = function (parent, chartGroup) {
     }
 
     _chart.label(function (d) {
-        return dc.utils.printSingleValue(d.y0 + d.y);
+        return utils.printSingleValue(d.y0 + d.y);
     }, false);
 
     function drawLabels (layers) {
         layers.each(function (d, layerIndex) {
             var layer = d3.select(this);
             var labels = layer.selectAll('text.lineLabel')
-                .data(d.values, dc.pluck('x'));
+                .data(d.values, pluck('x'));
 
             var labelsEnterModify = labels
                 .enter()
@@ -437,19 +445,19 @@ dc.lineChart = function (parent, chartGroup) {
                     .attr('text-anchor', 'middle')
                 .merge(labels);
 
-            dc.transition(labelsEnterModify, _chart.transitionDuration())
+            transition(labelsEnterModify, _chart.transitionDuration())
                 .attr('x', function (d) {
-                    return dc.utils.safeNumber(_chart.x()(d.x));
+                    return utils.safeNumber(_chart.x()(d.x));
                 })
                 .attr('y', function (d) {
                     var y = _chart.y()(d.y + d.y0) - LABEL_PADDING;
-                    return dc.utils.safeNumber(y);
+                    return utils.safeNumber(y);
                 })
                 .text(function (d) {
                     return _chart.label()(d);
                 });
 
-            dc.transition(labels.exit(), _chart.transitionDuration())
+            transition(labels.exit(), _chart.transitionDuration())
                 .attr('height', 0)
                 .remove();
         });
@@ -500,7 +508,7 @@ dc.lineChart = function (parent, chartGroup) {
     function renderTitle (dot, d) {
         if (_chart.renderTitle()) {
             dot.select('title').remove();
-            dot.append('title').text(dc.pluck('data', _chart.title(d.name)));
+            dot.append('title').text(pluck('data', _chart.title(d.name)));
         }
     }
 
@@ -594,7 +602,7 @@ dc.lineChart = function (parent, chartGroup) {
             .classed('fadeout', false);
     };
 
-    dc.override(_chart, 'legendables', function () {
+    override(_chart, 'legendables', function () {
         var legendables = _chart._legendables();
         if (!_dashStyle) {
             return legendables;

@@ -1,3 +1,13 @@
+import * as d3 from 'd3';
+
+import {transition} from './core';
+import {filters} from './filters';
+import {utils} from './utils';
+import {events} from './events';
+import {capMixin} from './cap-mixin';
+import {colorMixin} from './color-mixin';
+import {baseMixin} from './base-mixin';
+
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -26,7 +36,7 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.sunburstChart}
  **/
-dc.sunburstChart = function (parent, chartGroup) {
+export const sunburstChart = function (parent, chartGroup) {
     var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
     var _sliceCssClass = 'pie-slice';
@@ -42,7 +52,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     var _cy;
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
-    var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
+    var _chart = capMixin(colorMixin(baseMixin({})));
 
     _chart.colorAccessor(_chart.cappedKeyAccessor);
 
@@ -102,7 +112,7 @@ dc.sunburstChart = function (parent, chartGroup) {
         var sunburstData, cdata;
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
-            cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
+            cdata = utils.toHierarchy(_chart.data(), _chart.valueAccessor());
             sunburstData = partitionNodes(cdata);
             // First one is the root, which is not needed
             sunburstData.shift();
@@ -110,7 +120,7 @@ dc.sunburstChart = function (parent, chartGroup) {
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
-            cdata = dc.utils.toHierarchy([], function (d) {
+            cdata = utils.toHierarchy([], function (d) {
                 return d.value;
             });
             sunburstData = partitionNodes(cdata);
@@ -128,7 +138,7 @@ dc.sunburstChart = function (parent, chartGroup) {
 
             highlightFilter();
 
-            dc.transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
+            transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
                 .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
         }
     }
@@ -161,9 +171,9 @@ dc.sunburstChart = function (parent, chartGroup) {
                 return safeArc(arc, d);
             });
 
-        var transition = dc.transition(slicePath, _chart.transitionDuration());
-        if (transition.attrTween) {
-            transition.attrTween('d', tweenSlice);
+        var tranNodes = transition(slicePath, _chart.transitionDuration());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', tweenSlice);
         }
     }
 
@@ -176,7 +186,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     }
 
     function positionLabels (labelsEnter, arc) {
-        dc.transition(labelsEnter, _chart.transitionDuration())
+        transition(labelsEnter, _chart.transitionDuration())
             .attr('transform', function (d) {
                 return labelPosition(d, arc);
             })
@@ -225,11 +235,11 @@ dc.sunburstChart = function (parent, chartGroup) {
             .attr('d', function (d, i) {
                 return safeArc(arc, d);
             });
-        var transition = dc.transition(slicePaths, _chart.transitionDuration());
-        if (transition.attrTween) {
-            transition.attrTween('d', tweenSlice);
+        var tranNodes = transition(slicePaths, _chart.transitionDuration());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', tweenSlice);
         }
-        transition.attr('fill', fill);
+        tranNodes.attr('fill', fill);
     }
 
     function updateLabels (sunburstData, arc) {
@@ -424,15 +434,15 @@ dc.sunburstChart = function (parent, chartGroup) {
 
     // returns all filters that are a parent or child of the path
     function filtersForPath (path) {
-        var pathFilter = dc.filters.HierarchyFilter(path);
-        var filters = [];
+        var pathFilter = filters.HierarchyFilter(path);
+        var filtersList = [];
         for (var i = 0; i < _chart.filters().length; i++) {
             var currentFilter = _chart.filters()[i];
             if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
-                filters.push(currentFilter);
+                filtersList.push(currentFilter);
             }
         }
-        return filters;
+        return filtersList;
     }
 
     _chart._doRedraw = function () {
@@ -504,20 +514,20 @@ dc.sunburstChart = function (parent, chartGroup) {
         // Clicking on Legends do not filter, it throws exception
         // Must be better way to handle this, in legends we need to access `d.key`
         var path = d.path || d.key;
-        var filter = dc.filters.HierarchyFilter(path);
+        var filter = filters.HierarchyFilter(path);
 
         // filters are equal to, parents or children of the path.
-        var filters = filtersForPath(path);
+        var filtersList = filtersForPath(path);
         var exactMatch = false;
         // clear out any filters that cover the path filtered.
-        for (var i = filters.length - 1; i >= 0; i--) {
-            var currentFilter = filters[i];
-            if (dc.utils.arraysIdentical(currentFilter, path)) {
+        for (var i = filtersList.length - 1; i >= 0; i--) {
+            var currentFilter = filtersList[i];
+            if (utils.arraysIdentical(currentFilter, path)) {
                 exactMatch = true;
             }
-            _chart.filter(filters[i]);
+            _chart.filter(filtersList[i]);
         }
-        dc.events.trigger(function () {
+        events.trigger(function () {
             // if it is a new filter - put it in.
             if (!exactMatch) {
                 _chart.filter(filter);

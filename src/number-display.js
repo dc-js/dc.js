@@ -1,3 +1,7 @@
+import * as d3 from 'd3';
+
+import {baseMixin} from './base-mixin';
+
 /**
  * A display of a single numeric value.
  *
@@ -24,10 +28,10 @@
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.numberDisplay}
  */
-dc.numberDisplay = function (parent, chartGroup) {
+export const numberDisplay = function (parent, chartGroup) {
     var SPAN_CLASS = 'number-display';
     var _formatNumber = d3.format('.2s');
-    var _chart = dc.baseMixin({});
+    var _chart = baseMixin({});
     var _html = {one: '', some: '', none: ''};
     var _lastValue;
 
