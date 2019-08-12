@@ -246,40 +246,34 @@ module.exports = function (grunt) {
                     slFirefoxLinux: {
                         base: 'SauceLabs',
                         browserName: 'firefox',
-                        version: '45.0',
+                        version: '68.0',
                         platform: 'Linux'
                     },
                     slSafari: {
                         base: 'SauceLabs',
                         browserName: 'safari',
-                        version: '9.0',
-                        platform: 'OS X 10.11'
+                        version: '12.0',
+                        platform: 'OS X 10.14'
                     },
-                    slInternetExplorer11: {
+                    slChromeWindows: {
                         base: 'SauceLabs',
-                        browserName: 'internet explorer',
-                        platform: 'Windows 10',
-                        version: '11.0'
-                    },
-                    slInternetExplorer11win8: {
-                        base: 'SauceLabs',
-                        browserName: 'internet explorer',
-                        version: '11.0',
-                        platform: 'Windows 8.1'
+                        browserName: 'GoogleChrome',
+                        version: '75.0',
+                        platform: 'Windows 10'
                     },
                     slMicrosoftEdge: {
                         base: 'SauceLabs',
                         browserName: 'MicrosoftEdge',
-                        version: '14',
+                        version: '18',
                         platform: 'Windows 10'
                     }
                 },
                 browsers: [
-                    'slInternetExplorer11',
-                    'slInternetExplorer11win8',
                     'slMicrosoftEdge',
                     'slFirefoxLinux',
-                    'slSafari'
+                    'slSafari',
+                    'slChromeWindows',
+                    'slMicrosoftEdge'
                 ],
                 concurrency: 2,
                 browserNoActivityTimeout: 120000,
