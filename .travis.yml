@@ -2,10 +2,6 @@ language: node_js
 node_js:
   - '11'
 
-cache:
-  directories:
-  - node_modules # NPM packages
-
 script:
   - 'if [ "${D3VER}" = "4" ]; then npm i "d3@^4"; npm list d3; fi'
   - 'if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then grunt ci; else grunt ci-pull; fi'
