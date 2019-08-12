@@ -275,7 +275,7 @@ describe('dc.baseMixin', function () {
                 dc.baseMixin({}).group(group).render();
                 throw new Error('That should\'ve thrown');
             } catch (e) {
-                expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();
+                expect(e instanceof dc.InvalidStateException).toBeTruthy();
             }
         });
 
@@ -284,7 +284,7 @@ describe('dc.baseMixin', function () {
                 dc.baseMixin({}).dimension(dimension).render();
                 throw new Error('That should\'ve thrown');
             } catch (e) {
-                expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();
+                expect(e instanceof dc.InvalidStateException).toBeTruthy();
             }
         });
     });

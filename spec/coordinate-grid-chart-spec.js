@@ -253,7 +253,7 @@ describe('dc.coordinateGridChart', function () {
                     dc.coordinateGridChart({}).group({}).dimension({}).render();
                     expect('exception').toBe('thrown');
                 } catch (e) {
-                    expect(e instanceof dc.errors.InvalidStateException).toBeTruthy();
+                    expect(e instanceof dc.InvalidStateException).toBeTruthy();
                     expect(e.message).toMatch(/Mandatory attribute chart.x is missing on chart\[#.+\]/);
                 }
             });

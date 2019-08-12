@@ -4,9 +4,10 @@ import { printers, utils } from './utils';
 import { pluck } from './utils';
 import { deregisterChart, instanceOfChart, renderAll, redrawAll, registerChart } from './core';
 import { constants } from './constants';
-import { errors } from './errors';
 import { events } from './events';
 import { logger } from './logger';
+import {InvalidStateException} from './invalid-state-exception';
+import {BadArgumentException} from './bad-argument-exception';
 
 /**
  * `dc.baseMixin` is an abstract functional object representing a basic `dc` chart object
@@ -460,7 +461,7 @@ export const baseMixin = function (_chart) {
             registerChart(_chart, chartGroup);
             _isChild = false;
         } else {
-            throw new errors.BadArgumentException('parent must be defined');
+            throw new BadArgumentException('parent must be defined');
         }
         _chartGroup = chartGroup;
         return _chart;
@@ -686,7 +687,7 @@ export const baseMixin = function (_chart) {
 
     function checkForMandatoryAttributes (a) {
         if (!_chart[a] || !_chart[a]()) {
-            throw new errors.InvalidStateException('Mandatory attribute chart.' + a +
+            throw new InvalidStateException('Mandatory attribute chart.' + a +
                 ' is missing on chart[#' + _chart.anchorName() + ']');
         }
     }
