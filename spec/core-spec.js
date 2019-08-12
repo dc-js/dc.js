@@ -133,7 +133,7 @@ describe('dc.core', function () {
             });
         });
 
-/* ES6: dc.disableTransitions can no longer be assigned, re-look later
+        /* ES6: dc.disableTransitions can no longer be assigned, re-look later
         describe('skip', function () {
             it('transition should not be activated with 0 duration', function () {
                 dc.transition(selections, 0, 0);
@@ -153,7 +153,7 @@ describe('dc.core', function () {
                 dc.disableTransitions = false;
             });
         });
-*/
+        */
 
         describe('parameters', function () {
             it('duration should not be called if skipped', function () {
