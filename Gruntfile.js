@@ -247,24 +247,24 @@ module.exports = function (grunt) {
                         base: 'SauceLabs',
                         browserName: 'firefox',
                         version: '68.0',
-                        platform: 'Linux'
+                        platform: 'macOS 10.14'
                     },
                     slSafari: {
                         base: 'SauceLabs',
                         browserName: 'safari',
                         version: '12.0',
-                        platform: 'OS X 10.14'
+                        platform: 'macOS 10.14'
                     },
                     slChromeWindows: {
                         base: 'SauceLabs',
-                        browserName: 'GoogleChrome',
-                        version: '75.0',
+                        browserName: 'chrome',
+                        version: '76.0',
                         platform: 'Windows 10'
                     },
                     slMicrosoftEdge: {
                         base: 'SauceLabs',
                         browserName: 'MicrosoftEdge',
-                        version: '18',
+                        version: '18.17763',
                         platform: 'Windows 10'
                     }
                 },
