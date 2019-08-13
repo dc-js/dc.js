@@ -269,7 +269,6 @@ module.exports = function (grunt) {
                     }
                 },
                 browsers: [
-                    'slMicrosoftEdge',
                     'slFirefoxLinux',
                     'slSafari',
                     'slChromeWindows',
