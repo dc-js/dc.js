@@ -246,7 +246,7 @@ module.exports = function (grunt) {
                     slFirefoxLinux: {
                         base: 'SauceLabs',
                         browserName: 'firefox',
-                        version: '68.0',
+                        version: '45.0',
                         platform: 'macOS 10.14'
                     },
                     slSafari: {
