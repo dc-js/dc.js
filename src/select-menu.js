@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import {logger} from './logger';
-import {events} from './events';
+import {logger} from './core/logger';
+import {events} from './core/events';
 import {baseMixin} from './base-mixin';
 
 /**

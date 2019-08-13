@@ -2,8 +2,8 @@ import * as d3 from 'd3';
 
 import {d3Box} from './d3.box'
 import {coordinateGridMixin} from './coordinate-grid-mixin';
-import {transition, units} from './core';
-import {utils} from './utils';
+import {transition, units} from './core/core';
+import {utils} from './core/utils';
 
 /**
  * A box plot is a chart that depicts numerical data via their quartile ranges.

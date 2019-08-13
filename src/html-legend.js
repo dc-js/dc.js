@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import {pluck, utils} from './utils';
-import {constants} from './constants';
+import {pluck, utils} from './core/utils';
+import {constants} from './core/constants';
 
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend

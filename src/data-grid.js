@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import {logger} from './logger';
+import {logger} from './core/logger';
 import {baseMixin} from './base-mixin';
 
 /**

@@ -4,7 +4,7 @@ import {baseMixin} from './base-mixin';
 import {capMixin} from './cap-mixin';
 import {marginMixin} from './margin-mixin';
 import {colorMixin} from './color-mixin';
-import {transition} from './core';
+import {transition} from './core/core';
 
 /**
  * Concrete row chart implementation.

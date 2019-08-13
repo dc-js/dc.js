@@ -1,9 +1,9 @@
 import * as d3 from 'd3';
 
-import {transition} from './core';
-import {filters} from './filters';
-import {utils} from './utils';
-import {events} from './events';
+import {transition} from './core/core';
+import {filters} from './core/filters';
+import {utils} from './core/utils';
+import {events} from './core/events';
 import {capMixin} from './cap-mixin';
 import {colorMixin} from './color-mixin';
 import {baseMixin} from './base-mixin';

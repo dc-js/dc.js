@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 
-import {transition} from './core';
-import {logger} from './logger';
-import {filters} from './filters';
-import {events} from './events';
-import {override} from './core';
+import {transition} from './core/core';
+import {logger} from './core/logger';
+import {filters} from './core/filters';
+import {events} from './core/events';
+import {override} from './core/core';
 import {colorMixin} from './color-mixin';
 import {marginMixin} from './margin-mixin';
 import {baseMixin} from './base-mixin';

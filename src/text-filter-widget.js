@@ -1,7 +1,7 @@
 import {baseMixin} from './base-mixin';
-import {constants} from './constants';
-import {events} from './events';
-import {redrawAll} from './core';
+import {constants} from './core/constants';
+import {events} from './core/events';
+import {redrawAll} from './core/core';
 
 /**
  * Text Filter Widget
