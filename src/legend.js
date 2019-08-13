@@ -1,5 +1,5 @@
-import {pluck} from './utils';
-import {utils} from './utils';
+import {pluck} from './core/utils';
+import {utils} from './core/utils';
 /**
  * Legend is a attachable widget that can be added to other dc charts to render horizontal legend
  * labels.

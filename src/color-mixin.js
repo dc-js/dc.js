@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import { config } from './config';
-import { utils } from './utils';
+import { config } from './core/config';
+import { utils } from './core/utils';
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support

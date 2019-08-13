@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import {events} from './events';
+import {events} from './core/events';
 import {baseMixin} from './base-mixin';
 
 /**

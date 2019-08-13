@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 
 import {compositeChart} from './composite-chart';
 import {lineChart} from './line-chart';
-import {utils} from './utils';
+import {utils} from './core/utils';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the

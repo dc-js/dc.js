@@ -3,12 +3,12 @@ import * as d3 from 'd3';
 import {colorMixin} from './color-mixin';
 import {marginMixin} from './margin-mixin';
 import {baseMixin} from './base-mixin';
-import {optionalTransition, override, transition, units} from './core';
-import {constants} from './constants';
-import {utils} from './utils';
-import {logger} from './logger';
-import {filters} from './filters';
-import {events} from './events';
+import {optionalTransition, override, transition, units} from './core/core';
+import {constants} from './core/constants';
+import {utils} from './core/utils';
+import {logger} from './core/logger';
+import {filters} from './core/filters';
+import {events} from './core/events';
 
 /**
  * Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based

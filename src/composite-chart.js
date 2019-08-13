@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import {override} from './core';
-import {utils} from './utils';
+import {override} from './core/core';
+import {utils} from './core/utils';
 import {coordinateGridMixin} from './coordinate-grid-mixin';
 
 /**
