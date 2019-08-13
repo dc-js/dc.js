@@ -195,7 +195,7 @@ module.exports = function (grunt) {
                 colors: true,
                 logLevel: 'INFO',
                 autoWatch: false,
-                browsers: ['Firefox'],
+                browsers: ['FirefoxHeadless'],
                 browserConsoleLogOptions: {level: 'error'},
                 singleRun: true,
                 concurrency: Infinity
