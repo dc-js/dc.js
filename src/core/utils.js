@@ -1,14 +1,6 @@
 import * as d3 from 'd3';
 import {constants} from './constants';
-
-/**
- * The default date format for dc.js
- * @name dateFormat
- * @memberof dc
- * @type {Function}
- * @default d3.timeFormat('%m/%d/%Y')
- */
-export const dateFormat = d3.timeFormat('%m/%d/%Y');
+import {config} from './config';
 
 /**
  * @namespace printers
@@ -112,7 +104,7 @@ utils.printSingleValue = function (filter) {
     var s = '' + filter;
 
     if (filter instanceof Date) {
-        s = dateFormat(filter);
+        s = config.dateFormat(filter);
     } else if (typeof(filter) === 'string') {
         s = filter;
     } else if (utils.isFloat(filter)) {

@@ -1,4 +1,5 @@
 import { logger } from './logger';
+import * as d3 from 'd3';
 
 /**
  * General configuration
@@ -9,8 +10,18 @@ import { logger } from './logger';
  */
 export class Config {
 
+
+    /**
+     * The default date format for dc.js
+     * @name dateFormat
+     * @memberof dc
+     * @type {Function}
+     * @default d3.timeFormat('%m/%d/%Y')
+     */
+
     constructor () {
         this._defaultColors = Config._schemeCategory20c;
+        this.dateFormat = d3.timeFormat('%m/%d/%Y');
     }
 
     /**
@@ -44,6 +55,7 @@ export class Config {
         this._defaultColors = colors;
         return this;
     }
+
 }
 
 // D3v5 has removed schemeCategory20c, copied here for backward compatibility
