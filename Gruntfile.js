@@ -162,61 +162,7 @@ module.exports = function (grunt) {
         },
         karma: {
             options: {
-                basePath: '',
-                frameworks: ['jasmine'],
-                files: [
-                    // CSS files
-                    '<%= conf.web %>/css/dc.css',
-                    // Helpers
-                    '<%= conf.web %>/js/jasmine-jsreporter.js',
-                    '<%= conf.web %>/js/compare-versions.js',
-                    '<%= conf.spec %>/helpers/*.js',
-                    // JS code dependencies
-                    '<%= conf.web %>/js/d3.js',
-                    '<%= conf.web %>/js/crossfilter.js',
-                    // Code to be tested
-                    '<%= conf.pkg.name %>.js',
-                    // Jasmine spec files
-                    '<%= conf.spec %>/*spec.js'
-                ],
-                exclude: [],
-                preprocessors: {},
-                // possible values: 'dots', 'progress'
-                reporters: ['progress', 'summary'],
-                summaryReporter: {
-                    // 'failed', 'skipped' or 'all'
-                    show: 'failed',
-                    // Limit the spec label to this length
-                    specLength: 100,
-                    // Show an 'all' column as a summary
-                    overviewColumn: true
-                },
-                customLaunchers: {
-                    // See https://github.com/karma-runner/karma/issues/2603
-                    ChromeNoSandboxHeadless: {
-                        base: 'Chrome',
-                        flags: [
-                            '--no-sandbox',
-                            // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
-                            '--headless',
-                            '--disable-gpu',
-                            // Without a remote debugging port, Google Chrome exits immediately.
-                            ' --remote-debugging-port=9222'
-                        ]
-                    },
-                    FirefoxHeadless: {
-                        base: 'Firefox',
-                        flags: ['-headless']
-                    }
-                },
-                port: 9876,
-                colors: true,
-                logLevel: 'INFO',
-                autoWatch: false,
-                browsers: ['FirefoxHeadless'],
-                browserConsoleLogOptions: {level: 'error'},
-                singleRun: true,
-                concurrency: Infinity
+                configFile: 'karma.conf.js'
             },
             unit: {},
             coverage: {
