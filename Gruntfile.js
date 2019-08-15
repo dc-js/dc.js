@@ -16,8 +16,7 @@ module.exports = function (grunt) {
         spec: 'spec',
         web: 'web',
         pkg: require('./package.json'),
-        banner: grunt.file.read('./LICENSE_BANNER'),
-        jsFiles: module.exports.jsFiles
+        banner: grunt.file.read('./LICENSE_BANNER')
     };
 
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
@@ -460,45 +459,3 @@ module.exports = function (grunt) {
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };
-
-module.exports.jsFiles = [
-    // 'src/banner.js',   // NOTE: keep this first
-    'src/core.js',
-    'src/errors.js',
-    'src/utils.js',
-    'src/logger.js',
-    'src/config.js',
-    'src/events.js',
-    'src/filters.js',
-    'src/base-mixin.js',
-    'src/margin-mixin.js',
-    'src/color-mixin.js',
-    'src/coordinate-grid-mixin.js',
-    'src/stack-mixin.js',
-    'src/cap-mixin.js',
-    'src/bubble-mixin.js',
-    'src/pie-chart.js',
-    'src/sunburst-chart.js',
-    'src/bar-chart.js',
-    'src/line-chart.js',
-    'src/data-count.js',
-    'src/data-table.js',
-    'src/data-grid.js',
-    'src/bubble-chart.js',
-    'src/composite-chart.js',
-    'src/series-chart.js',
-    'src/geo-choropleth-chart.js',
-    'src/bubble-overlay.js',
-    'src/row-chart.js',
-    'src/legend.js',
-    'src/html-legend.js',
-    'src/scatter-plot.js',
-    'src/number-display.js',
-    'src/heatmap.js',
-    'src/d3.box.js',
-    'src/box-plot.js',
-    'src/select-menu.js',
-    'src/text-filter-widget.js',
-    'src/cbox-menu.js',
-    // 'src/footer.js'  // NOTE: keep this last
-];
