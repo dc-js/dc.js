@@ -322,7 +322,7 @@ export const baseMixin = function (_chart) {
      * var index = crossfilter([]);
      * var dimension = index.dimension(dc.pluck('key'));
      * chart.dimension(dimension);
-     * chart.group(dimension.group(crossfilter.reduceSum()));
+     * chart.group(dimension.group().reduceSum());
      * @param {crossfilter.group} [group]
      * @param {String} [name]
      * @returns {crossfilter.group|dc.baseMixin}
