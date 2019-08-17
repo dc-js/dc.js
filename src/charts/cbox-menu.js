@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import {events} from './core/events';
-import {baseMixin} from './base-mixin';
+import {events} from '../core/events';
+import {baseMixin} from '../base/base-mixin';
 
 /**
  * The cboxMenu is a simple widget designed to filter a dimension by

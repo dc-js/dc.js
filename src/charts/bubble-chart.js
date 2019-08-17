@@ -1,6 +1,6 @@
-import {bubbleMixin} from './bubble-mixin';
-import {coordinateGridMixin} from './coordinate-grid-mixin';
-import {transition} from './core/core';
+import {bubbleMixin} from '../base/bubble-mixin';
+import {coordinateGridMixin} from '../base/coordinate-grid-mixin';
+import {transition} from '../core/core';
 
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the

@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import {logger} from './core/logger';
-import {baseMixin} from './base-mixin';
+import {logger} from '../core/logger';
+import {baseMixin} from '../base/base-mixin';
 
 /**
  * The data table is a simple widget designed to list crossfilter focused data set (rows being

@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 
-import {baseMixin} from './base-mixin';
-import {bubbleMixin} from './bubble-mixin';
-import {transition} from './core/core';
-import {constants} from './core/constants';
-import {utils} from './core/utils';
+import {baseMixin} from '../base/base-mixin';
+import {bubbleMixin} from '../base/bubble-mixin';
+import {transition} from '../core/core';
+import {constants} from '../core/constants';
+import {utils} from '../core/utils';
 
 /**
  * The bubble overlay chart is quite different from the typical bubble chart. With the bubble overlay

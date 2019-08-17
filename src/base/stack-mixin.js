@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import {pluck, utils} from './core/utils';
-import {override} from './core/core';
+import {pluck, utils} from '../core/utils';
+import {override} from '../core/core';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stackD3v3.

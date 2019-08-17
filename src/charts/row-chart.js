@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 
-import {baseMixin} from './base-mixin';
-import {capMixin} from './cap-mixin';
-import {marginMixin} from './margin-mixin';
-import {colorMixin} from './color-mixin';
-import {transition} from './core/core';
+import {baseMixin} from '../base/base-mixin';
+import {capMixin} from '../base/cap-mixin';
+import {marginMixin} from '../base/margin-mixin';
+import {colorMixin} from '../base/color-mixin';
+import {transition} from '../core/core';
 
 /**
  * Concrete row chart implementation.

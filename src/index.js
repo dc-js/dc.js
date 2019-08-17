@@ -8,48 +8,48 @@ export * from './core/logger';
 export * from './core/config';
 export * from './core/events';
 export * from './core/filters';
-export * from './d3.box';
+export * from './base/d3.box';
 
-export * from './base-mixin';
-export * from './bubble-mixin';
-export * from './bubble-overlay';
-export * from './color-mixin';
-export * from './coordinate-grid-mixin';
-export * from './cap-mixin';
-export * from './legend';
-export * from './margin-mixin';
-export * from './stack-mixin';
+export * from './base/base-mixin';
+export * from './base/bubble-mixin';
+export * from './charts/bubble-overlay';
+export * from './base/color-mixin';
+export * from './base/coordinate-grid-mixin';
+export * from './base/cap-mixin';
+export * from './base/legend';
+export * from './base/margin-mixin';
+export * from './base/stack-mixin';
 
-export * from './bar-chart';
-export * from './box-plot';
-export * from './bubble-chart';
-export * from './cbox-menu';
-export * from './composite-chart';
-export * from './data-count';
-export * from './data-grid';
-export * from './data-table';
-export * from './geo-choropleth-chart';
-export * from './heatmap';
-export * from './html-legend';
-export * from './line-chart';
-export * from './number-display';
-export * from './pie-chart';
-export * from './row-chart';
-export * from './scatter-plot';
-export * from './select-menu';
-export * from './series-chart';
-export * from './sunburst-chart';
-export * from './text-filter-widget';
+export * from './charts/bar-chart';
+export * from './charts/box-plot';
+export * from './charts/bubble-chart';
+export * from './charts/cbox-menu';
+export * from './charts/composite-chart';
+export * from './charts/data-count';
+export * from './charts/data-grid';
+export * from './charts/data-table';
+export * from './charts/geo-choropleth-chart';
+export * from './charts/heatmap';
+export * from './base/html-legend';
+export * from './charts/line-chart';
+export * from './charts/number-display';
+export * from './charts/pie-chart';
+export * from './charts/row-chart';
+export * from './charts/scatter-plot';
+export * from './charts/select-menu';
+export * from './charts/series-chart';
+export * from './charts/sunburst-chart';
+export * from './charts/text-filter-widget';
 
 /* ES6: Older renames and exports, probably can be dropped */
 
-export {bubbleMixin as abstractBubbleChart} from './bubble-mixin';
-export {baseMixin as baseChart} from './base-mixin';
-export {capMixin as capped} from './cap-mixin';
-export {colorMixin as colorChart} from './color-mixin';
-export {coordinateGridMixin as coordinateGridChart} from './coordinate-grid-mixin';
-export {marginMixin as marginable} from './margin-mixin';
-export {stackMixin as stackableChart} from './stack-mixin';
+export {bubbleMixin as abstractBubbleChart} from './base/bubble-mixin';
+export {baseMixin as baseChart} from './base/base-mixin';
+export {capMixin as capped} from './base/cap-mixin';
+export {colorMixin as colorChart} from './base/color-mixin';
+export {coordinateGridMixin as coordinateGridChart} from './base/coordinate-grid-mixin';
+export {marginMixin as marginable} from './base/margin-mixin';
+export {stackMixin as stackableChart} from './base/stack-mixin';
 
 /*
 // Expose d3 and crossfilter, so that clients in browserify

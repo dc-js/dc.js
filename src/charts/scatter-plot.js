@@ -1,10 +1,10 @@
 import * as d3 from 'd3';
 
-import {coordinateGridMixin} from './coordinate-grid-mixin';
-import {optionalTransition, override, transition} from './core/core';
-import {filters} from './core/filters';
-import {constants} from './core/constants';
-import {events} from './core/events';
+import {coordinateGridMixin} from '../base/coordinate-grid-mixin';
+import {optionalTransition, override, transition} from '../core/core';
+import {filters} from '../core/filters';
+import {constants} from '../core/constants';
+import {events} from '../core/events';
 
 /**
  * A scatter plot chart

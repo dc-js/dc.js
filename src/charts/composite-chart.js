@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 
-import {override} from './core/core';
-import {utils} from './core/utils';
-import {coordinateGridMixin} from './coordinate-grid-mixin';
+import {override} from '../core/core';
+import {utils} from '../core/utils';
+import {coordinateGridMixin} from '../base/coordinate-grid-mixin';
 
 /**
  * Composite charts are a special kind of chart that render multiple charts on the same Coordinate

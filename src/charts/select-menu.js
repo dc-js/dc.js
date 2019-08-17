@@ -1,8 +1,8 @@
 import * as d3 from 'd3';
 
-import {logger} from './core/logger';
-import {events} from './core/events';
-import {baseMixin} from './base-mixin';
+import {logger} from '../core/logger';
+import {events} from '../core/events';
+import {baseMixin} from '../base/base-mixin';
 
 /**
  * The select menu is a simple widget designed to filter a dimension by selecting an option from

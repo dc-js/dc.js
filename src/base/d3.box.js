@@ -34,7 +34,7 @@
 // Inspired by http://informationandvisualization.de/blog/box-plot
 
 import * as d3 from 'd3';
-import {utils} from './core/utils';
+import {utils} from '../core/utils';
 
 export const d3Box = function () {
     var width = 1,

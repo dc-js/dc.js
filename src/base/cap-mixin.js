@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import { override } from './core/core';
+import { override } from '../core/core';
 
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the

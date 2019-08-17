@@ -1,12 +1,12 @@
 import * as d3 from 'd3';
 
-import {pluck, printers, utils} from './core/utils';
-import {deregisterChart, instanceOfChart, redrawAll, registerChart, renderAll} from './core/core';
-import {constants} from './core/constants';
-import {events} from './core/events';
-import {logger} from './core/logger';
-import {InvalidStateException} from './core/invalid-state-exception';
-import {BadArgumentException} from './core/bad-argument-exception';
+import {pluck, printers, utils} from '../core/utils';
+import {deregisterChart, instanceOfChart, redrawAll, registerChart, renderAll} from '../core/core';
+import {constants} from '../core/constants';
+import {events} from '../core/events';
+import {logger} from '../core/logger';
+import {InvalidStateException} from '../core/invalid-state-exception';
+import {BadArgumentException} from '../core/bad-argument-exception';
 
 /**
  * `dc.baseMixin` is an abstract functional object representing a basic `dc` chart object

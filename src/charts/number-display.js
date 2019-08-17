@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import {baseMixin} from './base-mixin';
+import {baseMixin} from '../base/base-mixin';
 
 /**
  * A display of a single numeric value.

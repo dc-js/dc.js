@@ -1,13 +1,13 @@
 import * as d3 from 'd3';
 
-import {transition} from './core/core';
-import {logger} from './core/logger';
-import {filters} from './core/filters';
-import {events} from './core/events';
-import {override} from './core/core';
-import {colorMixin} from './color-mixin';
-import {marginMixin} from './margin-mixin';
-import {baseMixin} from './base-mixin';
+import {transition} from '../core/core';
+import {logger} from '../core/logger';
+import {filters} from '../core/filters';
+import {events} from '../core/events';
+import {override} from '../core/core';
+import {colorMixin} from '../base/color-mixin';
+import {marginMixin} from '../base/margin-mixin';
+import {baseMixin} from '../base/base-mixin';
 
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.

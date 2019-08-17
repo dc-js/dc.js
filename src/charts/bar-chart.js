@@ -1,11 +1,11 @@
 import * as d3 from 'd3';
 
-import {stackMixin} from './stack-mixin';
-import {coordinateGridMixin} from './coordinate-grid-mixin';
-import {override, transition} from './core/core';
-import {constants} from './core/constants';
-import {logger} from './core/logger';
-import {pluck, utils} from './core/utils';
+import {stackMixin} from '../base/stack-mixin';
+import {coordinateGridMixin} from '../base/coordinate-grid-mixin';
+import {override, transition} from '../core/core';
+import {constants} from '../core/constants';
+import {logger} from '../core/logger';
+import {pluck, utils} from '../core/utils';
 
 /**
  * Concrete bar chart/histogram implementation.
