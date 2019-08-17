@@ -40,7 +40,6 @@ dc.baseMixin = function (_chart) {
     var _label = dc.pluck('key');
 
     var _ordering = dc.pluck('key');
-    var _orderSort;
 
     var _renderLabel = false;
 
@@ -345,23 +344,13 @@ dc.baseMixin = function (_chart) {
             return _ordering;
         }
         _ordering = orderFunction;
-        _orderSort = crossfilter.quicksort.by(_ordering);
         _chart.expireCache();
         return _chart;
     };
 
     _chart._computeOrderedGroups = function (data) {
-        var dataCopy = data.slice(0);
-
-        if (dataCopy.length <= 1) {
-            return dataCopy;
-        }
-
-        if (!_orderSort) {
-            _orderSort = crossfilter.quicksort.by(_ordering);
-        }
-
-        return _orderSort(dataCopy, 0, dataCopy.length);
+        // clone the array before sorting, otherwise Array.sort sorts in-place
+        return Array.from(data).sort(function (a, b) { return _ordering(a) - _ordering(b) });
     };
 
     /**
