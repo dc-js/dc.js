@@ -1,11 +1,10 @@
 import * as d3 from 'd3';
 
-import { printers, utils } from './utils';
-import { pluck } from './utils';
-import { deregisterChart, instanceOfChart, renderAll, redrawAll, registerChart } from './core';
-import { constants } from './constants';
-import { events } from './events';
-import { logger } from './logger';
+import {pluck, printers, utils} from './utils';
+import {deregisterChart, instanceOfChart, redrawAll, registerChart, renderAll} from './core';
+import {constants} from './constants';
+import {events} from './events';
+import {logger} from './logger';
 import {InvalidStateException} from './invalid-state-exception';
 import {BadArgumentException} from './bad-argument-exception';
 
@@ -51,7 +50,6 @@ export const baseMixin = function (_chart) {
     var _label = pluck('key');
 
     var _ordering = pluck('key');
-    var _orderSort;
 
     var _renderLabel = false;
 
@@ -356,23 +354,13 @@ export const baseMixin = function (_chart) {
             return _ordering;
         }
         _ordering = orderFunction;
-        _orderSort = crossfilter.quicksort.by(_ordering);
         _chart.expireCache();
         return _chart;
     };
 
     _chart._computeOrderedGroups = function (data) {
-        var dataCopy = data.slice(0);
-
-        if (dataCopy.length <= 1) {
-            return dataCopy;
-        }
-
-        if (!_orderSort) {
-            _orderSort = crossfilter.quicksort.by(_ordering);
-        }
-
-        return _orderSort(dataCopy, 0, dataCopy.length);
+        // clone the array before sorting, otherwise Array.sort sorts in-place
+        return Array.from(data).sort(function (a, b) { return _ordering(a) - _ordering(b) });
     };
 
     /**
