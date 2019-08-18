@@ -39,7 +39,7 @@ export class Legend {
             return this;
         };
 
-        this.render = function () {
+        this.render = () => {
             _parent.svg().select('g.dc-legend').remove();
             _g = _parent.svg().append('g')
                 .attr('class', 'dc-legend')
@@ -55,20 +55,18 @@ export class Legend {
                 .enter()
                 .append('g')
                 .attr('class', 'dc-legend-item')
-                .on('mouseover', function (d) {
+                .on('mouseover', d => {
                     _parent.legendHighlight(d);
                 })
-                .on('mouseout', function (d) {
+                .on('mouseout', d => {
                     _parent.legendReset(d);
                 })
-                .on('click', function (d) {
+                .on('click', d => {
                     d.chart.legendToggle(d);
                 });
 
             _g.selectAll('g.dc-legend-item')
-                .classed('fadeout', function (d) {
-                    return d.chart.isLegendableHidden(d);
-                });
+                .classed('fadeout', d => d.chart.isLegendableHidden(d));
 
             if (legendables.some(pluck('dashstyle'))) {
                 itemEnter
@@ -85,9 +83,7 @@ export class Legend {
                     .append('rect')
                     .attr('width', _itemHeight)
                     .attr('height', _itemHeight)
-                    .attr('fill', function (d) {
-                        return d ? d.color : 'blue';
-                    });
+                    .attr('fill', d => d ? d.color : 'blue');
             }
 
             itemEnter.append('text')
@@ -295,7 +291,5 @@ export class Legend {
     }
 }
 
-export const legend = function () {
-    return new Legend();
-};
+export const legend = () => new Legend();
 
