@@ -93,17 +93,17 @@ export class Legend {
                     return _itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
                 });
 
-            let _cumulativeLegendTextWidth = 0;
+            let cumulativeLegendTextWidth = 0;
             let row = 0;
             itemEnter.attr('transform', function (d, i) {
                 if (_horizontal) {
                     const itemWidth = _autoItemWidth === true ? this.getBBox().width + _gap : _itemWidth;
-                    if ((_cumulativeLegendTextWidth + itemWidth) > _legendWidth && _cumulativeLegendTextWidth > 0) {
+                    if ((cumulativeLegendTextWidth + itemWidth) > _legendWidth && cumulativeLegendTextWidth > 0) {
                         ++row;
-                        _cumulativeLegendTextWidth = 0;
+                        cumulativeLegendTextWidth = 0;
                     }
-                    const translateBy = 'translate(' + _cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
-                    _cumulativeLegendTextWidth += itemWidth;
+                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                    cumulativeLegendTextWidth += itemWidth;
                     return translateBy;
                 } else {
                     return 'translate(0,' + i * legendItemHeight() + ')';
