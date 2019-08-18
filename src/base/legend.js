@@ -1,5 +1,7 @@
 import {pluck, utils} from '../core/utils';
 
+const LABEL_GAP = 2;
+
 /**
  * Legend is a attachable widget that can be added to other dc charts to render horizontal legend
  * labels.
@@ -15,8 +17,6 @@ import {pluck, utils} from '../core/utils';
  */
 export class Legend {
     constructor () {
-        const LABEL_GAP = 2;
-
         this._parent = undefined;
         this._x = 0;
         this._y = 0;
@@ -30,80 +30,6 @@ export class Legend {
         this._maxItems = undefined;
 
         this._g = undefined;
-
-        this.render = () => {
-            const self = this;
-
-            self._parent.svg().select('g.dc-legend').remove();
-            self._g = self._parent.svg().append('g')
-                .attr('class', 'dc-legend')
-                .attr('transform', 'translate(' + self._x + ',' + self._y + ')');
-            let legendables = self._parent.legendables();
-
-            if (self._maxItems !== undefined) {
-                legendables = legendables.slice(0, self._maxItems);
-            }
-
-            const itemEnter = self._g.selectAll('g.dc-legend-item')
-                .data(legendables)
-                .enter()
-                .append('g')
-                .attr('class', 'dc-legend-item')
-                .on('mouseover', d => {
-                    self._parent.legendHighlight(d);
-                })
-                .on('mouseout', d => {
-                    self._parent.legendReset(d);
-                })
-                .on('click', d => {
-                    d.chart.legendToggle(d);
-                });
-
-            self._g.selectAll('g.dc-legend-item')
-                .classed('fadeout', d => d.chart.isLegendableHidden(d));
-
-            if (legendables.some(pluck('dashstyle'))) {
-                itemEnter
-                    .append('line')
-                    .attr('x1', 0)
-                    .attr('y1', self._itemHeight / 2)
-                    .attr('x2', self._itemHeight)
-                    .attr('y2', self._itemHeight / 2)
-                    .attr('stroke-width', 2)
-                    .attr('stroke-dasharray', pluck('dashstyle'))
-                    .attr('stroke', pluck('color'));
-            } else {
-                itemEnter
-                    .append('rect')
-                    .attr('width', self._itemHeight)
-                    .attr('height', self._itemHeight)
-                    .attr('fill', d => d ? d.color : 'blue');
-            }
-
-            itemEnter.append('text')
-                .text(self._legendText)
-                .attr('x', self._itemHeight + LABEL_GAP)
-                .attr('y', function () {
-                    return self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
-                });
-
-            let cumulativeLegendTextWidth = 0;
-            let row = 0;
-            itemEnter.attr('transform', function (d, i) {
-                if (self._horizontal) {
-                    const itemWidth = self._autoItemWidth === true ? this.getBBox().width + self._gap : self._itemWidth;
-                    if ((cumulativeLegendTextWidth + itemWidth) > self._legendWidth && cumulativeLegendTextWidth > 0) {
-                        ++row;
-                        cumulativeLegendTextWidth = 0;
-                    }
-                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * self.legendItemHeight() + ')';
-                    cumulativeLegendTextWidth += itemWidth;
-                    return translateBy;
-                } else {
-                    return 'translate(0,' + i * self.legendItemHeight() + ')';
-                }
-            });
-        };
     }
 
     parent (p) {
@@ -291,7 +217,88 @@ export class Legend {
     legendItemHeight () {
         return this._gap + this._itemHeight;
     }
+
+    render () {
+        this._parent.svg().select('g.dc-legend').remove();
+        this._g = this._parent.svg().append('g')
+            .attr('class', 'dc-legend')
+            .attr('transform', 'translate(' + this._x + ',' + this._y + ')');
+        let legendables = this._parent.legendables();
+
+        if (this._maxItems !== undefined) {
+            legendables = legendables.slice(0, this._maxItems);
+        }
+
+        const itemEnter = this._g.selectAll('g.dc-legend-item')
+            .data(legendables)
+            .enter()
+            .append('g')
+            .attr('class', 'dc-legend-item')
+            .on('mouseover', d => {
+                this._parent.legendHighlight(d);
+            })
+            .on('mouseout', d => {
+                this._parent.legendReset(d);
+            })
+            .on('click', d => {
+                d.chart.legendToggle(d);
+            });
+
+        this._g.selectAll('g.dc-legend-item')
+            .classed('fadeout', d => d.chart.isLegendableHidden(d));
+
+        if (legendables.some(pluck('dashstyle'))) {
+            itemEnter
+                .append('line')
+                .attr('x1', 0)
+                .attr('y1', this._itemHeight / 2)
+                .attr('x2', this._itemHeight)
+                .attr('y2', this._itemHeight / 2)
+                .attr('stroke-width', 2)
+                .attr('stroke-dasharray', pluck('dashstyle'))
+                .attr('stroke', pluck('color'));
+        } else {
+            itemEnter
+                .append('rect')
+                .attr('width', this._itemHeight)
+                .attr('height', this._itemHeight)
+                .attr('fill', d => d ? d.color : 'blue');
+        }
+
+        {
+            const self = this;
+
+            itemEnter.append('text')
+                .text(self._legendText)
+                .attr('x', self._itemHeight + LABEL_GAP)
+                .attr('y', function () {
+                    return self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
+                });
+        }
+
+        let cumulativeLegendTextWidth = 0;
+        let row = 0;
+
+        {
+            const self = this;
+
+            itemEnter.attr('transform', function (d, i) {
+                if (self._horizontal) {
+                    const itemWidth = self._autoItemWidth === true ? this.getBBox().width + self._gap : self._itemWidth;
+                    if ((cumulativeLegendTextWidth + itemWidth) > self._legendWidth && cumulativeLegendTextWidth > 0) {
+                        ++row;
+                        cumulativeLegendTextWidth = 0;
+                    }
+                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * self.legendItemHeight() + ')';
+                    cumulativeLegendTextWidth += itemWidth;
+                    return translateBy;
+                } else {
+                    return 'translate(0,' + i * self.legendItemHeight() + ')';
+                }
+            });
+        }
+    }
+
 }
 
 export const legend = () => new Legend();
-
