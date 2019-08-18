@@ -1,5 +1,4 @@
-import {pluck} from '../core/utils';
-import {utils} from '../core/utils';
+import {pluck, utils} from '../core/utils';
 
 /**
  * Legend is a attachable widget that can be added to other dc charts to render horizontal legend
@@ -18,8 +17,6 @@ export class Legend {
     constructor () {
         const LABEL_GAP = 2;
 
-        const _legend = this;
-
         let _parent;
         let _x = 0;
         let _y = 0;
@@ -34,15 +31,15 @@ export class Legend {
 
         let _g;
 
-        _legend.parent = function (p) {
+        this.parent = function (p) {
             if (!arguments.length) {
                 return _parent;
             }
             _parent = p;
-            return _legend;
+            return this;
         };
 
-        _legend.render = function () {
+        this.render = function () {
             _parent.svg().select('g.dc-legend').remove();
             _g = _parent.svg().append('g')
                 .attr('class', 'dc-legend')
@@ -130,12 +127,12 @@ export class Legend {
          * @param  {Number} [x=0]
          * @returns {Number|dc.legend}
          */
-        _legend.x = function (x) {
+        this.x = function (x) {
             if (!arguments.length) {
                 return _x;
             }
             _x = x;
-            return _legend;
+            return this;
         };
 
         /**
@@ -146,12 +143,12 @@ export class Legend {
          * @param  {Number} [y=0]
          * @returns {Number|dc.legend}
          */
-        _legend.y = function (y) {
+        this.y = function (y) {
             if (!arguments.length) {
                 return _y;
             }
             _y = y;
-            return _legend;
+            return this;
         };
 
         /**
@@ -162,12 +159,12 @@ export class Legend {
          * @param  {Number} [gap=5]
          * @returns {Number|dc.legend}
          */
-        _legend.gap = function (gap) {
+        this.gap = function (gap) {
             if (!arguments.length) {
                 return _gap;
             }
             _gap = gap;
-            return _legend;
+            return this;
         };
 
         /**
@@ -178,12 +175,12 @@ export class Legend {
          * @param  {Number} [itemHeight=12]
          * @returns {Number|dc.legend}
          */
-        _legend.itemHeight = function (itemHeight) {
+        this.itemHeight = function (itemHeight) {
             if (!arguments.length) {
                 return _itemHeight;
             }
             _itemHeight = itemHeight;
-            return _legend;
+            return this;
         };
 
         /**
@@ -194,12 +191,12 @@ export class Legend {
          * @param  {Boolean} [horizontal=false]
          * @returns {Boolean|dc.legend}
          */
-        _legend.horizontal = function (horizontal) {
+        this.horizontal = function (horizontal) {
             if (!arguments.length) {
                 return _horizontal;
             }
             _horizontal = horizontal;
-            return _legend;
+            return this;
         };
 
         /**
@@ -210,12 +207,12 @@ export class Legend {
          * @param  {Number} [legendWidth=500]
          * @returns {Number|dc.legend}
          */
-        _legend.legendWidth = function (legendWidth) {
+        this.legendWidth = function (legendWidth) {
             if (!arguments.length) {
                 return _legendWidth;
             }
             _legendWidth = legendWidth;
-            return _legend;
+            return this;
         };
 
         /**
@@ -226,12 +223,12 @@ export class Legend {
          * @param  {Number} [itemWidth=70]
          * @returns {Number|dc.legend}
          */
-        _legend.itemWidth = function (itemWidth) {
+        this.itemWidth = function (itemWidth) {
             if (!arguments.length) {
                 return _itemWidth;
             }
             _itemWidth = itemWidth;
-            return _legend;
+            return this;
         };
 
         /**
@@ -243,12 +240,12 @@ export class Legend {
          * @param  {Boolean} [autoItemWidth=false]
          * @returns {Boolean|dc.legend}
          */
-        _legend.autoItemWidth = function (autoItemWidth) {
+        this.autoItemWidth = function (autoItemWidth) {
             if (!arguments.length) {
                 return _autoItemWidth;
             }
             _autoItemWidth = autoItemWidth;
-            return _legend;
+            return this;
         };
 
         /**
@@ -270,12 +267,12 @@ export class Legend {
          * // create legend displaying group counts
          * chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
          **/
-        _legend.legendText = function (legendText) {
+        this.legendText = function (legendText) {
             if (!arguments.length) {
                 return _legendText;
             }
             _legendText = legendText;
-            return _legend;
+            return this;
         };
 
         /**
@@ -286,15 +283,15 @@ export class Legend {
          * @param  {Number} [maxItems]
          * @return {dc.legend}
          */
-        _legend.maxItems = function (maxItems) {
+        this.maxItems = function (maxItems) {
             if (!arguments.length) {
                 return _maxItems;
             }
             _maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
-            return _legend;
+            return this;
         };
 
-        return _legend;
+        return this;
     }
 }
 
