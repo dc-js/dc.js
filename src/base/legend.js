@@ -214,7 +214,7 @@ export class Legend {
 
     // Implementation methods
 
-    legendItemHeight () {
+    _legendItemHeight () {
         return this._gap + this._itemHeight;
     }
 
@@ -289,11 +289,11 @@ export class Legend {
                         ++row;
                         cumulativeLegendTextWidth = 0;
                     }
-                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * self.legendItemHeight() + ')';
+                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * self._legendItemHeight() + ')';
                     cumulativeLegendTextWidth += itemWidth;
                     return translateBy;
                 } else {
-                    return 'translate(0,' + i * self.legendItemHeight() + ')';
+                    return 'translate(0,' + i * self._legendItemHeight() + ')';
                 }
             });
         }
