@@ -16,24 +16,24 @@ import {pluck, utils} from '../core/utils';
 export class Legend {
     constructor () {
         const LABEL_GAP = 2;
-        
-        let self = this;
 
-        self._parent = undefined;
-        self._x = 0;
-        self._y = 0;
-        self._itemHeight = 12;
-        self._gap = 5;
-        self._horizontal = false;
-        self._legendWidth = 560;
-        self._itemWidth = 70;
-        self._autoItemWidth = false;
-        self._legendText = pluck('name');
-        self._maxItems = undefined;
+        this._parent = undefined;
+        this._x = 0;
+        this._y = 0;
+        this._itemHeight = 12;
+        this._gap = 5;
+        this._horizontal = false;
+        this._legendWidth = 560;
+        this._itemWidth = 70;
+        this._autoItemWidth = false;
+        this._legendText = pluck('name');
+        this._maxItems = undefined;
 
-        self._g;
+        this._g = undefined;
 
         this.render = () => {
+            const self = this;
+
             self._parent.svg().select('g.dc-legend').remove();
             self._g = self._parent.svg().append('g')
                 .attr('class', 'dc-legend')
@@ -96,18 +96,14 @@ export class Legend {
                         ++row;
                         cumulativeLegendTextWidth = 0;
                     }
-                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * legendItemHeight() + ')';
+                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * self.legendItemHeight() + ')';
                     cumulativeLegendTextWidth += itemWidth;
                     return translateBy;
                 } else {
-                    return 'translate(0,' + i * legendItemHeight() + ')';
+                    return 'translate(0,' + i * self.legendItemHeight() + ')';
                 }
             });
         };
-
-        function legendItemHeight () {
-            return self._gap + self._itemHeight;
-        }
     }
 
     parent (p) {
@@ -290,6 +286,11 @@ export class Legend {
         return this;
     };
 
+    // Implementation methods
+
+    legendItemHeight () {
+        return this._gap + this._itemHeight;
+    }
 }
 
 export const legend = () => new Legend();
