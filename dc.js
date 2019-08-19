@@ -1,5 +1,5 @@
 /*!
- *  dc 3.1.1
+ *  dc 3.1.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.1.1
+ * @version 3.1.2
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  *      .filter('sunday');
  */
 var dc = {
-    version: '3.1.1',
+    version: '3.1.2',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1442,7 +1442,6 @@ dc.baseMixin = function (_chart) {
     var _label = dc.pluck('key');
 
     var _ordering = dc.pluck('key');
-    var _orderSort;
 
     var _renderLabel = false;
 
@@ -1713,7 +1712,7 @@ dc.baseMixin = function (_chart) {
      * var index = crossfilter([]);
      * var dimension = index.dimension(dc.pluck('key'));
      * chart.dimension(dimension);
-     * chart.group(dimension.group(crossfilter.reduceSum()));
+     * chart.group(dimension.group().reduceSum());
      * @param {crossfilter.group} [group]
      * @param {String} [name]
      * @returns {crossfilter.group|dc.baseMixin}
@@ -1730,12 +1729,11 @@ dc.baseMixin = function (_chart) {
 
     /**
      * Get or set an accessor to order ordinal dimensions.  The chart uses
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
+     * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.sort}
      * to sort elements; this accessor returns the value to order on.
      * @method ordering
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
      * @example
      * // Default ordering accessor
      * _chart.ordering(dc.pluck('key'));
@@ -1747,23 +1745,13 @@ dc.baseMixin = function (_chart) {
             return _ordering;
         }
         _ordering = orderFunction;
-        _orderSort = crossfilter.quicksort.by(_ordering);
         _chart.expireCache();
         return _chart;
     };
 
     _chart._computeOrderedGroups = function (data) {
-        var dataCopy = data.slice(0);
-
-        if (dataCopy.length <= 1) {
-            return dataCopy;
-        }
-
-        if (!_orderSort) {
-            _orderSort = crossfilter.quicksort.by(_ordering);
-        }
-
-        return _orderSort(dataCopy, 0, dataCopy.length);
+        // clone the array before sorting, otherwise Array.sort sorts in-place
+        return Array.from(data).sort(function (a, b) { return _ordering(a) - _ordering(b) });
     };
 
     /**
