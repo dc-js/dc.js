@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.1.1  
+**Version**: 3.1.2  
 **Example**  
 ```js
 // Example chaining
@@ -3986,17 +3986,16 @@ If `name` is specified then it will be used to generate legend label.
 var index = crossfilter([]);
 var dimension = index.dimension(dc.pluck('key'));
 chart.dimension(dimension);
-chart.group(dimension.group(crossfilter.reduceSum()));
+chart.group(dimension.group().reduceSum());
 ```
 <a name="dc.baseMixin+ordering"></a>
 
 #### baseMixin.ordering([orderFunction]) ⇒ <code>function</code> \| [<code>baseMixin</code>](#dc.baseMixin)
 Get or set an accessor to order ordinal dimensions.  The chart uses
-[crossfilter.quicksort.by](https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by)
+[Array.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
 to sort elements; this accessor returns the value to order on.
 
 **Kind**: instance method of [<code>baseMixin</code>](#dc.baseMixin)  
-**See**: [crossfilter.quicksort.by](https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by)  
 
 | Param | Type |
 | --- | --- |
