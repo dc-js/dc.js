@@ -391,12 +391,11 @@ export class BaseMixin {
 
     /**
      * Get or set an accessor to order ordinal dimensions.  The chart uses
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
+     * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.sort}
      * to sort elements; this accessor returns the value to order on.
      * @method ordering
      * @memberof dc.baseMixin
      * @instance
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
      * @example
      * // Default ordering accessor
      * _chart.ordering(dc.pluck('key'));
