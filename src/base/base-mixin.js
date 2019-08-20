@@ -31,17 +31,9 @@ export class BaseMixin {
         this._isChild = undefined;
 
         this._minWidth = 200;
-        this._defaultWidthCalc = element => {
-            const width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
-            return (width && width > this._minWidth) ? width : this._minWidth;
-        };
         this._widthCalc = this._defaultWidthCalc;
 
         this._minHeight = 200;
-        this._defaultHeightCalc = element => {
-            const height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
-            return (height && height > this._minHeight) ? height : this._minHeight;
-        };
         this._heightCalc = this._defaultHeightCalc;
         this._width = undefined;
         this._height = undefined;
@@ -55,6 +47,7 @@ export class BaseMixin {
 
         this._renderLabel = false;
 
+        // ES6: the following can't be promoted to a member function, as it needs to be => function
         this._pvt_title = d => this.keyAccessor()(d) + ': ' + this.valueAccessor()(d);
         this._renderTitle = true;
         this._controlsUseVisibility = false;
@@ -82,61 +75,15 @@ export class BaseMixin {
         this._legend = undefined;
         this._commitHandler = undefined;
 
+        this._data = this._defaultData;
+
         this._filters = [];
 
-        // ES6: these seem more like attributes which may be reassigned on a per chart basis, so,
-        //      better not to promote these to member methods
-
-        this._data = group => group.all();
-
-        this._filterHandler = (dimension, filters) => {
-            if (filters.length === 0) {
-                dimension.filter(null);
-            } else if (filters.length === 1 && !filters[0].isFiltered) {
-                // single value and not a function-based filter
-                dimension.filterExact(filters[0]);
-            } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-                // single range-based filter
-                dimension.filterRange(filters[0]);
-            } else {
-                dimension.filterFunction(d => {
-                    for (let i = 0; i < filters.length; i++) {
-                        const filter = filters[i];
-                        if (filter.isFiltered && filter.isFiltered(d)) {
-                            return true;
-                        } else if (filter <= d && filter >= d) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-            }
-            return filters;
-        };
-
-        this._hasFilterHandler = (filters, filter) => {
-            if (filter === null || typeof (filter) === 'undefined') {
-                return filters.length > 0;
-            }
-            return filters.some(f => filter <= f && filter >= f);
-        };
-
-        this._removeFilterHandler = (filters, filter) => {
-            for (let i = 0; i < filters.length; i++) {
-                if (filters[i] <= filter && filters[i] >= filter) {
-                    filters.splice(i, 1);
-                    break;
-                }
-            }
-            return filters;
-        };
-
-        this._addFilterHandler = (filters, filter) => {
-            filters.push(filter);
-            return filters;
-        };
-
-        this._resetFilterHandler = filters => [];
+        this._filterHandler = this._defaultFilterHandler;
+        this._hasFilterHandler = this._defaultHasFilterHandler;
+        this._removeFilterHandler = this._defaultRemoveFilterHandler;
+        this._addFilterHandler = this._defaultAddFilterHandler;
+        this._resetFilterHandler = this._defaultResetFilterHandler;
 
         // ES6: need to figure out proper way to deprecate
 
@@ -1574,6 +1521,71 @@ export class BaseMixin {
     on (event, listener) {
         this._listeners.on(event, listener);
         return this;
+    }
+
+    _defaultWidthCalc (element) {
+        const width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
+        return (width && width > this._minWidth) ? width : this._minWidth;
+    }
+
+    _defaultHeightCalc (element) {
+        const height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
+        return (height && height > this._minHeight) ? height : this._minHeight;
+    }
+
+    _defaultFilterHandler (dimension, filters) {
+        if (filters.length === 0) {
+            dimension.filter(null);
+        } else if (filters.length === 1 && !filters[0].isFiltered) {
+            // single value and not a function-based filter
+            dimension.filterExact(filters[0]);
+        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
+            // single range-based filter
+            dimension.filterRange(filters[0]);
+        } else {
+            dimension.filterFunction(d => {
+                for (let i = 0; i < filters.length; i++) {
+                    const filter = filters[i];
+                    if (filter.isFiltered && filter.isFiltered(d)) {
+                        return true;
+                    } else if (filter <= d && filter >= d) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
+        return filters;
+    }
+
+    _defaultHasFilterHandler (filters, filter) {
+        if (filter === null || typeof (filter) === 'undefined') {
+            return filters.length > 0;
+        }
+        return filters.some(f => filter <= f && filter >= f);
+    }
+
+    _defaultRemoveFilterHandler (filters, filter) {
+        for (let i = 0; i < filters.length; i++) {
+            if (filters[i] <= filter && filters[i] >= filter) {
+                filters.splice(i, 1);
+                break;
+            }
+        }
+        return filters;
+    }
+
+    _defaultAddFilterHandler (filters, filter) {
+        filters.push(filter);
+        return filters;
+    }
+
+    _defaultResetFilterHandler (filters) {
+        return [];
+    }
+
+    _defaultData (group) {
+        return group.all();
     }
 }
 
