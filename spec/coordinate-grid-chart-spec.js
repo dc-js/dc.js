@@ -250,7 +250,7 @@ describe('dc.coordinateGridChart', function () {
         describe('when an x function is not provided', function () {
             it('should trigger a descriptive exception', function () {
                 try {
-                    dc.coordinateGridChart({}).group({}).dimension({}).render();
+                    new dc.CoordinateGridMixin().group({}).dimension({}).render();
                     expect('exception').toBe('thrown');
                 } catch (e) {
                     expect(e instanceof dc.InvalidStateException).toBeTruthy();

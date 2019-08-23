@@ -9,7 +9,8 @@ describe('dc.capMixin', function () {
         group = dimension.group().reduceSum(function (d) {return Math.abs(+d.nvalue);});
         total = d3.sum(group.all().map(dc.pluck('value')));
 
-        mixin = dc.capMixin(dc.baseMixin({}));
+        const CapMixinTester = dc.CapMixin(dc.BaseMixin);
+        mixin = new CapMixinTester();
 
         mixin.dimension(dimension)
             .group(group);

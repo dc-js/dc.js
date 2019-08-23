@@ -319,7 +319,7 @@ describe('dc.heatmap', function () {
 
         it('should keep all data points for that cell', function () {
             var otherGroup = otherDimension.group().reduceSum(function (d) { return +d.colorData; });
-            var otherChart = dc.baseChart({}).dimension(otherDimension).group(otherGroup);
+            var otherChart = dc.baseMixin().dimension(otherDimension).group(otherGroup);
 
             otherChart.render();
             var clickedCell = clickCellOnChart(chart, filterX, filterY);

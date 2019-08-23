@@ -7,11 +7,13 @@ describe('dc.colorMixin', function () {
 
     function identity (d) { return d; }
 
+    const ColorMixinTester = dc.ColorMixin(dc.BaseMixin);
+
     describe('deprecation', function () {
         it('issues a one time warning when using default color scheme', function () {
             spyOn(dc.logger, 'warnOnce');
 
-            dc.colorMixin({});
+            new ColorMixinTester();
 
             expect(dc.logger.warnOnce).toHaveBeenCalled();
         });
@@ -22,7 +24,7 @@ describe('dc.colorMixin', function () {
             spyOn(dc.logger, 'warnOnce');
 
             dc.config.defaultColors(d3.schemeSet1);
-            dc.colorMixin({});
+            new ColorMixinTester();
 
             expect(dc.logger.warnOnce).not.toHaveBeenCalled();
 
@@ -35,7 +37,7 @@ describe('dc.colorMixin', function () {
         var chart, domain;
 
         beforeEach(function () {
-            chart = dc.colorMixin({});
+            chart = new ColorMixinTester();
             chart.colorAccessor(identity);
             domain = ['a','b','c','d','e'];
         });
@@ -74,7 +76,7 @@ describe('dc.colorMixin', function () {
         var chart, domain, test, expectedColorIndices;
 
         beforeEach(function () {
-            chart = dc.colorChart({});
+            chart = new ColorMixinTester();
             chart.colorAccessor(identity);
             domain = [1, 100];
             // It has items that are not part of the domain.
@@ -135,7 +137,7 @@ describe('dc.colorMixin', function () {
                 return d.value;
             });
             var valueGroup = valueDimension.group();
-            chart = dc.colorChart(dc.baseChart({}))
+            chart = new ColorMixinTester()
                 .colorAccessor(function (d) {return d.value;})
                 .group(valueGroup);
         });
