@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import {logger} from '../core/logger';
-import {baseMixin} from '../base/base-mixin';
+import {BaseMixin} from '../base/base-mixin';
 
 /**
  * The data count widget is a simple widget designed to display the number of records selected by the
@@ -34,103 +34,110 @@ import {baseMixin} from '../base/base-mixin';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.dataCount}
  */
-export const dataCount = function (parent, chartGroup) {
-    var _formatNumber = d3.format(',d');
-    var _chart = baseMixin({});
-    var _crossfilter = null, _groupAll = null;
-    var _html = {some: '', all: ''};
+export const dataCount = (parent, chartGroup) => new DataCount(parent, chartGroup);
 
-    _chart._mandatoryAttributes(['crossfilter', 'groupAll']);
+export class DataCount extends BaseMixin {
+    constructor (parent, chartGroup) {
+        super();
 
-    /**
-     * Gets or sets an optional object specifying HTML templates to use depending how many items are
-     * selected. The text `%total-count` will replaced with the total number of records, and the text
-     * `%filter-count` will be replaced with the number of selected records.
-     * - all: HTML template to use if all items are selected
-     * - some: HTML template to use if not all items are selected
-     * @method html
-     * @memberof dc.dataCount
-     * @instance
-     * @example
-     * counter.html({
-     *      some: '%filter-count out of %total-count records selected',
-     *      all: 'All records selected. Click on charts to apply filters'
-     * })
-     * @param {{some:String, all: String}} [options]
-     * @returns {{some:String, all: String}|dc.dataCount}
-     */
-    _chart.html = function (options) {
-        if (!arguments.length) {
-            return _html;
-        }
-        if (options.all) {
-            _html.all = options.all;
-        }
-        if (options.some) {
-            _html.some = options.some;
-        }
-        return _chart;
-    };
+        const _chart = this;
 
-    /**
-     * Gets or sets an optional function to format the filter count and total count.
-     * @method formatNumber
-     * @memberof dc.dataCount
-     * @instance
-     * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
-     * @example
-     * counter.formatNumber(d3.format('.2g'))
-     * @param {Function} [formatter=d3.format('.2g')]
-     * @returns {Function|dc.dataCount}
-     */
-    _chart.formatNumber = function (formatter) {
-        if (!arguments.length) {
-            return _formatNumber;
-        }
-        _formatNumber = formatter;
-        return _chart;
-    };
+        var _formatNumber = d3.format(',d');
+        var _crossfilter = null, _groupAll = null;
+        var _html = {some: '', all: ''};
 
-    _chart._doRender = function () {
-        var tot = _chart.crossfilter().size(),
-            val = _chart.groupAll().value();
-        var all = _formatNumber(tot);
-        var selected = _formatNumber(val);
+        _chart._mandatoryAttributes(['crossfilter', 'groupAll']);
 
-        if ((tot === val) && (_html.all !== '')) {
-            _chart.root().html(_html.all.replace('%total-count', all).replace('%filter-count', selected));
-        } else if (_html.some !== '') {
-            _chart.root().html(_html.some.replace('%total-count', all).replace('%filter-count', selected));
-        } else {
-            _chart.selectAll('.total-count').text(all);
-            _chart.selectAll('.filter-count').text(selected);
-        }
-        return _chart;
-    };
+        /**
+         * Gets or sets an optional object specifying HTML templates to use depending how many items are
+         * selected. The text `%total-count` will replaced with the total number of records, and the text
+         * `%filter-count` will be replaced with the number of selected records.
+         * - all: HTML template to use if all items are selected
+         * - some: HTML template to use if not all items are selected
+         * @method html
+         * @memberof dc.dataCount
+         * @instance
+         * @example
+         * counter.html({
+         *      some: '%filter-count out of %total-count records selected',
+         *      all: 'All records selected. Click on charts to apply filters'
+         * })
+         * @param {{some:String, all: String}} [options]
+         * @returns {{some:String, all: String}|dc.dataCount}
+         */
+        _chart.html = function (options) {
+            if (!arguments.length) {
+                return _html;
+            }
+            if (options.all) {
+                _html.all = options.all;
+            }
+            if (options.some) {
+                _html.some = options.some;
+            }
+            return _chart;
+        };
 
-    _chart._doRedraw = function () {
-        return _chart._doRender();
-    };
+        /**
+         * Gets or sets an optional function to format the filter count and total count.
+         * @method formatNumber
+         * @memberof dc.dataCount
+         * @instance
+         * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
+         * @example
+         * counter.formatNumber(d3.format('.2g'))
+         * @param {Function} [formatter=d3.format('.2g')]
+         * @returns {Function|dc.dataCount}
+         */
+        _chart.formatNumber = function (formatter) {
+            if (!arguments.length) {
+                return _formatNumber;
+            }
+            _formatNumber = formatter;
+            return _chart;
+        };
 
-    _chart.crossfilter = function (cf) {
-        if (!arguments.length) {
-            return _crossfilter;
-        }
-        _crossfilter = cf;
-        return this;
-    };
-    _chart.dimension = logger.annotate(_chart.crossfilter,
-                                       'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
+        _chart._doRender = function () {
+            var tot = _chart.crossfilter().size(),
+                val = _chart.groupAll().value();
+            var all = _formatNumber(tot);
+            var selected = _formatNumber(val);
 
-    _chart.groupAll = function (groupAll) {
-        if (!arguments.length) {
-            return _groupAll;
-        }
-        _groupAll = groupAll;
-        return this;
-    };
-    _chart.group = logger.annotate(_chart.groupAll,
-                                   'consider using dataCount.groupAll instead of dataCount.group for clarity');
+            if ((tot === val) && (_html.all !== '')) {
+                _chart.root().html(_html.all.replace('%total-count', all).replace('%filter-count', selected));
+            } else if (_html.some !== '') {
+                _chart.root().html(_html.some.replace('%total-count', all).replace('%filter-count', selected));
+            } else {
+                _chart.selectAll('.total-count').text(all);
+                _chart.selectAll('.filter-count').text(selected);
+            }
+            return _chart;
+        };
 
-    return _chart.anchor(parent, chartGroup);
-};
+        _chart._doRedraw = function () {
+            return _chart._doRender();
+        };
+
+        _chart.crossfilter = function (cf) {
+            if (!arguments.length) {
+                return _crossfilter;
+            }
+            _crossfilter = cf;
+            return this;
+        };
+        _chart.dimension = logger.annotate(_chart.crossfilter,
+            'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
+
+        _chart.groupAll = function (groupAll) {
+            if (!arguments.length) {
+                return _groupAll;
+            }
+            _groupAll = groupAll;
+            return this;
+        };
+        _chart.group = logger.annotate(_chart.groupAll,
+            'consider using dataCount.groupAll instead of dataCount.group for clarity');
+
+        return _chart.anchor(parent, chartGroup);
+    }
+}

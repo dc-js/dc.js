@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import {events} from '../core/events';
-import {baseMixin} from '../base/base-mixin';
+import {BaseMixin} from '../base/base-mixin';
 
 /**
  * The cboxMenu is a simple widget designed to filter a dimension by
@@ -28,278 +28,286 @@ import {baseMixin} from '../base/base-mixin';
  * @returns {cboxMenu}
  **/
 
-export const cboxMenu = function (parent, chartGroup) {
-    var GROUP_CSS_CLASS = 'dc-cbox-group';
-    var ITEM_CSS_CLASS = 'dc-cbox-item';
+export const cboxMenu = (parent, chartGroup) => new CboxMenu(parent, chartGroup);
 
-    var _chart = baseMixin({});
+export class CboxMenu extends BaseMixin {
+    constructor (parent, chartGroup) {
+        super();
 
-    var _cbox;
-    var _promptText = 'Select all';
-    var _multiple = false;
-    var _inputType = 'radio';
-    var _promptValue = null;
-    // generate a random number to use as an ID
-    var _randVal = Math.floor(Math.random() * (100000)) + 1;
-    var _order = function (a, b) {
-        return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ? 1 :
-            _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ? -1 :
-            0;
-    };
+        const _chart = this;
 
-    var _filterDisplayed = function (d) {
-        return _chart.valueAccessor()(d) > 0;
-    };
+        var GROUP_CSS_CLASS = 'dc-cbox-group';
+        var ITEM_CSS_CLASS = 'dc-cbox-item';
 
-    _chart.data(function (group) {
-        return group.all().filter(_filterDisplayed);
-    });
+        var _cbox;
+        var _promptText = 'Select all';
+        var _multiple = false;
+        var _inputType = 'radio';
+        var _promptValue = null;
+        // generate a random number to use as an ID
+        var _randVal = Math.floor(Math.random() * (100000)) + 1;
+        var _order = function (a, b) {
+            return _chart.keyAccessor()(a) > _chart.keyAccessor()(b) ? 1 :
+                _chart.keyAccessor()(b) > _chart.keyAccessor()(a) ? -1 :
+                    0;
+        };
 
-    _chart._doRender = function () {
-        return _chart._doRedraw();
-    };
-    /*
-    // IS THIS NEEDED?
-    // Fixing IE 11 crash when redrawing the chart
-    // see here for list of IE user Agents :
-    // http://www.useragentstring.com/pages/useragentstring.php?name=Internet+Explorer
-    var ua = window.navigator.userAgent;
-    // test for IE 11 but not a lower version (which contains MSIE in UA)
-    if (ua.indexOf('Trident/') > 0 && ua.indexOf('MSIE') === -1) {
-        _chart.redraw = _chart.render;
-    }
-    */
-    _chart._doRedraw = function () {
-        _chart.select('ul').remove();
-        _cbox = _chart.root()
-            .append('ul')
-            .classed(GROUP_CSS_CLASS, true);
-        renderOptions();
+        var _filterDisplayed = function (d) {
+            return _chart.valueAccessor()(d) > 0;
+        };
 
-        if (_chart.hasFilter() && _multiple) {
-            _cbox.selectAll('input')
-                .property('checked', function (d) {
-                    // adding `false` avoids failing test cases in phantomjs
-                    return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0 || false;
-                });
-        } else if (_chart.hasFilter()) {
-            _cbox.selectAll('input')
-                .property('checked', function (d) {
-                    if (!d) {
-                        return false;
-                    }
-                    return _chart.keyAccessor()(d) === _chart.filter();
-                });
+        _chart.data(function (group) {
+            return group.all().filter(_filterDisplayed);
+        });
+
+        _chart._doRender = function () {
+            return _chart._doRedraw();
+        };
+        /*
+        // IS THIS NEEDED?
+        // Fixing IE 11 crash when redrawing the chart
+        // see here for list of IE user Agents :
+        // http://www.useragentstring.com/pages/useragentstring.php?name=Internet+Explorer
+        var ua = window.navigator.userAgent;
+        // test for IE 11 but not a lower version (which contains MSIE in UA)
+        if (ua.indexOf('Trident/') > 0 && ua.indexOf('MSIE') === -1) {
+            _chart.redraw = _chart.render;
         }
-        return _chart;
-    };
+        */
+        _chart._doRedraw = function () {
+            _chart.select('ul').remove();
+            _cbox = _chart.root()
+                .append('ul')
+                .classed(GROUP_CSS_CLASS, true);
+            renderOptions();
 
-    function renderOptions () {
-        var options = _cbox
-        .selectAll('li.' + ITEM_CSS_CLASS)
-            .data(_chart.data(), function (d) {
-                return _chart.keyAccessor()(d);
-            });
+            if (_chart.hasFilter() && _multiple) {
+                _cbox.selectAll('input')
+                    .property('checked', function (d) {
+                        // adding `false` avoids failing test cases in phantomjs
+                        return d && _chart.filters().indexOf(String(_chart.keyAccessor()(d))) >= 0 || false;
+                    });
+            } else if (_chart.hasFilter()) {
+                _cbox.selectAll('input')
+                    .property('checked', function (d) {
+                        if (!d) {
+                            return false;
+                        }
+                        return _chart.keyAccessor()(d) === _chart.filter();
+                    });
+            }
+            return _chart;
+        };
 
-        options.exit().remove();
+        function renderOptions () {
+            var options = _cbox
+                .selectAll('li.' + ITEM_CSS_CLASS)
+                .data(_chart.data(), function (d) {
+                    return _chart.keyAccessor()(d);
+                });
 
-        options = options.enter()
+            options.exit().remove();
+
+            options = options.enter()
                 .append('li')
                 .classed(ITEM_CSS_CLASS, true)
-            .merge(options);
+                .merge(options);
 
-        options
-            .append('input')
-            .attr('type', _inputType)
-            .attr('value', function (d) { return _chart.keyAccessor()(d); })
-            .attr('name', 'domain_' + _randVal)
-            .attr('id', function (d, i) {
-                return 'input_' + _randVal + '_' + i;
-            });
-        options
-            .append('label')
-            .attr('for', function (d, i) {
-                return 'input_' + _randVal + '_' + i;
-            })
-            .text(_chart.title());
-
-        // 'all' option
-        if (_multiple) {
-            _cbox
-            .append('li')
-            .append('input')
-            .attr('type', 'reset')
-            .text(_promptText)
-            .on('click', onChange);
-        } else {
-            var li = _cbox.append('li');
-            li.append('input')
+            options
+                .append('input')
                 .attr('type', _inputType)
-                .attr('value', _promptValue)
+                .attr('value', function (d) {
+                    return _chart.keyAccessor()(d);
+                })
                 .attr('name', 'domain_' + _randVal)
                 .attr('id', function (d, i) {
-                    return 'input_' + _randVal + '_all';
-                })
-                .property('checked', true);
-            li.append('label')
+                    return 'input_' + _randVal + '_' + i;
+                });
+            options
+                .append('label')
                 .attr('for', function (d, i) {
-                    return 'input_' + _randVal + '_all';
+                    return 'input_' + _randVal + '_' + i;
                 })
-                .text(_promptText);
-        }
+                .text(_chart.title());
 
-        _cbox
-            .selectAll('li.' + ITEM_CSS_CLASS)
-            .sort(_order);
-
-        _cbox.on('change', onChange);
-        return options;
-    }
-
-    function onChange (d, i) {
-        var values,
-            target = d3.select(d3.event.target),
-            options;
-
-        if (!target.datum()) {
-            values = _promptValue || null;
-        } else {
-            options = d3.select(this).selectAll('input')
-            .filter(function (o) {
-                if (o) {
-                    return this.checked;
-                }
-            });
-            values = options.nodes().map(function (option) {
-                return option.value;
-            });
-            // check if only prompt option is selected
-            if (!_multiple && values.length === 1) {
-                values = values[0];
+            // 'all' option
+            if (_multiple) {
+                _cbox
+                    .append('li')
+                    .append('input')
+                    .attr('type', 'reset')
+                    .text(_promptText)
+                    .on('click', onChange);
+            } else {
+                var li = _cbox.append('li');
+                li.append('input')
+                    .attr('type', _inputType)
+                    .attr('value', _promptValue)
+                    .attr('name', 'domain_' + _randVal)
+                    .attr('id', function (d, i) {
+                        return 'input_' + _randVal + '_all';
+                    })
+                    .property('checked', true);
+                li.append('label')
+                    .attr('for', function (d, i) {
+                        return 'input_' + _randVal + '_all';
+                    })
+                    .text(_promptText);
             }
+
+            _cbox
+                .selectAll('li.' + ITEM_CSS_CLASS)
+                .sort(_order);
+
+            _cbox.on('change', onChange);
+            return options;
         }
-        _chart.onChange(values);
+
+        function onChange (d, i) {
+            var values,
+                target = d3.select(d3.event.target),
+                options;
+
+            if (!target.datum()) {
+                values = _promptValue || null;
+            } else {
+                options = d3.select(this).selectAll('input')
+                    .filter(function (o) {
+                        if (o) {
+                            return this.checked;
+                        }
+                    });
+                values = options.nodes().map(function (option) {
+                    return option.value;
+                });
+                // check if only prompt option is selected
+                if (!_multiple && values.length === 1) {
+                    values = values[0];
+                }
+            }
+            _chart.onChange(values);
+        }
+
+        _chart.onChange = function (val) {
+            if (val && _multiple) {
+                _chart.replaceFilter([val]);
+            } else if (val) {
+                _chart.replaceFilter(val);
+            } else {
+                _chart.filterAll();
+            }
+            events.trigger(function () {
+                _chart.redrawGroup();
+            });
+        };
+
+        /**
+         * Get or set the function that controls the ordering of option tags in the
+         * cbox menu. By default options are ordered by the group key in ascending
+         * order.
+         * @method order
+         * @memberof dc.cboxMenu
+         * @instance
+         * @param {Function} [order]
+         * @returns {Function|dc.cboxMenu}
+         * @example
+         * // order by the group's value
+         * chart.order(function (a,b) {
+         *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
+         * });
+         **/
+        _chart.order = function (order) {
+            if (!arguments.length) {
+                return _order;
+            }
+            _order = order;
+            return _chart;
+        };
+
+        /**
+         * Get or set the text displayed in the options used to prompt selection.
+         * @method promptText
+         * @memberof dc.cboxMenu
+         * @instance
+         * @param {String} [promptText='Select all']
+         * @returns {String|dc.cboxMenu}
+         * @example
+         * chart.promptText('All states');
+         **/
+        _chart.promptText = function (promptText) {
+            if (!arguments.length) {
+                return _promptText;
+            }
+            _promptText = promptText;
+            return _chart;
+        };
+
+        /**
+         * Get or set the function that filters options prior to display. By default options
+         * with a value of < 1 are not displayed.
+         * @method filterDisplayed
+         * @memberof dc.cboxMenu
+         * @instance
+         * @param {function} [filterDisplayed]
+         * @returns {Function|dc.cboxMenu}
+         * @example
+         * // display all options override the `filterDisplayed` function:
+         * chart.filterDisplayed(function () {
+         *     return true;
+         * });
+         **/
+        _chart.filterDisplayed = function (filterDisplayed) {
+            if (!arguments.length) {
+                return _filterDisplayed;
+            }
+            _filterDisplayed = filterDisplayed;
+            return _chart;
+        };
+
+        /**
+         * Controls the type of input element. Setting it to true converts
+         * the HTML `input` tags from radio buttons to checkboxes.
+         * @method multiple
+         * @memberof dc.cboxMenu
+         * @instance
+         * @param {boolean} [multiple=false]
+         * @returns {Boolean|dc.cboxMenu}
+         * @example
+         * chart.multiple(true);
+         **/
+        _chart.multiple = function (multiple) {
+            if (!arguments.length) {
+                return _multiple;
+            }
+            _multiple = multiple;
+            if (_multiple) {
+                _inputType = 'checkbox';
+            } else {
+                _inputType = 'radio';
+            }
+            return _chart;
+        };
+
+        /**
+         * Controls the default value to be used for
+         * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
+         * when only the prompt value is selected. If `null` (the default), no filtering will occur when
+         * just the prompt is selected.
+         * @method promptValue
+         * @memberof dc.cboxMenu
+         * @instance
+         * @param {?*} [promptValue=null]
+         * @returns {*|dc.cboxMenu}
+         **/
+        _chart.promptValue = function (promptValue) {
+            if (!arguments.length) {
+                return _promptValue;
+            }
+            _promptValue = promptValue;
+
+            return _chart;
+        };
+
+        return _chart.anchor(parent, chartGroup);
     }
-
-    _chart.onChange = function (val) {
-        if (val && _multiple) {
-            _chart.replaceFilter([val]);
-        } else if (val) {
-            _chart.replaceFilter(val);
-        } else {
-            _chart.filterAll();
-        }
-        events.trigger(function () {
-            _chart.redrawGroup();
-        });
-    };
-
-    /**
-     * Get or set the function that controls the ordering of option tags in the
-     * cbox menu. By default options are ordered by the group key in ascending
-     * order.
-     * @method order
-     * @memberof dc.cboxMenu
-     * @instance
-     * @param {Function} [order]
-     * @returns {Function|dc.cboxMenu}
-     * @example
-     * // order by the group's value
-     * chart.order(function (a,b) {
-     *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
-     * });
-     **/
-    _chart.order = function (order) {
-        if (!arguments.length) {
-            return _order;
-        }
-        _order = order;
-        return _chart;
-    };
-
-    /**
-     * Get or set the text displayed in the options used to prompt selection.
-     * @method promptText
-     * @memberof dc.cboxMenu
-     * @instance
-     * @param {String} [promptText='Select all']
-     * @returns {String|dc.cboxMenu}
-     * @example
-     * chart.promptText('All states');
-     **/
-    _chart.promptText = function (promptText) {
-        if (!arguments.length) {
-            return _promptText;
-        }
-        _promptText = promptText;
-        return _chart;
-    };
-
-    /**
-     * Get or set the function that filters options prior to display. By default options
-     * with a value of < 1 are not displayed.
-     * @method filterDisplayed
-     * @memberof dc.cboxMenu
-     * @instance
-     * @param {function} [filterDisplayed]
-     * @returns {Function|dc.cboxMenu}
-     * @example
-     * // display all options override the `filterDisplayed` function:
-     * chart.filterDisplayed(function () {
-     *     return true;
-     * });
-     **/
-    _chart.filterDisplayed = function (filterDisplayed) {
-        if (!arguments.length) {
-            return _filterDisplayed;
-        }
-        _filterDisplayed = filterDisplayed;
-        return _chart;
-    };
-
-    /**
-     * Controls the type of input element. Setting it to true converts
-     * the HTML `input` tags from radio buttons to checkboxes.
-     * @method multiple
-     * @memberof dc.cboxMenu
-     * @instance
-     * @param {boolean} [multiple=false]
-     * @returns {Boolean|dc.cboxMenu}
-     * @example
-     * chart.multiple(true);
-     **/
-    _chart.multiple = function (multiple) {
-        if (!arguments.length) {
-            return _multiple;
-        }
-        _multiple = multiple;
-        if (_multiple) {
-            _inputType = 'checkbox';
-        } else {
-            _inputType = 'radio';
-        }
-        return _chart;
-    };
-
-    /**
-     * Controls the default value to be used for
-     * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
-     * when only the prompt value is selected. If `null` (the default), no filtering will occur when
-     * just the prompt is selected.
-     * @method promptValue
-     * @memberof dc.cboxMenu
-     * @instance
-     * @param {?*} [promptValue=null]
-     * @returns {*|dc.cboxMenu}
-     **/
-    _chart.promptValue = function (promptValue) {
-        if (!arguments.length) {
-            return _promptValue;
-        }
-        _promptValue = promptValue;
-
-        return _chart;
-    };
-
-    return _chart.anchor(parent, chartGroup);
-};
+}

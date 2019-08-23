@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
-import {baseMixin} from '../base/base-mixin';
-import {bubbleMixin} from '../base/bubble-mixin';
+import {BaseMixin} from '../base/base-mixin';
+import {BubbleMixin} from '../base/bubble-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
@@ -30,190 +30,196 @@ import {utils} from '../core/utils';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.bubbleOverlay}
  */
-export const bubbleOverlay = function (parent, chartGroup) {
-    var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
-    var BUBBLE_NODE_CLASS = 'node';
-    var BUBBLE_CLASS = 'bubble';
+export const bubbleOverlay = (parent, chartGroup) => new BubbleOverlay(parent, chartGroup);
 
-    /**
-     * **mandatory**
-     *
-     * Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
-     * element; therefore the bubble overlay chart will not work if this function is not invoked. If the
-     * underlying image is a bitmap, then an empty svg will need to be created on top of the image.
-     * @method svg
-     * @memberof dc.bubbleOverlay
-     * @instance
-     * @example
-     * // set up underlying svg element
-     * chart.svg(d3.select('#chart svg'));
-     * @param {SVGElement|d3.selection} [imageElement]
-     * @returns {dc.bubbleOverlay}
-     */
-    var _chart = bubbleMixin(baseMixin({}));
-    var _g;
-    var _points = [];
+export class BubbleOverlay extends BubbleMixin(BaseMixin) {
+    constructor (parent, chartGroup) {
+        super();
 
-    _chart.transitionDuration(750);
+        const _chart = this;
+        var BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
+        var BUBBLE_NODE_CLASS = 'node';
+        var BUBBLE_CLASS = 'bubble';
 
-    _chart.transitionDelay(0);
+        /**
+         * **mandatory**
+         *
+         * Set the underlying svg image element. Unlike other dc charts this chart will not generate a svg
+         * element; therefore the bubble overlay chart will not work if this function is not invoked. If the
+         * underlying image is a bitmap, then an empty svg will need to be created on top of the image.
+         * @method svg
+         * @memberof dc.bubbleOverlay
+         * @instance
+         * @example
+         * // set up underlying svg element
+         * chart.svg(d3.select('#chart svg'));
+         * @param {SVGElement|d3.selection} [imageElement]
+         * @returns {dc.bubbleOverlay}
+         */
+        var _g;
+        var _points = [];
 
-    _chart.radiusValueAccessor(function (d) {
-        return d.value;
-    });
+        _chart.transitionDuration(750);
 
-    /**
-     * **mandatory**
-     *
-     * Set up a data point on the overlay. The name of a data point should match a specific 'key' among
-     * data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
-     * then a bubble will be generated at the position specified by the function. x and y
-     * value specified here are relative to the underlying svg.
-     * @method point
-     * @memberof dc.bubbleOverlay
-     * @instance
-     * @param {String} name
-     * @param {Number} x
-     * @param {Number} y
-     * @returns {dc.bubbleOverlay}
-     */
-    _chart.point = function (name, x, y) {
-        _points.push({name: name, x: x, y: y});
-        return _chart;
-    };
+        _chart.transitionDelay(0);
 
-    _chart._doRender = function () {
-        _g = initOverlayG();
+        _chart.radiusValueAccessor(function (d) {
+            return d.value;
+        });
 
-        _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
+        /**
+         * **mandatory**
+         *
+         * Set up a data point on the overlay. The name of a data point should match a specific 'key' among
+         * data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
+         * then a bubble will be generated at the position specified by the function. x and y
+         * value specified here are relative to the underlying svg.
+         * @method point
+         * @memberof dc.bubbleOverlay
+         * @instance
+         * @param {String} name
+         * @param {Number} x
+         * @param {Number} y
+         * @returns {dc.bubbleOverlay}
+         */
+        _chart.point = function (name, x, y) {
+            _points.push({name: name, x: x, y: y});
+            return _chart;
+        };
 
-        initializeBubbles();
+        _chart._doRender = function () {
+            _g = initOverlayG();
 
-        _chart.fadeDeselectedArea(_chart.filter());
+            _chart.r().range([_chart.MIN_RADIUS, _chart.width() * _chart.maxBubbleRelativeSize()]);
 
-        return _chart;
-    };
+            initializeBubbles();
 
-    function initOverlayG () {
-        _g = _chart.select('g.' + BUBBLE_OVERLAY_CLASS);
-        if (_g.empty()) {
-            _g = _chart.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
+            _chart.fadeDeselectedArea(_chart.filter());
+
+            return _chart;
+        };
+
+        function initOverlayG () {
+            _g = _chart.select('g.' + BUBBLE_OVERLAY_CLASS);
+            if (_g.empty()) {
+                _g = _chart.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
+            }
+            return _g;
         }
-        return _g;
-    }
 
-    function initializeBubbles () {
-        var data = mapData();
-        _chart.calculateRadiusDomain();
+        function initializeBubbles () {
+            var data = mapData();
+            _chart.calculateRadiusDomain();
 
-        _points.forEach(function (point) {
-            var nodeG = getNodeG(point, data);
+            _points.forEach(function (point) {
+                var nodeG = getNodeG(point, data);
 
-            var circle = nodeG.select('circle.' + BUBBLE_CLASS);
+                var circle = nodeG.select('circle.' + BUBBLE_CLASS);
 
-            if (circle.empty()) {
-                circle = nodeG.append('circle')
-                    .attr('class', BUBBLE_CLASS)
-                    .attr('r', 0)
-                    .attr('fill', _chart.getColor)
-                    .on('click', _chart.onClick);
+                if (circle.empty()) {
+                    circle = nodeG.append('circle')
+                        .attr('class', BUBBLE_CLASS)
+                        .attr('r', 0)
+                        .attr('fill', _chart.getColor)
+                        .on('click', _chart.onClick);
+                }
+
+                transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
+                    .attr('r', function (d) {
+                        return _chart.bubbleR(d);
+                    });
+
+                _chart._doRenderLabel(nodeG);
+
+                _chart._doRenderTitles(nodeG);
+            });
+        }
+
+        function mapData () {
+            var data = {};
+            _chart.data().forEach(function (datum) {
+                data[_chart.keyAccessor()(datum)] = datum;
+            });
+            return data;
+        }
+
+        function getNodeG (point, data) {
+            var bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + utils.nameToId(point.name);
+
+            var nodeG = _g.select('g.' + utils.nameToId(point.name));
+
+            if (nodeG.empty()) {
+                nodeG = _g.append('g')
+                    .attr('class', bubbleNodeClass)
+                    .attr('transform', 'translate(' + point.x + ',' + point.y + ')');
             }
 
-            transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('r', function (d) {
-                    return _chart.bubbleR(d);
-                });
+            nodeG.datum(data[point.name]);
 
-            _chart._doRenderLabel(nodeG);
-
-            _chart._doRenderTitles(nodeG);
-        });
-    }
-
-    function mapData () {
-        var data = {};
-        _chart.data().forEach(function (datum) {
-            data[_chart.keyAccessor()(datum)] = datum;
-        });
-        return data;
-    }
-
-    function getNodeG (point, data) {
-        var bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + utils.nameToId(point.name);
-
-        var nodeG = _g.select('g.' + utils.nameToId(point.name));
-
-        if (nodeG.empty()) {
-            nodeG = _g.append('g')
-                .attr('class', bubbleNodeClass)
-                .attr('transform', 'translate(' + point.x + ',' + point.y + ')');
+            return nodeG;
         }
 
-        nodeG.datum(data[point.name]);
+        _chart._doRedraw = function () {
+            updateBubbles();
 
-        return nodeG;
-    }
+            _chart.fadeDeselectedArea(_chart.filter());
 
-    _chart._doRedraw = function () {
-        updateBubbles();
+            return _chart;
+        };
 
-        _chart.fadeDeselectedArea(_chart.filter());
+        function updateBubbles () {
+            var data = mapData();
+            _chart.calculateRadiusDomain();
 
-        return _chart;
-    };
+            _points.forEach(function (point) {
+                var nodeG = getNodeG(point, data);
 
-    function updateBubbles () {
-        var data = mapData();
-        _chart.calculateRadiusDomain();
+                var circle = nodeG.select('circle.' + BUBBLE_CLASS);
 
-        _points.forEach(function (point) {
-            var nodeG = getNodeG(point, data);
+                transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
+                    .attr('r', function (d) {
+                        return _chart.bubbleR(d);
+                    })
+                    .attr('fill', _chart.getColor);
 
-            var circle = nodeG.select('circle.' + BUBBLE_CLASS);
+                _chart.doUpdateLabels(nodeG);
 
-            transition(circle, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('r', function (d) {
-                    return _chart.bubbleR(d);
-                })
-                .attr('fill', _chart.getColor);
+                _chart.doUpdateTitles(nodeG);
+            });
+        }
 
-            _chart.doUpdateLabels(nodeG);
+        _chart.debug = function (flag) {
+            if (flag) {
+                var debugG = _chart.select('g.' + constants.DEBUG_GROUP_CLASS);
 
-            _chart.doUpdateTitles(nodeG);
-        });
-    }
+                if (debugG.empty()) {
+                    debugG = _chart.svg()
+                        .append('g')
+                        .attr('class', constants.DEBUG_GROUP_CLASS);
+                }
 
-    _chart.debug = function (flag) {
-        if (flag) {
-            var debugG = _chart.select('g.' + constants.DEBUG_GROUP_CLASS);
+                var debugText = debugG.append('text')
+                    .attr('x', 10)
+                    .attr('y', 20);
 
-            if (debugG.empty()) {
-                debugG = _chart.svg()
-                    .append('g')
-                    .attr('class', constants.DEBUG_GROUP_CLASS);
+                debugG
+                    .append('rect')
+                    .attr('width', _chart.width())
+                    .attr('height', _chart.height())
+                    .on('mousemove', function () {
+                        var position = d3.mouse(debugG.node());
+                        var msg = position[0] + ', ' + position[1];
+                        debugText.text(msg);
+                    });
+            } else {
+                _chart.selectAll('.debug').remove();
             }
 
-            var debugText = debugG.append('text')
-                .attr('x', 10)
-                .attr('y', 20);
+            return _chart;
+        };
 
-            debugG
-                .append('rect')
-                .attr('width', _chart.width())
-                .attr('height', _chart.height())
-                .on('mousemove', function () {
-                    var position = d3.mouse(debugG.node());
-                    var msg = position[0] + ', ' + position[1];
-                    debugText.text(msg);
-                });
-        } else {
-            _chart.selectAll('.debug').remove();
-        }
+        _chart.anchor(parent, chartGroup);
 
         return _chart;
-    };
-
-    _chart.anchor(parent, chartGroup);
-
-    return _chart;
-};
+    }
+}
