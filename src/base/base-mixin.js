@@ -8,6 +8,55 @@ import {logger} from '../core/logger';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
 
+const _defaultFilterHandler = (dimension, filters) => {
+    if (filters.length === 0) {
+        dimension.filter(null);
+    } else if (filters.length === 1 && !filters[0].isFiltered) {
+        // single value and not a function-based filter
+        dimension.filterExact(filters[0]);
+    } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
+        // single range-based filter
+        dimension.filterRange(filters[0]);
+    } else {
+        dimension.filterFunction(d => {
+            for (let i = 0; i < filters.length; i++) {
+                const filter = filters[i];
+                if (filter.isFiltered && filter.isFiltered(d)) {
+                    return true;
+                } else if (filter <= d && filter >= d) {
+                    return true;
+                }
+            }
+            return false;
+        });
+    }
+    return filters;
+};
+
+const _defaultHasFilterHandler = (filters, filter) => {
+    if (filter === null || typeof (filter) === 'undefined') {
+        return filters.length > 0;
+    }
+    return filters.some(f => filter <= f && filter >= f);
+};
+
+const _defaultRemoveFilterHandler = (filters, filter) => {
+    for (let i = 0; i < filters.length; i++) {
+        if (filters[i] <= filter && filters[i] >= filter) {
+            filters.splice(i, 1);
+            break;
+        }
+    }
+    return filters;
+};
+
+const _defaultAddFilterHandler = (filters, filter) => {
+    filters.push(filter);
+    return filters;
+};
+
+const _defaultResetFilterHandler = filters => [];
+
 /**
  * `dc.baseMixin` is an abstract functional object representing a basic `dc` chart object
  * for all chart and widget implementations. Methods from the {@link #dc.baseMixin dc.baseMixin} are inherited
@@ -79,11 +128,11 @@ export class BaseMixin {
 
         this._filters = [];
 
-        this._filterHandler = this._defaultFilterHandler;
-        this._hasFilterHandler = this._defaultHasFilterHandler;
-        this._removeFilterHandler = this._defaultRemoveFilterHandler;
-        this._addFilterHandler = this._defaultAddFilterHandler;
-        this._resetFilterHandler = this._defaultResetFilterHandler;
+        this._filterHandler = _defaultFilterHandler;
+        this._hasFilterHandler = _defaultHasFilterHandler;
+        this._removeFilterHandler = _defaultRemoveFilterHandler;
+        this._addFilterHandler = _defaultAddFilterHandler;
+        this._resetFilterHandler = _defaultResetFilterHandler;
 
         // ES6: need to figure out proper way to deprecate
 
@@ -1531,57 +1580,6 @@ export class BaseMixin {
     _defaultHeightCalc (element) {
         const height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
         return (height && height > this._minHeight) ? height : this._minHeight;
-    }
-
-    _defaultFilterHandler (dimension, filters) {
-        if (filters.length === 0) {
-            dimension.filter(null);
-        } else if (filters.length === 1 && !filters[0].isFiltered) {
-            // single value and not a function-based filter
-            dimension.filterExact(filters[0]);
-        } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-            // single range-based filter
-            dimension.filterRange(filters[0]);
-        } else {
-            dimension.filterFunction(d => {
-                for (let i = 0; i < filters.length; i++) {
-                    const filter = filters[i];
-                    if (filter.isFiltered && filter.isFiltered(d)) {
-                        return true;
-                    } else if (filter <= d && filter >= d) {
-                        return true;
-                    }
-                }
-                return false;
-            });
-        }
-        return filters;
-    }
-
-    _defaultHasFilterHandler (filters, filter) {
-        if (filter === null || typeof (filter) === 'undefined') {
-            return filters.length > 0;
-        }
-        return filters.some(f => filter <= f && filter >= f);
-    }
-
-    _defaultRemoveFilterHandler (filters, filter) {
-        for (let i = 0; i < filters.length; i++) {
-            if (filters[i] <= filter && filters[i] >= filter) {
-                filters.splice(i, 1);
-                break;
-            }
-        }
-        return filters;
-    }
-
-    _defaultAddFilterHandler (filters, filter) {
-        filters.push(filter);
-        return filters;
-    }
-
-    _defaultResetFilterHandler (filters) {
-        return [];
     }
 
     _defaultData (group) {
