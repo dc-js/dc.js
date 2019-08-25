@@ -449,7 +449,10 @@ module.exports = function (grunt) {
     grunt.registerTask('build', ['concat:version.js', 'rollup:js', 'sass', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:scripts-sass-docs']);
+    grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
+    grunt.registerTask('server', ['server-only', 'watch:scripts-sass-docs']);
+    // This task will active server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
+    grunt.registerTask('test-n-serve', ['server-only', 'test', 'watch:tests']);
     grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
     // grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
