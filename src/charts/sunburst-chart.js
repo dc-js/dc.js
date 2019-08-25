@@ -8,6 +8,8 @@ import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 
+const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -42,49 +44,36 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
     constructor (parent, chartGroup) {
         super();
 
-        const _chart = this;
-        var DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+        this._sliceCssClass = 'pie-slice';
+        this._emptyCssClass = 'empty-chart';
+        this._emptyTitle = 'empty';
 
-        var _sliceCssClass = 'pie-slice';
-        var _emptyCssClass = 'empty-chart';
-        var _emptyTitle = 'empty';
+        this._radius = undefined;
+        this._givenRadius = undefined; // given radius, if any
+        this._innerRadius = 0;
 
-        var _radius,
-            _givenRadius, // given radius, if any
-            _innerRadius = 0;
+        this._g = undefined;
+        this._cx = undefined;
+        this._cy = undefined;
+        this._minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+        this._externalLabelRadius = undefined;
 
-        var _g;
-        var _cx;
-        var _cy;
-        var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
-        var _externalLabelRadius;
+        this.colorAccessor(this.cappedKeyAccessor);
 
-        _chart.colorAccessor(_chart.cappedKeyAccessor);
+        this.title(d => this.cappedKeyAccessor(d) + ': ' + this._extendedValueAccessor(d));
 
-        // Handle cases if value corresponds to generated parent nodes
-        function extendedValueAccessor (d) {
-            if (d.path) {
-                return d.value;
-            }
-            return _chart.cappedValueAccessor(d);
-        }
+        this.label(this.cappedKeyAccessor);
+        this.renderLabel(true);
 
-        _chart.title(function (d) {
-            return _chart.cappedKeyAccessor(d) + ': ' + extendedValueAccessor(d);
-        });
+        this.transitionDuration(350);
 
-        _chart.label(_chart.cappedKeyAccessor);
-        _chart.renderLabel(true);
-
-        _chart.transitionDuration(350);
-
-        _chart.filterHandler(function (dimension, filters) {
+        this.filterHandler((dimension, filters) => {
             if (filters.length === 0) {
                 dimension.filter(null);
             } else {
-                dimension.filterFunction(function (d) {
-                    for (var i = 0; i < filters.length; i++) {
-                        var filter = filters[i];
+                dimension.filterFunction(d => {
+                    for (let i = 0; i < filters.length; i++) {
+                        const filter = filters[i];
                         if (filter.isFiltered && filter.isFiltered(d)) {
                             return true;
                         }
@@ -95,513 +84,505 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
             return filters;
         });
 
-        _chart._doRender = function () {
-            _chart.resetSvg();
+        {
+            const self = this;
+            // ES6: it uses this as well as self, carefully handle
+            self._tweenSlice = function (d) {
+                let current = this._current;
+                if (self._isOffCanvas(current)) {
+                    current = {x0: 0, x1: 0, y0: 0, y1: 0};
+                }
+                const tweenTarget = {
+                    x0: d.x0,
+                    x1: d.x1,
+                    y0: d.y0,
+                    y1: d.y1
+                };
+                const i = d3.interpolate(current, tweenTarget);
+                this._current = i(0);
+                return t => self._safeArc(self._buildArcs(), Object.assign({}, d, i(t)));
+            };
+        }
 
-            _g = _chart.svg()
-                .append('g')
-                .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
-
-            drawChart();
-
-            return _chart;
+        // ES6 - must remain as an => function - check again later
+        this._onClick = (d, i) => {
+            if (this._g.attr('class') !== this._emptyCssClass) {
+                this._pvt_onClick(d, i);
+            }
         };
 
-        function drawChart () {
-            // set radius from chart size if none given, or if given radius is too large
-            var maxRadius = d3.min([_chart.width(), _chart.height()]) / 2;
-            _radius = _givenRadius && _givenRadius < maxRadius ? _givenRadius : maxRadius;
+        this.anchor(parent, chartGroup);
+    }
 
-            var arc = buildArcs();
+    // Handle cases if value corresponds to generated parent nodes
+    _extendedValueAccessor (d) {
+        if (d.path) {
+            return d.value;
+        }
+        return this.cappedValueAccessor(d);
+    }
 
-            var sunburstData, cdata;
-            // if we have data...
-            if (d3.sum(_chart.data(), _chart.valueAccessor())) {
-                cdata = utils.toHierarchy(_chart.data(), _chart.valueAccessor());
-                sunburstData = partitionNodes(cdata);
-                // First one is the root, which is not needed
-                sunburstData.shift();
-                _g.classed(_emptyCssClass, false);
-            } else {
-                // otherwise we'd be getting NaNs, so override
-                // note: abuse others for its ignoring the value accessor
-                cdata = utils.toHierarchy([], function (d) {
-                    return d.value;
-                });
-                sunburstData = partitionNodes(cdata);
-                _g.classed(_emptyCssClass, true);
-            }
+    _doRender () {
+        this.resetSvg();
 
-            if (_g) {
-                var slices = _g.selectAll('g.' + _sliceCssClass)
-                    .data(sunburstData);
-                createElements(slices, arc, sunburstData);
+        this._g = this.svg()
+            .append('g')
+            .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
 
-                updateElements(sunburstData, arc);
+        this._drawChart();
 
-                removeElements(slices);
+        return this;
+    }
 
-                highlightFilter();
+    _drawChart () {
+        // set radius from chart size if none given, or if given radius is too large
+        const maxRadius = d3.min([this.width(), this.height()]) / 2;
+        this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
 
-                transition(_g, _chart.transitionDuration(), _chart.transitionDelay())
-                    .attr('transform', 'translate(' + _chart.cx() + ',' + _chart.cy() + ')');
-            }
+        const arc = this._buildArcs();
+
+        let sunburstData, cdata;
+        // if we have data...
+        if (d3.sum(this.data(), this.valueAccessor())) {
+            cdata = utils.toHierarchy(this.data(), this.valueAccessor());
+            sunburstData = this._partitionNodes(cdata);
+            // First one is the root, which is not needed
+            sunburstData.shift();
+            this._g.classed(this._emptyCssClass, false);
+        } else {
+            // otherwise we'd be getting NaNs, so override
+            // note: abuse others for its ignoring the value accessor
+            cdata = utils.toHierarchy([], d => d.value);
+            sunburstData = this._partitionNodes(cdata);
+            this._g.classed(this._emptyCssClass, true);
         }
 
-        function createElements (slices, arc, sunburstData) {
-            var slicesEnter = createSliceNodes(slices);
+        if (this._g) {
+            const slices = this._g.selectAll('g.' + this._sliceCssClass)
+                .data(sunburstData);
+            this._createElements(slices, arc, sunburstData);
 
-            createSlicePath(slicesEnter, arc);
-            createTitles(slicesEnter);
-            createLabels(sunburstData, arc);
+            this._updateElements(sunburstData, arc);
+
+            this._removeElements(slices);
+
+            this._highlightFilter();
+
+            transition(this._g, this.transitionDuration(), this.transitionDelay())
+                .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
         }
+    }
 
-        function createSliceNodes (slices) {
-            var slicesEnter = slices
+    _createElements (slices, arc, sunburstData) {
+        const slicesEnter = this._createSliceNodes(slices);
+
+        this._createSlicePath(slicesEnter, arc);
+        this._createTitles(slicesEnter);
+        this._createLabels(sunburstData, arc);
+    }
+
+    _createSliceNodes (slices) {
+        return slices
+            .enter()
+            .append('g')
+            .attr('class', (d, i) => this._sliceCssClass +
+                ' _' + i + ' ' +
+                this._sliceCssClass + '-level-' + d.depth);
+    }
+
+    _createSlicePath (slicesEnter, arc) {
+        const slicePath = slicesEnter.append('path')
+            .attr('fill', (d, i) => this._fill(d, i))
+            .on('click', (d, i) => this._onClick(d, i))
+            .attr('d', d => this._safeArc(arc, d));
+
+        const tranNodes = transition(slicePath, this.transitionDuration());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', this._tweenSlice);
+        }
+    }
+
+    _createTitles (slicesEnter) {
+        if (this.renderTitle()) {
+            slicesEnter.append('title').text(d => this.title()(d));
+        }
+    }
+
+    _positionLabels (labelsEnter, arc) {
+        transition(labelsEnter, this.transitionDuration())
+            .attr('transform', d => this._labelPosition(d, arc))
+            .attr('text-anchor', 'middle')
+            .text(d => {
+                // position label...
+                if (this._sliceHasNoData(d) || this._sliceTooSmall(d)) {
+                    return '';
+                }
+                return this.label()(d);
+            });
+    }
+
+    _createLabels (sunburstData, arc) {
+        if (this.renderLabel()) {
+            const labels = this._g.selectAll('text.' + this._sliceCssClass)
+                .data(sunburstData);
+
+            labels.exit().remove();
+
+            const labelsEnter = labels
                 .enter()
-                .append('g')
-                .attr('class', function (d, i) {
-                    return _sliceCssClass +
-                        ' _' + i + ' ' +
-                        _sliceCssClass + '-level-' + d.depth;
-                });
-            return slicesEnter;
-        }
-
-        function createSlicePath (slicesEnter, arc) {
-            var slicePath = slicesEnter.append('path')
-                .attr('fill', fill)
-                .on('click', onClick)
-                .attr('d', function (d) {
-                    return safeArc(arc, d);
-                });
-
-            var tranNodes = transition(slicePath, _chart.transitionDuration());
-            if (tranNodes.attrTween) {
-                tranNodes.attrTween('d', tweenSlice);
-            }
-        }
-
-        function createTitles (slicesEnter) {
-            if (_chart.renderTitle()) {
-                slicesEnter.append('title').text(function (d) {
-                    return _chart.title()(d);
-                });
-            }
-        }
-
-        function positionLabels (labelsEnter, arc) {
-            transition(labelsEnter, _chart.transitionDuration())
-                .attr('transform', function (d) {
-                    return labelPosition(d, arc);
-                })
-                .attr('text-anchor', 'middle')
-                .text(function (d) {
-                    // position label...
-                    if (sliceHasNoData(d) || sliceTooSmall(d)) {
-                        return '';
+                .append('text')
+                .attr('class', (d, i) => {
+                    let classes = this._sliceCssClass + ' _' + i;
+                    if (this._externalLabelRadius) {
+                        classes += ' external';
                     }
-                    return _chart.label()(d);
-                });
+                    return classes;
+                })
+                .on('click', (d, i) => this._onClick(d, i));
+            this._positionLabels(labelsEnter, arc);
         }
+    }
 
-        function createLabels (sunburstData, arc) {
-            if (_chart.renderLabel()) {
-                var labels = _g.selectAll('text.' + _sliceCssClass)
-                    .data(sunburstData);
+    _updateElements (sunburstData, arc) {
+        this._updateSlicePaths(sunburstData, arc);
+        this._updateLabels(sunburstData, arc);
+        this._updateTitles(sunburstData);
+    }
 
-                labels.exit().remove();
-
-                var labelsEnter = labels
-                    .enter()
-                    .append('text')
-                    .attr('class', function (d, i) {
-                        var classes = _sliceCssClass + ' _' + i;
-                        if (_externalLabelRadius) {
-                            classes += ' external';
-                        }
-                        return classes;
-                    })
-                    .on('click', onClick);
-                positionLabels(labelsEnter, arc);
-            }
+    _updateSlicePaths (sunburstData, arc) {
+        const slicePaths = this._g.selectAll('g.' + this._sliceCssClass)
+            .data(sunburstData)
+            .select('path')
+            .attr('d', (d, i) => this._safeArc(arc, d));
+        const tranNodes = transition(slicePaths, this.transitionDuration());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', this._tweenSlice);
         }
+        tranNodes.attr('fill', (d, i) => this._fill(d, i));
+    }
 
-        function updateElements (sunburstData, arc) {
-            updateSlicePaths(sunburstData, arc);
-            updateLabels(sunburstData, arc);
-            updateTitles(sunburstData);
+    _updateLabels (sunburstData, arc) {
+        if (this.renderLabel()) {
+            const labels = this._g.selectAll('text.' + this._sliceCssClass)
+                .data(sunburstData);
+            this._positionLabels(labels, arc);
         }
+    }
 
-        function updateSlicePaths (sunburstData, arc) {
-            var slicePaths = _g.selectAll('g.' + _sliceCssClass)
+    _updateTitles (sunburstData) {
+        if (this.renderTitle()) {
+            this._g.selectAll('g.' + this._sliceCssClass)
                 .data(sunburstData)
-                .select('path')
-                .attr('d', function (d, i) {
-                    return safeArc(arc, d);
-                });
-            var tranNodes = transition(slicePaths, _chart.transitionDuration());
-            if (tranNodes.attrTween) {
-                tranNodes.attrTween('d', tweenSlice);
-            }
-            tranNodes.attr('fill', fill);
+                .select('title')
+                .text(d => this.title()(d));
         }
+    }
 
-        function updateLabels (sunburstData, arc) {
-            if (_chart.renderLabel()) {
-                var labels = _g.selectAll('text.' + _sliceCssClass)
-                    .data(sunburstData);
-                positionLabels(labels, arc);
-            }
-        }
+    _removeElements (slices) {
+        slices.exit().remove();
+    }
 
-        function updateTitles (sunburstData) {
-            if (_chart.renderTitle()) {
-                _g.selectAll('g.' + _sliceCssClass)
-                    .data(sunburstData)
-                    .select('title')
-                    .text(function (d) {
-                        return _chart.title()(d);
-                    });
-            }
-        }
-
-        function removeElements (slices) {
-            slices.exit().remove();
-        }
-
-        function highlightFilter () {
-            if (_chart.hasFilter()) {
-                _chart.selectAll('g.' + _sliceCssClass).each(function (d) {
-                    if (isSelectedSlice(d)) {
-                        _chart.highlightSelected(this);
-                    } else {
-                        _chart.fadeDeselected(this);
-                    }
-                });
-            } else {
-                _chart.selectAll('g.' + _sliceCssClass).each(function (d) {
-                    _chart.resetHighlight(this);
-                });
-            }
-        }
-
-        /**
-         * Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
-         * sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
-         * @method innerRadius
-         * @memberof dc.sunburstChart
-         * @instance
-         * @param {Number} [innerRadius=0]
-         * @returns {Number|dc.sunburstChart}
-         */
-        _chart.innerRadius = function (innerRadius) {
-            if (!arguments.length) {
-                return _innerRadius;
-            }
-            _innerRadius = innerRadius;
-            return _chart;
-        };
-
-        /**
-         * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
-         * chart width and height.
-         * @method radius
-         * @memberof dc.sunburstChart
-         * @instance
-         * @param {Number} [radius]
-         * @returns {Number|dc.sunburstChart}
-         */
-        _chart.radius = function (radius) {
-            if (!arguments.length) {
-                return _givenRadius;
-            }
-            _givenRadius = radius;
-            return _chart;
-        };
-
-        /**
-         * Get or set center x coordinate position. Default is center of svg.
-         * @method cx
-         * @memberof dc.sunburstChart
-         * @instance
-         * @param {Number} [cx]
-         * @returns {Number|dc.sunburstChart}
-         */
-        _chart.cx = function (cx) {
-            if (!arguments.length) {
-                return (_cx || _chart.width() / 2);
-            }
-            _cx = cx;
-            return _chart;
-        };
-
-        /**
-         * Get or set center y coordinate position. Default is center of svg.
-         * @method cy
-         * @memberof dc.sunburstChart
-         * @instance
-         * @param {Number} [cy]
-         * @returns {Number|dc.sunburstChart}
-         */
-        _chart.cy = function (cy) {
-            if (!arguments.length) {
-                return (_cy || _chart.height() / 2);
-            }
-            _cy = cy;
-            return _chart;
-        };
-
-        /**
-         * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
-         * display a slice label.
-         * @method minAngleForLabel
-         * @memberof dc.sunburstChart
-         * @instance
-         * @param {Number} [minAngleForLabel=0.5]
-         * @returns {Number|dc.sunburstChart}
-         */
-        _chart.minAngleForLabel = function (minAngleForLabel) {
-            if (!arguments.length) {
-                return _minAngleForLabel;
-            }
-            _minAngleForLabel = minAngleForLabel;
-            return _chart;
-        };
-
-        /**
-         * Title to use for the only slice when there is no data.
-         * @method emptyTitle
-         * @memberof dc.sunburstChart
-         * @instance
-         * @param {String} [title]
-         * @returns {String|dc.sunburstChart}
-         */
-        _chart.emptyTitle = function (title) {
-            if (arguments.length === 0) {
-                return _emptyTitle;
-            }
-            _emptyTitle = title;
-            return _chart;
-        };
-
-        /**
-         * Position slice labels offset from the outer edge of the chart.
-         *
-         * The argument specifies the extra radius to be added for slice labels.
-         * @method externalLabels
-         * @memberof dc.sunburstChart
-         * @instance
-         * @param {Number} [externalLabelRadius]
-         * @returns {Number|dc.sunburstChart}
-         */
-        _chart.externalLabels = function (externalLabelRadius) {
-            if (arguments.length === 0) {
-                return _externalLabelRadius;
-            } else if (externalLabelRadius) {
-                _externalLabelRadius = externalLabelRadius;
-            } else {
-                _externalLabelRadius = undefined;
-            }
-
-            return _chart;
-        };
-
-        function buildArcs () {
-            return d3.arc()
-                .startAngle(function (d) {
-                    return d.x0;
-                })
-                .endAngle(function (d) {
-                    return d.x1;
-                })
-                .innerRadius(function (d) {
-                    return d.data.path && d.data.path.length === 1 ? _innerRadius : Math.sqrt(d.y0);
-                })
-                .outerRadius(function (d) {
-                    return Math.sqrt(d.y1);
-                });
-        }
-
-        function isSelectedSlice (d) {
-            return isPathFiltered(d.path);
-        }
-
-        function isPathFiltered (path) {
-            for (var i = 0; i < _chart.filters().length; i++) {
-                var currentFilter = _chart.filters()[i];
-                if (currentFilter.isFiltered(path)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        // returns all filters that are a parent or child of the path
-        function filtersForPath (path) {
-            var pathFilter = filters.HierarchyFilter(path);
-            var filtersList = [];
-            for (var i = 0; i < _chart.filters().length; i++) {
-                var currentFilter = _chart.filters()[i];
-                if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
-                    filtersList.push(currentFilter);
-                }
-            }
-            return filtersList;
-        }
-
-        _chart._doRedraw = function () {
-            drawChart();
-            return _chart;
-        };
-
-        function partitionNodes (data) {
-            // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
-            var hierarchy = d3.hierarchy(data)
-                .sum(function (d) {
-                    return d.children ? 0 : extendedValueAccessor(d);
-                })
-                .sort(function (a, b) {
-                    return d3.ascending(a.data.path, b.data.path);
-                });
-
-            var partition = d3.partition()
-                .size([2 * Math.PI, _radius * _radius]);
-
-            partition(hierarchy);
-
-            // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
-            var nodes = hierarchy.descendants().map(function (d) {
-                d.key = d.data.key;
-                d.path = d.data.path;
-                return d;
-            });
-
-            return nodes;
-        }
-
-        function sliceTooSmall (d) {
-            var angle = d.x1 - d.x0;
-            return isNaN(angle) || angle < _minAngleForLabel;
-        }
-
-        function sliceHasNoData (d) {
-            return extendedValueAccessor(d) === 0;
-        }
-
-        function tweenSlice (d) {
-            var current = this._current;
-            if (isOffCanvas(current)) {
-                current = {x0: 0, x1: 0, y0: 0, y1: 0};
-            }
-            var tweenTarget = {
-                x0: d.x0,
-                x1: d.x1,
-                y0: d.y0,
-                y1: d.y1
-            };
-            var i = d3.interpolate(current, tweenTarget);
-            this._current = i(0);
-            return function (t) {
-                return safeArc(buildArcs(), Object.assign({}, d, i(t)));
-            };
-        }
-
-        function isOffCanvas (d) {
-            return !d || isNaN(d.x0) || isNaN(d.y0);
-        }
-
-        function fill (d, i) {
-            return _chart.getColor(d.data, i);
-        }
-
-        function _onClick (d) {
-            // Clicking on Legends do not filter, it throws exception
-            // Must be better way to handle this, in legends we need to access `d.key`
-            var path = d.path || d.key;
-            var filter = filters.HierarchyFilter(path);
-
-            // filters are equal to, parents or children of the path.
-            var filtersList = filtersForPath(path);
-            var exactMatch = false;
-            // clear out any filters that cover the path filtered.
-            for (var i = filtersList.length - 1; i >= 0; i--) {
-                var currentFilter = filtersList[i];
-                if (utils.arraysIdentical(currentFilter, path)) {
-                    exactMatch = true;
-                }
-                _chart.filter(filtersList[i]);
-            }
-            events.trigger(function () {
-                // if it is a new filter - put it in.
-                if (!exactMatch) {
-                    _chart.filter(filter);
-                }
-                _chart.redrawGroup();
-            });
-        }
-
-        _chart.onClick = onClick;
-
-        function onClick (d, i) {
-            if (_g.attr('class') !== _emptyCssClass) {
-                _onClick(d, i);
-            }
-        }
-
-        function safeArc (arc, d) {
-            var path = arc(d);
-            if (path.indexOf('NaN') >= 0) {
-                path = 'M0,0';
-            }
-            return path;
-        }
-
-        function labelPosition (d, arc) {
-            var centroid;
-            if (_externalLabelRadius) {
-                centroid = d3.svg.arc()
-                    .outerRadius(_radius + _externalLabelRadius)
-                    .innerRadius(_radius + _externalLabelRadius)
-                    .centroid(d);
-            } else {
-                centroid = arc.centroid(d);
-            }
-            if (isNaN(centroid[0]) || isNaN(centroid[1])) {
-                return 'translate(0,0)';
-            } else {
-                return 'translate(' + centroid + ')';
-            }
-        }
-
-        _chart.legendables = function () {
-            return _chart.data().map(function (d, i) {
-                var legendable = {name: d.key, data: d.value, others: d.others, chart: _chart};
-                legendable.color = _chart.getColor(d, i);
-                return legendable;
-            });
-        };
-
-        _chart.legendHighlight = function (d) {
-            highlightSliceFromLegendable(d, true);
-        };
-
-        _chart.legendReset = function (d) {
-            highlightSliceFromLegendable(d, false);
-        };
-
-        _chart.legendToggle = function (d) {
-            _chart.onClick({key: d.name, others: d.others});
-        };
-
-        function highlightSliceFromLegendable (legendable, highlighted) {
-            _chart.selectAll('g.pie-slice').each(function (d) {
-                if (legendable.name === d.key) {
-                    d3.select(this).classed('highlight', highlighted);
+    _highlightFilter () {
+        const self = this;
+        if (self.hasFilter()) {
+            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
+                if (self._isSelectedSlice(d)) {
+                    self.highlightSelected(this);
+                } else {
+                    self.fadeDeselected(this);
                 }
             });
+        } else {
+            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
+                self.resetHighlight(this);
+            });
+        }
+    }
+
+    /**
+     * Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
+     * sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
+     * @method innerRadius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [innerRadius=0]
+     * @returns {Number|dc.sunburstChart}
+     */
+    innerRadius (innerRadius) {
+        const self = this;
+        if (!arguments.length) {
+            return self._innerRadius;
+        }
+        self._innerRadius = innerRadius;
+        return self;
+    }
+
+    /**
+     * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+     * chart width and height.
+     * @method radius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [radius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    radius (radius) {
+        const self = this;
+        if (!arguments.length) {
+            return self._givenRadius;
+        }
+        self._givenRadius = radius;
+        return self;
+    }
+
+    /**
+     * Get or set center x coordinate position. Default is center of svg.
+     * @method cx
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cx]
+     * @returns {Number|dc.sunburstChart}
+     */
+    cx (cx) {
+        const self = this;
+        if (!arguments.length) {
+            return (self._cx || self.width() / 2);
+        }
+        self._cx = cx;
+        return self;
+    }
+
+    /**
+     * Get or set center y coordinate position. Default is center of svg.
+     * @method cy
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cy]
+     * @returns {Number|dc.sunburstChart}
+     */
+    cy (cy) {
+        const self = this;
+        if (!arguments.length) {
+            return (self._cy || self.height() / 2);
+        }
+        self._cy = cy;
+        return self;
+    }
+
+    /**
+     * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+     * display a slice label.
+     * @method minAngleForLabel
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [minAngleForLabel=0.5]
+     * @returns {Number|dc.sunburstChart}
+     */
+    minAngleForLabel (minAngleForLabel) {
+        const self = this;
+        if (!arguments.length) {
+            return self._minAngleForLabel;
+        }
+        self._minAngleForLabel = minAngleForLabel;
+        return self;
+    }
+
+    /**
+     * Title to use for the only slice when there is no data.
+     * @method emptyTitle
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {String} [title]
+     * @returns {String|dc.sunburstChart}
+     */
+    emptyTitle (title) {
+        const self = this;
+        if (arguments.length === 0) {
+            return self._emptyTitle;
+        }
+        self._emptyTitle = title;
+        return self;
+    }
+
+    /**
+     * Position slice labels offset from the outer edge of the chart.
+     *
+     * The argument specifies the extra radius to be added for slice labels.
+     * @method externalLabels
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [externalLabelRadius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    externalLabels (externalLabelRadius) {
+        const self = this;
+        if (arguments.length === 0) {
+            return self._externalLabelRadius;
+        } else if (externalLabelRadius) {
+            self._externalLabelRadius = externalLabelRadius;
+        } else {
+            self._externalLabelRadius = undefined;
         }
 
-        return _chart.anchor(parent, chartGroup);
+        return self;
+    }
+
+    _buildArcs () {
+        const self = this;
+        return d3.arc()
+            .startAngle(d => d.x0)
+            .endAngle(d => d.x1)
+            .innerRadius(d => d.data.path && d.data.path.length === 1 ? self._innerRadius : Math.sqrt(d.y0))
+            .outerRadius(d => Math.sqrt(d.y1));
+    }
+
+    _isSelectedSlice (d) {
+        const self = this;
+        return self._isPathFiltered(d.path);
+    }
+
+    _isPathFiltered (path) {
+        const self = this;
+        for (let i = 0; i < self.filters().length; i++) {
+            const currentFilter = self.filters()[i];
+            if (currentFilter.isFiltered(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // returns all filters that are a parent or child of the path
+    _filtersForPath (path) {
+        const self = this;
+        const pathFilter = filters.HierarchyFilter(path);
+        const filtersList = [];
+        for (let i = 0; i < self.filters().length; i++) {
+            const currentFilter = self.filters()[i];
+            if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
+                filtersList.push(currentFilter);
+            }
+        }
+        return filtersList;
+    }
+
+    _doRedraw () {
+        this._drawChart();
+        return this;
+    }
+
+    _partitionNodes (data) {
+        // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
+        const hierarchy = d3.hierarchy(data)
+            .sum(d => d.children ? 0 : this._extendedValueAccessor(d))
+            .sort((a, b) => d3.ascending(a.data.path, b.data.path));
+
+        const partition = d3.partition()
+            .size([2 * Math.PI, this._radius * this._radius]);
+
+        partition(hierarchy);
+
+        // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
+        return hierarchy.descendants().map(d => {
+            d.key = d.data.key;
+            d.path = d.data.path;
+            return d;
+        });
+    }
+
+    _sliceTooSmall (d) {
+        const angle = d.x1 - d.x0;
+        return isNaN(angle) || angle < this._minAngleForLabel;
+    }
+
+    _sliceHasNoData (d) {
+        return this._extendedValueAccessor(d) === 0;
+    }
+
+    _isOffCanvas (d) {
+        return !d || isNaN(d.x0) || isNaN(d.y0);
+    }
+
+    _fill (d, i) {
+        return this.getColor(d.data, i);
+    }
+
+    _pvt_onClick (d) {
+        // Clicking on Legends do not filter, it throws exception
+        // Must be better way to handle this, in legends we need to access `d.key`
+        const path = d.path || d.key;
+        const filter = filters.HierarchyFilter(path);
+
+        // filters are equal to, parents or children of the path.
+        const filtersList = this._filtersForPath(path);
+        let exactMatch = false;
+        // clear out any filters that cover the path filtered.
+        for (let i = filtersList.length - 1; i >= 0; i--) {
+            const currentFilter = filtersList[i];
+            if (utils.arraysIdentical(currentFilter, path)) {
+                exactMatch = true;
+            }
+            this.filter(filtersList[i]);
+        }
+        events.trigger(() => {
+            // if it is a new filter - put it in.
+            if (!exactMatch) {
+                this.filter(filter);
+            }
+            this.redrawGroup();
+        });
+    }
+
+    _safeArc (arc, d) {
+        let path = arc(d);
+        if (path.indexOf('NaN') >= 0) {
+            path = 'M0,0';
+        }
+        return path;
+    }
+
+    _labelPosition (d, arc) {
+        let centroid;
+        if (this._externalLabelRadius) {
+            centroid = d3.svg.arc()
+                .outerRadius(this._radius + this._externalLabelRadius)
+                .innerRadius(this._radius + this._externalLabelRadius)
+                .centroid(d);
+        } else {
+            centroid = arc.centroid(d);
+        }
+        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+            return 'translate(0,0)';
+        } else {
+            return 'translate(' + centroid + ')';
+        }
+    }
+
+    legendables () {
+        return this.data().map((d, i) => {
+            const legendable = {name: d.key, data: d.value, others: d.others, chart: this};
+            legendable.color = this.getColor(d, i);
+            return legendable;
+        });
+    }
+
+    legendHighlight (d) {
+        this._highlightSliceFromLegendable(d, true);
+    }
+
+    legendReset (d) {
+        this._highlightSliceFromLegendable(d, false);
+    }
+
+    legendToggle (d) {
+        this.onClick({key: d.name, others: d.others});
+    }
+
+    _highlightSliceFromLegendable (legendable, highlighted) {
+        this.selectAll('g.pie-slice').each(function (d) {
+            if (legendable.name === d.key) {
+                d3.select(this).classed('highlight', highlighted);
+            }
+        });
     }
 }
