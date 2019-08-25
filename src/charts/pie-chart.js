@@ -163,7 +163,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
         const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
-            tranNodes.attrTween('d', this._tweenPie);
+            tranNodes.attrTween('d', d => this._tweenPie(d));
         }
     }
 
@@ -278,7 +278,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .attr('d', (d, i) => this._safeArc(d, i, arc));
         const tranNodes = transition(slicePaths, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
-            tranNodes.attrTween('d', this._tweenPie);
+            tranNodes.attrTween('d', d => this._tweenPie(d));
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
