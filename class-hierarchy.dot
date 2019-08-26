@@ -1,7 +1,7 @@
 digraph dcHierarchy {
 graph [rankdir=LR, ranksep=0.5]
 node [fontname="sans-serif", fontsize=10, margin="0.05,0.05", href="dc.\N.html"]
-node [style=filled, fillcolor=lightgreen]
+node [style=filled, fillcolor=palegreen]
 { node [style=filled, fillcolor=lightblue] baseMixin colorMixin marginMixin bubbleMixin coordinateGridMixin stackMixin capMixin }
 baseMixin [href="dc.baseMixin.html"]
 colorMixin -> coordinateGridMixin
@@ -11,7 +11,7 @@ stackMixin -> barChart
 coordinateGridMixin -> boxPlot
 coordinateGridMixin -> bubbleChart
 bubbleMixin -> bubbleChart
-baseMixin -> bubbleMixin
+colorMixin -> bubbleMixin
 bubbleMixin -> bubbleOverlay
 coordinateGridMixin -> compositeChart
 compositeChart -> seriesChart
