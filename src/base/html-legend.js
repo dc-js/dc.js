@@ -14,181 +14,174 @@ import {constants} from '../core/constants';
  */
 export class HtmlLegend {
     constructor () {
+        this._htmlLegendDivCssClass = 'dc-html-legend';
+        this._legendItemCssClassHorizontal = 'dc-legend-item-horizontal';
+        this._legendItemCssClassVertical = 'dc-legend-item-vertical';
+        this._parent = undefined;
+        this._container = undefined;
+        this._legendText = pluck('name');
+        this._maxItems = undefined;
+        this._horizontal = false;
+        this._legendItemClass = undefined;
+        this._highlightSelected = false;
+    }
 
-        const _legend = this;
+    parent (p) {
+        if (!arguments.length) {
+            return this._parent;
+        }
+        this._parent = p;
+        return this;
+    }
 
-        var _htmlLegendDivCssClass = 'dc-html-legend';
-        var _legendItemCssClassHorizontal = 'dc-legend-item-horizontal';
-        var _legendItemCssClassVertical = 'dc-legend-item-vertical';
-        var _parent;
-        var _container;
-        var _legendText = pluck('name');
-        var _maxItems;
-        var _horizontal = false;
-        var _legendItemClass;
-        var _highlightSelected = false;
+    render () {
+        this._defaultLegendItemCssClass = this._horizontal ? this._legendItemCssClassHorizontal : this._legendItemCssClassVertical;
+        this._container.select(`div.${this._htmlLegendDivCssClass}`).remove();
 
-        _legend.parent = function (p) {
-            if (!arguments.length) {
-                return _parent;
-            }
-            _parent = p;
-            return _legend;
-        };
+        const container = this._container.append('div').attr('class', this._htmlLegendDivCssClass);
+        container.attr('style', `max-width:${this._container.nodes()[0].style.width}`);
 
-        _legend.render = function () {
-            var _defaultLegendItemCssClass = _horizontal ? _legendItemCssClassHorizontal : _legendItemCssClassVertical;
-            _container.select('div.dc-html-legend').remove();
+        let legendables = this._parent.legendables();
+        const filters = this._parent.filters();
 
-            var _l = _container.append('div').attr('class', _htmlLegendDivCssClass);
-            _l.attr('style', 'max-width:' + _container.nodes()[0].style.width);
+        if (this._maxItems !== undefined) {
+            legendables = legendables.slice(0, this._maxItems);
+        }
 
-            var legendables = _parent.legendables();
-            var filters = _parent.filters();
+        const legendItemClassName = this._legendItemClass ? this._legendItemClass : this._defaultLegendItemCssClass;
 
-            if (_maxItems !== undefined) {
-                legendables = legendables.slice(0, _maxItems);
-            }
+        const itemEnter = container.selectAll(`div.${legendItemClassName}`)
+            .data(legendables).enter()
+            .append('div')
+            .classed(legendItemClassName, true)
+            .on('mouseover', d => this._parent.legendHighlight(d))
+            .on('mouseout', d => this._parent.legendReset(d))
+            .on('click', d => this._parent.legendToggle(d));
 
-            var legendItemClassName = _legendItemClass ? _legendItemClass : _defaultLegendItemCssClass;
+        if (this._highlightSelected) {
+            itemEnter.classed(constants.SELECTED_CLASS, d => filters.indexOf(d.name) !== -1);
+        }
 
-            var itemEnter = _l.selectAll('div.' + legendItemClassName)
-                .data(legendables).enter()
-                .append('div')
-                .classed(legendItemClassName, true)
-                .on('mouseover', _parent.legendHighlight)
-                .on('mouseout', _parent.legendReset)
-                .on('click', _parent.legendToggle);
+        itemEnter.append('span')
+            .attr('class', 'dc-legend-item-color')
+            .style('background-color', pluck('color'));
 
-            if (_highlightSelected) {
-                itemEnter.classed(constants.SELECTED_CLASS, function (d) {
-                    return filters.indexOf(d.name) !== -1;
-                });
-            }
+        itemEnter.append('span')
+            .attr('class', 'dc-legend-item-label')
+            .attr('title', this._legendText)
+            .text(this._legendText);
+    }
 
-            itemEnter.append('span')
-                .attr('class', 'dc-legend-item-color')
-                .style('background-color', pluck('color'));
+    /**
+     * Set the container selector for the legend widget. Required.
+     * @method container
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [container]
+     * @return {String|dc.htmlLegend}
+     **/
+    container (container) {
+        if (!arguments.length) {
+            return this._container;
+        }
+        this._container = d3.select(container);
+        return this;
+    }
 
-            itemEnter.append('span')
-                .attr('class', 'dc-legend-item-label')
-                .attr('title', _legendText)
-                .text(_legendText);
-        };
+    /**
+     * This can be optionally used to override class for legenditem and just use this class style.
+     * This is helpful for overriding the style of a particular chart rather than overriding
+     * the style for all charts.
+     *
+     * Setting this will disable the highlighting of selected items also.
+     * @method legendItemClass
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [legendItemClass]
+     * @return {String|dc.htmlLegend}
+     **/
+    legendItemClass (legendItemClass) {
+        if (!arguments.length) {
+            return this._legendItemClass;
+        }
+        this._legendItemClass = legendItemClass;
+        return this;
+    }
 
-        /**
-         * Set the container selector for the legend widget. Required.
-         * @method container
-         * @memberof dc.htmlLegend
-         * @instance
-         * @param {String} [container]
-         * @return {String|dc.htmlLegend}
-         **/
-        _legend.container = function (container) {
-            if (!arguments.length) {
-                return _container;
-            }
-            _container = d3.select(container);
-            return _legend;
-        };
+    /**
+     * This can be optionally used to enable highlighting legends for the selections/filters for the
+     * chart.
+     * @method highlightSelected
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [highlightSelected]
+     * @return {String|dc.htmlLegend}
+     **/
+    highlightSelected (highlightSelected) {
+        if (!arguments.length) {
+            return this._highlightSelected;
+        }
+        this._highlightSelected = highlightSelected;
+        return this;
+    }
 
-        /**
-         * This can be optionally used to override class for legenditem and just use this class style.
-         * This is helpful for overriding the style of a particular chart rather than overriding
-         * the style for all charts.
-         *
-         * Setting this will disable the highlighting of selected items also.
-         * @method legendItemClass
-         * @memberof dc.htmlLegend
-         * @instance
-         * @param {String} [legendItemClass]
-         * @return {String|dc.htmlLegend}
-         **/
-        _legend.legendItemClass = function (legendItemClass) {
-            if (!arguments.length) {
-                return _legendItemClass;
-            }
-            _legendItemClass = legendItemClass;
-            return _legend;
-        };
+    /**
+     * Display the legend horizontally instead of vertically
+     * @method horizontal
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param {String} [horizontal]
+     * @return {String|dc.htmlLegend}
+     **/
+    horizontal (horizontal) {
+        if (!arguments.length) {
+            return this._horizontal;
+        }
+        this._horizontal = horizontal;
+        return this;
+    }
 
-        /**
-         * This can be optionally used to enable highlighting legends for the selections/filters for the
-         * chart.
-         * @method highlightSelected
-         * @memberof dc.htmlLegend
-         * @instance
-         * @param {String} [highlightSelected]
-         * @return {String|dc.htmlLegend}
-         **/
-        _legend.highlightSelected = function (highlightSelected) {
-            if (!arguments.length) {
-                return _highlightSelected;
-            }
-            _highlightSelected = highlightSelected;
-            return _legend;
-        };
+    /**
+     * Set or get the legend text function. The legend widget uses this function to render the legend
+     * text for each item. If no function is specified the legend widget will display the names
+     * associated with each group.
+     * @method legendText
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param  {Function} [legendText]
+     * @returns {Function|dc.htmlLegend}
+     * @example
+     * // default legendText
+     * legend.legendText(dc.pluck('name'))
+     *
+     * // create numbered legend items
+     * chart.legend(dc.htmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     *
+     * // create legend displaying group counts
+     * chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
+     **/
+    legendText (legendText) {
+        if (!arguments.length) {
+            return this._legendText;
+        }
+        this._legendText = legendText;
+        return this;
+    }
 
-        /**
-         * Display the legend horizontally instead of vertically
-         * @method horizontal
-         * @memberof dc.htmlLegend
-         * @instance
-         * @param {String} [horizontal]
-         * @return {String|dc.htmlLegend}
-         **/
-        _legend.horizontal = function (horizontal) {
-            if (!arguments.length) {
-                return _horizontal;
-            }
-            _horizontal = horizontal;
-            return _legend;
-        };
-
-        /**
-         * Set or get the legend text function. The legend widget uses this function to render the legend
-         * text for each item. If no function is specified the legend widget will display the names
-         * associated with each group.
-         * @method legendText
-         * @memberof dc.htmlLegend
-         * @instance
-         * @param  {Function} [legendText]
-         * @returns {Function|dc.htmlLegend}
-         * @example
-         * // default legendText
-         * legend.legendText(dc.pluck('name'))
-         *
-         * // create numbered legend items
-         * chart.legend(dc.htmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
-         *
-         * // create legend displaying group counts
-         * chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
-         **/
-        _legend.legendText = function (legendText) {
-            if (!arguments.length) {
-                return _legendText;
-            }
-            _legendText = legendText;
-            return _legend;
-        };
-
-        /**
-         * Maximum number of legend items to display
-         * @method maxItems
-         * @memberof dc.htmlLegend
-         * @instance
-         * @param  {Number} [maxItems]
-         * @return {dc.htmlLegend}
-         */
-        _legend.maxItems = function (maxItems) {
-            if (!arguments.length) {
-                return _maxItems;
-            }
-            _maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
-            return _legend;
-        };
-
-        return _legend;
+    /**
+     * Maximum number of legend items to display
+     * @method maxItems
+     * @memberof dc.htmlLegend
+     * @instance
+     * @param  {Number} [maxItems]
+     * @return {dc.htmlLegend}
+     */
+    maxItems (maxItems) {
+        if (!arguments.length) {
+            return this._maxItems;
+        }
+        this._maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
+        return this;
     }
 }
 
