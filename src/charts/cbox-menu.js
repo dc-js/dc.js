@@ -2,6 +2,7 @@ import * as d3 from 'd3';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
+import {utils} from '../core/utils'
 
 /**
  * The cboxMenu is a simple widget designed to filter a dimension by
@@ -65,9 +66,7 @@ export class CboxMenu extends BaseMixin {
         this._inputType = 'radio';
         this._promptValue = null;
 
-        // ES6, can we use utils.uniqueId
-        // generate a random number to use as an ID
-        this._randVal = Math.floor(Math.random() * (100000)) + 1;
+        this._uniqueId = utils.uniqueId();
 
         this.data((group) => {
             return group.all().filter(this._filterDisplayed);
@@ -138,11 +137,11 @@ export class CboxMenu extends BaseMixin {
             .append('input')
             .attr('type', this._inputType)
             .attr('value', d => this.keyAccessor()(d))
-            .attr('name', 'domain_' + this._randVal)
-            .attr('id', (d, i) => 'input_' + this._randVal + '_' + i);
+            .attr('name', 'domain_' + this._uniqueId)
+            .attr('id', (d, i) => 'input_' + this._uniqueId + '_' + i);
         options
             .append('label')
-            .attr('for', (d, i) => 'input_' + this._randVal + '_' + i)
+            .attr('for', (d, i) => 'input_' + this._uniqueId + '_' + i)
             .text(this.title());
 
         const self = this;
@@ -161,11 +160,11 @@ export class CboxMenu extends BaseMixin {
             li.append('input')
                 .attr('type', this._inputType)
                 .attr('value', this._promptValue)
-                .attr('name', 'domain_' + this._randVal)
-                .attr('id', (d, i) => 'input_' + this._randVal + '_all')
+                .attr('name', 'domain_' + this._uniqueId)
+                .attr('id', (d, i) => 'input_' + this._uniqueId + '_all')
                 .property('checked', true);
             li.append('label')
-                .attr('for', (d, i) => 'input_' + this._randVal + '_all')
+                .attr('for', (d, i) => 'input_' + this._uniqueId + '_all')
                 .text(this._promptText);
         }
 
