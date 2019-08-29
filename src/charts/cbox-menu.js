@@ -79,9 +79,13 @@ export class CboxMenu extends BaseMixin {
         };
 
         this._order = (a, b) => {
-            return this.keyAccessor()(a) > this.keyAccessor()(b) ? 1 :
-                this.keyAccessor()(b) > this.keyAccessor()(a) ? -1 :
-                    0;
+            if (this.keyAccessor()(a) > this.keyAccessor()(b)) {
+                return 1;
+            }
+            if (this.keyAccessor()(a) < this.keyAccessor()(b)) {
+                return -1;
+            }
+            return 0;
         };
 
         this.anchor(parent, chartGroup);
