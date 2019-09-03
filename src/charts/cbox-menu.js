@@ -68,14 +68,10 @@ export class CboxMenu extends BaseMixin {
 
         this._uniqueId = utils.uniqueId();
 
-        this.data((group) => {
-            return group.all().filter(this._filterDisplayed);
-        });
+        this.data((group) => group.all().filter(this._filterDisplayed));
 
         // There is an accessor for this attribute, initialized with default value
-        this._filterDisplayed = (d) => {
-            return this.valueAccessor()(d) > 0;
-        };
+        this._filterDisplayed = (d) => this.valueAccessor()(d) > 0;
 
         this._order = (a, b) => {
             if (this.keyAccessor()(a) > this.keyAccessor()(b)) {
