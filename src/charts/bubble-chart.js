@@ -29,121 +29,110 @@ import {transition} from '../core/core';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.bubbleChart}
  */
-export const bubbleChart = (parent, chartGroup) => new BubbleChart(parent, chartGroup);
-
 class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     constructor (parent, chartGroup) {
         super();
 
-        const _chart = this;
+        this.transitionDuration(750);
 
-        _chart.transitionDuration(750);
+        this.transitionDelay(0);
 
-        _chart.transitionDelay(0);
-
-        var bubbleLocator = function (d) {
-            return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
-        };
-
-        _chart.plotData = function () {
-            _chart.calculateRadiusDomain();
-            _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
-
-            var data = _chart.data();
-            var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
-                .data(data, function (d) {
-                    return d.key;
-                });
-            if (_chart.sortBubbleSize()) {
-                // update dom order based on sort
-                bubbleG.order();
-            }
-
-            removeNodes(bubbleG);
-
-            bubbleG = renderNodes(bubbleG);
-
-            updateNodes(bubbleG);
-
-            _chart.fadeDeselectedArea(_chart.filter());
-        };
-
-        function renderNodes (bubbleG) {
-            var bubbleGEnter = bubbleG.enter().append('g');
-
-            bubbleGEnter
-                .attr('class', _chart.BUBBLE_NODE_CLASS)
-                .attr('transform', bubbleLocator)
-                .append('circle').attr('class', function (d, i) {
-                return _chart.BUBBLE_CLASS + ' _' + i;
-            })
-                .on('click', _chart.onClick)
-                .attr('fill', _chart.getColor)
-                .attr('r', 0);
-
-            bubbleG = bubbleGEnter.merge(bubbleG);
-
-            transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
-                .select('circle.' + _chart.BUBBLE_CLASS)
-                .attr('r', function (d) {
-                    return _chart.bubbleR(d);
-                })
-                .attr('opacity', function (d) {
-                    return (_chart.bubbleR(d) > 0) ? 1 : 0;
-                });
-
-            _chart._doRenderLabel(bubbleGEnter);
-
-            _chart._doRenderTitles(bubbleGEnter);
-
-            return bubbleG;
-        }
-
-        function updateNodes (bubbleG) {
-            transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('transform', bubbleLocator)
-                .select('circle.' + _chart.BUBBLE_CLASS)
-                .attr('fill', _chart.getColor)
-                .attr('r', function (d) {
-                    return _chart.bubbleR(d);
-                })
-                .attr('opacity', function (d) {
-                    return (_chart.bubbleR(d) > 0) ? 1 : 0;
-                });
-
-            _chart.doUpdateLabels(bubbleG);
-            _chart.doUpdateTitles(bubbleG);
-        }
-
-        function removeNodes (bubbleG) {
-            bubbleG.exit().remove();
-        }
-
-        function bubbleX (d) {
-            var x = _chart.x()(_chart.keyAccessor()(d));
-            if (isNaN(x) || !isFinite(x)) {
-                x = 0;
-            }
-            return x;
-        }
-
-        function bubbleY (d) {
-            var y = _chart.y()(_chart.valueAccessor()(d));
-            if (isNaN(y) || !isFinite(y)) {
-                y = 0;
-            }
-            return y;
-        }
-
-        _chart.renderBrush = function () {
+        // ES6: come back here after mixins have been converted
+        this.renderBrush = () => {
             // override default x axis brush from parent chart
         };
 
-        _chart.redrawBrush = function (brushSelection, doTransition) {
+        // ES6: come back here after mixins have been converted
+        this.redrawBrush = (brushSelection, doTransition) => {
             // override default x axis brush from parent chart
-            _chart.fadeDeselectedArea(brushSelection);
+            this.fadeDeselectedArea(brushSelection);
         };
 
-        return _chart.anchor(parent, chartGroup);
+        this.anchor(parent, chartGroup);
     }
+
+    _bubbleLocator (d) {
+        return 'translate(' + (this._bubbleX(d)) + ',' + (this._bubbleY(d)) + ')';
+    }
+
+    plotData () {
+        this.calculateRadiusDomain();
+        this.r().range([this.MIN_RADIUS, this.xAxisLength() * this.maxBubbleRelativeSize()]);
+
+        const data = this.data();
+        let bubbleG = this.chartBodyG().selectAll('g.' + this.BUBBLE_NODE_CLASS)
+            .data(data, d => d.key);
+        if (this.sortBubbleSize()) {
+            // update dom order based on sort
+            bubbleG.order();
+        }
+
+        this._removeNodes(bubbleG);
+
+        bubbleG = this._renderNodes(bubbleG);
+
+        this._updateNodes(bubbleG);
+
+        this.fadeDeselectedArea(this.filter());
+    }
+
+    _renderNodes (bubbleG) {
+        const bubbleGEnter = bubbleG.enter().append('g');
+
+        bubbleGEnter
+            .attr('class', this.BUBBLE_NODE_CLASS)
+            .attr('transform', (d) => this._bubbleLocator(d))
+            .append('circle').attr('class', (d, i) => this.BUBBLE_CLASS + ' _' + i)
+            .on('click', this.onClick)
+            .attr('fill', this.getColor)
+            .attr('r', 0);
+
+        bubbleG = bubbleGEnter.merge(bubbleG);
+
+        transition(bubbleG, this.transitionDuration(), this.transitionDelay())
+            .select('circle.' + this.BUBBLE_CLASS)
+            .attr('r', d => this.bubbleR(d))
+            .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
+
+        this._doRenderLabel(bubbleGEnter);
+
+        this._doRenderTitles(bubbleGEnter);
+
+        return bubbleG;
+    }
+
+    _updateNodes (bubbleG) {
+        transition(bubbleG, this.transitionDuration(), this.transitionDelay())
+            .attr('transform', (d) => this._bubbleLocator(d))
+            .select('circle.' + this.BUBBLE_CLASS)
+            .attr('fill', this.getColor)
+            .attr('r', d => this.bubbleR(d))
+            .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
+
+        this.doUpdateLabels(bubbleG);
+        this.doUpdateTitles(bubbleG);
+    }
+
+    _removeNodes (bubbleG) {
+        bubbleG.exit().remove();
+    }
+
+    _bubbleX (d) {
+        let x = this.x()(this.keyAccessor()(d));
+        if (isNaN(x) || !isFinite(x)) {
+            x = 0;
+        }
+        return x;
+    }
+
+    _bubbleY (d) {
+        let y = this.y()(this.valueAccessor()(d));
+        if (isNaN(y) || !isFinite(y)) {
+            y = 0;
+        }
+        return y;
+    }
+
 }
+
+export const bubbleChart = (parent, chartGroup) => new BubbleChart(parent, chartGroup);
