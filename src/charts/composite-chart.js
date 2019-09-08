@@ -4,6 +4,9 @@ import {override} from '../core/core';
 import {utils} from '../core/utils';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 
+const SUB_CHART_CLASS = 'sub';
+const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
+
 /**
  * Composite charts are a special kind of chart that render multiple charts on the same Coordinate
  * Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
@@ -23,215 +26,123 @@ import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.compositeChart}
  */
-export const compositeChart = (parent, chartGroup) => new CompositeChart(parent, chartGroup);
-
 export class CompositeChart extends CoordinateGridMixin {
     constructor (parent, chartGroup) {
         super();
 
-        const _chart = this;
+        this._children = [];
 
-        var SUB_CHART_CLASS = 'sub';
-        var DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
+        this._childOptions = {};
 
-        var _children = [];
+        this._shareColors = false;
+        this._shareTitle = true;
+        this._alignYAxes = false;
 
-        var _childOptions = {};
+        this._rightYAxis = d3.axisRight();
+        this._rightYAxisLabel = 0;
+        this._rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING;
+        this._pvt_rightY = undefined;
+        this._rightAxisGridLines = false;
 
-        var _shareColors = false,
-            _shareTitle = true,
-            _alignYAxes = false;
+        this._mandatoryAttributes([]);
+        this.transitionDuration(500);
+        this.transitionDelay(0);
 
-        var _rightYAxis = d3.axisRight(),
-            _rightYAxisLabel = 0,
-            _rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING,
-            _rightY,
-            _rightAxisGridLines = false;
+        // Revisit after converting mixins
+        override(this, '_generateG', function () {
+            const g = this.__generateG();
 
-        _chart._mandatoryAttributes([]);
-        _chart.transitionDuration(500);
-        _chart.transitionDelay(0);
+            for (let i = 0; i < this._children.length; ++i) {
+                const child = this._children[i];
 
-        override(_chart, '_generateG', function () {
-            var g = this.__generateG();
-
-            for (var i = 0; i < _children.length; ++i) {
-                var child = _children[i];
-
-                generateChildG(child, i);
+                this._generateChildG(child, i);
 
                 if (!child.dimension()) {
-                    child.dimension(_chart.dimension());
+                    child.dimension(this.dimension());
                 }
                 if (!child.group()) {
-                    child.group(_chart.group());
+                    child.group(this.group());
                 }
 
-                child.chartGroup(_chart.chartGroup());
-                child.svg(_chart.svg());
-                child.xUnits(_chart.xUnits());
-                child.transitionDuration(_chart.transitionDuration(), _chart.transitionDelay());
-                child.parentBrushOn(_chart.brushOn());
+                child.chartGroup(this.chartGroup());
+                child.svg(this.svg());
+                child.xUnits(this.xUnits());
+                child.transitionDuration(this.transitionDuration(), this.transitionDelay());
+                child.parentBrushOn(this.brushOn());
                 child.brushOn(false);
-                child.renderTitle(_chart.renderTitle());
-                child.elasticX(_chart.elasticX());
+                child.renderTitle(this.renderTitle());
+                child.elasticX(this.elasticX());
             }
 
             return g;
         });
 
-        _chart.on('filtered.dcjs-composite-chart', function (chart) {
+        // Revisit after converting mixins
+        this.on('filtered.dcjs-composite-chart', function (chart) {
             // Propagate the filters onto the children
             // Notice that on children the call is .replaceFilter and not .filter
             //   the reason is that _chart.filter() returns the entire current set of filters not just the last added one
-            for (var i = 0; i < _children.length; ++i) {
-                _children[i].replaceFilter(_chart.filter());
+            for (let i = 0; i < this._children.length; ++i) {
+                this._children[i].replaceFilter(this.filter());
             }
         });
 
-        _chart._prepareYAxis = function () {
-            var left = (leftYAxisChildren().length !== 0);
-            var right = (rightYAxisChildren().length !== 0);
-            var ranges = calculateYAxisRanges(left, right);
+        // Revisit after converting mixins
+        this._prepareYAxis = function () {
+            const left = (this._leftYAxisChildren().length !== 0);
+            const right = (this._rightYAxisChildren().length !== 0);
+            const ranges = this._calculateYAxisRanges(left, right);
 
             if (left) {
-                prepareLeftYAxis(ranges);
+                this._prepareLeftYAxis(ranges);
             }
             if (right) {
-                prepareRightYAxis(ranges);
+                this._prepareRightYAxis(ranges);
             }
 
-            if (leftYAxisChildren().length > 0 && !_rightAxisGridLines) {
-                _chart._renderHorizontalGridLinesForAxis(_chart.g(), _chart.y(), _chart.yAxis());
-            } else if (rightYAxisChildren().length > 0) {
-                _chart._renderHorizontalGridLinesForAxis(_chart.g(), _rightY, _rightYAxis);
+            if (this._leftYAxisChildren().length > 0 && !this._rightAxisGridLines) {
+                this._renderHorizontalGridLinesForAxis(this.g(), this.y(), this.yAxis());
+            } else if (this._rightYAxisChildren().length > 0) {
+                this._renderHorizontalGridLinesForAxis(this.g(), this._pvt_rightY, this._rightYAxis);
             }
         };
 
-        _chart.renderYAxis = function () {
-            if (leftYAxisChildren().length !== 0) {
-                _chart.renderYAxisAt('y', _chart.yAxis(), _chart.margins().left);
-                _chart.renderYAxisLabel('y', _chart.yAxisLabel(), -90);
+        // Revisit after converting mixins
+        this.renderYAxis = function () {
+            if (this._leftYAxisChildren().length !== 0) {
+                this.renderYAxisAt('y', this.yAxis(), this.margins().left);
+                this.renderYAxisLabel('y', this.yAxisLabel(), -90);
             }
 
-            if (rightYAxisChildren().length !== 0) {
-                _chart.renderYAxisAt('yr', _chart.rightYAxis(), _chart.width() - _chart.margins().right);
-                _chart.renderYAxisLabel('yr', _chart.rightYAxisLabel(), 90, _chart.width() - _rightYAxisLabelPadding);
+            if (this._rightYAxisChildren().length !== 0) {
+                this.renderYAxisAt('yr', this.rightYAxis(), this.width() - this.margins().right);
+                this.renderYAxisLabel('yr', this.rightYAxisLabel(), 90, this.width() - this._rightYAxisLabelPadding);
             }
         };
 
-        function calculateYAxisRanges (left, right) {
-            var lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
-            var ranges;
-
-            if (left) {
-                lyAxisMin = yAxisMin();
-                lyAxisMax = yAxisMax();
-            }
-
-            if (right) {
-                ryAxisMin = rightYAxisMin();
-                ryAxisMax = rightYAxisMax();
-            }
-
-            if (_chart.alignYAxes() && left && right) {
-                ranges = alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
-            }
-
-            return ranges || {
-                lyAxisMin: lyAxisMin,
-                lyAxisMax: lyAxisMax,
-                ryAxisMin: ryAxisMin,
-                ryAxisMax: ryAxisMax
-            };
-        }
-
-        function alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
-            // since the two series will share a zero, each Y is just a multiple
-            // of the other. and the ratio should be the ratio of the ranges of the
-            // input data, so that they come out the same height. so we just min/max
-
-            // note: both ranges already include zero due to the stack mixin (#667)
-            // if #667 changes, we can reconsider whether we want data height or
-            // height from zero to be equal. and it will be possible for the axes
-            // to be aligned but not visible.
-            var extentRatio = (ryAxisMax - ryAxisMin) / (lyAxisMax - lyAxisMin);
-
-            return {
-                lyAxisMin: Math.min(lyAxisMin, ryAxisMin / extentRatio),
-                lyAxisMax: Math.max(lyAxisMax, ryAxisMax / extentRatio),
-                ryAxisMin: Math.min(ryAxisMin, lyAxisMin * extentRatio),
-                ryAxisMax: Math.max(ryAxisMax, lyAxisMax * extentRatio)
-            };
-        }
-
-        function prepareRightYAxis (ranges) {
-            var needDomain = _chart.rightY() === undefined || _chart.elasticY(),
-                needRange = needDomain || _chart.resizing();
-            if (_chart.rightY() === undefined) {
-                _chart.rightY(d3.scaleLinear());
-            }
-            if (needDomain) {
-                _chart.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
-            }
-            if (needRange) {
-                _chart.rightY().rangeRound([_chart.yAxisHeight(), 0]);
-            }
-
-            _chart.rightY().range([_chart.yAxisHeight(), 0]);
-            _chart.rightYAxis(_chart.rightYAxis().scale(_chart.rightY()));
-
-            // In D3v4 create a RightAxis
-            // _chart.rightYAxis().orient('right');
-        }
-
-        function prepareLeftYAxis (ranges) {
-            var needDomain = _chart.y() === undefined || _chart.elasticY(),
-                needRange = needDomain || _chart.resizing();
-            if (_chart.y() === undefined) {
-                _chart.y(d3.scaleLinear());
-            }
-            if (needDomain) {
-                _chart.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
-            }
-            if (needRange) {
-                _chart.y().rangeRound([_chart.yAxisHeight(), 0]);
-            }
-
-            _chart.y().range([_chart.yAxisHeight(), 0]);
-            _chart.yAxis(_chart.yAxis().scale(_chart.y()));
-
-            // In D3v4 create a LeftAxis
-            // _chart.yAxis().orient('left');
-        }
-
-        function generateChildG (child, i) {
-            child._generateG(_chart.g());
-            child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
-        }
-
-        _chart.plotData = function () {
-            for (var i = 0; i < _children.length; ++i) {
-                var child = _children[i];
+        // Revisit after converting mixins
+        this.plotData = function () {
+            for (let i = 0; i < this._children.length; ++i) {
+                const child = this._children[i];
 
                 if (!child.g()) {
-                    generateChildG(child, i);
+                    this._generateChildG(child, i);
                 }
 
-                if (_shareColors) {
-                    child.colors(_chart.colors());
+                if (this._shareColors) {
+                    child.colors(this.colors());
                 }
 
-                child.x(_chart.x());
+                child.x(this.x());
 
-                child.xAxis(_chart.xAxis());
+                child.xAxis(this.xAxis());
 
                 if (child.useRightYAxis()) {
-                    child.y(_chart.rightY());
-                    child.yAxis(_chart.rightYAxis());
+                    child.y(this.rightY());
+                    child.yAxis(this.rightYAxis());
                 } else {
-                    child.y(_chart.y());
-                    child.yAxis(_chart.yAxis());
+                    child.y(this.y());
+                    child.yAxis(this.yAxis());
                 }
 
                 child.plotData();
@@ -240,333 +151,416 @@ export class CompositeChart extends CoordinateGridMixin {
             }
         };
 
-        /**
-         * Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
-         * default behavior. This option is only respected when subcharts with both left and right y-axes
-         * are present.
-         * @method useRightAxisGridLines
-         * @memberof dc.compositeChart
-         * @instance
-         * @param {Boolean} [useRightAxisGridLines=false]
-         * @returns {Boolean|dc.compositeChart}
-         */
-        _chart.useRightAxisGridLines = function (useRightAxisGridLines) {
-            if (!arguments) {
-                return _rightAxisGridLines;
-            }
-
-            _rightAxisGridLines = useRightAxisGridLines;
-            return _chart;
-        };
-
-        /**
-         * Get or set chart-specific options for all child charts. This is equivalent to calling
-         * {@link dc.baseMixin#options .options} on each child chart.
-         *
-         * Note: currently you must call this before `compose` in order for the options to be propagated.
-         * @method childOptions
-         * @memberof dc.compositeChart
-         * @instance
-         * @param {Object} [childOptions]
-         * @returns {Object|dc.compositeChart}
-         */
-        _chart.childOptions = function (childOptions) {
-            if (!arguments.length) {
-                return _childOptions;
-            }
-            _childOptions = childOptions;
-            _children.forEach(function (child) {
-                child.options(_childOptions);
-            });
-            return _chart;
-        };
-
-        _chart.fadeDeselectedArea = function (brushSelection) {
-            if (_chart.brushOn()) {
-                for (var i = 0; i < _children.length; ++i) {
-                    var child = _children[i];
+        // Revisit after converting mixins
+        this.fadeDeselectedArea = function (brushSelection) {
+            if (this.brushOn()) {
+                for (let i = 0; i < this._children.length; ++i) {
+                    const child = this._children[i];
                     child.fadeDeselectedArea(brushSelection);
                 }
             }
         };
 
-        /**
-         * Set or get the right y axis label.
-         * @method rightYAxisLabel
-         * @memberof dc.compositeChart
-         * @instance
-         * @param {String} [rightYAxisLabel]
-         * @param {Number} [padding]
-         * @returns {String|dc.compositeChart}
-         */
-        _chart.rightYAxisLabel = function (rightYAxisLabel, padding) {
-            if (!arguments.length) {
-                return _rightYAxisLabel;
-            }
-            _rightYAxisLabel = rightYAxisLabel;
-            _chart.margins().right -= _rightYAxisLabelPadding;
-            _rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
-            _chart.margins().right += _rightYAxisLabelPadding;
-            return _chart;
-        };
+        // ES6: avoid deleting
+        delete this.yAxisMin;
 
-        /**
-         * Combine the given charts into one single composite coordinate grid chart.
-         *
-         * Note: currently due to the way it is implemented, you must call this function at the end of
-         * initialization of the composite chart, in particular after `shareTitle`, `childOptions`,
-         * `width`, `height`, and `margins`, in order for the settings to get propagated to the children
-         * correctly.
-         * @method compose
-         * @memberof dc.compositeChart
-         * @instance
-         * @example
-         * moveChart.compose([
-         *     // when creating sub-chart you need to pass in the parent chart
-         *     dc.lineChart(moveChart)
-         *         .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
-         *         .valueAccessor(function (d){return d.value.avg;})
-         *         // most of the normal functions will continue to work in a composed chart
-         *         .renderArea(true)
-         *         .stack(monthlyMoveGroup, function (d){return d.value;})
-         *         .title(function (d){
-         *             var value = d.value.avg?d.value.avg:d.value;
-         *             if(isNaN(value)) value = 0;
-         *             return dateFormat(d.key) + '\n' + numberFormat(value);
-         *         }),
-         *     dc.barChart(moveChart)
-         *         .group(volumeByMonthGroup)
-         *         .centerBar(true)
-         * ]);
-         * @param {Array<Chart>} [subChartArray]
-         * @returns {dc.compositeChart}
-         */
-        _chart.compose = function (subChartArray) {
-            _children = subChartArray;
-            _children.forEach(function (child) {
-                child.height(_chart.height());
-                child.width(_chart.width());
-                child.margins(_chart.margins());
+        // ES6: avoid deleting
+        delete this.yAxisMax;
 
-                if (_shareTitle) {
-                    child.title(_chart.title());
-                }
-
-                child.options(_childOptions);
-            });
-            return _chart;
-        };
-
-        /**
-         * Returns the child charts which are composed into the composite chart.
-         * @method children
-         * @memberof dc.compositeChart
-         * @instance
-         * @returns {Array<dc.baseMixin>}
-         */
-        _chart.children = function () {
-            return _children;
-        };
-
-        /**
-         * Get or set color sharing for the chart. If set, the {@link dc.colorMixin#colors .colors()} value from this chart
-         * will be shared with composed children. Additionally if the child chart implements
-         * Stackable and has not set a custom .colorAccessor, then it will generate a color
-         * specific to its order in the composition.
-         * @method shareColors
-         * @memberof dc.compositeChart
-         * @instance
-         * @param {Boolean} [shareColors=false]
-         * @returns {Boolean|dc.compositeChart}
-         */
-        _chart.shareColors = function (shareColors) {
-            if (!arguments.length) {
-                return _shareColors;
-            }
-            _shareColors = shareColors;
-            return _chart;
-        };
-
-        /**
-         * Get or set title sharing for the chart. If set, the {@link dc.baseMixin#title .title()} value from
-         * this chart will be shared with composed children.
-         *
-         * Note: currently you must call this before `compose` or the child will still get the parent's
-         * `title` function!
-         * @method shareTitle
-         * @memberof dc.compositeChart
-         * @instance
-         * @param {Boolean} [shareTitle=true]
-         * @returns {Boolean|dc.compositeChart}
-         */
-        _chart.shareTitle = function (shareTitle) {
-            if (!arguments.length) {
-                return _shareTitle;
-            }
-            _shareTitle = shareTitle;
-            return _chart;
-        };
-
-        /**
-         * Get or set the y scale for the right axis. The right y scale is typically automatically
-         * generated by the chart implementation.
-         * @method rightY
-         * @memberof dc.compositeChart
-         * @instance
-         * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
-         * @param {d3.scale} [yScale]
-         * @returns {d3.scale|dc.compositeChart}
-         */
-        _chart.rightY = function (yScale) {
-            if (!arguments.length) {
-                return _rightY;
-            }
-            _rightY = yScale;
-            _chart.rescale();
-            return _chart;
-        };
-
-        /**
-         * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-         * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
-         * @method alignYAxes
-         * @memberof dc.compositeChart
-         * @instance
-         * @param {Boolean} [alignYAxes=false]
-         * @returns {Chart}
-         */
-        _chart.alignYAxes = function (alignYAxes) {
-            if (!arguments.length) {
-                return _alignYAxes;
-            }
-            _alignYAxes = alignYAxes;
-            _chart.rescale();
-            return _chart;
-        };
-
-        function leftYAxisChildren () {
-            return _children.filter(function (child) {
-                return !child.useRightYAxis();
-            });
-        }
-
-        function rightYAxisChildren () {
-            return _children.filter(function (child) {
-                return child.useRightYAxis();
-            });
-        }
-
-        function getYAxisMin (charts) {
-            return charts.map(function (c) {
-                return c.yAxisMin();
-            });
-        }
-
-        delete _chart.yAxisMin;
-
-        function yAxisMin () {
-            return d3.min(getYAxisMin(leftYAxisChildren()));
-        }
-
-        function rightYAxisMin () {
-            return d3.min(getYAxisMin(rightYAxisChildren()));
-        }
-
-        function getYAxisMax (charts) {
-            return charts.map(function (c) {
-                return c.yAxisMax();
-            });
-        }
-
-        delete _chart.yAxisMax;
-
-        function yAxisMax () {
-            return utils.add(d3.max(getYAxisMax(leftYAxisChildren())), _chart.yAxisPadding());
-        }
-
-        function rightYAxisMax () {
-            return utils.add(d3.max(getYAxisMax(rightYAxisChildren())), _chart.yAxisPadding());
-        }
-
-        function getAllXAxisMinFromChildCharts () {
-            return _children.map(function (c) {
-                return c.xAxisMin();
-            });
-        }
-
-        override(_chart, 'xAxisMin', function () {
-            return utils.subtract(d3.min(getAllXAxisMinFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
+        override(this, 'xAxisMin', function () {
+            return utils.subtract(d3.min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
         });
 
-        function getAllXAxisMaxFromChildCharts () {
-            return _children.map(function (c) {
-                return c.xAxisMax();
-            });
-        }
-
-        override(_chart, 'xAxisMax', function () {
-            return utils.add(d3.max(getAllXAxisMaxFromChildCharts()), _chart.xAxisPadding(), _chart.xAxisPaddingUnit());
+        override(this, 'xAxisMax', function () {
+            return utils.add(d3.max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
         });
 
-        _chart.legendables = function () {
-            return _children.reduce(function (items, child) {
-                if (_shareColors) {
-                    child.colors(_chart.colors());
-                }
-                items.push.apply(items, child.legendables());
-                return items;
-            }, []);
-        };
+        this.anchor(parent, chartGroup);
+    }
 
-        _chart.legendHighlight = function (d) {
-            for (var j = 0; j < _children.length; ++j) {
-                var child = _children[j];
-                child.legendHighlight(d);
+    _calculateYAxisRanges (left, right) {
+        let lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
+        let ranges;
+
+        if (left) {
+            lyAxisMin = this._yAxisMin();
+            lyAxisMax = this._yAxisMax();
+        }
+
+        if (right) {
+            ryAxisMin = this._rightYAxisMin();
+            ryAxisMax = this._rightYAxisMax();
+        }
+
+        if (this.alignYAxes() && left && right) {
+            ranges = this._alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
+        }
+
+        return ranges || {
+            lyAxisMin: lyAxisMin,
+            lyAxisMax: lyAxisMax,
+            ryAxisMin: ryAxisMin,
+            ryAxisMax: ryAxisMax
+        };
+    }
+
+    _alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
+        // since the two series will share a zero, each Y is just a multiple
+        // of the other. and the ratio should be the ratio of the ranges of the
+        // input data, so that they come out the same height. so we just min/max
+
+        // note: both ranges already include zero due to the stack mixin (#667)
+        // if #667 changes, we can reconsider whether we want data height or
+        // height from zero to be equal. and it will be possible for the axes
+        // to be aligned but not visible.
+        const extentRatio = (ryAxisMax - ryAxisMin) / (lyAxisMax - lyAxisMin);
+
+        return {
+            lyAxisMin: Math.min(lyAxisMin, ryAxisMin / extentRatio),
+            lyAxisMax: Math.max(lyAxisMax, ryAxisMax / extentRatio),
+            ryAxisMin: Math.min(ryAxisMin, lyAxisMin * extentRatio),
+            ryAxisMax: Math.max(ryAxisMax, lyAxisMax * extentRatio)
+        };
+    }
+
+    _prepareRightYAxis (ranges) {
+        const needDomain = this.rightY() === undefined || this.elasticY(),
+            needRange = needDomain || this.resizing();
+        if (this.rightY() === undefined) {
+            this.rightY(d3.scaleLinear());
+        }
+        if (needDomain) {
+            this.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
+        }
+        if (needRange) {
+            this.rightY().rangeRound([this.yAxisHeight(), 0]);
+        }
+
+        this.rightY().range([this.yAxisHeight(), 0]);
+        this.rightYAxis(this.rightYAxis().scale(this.rightY()));
+
+        // In D3v4 create a RightAxis
+        // _chart.rightYAxis().orient('right');
+    }
+
+    _prepareLeftYAxis (ranges) {
+        const needDomain = this.y() === undefined || this.elasticY(),
+            needRange = needDomain || this.resizing();
+        if (this.y() === undefined) {
+            this.y(d3.scaleLinear());
+        }
+        if (needDomain) {
+            this.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
+        }
+        if (needRange) {
+            this.y().rangeRound([this.yAxisHeight(), 0]);
+        }
+
+        this.y().range([this.yAxisHeight(), 0]);
+        this.yAxis(this.yAxis().scale(this.y()));
+
+        // In D3v4 create a LeftAxis
+        // _chart.yAxis().orient('left');
+    }
+
+    _generateChildG (child, i) {
+        child._generateG(this.g());
+        child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
+    }
+
+    /**
+     * Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
+     * default behavior. This option is only respected when subcharts with both left and right y-axes
+     * are present.
+     * @method useRightAxisGridLines
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [useRightAxisGridLines=false]
+     * @returns {Boolean|dc.compositeChart}
+     */
+    useRightAxisGridLines (useRightAxisGridLines) {
+        if (!arguments) {
+            return this._rightAxisGridLines;
+        }
+
+        this._rightAxisGridLines = useRightAxisGridLines;
+        return this;
+    }
+
+    /**
+     * Get or set chart-specific options for all child charts. This is equivalent to calling
+     * {@link dc.baseMixin#options .options} on each child chart.
+     *
+     * Note: currently you must call this before `compose` in order for the options to be propagated.
+     * @method childOptions
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Object} [childOptions]
+     * @returns {Object|dc.compositeChart}
+     */
+    childOptions (childOptions) {
+        if (!arguments.length) {
+            return this._childOptions;
+        }
+        this._childOptions = childOptions;
+        this._children.forEach(child => {
+            child.options(this._childOptions);
+        });
+        return this;
+    }
+
+    /**
+     * Set or get the right y axis label.
+     * @method rightYAxisLabel
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {String} [rightYAxisLabel]
+     * @param {Number} [padding]
+     * @returns {String|dc.compositeChart}
+     */
+    rightYAxisLabel (rightYAxisLabel, padding) {
+        if (!arguments.length) {
+            return this._rightYAxisLabel;
+        }
+        this._rightYAxisLabel = rightYAxisLabel;
+        this.margins().right -= this._rightYAxisLabelPadding;
+        this._rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
+        this.margins().right += this._rightYAxisLabelPadding;
+        return this;
+    }
+
+    /**
+     * Combine the given charts into one single composite coordinate grid chart.
+     *
+     * Note: currently due to the way it is implemented, you must call this function at the end of
+     * initialization of the composite chart, in particular after `shareTitle`, `childOptions`,
+     * `width`, `height`, and `margins`, in order for the settings to get propagated to the children
+     * correctly.
+     * @method compose
+     * @memberof dc.compositeChart
+     * @instance
+     * @example
+     * moveChart.compose([
+     *     // when creating sub-chart you need to pass in the parent chart
+     *     dc.lineChart(moveChart)
+     *         .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
+     *         .valueAccessor(function (d){return d.value.avg;})
+     *         // most of the normal functions will continue to work in a composed chart
+     *         .renderArea(true)
+     *         .stack(monthlyMoveGroup, function (d){return d.value;})
+     *         .title(function (d){
+     *             var value = d.value.avg?d.value.avg:d.value;
+     *             if(isNaN(value)) value = 0;
+     *             return dateFormat(d.key) + '\n' + numberFormat(value);
+     *         }),
+     *     dc.barChart(moveChart)
+     *         .group(volumeByMonthGroup)
+     *         .centerBar(true)
+     * ]);
+     * @param {Array<Chart>} [subChartArray]
+     * @returns {dc.compositeChart}
+     */
+    compose (subChartArray) {
+        this._children = subChartArray;
+        this._children.forEach(child => {
+            child.height(this.height());
+            child.width(this.width());
+            child.margins(this.margins());
+
+            if (this._shareTitle) {
+                child.title(this.title());
             }
-        };
 
-        _chart.legendReset = function (d) {
-            for (var j = 0; j < _children.length; ++j) {
-                var child = _children[j];
-                child.legendReset(d);
+            child.options(this._childOptions);
+        });
+        return this;
+    }
+
+    /**
+     * Returns the child charts which are composed into the composite chart.
+     * @method children
+     * @memberof dc.compositeChart
+     * @instance
+     * @returns {Array<dc.baseMixin>}
+     */
+    children () {
+        return this._children;
+    }
+
+    /**
+     * Get or set color sharing for the chart. If set, the {@link dc.colorMixin#colors .colors()} value from this chart
+     * will be shared with composed children. Additionally if the child chart implements
+     * Stackable and has not set a custom .colorAccessor, then it will generate a color
+     * specific to its order in the composition.
+     * @method shareColors
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [shareColors=false]
+     * @returns {Boolean|dc.compositeChart}
+     */
+    shareColors (shareColors) {
+        if (!arguments.length) {
+            return this._shareColors;
+        }
+        this._shareColors = shareColors;
+        return this;
+    }
+
+    /**
+     * Get or set title sharing for the chart. If set, the {@link dc.baseMixin#title .title()} value from
+     * this chart will be shared with composed children.
+     *
+     * Note: currently you must call this before `compose` or the child will still get the parent's
+     * `title` function!
+     * @method shareTitle
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [shareTitle=true]
+     * @returns {Boolean|dc.compositeChart}
+     */
+    shareTitle (shareTitle) {
+        if (!arguments.length) {
+            return this._shareTitle;
+        }
+        this._shareTitle = shareTitle;
+        return this;
+    }
+
+    /**
+     * Get or set the y scale for the right axis. The right y scale is typically automatically
+     * generated by the chart implementation.
+     * @method rightY
+     * @memberof dc.compositeChart
+     * @instance
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+     * @param {d3.scale} [yScale]
+     * @returns {d3.scale|dc.compositeChart}
+     */
+    rightY (yScale) {
+        if (!arguments.length) {
+            return this._pvt_rightY;
+        }
+        this._pvt_rightY = yScale;
+        this.rescale();
+        return this;
+    }
+
+    /**
+     * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
+     * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
+     * @method alignYAxes
+     * @memberof dc.compositeChart
+     * @instance
+     * @param {Boolean} [alignYAxes=false]
+     * @returns {Chart}
+     */
+    alignYAxes (alignYAxes) {
+        if (!arguments.length) {
+            return this._alignYAxes;
+        }
+        this._alignYAxes = alignYAxes;
+        this.rescale();
+        return this;
+    }
+
+    _leftYAxisChildren () {
+        return this._children.filter(child => !child.useRightYAxis());
+    }
+
+    _rightYAxisChildren () {
+        return this._children.filter(child => child.useRightYAxis());
+    }
+
+    _getYAxisMin (charts) {
+        return charts.map(c => c.yAxisMin());
+    }
+
+    _yAxisMin () {
+        return d3.min(this._getYAxisMin(this._leftYAxisChildren()));
+    }
+
+    _rightYAxisMin () {
+        return d3.min(this._getYAxisMin(this._rightYAxisChildren()));
+    }
+
+    _getYAxisMax (charts) {
+        return charts.map(c => c.yAxisMax());
+    }
+
+    _yAxisMax () {
+        return utils.add(d3.max(this._getYAxisMax(this._leftYAxisChildren())), this.yAxisPadding());
+    }
+
+    _rightYAxisMax () {
+        return utils.add(d3.max(this._getYAxisMax(this._rightYAxisChildren())), this.yAxisPadding());
+    }
+
+    _getAllXAxisMinFromChildCharts () {
+        return this._children.map(c => c.xAxisMin());
+    }
+
+    _getAllXAxisMaxFromChildCharts () {
+        return this._children.map(c => c.xAxisMax());
+    }
+
+    legendables () {
+        return this._children.reduce((items, child) => {
+            if (this._shareColors) {
+                child.colors(this.colors());
             }
-        };
+            items.push.apply(items, child.legendables());
+            return items;
+        }, []);
+    }
 
-        _chart.legendToggle = function () {
-            console.log('composite should not be getting legendToggle itself');
-        };
+    legendHighlight (d) {
+        for (let j = 0; j < this._children.length; ++j) {
+            const child = this._children[j];
+            child.legendHighlight(d);
+        }
+    }
 
-        /**
-         * Set or get the right y axis used by the composite chart. This function is most useful when y
-         * axis customization is required. The y axis in dc.js is an instance of a
-         * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight) therefore it supports any valid
-         * d3 axis manipulation.
-         *
-         * **Caution**: The right y axis is usually generated internally by dc; resetting it may cause
-         * unexpected results.  Note also that when used as a getter, this function is not chainable: it
-         * returns the axis, not the chart,
-         * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
+    legendReset (d) {
+        for (let j = 0; j < this._children.length; ++j) {
+            const child = this._children[j];
+            child.legendReset(d);
+        }
+    }
+
+    legendToggle () {
+        console.log('composite should not be getting legendToggle itself');
+    }
+
+    /**
+     * Set or get the right y axis used by the composite chart. This function is most useful when y
+     * axis customization is required. The y axis in dc.js is an instance of a
+     * [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight) therefore it supports any valid
+     * d3 axis manipulation.
+     *
+     * **Caution**: The right y axis is usually generated internally by dc; resetting it may cause
+     * unexpected results.  Note also that when used as a getter, this function is not chainable: it
+     * returns the axis, not the chart,
+     * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
-         * @method rightYAxis
-         * @memberof dc.compositeChart
-         * @instance
-         * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisRight}
-         * @example
-         * // customize y axis tick format
-         * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
-         * // customize y axis tick values
-         * chart.rightYAxis().tickValues([0, 100, 200, 300]);
-         * @param {d3.axisRight} [rightYAxis]
-         * @returns {d3.axisRight|dc.compositeChart}
-         */
-        _chart.rightYAxis = function (rightYAxis) {
-            if (!arguments.length) {
-                return _rightYAxis;
-            }
-            _rightYAxis = rightYAxis;
-            return _chart;
-        };
-
-        return _chart.anchor(parent, chartGroup);
+     * @method rightYAxis
+     * @memberof dc.compositeChart
+     * @instance
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisRight}
+     * @example
+     * // customize y axis tick format
+     * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
+     * // customize y axis tick values
+     * chart.rightYAxis().tickValues([0, 100, 200, 300]);
+     * @param {d3.axisRight} [rightYAxis]
+     * @returns {d3.axisRight|dc.compositeChart}
+     */
+    rightYAxis (rightYAxis) {
+        if (!arguments.length) {
+            return this._rightYAxis;
+        }
+        this._rightYAxis = rightYAxis;
+        return this;
     }
 }
+
+export const compositeChart = (parent, chartGroup) => new CompositeChart(parent, chartGroup);
