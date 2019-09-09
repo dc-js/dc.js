@@ -400,17 +400,6 @@ module.exports = function (grunt) {
             hierarchy: {
                 command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
             }
-        },
-        browserify: {
-            dev: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: 'bundle.js',
-                options: {
-                    browserifyOptions: {
-                        standalone: 'dc'
-                    }
-                }
-            }
         }
     });
 
@@ -454,7 +443,6 @@ module.exports = function (grunt) {
     // This task will active server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
     grunt.registerTask('test-n-serve', ['server-only', 'test', 'watch:tests']);
     grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
-    // grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
