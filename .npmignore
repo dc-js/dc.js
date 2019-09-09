@@ -1,0 +1,12 @@
+
+# Ignore everything
+*
+
+# selectively include
+!package.json
+!README.md
+!LICENSE
+!dist/**/*
+
+# ignore the source map files, these have no use without source files
+dist/**/*.map
