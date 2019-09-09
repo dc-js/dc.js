@@ -15,6 +15,7 @@ module.exports = function (grunt) {
         src: 'src',
         spec: 'spec',
         web: 'web',
+        dist: 'dist',
         pkg: require('./package.json'),
         banner: grunt.file.read('./LICENSE_BANNER')
     };
@@ -48,7 +49,7 @@ module.exports = function (grunt) {
                     }
                 },
                 files: {
-                    '<%= conf.pkg.name %>.js': ['<%= conf.src %>/index.js']
+                    '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js': ['<%= conf.src %>/index.js']
                 }
             }
         },
@@ -58,7 +59,7 @@ module.exports = function (grunt) {
             },
             dist: {
                 files: {
-                    '<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
+                    '<%= conf.dist %>/style/<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
                 }
             }
         },
@@ -70,8 +71,8 @@ module.exports = function (grunt) {
                     sourceMap: true,
                     banner: '<%= conf.banner %>'
                 },
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.pkg.name %>.min.js'
+                src: '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js',
+                dest: '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js'
             }
         },
         cssmin: {
@@ -81,7 +82,7 @@ module.exports = function (grunt) {
             },
             main: {
                 files: {
-                    '<%= conf.pkg.name %>.min.css': ['<%= conf.pkg.name %>.css']
+                    '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css': ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css']
                 }
             }
         },
@@ -89,7 +90,6 @@ module.exports = function (grunt) {
             source: {
                 src: [
                     '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer,d3v3-compat}.js',
                     '<%= conf.spec %>/**/*.js',
                     'Gruntfile.js',
                     'grunt/*.js',
@@ -117,11 +117,11 @@ module.exports = function (grunt) {
                 tasks: ['test']
             },
             reload: {
-                files: ['<%= conf.pkg.name %>.js',
-                        '<%= conf.pkg.name %>.css',
+                files: ['<%= conf.dist %>/es6/<%= conf.pkg.name %>.js',
+                        '<%= conf.dist %>/style/<%= conf.pkg.name %>.css',
                         '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
                         '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
-                        '<%= conf.pkg.name %>.min.js'],
+                        '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js'],
                 options: {
                     livereload: true
                 }
@@ -155,7 +155,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= conf.web %>/js/d3.js',
                     '<%= conf.web %>/js/crossfilter.js',
-                    '<%= conf.pkg.name %>.js'
+                    '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js'
                 ]
             }
         },
@@ -171,7 +171,7 @@ module.exports = function (grunt) {
                     // source files, that you wanna generate coverage for
                     // do not include tests or libraries
                     // (these files will be instrumented by Istanbul)
-                    '<%= conf.pkg.name %>.js': ['coverage']
+                    '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js': ['coverage']
                 },
 
                 // optionally, configure the reporter
@@ -262,7 +262,7 @@ module.exports = function (grunt) {
                         expand: true,
                         flatten: true,
                         nonull: true,
-                        src: ['<%= conf.pkg.name %>.css', '<%= conf.pkg.name %>.min.css'],
+                        src: ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css', '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css'],
                         dest: '<%= conf.web %>/css/'
                     },
                     {
@@ -270,10 +270,10 @@ module.exports = function (grunt) {
                         flatten: true,
                         nonull: true,
                         src: [
-                            '<%= conf.pkg.name %>.js',
-                            '<%= conf.pkg.name %>.js.map',
-                            '<%= conf.pkg.name %>.min.js',
-                            '<%= conf.pkg.name %>.min.js.map',
+                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js',
+                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js.map',
+                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js',
+                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/' + d3pkgSubDir + '/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',

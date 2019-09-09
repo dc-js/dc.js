@@ -16,7 +16,7 @@ module.exports = function(config) {
             'web/js/d3.js',
             'web/js/crossfilter.js',
             // Code to be tested
-            'dc.js',
+            'dist/es6/dc.js',
             // Jasmine spec files
             'spec/*spec.js'
         ],
