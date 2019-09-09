@@ -77,15 +77,13 @@
     {
       "basePath": "/",
       "files": [
-        "dc.css",
-        "dc.min.css",
-        "dc.min.js",
-        "dc.min.js.map",
-        "dc.js",
-        "dc.js.map"
+        "dist/style/dc.css",
+        "dist/style/dc.min.css",
+        "dist/es6/dc.min.js",
+        "dist/es6/dc.js"
       ]
     }
   ],
-  "browser": "dc.js",
-  "main": "dc.js"
+  "browser": "dist/es6/dc.js",
+  "main": "dist/es6/dc.js"
 }
