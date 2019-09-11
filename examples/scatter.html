@@ -27,8 +27,8 @@ d3.csv("morley.csv").then(function(experiments) {
   });
 
   var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return [+d.Run, +d.Expt]; }),
-      speedSumGroup       = runDimension.group().reduceSum(function(d) { return d.Run; });
+      runDimension        = ndx.dimension(function(d) {return [+d.Run, +d.Speed]; }),
+      speedSumGroup       = runDimension.group();
 
   chart
     .width(768)

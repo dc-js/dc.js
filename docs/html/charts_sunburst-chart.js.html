@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>dc.js Source: charts/sunburst-chart.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">dc.js</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="dc.html">dc</a></li><li><a href="dc.chartRegistry.html">dc.chartRegistry</a></li><li><a href="dc.filters.html">dc.filters</a></li><li><a href="dc.printers.html">dc.printers</a></li><li><a href="dc.units.html">dc.units</a></li><li><a href="dc.units.fp.html">dc.units.fp</a></li><li><a href="dc.utils.html">dc.utils</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="dc.barChart.html">dc.barChart</a></li><li><a href="dc.boxPlot.html">dc.boxPlot</a></li><li><a href="dc.bubbleChart.html">dc.bubbleChart</a></li><li><a href="dc.bubbleOverlay.html">dc.bubbleOverlay</a></li><li><a href="dc.cboxMenu.html">dc.cboxMenu</a></li><li><a href="dc.compositeChart.html">dc.compositeChart</a></li><li><a href="dc.config.html">dc.config</a></li><li><a href="dc.dataCount.html">dc.dataCount</a></li><li><a href="dc.dataGrid.html">dc.dataGrid</a></li><li><a href="dc.dataTable.html">dc.dataTable</a></li><li><a href="dc.filters.HierarchyFilter.html">dc.filters.HierarchyFilter</a></li><li><a href="dc.filters.RangedFilter.html">dc.filters.RangedFilter</a></li><li><a href="dc.filters.RangedTwoDimensionalFilter.html">dc.filters.RangedTwoDimensionalFilter</a></li><li><a href="dc.filters.TwoDimensionalFilter.html">dc.filters.TwoDimensionalFilter</a></li><li><a href="dc.geoChoroplethChart.html">dc.geoChoroplethChart</a></li><li><a href="dc.heatMap.html">dc.heatMap</a></li><li><a href="dc.htmlLegend.html">dc.htmlLegend</a></li><li><a href="dc.Legend.html">dc.Legend</a></li><li><a href="dc.lineChart.html">dc.lineChart</a></li><li><a href="dc.logger.html">dc.logger</a></li><li><a href="dc.numberDisplay.html">dc.numberDisplay</a></li><li><a href="dc.pieChart.html">dc.pieChart</a></li><li><a href="dc.rowChart.html">dc.rowChart</a></li><li><a href="dc.scatterPlot.html">dc.scatterPlot</a></li><li><a href="dc.selectMenu.html">dc.selectMenu</a></li><li><a href="dc.seriesChart.html">dc.seriesChart</a></li><li><a href="dc.sunburstChart.html">dc.sunburstChart</a></li><li><a href="dc.textFilterWidget.html">dc.textFilterWidget</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="mixins.list.html" class="dropdown-toggle" data-toggle="dropdown">Mixins<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="dc.baseMixin.html">dc.baseMixin</a></li><li><a href="dc.bubbleMixin.html">dc.bubbleMixin</a></li><li><a href="dc.capMixin.html">dc.capMixin</a></li><li><a href="dc.colorMixin.html">dc.colorMixin</a></li><li><a href="dc.coordinateGridMixin.html">dc.coordinateGridMixin</a></li><li><a href="dc.marginMixin.html">dc.marginMixin</a></li><li><a href="dc.stackMixin.html">dc.stackMixin</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: charts/sunburst-chart.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import * as d3 from 'd3';
+
+import {transition} from '../core/core';
+import {filters} from '../core/filters';
+import {utils} from '../core/utils';
+import {events} from '../core/events';
+import {CapMixin} from '../base/cap-mixin';
+import {ColorMixin} from '../base/color-mixin';
+import {BaseMixin} from '../base/base-mixin';
+
+const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+
+/**
+ * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
+ * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
+ * slice relative to the sum of all values. Slices are ordered by {@link dc.baseMixin#ordering ordering} which defaults to sorting
+ * by key.
+ *
+ * The keys used in the sunburst chart should be arrays, representing paths in the tree.
+ *
+ * When filtering, the sunburst chart creates instances of {@link dc.filters.HierarchyFilter HierarchyFilter}.
+ *
+ * @class sunburstChart
+ * @memberof dc
+ * @mixes dc.capMixin
+ * @mixes dc.colorMixin
+ * @mixes dc.baseMixin
+ * @example
+ * // create a sunburst chart under #chart-container1 element using the default global chart group
+ * var chart1 = dc.sunburstChart('#chart-container1');
+ * // create a sunburst chart under #chart-container2 element using chart group A
+ * var chart2 = dc.sunburstChart('#chart-container2', 'chartGroupA');
+ *
+ * @param {String|node|d3.selection} parent - Any valid
+ * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
+ * a dom block element such as a div; or a dom element or d3 selection.
+ * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+ * Interaction with a chart will only trigger events and redraws within the chart's group.
+ * @returns {dc.sunburstChart}
+ **/
+export const sunburstChart = (parent, chartGroup) => new SunburstChart(parent, chartGroup);
+
+class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
+    constructor (parent, chartGroup) {
+        super();
+
+        this._sliceCssClass = 'pie-slice';
+        this._emptyCssClass = 'empty-chart';
+        this._emptyTitle = 'empty';
+
+        this._radius = undefined;
+        this._givenRadius = undefined; // given radius, if any
+        this._innerRadius = 0;
+
+        this._g = undefined;
+        this._cx = undefined;
+        this._cy = undefined;
+        this._minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
+        this._externalLabelRadius = undefined;
+
+        this.colorAccessor(this.cappedKeyAccessor);
+
+        this.title(d => this.cappedKeyAccessor(d) + ': ' + this._extendedValueAccessor(d));
+
+        this.label(this.cappedKeyAccessor);
+        this.renderLabel(true);
+
+        this.transitionDuration(350);
+
+        this.filterHandler((dimension, filters) => {
+            if (filters.length === 0) {
+                dimension.filter(null);
+            } else {
+                dimension.filterFunction(d => {
+                    for (let i = 0; i &lt; filters.length; i++) {
+                        const filter = filters[i];
+                        if (filter.isFiltered &amp;&amp; filter.isFiltered(d)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
+            return filters;
+        });
+
+        {
+            const self = this;
+            // ES6: it uses this as well as self, carefully handle
+            self._tweenSlice = function (d) {
+                let current = this._current;
+                if (self._isOffCanvas(current)) {
+                    current = {x0: 0, x1: 0, y0: 0, y1: 0};
+                }
+                const tweenTarget = {
+                    x0: d.x0,
+                    x1: d.x1,
+                    y0: d.y0,
+                    y1: d.y1
+                };
+                const i = d3.interpolate(current, tweenTarget);
+                this._current = i(0);
+                return t => self._safeArc(self._buildArcs(), Object.assign({}, d, i(t)));
+            };
+        }
+
+        // ES6 - must remain as an => function - check again later
+        this._onClick = (d, i) => {
+            if (this._g.attr('class') !== this._emptyCssClass) {
+                this._pvt_onClick(d, i);
+            }
+        };
+
+        this.anchor(parent, chartGroup);
+    }
+
+    // Handle cases if value corresponds to generated parent nodes
+    _extendedValueAccessor (d) {
+        if (d.path) {
+            return d.value;
+        }
+        return this.cappedValueAccessor(d);
+    }
+
+    _doRender () {
+        this.resetSvg();
+
+        this._g = this.svg()
+            .append('g')
+            .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
+
+        this._drawChart();
+
+        return this;
+    }
+
+    _drawChart () {
+        // set radius from chart size if none given, or if given radius is too large
+        const maxRadius = d3.min([this.width(), this.height()]) / 2;
+        this._radius = this._givenRadius &amp;&amp; this._givenRadius &lt; maxRadius ? this._givenRadius : maxRadius;
+
+        const arc = this._buildArcs();
+
+        let sunburstData, cdata;
+        // if we have data...
+        if (d3.sum(this.data(), this.valueAccessor())) {
+            cdata = utils.toHierarchy(this.data(), this.valueAccessor());
+            sunburstData = this._partitionNodes(cdata);
+            // First one is the root, which is not needed
+            sunburstData.shift();
+            this._g.classed(this._emptyCssClass, false);
+        } else {
+            // otherwise we'd be getting NaNs, so override
+            // note: abuse others for its ignoring the value accessor
+            cdata = utils.toHierarchy([], d => d.value);
+            sunburstData = this._partitionNodes(cdata);
+            this._g.classed(this._emptyCssClass, true);
+        }
+
+        if (this._g) {
+            const slices = this._g.selectAll('g.' + this._sliceCssClass)
+                .data(sunburstData);
+            this._createElements(slices, arc, sunburstData);
+
+            this._updateElements(sunburstData, arc);
+
+            this._removeElements(slices);
+
+            this._highlightFilter();
+
+            transition(this._g, this.transitionDuration(), this.transitionDelay())
+                .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
+        }
+    }
+
+    _createElements (slices, arc, sunburstData) {
+        const slicesEnter = this._createSliceNodes(slices);
+
+        this._createSlicePath(slicesEnter, arc);
+        this._createTitles(slicesEnter);
+        this._createLabels(sunburstData, arc);
+    }
+
+    _createSliceNodes (slices) {
+        return slices
+            .enter()
+            .append('g')
+            .attr('class', (d, i) => this._sliceCssClass +
+                ' _' + i + ' ' +
+                this._sliceCssClass + '-level-' + d.depth);
+    }
+
+    _createSlicePath (slicesEnter, arc) {
+        const slicePath = slicesEnter.append('path')
+            .attr('fill', (d, i) => this._fill(d, i))
+            .on('click', (d, i) => this._onClick(d, i))
+            .attr('d', d => this._safeArc(arc, d));
+
+        const tranNodes = transition(slicePath, this.transitionDuration());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', this._tweenSlice);
+        }
+    }
+
+    _createTitles (slicesEnter) {
+        if (this.renderTitle()) {
+            slicesEnter.append('title').text(d => this.title()(d));
+        }
+    }
+
+    _positionLabels (labelsEnter, arc) {
+        transition(labelsEnter, this.transitionDuration())
+            .attr('transform', d => this._labelPosition(d, arc))
+            .attr('text-anchor', 'middle')
+            .text(d => {
+                // position label...
+                if (this._sliceHasNoData(d) || this._sliceTooSmall(d)) {
+                    return '';
+                }
+                return this.label()(d);
+            });
+    }
+
+    _createLabels (sunburstData, arc) {
+        if (this.renderLabel()) {
+            const labels = this._g.selectAll('text.' + this._sliceCssClass)
+                .data(sunburstData);
+
+            labels.exit().remove();
+
+            const labelsEnter = labels
+                .enter()
+                .append('text')
+                .attr('class', (d, i) => {
+                    let classes = this._sliceCssClass + ' _' + i;
+                    if (this._externalLabelRadius) {
+                        classes += ' external';
+                    }
+                    return classes;
+                })
+                .on('click', (d, i) => this._onClick(d, i));
+            this._positionLabels(labelsEnter, arc);
+        }
+    }
+
+    _updateElements (sunburstData, arc) {
+        this._updateSlicePaths(sunburstData, arc);
+        this._updateLabels(sunburstData, arc);
+        this._updateTitles(sunburstData);
+    }
+
+    _updateSlicePaths (sunburstData, arc) {
+        const slicePaths = this._g.selectAll('g.' + this._sliceCssClass)
+            .data(sunburstData)
+            .select('path')
+            .attr('d', (d, i) => this._safeArc(arc, d));
+        const tranNodes = transition(slicePaths, this.transitionDuration());
+        if (tranNodes.attrTween) {
+            tranNodes.attrTween('d', this._tweenSlice);
+        }
+        tranNodes.attr('fill', (d, i) => this._fill(d, i));
+    }
+
+    _updateLabels (sunburstData, arc) {
+        if (this.renderLabel()) {
+            const labels = this._g.selectAll('text.' + this._sliceCssClass)
+                .data(sunburstData);
+            this._positionLabels(labels, arc);
+        }
+    }
+
+    _updateTitles (sunburstData) {
+        if (this.renderTitle()) {
+            this._g.selectAll('g.' + this._sliceCssClass)
+                .data(sunburstData)
+                .select('title')
+                .text(d => this.title()(d));
+        }
+    }
+
+    _removeElements (slices) {
+        slices.exit().remove();
+    }
+
+    _highlightFilter () {
+        const self = this;
+        if (self.hasFilter()) {
+            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
+                if (self._isSelectedSlice(d)) {
+                    self.highlightSelected(this);
+                } else {
+                    self.fadeDeselected(this);
+                }
+            });
+        } else {
+            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
+                self.resetHighlight(this);
+            });
+        }
+    }
+
+    /**
+     * Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
+     * sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
+     * @method innerRadius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [innerRadius=0]
+     * @returns {Number|dc.sunburstChart}
+     */
+    innerRadius (innerRadius) {
+        const self = this;
+        if (!arguments.length) {
+            return self._innerRadius;
+        }
+        self._innerRadius = innerRadius;
+        return self;
+    }
+
+    /**
+     * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
+     * chart width and height.
+     * @method radius
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [radius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    radius (radius) {
+        const self = this;
+        if (!arguments.length) {
+            return self._givenRadius;
+        }
+        self._givenRadius = radius;
+        return self;
+    }
+
+    /**
+     * Get or set center x coordinate position. Default is center of svg.
+     * @method cx
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cx]
+     * @returns {Number|dc.sunburstChart}
+     */
+    cx (cx) {
+        const self = this;
+        if (!arguments.length) {
+            return (self._cx || self.width() / 2);
+        }
+        self._cx = cx;
+        return self;
+    }
+
+    /**
+     * Get or set center y coordinate position. Default is center of svg.
+     * @method cy
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [cy]
+     * @returns {Number|dc.sunburstChart}
+     */
+    cy (cy) {
+        const self = this;
+        if (!arguments.length) {
+            return (self._cy || self.height() / 2);
+        }
+        self._cy = cy;
+        return self;
+    }
+
+    /**
+     * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
+     * display a slice label.
+     * @method minAngleForLabel
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [minAngleForLabel=0.5]
+     * @returns {Number|dc.sunburstChart}
+     */
+    minAngleForLabel (minAngleForLabel) {
+        const self = this;
+        if (!arguments.length) {
+            return self._minAngleForLabel;
+        }
+        self._minAngleForLabel = minAngleForLabel;
+        return self;
+    }
+
+    /**
+     * Title to use for the only slice when there is no data.
+     * @method emptyTitle
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {String} [title]
+     * @returns {String|dc.sunburstChart}
+     */
+    emptyTitle (title) {
+        const self = this;
+        if (arguments.length === 0) {
+            return self._emptyTitle;
+        }
+        self._emptyTitle = title;
+        return self;
+    }
+
+    /**
+     * Position slice labels offset from the outer edge of the chart.
+     *
+     * The argument specifies the extra radius to be added for slice labels.
+     * @method externalLabels
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Number} [externalLabelRadius]
+     * @returns {Number|dc.sunburstChart}
+     */
+    externalLabels (externalLabelRadius) {
+        const self = this;
+        if (arguments.length === 0) {
+            return self._externalLabelRadius;
+        } else if (externalLabelRadius) {
+            self._externalLabelRadius = externalLabelRadius;
+        } else {
+            self._externalLabelRadius = undefined;
+        }
+
+        return self;
+    }
+
+    _buildArcs () {
+        const self = this;
+        return d3.arc()
+            .startAngle(d => d.x0)
+            .endAngle(d => d.x1)
+            .innerRadius(d => d.data.path &amp;&amp; d.data.path.length === 1 ? self._innerRadius : Math.sqrt(d.y0))
+            .outerRadius(d => Math.sqrt(d.y1));
+    }
+
+    _isSelectedSlice (d) {
+        const self = this;
+        return self._isPathFiltered(d.path);
+    }
+
+    _isPathFiltered (path) {
+        const self = this;
+        for (let i = 0; i &lt; self.filters().length; i++) {
+            const currentFilter = self.filters()[i];
+            if (currentFilter.isFiltered(path)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // returns all filters that are a parent or child of the path
+    _filtersForPath (path) {
+        const self = this;
+        const pathFilter = filters.HierarchyFilter(path);
+        const filtersList = [];
+        for (let i = 0; i &lt; self.filters().length; i++) {
+            const currentFilter = self.filters()[i];
+            if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
+                filtersList.push(currentFilter);
+            }
+        }
+        return filtersList;
+    }
+
+    _doRedraw () {
+        this._drawChart();
+        return this;
+    }
+
+    _partitionNodes (data) {
+        // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
+        const hierarchy = d3.hierarchy(data)
+            .sum(d => d.children ? 0 : this._extendedValueAccessor(d))
+            .sort((a, b) => d3.ascending(a.data.path, b.data.path));
+
+        const partition = d3.partition()
+            .size([2 * Math.PI, this._radius * this._radius]);
+
+        partition(hierarchy);
+
+        // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
+        return hierarchy.descendants().map(d => {
+            d.key = d.data.key;
+            d.path = d.data.path;
+            return d;
+        });
+    }
+
+    _sliceTooSmall (d) {
+        const angle = d.x1 - d.x0;
+        return isNaN(angle) || angle &lt; this._minAngleForLabel;
+    }
+
+    _sliceHasNoData (d) {
+        return this._extendedValueAccessor(d) === 0;
+    }
+
+    _isOffCanvas (d) {
+        return !d || isNaN(d.x0) || isNaN(d.y0);
+    }
+
+    _fill (d, i) {
+        return this.getColor(d.data, i);
+    }
+
+    _pvt_onClick (d) {
+        // Clicking on Legends do not filter, it throws exception
+        // Must be better way to handle this, in legends we need to access `d.key`
+        const path = d.path || d.key;
+        const filter = filters.HierarchyFilter(path);
+
+        // filters are equal to, parents or children of the path.
+        const filtersList = this._filtersForPath(path);
+        let exactMatch = false;
+        // clear out any filters that cover the path filtered.
+        for (let i = filtersList.length - 1; i >= 0; i--) {
+            const currentFilter = filtersList[i];
+            if (utils.arraysIdentical(currentFilter, path)) {
+                exactMatch = true;
+            }
+            this.filter(filtersList[i]);
+        }
+        events.trigger(() => {
+            // if it is a new filter - put it in.
+            if (!exactMatch) {
+                this.filter(filter);
+            }
+            this.redrawGroup();
+        });
+    }
+
+    _safeArc (arc, d) {
+        let path = arc(d);
+        if (path.indexOf('NaN') >= 0) {
+            path = 'M0,0';
+        }
+        return path;
+    }
+
+    _labelPosition (d, arc) {
+        let centroid;
+        if (this._externalLabelRadius) {
+            centroid = d3.svg.arc()
+                .outerRadius(this._radius + this._externalLabelRadius)
+                .innerRadius(this._radius + this._externalLabelRadius)
+                .centroid(d);
+        } else {
+            centroid = arc.centroid(d);
+        }
+        if (isNaN(centroid[0]) || isNaN(centroid[1])) {
+            return 'translate(0,0)';
+        } else {
+            return 'translate(' + centroid + ')';
+        }
+    }
+
+    legendables () {
+        return this.data().map((d, i) => {
+            const legendable = {name: d.key, data: d.value, others: d.others, chart: this};
+            legendable.color = this.getColor(d, i);
+            return legendable;
+        });
+    }
+
+    legendHighlight (d) {
+        this._highlightSliceFromLegendable(d, true);
+    }
+
+    legendReset (d) {
+        this._highlightSliceFromLegendable(d, false);
+    }
+
+    legendToggle (d) {
+        this.onClick({key: d.name, others: d.others});
+    }
+
+    _highlightSliceFromLegendable (legendable, highlighted) {
+        this.selectAll('g.pie-slice').each(function (d) {
+            if (legendable.name === d.key) {
+                d3.select(this).classed('highlight', highlighted);
+            }
+        });
+    }
+}
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
+	
+		on Mon Aug 26th 2019
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

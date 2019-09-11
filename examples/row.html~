@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Bar Chart Example</title>
+    <title>dc.js - Row Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.barChart("#test");
+var chart = dc.rowChart("#test");
 d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {
@@ -34,16 +34,10 @@ d3.csv("morley.csv").then(function(experiments) {
     .width(768)
     .height(480)
     .x(d3.scaleLinear().domain([6,20]))
-    .brushOn(false)
-    .yAxisLabel("This is the Y Axis!")
+    .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .on('renderlet', function(chart) {
-        chart.selectAll('rect').on("click", function(d) {
-            console.log("click!", d);
-        });
-    });
-    chart.render();
+    .render();
 });
 
 </script>
