@@ -21,65 +21,62 @@ export const CapMixin = Base => {
         constructor () {
             super();
 
-            const _chart = this;
-
-            var _cap = Infinity, _takeFront = true;
-            var _othersLabel = 'Others';
+            this._cap = Infinity;
+            this._takeFront = true;
+            this._othersLabel = 'Others';
 
             // emulate old group.top(N) ordering
-            _chart.ordering(function (kv) {
-                return -kv.value;
-            });
+            this.ordering(kv => -kv.value);
 
-            var _othersGrouper = function (topItems, restItems) {
-                var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
-                    restKeys = restItems.map(_chart.keyAccessor());
+            this._othersGrouper = (topItems, restItems) => {
+                const restItemsSum = d3.sum(restItems, this.valueAccessor()),
+                    restKeys = restItems.map(this.keyAccessor());
                 if (restItemsSum > 0) {
                     return topItems.concat([{
                         others: restKeys,
-                        key: _chart.othersLabel(),
+                        key: this.othersLabel(),
                         value: restItemsSum
                     }]);
                 }
                 return topItems;
             };
 
-            _chart.cappedKeyAccessor = function (d, i) {
+            this.cappedKeyAccessor = (d, i) => {
                 if (d.others) {
                     return d.key;
                 }
-                return _chart.keyAccessor()(d, i);
+                return this.keyAccessor()(d, i);
             };
 
-            _chart.cappedValueAccessor = function (d, i) {
+            this.cappedValueAccessor = (d, i) => {
                 if (d.others) {
                     return d.value;
                 }
-                return _chart.valueAccessor()(d, i);
+                return this.valueAccessor()(d, i);
             };
 
             // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
             // whether top means front or back depends on takeFront
-            _chart.data(function (group) {
-                if (_cap === Infinity) {
-                    return _chart._computeOrderedGroups(group.all());
+            this.data(group => {
+                if (this._cap === Infinity) {
+                    return this._computeOrderedGroups(group.all());
                 } else {
-                    var items = group.all(), rest;
-                    items = _chart._computeOrderedGroups(items); // sort by baseMixin.ordering
+                    let items = group.all(), rest;
+                    items = this._computeOrderedGroups(items); // sort by baseMixin.ordering
 
-                    if (_cap) {
-                        if (_takeFront) {
-                            rest = items.slice(_cap);
-                            items = items.slice(0, _cap);
+                    if (this._cap) {
+                        if (this._takeFront) {
+                            rest = items.slice(this._cap);
+                            items = items.slice(0, this._cap);
                         } else {
-                            var start = Math.max(0, items.length - _cap);
+                            const start = Math.max(0, items.length - this._cap);
                             rest = items.slice(0, start);
                             items = items.slice(start);
                         }
                     }
 
-                    if (_othersGrouper) {
-                        return _othersGrouper(items, rest);
+                    if (this._othersGrouper) {
+                        return this._othersGrouper(items, rest);
                     }
                     return items;
                 }
@@ -116,12 +113,12 @@ export const CapMixin = Base => {
              * @param {Number} [count=Infinity]
              * @returns {Number|dc.capMixin}
              */
-            _chart.cap = function (count) {
+            this.cap = function (count) {
                 if (!arguments.length) {
-                    return _cap;
+                    return this._cap;
                 }
-                _cap = count;
-                return _chart;
+                this._cap = count;
+                return this;
             };
 
             /**
@@ -134,12 +131,12 @@ export const CapMixin = Base => {
              * @param {Boolean} [takeFront=true]
              * @returns {Boolean|dc.capMixin}
              */
-            _chart.takeFront = function (takeFront) {
+            this.takeFront = function (takeFront) {
                 if (!arguments.length) {
-                    return _takeFront;
+                    return this._takeFront;
                 }
-                _takeFront = takeFront;
-                return _chart;
+                this._takeFront = takeFront;
+                return this;
             };
 
             /**
@@ -150,12 +147,12 @@ export const CapMixin = Base => {
              * @param {String} [label="Others"]
              * @returns {String|dc.capMixin}
              */
-            _chart.othersLabel = function (label) {
+            this.othersLabel = function (label) {
                 if (!arguments.length) {
-                    return _othersLabel;
+                    return this._othersLabel;
                 }
-                _othersLabel = label;
-                return _chart;
+                this._othersLabel = label;
+                return this;
             };
 
             /**
@@ -186,22 +183,20 @@ export const CapMixin = Base => {
              * @param {Function} [grouperFunction]
              * @returns {Function|dc.capMixin}
              */
-            _chart.othersGrouper = function (grouperFunction) {
+            this.othersGrouper = function (grouperFunction) {
                 if (!arguments.length) {
-                    return _othersGrouper;
+                    return this._othersGrouper;
                 }
-                _othersGrouper = grouperFunction;
-                return _chart;
+                this._othersGrouper = grouperFunction;
+                return this;
             };
 
-            override(_chart, 'onClick', function (d) {
+            override(this, 'onClick', d => {
                 if (d.others) {
-                    _chart.filter([d.others]);
+                    this.filter([d.others]);
                 }
-                _chart._onClick(d);
+                this._onClick(d);
             });
-
-            return _chart;
         }
     }
 };
