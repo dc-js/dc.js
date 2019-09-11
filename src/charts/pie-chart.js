@@ -120,7 +120,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         const pie = this._pieLayout();
         let pieData;
         // if we have data...
-        if (d3.sum(this.data(), this.cappedValueAccessor)) {
+        if (d3.sum(this.data(), d => this.cappedValueAccessor(d))) {
             pieData = pie(this.data());
             this._g.classed(this._emptyCssClass, false);
         } else {
@@ -461,7 +461,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _pieLayout () {
-        return d3.pie().sort(null).value(this.cappedValueAccessor);
+        return d3.pie().sort(null).value(d => this.cappedValueAccessor(d));
     }
 
     _sliceTooSmall (d) {

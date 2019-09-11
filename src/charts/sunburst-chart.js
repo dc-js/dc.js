@@ -58,11 +58,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
         this._externalLabelRadius = undefined;
 
-        this.colorAccessor(this.cappedKeyAccessor);
+        this.colorAccessor(d => this.cappedKeyAccessor(d));
 
         this.title(d => this.cappedKeyAccessor(d) + ': ' + this._extendedValueAccessor(d));
 
-        this.label(this.cappedKeyAccessor);
+        this.label(d => this.cappedKeyAccessor(d));
         this.renderLabel(true);
 
         this.transitionDuration(350);

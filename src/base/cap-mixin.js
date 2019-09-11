@@ -52,21 +52,20 @@ export const CapMixin = Base => {
                     return items;
                 }
             });
+        }
 
-            this.cappedKeyAccessor = (d, i) => {
-                if (d.others) {
-                    return d.key;
-                }
-                return this.keyAccessor()(d, i);
-            };
+        cappedKeyAccessor (d, i) {
+            if (d.others) {
+                return d.key;
+            }
+            return this.keyAccessor()(d, i);
+        }
 
-            this.cappedValueAccessor = (d, i) => {
-                if (d.others) {
-                    return d.value;
-                }
-                return this.valueAccessor()(d, i);
-            };
-
+        cappedValueAccessor (d, i) {
+            if (d.others) {
+                return d.value;
+            }
+            return this.valueAccessor()(d, i);
         }
 
         _othersGrouper (topItems, restItems) {

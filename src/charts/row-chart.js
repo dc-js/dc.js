@@ -60,14 +60,14 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
 
         this.title(d => this.cappedKeyAccessor(d) + ': ' + this.cappedValueAccessor(d));
 
-        this.label(this.cappedKeyAccessor);
+        this.label(d => this.cappedKeyAccessor(d));
 
         this.anchor(parent, chartGroup);
     }
 
     _calculateAxisScale () {
         if (!this._x || this._elasticX) {
-            const extent = d3.extent(this._rowData, this.cappedValueAccessor);
+            const extent = d3.extent(this._rowData, d => this.cappedValueAccessor(d));
             if (extent[0] > 0) {
                 extent[0] = 0;
             }
