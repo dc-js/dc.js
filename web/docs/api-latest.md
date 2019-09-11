@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.1.2  
+**Version**: 3.1.3  
 **Example**  
 ```js
 // Example chaining
@@ -168,6 +168,10 @@ chart.width(300)
         * [.emptyColor](#dc.scatterPlot+emptyColor) ⇒ <code>String</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.emptyOpacity](#dc.scatterPlot+emptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.nonemptyOpacity](#dc.scatterPlot+nonemptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
+        * [.resetSvg()](#dc.scatterPlot+resetSvg) ⇒ <code>SVGElement</code>
+        * [.useCanvas([useCanvas])](#dc.scatterPlot+useCanvas) ⇒ <code>Boolean</code> \| <code>d3.selection</code>
+        * [.canvas([canvasElement])](#dc.scatterPlot+canvas) ⇒ <code>CanvasElement</code> \| <code>d3.selection</code>
+        * [.context()](#dc.scatterPlot+context) ⇒ <code>CanvasContext</code>
         * [.existenceAccessor([accessor])](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
         * [.customSymbol([customSymbol])](#dc.scatterPlot+customSymbol) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
@@ -2701,6 +2705,10 @@ Maximum number of legend items to display
     * [.emptyColor](#dc.scatterPlot+emptyColor) ⇒ <code>String</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.emptyOpacity](#dc.scatterPlot+emptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.nonemptyOpacity](#dc.scatterPlot+nonemptyOpacity) ⇒ <code>Number</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
+    * [.resetSvg()](#dc.scatterPlot+resetSvg) ⇒ <code>SVGElement</code>
+    * [.useCanvas([useCanvas])](#dc.scatterPlot+useCanvas) ⇒ <code>Boolean</code> \| <code>d3.selection</code>
+    * [.canvas([canvasElement])](#dc.scatterPlot+canvas) ⇒ <code>CanvasElement</code> \| <code>d3.selection</code>
+    * [.context()](#dc.scatterPlot+context) ⇒ <code>CanvasContext</code>
     * [.existenceAccessor([accessor])](#dc.scatterPlot+existenceAccessor) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.symbol([type])](#dc.scatterPlot+symbol) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
     * [.customSymbol([customSymbol])](#dc.scatterPlot+customSymbol) ⇒ <code>String</code> \| <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
@@ -2769,6 +2777,53 @@ Set or get opacity for symbols when the group is not empty.
 | --- | --- | --- |
 | [nonemptyOpacity] | <code>Number</code> | <code>1</code> | 
 
+<a name="dc.scatterPlot+resetSvg"></a>
+
+#### scatterPlot.resetSvg() ⇒ <code>SVGElement</code>
+Method that replaces original resetSvg and appropriately inserts canvas
+element along with svg element and sets their CSS properties appropriately
+so they are overlapped on top of each other.
+Remove the chart's SVGElements from the dom and recreate the container SVGElement.
+
+**Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
+**See**: [SVGElement](https://developer.mozilla.org/en-US/docs/Web/API/SVGElement)  
+<a name="dc.scatterPlot+useCanvas"></a>
+
+#### scatterPlot.useCanvas([useCanvas]) ⇒ <code>Boolean</code> \| <code>d3.selection</code>
+Set or get whether to use canvas backend for plotting scatterPlot. Note that the
+canvas backend does not currently support 
+[customSymbol](#dc.scatterPlot+customSymbol) or 
+[symbol](#dc.scatterPlot+symbol) methods and is limited to always plotting 
+with filled circles. Symbols are drawn with
+[symbolSize](#dc.scatterPlot+symbolSize) radius. By default, the SVG backend
+is used when `useCanvas` is set to `false`.
+
+**Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [useCanvas] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="dc.scatterPlot+canvas"></a>
+
+#### scatterPlot.canvas([canvasElement]) ⇒ <code>CanvasElement</code> \| <code>d3.selection</code>
+Set or get canvas element. You should usually only ever use the get method as
+dc.js will handle canvas element generation.  Provides valid canvas only when
+[useCanvas](#dc.scatterPlot+useCanvas) is set to `true`
+
+**Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
+
+| Param | Type |
+| --- | --- |
+| [canvasElement] | <code>CanvasElement</code> \| <code>d3.selection</code> | 
+
+<a name="dc.scatterPlot+context"></a>
+
+#### scatterPlot.context() ⇒ <code>CanvasContext</code>
+Get canvas 2D context. Provides valid context only when
+[useCanvas](#dc.scatterPlot+useCanvas) is set to `true`
+
+**Kind**: instance method of [<code>scatterPlot</code>](#dc.scatterPlot)  
 <a name="dc.scatterPlot+existenceAccessor"></a>
 
 #### scatterPlot.existenceAccessor([accessor]) ⇒ <code>function</code> \| [<code>scatterPlot</code>](#dc.scatterPlot)
