@@ -1,3 +1,12 @@
+## 3.1.3
+* Canvas-based scatter plot, by Sudeep Mandal ([#1361](https://github.com/dc-js/dc.js/pull/1361))
+* Better use of data in scatter example
+* Missing inheritance link in class hierarchy diagram
+
+## 3.1.2
+* Stop using [crossfilter.quicksort.by](https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by) and use [Array.sort](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort) instead, by Deepak Kumar. Crossfilter is now just a `devDependency`. ([#1560](https://github.com/dc-js/dc.js/pull/1560) /  ([#1559](https://github.com/dc-js/dc.js/issues/1559))
+* Example of [updating data in a range-focus chart](http://dc-js.github.io/dc.js/examples/focus-dynamic-data.html).
+
 ## 3.1.1
 * Update [replacing data](https://dc-js.github.io/dc.js/examples/replacing-data.html) and [series](https://dc-js.github.io/dc.js/examples/series.html) examples with the robust way to replace data as of crossfilter 1.4 ([#1536](https://github.com/dc-js/dc.js/issues/1536))
 * The [focus ordinal bar example](https://dc-js.github.io/dc.js/examples/focus-ordinal-bar.html) demonstrates scrolling through a wide bar chart using a range chart.
