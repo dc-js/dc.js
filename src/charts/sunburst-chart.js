@@ -40,7 +40,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  **/
 export const sunburstChart = (parent, chartGroup) => new SunburstChart(parent, chartGroup);
 
-class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
+class SunburstChart extends ColorMixin(BaseMixin) {
     constructor (parent, chartGroup) {
         super();
 
@@ -58,11 +58,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
         this._externalLabelRadius = undefined;
 
-        this.colorAccessor(d => this.cappedKeyAccessor(d));
+        this.colorAccessor(d => this.keyAccessor()(d));
 
-        this.title(d => this.cappedKeyAccessor(d) + ': ' + this._extendedValueAccessor(d));
+        this.title(d => this.keyAccessor()(d) + ': ' + this._extendedValueAccessor(d));
 
-        this.label(d => this.cappedKeyAccessor(d));
+        this.label(d => this.keyAccessor()(d));
         this.renderLabel(true);
 
         this.transitionDuration(350);
@@ -112,7 +112,7 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         if (d.path) {
             return d.value;
         }
-        return this.cappedValueAccessor(d);
+        return this.valueAccessor()(d);
     }
 
     _doRender () {
