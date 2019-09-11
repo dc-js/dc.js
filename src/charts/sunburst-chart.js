@@ -104,13 +104,6 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
             };
         }
 
-        // ES6 - must remain as an => function - check again later
-        this._onClick = (d, i) => {
-            if (this._g.attr('class') !== this._emptyCssClass) {
-                this._pvt_onClick(d, i);
-            }
-        };
-
         this.anchor(parent, chartGroup);
     }
 
@@ -193,7 +186,7 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
     _createSlicePath (slicesEnter, arc) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', (d, i) => this._onClick(d, i))
+            .on('click', (d, i) => this.onClick(d, i))
             .attr('d', d => this._safeArc(arc, d));
 
         const tranNodes = transition(slicePath, this.transitionDuration());
@@ -238,7 +231,7 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
                     }
                     return classes;
                 })
-                .on('click', (d, i) => this._onClick(d, i));
+                .on('click', (d, i) => this.onClick(d, i));
             this._positionLabels(labelsEnter, arc);
         }
     }
@@ -507,8 +500,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this.getColor(d.data, i);
     }
 
-    _pvt_onClick (d) {
-        // Clicking on Legends do not filter, it throws exception
+    onClick (d, i) {
+        if (this._g.attr('class') === this._emptyCssClass) {
+            return;
+        }
+
         // Must be better way to handle this, in legends we need to access `d.key`
         const path = d.path || d.key;
         const filter = filters.HierarchyFilter(path);
@@ -517,12 +513,12 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         const filtersList = this._filtersForPath(path);
         let exactMatch = false;
         // clear out any filters that cover the path filtered.
-        for (let i = filtersList.length - 1; i >= 0; i--) {
-            const currentFilter = filtersList[i];
+        for (let j = filtersList.length - 1; j >= 0; j--) {
+            const currentFilter = filtersList[j];
             if (utils.arraysIdentical(currentFilter, path)) {
                 exactMatch = true;
             }
-            this.filter(filtersList[i]);
+            this.filter(filtersList[j]);
         }
         events.trigger(() => {
             // if it is a new filter - put it in.

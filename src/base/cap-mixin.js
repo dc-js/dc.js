@@ -1,7 +1,5 @@
 import * as d3 from 'd3';
 
-import {override} from '../core/core';
-
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
  * Row and Pie Charts.
@@ -190,13 +188,13 @@ export const CapMixin = Base => {
                 this._othersGrouper = grouperFunction;
                 return this;
             };
+        }
 
-            override(this, 'onClick', d => {
-                if (d.others) {
-                    this.filter([d.others]);
-                }
-                this._onClick(d);
-            });
+        onClick (d) {
+            if (d.others) {
+                this.filter([d.others]);
+            }
+            super.onClick(d);
         }
     }
 };
