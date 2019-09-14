@@ -12,40 +12,36 @@ export const MarginMixin = Base => {
         constructor () {
             super();
 
-            const _chart = this;
+            this._margin = {top: 10, right: 50, bottom: 30, left: 30};
+        }
 
-            var _margin = {top: 10, right: 50, bottom: 30, left: 30};
+        /**
+         * Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
+         * an associative Javascript array.
+         * @method margins
+         * @memberof dc.marginMixin
+         * @instance
+         * @example
+         * var leftMargin = chart.margins().left; // 30 by default
+         * chart.margins().left = 50;
+         * leftMargin = chart.margins().left; // now 50
+         * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
+         * @returns {{top: Number, right: Number, left: Number, bottom: Number}|dc.marginMixin}
+         */
+        margins (margins) {
+            if (!arguments.length) {
+                return this._margin;
+            }
+            this._margin = margins;
+            return this;
+        }
 
-            /**
-             * Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
-             * an associative Javascript array.
-             * @method margins
-             * @memberof dc.marginMixin
-             * @instance
-             * @example
-             * var leftMargin = chart.margins().left; // 30 by default
-             * chart.margins().left = 50;
-             * leftMargin = chart.margins().left; // now 50
-             * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
-             * @returns {{top: Number, right: Number, left: Number, bottom: Number}|dc.marginMixin}
-             */
-            _chart.margins = function (margins) {
-                if (!arguments.length) {
-                    return _margin;
-                }
-                _margin = margins;
-                return _chart;
-            };
+        effectiveWidth () {
+            return this.width() - this.margins().left - this.margins().right;
+        }
 
-            _chart.effectiveWidth = function () {
-                return _chart.width() - _chart.margins().left - _chart.margins().right;
-            };
-
-            _chart.effectiveHeight = function () {
-                return _chart.height() - _chart.margins().top - _chart.margins().bottom;
-            };
-
-            return _chart;
+        effectiveHeight () {
+            return this.height() - this.margins().top - this.margins().bottom;
         }
     }
 };
