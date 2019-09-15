@@ -65,16 +65,6 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this._symbol.size((d, i) => this._elementSize(d, i));
 
-        // ES6: convert to method override
-        override(this, '_filter', function (filter) {
-            const self = this;
-            if (!arguments.length) {
-                return self.__filter();
-            }
-
-            return self.__filter(filters.RangedTwoDimensionalFilter(filter));
-        });
-
         {        // ES6: brushing related functions can be made members after coordinate grid has been converted.
             this.createBrushHandlePaths = () => {
                 // no handle paths for poly-brushes
@@ -196,6 +186,15 @@ export class ScatterPlot extends CoordinateGridMixin {
         const self = this;
         return 'translate(' + self.x()(self.keyAccessor()(d)) + ',' +
             self.y()(self.valueAccessor()(d)) + ')';
+    }
+
+    filter (filter) {
+        const self = this;
+        if (!arguments.length) {
+            return super.filter();
+        }
+
+        return super.filter(filters.RangedTwoDimensionalFilter(filter));
     }
 
     plotData () {
