@@ -83,7 +83,7 @@ class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
             .attr('class', this.BUBBLE_NODE_CLASS)
             .attr('transform', (d) => this._bubbleLocator(d))
             .append('circle').attr('class', (d, i) => this.BUBBLE_CLASS + ' _' + i)
-            .on('click', this.onClick)
+            .on('click', d => this.onClick(d))
             .attr('fill', this.getColor)
             .attr('r', 0);
 
