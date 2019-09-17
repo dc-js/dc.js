@@ -23,37 +23,6 @@ export const StackMixin = Base => {
             this._hidableStacks = false;
             this._evadeDomainFilter = false;
 
-            // ES6: revisit after converting other mixins
-            this.yAxisMin = () => {
-                const min = d3.min(this._flattenStack(), p => (p.y < 0) ? (p.y + p.y0) : p.y0);
-                return utils.subtract(min, this.yAxisPadding());
-            };
-
-            // ES6: revisit after converting other mixins
-            this.yAxisMax = () => {
-                const max = d3.max(this._flattenStack(), p => (p.y > 0) ? (p.y + p.y0) : p.y0);
-                return utils.add(max, this.yAxisPadding());
-            };
-
-            // ES6: revisit after converting other mixins
-            this.xAxisMin = () => {
-                const min = d3.min(this._flattenStack(), pluck('x'));
-                return utils.subtract(min, this.xAxisPadding(), this.xAxisPaddingUnit());
-            };
-
-            // ES6: revisit after converting other mixins
-            this.xAxisMax = () => {
-                const max = d3.max(this._flattenStack(), pluck('x'));
-                return utils.add(max, this.xAxisPadding(), this.xAxisPaddingUnit());
-            };
-
-            // ES6: revisit after converting other mixins
-            this._ordinalXDomain = () => {
-                const flat = this._flattenStack().map(pluck('data'));
-                const ordered = this._computeOrderedGroups(flat);
-                return ordered.map(this.keyAccessor());
-            };
-
             this.data(() => {
                 const layers = this._stack.filter(this._visibility);
                 if (!layers.length) {
@@ -234,11 +203,31 @@ export const StackMixin = Base => {
             return this._stack[index].accessor || this.valueAccessor();
         }
 
+        yAxisMin () {
+            const min = d3.min(this._flattenStack(), p => (p.y < 0) ? (p.y + p.y0) : p.y0);
+            return utils.subtract(min, this.yAxisPadding());
+        }
+
+        yAxisMax () {
+            const max = d3.max(this._flattenStack(), p => (p.y > 0) ? (p.y + p.y0) : p.y0);
+            return utils.add(max, this.yAxisPadding());
+        }
+
         _flattenStack () {
             // A round about way to achieve flatMap
             // When target browsers support flatMap, just replace map -> flatMap, no concat needed
             const values = this.data().map(layer => layer.domainValues);
             return [].concat(...values);
+        }
+
+        xAxisMin () {
+            const min = d3.min(this._flattenStack(), pluck('x'));
+            return utils.subtract(min, this.xAxisPadding(), this.xAxisPaddingUnit());
+        }
+
+        xAxisMax () {
+            const max = d3.max(this._flattenStack(), pluck('x'));
+            return utils.add(max, this.xAxisPadding(), this.xAxisPaddingUnit());
         }
 
         /**
@@ -326,6 +315,12 @@ export const StackMixin = Base => {
 
         _visibility (l) {
             return !l.hidden;
+        }
+
+        _ordinalXDomain () {
+            const flat = this._flattenStack().map(pluck('data'));
+            const ordered = this._computeOrderedGroups(flat);
+            return ordered.map(this.keyAccessor());
         }
 
         legendables () {
