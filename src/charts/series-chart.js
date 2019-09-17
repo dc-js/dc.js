@@ -34,6 +34,7 @@ export class SeriesChart extends CompositeChart {
 
         this._charts = {};
         this._chartFunction = lineChart;
+        this._chartGroup = chartGroup;
         this._seriesAccessor = undefined;
         this._seriesSort = d3.ascending;
         this._valueSort = this._keySort;
@@ -41,56 +42,54 @@ export class SeriesChart extends CompositeChart {
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
         this.shareColors(true);
 
-        // ES6: this function has been overridden, actually defined and called in coordinate grid mixin
-        // can not be moved out of the constructor before converting as a member function in the base class
-        this._preprocessData = function () {
-            const keep = [];
-            let childrenChanged;
-            const nester = d3.nest().key(this._seriesAccessor);
-            if (this._seriesSort) {
-                nester.sortKeys(this._seriesSort);
-            }
-            if (this._valueSort) {
-                nester.sortValues(this._valueSort);
-            }
-            const nesting = nester.entries(this.data());
-            const children =
-                nesting.map((sub, i) => {
-                    const subChart = this._charts[sub.key] || this._chartFunction.call(this, this, chartGroup, sub.key, i);
-                    if (!this._charts[sub.key]) {
-                        childrenChanged = true;
-                    }
-                    this._charts[sub.key] = subChart;
-                    keep.push(sub.key);
-                    return subChart
-                        .dimension(this.dimension())
-                        .group({
-                            all: typeof sub.values === 'function' ? sub.values : utils.constant(sub.values)
-                        }, sub.key)
-                        .keyAccessor(this.keyAccessor())
-                        .valueAccessor(this.valueAccessor())
-                        .brushOn(false);
-                });
-            // ES6: do we add removal function in composite chart?
-            // this works around the fact compositeChart doesn't really
-            // have a removal interface
-            const self = this;
-            Object.keys(this._charts)
-                .filter(c => keep.indexOf(c) === -1)
-                .forEach(c => {
-                    self._clearChart(c);
-                    childrenChanged = true;
-                });
-            this._compose(children);
-            if (childrenChanged && this.legend()) {
-                this.legend().render();
-            }
-        };
-
         // ES6: consider creating a method _compose that calls super.compose and make overridden compose to throw exception
         // make compose private
         this._compose = this.compose;
         delete this.compose;
+    }
+
+    _preprocessData () {
+        const keep = [];
+        let childrenChanged;
+        const nester = d3.nest().key(this._seriesAccessor);
+        if (this._seriesSort) {
+            nester.sortKeys(this._seriesSort);
+        }
+        if (this._valueSort) {
+            nester.sortValues(this._valueSort);
+        }
+        const nesting = nester.entries(this.data());
+        const children =
+            nesting.map((sub, i) => {
+                const subChart = this._charts[sub.key] || this._chartFunction.call(this, this, this._chartGroup , sub.key, i);
+                if (!this._charts[sub.key]) {
+                    childrenChanged = true;
+                }
+                this._charts[sub.key] = subChart;
+                keep.push(sub.key);
+                return subChart
+                    .dimension(this.dimension())
+                    .group({
+                        all: typeof sub.values === 'function' ? sub.values : utils.constant(sub.values)
+                    }, sub.key)
+                    .keyAccessor(this.keyAccessor())
+                    .valueAccessor(this.valueAccessor())
+                    .brushOn(false);
+            });
+        // ES6: do we add removal function in composite chart?
+        // this works around the fact compositeChart doesn't really
+        // have a removal interface
+        const self = this;
+        Object.keys(this._charts)
+            .filter(c => keep.indexOf(c) === -1)
+            .forEach(c => {
+                self._clearChart(c);
+                childrenChanged = true;
+            });
+        this._compose(children);
+        if (childrenChanged && this.legend()) {
+            this.legend().render();
+        }
     }
 
     _clearChart (c) {
