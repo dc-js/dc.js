@@ -80,11 +80,13 @@
                 .text(function(d) { return d; })
                 .attr('selected', function(d) { return d === defint ? '' : null; });
             function setup() {
+                var start_t = window.performance.now();
                 if(dateDim) {
                     dateDim.dispose();
                     group.dispose();
                 }
-                var interval = intervals[d3.select('#interval').nodes()[0].value];
+                var interval_name = d3.select('#interval').nodes()[0].value;
+                var interval = intervals[interval_name];
                 dateDim = ndx.dimension(function(d) {return interval(d[date_col]);});
                 chart.xUnits(interval.range);
                 group = dateDim
@@ -121,6 +123,7 @@
                 chart.dimension(dateDim).group(group)
                     .transitionDuration(!find_query('unsafe') && group.all().length > 2000 ? 0 : 1000)
                     .render();
+                console.log(['setup for', interval_name, 'took', window.performance.now() - start_t, 'ms'].join(' '));
             }
 
             chart
