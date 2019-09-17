@@ -360,7 +360,7 @@ describe('dc.barChart', function () {
                 beforeEach(function () {
                     chart.brushOn(false)
                         .on('renderlet', function (_chart) {
-                            _chart.selectAll('rect.bar').on('click', _chart.onClick);
+                            _chart.selectAll('rect.bar').on('click', d => _chart.onClick(d));
                         })
                         .render();
                 });

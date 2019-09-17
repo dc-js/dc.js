@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 
 import {StackMixin} from '../base/stack-mixin';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {override, transition} from '../core/core';
+import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
@@ -47,80 +47,7 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
 
         this._barWidth = undefined;
 
-        override(this, 'rescale', function () {
-            this._rescale();
-            this._barWidth = undefined;
-            return this;
-        });
-
-        override(this, 'render', function () {
-            if (this.round() && this._centerBar && !this._alwaysUseRounding) {
-                logger.warn('By default, brush rounding is disabled if bars are centered. ' +
-                    'See dc.js bar chart API documentation for details.');
-            }
-
-            return this._render();
-        });
-
         this.label(d => utils.printSingleValue(d.y0 + d.y), false);
-
-        this.plotData = function () {
-            let layers = this.chartBodyG().selectAll('g.stack')
-                .data(this.data());
-
-            this._calculateBarWidth();
-
-            layers = layers
-                .enter()
-                .append('g')
-                .attr('class', (d, i) => 'stack ' + '_' + i)
-                .merge(layers);
-
-            const last = layers.size() - 1;
-            {
-                const self = this;
-                layers.each(function (d, i) {
-                    const layer = d3.select(this);
-
-                    self._renderBars(layer, i, d);
-
-                    if (self.renderLabel() && last === i) {
-                        self._renderLabels(layer, i, d);
-                    }
-                });
-            }
-        };
-
-        this.fadeDeselectedArea = function (brushSelection) {
-            const bars = this.chartBodyG().selectAll('rect.bar');
-
-            if (this.isOrdinal()) {
-                if (this.hasFilter()) {
-                    bars.classed(constants.SELECTED_CLASS, d => this.hasFilter(d.x));
-                    bars.classed(constants.DESELECTED_CLASS, d => !this.hasFilter(d.x));
-                } else {
-                    bars.classed(constants.SELECTED_CLASS, false);
-                    bars.classed(constants.DESELECTED_CLASS, false);
-                }
-            } else if (this.brushOn() || this.parentBrushOn()) {
-                if (!this.brushIsEmpty(brushSelection)) {
-                    const start = brushSelection[0];
-                    const end = brushSelection[1];
-
-                    bars.classed(constants.DESELECTED_CLASS, d => d.x < start || d.x >= end);
-                } else {
-                    bars.classed(constants.DESELECTED_CLASS, false);
-                }
-            }
-        };
-
-        override(this, 'onClick',  (d) => {
-            this._onClick(d.data);
-        });
-
-        this._useOuterPadding = function () {
-            return this._gap === undefined;
-        };
 
         /**
          * Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
@@ -133,25 +60,50 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
          */
         this.outerPadding = this._outerRangeBandPadding;
 
-        this.extendBrush = function (brushSelection) {
-            if (brushSelection && this.round() && (!this._centerBar || this._alwaysUseRounding)) {
-                brushSelection[0] = this.round()(brushSelection[0]);
-                brushSelection[1] = this.round()(brushSelection[1]);
-            }
-            return brushSelection;
-        };
-
-        override(this, 'xAxisMax', function () {
-            let max = this._xAxisMax();
-            if ('resolution' in this.xUnits()) {
-                const res = this.xUnits().resolution;
-                max += res;
-            }
-            return max;
-        });
-
         this.anchor(parent, chartGroup);
     }
+
+    rescale () {
+        super.rescale();
+        this._barWidth = undefined;
+        return this;
+    }
+
+    render () {
+        if (this.round() && this._centerBar && !this._alwaysUseRounding) {
+            logger.warn('By default, brush rounding is disabled if bars are centered. ' +
+                'See dc.js bar chart API documentation for details.');
+        }
+
+        return super.render();
+    }
+
+    plotData () {
+        let layers = this.chartBodyG().selectAll('g.stack')
+            .data(this.data());
+
+        this._calculateBarWidth();
+
+        layers = layers
+            .enter()
+            .append('g')
+            .attr('class', (d, i) => 'stack ' + '_' + i)
+            .merge(layers);
+
+        const last = layers.size() - 1;
+        {
+            const self = this;
+            layers.each(function (d, i) {
+                const layer = d3.select(this);
+
+                self._renderBars(layer, i, d);
+
+                if (self.renderLabel() && last === i) {
+                    self._renderLabels(layer, i, d);
+                }
+            });
+        }
+    };
 
     _barHeight (d) {
         return utils.safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
@@ -192,7 +144,7 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
             .merge(labels);
 
         if (this.isOrdinal()) {
-            labelsEnterUpdate.on('click', this.onClick);
+            labelsEnterUpdate.on('click', d => this.onClick(d));
             labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
@@ -236,7 +188,7 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
         }
 
         if (this.isOrdinal()) {
-            barsEnterUpdate.on('click', this.onClick);
+            barsEnterUpdate.on('click', d => this.onClick(d));
         }
 
         transition(barsEnterUpdate, this.transitionDuration(), this.transitionDelay())
@@ -280,6 +232,29 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
         }
     }
 
+    fadeDeselectedArea (brushSelection) {
+        const bars = this.chartBodyG().selectAll('rect.bar');
+
+        if (this.isOrdinal()) {
+            if (this.hasFilter()) {
+                bars.classed(constants.SELECTED_CLASS, d => this.hasFilter(d.x));
+                bars.classed(constants.DESELECTED_CLASS, d => !this.hasFilter(d.x));
+            } else {
+                bars.classed(constants.SELECTED_CLASS, false);
+                bars.classed(constants.DESELECTED_CLASS, false);
+            }
+        } else if (this.brushOn() || this.parentBrushOn()) {
+            if (!this.brushIsEmpty(brushSelection)) {
+                const start = brushSelection[0];
+                const end = brushSelection[1];
+
+                bars.classed(constants.DESELECTED_CLASS, d => d.x < start || d.x >= end);
+            } else {
+                bars.classed(constants.DESELECTED_CLASS, false);
+            }
+        }
+    };
+
     /**
      * Whether the bar chart will render each bar centered around the data position on the x-axis.
      * @method centerBar
@@ -294,6 +269,10 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
         }
         this._centerBar = centerBar;
         return this;
+    }
+
+    onClick (d) {
+        super.onClick(d.data);
     }
 
     /**
@@ -316,6 +295,10 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
         return this;
     }
 
+    _useOuterPadding () {
+        return this._gap === undefined;
+    };
+
     /**
      * Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
      * gap.  By default the bar chart implementation will calculate and set the gap automatically
@@ -333,6 +316,14 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
         this._gap = gap;
         return this;
     }
+
+    extendBrush (brushSelection) {
+        if (brushSelection && this.round() && (!this._centerBar || this._alwaysUseRounding)) {
+            brushSelection[0] = this.round()(brushSelection[0]);
+            brushSelection[1] = this.round()(brushSelection[1]);
+        }
+        return brushSelection;
+    };
 
     /**
      * Set or get whether rounding is enabled when bars are centered. If false, using
@@ -375,6 +366,15 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
         this.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
+    }
+
+    xAxisMax () {
+        let max = super.xAxisMax();
+        if ('resolution' in this.xUnits()) {
+            const res = this.xUnits().resolution;
+            max += res;
+        }
+        return max;
     }
 }
 
