@@ -120,86 +120,6 @@ class BoxPlot extends CoordinateGridMixin {
         this.outerPadding = this._outerRangeBandPadding;
         this.outerPadding(0.5);
 
-        // ES6: come back after converting mixins
-        this._preprocessData = () => {
-            if (this.elasticX()) {
-                this.x().domain([]);
-            }
-        };
-
-        // ES6: come back after converting mixins
-        this.plotData = () => {
-            this._calculatedBoxWidth = this._boxWidth(this.effectiveWidth(), this.xUnitCount());
-
-            this._box.whiskers(this._whiskers)
-                .width(this._calculatedBoxWidth)
-                .height(this.effectiveHeight())
-                .value(this.valueAccessor())
-                .domain(this.y().domain())
-                .duration(this.transitionDuration())
-                .tickFormat(this._tickFormat)
-                .renderDataPoints(this._renderDataPoints)
-                .dataOpacity(this._dataOpacity)
-                .dataWidthPortion(this._dataWidthPortion)
-                .renderTitle(this.renderTitle())
-                .showOutliers(this._showOutliers)
-                .boldOutlier(this._boldOutlier);
-
-            const boxesG = this.chartBodyG().selectAll('g.box').data(this.data(), this.keyAccessor());
-
-            const boxesGEnterUpdate = this._renderBoxes(boxesG);
-            this._updateBoxes(boxesGEnterUpdate);
-            this._removeBoxes(boxesG);
-
-            this.fadeDeselectedArea(this.filter());
-        };
-
-        // ES6: revisit after converting mixins
-        this.fadeDeselectedArea = brushSelection => {
-            const self = this;
-            if (this.hasFilter()) {
-                if (this.isOrdinal()) {
-                    this.g().selectAll('g.box').each(function (d) {
-                        if (self.isSelectedNode(d)) {
-                            self.highlightSelected(this);
-                        } else {
-                            self.fadeDeselected(this);
-                        }
-                    });
-                } else {
-                    if (!(this.brushOn() || this.parentBrushOn())) {
-                        return;
-                    }
-                    const start = brushSelection[0];
-                    const end = brushSelection[1];
-                    this.g().selectAll('g.box').each(function (d) {
-                        const key = self.keyAccessor()(d);
-                        if (key < start || key >= end) {
-                            self.fadeDeselected(this);
-                        } else {
-                            self.highlightSelected(this);
-                        }
-                    });
-                }
-            } else {
-                this.g().selectAll('g.box').each(function () {
-                    self.resetHighlight(this);
-                });
-            }
-        };
-
-       // ES6: revisit after converting mixins
-        this.yAxisMin = () => {
-            const padding = this._yRangePadding * this._yAxisRangeRatio();
-            return utils.subtract(this._minDataValue() - padding, this.yAxisPadding());
-        };
-
-        // ES6: revisit after converting mixins
-        this.yAxisMax = () => {
-            const padding = this._yRangePadding * this._yAxisRangeRatio();
-            return utils.add(this._maxDataValue() + padding, this.yAxisPadding());
-        };
-
         this.anchor(parent, chartGroup);
     }
 
@@ -229,6 +149,38 @@ class BoxPlot extends CoordinateGridMixin {
     _boxTransform (d, i) {
         const xOffset = this.x()(this.keyAccessor()(d, i));
         return 'translate(' + xOffset + ', 0)';
+    };
+
+    _preprocessData () {
+        if (this.elasticX()) {
+            this.x().domain([]);
+        }
+    };
+
+    plotData () {
+        this._calculatedBoxWidth = this._boxWidth(this.effectiveWidth(), this.xUnitCount());
+
+        this._box.whiskers(this._whiskers)
+            .width(this._calculatedBoxWidth)
+            .height(this.effectiveHeight())
+            .value(this.valueAccessor())
+            .domain(this.y().domain())
+            .duration(this.transitionDuration())
+            .tickFormat(this._tickFormat)
+            .renderDataPoints(this._renderDataPoints)
+            .dataOpacity(this._dataOpacity)
+            .dataWidthPortion(this._dataWidthPortion)
+            .renderTitle(this.renderTitle())
+            .showOutliers(this._showOutliers)
+            .boldOutlier(this._boldOutlier);
+
+        const boxesG = this.chartBodyG().selectAll('g.box').data(this.data(), this.keyAccessor());
+
+        const boxesGEnterUpdate = this._renderBoxes(boxesG);
+        this._updateBoxes(boxesGEnterUpdate);
+        this._removeBoxes(boxesG);
+
+        this.fadeDeselectedArea(this.filter());
     };
 
     _renderBoxes (boxesG) {
@@ -277,8 +229,51 @@ class BoxPlot extends CoordinateGridMixin {
         return ((this._maxDataValue() - this._minDataValue()) / this.effectiveHeight());
     };
 
+    fadeDeselectedArea (brushSelection) {
+        const self = this;
+        if (this.hasFilter()) {
+            if (this.isOrdinal()) {
+                this.g().selectAll('g.box').each(function (d) {
+                    if (self.isSelectedNode(d)) {
+                        self.highlightSelected(this);
+                    } else {
+                        self.fadeDeselected(this);
+                    }
+                });
+            } else {
+                if (!(this.brushOn() || this.parentBrushOn())) {
+                    return;
+                }
+                const start = brushSelection[0];
+                const end = brushSelection[1];
+                this.g().selectAll('g.box').each(function (d) {
+                    const key = self.keyAccessor()(d);
+                    if (key < start || key >= end) {
+                        self.fadeDeselected(this);
+                    } else {
+                        self.highlightSelected(this);
+                    }
+                });
+            }
+        } else {
+            this.g().selectAll('g.box').each(function () {
+                self.resetHighlight(this);
+            });
+        }
+    };
+
     isSelectedNode (d) {
         return this.hasFilter(this.keyAccessor()(d));
+    };
+
+    yAxisMin () {
+        const padding = this._yRangePadding * this._yAxisRangeRatio();
+        return utils.subtract(this._minDataValue() - padding, this.yAxisPadding());
+    };
+
+    yAxisMax () {
+        const padding = this._yRangePadding * this._yAxisRangeRatio();
+        return utils.add(this._maxDataValue() + padding, this.yAxisPadding());
     };
 
     /**
