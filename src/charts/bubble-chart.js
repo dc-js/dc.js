@@ -37,17 +37,6 @@ class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 
         this.transitionDelay(0);
 
-        // ES6: come back here after mixins have been converted
-        this.renderBrush = () => {
-            // override default x axis brush from parent chart
-        };
-
-        // ES6: come back here after mixins have been converted
-        this.redrawBrush = (brushSelection, doTransition) => {
-            // override default x axis brush from parent chart
-            this.fadeDeselectedArea(brushSelection);
-        };
-
         this.anchor(parent, chartGroup);
     }
 
@@ -133,6 +122,14 @@ class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return y;
     }
 
+    renderBrush () {
+        // override default x axis brush from parent chart
+    }
+
+    redrawBrush (brushSelection, doTransition) {
+        // override default x axis brush from parent chart
+        this.fadeDeselectedArea(brushSelection);
+    }
 }
 
 export const bubbleChart = (parent, chartGroup) => new BubbleChart(parent, chartGroup);
