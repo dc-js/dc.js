@@ -48,37 +48,7 @@ export class CompositeChart extends CoordinateGridMixin {
         this.transitionDuration(500);
         this.transitionDelay(0);
 
-        // Revisit after converting mixins
-        override(this, '_generateG', function () {
-            const g = this.__generateG();
-
-            for (let i = 0; i < this._children.length; ++i) {
-                const child = this._children[i];
-
-                this._generateChildG(child, i);
-
-                if (!child.dimension()) {
-                    child.dimension(this.dimension());
-                }
-                if (!child.group()) {
-                    child.group(this.group());
-                }
-
-                child.chartGroup(this.chartGroup());
-                child.svg(this.svg());
-                child.xUnits(this.xUnits());
-                child.transitionDuration(this.transitionDuration(), this.transitionDelay());
-                child.parentBrushOn(this.brushOn());
-                child.brushOn(false);
-                child.renderTitle(this.renderTitle());
-                child.elasticX(this.elasticX());
-            }
-
-            return g;
-        });
-
-        // Revisit after converting mixins
-        this.on('filtered.dcjs-composite-chart', function (chart) {
+        this.on('filtered.dcjs-composite-chart', (chart) => {
             // Propagate the filters onto the children
             // Notice that on children the call is .replaceFilter and not .filter
             //   the reason is that _chart.filter() returns the entire current set of filters not just the last added one
@@ -87,96 +57,73 @@ export class CompositeChart extends CoordinateGridMixin {
             }
         });
 
-        // Revisit after converting mixins
-        this._prepareYAxis = function () {
-            const left = (this._leftYAxisChildren().length !== 0);
-            const right = (this._rightYAxisChildren().length !== 0);
-            const ranges = this._calculateYAxisRanges(left, right);
-
-            if (left) {
-                this._prepareLeftYAxis(ranges);
-            }
-            if (right) {
-                this._prepareRightYAxis(ranges);
-            }
-
-            if (this._leftYAxisChildren().length > 0 && !this._rightAxisGridLines) {
-                this._renderHorizontalGridLinesForAxis(this.g(), this.y(), this.yAxis());
-            } else if (this._rightYAxisChildren().length > 0) {
-                this._renderHorizontalGridLinesForAxis(this.g(), this._pvt_rightY, this._rightYAxis);
-            }
-        };
-
-        // Revisit after converting mixins
-        this.renderYAxis = function () {
-            if (this._leftYAxisChildren().length !== 0) {
-                this.renderYAxisAt('y', this.yAxis(), this.margins().left);
-                this.renderYAxisLabel('y', this.yAxisLabel(), -90);
-            }
-
-            if (this._rightYAxisChildren().length !== 0) {
-                this.renderYAxisAt('yr', this.rightYAxis(), this.width() - this.margins().right);
-                this.renderYAxisLabel('yr', this.rightYAxisLabel(), 90, this.width() - this._rightYAxisLabelPadding);
-            }
-        };
-
-        // Revisit after converting mixins
-        this.plotData = function () {
-            for (let i = 0; i < this._children.length; ++i) {
-                const child = this._children[i];
-
-                if (!child.g()) {
-                    this._generateChildG(child, i);
-                }
-
-                if (this._shareColors) {
-                    child.colors(this.colors());
-                }
-
-                child.x(this.x());
-
-                child.xAxis(this.xAxis());
-
-                if (child.useRightYAxis()) {
-                    child.y(this.rightY());
-                    child.yAxis(this.rightYAxis());
-                } else {
-                    child.y(this.y());
-                    child.yAxis(this.yAxis());
-                }
-
-                child.plotData();
-
-                child._activateRenderlets();
-            }
-        };
-
-        // Revisit after converting mixins
-        this.fadeDeselectedArea = function (brushSelection) {
-            if (this.brushOn()) {
-                for (let i = 0; i < this._children.length; ++i) {
-                    const child = this._children[i];
-                    child.fadeDeselectedArea(brushSelection);
-                }
-            }
-        };
-
         // ES6: avoid deleting
         delete this.yAxisMin;
 
         // ES6: avoid deleting
         delete this.yAxisMax;
 
-        override(this, 'xAxisMin', function () {
-            return utils.subtract(d3.min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
-        });
-
-        override(this, 'xAxisMax', function () {
-            return utils.add(d3.max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
-        });
-
         this.anchor(parent, chartGroup);
     }
+
+    _generateG () {
+        const g = super._generateG();
+
+        for (let i = 0; i < this._children.length; ++i) {
+            const child = this._children[i];
+
+            this._generateChildG(child, i);
+
+            if (!child.dimension()) {
+                child.dimension(this.dimension());
+            }
+            if (!child.group()) {
+                child.group(this.group());
+            }
+
+            child.chartGroup(this.chartGroup());
+            child.svg(this.svg());
+            child.xUnits(this.xUnits());
+            child.transitionDuration(this.transitionDuration(), this.transitionDelay());
+            child.parentBrushOn(this.brushOn());
+            child.brushOn(false);
+            child.renderTitle(this.renderTitle());
+            child.elasticX(this.elasticX());
+        }
+
+        return g;
+    }
+
+    _prepareYAxis () {
+        const left = (this._leftYAxisChildren().length !== 0);
+        const right = (this._rightYAxisChildren().length !== 0);
+        const ranges = this._calculateYAxisRanges(left, right);
+
+        if (left) {
+            this._prepareLeftYAxis(ranges);
+        }
+        if (right) {
+            this._prepareRightYAxis(ranges);
+        }
+
+        if (this._leftYAxisChildren().length > 0 && !this._rightAxisGridLines) {
+            this._renderHorizontalGridLinesForAxis(this.g(), this.y(), this.yAxis());
+        } else if (this._rightYAxisChildren().length > 0) {
+            this._renderHorizontalGridLinesForAxis(this.g(), this._pvt_rightY, this._rightYAxis);
+        }
+    };
+
+    renderYAxis () {
+        if (this._leftYAxisChildren().length !== 0) {
+            this.renderYAxisAt('y', this.yAxis(), this.margins().left);
+            this.renderYAxisLabel('y', this.yAxisLabel(), -90);
+        }
+
+        if (this._rightYAxisChildren().length !== 0) {
+            this.renderYAxisAt('yr', this.rightYAxis(), this.width() - this.margins().right);
+            this.renderYAxisLabel('yr', this.rightYAxisLabel(), 90, this.width() - this._rightYAxisLabelPadding);
+        }
+    };
 
     _calculateYAxisRanges (left, right) {
         let lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
@@ -268,6 +215,36 @@ export class CompositeChart extends CoordinateGridMixin {
         child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
     }
 
+    plotData () {
+        for (let i = 0; i < this._children.length; ++i) {
+            const child = this._children[i];
+
+            if (!child.g()) {
+                this._generateChildG(child, i);
+            }
+
+            if (this._shareColors) {
+                child.colors(this.colors());
+            }
+
+            child.x(this.x());
+
+            child.xAxis(this.xAxis());
+
+            if (child.useRightYAxis()) {
+                child.y(this.rightY());
+                child.yAxis(this.rightYAxis());
+            } else {
+                child.y(this.y());
+                child.yAxis(this.yAxis());
+            }
+
+            child.plotData();
+
+            child._activateRenderlets();
+        }
+    };
+
     /**
      * Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
      * default behavior. This option is only respected when subcharts with both left and right y-axes
@@ -308,6 +285,15 @@ export class CompositeChart extends CoordinateGridMixin {
         });
         return this;
     }
+
+    fadeDeselectedArea (brushSelection) {
+        if (this.brushOn()) {
+            for (let i = 0; i < this._children.length; ++i) {
+                const child = this._children[i];
+                child.fadeDeselectedArea(brushSelection);
+            }
+        }
+    };
 
     /**
      * Set or get the right y axis label.
@@ -499,8 +485,16 @@ export class CompositeChart extends CoordinateGridMixin {
         return this._children.map(c => c.xAxisMin());
     }
 
+    xAxisMin () {
+        return utils.subtract(d3.min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
+    }
+
     _getAllXAxisMaxFromChildCharts () {
         return this._children.map(c => c.xAxisMax());
+    }
+
+    xAxisMax () {
+        return utils.add(d3.max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     legendables () {
