@@ -4,11 +4,26 @@ import {transition} from '../core/core';
 import {filters} from '../core/filters';
 import {utils} from '../core/utils';
 import {events} from '../core/events';
-import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
+
+function _tweenSlice (d, chart) {
+    let current = this._current;
+    if (chart._isOffCanvas(current)) {
+        current = {x0: 0, x1: 0, y0: 0, y1: 0};
+    }
+    const tweenTarget = {
+        x0: d.x0,
+        x1: d.x1,
+        y0: d.y0,
+        y1: d.y1
+    };
+    const i = d3.interpolate(current, tweenTarget);
+    this._current = i(0);
+    return t => chart._safeArc(chart._buildArcs(), Object.assign({}, d, i(t)));
+}
 
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
@@ -83,26 +98,6 @@ class SunburstChart extends ColorMixin(BaseMixin) {
             }
             return filters;
         });
-
-        {
-            const self = this;
-            // ES6: it uses this as well as self, carefully handle
-            self._tweenSlice = function (d) {
-                let current = this._current;
-                if (self._isOffCanvas(current)) {
-                    current = {x0: 0, x1: 0, y0: 0, y1: 0};
-                }
-                const tweenTarget = {
-                    x0: d.x0,
-                    x1: d.x1,
-                    y0: d.y0,
-                    y1: d.y1
-                };
-                const i = d3.interpolate(current, tweenTarget);
-                this._current = i(0);
-                return t => self._safeArc(self._buildArcs(), Object.assign({}, d, i(t)));
-            };
-        }
 
         this.anchor(parent, chartGroup);
     }
@@ -191,7 +186,10 @@ class SunburstChart extends ColorMixin(BaseMixin) {
 
         const tranNodes = transition(slicePath, this.transitionDuration());
         if (tranNodes.attrTween) {
-            tranNodes.attrTween('d', this._tweenSlice);
+            const self = this;
+            tranNodes.attrTween('d', function (d) {
+                return _tweenSlice.call(this, d, self);
+            });
         }
     }
 
@@ -249,7 +247,10 @@ class SunburstChart extends ColorMixin(BaseMixin) {
             .attr('d', (d, i) => this._safeArc(arc, d));
         const tranNodes = transition(slicePaths, this.transitionDuration());
         if (tranNodes.attrTween) {
-            tranNodes.attrTween('d', this._tweenSlice);
+            const self = this;
+            tranNodes.attrTween('d', function (d) {
+                return _tweenSlice.call(this, d, self);
+            });
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
