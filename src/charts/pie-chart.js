@@ -172,7 +172,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     _createSlicePath (slicesEnter, arc) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', (d, i) => this._pvt_onClick(d, i))
+            .on('click', (d, i) => this._onClick(d, i))
             .attr('d', (d, i) => this._safeArc(d, i, arc));
 
         const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
@@ -225,7 +225,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                     }
                     return classes;
                 })
-                .on('click', (d, i) => this._pvt_onClick(d, i))
+                .on('click', (d, i) => this._onClick(d, i))
                 .on('mouseover', (d, i) => {
                     this._highlightSlice(i, true);
                 })
@@ -249,7 +249,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .enter()
             .append('polyline')
             .attr('class', (d, i) => 'pie-path _' + i + ' ' + this._sliceCssClass)
-            .on('click', (d, i) => this._pvt_onClick(d, i))
+            .on('click', (d, i) => this._onClick(d, i))
             .on('mouseover', (d, i) => {
                 this._highlightSlice(i, true);
             })
@@ -481,7 +481,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this.getColor(d.data, i);
     }
 
-    _pvt_onClick (d, i) {
+    _onClick (d, i) {
         if (this._g.attr('class') !== this._emptyCssClass) {
             this.onClick(d.data, i);
         }

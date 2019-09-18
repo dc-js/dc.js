@@ -247,9 +247,8 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         return this;
     }
 
-    _colors (d, i) {
-        const self = this;
-        return self.getColor.call(d, d.values, i);
+    _getColor (d, i) {
+        return this.getColor.call(d, d.values, i);
     }
 
     // To keep it backward compatible, this covers multiple cases
@@ -312,14 +311,14 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
 
         const path = layersEnter.append('path')
             .attr('class', 'line')
-            .attr('stroke', (d, i) => this._colors(d, i));
+            .attr('stroke', (d, i) => this._getColor(d, i));
         if (this._dashStyle) {
             path.attr('stroke-dasharray', this._dashStyle);
         }
 
         transition(layers.select('path.line'), this.transitionDuration(), this.transitionDelay())
         //.ease('linear')
-            .attr('stroke', (d, i) => this._colors(d, i))
+            .attr('stroke', (d, i) => this._getColor(d, i))
             .attr('d', d => this._safeD(line(d.values)));
     }
 
@@ -336,12 +335,12 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
 
             layersEnter.append('path')
                 .attr('class', 'area')
-                .attr('fill', (d, i) => this._colors(d, i))
+                .attr('fill', (d, i) => this._getColor(d, i))
                 .attr('d', d => this._safeD(area(d.values)));
 
             transition(layers.select('path.area'), this.transitionDuration(), this.transitionDelay())
             //.ease('linear')
-                .attr('fill', (d, i) => this._colors(d, i))
+                .attr('fill', (d, i) => this._getColor(d, i))
                 .attr('d', d => this._safeD(area(d.values)));
         }
     }
@@ -399,7 +398,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                     })
                     .merge(dots);
 
-                dotsEnterModify.call(dot => this._pvt_renderTitle(dot, d));
+                dotsEnterModify.call(dot => this._doRenderTitle(dot, d));
 
                 transition(dotsEnterModify, this.transitionDuration())
                     .attr('cx', d => utils.safeNumber(this.x()(d.x)))
@@ -481,7 +480,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
     }
 
-    _pvt_renderTitle (dot, d) {
+    _doRenderTitle (dot, d) {
         if (this.renderTitle()) {
             dot.select('title').remove();
             dot.append('title').text(pluck('data', this.title(d.name)));

@@ -100,10 +100,10 @@ export class SelectMenu extends BaseMixin {
 
         this._select.selectAll('option.' + OPTION_CSS_CLASS).sort(this._order);
 
-        this._select.on('change', (d, i) => this._pvt_onChange(d, i));
+        this._select.on('change', (d, i) => this._onChange(d, i));
     }
 
-    _pvt_onChange (d, i) {
+    _onChange (d, i) {
         let values;
         const target = d3.event.target;
         if (target.selectedOptions) {

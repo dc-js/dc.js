@@ -40,7 +40,7 @@ export class CompositeChart extends CoordinateGridMixin {
         this._rightYAxis = d3.axisRight();
         this._rightYAxisLabel = 0;
         this._rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING;
-        this._pvt_rightY = undefined;
+        this._rightY = undefined;
         this._rightAxisGridLines = false;
 
         this._mandatoryAttributes([]);
@@ -108,7 +108,7 @@ export class CompositeChart extends CoordinateGridMixin {
         if (this._leftYAxisChildren().length > 0 && !this._rightAxisGridLines) {
             this._renderHorizontalGridLinesForAxis(this.g(), this.y(), this.yAxis());
         } else if (this._rightYAxisChildren().length > 0) {
-            this._renderHorizontalGridLinesForAxis(this.g(), this._pvt_rightY, this._rightYAxis);
+            this._renderHorizontalGridLinesForAxis(this.g(), this._rightY, this._rightYAxis);
         }
     }
 
@@ -423,9 +423,9 @@ export class CompositeChart extends CoordinateGridMixin {
      */
     rightY (yScale) {
         if (!arguments.length) {
-            return this._pvt_rightY;
+            return this._rightY;
         }
-        this._pvt_rightY = yScale;
+        this._rightY = yScale;
         this.rescale();
         return this;
     }

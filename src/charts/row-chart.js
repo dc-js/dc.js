@@ -192,7 +192,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         const rect = rows.attr('transform', (d, i) => 'translate(0,' + ((i + 1) * this._gap + i * height) + ')').select('rect')
             .attr('height', height)
             .attr('fill', this.getColor)
-            .on('click', d => this._pvt_onClick(d))
+            .on('click', d => this._onClick(d))
             .classed('deselected', d => (this.hasFilter()) ? !this._isSelectedRow(d) : false)
             .classed('selected', d => (this.hasFilter()) ? this._isSelectedRow(d) : false);
 
@@ -214,12 +214,12 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
     _createLabels (rowEnter) {
         if (this.renderLabel()) {
             rowEnter.append('text')
-                .on('click', d => this._pvt_onClick(d));
+                .on('click', d => this._onClick(d));
         }
         if (this.renderTitleLabel()) {
             rowEnter.append('text')
                 .attr('class', this._titleRowCssClass)
-                .on('click', d => this._pvt_onClick(d));
+                .on('click', d => this._onClick(d));
         }
     }
 
@@ -229,7 +229,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
                 .attr('x', this._labelOffsetX)
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
-                .on('click', d => this._pvt_onClick(d))
+                .on('click', d => this._onClick(d))
                 .attr('class', (d, i) => this._rowCssClass + ' _' + i)
                 .text(d => this.label()(d));
             transition(lab, this.transitionDuration(), this.transitionDelay())
@@ -241,7 +241,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
                 .attr('text-anchor', 'end')
-                .on('click', d => this._pvt_onClick(d))
+                .on('click', d => this._onClick(d))
                 .attr('class', (d, i) => this._titleRowCssClass + ' _' + i)
                 .text(d => this.title()(d));
             transition(titlelab, this.transitionDuration(), this.transitionDelay())
@@ -265,7 +265,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         return this;
     }
 
-    _pvt_onClick (d) {
+    _onClick (d) {
         this.onClick(d);
     }
 

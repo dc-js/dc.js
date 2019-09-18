@@ -72,7 +72,7 @@ export class BaseMixin {
         this.__dcFlag__ = utils.uniqueId();
 
         this._dimension = undefined;
-        this._pvt_group = undefined;
+        this._group = undefined;
 
         this._anchor = undefined;
         this._root = undefined;
@@ -97,7 +97,7 @@ export class BaseMixin {
         this._renderLabel = false;
 
         // ES6: the following can't be promoted to a member function, as it needs to be => function
-        this._pvt_title = d => this.keyAccessor()(d) + ': ' + this.valueAccessor()(d);
+        this._title = d => this.keyAccessor()(d) + ': ' + this.valueAccessor()(d);
         this._renderTitle = true;
         this._controlsUseVisibility = false;
 
@@ -349,7 +349,7 @@ export class BaseMixin {
      */
     data (callback) {
         if (!arguments.length) {
-            return this._data.call(this, this._pvt_group);
+            return this._data.call(this, this._group);
         }
         this._data = typeof callback === 'function' ? callback : utils.constant(callback);
         this.expireCache();
@@ -381,9 +381,9 @@ export class BaseMixin {
      */
     group (group, name) {
         if (!arguments.length) {
-            return this._pvt_group;
+            return this._group;
         }
-        this._pvt_group = group;
+        this._group = group;
         this._groupName = name;
         this.expireCache();
         return this;
@@ -1404,9 +1404,9 @@ export class BaseMixin {
      */
     title (titleFunction) {
         if (!arguments.length) {
-            return this._pvt_title;
+            return this._title;
         }
-        this._pvt_title = titleFunction;
+        this._title = titleFunction;
         return this;
     }
 

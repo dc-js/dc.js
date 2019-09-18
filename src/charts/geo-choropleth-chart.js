@@ -80,7 +80,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
 
             this._renderPaths(regionG, layerIndex, data);
 
-            this._pvt_renderTitle(regionG, layerIndex, data);
+            this._renderTitles(regionG, layerIndex, data);
         }
     }
 
@@ -163,7 +163,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     }
 
     // ES6: name clashes with instance variable in the BaseMixin
-    _pvt_renderTitle (regionG, layerIndex, data) {
+    _renderTitles (regionG, layerIndex, data) {
         if (this.renderTitle()) {
             regionG.selectAll('title').text(d => {
                 const key = this._getKey(layerIndex, d);

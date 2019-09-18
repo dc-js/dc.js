@@ -17,8 +17,7 @@ export const ColorMixin = Base => {
         constructor () {
             super();
 
-            // ES6: conflicts with a method named _colors in line-chart
-            this._pvt_colors = d3.scaleOrdinal(config.defaultColors());
+            this._colors = d3.scaleOrdinal(config.defaultColors());
 
             this._colorAccessor = (d) => {
                 return this.keyAccessor()(d);
@@ -42,7 +41,7 @@ export const ColorMixin = Base => {
                 self.getColor = function (d, i) {
                     return self._colorCalculator ?
                         self._colorCalculator.call(this, d, i) :
-                        self._pvt_colors(self._colorAccessor.call(this, d, i));
+                        self._colors(self._colorAccessor.call(this, d, i));
                 };
             }
         }
@@ -58,7 +57,7 @@ export const ColorMixin = Base => {
         calculateColorDomain () {
             const newDomain = [d3.min(this.data(), this.colorAccessor()),
                                d3.max(this.data(), this.colorAccessor())];
-            this._pvt_colors.domain(newDomain);
+            this._colors.domain(newDomain);
             return this;
         }
 
@@ -83,12 +82,12 @@ export const ColorMixin = Base => {
          */
         colors (colorScale) {
             if (!arguments.length) {
-                return this._pvt_colors;
+                return this._colors;
             }
             if (colorScale instanceof Array) {
-                this._pvt_colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
+                this._colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
             } else {
-                this._pvt_colors = typeof colorScale === 'function' ? colorScale : utils.constant(colorScale);
+                this._colors = typeof colorScale === 'function' ? colorScale : utils.constant(colorScale);
             }
             return this;
         }
@@ -158,9 +157,9 @@ export const ColorMixin = Base => {
          */
         colorDomain (domain) {
             if (!arguments.length) {
-                return this._pvt_colors.domain();
+                return this._colors.domain();
             }
-            this._pvt_colors.domain(domain);
+            this._colors.domain(domain);
             return this;
         }
 

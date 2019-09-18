@@ -61,8 +61,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
 
         this._brush = d3.brushX();
 
-        // ES6: conflicts with scatter-plot
-        this._pvt_gBrush = undefined;
+        this._gBrush = undefined;
         this._brushOn = true;
         this._parentBrushOn = false;
         this._round = undefined;
@@ -86,9 +85,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
         this._mouseZoomable = false;
         this._clipPadding = 0;
 
-        // ES6: conflicts with methods by same names
-        this._pvt_outerRangeBandPadding = 0.5;
-        this._pvt_rangeBandPadding = 0;
+        this._fOuterRangeBandPadding = 0.5;
+        this._fRangeBandPadding = 0;
 
         this._useRightYAxis = false;
     }
@@ -524,8 +522,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
         // please can't we always use rangeBands for bar charts?
         if (this.isOrdinal()) {
             this._x.range([0, this.xAxisLength()])
-                .paddingInner(this._pvt_rangeBandPadding)
-                .paddingOuter(this._useOuterPadding() ? this._pvt_outerRangeBandPadding : 0);
+                .paddingInner(this._fRangeBandPadding)
+                .paddingOuter(this._useOuterPadding() ? this._fOuterRangeBandPadding : 0);
         } else {
             this._x.range([0, this.xAxisLength()]);
         }
@@ -967,17 +965,17 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
 
     _rangeBandPadding (_) {
         if (!arguments.length) {
-            return this._pvt_rangeBandPadding;
+            return this._fRangeBandPadding;
         }
-        this._pvt_rangeBandPadding = _;
+        this._fRangeBandPadding = _;
         return this;
     }
 
     _outerRangeBandPadding (_) {
         if (!arguments.length) {
-            return this._pvt_outerRangeBandPadding;
+            return this._fOuterRangeBandPadding;
         }
-        this._pvt_outerRangeBandPadding = _;
+        this._fOuterRangeBandPadding = _;
         return this;
     }
 
@@ -1021,13 +1019,13 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
             this._brush.on('start brush end', () => this._brushing());
 
             // To retrieve selection we need self._gBrush
-            this._pvt_gBrush = g.append('g')
+            this._gBrush = g.append('g')
                 .attr('class', 'brush')
                 .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
 
             this.setBrushExtents();
 
-            this.createBrushHandlePaths(this._pvt_gBrush, doTransition);
+            this.createBrushHandlePaths(this._gBrush, doTransition);
 
             this.redrawBrush(this.filter(), doTransition);
         }
@@ -1099,27 +1097,27 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
         // Set boundaries of the brush, must set it before applying to self._gBrush
         this._brush.extent([[0, 0], [this.effectiveWidth(), this.effectiveHeight()]]);
 
-        this._pvt_gBrush
+        this._gBrush
             .call(this._brush);
     }
 
     redrawBrush (brushSelection, doTransition) {
-        if (this._brushOn && this._pvt_gBrush) {
+        if (this._brushOn && this._gBrush) {
             if (this._resizing) {
                 this.setBrushExtents(doTransition);
             }
 
             if (!brushSelection) {
-                this._pvt_gBrush
+                this._gBrush
                     .call(this._brush.move, null);
 
-                this._pvt_gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                this._gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
                     .attr('display', 'none');
             } else {
                 const scaledSelection = [this._x(brushSelection[0]), this._x(brushSelection[1])];
 
                 const gBrush =
-                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(this._pvt_gBrush);
+                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(this._gBrush);
 
                 gBrush
                     .call(this._brush.move, scaledSelection);
@@ -1464,7 +1462,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
 
     // Get the SVG rendered brush
     gBrush () {
-        return this._pvt_gBrush;
+        return this._gBrush;
     }
 
     _hasRangeSelected (range) {
