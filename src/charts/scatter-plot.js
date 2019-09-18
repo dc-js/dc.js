@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {optionalTransition, override, transition} from '../core/core';
+import {optionalTransition, transition} from '../core/core';
 import {filters} from '../core/filters';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
@@ -89,7 +89,6 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     filter (filter) {
-        const self = this;
         if (!arguments.length) {
             return super.filter();
         }

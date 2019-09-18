@@ -40,7 +40,9 @@ export const ColorMixin = Base => {
                  * @returns {String}
                  */
                 self.getColor = function (d, i) {
-                    return self._colorCalculator ? self._colorCalculator.call(this, d, i) : self._pvt_colors(self._colorAccessor.call(this, d, i));
+                    return self._colorCalculator ?
+                        self._colorCalculator.call(this, d, i) :
+                        self._pvt_colors(self._colorAccessor.call(this, d, i));
                 };
             }
         }

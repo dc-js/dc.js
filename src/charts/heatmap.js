@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-import {override, transition} from '../core/core';
+import {transition} from '../core/core';
 import {logger} from '../core/logger';
 import {filters} from '../core/filters';
 import {events} from '../core/events';

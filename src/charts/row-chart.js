@@ -38,7 +38,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         this._labelOffsetX = 10;
         this._labelOffsetY = 15;
         this._hasLabelOffsetY = false;
-        this._dyOffset = '0.35em';  // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
+        this._dyOffset = '0.35em'; // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
         this._titleLabelOffsetX = 2;
 
         this._gap = 5;
