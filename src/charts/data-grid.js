@@ -62,7 +62,7 @@ export class DataGrid extends BaseMixin {
          * @returns {Function|dc.dataGrid}
          */
         this.group = logger.annotate(this.section,
-            'consider using dataGrid.section instead of dataGrid.group for clarity');
+                                     'consider using dataGrid.section instead of dataGrid.group for clarity');
 
         /**
          * Backward-compatible synonym for {@link dc.dataGrid#htmlSection htmlSection}.
@@ -73,7 +73,7 @@ export class DataGrid extends BaseMixin {
          * @returns {Function|dc.dataGrid}
          */
         this.htmlGroup = logger.annotate(this.htmlSection,
-            'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
+                                         'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
 
         this.anchor(parent, chartGroup);
     }
@@ -84,7 +84,7 @@ export class DataGrid extends BaseMixin {
         this._renderItems(this._renderSections());
 
         return this;
-    };
+    }
 
     _renderSections () {
         const sections = this.root().selectAll('div.' + GRID_CSS_CLASS)
@@ -102,7 +102,7 @@ export class DataGrid extends BaseMixin {
 
         sections.exit().remove();
         return itemSection;
-    };
+    }
 
     _nestEntries () {
         const entries = this.dimension().top(this._size);
@@ -115,7 +115,7 @@ export class DataGrid extends BaseMixin {
                     .sort((a, b) => this._order(this._sortBy(a), this._sortBy(b)))
                     .slice(this._beginSlice, this._endSlice)
             );
-    };
+    }
 
     _renderItems (sections) {
         let items = sections.order()
@@ -134,11 +134,11 @@ export class DataGrid extends BaseMixin {
             .merge(items);
 
         return items;
-    };
+    }
 
     _doRedraw () {
         return this._doRender();
-    };
+    }
 
     /**
      * Get or set the section function for the data grid. The section function takes a data row and
@@ -162,7 +162,7 @@ export class DataGrid extends BaseMixin {
         }
         this._section = section;
         return this;
-    };
+    }
 
     /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
@@ -179,7 +179,7 @@ export class DataGrid extends BaseMixin {
         }
         this._beginSlice = beginSlice;
         return this;
-    };
+    }
 
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the widget.
@@ -196,7 +196,7 @@ export class DataGrid extends BaseMixin {
         }
         this._endSlice = endSlice;
         return this;
-    };
+    }
 
     /**
      * Get or set the grid size which determines the number of items displayed by the widget.
@@ -212,7 +212,7 @@ export class DataGrid extends BaseMixin {
         }
         this._size = size;
         return this;
-    };
+    }
 
     /**
      * Get or set the function that formats an item. The data grid widget uses a
@@ -232,7 +232,7 @@ export class DataGrid extends BaseMixin {
         }
         this._html = html;
         return this;
-    };
+    }
 
     /**
      * Get or set the function that formats a section label.
@@ -250,7 +250,7 @@ export class DataGrid extends BaseMixin {
         }
         this._htmlSection = htmlSection;
         return this;
-    };
+    }
 
     /**
      * Get or set sort-by function. This function works as a value accessor at the item
@@ -271,7 +271,7 @@ export class DataGrid extends BaseMixin {
         }
         this._sortBy = sortByFunction;
         return this;
-    };
+    }
 
     /**
      * Get or set sort the order function.
@@ -291,7 +291,7 @@ export class DataGrid extends BaseMixin {
         }
         this._order = order;
         return this;
-    };
+    }
 }
 
 export const dataGrid = (parent, chartGroup) => new DataGrid(parent, chartGroup);

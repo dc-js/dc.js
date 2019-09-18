@@ -103,7 +103,7 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
                 }
             });
         }
-    };
+    }
 
     _barHeight (d) {
         return utils.safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
@@ -253,7 +253,7 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
                 bars.classed(constants.DESELECTED_CLASS, false);
             }
         }
-    };
+    }
 
     /**
      * Whether the bar chart will render each bar centered around the data position on the x-axis.
@@ -297,7 +297,7 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
 
     _useOuterPadding () {
         return this._gap === undefined;
-    };
+    }
 
     /**
      * Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
@@ -323,7 +323,7 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
             brushSelection[1] = this.round()(brushSelection[1]);
         }
         return brushSelection;
-    };
+    }
 
     /**
      * Set or get whether rounding is enabled when bars are centered. If false, using

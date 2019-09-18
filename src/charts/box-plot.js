@@ -144,18 +144,18 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._boxWidth = typeof boxWidth === 'function' ? boxWidth : utils.constant(boxWidth);
         return this;
-    };
+    }
 
     _boxTransform (d, i) {
         const xOffset = this.x()(this.keyAccessor()(d, i));
         return 'translate(' + xOffset + ', 0)';
-    };
+    }
 
     _preprocessData () {
         if (this.elasticX()) {
             this.x().domain([]);
         }
-    };
+    }
 
     plotData () {
         this._calculatedBoxWidth = this._boxWidth(this.effectiveWidth(), this.xUnitCount());
@@ -181,7 +181,7 @@ class BoxPlot extends CoordinateGridMixin {
         this._removeBoxes(boxesG);
 
         this.fadeDeselectedArea(this.filter());
-    };
+    }
 
     _renderBoxes (boxesG) {
         const boxesGEnter = boxesG.enter().append('g');
@@ -195,7 +195,7 @@ class BoxPlot extends CoordinateGridMixin {
                 this.redrawGroup();
             });
         return boxesGEnter.merge(boxesG);
-    };
+    }
 
     _updateBoxes (boxesG) {
         const self = this;
@@ -207,27 +207,27 @@ class BoxPlot extends CoordinateGridMixin {
                 d3.select(this).select('rect.box').attr('fill', color);
                 d3.select(this).selectAll('circle.data').attr('fill', color);
             });
-    };
+    }
 
     _removeBoxes (boxesG) {
         boxesG.exit().remove().call(this._box);
-    };
+    }
 
     _minDataValue () {
         return d3.min(this.data(), e => {
             return d3.min(this.valueAccessor()(e));
         });
-    };
+    }
 
     _maxDataValue () {
         return d3.max(this.data(), e => {
             return d3.max(this.valueAccessor()(e));
         });
-    };
+    }
 
     _yAxisRangeRatio () {
         return ((this._maxDataValue() - this._minDataValue()) / this.effectiveHeight());
-    };
+    }
 
     fadeDeselectedArea (brushSelection) {
         const self = this;
@@ -260,21 +260,21 @@ class BoxPlot extends CoordinateGridMixin {
                 self.resetHighlight(this);
             });
         }
-    };
+    }
 
     isSelectedNode (d) {
         return this.hasFilter(this.keyAccessor()(d));
-    };
+    }
 
     yAxisMin () {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
         return utils.subtract(this._minDataValue() - padding, this.yAxisPadding());
-    };
+    }
 
     yAxisMax () {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
         return utils.add(this._maxDataValue() + padding, this.yAxisPadding());
-    };
+    }
 
     /**
      * Get or set the numerical format of the boxplot median, whiskers and quartile labels. Defaults
@@ -294,7 +294,7 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._tickFormat = tickFormat;
         return this;
-    };
+    }
 
     /**
      * Get or set the amount of padding to add, in pixel coordinates, to the top and
@@ -314,7 +314,7 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._yRangePadding = yRangePadding;
         return this;
-    };
+    }
 
     /**
      * Get or set whether individual data points will be rendered.
@@ -333,7 +333,7 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._renderDataPoints = show;
         return this;
-    };
+    }
 
     /**
      * Get or set the opacity when rendering data.
@@ -352,7 +352,7 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._dataOpacity = opacity;
         return this;
-    };
+    }
 
     /**
      * Get or set the portion of the width of the box to show data points.
@@ -371,7 +371,7 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._dataWidthPortion = percentage;
         return this;
-    };
+    }
 
     /**
      * Get or set whether outliers will be rendered.
@@ -390,7 +390,7 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._showOutliers = show;
         return this;
-    };
+    }
 
     /**
      * Get or set whether outliers will be drawn bold.
@@ -409,7 +409,7 @@ class BoxPlot extends CoordinateGridMixin {
         }
         this._boldOutlier = show;
         return this;
-    };
+    }
 }
 
 export const boxPlot = (parent, chartGroup) => new BoxPlot(parent, chartGroup);

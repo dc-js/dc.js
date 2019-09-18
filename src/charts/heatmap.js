@@ -213,7 +213,7 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
             .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
 
         return this._doRedraw();
-    };
+    }
 
     _doRedraw () {
         const data = this.data();
@@ -237,7 +237,7 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
         rows.rangeRound([this.effectiveHeight(), 0]);
 
         let boxes = this._chartBody.selectAll('g.box-group').data(this.data(),
-            (d, i) => this.keyAccessor()(d, i) + '\0' + this.valueAccessor()(d, i));
+                                                                  (d, i) => this.keyAccessor()(d, i) + '\0' + this.valueAccessor()(d, i));
 
         boxes.exit().remove();
 
@@ -332,7 +332,7 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
             });
         }
         return this;
-    };
+    }
 
     /**
      * Gets or sets the handler that fires when an individual cell is clicked in the heatmap.

@@ -55,7 +55,7 @@ export const ColorMixin = Base => {
          */
         calculateColorDomain () {
             const newDomain = [d3.min(this.data(), this.colorAccessor()),
-                d3.max(this.data(), this.colorAccessor())];
+                               d3.max(this.data(), this.colorAccessor())];
             this._pvt_colors.domain(newDomain);
             return this;
         }

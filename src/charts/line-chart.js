@@ -144,7 +144,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         if (this.renderLabel()) {
             this._drawLabels(layers);
         }
-    };
+    }
 
     /**
      * Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
@@ -182,7 +182,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         }
         this._curve = curve;
         return this;
-    };
+    }
 
     /**
      * Gets or sets a function that will determine discontinuities in the line which should be
@@ -207,7 +207,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         }
         this._defined = defined;
         return this;
-    };
+    }
 
     /**
      * Set the line's d3 dashstyle. This value becomes the 'stroke-dasharray' of line. Defaults to empty
@@ -228,7 +228,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         }
         this._dashStyle = dashStyle;
         return this;
-    };
+    }
 
     /**
      * Get or set render area flag. If the flag is set to true then the chart will render the area
@@ -245,12 +245,12 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         }
         this._renderArea = renderArea;
         return this;
-    };
+    }
 
     _colors (d, i) {
         const self = this;
         return self.getColor.call(d, d.values, i);
-    };
+    }
 
     // To keep it backward compatible, this covers multiple cases
     // See https://github.com/dc-js/dc.js/issues/1376
@@ -299,7 +299,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
             }
         }
         return curve;
-    };
+    }
 
     _drawLine (layersEnter, layers) {
         const line = d3.line()
@@ -321,7 +321,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         //.ease('linear')
             .attr('stroke', (d, i) => this._colors(d, i))
             .attr('d', d => this._safeD(line(d.values)));
-    };
+    }
 
     _drawArea (layersEnter, layers) {
         if (this._renderArea) {
@@ -344,11 +344,11 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                 .attr('fill', (d, i) => this._colors(d, i))
                 .attr('d', d => this._safeD(area(d.values)));
         }
-    };
+    }
 
     _safeD (d) {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
-    };
+    }
 
     _drawDots (chartBody, layers) {
         if (this.xyTipsOn() === 'always' || (!(this.brushOn() || this.parentBrushOn()) && this.xyTipsOn())) {
@@ -409,7 +409,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                 dots.exit().remove();
             });
         }
-    };
+    }
 
     _drawLabels (layers) {
         const self = this;
@@ -437,7 +437,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                 .attr('height', 0)
                 .remove();
         });
-    };
+    }
 
     _createRefLines (g) {
         const yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
@@ -447,14 +447,14 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         const xRefLine = g.select('path.' + X_AXIS_REF_LINE_CLASS).empty() ?
             g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select('path.' + X_AXIS_REF_LINE_CLASS);
         xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
-    };
+    }
 
     _showDot (dot) {
         dot.style('fill-opacity', 0.8);
         dot.style('stroke-opacity', 0.8);
         dot.attr('r', this._dotRadius);
         return dot;
-    };
+    }
 
     _showRefLines (dot, g) {
         const x = dot.attr('cx');
@@ -464,29 +464,29 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         const xAxisRefPathD = 'M' + x + ' ' + this.yAxisHeight() + 'L' + x + ' ' + y;
         g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', '').attr('d', yAxisRefPathD);
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', '').attr('d', xAxisRefPathD);
-    };
+    }
 
     _getDotRadius () {
         return this._dataPointRadius || this._dotRadius;
-    };
+    }
 
     _hideDot (dot) {
         dot.style('fill-opacity', this._dataPointFillOpacity)
             .style('stroke-opacity', this._dataPointStrokeOpacity)
             .attr('r', this._getDotRadius());
-    };
+    }
 
     _hideRefLines (g) {
         g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
         g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
-    };
+    }
 
     _pvt_renderTitle (dot, d) {
         if (this.renderTitle()) {
             dot.select('title').remove();
             dot.append('title').text(pluck('data', this.title(d.name)));
         }
-    };
+    }
 
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
@@ -504,7 +504,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         }
         this._xyTipsOn = xyTipsOn;
         return this;
-    };
+    }
 
     /**
      * Get or set the radius (in px) for dots displayed on the data points.
@@ -520,7 +520,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
         }
         this._dotRadius = dotRadius;
         return this;
-    };
+    }
 
     /**
      * Always show individual dots for each datapoint.
@@ -552,7 +552,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
             this._dataPointRadius = options.radius || 2;
         }
         return this;
-    };
+    }
 
     _colorFilter (color, dashstyle, inv) {
         return function () {
@@ -562,7 +562,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                     dashstyle.join(',') : null)) || item.attr('fill') === color;
             return inv ? !match : match;
         };
-    };
+    }
 
     legendHighlight (d) {
         if (!this.isLegendableHidden(d)) {
@@ -570,13 +570,13 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                 .classed('highlight', this._colorFilter(d.color, d.dashstyle))
                 .classed('fadeout', this._colorFilter(d.color, d.dashstyle, true));
         }
-    };
+    }
 
     legendReset () {
         this.g().selectAll('path.line, path.area')
             .classed('highlight', false)
             .classed('fadeout', false);
-    };
+    }
 
     legendables () {
         const legendables = super.legendables();

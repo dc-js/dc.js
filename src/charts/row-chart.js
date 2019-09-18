@@ -78,7 +78,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
                 .range([0, this.effectiveWidth()]);
         }
         this._xAxis.scale(this._x);
-    };
+    }
 
     _drawAxis () {
         let axisG = this._g.select('g.axis');
@@ -92,7 +92,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
 
         transition(axisG, this.transitionDuration(), this.transitionDelay())
             .call(this._xAxis);
-    };
+    }
 
     _doRender () {
         this.resetSvg();
@@ -104,7 +104,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         this._drawChart();
 
         return this;
-    };
+    }
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
@@ -122,7 +122,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._x = scale;
         return this;
-    };
+    }
 
     _drawGridLines () {
         this._g.selectAll('g.tick')
@@ -136,7 +136,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
             .attr('y1', 0)
             .attr('x2', 0)
             .attr('y2', () => -this.effectiveHeight());
-    };
+    }
 
     _drawChart () {
         this._rowData = this.data();
@@ -151,7 +151,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         rows = this._createElements(rows)
             .merge(rows);
         this._updateElements(rows);
-    };
+    }
 
     _createElements (rows) {
         const rowEnter = rows.enter()
@@ -163,16 +163,16 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         this._createLabels(rowEnter);
 
         return rowEnter;
-    };
+    }
 
     _removeElements (rows) {
         rows.exit().remove();
-    };
+    }
 
     _rootValue () {
         const root = this._x(0);
         return (root === -Infinity || root !== root) ? this._x(1) : root;
-    };
+    }
 
     _updateElements (rows) {
         const n = this._rowData.length;
@@ -202,14 +202,14 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
 
         this._createTitles(rows);
         this._updateLabels(rows);
-    };
+    }
 
     _createTitles (rows) {
         if (this.renderTitle()) {
             rows.select('title').remove();
             rows.append('title').text(this.title());
         }
-    };
+    }
 
     _createLabels (rowEnter) {
         if (this.renderLabel()) {
@@ -221,7 +221,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
                 .attr('class', this._titleRowCssClass)
                 .on('click', d => this._pvt_onClick(d));
         }
-    };
+    }
 
     _updateLabels (rows) {
         if (this.renderLabel()) {
@@ -247,7 +247,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
             transition(titlelab, this.transitionDuration(), this.transitionDelay())
                 .attr('transform', d => this._translateX(d));
         }
-    };
+    }
 
     /**
      * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
@@ -263,23 +263,23 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._renderTitleLabel = renderTitleLabel;
         return this;
-    };
+    }
 
     _pvt_onClick (d) {
         this.onClick(d);
-    };
+    }
 
     _translateX (d) {
         const x = this._x(this.cappedValueAccessor(d)),
             x0 = this._rootValue(),
             s = x > x0 ? x0 : x;
         return 'translate(' + s + ',0)';
-    };
+    }
 
     _doRedraw () {
         this._drawChart();
         return this;
-    };
+    }
 
     /**
      * Get or sets the x axis for the row chart instance.
@@ -305,7 +305,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._xAxis = xAxis;
         return this;
-    };
+    }
 
     /**
      * Get or set the fixed bar height. Default is [false] which will auto-scale bars.
@@ -326,7 +326,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._fixedBarHeight = fixedBarHeight;
         return this;
-    };
+    }
 
     /**
      * Get or set the vertical gap space between rows on a particular row chart instance.
@@ -342,7 +342,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._gap = gap;
         return this;
-    };
+    }
 
     /**
      * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescale to auto-fit the
@@ -359,7 +359,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._elasticX = elasticX;
         return this;
-    };
+    }
 
     /**
      * Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
@@ -375,7 +375,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._labelOffsetX = labelOffsetX;
         return this;
-    };
+    }
 
     /**
      * Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
@@ -392,7 +392,7 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         this._labelOffsetY = labelOffsety;
         this._hasLabelOffsetY = true;
         return this;
-    };
+    }
 
     /**
      * Get of set the x offset (horizontal space between right edge of row and right edge or text.
@@ -408,11 +408,11 @@ class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
         }
         this._titleLabelOffsetX = titleLabelOffsetX;
         return this;
-    };
+    }
 
     _isSelectedRow (d) {
         return this.hasFilter(this.cappedKeyAccessor(d));
-    };
+    }
 }
 
 export const rowChart = (parent, chartGroup) => new RowChart(parent, chartGroup);

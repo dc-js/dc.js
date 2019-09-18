@@ -66,7 +66,7 @@ export class DataTable extends BaseMixin {
          * @returns {Function|dc.dataTable}
          */
         this.group = logger.annotate(this.section,
-            'consider using dataTable.section instead of dataTable.group for clarity');
+                                     'consider using dataTable.section instead of dataTable.group for clarity');
 
         /**
          * Backward-compatible synonym for {@link dc.dataTable#showSections showSections}.
@@ -77,7 +77,7 @@ export class DataTable extends BaseMixin {
          * @returns {Boolean|dc.dataTable}
          */
         this.showGroups = logger.annotate(this.showSections,
-            'consider using dataTable.showSections instead of dataTable.showGroups for clarity');
+                                          'consider using dataTable.showSections instead of dataTable.showGroups for clarity');
 
         this.anchor(parent, chartGroup);
     }
@@ -93,7 +93,7 @@ export class DataTable extends BaseMixin {
     _doColumnValueFormat (v, d) {
         return (typeof v === 'function') ? v(d) :  // v as function
             (typeof v === 'string') ? d[v] :       // v is field name string
-                v.format(d);                           // v is Object, use fn (element 2)
+            v.format(d);                           // v is Object, use fn (element 2)
     }
 
     _doColumnHeaderFormat (d) {
@@ -102,7 +102,7 @@ export class DataTable extends BaseMixin {
         // if an object then display its label string as-is.
         return (typeof d === 'function') ? this._doColumnHeaderFnToString(d) :
             (typeof d === 'string') ? this._doColumnHeaderCapitalize(d) :
-                String(d.label);
+            String(d.label);
     }
 
     _doColumnHeaderCapitalize (s) {

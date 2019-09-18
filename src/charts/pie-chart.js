@@ -237,7 +237,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 this._updateLabelPaths(pieData, arc);
             }
         }
-    };
+    }
 
     _updateLabelPaths (pieData, arc) {
         let polyline = this._g.selectAll('polyline.' + this._sliceCssClass)

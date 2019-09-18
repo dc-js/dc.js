@@ -420,7 +420,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
     createBrushHandlePaths () {
         // no handle paths for poly-brushes
-    };
+    }
 
     extendBrush (brushSelection) {
         const self = this;
@@ -429,11 +429,11 @@ export class ScatterPlot extends CoordinateGridMixin {
             brushSelection[1] = brushSelection[1].map(self.round());
         }
         return brushSelection;
-    };
+    }
 
     brushIsEmpty (brushSelection) {
         return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
-    };
+    }
 
     _brushing () {
         const self = this;
@@ -476,7 +476,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             self.replaceFilter(ranged2DFilter);
             self.redrawGroup();
         }, constants.EVENT_DELAY);
-    };
+    }
 
     redrawBrush (brushSelection, doTransition) {
         const self = this;
@@ -509,12 +509,12 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
 
         self.fadeDeselectedArea(brushSelection);
-    };
+    }
 
     setBrushY (gBrush) {
         const self = this;
         gBrush.call(self.brush().y(self.y()));
-    };
+    }
 }
 
 export const scatterPlot = (parent, chartGroup) => new ScatterPlot(parent, chartGroup);

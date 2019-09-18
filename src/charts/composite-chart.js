@@ -111,7 +111,7 @@ export class CompositeChart extends CoordinateGridMixin {
         } else if (this._rightYAxisChildren().length > 0) {
             this._renderHorizontalGridLinesForAxis(this.g(), this._pvt_rightY, this._rightYAxis);
         }
-    };
+    }
 
     renderYAxis () {
         if (this._leftYAxisChildren().length !== 0) {
@@ -123,7 +123,7 @@ export class CompositeChart extends CoordinateGridMixin {
             this.renderYAxisAt('yr', this.rightYAxis(), this.width() - this.margins().right);
             this.renderYAxisLabel('yr', this.rightYAxisLabel(), 90, this.width() - this._rightYAxisLabelPadding);
         }
-    };
+    }
 
     _calculateYAxisRanges (left, right) {
         let lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
@@ -243,7 +243,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
             child._activateRenderlets();
         }
-    };
+    }
 
     /**
      * Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
@@ -293,7 +293,7 @@ export class CompositeChart extends CoordinateGridMixin {
                 child.fadeDeselectedArea(brushSelection);
             }
         }
-    };
+    }
 
     /**
      * Set or get the right y axis label.

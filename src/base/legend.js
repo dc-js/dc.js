@@ -38,7 +38,7 @@ export class Legend {
         }
         this._parent = p;
         return this;
-    };
+    }
 
     /**
      * Set or get x coordinate for legend widget.
@@ -54,7 +54,7 @@ export class Legend {
         }
         this._x = x;
         return this;
-    };
+    }
 
     /**
      * Set or get y coordinate for legend widget.
@@ -70,7 +70,7 @@ export class Legend {
         }
         this._y = y;
         return this;
-    };
+    }
 
     /**
      * Set or get gap between legend items.
@@ -86,7 +86,7 @@ export class Legend {
         }
         this._gap = gap;
         return this;
-    };
+    }
 
     /**
      * Set or get legend item height.
@@ -102,7 +102,7 @@ export class Legend {
         }
         this._itemHeight = itemHeight;
         return this;
-    };
+    }
 
     /**
      * Position legend horizontally instead of vertically.
@@ -118,7 +118,7 @@ export class Legend {
         }
         this._horizontal = horizontal;
         return this;
-    };
+    }
 
     /**
      * Maximum width for horizontal legend.
@@ -134,7 +134,7 @@ export class Legend {
         }
         this._legendWidth = legendWidth;
         return this;
-    };
+    }
 
     /**
      * Legend item width for horizontal legend.
@@ -150,7 +150,7 @@ export class Legend {
         }
         this._itemWidth = itemWidth;
         return this;
-    };
+    }
 
     /**
      * Turn automatic width for legend items on or off. If true, {@link dc.legend#itemWidth itemWidth} is ignored.
@@ -167,7 +167,7 @@ export class Legend {
         }
         this._autoItemWidth = autoItemWidth;
         return this;
-    };
+    }
 
     /**
      * Set or get the legend text function. The legend widget uses this function to render the legend
@@ -194,7 +194,7 @@ export class Legend {
         }
         this._legendText = legendText;
         return this;
-    };
+    }
 
     /**
      * Maximum number of legend items to display
@@ -210,7 +210,7 @@ export class Legend {
         }
         this._maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
         return this;
-    };
+    }
 
     // Implementation methods
 

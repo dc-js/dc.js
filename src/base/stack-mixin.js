@@ -158,7 +158,7 @@ export const StackMixin = Base => {
             }
             this._hidableStacks = hidableStacks;
             return this;
-        };
+        }
 
         _findLayerByName (n) {
             const i = this._stack.map(pluck('name')).indexOf(n);

@@ -46,10 +46,10 @@ export class DataCount extends BaseMixin {
         this._mandatoryAttributes(['crossfilter', 'groupAll']);
 
         this.dimension = logger.annotate(this.crossfilter,
-            'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
+                                         'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
 
         this.group = logger.annotate(this.groupAll,
-            'consider using dataCount.groupAll instead of dataCount.group for clarity');
+                                     'consider using dataCount.groupAll instead of dataCount.group for clarity');
 
         this.anchor(parent, chartGroup);
     }
@@ -82,7 +82,7 @@ export class DataCount extends BaseMixin {
             this._html.some = options.some;
         }
         return this;
-    };
+    }
 
     /**
      * Gets or sets an optional function to format the filter count and total count.
@@ -101,7 +101,7 @@ export class DataCount extends BaseMixin {
         }
         this._formatNumber = formatter;
         return this;
-    };
+    }
 
     _doRender () {
         const tot = this.crossfilter().size(),
@@ -118,11 +118,11 @@ export class DataCount extends BaseMixin {
             this.selectAll('.filter-count').text(selected);
         }
         return this;
-    };
+    }
 
     _doRedraw () {
         return this._doRender();
-    };
+    }
 
     crossfilter (cf) {
         if (!arguments.length) {
@@ -130,7 +130,7 @@ export class DataCount extends BaseMixin {
         }
         this._crossfilter = cf;
         return this;
-    };
+    }
 
     groupAll (groupAll) {
         if (!arguments.length) {
@@ -138,7 +138,7 @@ export class DataCount extends BaseMixin {
         }
         this._groupAll = groupAll;
         return this;
-    };
+    }
 }
 
 export const dataCount = (parent, chartGroup) => new DataCount(parent, chartGroup);
