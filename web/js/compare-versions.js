@@ -80,6 +80,14 @@
     '<='
   ];
 
+  var operatorResMap = {
+    '>': [1],
+    '>=': [0, 1],
+    '=': [0],
+    '<=': [-1, 0],
+    '<': [-1]
+  };
+
   function validateOperator(op) {
     if (typeof op !== 'string') {
       throw new TypeError('Invalid operator type, expected string but got ' + typeof op);
@@ -93,20 +101,10 @@
     // Validate operator
     validateOperator(operator);
 
-    // TODO: there might be a better way instead of doing this
-    switch(operator) {
-      case '>':
-        return compareVersions(v1, v2) > 0;
-      case '>=':
-        return compareVersions(v1, v2) >= 0;
-      case '<':
-        return compareVersions(v1, v2) < 0;
-      case '<=':
-        return compareVersions(v1, v2) <= 0;
-      default:
-        // Since validateOperator already checks the operator, this case in the switch checks for the '=' operator
-        return compareVersions(v1, v2) === 0;
-    }
+    // since result of compareVersions can only be -1 or 0 or 1
+    // a simple map can be used to replace switch
+    var res = compareVersions(v1, v2);
+    return operatorResMap[operator].indexOf(res) > -1;
   }
 
   return compareVersions;
