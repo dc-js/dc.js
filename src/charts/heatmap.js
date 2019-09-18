@@ -66,149 +66,6 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
             });
         };
 
-        const nonstandardFilter = logger.deprecate(filter => this._filter(filters.TwoDimensionalFilter(filter)), 'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
-        override(this, 'filter', function (filter) {
-            if (!arguments.length) {
-                return this._filter();
-            }
-            if (filter !== null && filter.filterType !== 'TwoDimensionalFilter' &&
-                !(Array.isArray(filter) && Array.isArray(filter[0]) && filter[0][0].filterType === 'TwoDimensionalFilter')) {
-                return nonstandardFilter(filter);
-            }
-            return this._filter(filter);
-        });
-
-        // ES6: revisit after converting mixins
-        this._doRender = () => {
-            this.resetSvg();
-
-            this._chartBody = this.svg()
-                .append('g')
-                .attr('class', 'heatmap')
-                .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
-
-            return this._doRedraw();
-        };
-
-        // ES6: revisit after converting mixins
-        this._doRedraw = () => {
-            const data = this.data();
-            let rows = this.rows() || data.map(this.valueAccessor()),
-                cols = this.cols() || data.map(this.keyAccessor());
-            if (this._rowOrdering) {
-                rows = rows.sort(this._rowOrdering);
-            }
-            if (this._colOrdering) {
-                cols = cols.sort(this._colOrdering);
-            }
-            rows = this._rowScale.domain(rows);
-            cols = this._colScale.domain(cols);
-
-            const rowCount = rows.domain().length,
-                colCount = cols.domain().length,
-                boxWidth = Math.floor(this.effectiveWidth() / colCount),
-                boxHeight = Math.floor(this.effectiveHeight() / rowCount);
-
-            cols.rangeRound([0, this.effectiveWidth()]);
-            rows.rangeRound([this.effectiveHeight(), 0]);
-
-            let boxes = this._chartBody.selectAll('g.box-group').data(this.data(), (d, i) => this.keyAccessor()(d, i) + '\0' + this.valueAccessor()(d, i));
-
-            boxes.exit().remove();
-
-            const gEnter = boxes.enter().append('g')
-                .attr('class', 'box-group');
-
-            gEnter.append('rect')
-                .attr('class', 'heat-box')
-                .attr('fill', 'white')
-                .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
-                .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
-                .on('click', this.boxOnClick());
-
-            boxes = gEnter.merge(boxes);
-
-            if (this.renderTitle()) {
-                gEnter.append('title');
-                boxes.select('title').text(this.title());
-            }
-
-            transition(boxes.select('rect'), this.transitionDuration(), this.transitionDelay())
-                .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
-                .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
-                .attr('rx', this._xBorderRadius)
-                .attr('ry', this._yBorderRadius)
-                .attr('fill', this.getColor)
-                .attr('width', boxWidth)
-                .attr('height', boxHeight);
-
-            let gCols = this._chartBody.select('g.cols');
-            if (gCols.empty()) {
-                gCols = this._chartBody.append('g').attr('class', 'cols axis');
-            }
-            let gColsText = gCols.selectAll('text').data(cols.domain());
-
-            gColsText.exit().remove();
-
-            gColsText = gColsText
-                .enter()
-                .append('text')
-                .attr('x', d => cols(d) + boxWidth / 2)
-                .style('text-anchor', 'middle')
-                .attr('y', this.effectiveHeight())
-                .attr('dy', 12)
-                .on('click', this.xAxisOnClick())
-                .text(this.colsLabel())
-                .merge(gColsText);
-
-            transition(gColsText, this.transitionDuration(), this.transitionDelay())
-                .text(this.colsLabel())
-                .attr('x', d => cols(d) + boxWidth / 2)
-                .attr('y', this.effectiveHeight());
-
-            let gRows = this._chartBody.select('g.rows');
-            if (gRows.empty()) {
-                gRows = this._chartBody.append('g').attr('class', 'rows axis');
-            }
-
-            let gRowsText = gRows.selectAll('text').data(rows.domain());
-
-            gRowsText.exit().remove();
-
-            gRowsText = gRowsText
-                .enter()
-                .append('text')
-                .style('text-anchor', 'end')
-                .attr('x', 0)
-                .attr('dx', -2)
-                .attr('y', d => rows(d) + boxHeight / 2)
-                .attr('dy', 6)
-                .on('click', this.yAxisOnClick())
-                .text(this.rowsLabel())
-                .merge(gRowsText);
-
-            transition(gRowsText, this.transitionDuration(), this.transitionDelay())
-                .text(this.rowsLabel())
-                .attr('y', d => rows(d) + boxHeight / 2);
-
-            if (this.hasFilter()) {
-                const self = this;
-                this.selectAll('g.box-group').each(function (d) {
-                    if (self.isSelectedNode(d)) {
-                        self.highlightSelected(this);
-                    } else {
-                        self.fadeDeselected(this);
-                    }
-                });
-            } else {
-                const self = this;
-                this.selectAll('g.box-group').each(function () {
-                    self.resetHighlight(this);
-                });
-            }
-            return this;
-        };
-
         this.anchor(parent, chartGroup);
     }
 
@@ -261,6 +118,21 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
             this.filter([filtersList]);
             this.redrawGroup();
         });
+    }
+
+    filter (filter) {
+        const nonstandardFilter = logger.deprecate(
+            filter => this._filter(filters.TwoDimensionalFilter(filter)),
+            'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
+
+        if (!arguments.length) {
+            return super.filter();
+        }
+        if (filter !== null && filter.filterType !== 'TwoDimensionalFilter' &&
+            !(Array.isArray(filter) && Array.isArray(filter[0]) && filter[0][0].filterType === 'TwoDimensionalFilter')) {
+            return nonstandardFilter(filter);
+        }
+        return super.filter(filter);
     }
 
     /**
@@ -331,6 +203,136 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
         this._colOrdering = colOrdering;
         return this;
     }
+
+    _doRender () {
+        this.resetSvg();
+
+        this._chartBody = this.svg()
+            .append('g')
+            .attr('class', 'heatmap')
+            .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
+
+        return this._doRedraw();
+    };
+
+    _doRedraw () {
+        const data = this.data();
+        let rows = this.rows() || data.map(this.valueAccessor()),
+            cols = this.cols() || data.map(this.keyAccessor());
+        if (this._rowOrdering) {
+            rows = rows.sort(this._rowOrdering);
+        }
+        if (this._colOrdering) {
+            cols = cols.sort(this._colOrdering);
+        }
+        rows = this._rowScale.domain(rows);
+        cols = this._colScale.domain(cols);
+
+        const rowCount = rows.domain().length,
+            colCount = cols.domain().length,
+            boxWidth = Math.floor(this.effectiveWidth() / colCount),
+            boxHeight = Math.floor(this.effectiveHeight() / rowCount);
+
+        cols.rangeRound([0, this.effectiveWidth()]);
+        rows.rangeRound([this.effectiveHeight(), 0]);
+
+        let boxes = this._chartBody.selectAll('g.box-group').data(this.data(),
+            (d, i) => this.keyAccessor()(d, i) + '\0' + this.valueAccessor()(d, i));
+
+        boxes.exit().remove();
+
+        const gEnter = boxes.enter().append('g')
+            .attr('class', 'box-group');
+
+        gEnter.append('rect')
+            .attr('class', 'heat-box')
+            .attr('fill', 'white')
+            .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
+            .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
+            .on('click', this.boxOnClick());
+
+        boxes = gEnter.merge(boxes);
+
+        if (this.renderTitle()) {
+            gEnter.append('title');
+            boxes.select('title').text(this.title());
+        }
+
+        transition(boxes.select('rect'), this.transitionDuration(), this.transitionDelay())
+            .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
+            .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
+            .attr('rx', this._xBorderRadius)
+            .attr('ry', this._yBorderRadius)
+            .attr('fill', this.getColor)
+            .attr('width', boxWidth)
+            .attr('height', boxHeight);
+
+        let gCols = this._chartBody.select('g.cols');
+        if (gCols.empty()) {
+            gCols = this._chartBody.append('g').attr('class', 'cols axis');
+        }
+        let gColsText = gCols.selectAll('text').data(cols.domain());
+
+        gColsText.exit().remove();
+
+        gColsText = gColsText
+            .enter()
+            .append('text')
+            .attr('x', d => cols(d) + boxWidth / 2)
+            .style('text-anchor', 'middle')
+            .attr('y', this.effectiveHeight())
+            .attr('dy', 12)
+            .on('click', this.xAxisOnClick())
+            .text(this.colsLabel())
+            .merge(gColsText);
+
+        transition(gColsText, this.transitionDuration(), this.transitionDelay())
+            .text(this.colsLabel())
+            .attr('x', d => cols(d) + boxWidth / 2)
+            .attr('y', this.effectiveHeight());
+
+        let gRows = this._chartBody.select('g.rows');
+        if (gRows.empty()) {
+            gRows = this._chartBody.append('g').attr('class', 'rows axis');
+        }
+
+        let gRowsText = gRows.selectAll('text').data(rows.domain());
+
+        gRowsText.exit().remove();
+
+        gRowsText = gRowsText
+            .enter()
+            .append('text')
+            .style('text-anchor', 'end')
+            .attr('x', 0)
+            .attr('dx', -2)
+            .attr('y', d => rows(d) + boxHeight / 2)
+            .attr('dy', 6)
+            .on('click', this.yAxisOnClick())
+            .text(this.rowsLabel())
+            .merge(gRowsText);
+
+        transition(gRowsText, this.transitionDuration(), this.transitionDelay())
+            .text(this.rowsLabel())
+            .attr('y', d => rows(d) + boxHeight / 2);
+
+        if (this.hasFilter()) {
+            const self = this;
+            this.selectAll('g.box-group').each(function (d) {
+                if (self.isSelectedNode(d)) {
+                    self.highlightSelected(this);
+                } else {
+                    self.fadeDeselected(this);
+                }
+            });
+        } else {
+            const self = this;
+            this.selectAll('g.box-group').each(function () {
+                self.resetHighlight(this);
+            });
+        }
+        return this;
+    };
 
     /**
      * Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
