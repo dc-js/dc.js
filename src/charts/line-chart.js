@@ -4,7 +4,7 @@ import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {override, transition} from '../core/core';
+import {transition} from '../core/core';
 
 const DEFAULT_DOT_RADIUS = 5;
 const TOOLTIP_G_CLASS = 'dc-tooltip';
@@ -62,35 +62,6 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
 
         this.label(d => utils.printSingleValue(d.y0 + d.y), false);
 
-        // ES6: revisit after converting mixins
-        this.plotData = () => {
-            const chartBody = this.chartBodyG();
-            let layersList = chartBody.select('g.stack-list');
-
-            if (layersList.empty()) {
-                layersList = chartBody.append('g').attr('class', 'stack-list');
-            }
-
-            let layers = layersList.selectAll('g.stack').data(this.data());
-
-            const layersEnter = layers
-                .enter()
-                .append('g')
-                .attr('class', (d, i) => 'stack ' + '_' + i);
-
-            layers = layersEnter.merge(layers);
-
-            this._drawLine(layersEnter, layers);
-
-            this._drawArea(layersEnter, layers);
-
-            this._drawDots(chartBody, layers);
-
-            if (this.renderLabel()) {
-                this._drawLabels(layers);
-            }
-        };
-
         /**
          * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
          * functions, splines, and cubic interpolation.
@@ -144,20 +115,36 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
             return this;
         }, 'dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
 
-        // ES6: revisit after converting mixins
-        override(this, 'legendables', () => {
-            const legendables = this._legendables();
-            if (!this._dashStyle) {
-                return legendables;
-            }
-            return legendables.map(l => {
-                l.dashstyle = this._dashStyle;
-                return l;
-            });
-        });
-
         this.anchor(parent, chartGroup);
     }
+
+    plotData () {
+        const chartBody = this.chartBodyG();
+        let layersList = chartBody.select('g.stack-list');
+
+        if (layersList.empty()) {
+            layersList = chartBody.append('g').attr('class', 'stack-list');
+        }
+
+        let layers = layersList.selectAll('g.stack').data(this.data());
+
+        const layersEnter = layers
+            .enter()
+            .append('g')
+            .attr('class', (d, i) => 'stack ' + '_' + i);
+
+        layers = layersEnter.merge(layers);
+
+        this._drawLine(layersEnter, layers);
+
+        this._drawArea(layersEnter, layers);
+
+        this._drawDots(chartBody, layers);
+
+        if (this.renderLabel()) {
+            this._drawLabels(layers);
+        }
+    };
 
     /**
      * Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
@@ -325,14 +312,14 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
 
         const path = layersEnter.append('path')
             .attr('class', 'line')
-            .attr('stroke', (d, i) => this._colors(d,i));
+            .attr('stroke', (d, i) => this._colors(d, i));
         if (this._dashStyle) {
             path.attr('stroke-dasharray', this._dashStyle);
         }
 
         transition(layers.select('path.line'), this.transitionDuration(), this.transitionDelay())
         //.ease('linear')
-            .attr('stroke', (d, i) => this._colors(d,i))
+            .attr('stroke', (d, i) => this._colors(d, i))
             .attr('d', d => this._safeD(line(d.values)));
     };
 
@@ -349,12 +336,12 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
 
             layersEnter.append('path')
                 .attr('class', 'area')
-                .attr('fill', (d, i) => this._colors(d,i))
+                .attr('fill', (d, i) => this._colors(d, i))
                 .attr('d', d => this._safeD(area(d.values)));
 
             transition(layers.select('path.area'), this.transitionDuration(), this.transitionDelay())
             //.ease('linear')
-                .attr('fill', (d, i) => this._colors(d,i))
+                .attr('fill', (d, i) => this._colors(d, i))
                 .attr('d', d => this._safeD(area(d.values)));
         }
     };
@@ -591,6 +578,16 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
             .classed('fadeout', false);
     };
 
+    legendables () {
+        const legendables = super.legendables();
+        if (!this._dashStyle) {
+            return legendables;
+        }
+        return legendables.map(l => {
+            l.dashstyle = this._dashStyle;
+            return l;
+        });
+    }
 }
 
 export const lineChart = (parent, chartGroup) => new LineChart(parent, chartGroup);
