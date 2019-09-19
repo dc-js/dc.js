@@ -11,7 +11,7 @@ import * as d3 from 'd3';
  * @name capMixin
  * @memberof dc
  * @mixin
- * @param {Object} _chart
+ * @param {Object} Base
  * @returns {dc.capMixin}
  */
 export const CapMixin = Base => {

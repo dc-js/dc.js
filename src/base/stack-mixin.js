@@ -7,7 +7,7 @@ import {pluck, utils} from '../core/utils';
  * @name stackMixin
  * @memberof dc
  * @mixin
- * @param {Object} _chart
+ * @param {Object} Base
  * @returns {dc.stackMixin}
  */
 export const StackMixin = Base => {

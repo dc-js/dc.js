@@ -9,7 +9,7 @@ import {utils} from '../core/utils';
  * @name colorMixin
  * @memberof dc
  * @mixin
- * @param {Object} _chart
+ * @param {Object} Base
  * @returns {dc.colorMixin}
  */
 export const ColorMixin = Base => {

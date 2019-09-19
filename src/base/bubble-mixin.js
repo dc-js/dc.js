@@ -10,7 +10,7 @@ import {events} from '../core/events';
  * @memberof dc
  * @mixin
  * @mixes dc.colorMixin
- * @param {Object} _chart
+ * @param {Object} Base
  * @returns {dc.bubbleMixin}
  */
 export const BubbleMixin = Base => {

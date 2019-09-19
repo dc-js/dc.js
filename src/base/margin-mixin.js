@@ -4,7 +4,7 @@
  * @name marginMixin
  * @memberof dc
  * @mixin
- * @param {Object} _chart
+ * @param {Object} Base
  * @returns {dc.marginMixin}
  */
 export const MarginMixin = Base => {
