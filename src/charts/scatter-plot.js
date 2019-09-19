@@ -72,20 +72,18 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     _elementSize (d, i) {
-        const self = this;
-        if (!self._existenceAccessor(d)) {
-            return Math.pow(self._emptySize, 2);
-        } else if (self._filtered[i]) {
-            return Math.pow(self._symbolSize, 2);
+        if (!this._existenceAccessor(d)) {
+            return Math.pow(this._emptySize, 2);
+        } else if (this._filtered[i]) {
+            return Math.pow(this._symbolSize, 2);
         } else {
-            return Math.pow(self._excludedSize, 2);
+            return Math.pow(this._excludedSize, 2);
         }
     }
 
     _locator (d) {
-        const self = this;
-        return 'translate(' + self.x()(self.keyAccessor()(d)) + ',' +
-            self.y()(self.valueAccessor()(d)) + ')';
+        return 'translate(' + this.x()(this.keyAccessor()(d)) + ',' +
+            this.y()(this.valueAccessor()(d)) + ')';
     }
 
     filter (filter) {
@@ -97,11 +95,10 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     plotData () {
-        const self = this;
-        let symbols = self.chartBodyG().selectAll('path.symbol')
-            .data(self.data());
+        let symbols = this.chartBodyG().selectAll('path.symbol')
+            .data(this.data());
 
-        transition(symbols.exit(), self.transitionDuration(), self.transitionDelay())
+        transition(symbols.exit(), this.transitionDuration(), this.transitionDelay())
             .attr('opacity', 0).remove();
 
         symbols = symbols
@@ -109,44 +106,43 @@ export class ScatterPlot extends CoordinateGridMixin {
             .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
-            .attr('fill', self.getColor)
-            .attr('transform', d => self._locator(d))
+            .attr('fill', this.getColor)
+            .attr('transform', d => this._locator(d))
             .merge(symbols);
 
-        symbols.call(symbol => self._renderTitles(symbol, self.data()));
+        symbols.call(symbol => this._renderTitles(symbol, this.data()));
 
         symbols.each((d, i) => {
-            self._filtered[i] = !self.filter() || self.filter().isFiltered([self.keyAccessor()(d), self.valueAccessor()(d)]);
+            this._filtered[i] = !this.filter() || this.filter().isFiltered([this.keyAccessor()(d), this.valueAccessor()(d)]);
         });
 
-        transition(symbols, self.transitionDuration(), self.transitionDelay())
+        transition(symbols, this.transitionDuration(), this.transitionDelay())
             .attr('opacity', (d, i) => {
-                if (!self._existenceAccessor(d)) {
-                    return self._emptyOpacity;
-                } else if (self._filtered[i]) {
-                    return self._nonemptyOpacity;
+                if (!this._existenceAccessor(d)) {
+                    return this._emptyOpacity;
+                } else if (this._filtered[i]) {
+                    return this._nonemptyOpacity;
                 } else {
-                    return self.excludedOpacity();
+                    return this.excludedOpacity();
                 }
             })
             .attr('fill', (d, i) => {
-                if (self._emptyColor && !self._existenceAccessor(d)) {
-                    return self._emptyColor;
-                } else if (self.excludedColor() && !self._filtered[i]) {
-                    return self.excludedColor();
+                if (this._emptyColor && !this._existenceAccessor(d)) {
+                    return this._emptyColor;
+                } else if (this.excludedColor() && !this._filtered[i]) {
+                    return this.excludedColor();
                 } else {
-                    return self.getColor(d);
+                    return this.getColor(d);
                 }
             })
-            .attr('transform', d => self._locator(d))
-            .attr('d', self._symbol);
+            .attr('transform', d => this._locator(d))
+            .attr('d', this._symbol);
     }
 
     _renderTitles (symbol, d) {
-        const self = this;
-        if (self.renderTitle()) {
+        if (this.renderTitle()) {
             symbol.selectAll('title').remove();
-            symbol.append('title').text(d => self.title()(d));
+            symbol.append('title').text(d => this.title()(d));
         }
     }
 
@@ -168,12 +164,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Function|dc.scatterPlot}
      */
     existenceAccessor (accessor) {
-        const self = this;
         if (!arguments.length) {
-            return self._existenceAccessor;
+            return this._existenceAccessor;
         }
-        self._existenceAccessor = accessor;
-        return self;
+        this._existenceAccessor = accessor;
+        return this;
     }
 
     /**
@@ -192,12 +187,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Function|dc.scatterPlot}
      */
     symbol (type) {
-        const self = this;
         if (!arguments.length) {
-            return self._symbol.type();
+            return this._symbol.type();
         }
-        self._symbol.type(type);
-        return self;
+        this._symbol.type(type);
+        return this;
     }
 
     /**
@@ -215,13 +209,12 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {String|Function|dc.scatterPlot}
      */
     customSymbol (customSymbol) {
-        const self = this;
         if (!arguments.length) {
-            return self._symbol;
+            return this._symbol;
         }
-        self._symbol = customSymbol;
-        self._symbol.size((d, i) => self._elementSize(d, i));
-        return self;
+        this._symbol = customSymbol;
+        this._symbol.size((d, i) => this._elementSize(d, i));
+        return this;
     }
 
     /**
@@ -234,12 +227,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Number|dc.scatterPlot}
      */
     symbolSize (symbolSize) {
-        const self = this;
         if (!arguments.length) {
-            return self._symbolSize;
+            return this._symbolSize;
         }
-        self._symbolSize = symbolSize;
-        return self;
+        this._symbolSize = symbolSize;
+        return this;
     }
 
     /**
@@ -252,12 +244,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Number|dc.scatterPlot}
      */
     highlightedSize (highlightedSize) {
-        const self = this;
         if (!arguments.length) {
-            return self._highlightedSize;
+            return this._highlightedSize;
         }
-        self._highlightedSize = highlightedSize;
-        return self;
+        this._highlightedSize = highlightedSize;
+        return this;
     }
 
     /**
@@ -271,12 +262,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Number|dc.scatterPlot}
      */
     excludedSize (excludedSize) {
-        const self = this;
         if (!arguments.length) {
-            return self._excludedSize;
+            return this._excludedSize;
         }
-        self._excludedSize = excludedSize;
-        return self;
+        this._excludedSize = excludedSize;
+        return this;
     }
 
     /**
@@ -289,12 +279,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Number|dc.scatterPlot}
      */
     excludedColor (excludedColor) {
-        const self = this;
         if (!arguments.length) {
-            return self._excludedColor;
+            return this._excludedColor;
         }
-        self._excludedColor = excludedColor;
-        return self;
+        this._excludedColor = excludedColor;
+        return this;
     }
 
     /**
@@ -306,12 +295,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Number|dc.scatterPlot}
      */
     excludedOpacity (excludedOpacity) {
-        const self = this;
         if (!arguments.length) {
-            return self._excludedOpacity;
+            return this._excludedOpacity;
         }
-        self._excludedOpacity = excludedOpacity;
-        return self;
+        this._excludedOpacity = excludedOpacity;
+        return this;
     }
 
     /**
@@ -324,12 +312,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {Number|dc.scatterPlot}
      */
     emptySize (emptySize) {
-        const self = this;
         if (!arguments.length) {
-            return self._emptySize;
+            return this._emptySize;
         }
-        self._emptySize = emptySize;
-        return self;
+        this._emptySize = emptySize;
+        return this;
     }
 
     /**
@@ -343,12 +330,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @return {dc.scatterPlot}/
      */
     emptyColor (emptyColor) {
-        const self = this;
         if (!arguments.length) {
-            return self._emptyColor;
+            return this._emptyColor;
         }
-        self._emptyColor = emptyColor;
-        return self;
+        this._emptyColor = emptyColor;
+        return this;
     }
 
     /**
@@ -361,12 +347,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @return {dc.scatterPlot}
      */
     emptyOpacity (emptyOpacity) {
-        const self = this;
         if (!arguments.length) {
-            return self._emptyOpacity;
+            return this._emptyOpacity;
         }
-        self._emptyOpacity = emptyOpacity;
-        return self;
+        this._emptyOpacity = emptyOpacity;
+        return this;
     }
 
     /**
@@ -379,12 +364,11 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @return {dc.scatterPlot}
      */
     nonemptyOpacity (nonemptyOpacity) {
-        const self = this;
         if (!arguments.length) {
-            return self._emptyOpacity;
+            return this._emptyOpacity;
         }
-        self._nonemptyOpacity = nonemptyOpacity;
-        return self;
+        this._nonemptyOpacity = nonemptyOpacity;
+        return this;
     }
 
     legendables () {
@@ -392,40 +376,36 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     legendHighlight (d) {
-        const self = this;
-        self._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, self._highlightedSize);
-        self.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+        this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._highlightedSize);
+        this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', true);
     }
 
     legendReset (d) {
-        const self = this;
-        self._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, self._symbolSize);
-        self.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+        this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._symbolSize);
+        this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return d3.select(this).attr('fill') !== d.color;
         }).classed('fadeout', false);
     }
 
     _resizeSymbolsWhere (condition, size) {
-        const self = this;
-        const symbols = self.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+        const symbols = this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
             return condition(d3.select(this));
         });
-        const oldSize = self._symbol.size();
-        self._symbol.size(Math.pow(size, 2));
-        transition(symbols, self.transitionDuration(), self.transitionDelay()).attr('d', self._symbol);
-        self._symbol.size(oldSize);
+        const oldSize = this._symbol.size();
+        this._symbol.size(Math.pow(size, 2));
+        transition(symbols, this.transitionDuration(), this.transitionDelay()).attr('d', this._symbol);
+        this._symbol.size(oldSize);
     }
     createBrushHandlePaths () {
         // no handle paths for poly-brushes
     }
 
     extendBrush (brushSelection) {
-        const self = this;
-        if (self.round()) {
-            brushSelection[0] = brushSelection[0].map(self.round());
-            brushSelection[1] = brushSelection[1].map(self.round());
+        if (this.round()) {
+            brushSelection[0] = brushSelection[0].map(this.round());
+            brushSelection[1] = brushSelection[1].map(this.round());
         }
         return brushSelection;
     }
@@ -435,7 +415,6 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     _brushing () {
-        const self = this;
         // Avoids infinite recursion (mutual recursion between range and focus operations)
         // Source Event will be null when brush.move is called programmatically (see below as well).
         if (!d3.event.sourceEvent) {
@@ -453,66 +432,64 @@ export class ScatterPlot extends CoordinateGridMixin {
         let brushSelection = d3.event.selection;
 
         // Testing with pixels is more reliable
-        let brushIsEmpty = self.brushIsEmpty(brushSelection);
+        let brushIsEmpty = this.brushIsEmpty(brushSelection);
 
         if (brushSelection) {
             brushSelection = brushSelection.map(point => point.map((coord, i) => {
-                const scale = i === 0 ? self.x() : self.y();
+                const scale = i === 0 ? this.x() : this.y();
                 return scale.invert(coord);
             }));
 
-            brushSelection = self.extendBrush(brushSelection);
+            brushSelection = this.extendBrush(brushSelection);
 
             // The rounding process might have made brushSelection empty, so we need to recheck
-            brushIsEmpty = brushIsEmpty && self.brushIsEmpty(brushSelection);
+            brushIsEmpty = brushIsEmpty && this.brushIsEmpty(brushSelection);
         }
 
-        self.redrawBrush(brushSelection, false);
+        this.redrawBrush(brushSelection, false);
 
         const ranged2DFilter = brushIsEmpty ? null : filters.RangedTwoDimensionalFilter(brushSelection);
 
         events.trigger(() => {
-            self.replaceFilter(ranged2DFilter);
-            self.redrawGroup();
+            this.replaceFilter(ranged2DFilter);
+            this.redrawGroup();
         }, constants.EVENT_DELAY);
     }
 
     redrawBrush (brushSelection, doTransition) {
-        const self = this;
         // override default x axis brush from parent chart
-        self._brush = self.brush();
-        self._gBrush = self.gBrush();
+        this._brush = this.brush();
+        this._gBrush = this.gBrush();
 
-        if (self.brushOn() && self._gBrush) {
-            if (self.resizing()) {
-                self.setBrushExtents(doTransition);
+        if (this.brushOn() && this._gBrush) {
+            if (this.resizing()) {
+                this.setBrushExtents(doTransition);
             }
 
             if (!brushSelection) {
-                self._gBrush
-                    .call(self._brush.move, brushSelection);
+                this._gBrush
+                    .call(this._brush.move, brushSelection);
 
             } else {
                 brushSelection = brushSelection.map(point => point.map((coord, i) => {
-                    const scale = i === 0 ? self.x() : self.y();
+                    const scale = i === 0 ? this.x() : this.y();
                     return scale(coord);
                 }));
 
                 const gBrush =
-                    optionalTransition(doTransition, self.transitionDuration(), self.transitionDelay())(self._gBrush);
+                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(this._gBrush);
 
                 gBrush
-                    .call(self._brush.move, brushSelection);
+                    .call(this._brush.move, brushSelection);
 
             }
         }
 
-        self.fadeDeselectedArea(brushSelection);
+        this.fadeDeselectedArea(brushSelection);
     }
 
     setBrushY (gBrush) {
-        const self = this;
-        gBrush.call(self.brush().y(self.y()));
+        gBrush.call(this.brush().y(this.y()));
     }
 }
 

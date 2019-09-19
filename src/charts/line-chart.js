@@ -374,7 +374,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                 const dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
                     .data(points, pluck('x'));
 
-                const self = this;
+                const chart = this;
                 const dotsEnterModify = dots
                     .enter()
                     .append('circle')
@@ -388,13 +388,13 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                     .attr('stroke', this.getColor)
                     .on('mousemove', function () {
                         const dot = d3.select(this);
-                        self._showDot(dot);
-                        self._showRefLines(dot, g);
+                        chart._showDot(dot);
+                        chart._showRefLines(dot, g);
                     })
                     .on('mouseout', function () {
                         const dot = d3.select(this);
-                        self._hideDot(dot);
-                        self._hideRefLines(g);
+                        chart._hideDot(dot);
+                        chart._hideRefLines(g);
                     })
                     .merge(dots);
 
@@ -411,7 +411,7 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
     }
 
     _drawLabels (layers) {
-        const self = this;
+        const chart = this;
         layers.each(function (d, layerIndex) {
             const layer = d3.select(this);
             const labels = layer.selectAll('text.lineLabel')
@@ -424,15 +424,15 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
                 .attr('text-anchor', 'middle')
                 .merge(labels);
 
-            transition(labelsEnterModify, self.transitionDuration())
-                .attr('x', d => utils.safeNumber(self.x()(d.x)))
+            transition(labelsEnterModify, chart.transitionDuration())
+                .attr('x', d => utils.safeNumber(chart.x()(d.x)))
                 .attr('y', d => {
-                    const y = self.y()(d.y + d.y0) - LABEL_PADDING;
+                    const y = chart.y()(d.y + d.y0) - LABEL_PADDING;
                     return utils.safeNumber(y);
                 })
-                .text(d => self.label()(d));
+                .text(d => chart.label()(d));
 
-            transition(labels.exit(), self.transitionDuration())
+            transition(labels.exit(), chart.transitionDuration())
                 .attr('height', 0)
                 .remove();
         });

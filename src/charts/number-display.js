@@ -128,28 +128,28 @@ export class NumberDisplay extends BaseMixin {
         }
 
         {
-            const self = this;
+            const chart = this;
             span.transition()
-                .duration(self.transitionDuration())
-                .delay(self.transitionDelay())
+                .duration(chart.transitionDuration())
+                .delay(chart.transitionDelay())
                 .ease(d3.easeQuad)
                 .tween('text', function () {
                     // [XA] don't try and interpolate from Infinity, else this breaks.
-                    const interpStart = isFinite(self._lastValue) ? self._lastValue : 0;
+                    const interpStart = isFinite(chart._lastValue) ? chart._lastValue : 0;
                     const interp = d3.interpolateNumber(interpStart || 0, newValue);
-                    self._lastValue = newValue;
+                    chart._lastValue = newValue;
 
                     // need to save it in D3v4
                     const node = this;
                     return t => {
                         let html = null;
-                        const num = self.formatNumber()(interp(t));
-                        if (newValue === 0 && (self._html.none !== '')) {
-                            html = self._html.none;
-                        } else if (newValue === 1 && (self._html.one !== '')) {
-                            html = self._html.one;
-                        } else if (self._html.some !== '') {
-                            html = self._html.some;
+                        const num = chart.formatNumber()(interp(t));
+                        if (newValue === 0 && (chart._html.none !== '')) {
+                            html = chart._html.none;
+                        } else if (newValue === 1 && (chart._html.one !== '')) {
+                            html = chart._html.one;
+                        } else if (chart._html.some !== '') {
+                            html = chart._html.some;
                         }
                         node.innerHTML = html ? html.replace('%number', num) : num;
                     };

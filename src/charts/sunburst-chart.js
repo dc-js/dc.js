@@ -186,9 +186,9 @@ class SunburstChart extends ColorMixin(BaseMixin) {
 
         const tranNodes = transition(slicePath, this.transitionDuration());
         if (tranNodes.attrTween) {
-            const self = this;
+            const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenSlice.call(this, d, self);
+                return _tweenSlice.call(this, d, chart);
             });
         }
     }
@@ -247,9 +247,9 @@ class SunburstChart extends ColorMixin(BaseMixin) {
             .attr('d', (d, i) => this._safeArc(arc, d));
         const tranNodes = transition(slicePaths, this.transitionDuration());
         if (tranNodes.attrTween) {
-            const self = this;
+            const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenSlice.call(this, d, self);
+                return _tweenSlice.call(this, d, chart);
             });
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
@@ -277,18 +277,18 @@ class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     _highlightFilter () {
-        const self = this;
-        if (self.hasFilter()) {
-            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
-                if (self._isSelectedSlice(d)) {
-                    self.highlightSelected(this);
+        const chart = this;
+        if (chart.hasFilter()) {
+            chart.selectAll('g.' + chart._sliceCssClass).each(function (d) {
+                if (chart._isSelectedSlice(d)) {
+                    chart.highlightSelected(this);
                 } else {
-                    self.fadeDeselected(this);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
-            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
-                self.resetHighlight(this);
+            chart.selectAll('g.' + chart._sliceCssClass).each(function (d) {
+                chart.resetHighlight(this);
             });
         }
     }
@@ -303,12 +303,11 @@ class SunburstChart extends ColorMixin(BaseMixin) {
      * @returns {Number|dc.sunburstChart}
      */
     innerRadius (innerRadius) {
-        const self = this;
         if (!arguments.length) {
-            return self._innerRadius;
+            return this._innerRadius;
         }
-        self._innerRadius = innerRadius;
-        return self;
+        this._innerRadius = innerRadius;
+        return this;
     }
 
     /**
@@ -321,12 +320,11 @@ class SunburstChart extends ColorMixin(BaseMixin) {
      * @returns {Number|dc.sunburstChart}
      */
     radius (radius) {
-        const self = this;
         if (!arguments.length) {
-            return self._givenRadius;
+            return this._givenRadius;
         }
-        self._givenRadius = radius;
-        return self;
+        this._givenRadius = radius;
+        return this;
     }
 
     /**
@@ -338,12 +336,11 @@ class SunburstChart extends ColorMixin(BaseMixin) {
      * @returns {Number|dc.sunburstChart}
      */
     cx (cx) {
-        const self = this;
         if (!arguments.length) {
-            return (self._cx || self.width() / 2);
+            return (this._cx || this.width() / 2);
         }
-        self._cx = cx;
-        return self;
+        this._cx = cx;
+        return this;
     }
 
     /**
@@ -355,12 +352,11 @@ class SunburstChart extends ColorMixin(BaseMixin) {
      * @returns {Number|dc.sunburstChart}
      */
     cy (cy) {
-        const self = this;
         if (!arguments.length) {
-            return (self._cy || self.height() / 2);
+            return (this._cy || this.height() / 2);
         }
-        self._cy = cy;
-        return self;
+        this._cy = cy;
+        return this;
     }
 
     /**
@@ -373,12 +369,11 @@ class SunburstChart extends ColorMixin(BaseMixin) {
      * @returns {Number|dc.sunburstChart}
      */
     minAngleForLabel (minAngleForLabel) {
-        const self = this;
         if (!arguments.length) {
-            return self._minAngleForLabel;
+            return this._minAngleForLabel;
         }
-        self._minAngleForLabel = minAngleForLabel;
-        return self;
+        this._minAngleForLabel = minAngleForLabel;
+        return this;
     }
 
     /**
@@ -390,12 +385,11 @@ class SunburstChart extends ColorMixin(BaseMixin) {
      * @returns {String|dc.sunburstChart}
      */
     emptyTitle (title) {
-        const self = this;
         if (arguments.length === 0) {
-            return self._emptyTitle;
+            return this._emptyTitle;
         }
-        self._emptyTitle = title;
-        return self;
+        this._emptyTitle = title;
+        return this;
     }
 
     /**
@@ -409,36 +403,32 @@ class SunburstChart extends ColorMixin(BaseMixin) {
      * @returns {Number|dc.sunburstChart}
      */
     externalLabels (externalLabelRadius) {
-        const self = this;
         if (arguments.length === 0) {
-            return self._externalLabelRadius;
+            return this._externalLabelRadius;
         } else if (externalLabelRadius) {
-            self._externalLabelRadius = externalLabelRadius;
+            this._externalLabelRadius = externalLabelRadius;
         } else {
-            self._externalLabelRadius = undefined;
+            this._externalLabelRadius = undefined;
         }
 
-        return self;
+        return this;
     }
 
     _buildArcs () {
-        const self = this;
         return d3.arc()
             .startAngle(d => d.x0)
             .endAngle(d => d.x1)
-            .innerRadius(d => d.data.path && d.data.path.length === 1 ? self._innerRadius : Math.sqrt(d.y0))
+            .innerRadius(d => d.data.path && d.data.path.length === 1 ? this._innerRadius : Math.sqrt(d.y0))
             .outerRadius(d => Math.sqrt(d.y1));
     }
 
     _isSelectedSlice (d) {
-        const self = this;
-        return self._isPathFiltered(d.path);
+        return this._isPathFiltered(d.path);
     }
 
     _isPathFiltered (path) {
-        const self = this;
-        for (let i = 0; i < self.filters().length; i++) {
-            const currentFilter = self.filters()[i];
+        for (let i = 0; i < this.filters().length; i++) {
+            const currentFilter = this.filters()[i];
             if (currentFilter.isFiltered(path)) {
                 return true;
             }
@@ -448,11 +438,10 @@ class SunburstChart extends ColorMixin(BaseMixin) {
 
     // returns all filters that are a parent or child of the path
     _filtersForPath (path) {
-        const self = this;
         const pathFilter = filters.HierarchyFilter(path);
         const filtersList = [];
-        for (let i = 0; i < self.filters().length; i++) {
-            const currentFilter = self.filters()[i];
+        for (let i = 0; i < this.filters().length; i++) {
+            const currentFilter = this.filters()[i];
             if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
                 filtersList.push(currentFilter);
             }

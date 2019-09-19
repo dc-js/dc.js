@@ -261,18 +261,18 @@ export const BubbleMixin = Base => {
 
         fadeDeselectedArea (selection) {
             if (this.hasFilter()) {
-                const self = this;
-                this.selectAll('g.' + self.BUBBLE_NODE_CLASS).each(function (d) {
-                    if (self.isSelectedNode(d)) {
-                        self.highlightSelected(this);
+                const chart = this;
+                this.selectAll('g.' + chart.BUBBLE_NODE_CLASS).each(function (d) {
+                    if (chart.isSelectedNode(d)) {
+                        chart.highlightSelected(this);
                     } else {
-                        self.fadeDeselected(this);
+                        chart.fadeDeselected(this);
                     }
                 });
             } else {
-                const self = this;
-                this.selectAll('g.' + self.BUBBLE_NODE_CLASS).each(function () {
-                    self.resetHighlight(this);
+                const chart = this;
+                this.selectAll('g.' + chart.BUBBLE_NODE_CLASS).each(function () {
+                    chart.resetHighlight(this);
                 });
             }
         }

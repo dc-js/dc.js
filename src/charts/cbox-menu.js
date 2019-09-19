@@ -31,13 +31,13 @@ import {utils} from '../core/utils'
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
 
-function _onChange (d, i, self) {
+function _onChange (d, i, chart) {
     let values;
     const target = d3.select(d3.event.target);
     let options;
 
     if (!target.datum()) {
-        values = self._promptValue || null;
+        values = chart._promptValue || null;
     } else {
         options = d3.select(this).selectAll('input')
             .filter(function (o) {
@@ -49,11 +49,11 @@ function _onChange (d, i, self) {
             return option.value;
         });
         // check if only prompt option is selected
-        if (!self._multiple && values.length === 1) {
+        if (!chart._multiple && values.length === 1) {
             values = values[0];
         }
     }
-    self.onChange(values);
+    chart.onChange(values);
 }
 
 export class CboxMenu extends BaseMixin {
@@ -91,30 +91,30 @@ export class CboxMenu extends BaseMixin {
     }
 
     _doRedraw () {
-        const self = this;
+        const chart = this;
 
-        self.select('ul').remove();
-        self._cbox = self.root()
+        chart.select('ul').remove();
+        chart._cbox = chart.root()
             .append('ul')
             .classed(GROUP_CSS_CLASS, true);
-        self._renderOptions();
+        chart._renderOptions();
 
-        if (self.hasFilter() && self._multiple) {
-            self._cbox.selectAll('input')
+        if (chart.hasFilter() && chart._multiple) {
+            chart._cbox.selectAll('input')
                 .property('checked', function (d) {
                     // adding `false` avoids failing test cases in phantomjs
-                    return d && self.filters().indexOf(String(self.keyAccessor()(d))) >= 0 || false;
+                    return d && chart.filters().indexOf(String(chart.keyAccessor()(d))) >= 0 || false;
                 });
-        } else if (self.hasFilter()) {
-            self._cbox.selectAll('input')
+        } else if (chart.hasFilter()) {
+            chart._cbox.selectAll('input')
                 .property('checked', function (d) {
                     if (!d) {
                         return false;
                     }
-                    return self.keyAccessor()(d) === self.filter();
+                    return chart.keyAccessor()(d) === chart.filter();
                 });
         }
-        return self;
+        return chart;
     }
 
     _renderOptions () {
@@ -140,7 +140,7 @@ export class CboxMenu extends BaseMixin {
             .attr('for', (d, i) => 'input_' + this._uniqueId + '_' + i)
             .text(this.title());
 
-        const self = this;
+        const chart = this;
         // 'all' option
         if (this._multiple) {
             this._cbox
@@ -149,7 +149,7 @@ export class CboxMenu extends BaseMixin {
                 .attr('type', 'reset')
                 .text(this._promptText)
                 .on('click', function (d, i) {
-                    return _onChange.call(this, d, i, self);
+                    return _onChange.call(this, d, i, chart);
                 });
         } else {
             const li = this._cbox.append('li');
@@ -169,22 +169,22 @@ export class CboxMenu extends BaseMixin {
             .sort(this._order);
 
         this._cbox.on('change',  function (d, i) {
-            return _onChange.call(this, d, i, self);
+            return _onChange.call(this, d, i, chart);
         });
         return options;
     }
 
     onChange (val) {
-        const self = this;
-        if (val && self._multiple) {
-            self.replaceFilter([val]);
+        const chart = this;
+        if (val && chart._multiple) {
+            chart.replaceFilter([val]);
         } else if (val) {
-            self.replaceFilter(val);
+            chart.replaceFilter(val);
         } else {
-            self.filterAll();
+            chart.filterAll();
         }
         events.trigger(function () {
-            self.redrawGroup();
+            chart.redrawGroup();
         });
     }
 

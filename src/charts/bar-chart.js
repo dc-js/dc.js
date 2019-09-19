@@ -92,14 +92,14 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
 
         const last = layers.size() - 1;
         {
-            const self = this;
+            const chart = this;
             layers.each(function (d, i) {
                 const layer = d3.select(this);
 
-                self._renderBars(layer, i, d);
+                chart._renderBars(layer, i, d);
 
-                if (self.renderLabel() && last === i) {
-                    self._renderLabels(layer, i, d);
+                if (chart.renderLabel() && last === i) {
+                    chart._renderLabels(layer, i, d);
                 }
             });
         }

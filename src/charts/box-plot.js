@@ -198,12 +198,12 @@ class BoxPlot extends CoordinateGridMixin {
     }
 
     _updateBoxes (boxesG) {
-        const self = this;
+        const chart = this;
         transition(boxesG, this.transitionDuration(), this.transitionDelay())
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .each(function (d) {
-                const color = self.getColor(d, 0);
+                const color = chart.getColor(d, 0);
                 d3.select(this).select('rect.box').attr('fill', color);
                 d3.select(this).selectAll('circle.data').attr('fill', color);
             });
@@ -230,14 +230,14 @@ class BoxPlot extends CoordinateGridMixin {
     }
 
     fadeDeselectedArea (brushSelection) {
-        const self = this;
+        const chart = this;
         if (this.hasFilter()) {
             if (this.isOrdinal()) {
                 this.g().selectAll('g.box').each(function (d) {
-                    if (self.isSelectedNode(d)) {
-                        self.highlightSelected(this);
+                    if (chart.isSelectedNode(d)) {
+                        chart.highlightSelected(this);
                     } else {
-                        self.fadeDeselected(this);
+                        chart.fadeDeselected(this);
                     }
                 });
             } else {
@@ -247,17 +247,17 @@ class BoxPlot extends CoordinateGridMixin {
                 const start = brushSelection[0];
                 const end = brushSelection[1];
                 this.g().selectAll('g.box').each(function (d) {
-                    const key = self.keyAccessor()(d);
+                    const key = chart.keyAccessor()(d);
                     if (key < start || key >= end) {
-                        self.fadeDeselected(this);
+                        chart.fadeDeselected(this);
                     } else {
-                        self.highlightSelected(this);
+                        chart.highlightSelected(this);
                     }
                 });
             }
         } else {
             this.g().selectAll('g.box').each(function () {
-                self.resetHighlight(this);
+                chart.resetHighlight(this);
             });
         }
     }

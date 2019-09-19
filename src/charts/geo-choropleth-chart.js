@@ -46,30 +46,29 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     }
 
     _doRender () {
-        const self = this;
-        self.resetSvg();
-        for (let layerIndex = 0; layerIndex < self._geoJsons.length; ++layerIndex) {
-            const states = self.svg().append('g')
+        this.resetSvg();
+        for (let layerIndex = 0; layerIndex < this._geoJsons.length; ++layerIndex) {
+            const states = this.svg().append('g')
                 .attr('class', 'layer' + layerIndex);
 
-            let regionG = states.selectAll('g.' + self._geoJson(layerIndex).name)
-                .data(self._geoJson(layerIndex).data);
+            let regionG = states.selectAll('g.' + this._geoJson(layerIndex).name)
+                .data(this._geoJson(layerIndex).data);
 
             regionG = regionG.enter()
                 .append('g')
-                .attr('class', self._geoJson(layerIndex).name)
+                .attr('class', this._geoJson(layerIndex).name)
                 .merge(regionG);
 
             regionG
                 .append('path')
                 .attr('fill', 'white')
-                .attr('d', self._getGeoPath());
+                .attr('d', this._getGeoPath());
 
             regionG.append('title');
 
-            self._plotData(layerIndex);
+            this._plotData(layerIndex);
         }
-        self._projectionFlag = false;
+        this._projectionFlag = false;
     }
 
     _plotData (layerIndex) {

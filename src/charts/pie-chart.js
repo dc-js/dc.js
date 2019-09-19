@@ -177,9 +177,9 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
         const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
-            const self = this;
+            const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenPie.call(this, d, self);
+                return _tweenPie.call(this, d, chart);
             });
         }
     }
@@ -295,9 +295,9 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .attr('d', (d, i) => this._safeArc(d, i, arc));
         const tranNodes = transition(slicePaths, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
-            const self = this;
+            const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenPie.call(this, d, self);
+                return _tweenPie.call(this, d, chart);
             });
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
@@ -329,18 +329,18 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _highlightFilter () {
-        const self = this;
+        const chart = this;
         if (this.hasFilter()) {
             this.selectAll('g.' + this._sliceCssClass).each(function (d) {
-                if (self._isSelectedSlice(d)) {
-                    self.highlightSelected(this);
+                if (chart._isSelectedSlice(d)) {
+                    chart.highlightSelected(this);
                 } else {
-                    self.fadeDeselected(this);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
             this.selectAll('g.' + this._sliceCssClass).each(function () {
-                self.resetHighlight(this);
+                chart.resetHighlight(this);
             });
         }
     }

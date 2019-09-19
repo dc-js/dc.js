@@ -317,18 +317,18 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
             .attr('y', d => rows(d) + boxHeight / 2);
 
         if (this.hasFilter()) {
-            const self = this;
+            const chart = this;
             this.selectAll('g.box-group').each(function (d) {
-                if (self.isSelectedNode(d)) {
-                    self.highlightSelected(this);
+                if (chart.isSelectedNode(d)) {
+                    chart.highlightSelected(this);
                 } else {
-                    self.fadeDeselected(this);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
-            const self = this;
+            const chart = this;
             this.selectAll('g.box-group').each(function () {
-                self.resetHighlight(this);
+                chart.resetHighlight(this);
             });
         }
         return this;

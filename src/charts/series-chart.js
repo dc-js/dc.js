@@ -79,11 +79,11 @@ export class SeriesChart extends CompositeChart {
         // ES6: do we add removal function in composite chart?
         // this works around the fact compositeChart doesn't really
         // have a removal interface
-        const self = this;
+        const chart = this;
         Object.keys(this._charts)
             .filter(c => keep.indexOf(c) === -1)
             .forEach(c => {
-                self._clearChart(c);
+                chart._clearChart(c);
                 childrenChanged = true;
             });
         this._compose(children);

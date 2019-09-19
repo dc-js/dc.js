@@ -25,7 +25,7 @@ export const ColorMixin = Base => {
             this._colorCalculator = undefined;
 
             {
-                const self = this;
+                const chart = this;
                 // ES6: this method is called very differently from stack-mixin and derived charts
                 // Removing and placing it as a member method is tricky
 
@@ -38,10 +38,10 @@ export const ColorMixin = Base => {
                  * @param {Number} [i]
                  * @returns {String}
                  */
-                self.getColor = function (d, i) {
-                    return self._colorCalculator ?
-                        self._colorCalculator.call(this, d, i) :
-                        self._colors(self._colorAccessor.call(this, d, i));
+                chart.getColor = function (d, i) {
+                    return chart._colorCalculator ?
+                        chart._colorCalculator.call(this, d, i) :
+                        chart._colors(chart._colorAccessor.call(this, d, i));
                 };
             }
         }
