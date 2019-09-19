@@ -13,7 +13,7 @@ describe('dc.colorMixin', function () {
         it('issues a one time warning when using default color scheme', function () {
             spyOn(dc.logger, 'warnOnce');
 
-            new ColorMixinTester();
+            new ColorMixinTester(); // eslint-disable-line no-new
 
             expect(dc.logger.warnOnce).toHaveBeenCalled();
         });
@@ -24,7 +24,7 @@ describe('dc.colorMixin', function () {
             spyOn(dc.logger, 'warnOnce');
 
             dc.config.defaultColors(d3.schemeSet1);
-            new ColorMixinTester();
+            new ColorMixinTester(); // eslint-disable-line no-new
 
             expect(dc.logger.warnOnce).not.toHaveBeenCalled();
 
