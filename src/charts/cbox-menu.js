@@ -91,30 +91,28 @@ export class CboxMenu extends BaseMixin {
     }
 
     _doRedraw () {
-        const chart = this;
-
-        chart.select('ul').remove();
-        chart._cbox = chart.root()
+        this.select('ul').remove();
+        this._cbox = this.root()
             .append('ul')
             .classed(GROUP_CSS_CLASS, true);
-        chart._renderOptions();
+        this._renderOptions();
 
-        if (chart.hasFilter() && chart._multiple) {
-            chart._cbox.selectAll('input')
-                .property('checked', function (d) {
+        if (this.hasFilter() && this._multiple) {
+            this._cbox.selectAll('input')
+                .property('checked', d => {
                     // adding `false` avoids failing test cases in phantomjs
-                    return d && chart.filters().indexOf(String(chart.keyAccessor()(d))) >= 0 || false;
+                    return d && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0 || false;
                 });
-        } else if (chart.hasFilter()) {
-            chart._cbox.selectAll('input')
-                .property('checked', function (d) {
+        } else if (this.hasFilter()) {
+            this._cbox.selectAll('input')
+                .property('checked', d => {
                     if (!d) {
                         return false;
                     }
-                    return chart.keyAccessor()(d) === chart.filter();
+                    return this.keyAccessor()(d) === this.filter();
                 });
         }
-        return chart;
+        return this;
     }
 
     _renderOptions () {
@@ -175,16 +173,15 @@ export class CboxMenu extends BaseMixin {
     }
 
     onChange (val) {
-        const chart = this;
-        if (val && chart._multiple) {
-            chart.replaceFilter([val]);
+        if (val && this._multiple) {
+            this.replaceFilter([val]);
         } else if (val) {
-            chart.replaceFilter(val);
+            this.replaceFilter(val);
         } else {
-            chart.filterAll();
+            this.filterAll();
         }
-        events.trigger(function () {
-            chart.redrawGroup();
+        events.trigger(() => {
+            this.redrawGroup();
         });
     }
 
