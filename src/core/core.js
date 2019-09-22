@@ -420,12 +420,6 @@ round.round = function (n) {
     return Math.round(n);
 };
 
-export const override = function (obj, functionName, newFunction) {
-    const existingFunction = obj[functionName];
-    obj['_' + functionName] = existingFunction;
-    obj[functionName] = newFunction;
-};
-
 export const renderlet = function (_) {
     if (!arguments.length) {
         return _renderlet;

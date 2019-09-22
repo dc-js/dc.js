@@ -208,41 +208,6 @@ describe('dc.core', function () {
         });
     });
 
-    describe('override', function () {
-        var o;
-
-        beforeEach(function () {
-            o = {
-                foo: function () {
-                    return 'foo';
-                },
-                goo: function (i) {
-                    return i;
-                }
-            };
-        });
-
-        it('wo/ override function should work as expected', function () {
-            expect(o.foo()).toEqual('foo');
-        });
-
-        it('should expose existing function', function () {
-            dc.override(o, 'foo', function () {
-                return this._foo() + '2';
-            });
-
-            expect(o.foo()).toEqual('foo2');
-        });
-
-        it('should expose existing function with args', function () {
-            dc.override(o, 'goo', function (i) {
-                return this._goo(i) + 2;
-            });
-
-            expect(o.goo(1)).toEqual(3);
-        });
-    });
-
     describe('charts w/ grouping', function () {
         var chart;
 
