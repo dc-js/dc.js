@@ -196,18 +196,6 @@ describe('dc.core', function () {
         });
     });
 
-    describe('round', function () {
-        describe('.floor', function () {
-            var result;
-            beforeEach(function () {
-                result = dc.round.floor(0.33);
-            });
-            it('should floored number', function () {
-                expect(result).toEqual(0);
-            });
-        });
-    });
-
     describe('charts w/ grouping', function () {
         var chart;
 

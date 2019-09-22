@@ -204,7 +204,7 @@
           charts[i]
               .dimension(dim)
               .group(group)
-              .round(dc.round.floor)
+              .round(Math.floor)
               .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
               .xUnits(function(start, end, xDomain) { return (end - start) / spec.resolution; })
               .controlsUseVisibility(true);

@@ -409,17 +409,6 @@ units.fp.precision = function (precision) {
     return _f;
 };
 
-export const round = {};
-round.floor = function (n) {
-    return Math.floor(n);
-};
-round.ceil = function (n) {
-    return Math.ceil(n);
-};
-round.round = function (n) {
-    return Math.round(n);
-};
-
 export const renderlet = function (_) {
     if (!arguments.length) {
         return _renderlet;

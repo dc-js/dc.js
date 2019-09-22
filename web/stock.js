@@ -388,7 +388,7 @@ d3.csv('ndx.csv').then(function (data) {
         // (_optional_) set gap between bars manually in px, `default=2`
         .gap(1)
         // (_optional_) set filter brush rounding
-        .round(dc.round.floor)
+        .round(Math.floor)
         .alwaysUseRounding(true)
         .x(d3.scaleLinear().domain([-25, 25]))
         .renderHorizontalGridLines(true)
