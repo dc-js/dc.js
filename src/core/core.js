@@ -1,5 +1,6 @@
-import { utils } from './utils';
+import {utils} from './utils';
 import {constants} from './constants';
+import {config} from './config';
 
 /**
  * The entire dc.js library is scoped under the **dc** name space. It does not introduce
@@ -153,7 +154,7 @@ export const registerChart = function (chart, group) {
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  * @return {undefined}
-*/
+ */
 export const deregisterChart = function (chart, group) {
     chartRegistry.deregister(chart, group);
 };
@@ -253,16 +254,6 @@ export const redrawAll = function (group) {
 };
 
 /**
- * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
- * immediately.
- * @memberof dc
- * @member disableTransitions
- * @type {Boolean}
- * @default false
- */
-export const disableTransitions = false;
-
-/**
  * Start a transition on a selection if transitions are globally enabled
  * ({@link dc.disableTransitions} is false) and the duration is greater than zero; otherwise return
  * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
@@ -279,7 +270,7 @@ export const disableTransitions = false;
  * @returns {d3.transition|d3.selection}
  */
 export const transition = function (selection, duration, delay, name) {
-    if (disableTransitions || duration <= 0) {
+    if (config.disableTransitions || duration <= 0) {
         return selection;
     }
 

@@ -22,6 +22,16 @@ export class Config {
     constructor () {
         this._defaultColors = Config._schemeCategory20c;
         this.dateFormat = d3.timeFormat('%m/%d/%Y');
+
+        /**
+         * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+         * immediately.
+         * @memberof dc
+         * @member disableTransitions
+         * @type {Boolean}
+         * @default false
+         */
+        this.disableTransitions = false;
     }
 
     /**
