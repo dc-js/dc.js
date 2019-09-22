@@ -6,20 +6,6 @@ import {transition} from '../core/core';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
-function _tweenPie (b, chart) {
-    b.innerRadius = chart._innerRadius;
-    let current = this._current;
-    if (chart._isOffCanvas(current)) {
-        current = {startAngle: 0, endAngle: 0};
-    } else {
-        // only interpolate startAngle & endAngle, not the whole data object
-        current = {startAngle: current.startAngle, endAngle: current.endAngle};
-    }
-    const i = d3.interpolate(current, b);
-    this._current = i(0);
-    return t => chart._safeArc(i(t), 0, chart._buildArcs());
-}
-
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -179,7 +165,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenPie.call(this, d, chart);
+                return chart._tweenPie(d, this);
             });
         }
     }
@@ -297,7 +283,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenPie.call(this, d, chart);
+                return chart._tweenPie(d, this);
             });
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
@@ -594,6 +580,22 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             }
         });
     }
+
+    _tweenPie (b, element) {
+        b.innerRadius = this._innerRadius;
+        let current = element._current;
+        if (this._isOffCanvas(current)) {
+            current = {startAngle: 0, endAngle: 0};
+        } else {
+            // only interpolate startAngle & endAngle, not the whole data object
+            current = {startAngle: current.startAngle, endAngle: current.endAngle};
+        }
+        const i = d3.interpolate(current, b);
+        element._current = i(0);
+        return t => this._safeArc(i(t), 0, this._buildArcs());
+    }
+
+
 }
 
 export const pieChart = (parent, chartGroup) => new PieChart(parent, chartGroup);

@@ -31,31 +31,6 @@ import {utils} from '../core/utils'
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
 
-function _onChange (d, i, chart) {
-    let values;
-    const target = d3.select(d3.event.target);
-    let options;
-
-    if (!target.datum()) {
-        values = chart._promptValue || null;
-    } else {
-        options = d3.select(this).selectAll('input')
-            .filter(function (o) {
-                if (o) {
-                    return this.checked;
-                }
-            });
-        values = options.nodes().map(function (option) {
-            return option.value;
-        });
-        // check if only prompt option is selected
-        if (!chart._multiple && values.length === 1) {
-            values = values[0];
-        }
-    }
-    chart.onChange(values);
-}
-
 export class CboxMenu extends BaseMixin {
     constructor (parent, chartGroup) {
         super();
@@ -147,7 +122,7 @@ export class CboxMenu extends BaseMixin {
                 .attr('type', 'reset')
                 .text(this._promptText)
                 .on('click', function (d, i) {
-                    return _onChange.call(this, d, i, chart);
+                    return chart._onChange(d, i, this);
                 });
         } else {
             const li = this._cbox.append('li');
@@ -167,9 +142,34 @@ export class CboxMenu extends BaseMixin {
             .sort(this._order);
 
         this._cbox.on('change',  function (d, i) {
-            return _onChange.call(this, d, i, chart);
+            return chart._onChange(d, i, this);
         });
         return options;
+    }
+
+    _onChange (d, i, element) {
+        let values;
+        const target = d3.select(d3.event.target);
+        let options;
+
+        if (!target.datum()) {
+            values = this._promptValue || null;
+        } else {
+            options = d3.select(element).selectAll('input')
+                .filter(function (o) {
+                    if (o) {
+                        return this.checked;
+                    }
+                });
+            values = options.nodes().map(function (option) {
+                return option.value;
+            });
+            // check if only prompt option is selected
+            if (!this._multiple && values.length === 1) {
+                values = values[0];
+            }
+        }
+        this.onChange(values);
     }
 
     onChange (val) {
@@ -291,7 +291,6 @@ export class CboxMenu extends BaseMixin {
 
         return this;
     }
-
 }
 
 export const cboxMenu = (parent, chartGroup) => new CboxMenu(parent, chartGroup);
