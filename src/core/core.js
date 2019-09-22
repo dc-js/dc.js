@@ -20,8 +20,6 @@ import {config} from './config';
  *      .filter('sunday');
  */
 
-let _renderlet = null;
-
 /**
  * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups
  * and the default group.
@@ -227,8 +225,8 @@ export const renderAll = function (group) {
         charts[i].render();
     }
 
-    if (_renderlet !== null) {
-        _renderlet(group);
+    if (config._renderlet !== null) {
+        config._renderlet(group);
     }
 };
 
@@ -248,8 +246,8 @@ export const redrawAll = function (group) {
         charts[i].redraw();
     }
 
-    if (_renderlet !== null) {
-        _renderlet(group);
+    if (config._renderlet !== null) {
+        config._renderlet(group);
     }
 };
 
@@ -402,9 +400,9 @@ units.fp.precision = function (precision) {
 
 export const renderlet = function (_) {
     if (!arguments.length) {
-        return _renderlet;
+        return config._renderlet;
     }
-    _renderlet = _;
+    config._renderlet = _;
     return null;
 };
 
