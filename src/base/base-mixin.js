@@ -351,7 +351,7 @@ export class BaseMixin {
      */
     data (callback) {
         if (!arguments.length) {
-            return this._data.call(this, this._group);
+            return this._data(this._group);
         }
         this._data = typeof callback === 'function' ? callback : utils.constant(callback);
         this.expireCache();
