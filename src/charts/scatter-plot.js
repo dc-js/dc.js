@@ -127,22 +127,22 @@ export class ScatterPlot extends CoordinateGridMixin {
             super.resetSvg(); // Perform original svgReset inherited from baseMixin
             this.select('canvas').remove(); // remove old canvas
 
-            var svgSel = this.svg();
-            var rootSel = this.root();
+            const svgSel = this.svg();
+            const rootSel = this.root();
 
             // Set root node to relative positioning and svg to absolute
             rootSel.style('position', 'relative');
             svgSel.style('position', 'relative');
 
             // Check if SVG element already has any extra top/left CSS offsets
-            var svgLeft = isNaN(parseInt(svgSel.style('left'), 10)) ? 0 : parseInt(svgSel.style('left'), 10);
-            var svgTop = isNaN(parseInt(svgSel.style('top'), 10)) ? 0 : parseInt(svgSel.style('top'), 10);
-            var width = this.effectiveWidth();
-            var height = this.effectiveHeight();
-            var margins = this.margins(); // {top: 10, right: 130, bottom: 42, left: 42}
+            const svgLeft = isNaN(parseInt(svgSel.style('left'), 10)) ? 0 : parseInt(svgSel.style('left'), 10);
+            const svgTop = isNaN(parseInt(svgSel.style('top'), 10)) ? 0 : parseInt(svgSel.style('top'), 10);
+            const width = this.effectiveWidth();
+            const height = this.effectiveHeight();
+            const margins = this.margins(); // {top: 10, right: 130, bottom: 42, left: 42}
 
             // Add the canvas element such that it perfectly overlaps the plot area of the scatter plot SVG
-            var devicePixelRatio = window.devicePixelRatio || 1;
+            const devicePixelRatio = window.devicePixelRatio || 1;
             this._canvas = this.root().append('canvas')
                 .attr('x', 0)
                 .attr('y', 0)
@@ -224,15 +224,15 @@ export class ScatterPlot extends CoordinateGridMixin {
     // currently being highlighted and modifies opacity/size of symbols accordingly
     // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
     _plotOnCanvas (legendHighlightDatum) {
-        var context = this.context();
+        const context = this.context();
         context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
-        var data = this.data();
+        const data = this.data();
 
         // Draw the data on canvas
         data.forEach((d, i) => {
-            var isFiltered = !this.filter() || this.filter().isFiltered([d.key[0], d.key[1]]);
+            const isFiltered = !this.filter() || this.filter().isFiltered([d.key[0], d.key[1]]);
             // Calculate opacity for current data point
-            var cOpacity = 1;
+            let cOpacity = 1;
             if (!this._existenceAccessor(d)) {
                 cOpacity = this._emptyOpacity;
             } else if (isFiltered) {
@@ -241,7 +241,7 @@ export class ScatterPlot extends CoordinateGridMixin {
                 cOpacity = this.excludedOpacity();
             }
             // Calculate color for current data point
-            var cColor = null;
+            let cColor = null;
             if (this._emptyColor && !this._existenceAccessor(d)) {
                 cColor = this._emptyColor;
             } else if (this.excludedColor() && !isFiltered) {
@@ -249,13 +249,13 @@ export class ScatterPlot extends CoordinateGridMixin {
             } else {
                 cColor = this.getColor(d);
             }
-            var cSize = this._canvasElementSize(d, isFiltered);
+            let cSize = this._canvasElementSize(d, isFiltered);
 
             // Adjust params for data points if legend is highlighted
             if (legendHighlightDatum) {
-                var isHighlighted = (cColor === legendHighlightDatum.color);
+                const isHighlighted = (cColor === legendHighlightDatum.color);
                 // Calculate opacity for current data point
-                var fadeOutOpacity = 0.1; // TODO: Make this programmatically setable
+                const fadeOutOpacity = 0.1; // TODO: Make this programmatically setable
                 if (!isHighlighted) { // Fade out non-highlighted colors + highlighted colors outside filter
                     cOpacity = fadeOutOpacity;
                 }

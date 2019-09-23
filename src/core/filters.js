@@ -33,7 +33,7 @@ export const filters = {};
  * @constructor
  */
 filters.RangedFilter = function (low, high) {
-    var range = new Array(low, high);
+    const range = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
     };
@@ -57,7 +57,7 @@ filters.RangedFilter = function (low, high) {
 filters.TwoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
-    var f = filter;
+    const f = filter;
     f.isFiltered = function (value) {
         return value.length && value.length === f.length &&
                value[0] === f[0] && value[1] === f[1];
@@ -89,8 +89,8 @@ filters.TwoDimensionalFilter = function (filter) {
 filters.RangedTwoDimensionalFilter = function (filter) {
     if (filter === null) { return null; }
 
-    var f = filter;
-    var fromBottomLeft;
+    const f = filter;
+    let fromBottomLeft;
 
     if (f[0] instanceof Array) {
         fromBottomLeft = [
@@ -102,7 +102,7 @@ filters.RangedTwoDimensionalFilter = function (filter) {
     }
 
     f.isFiltered = function (value) {
-        var x, y;
+        let x, y;
 
         if (value instanceof Array) {
             x = value[0];
@@ -138,13 +138,13 @@ filters.HierarchyFilter = function (path) {
         return null;
     }
 
-    var filter = path.slice(0);
+    const filter = path.slice(0);
     filter.isFiltered = function (value) {
         if (!(filter.length && value && value.length && value.length >= filter.length)) {
             return false;
         }
 
-        for (var i = 0; i < filter.length; i++) {
+        for (let i = 0; i < filter.length; i++) {
             if (value[i] !== filter[i]) {
                 return false;
             }

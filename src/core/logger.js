@@ -103,7 +103,8 @@ export const logger = (function () {
      */
     _logger.deprecate = function (fn, msg) {
         // Allow logging of deprecation
-        var warned = false;
+        let warned = false;
+
         function deprecated () {
             if (!warned) {
                 _logger.warn(msg);
@@ -136,7 +137,8 @@ export const logger = (function () {
      */
     _logger.annotate = function (fn, msg) {
         // Allow logging of deprecation
-        var warned = false;
+        let warned = false;
+
         function annotated () {
             if (!warned) {
                 console.groupCollapsed(msg);

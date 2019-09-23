@@ -1,4 +1,3 @@
-import {utils} from './utils';
 import {constants} from './constants';
 import {config} from './config';
 
@@ -37,7 +36,7 @@ import {config} from './config';
  */
 export const chartRegistry = (function () {
     // chartGroup:string => charts:array
-    var _chartMap = {};
+    let _chartMap = {};
 
     function initializeChartGroup (group) {
         if (!group) {
@@ -93,7 +92,7 @@ export const chartRegistry = (function () {
          */
         deregister: function (chart, group) {
             group = initializeChartGroup(group);
-            for (var i = 0; i < _chartMap[group].length; i++) {
+            for (let i = 0; i < _chartMap[group].length; i++) {
                 if (_chartMap[group][i].anchorName() === chart.anchorName()) {
                     _chartMap[group].splice(i, 1);
                     break;
@@ -188,8 +187,8 @@ export const deregisterAllCharts = function (group) {
  * @return {undefined}
  */
 export const filterAll = function (group) {
-    var charts = chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
     }
 };
@@ -203,8 +202,8 @@ export const filterAll = function (group) {
  * @return {undefined}
  */
 export const refocusAll = function (group) {
-    var charts = chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         if (charts[i].focus) {
             charts[i].focus();
         }
@@ -220,8 +219,8 @@ export const refocusAll = function (group) {
  * @return {undefined}
  */
 export const renderAll = function (group) {
-    var charts = chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         charts[i].render();
     }
 
@@ -241,8 +240,8 @@ export const renderAll = function (group) {
  * @return {undefined}
  */
 export const redrawAll = function (group) {
-    var charts = chartRegistry.list(group);
-    for (var i = 0; i < charts.length; ++i) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i < charts.length; ++i) {
         charts[i].redraw();
     }
 
@@ -272,7 +271,7 @@ export const transition = function (selection, duration, delay, name) {
         return selection;
     }
 
-    var s = selection.transition(name);
+    let s = selection.transition(name);
 
     if (duration >= 0 || duration !== undefined) {
         s = s.duration(duration);
@@ -302,7 +301,7 @@ export const afterTransition = function (transition, callback) {
     if (transition.empty() || !transition.duration) {
         callback.call(transition);
     } else {
-        var n = 0;
+        let n = 0;
         transition
             .each(function () { ++n; })
             .on('end', function () {

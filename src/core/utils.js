@@ -17,9 +17,9 @@ export const printers = {};
  * @returns {String}
  */
 printers.filters = function (filters) {
-    var s = '';
+    let s = '';
 
-    for (var i = 0; i < filters.length; ++i) {
+    for (let i = 0; i < filters.length; ++i) {
         if (i > 0) {
             s += ', ';
         }
@@ -37,7 +37,7 @@ printers.filters = function (filters) {
  * @returns {String}
  */
 printers.filter = function (filter) {
-    var s = '';
+    let s = '';
 
     if (typeof filter !== 'undefined' && filter !== null) {
         if (filter instanceof Array) {
@@ -101,7 +101,7 @@ export const utils = {};
  * @returns {String}
  */
 utils.printSingleValue = function (filter) {
-    var s = '' + filter;
+    let s = '' + filter;
 
     if (filter instanceof Date) {
         s = config.dateFormat(filter);
@@ -161,7 +161,7 @@ utils.add = function (l, r, t) {
         }
         return t.offset(l, r);
     } else if (typeof r === 'string') {
-        var percentage = (+r / 100);
+        const percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l + r;
@@ -207,7 +207,7 @@ utils.subtract = function (l, r, t) {
         }
         return t.offset(l, -r);
     } else if (typeof r === 'string') {
-        var percentage = (+r / 100);
+        const percentage = (+r / 100);
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l - r;
@@ -321,7 +321,7 @@ utils.nameToId = function (name) {
  */
 utils.appendOrSelect = function (parent, selector, tag) {
     tag = tag || selector;
-    var element = parent.select(selector);
+    let element = parent.select(selector);
     if (element.empty()) {
         element = parent.append(tag);
     }
@@ -364,11 +364,11 @@ utils.arraysEqual = function (a1, a2) {
 
 // ******** Sunburst Chart ********
 utils.allChildren = function (node) {
-    var paths = [];
+    let paths = [];
     paths.push(node.path);
     console.log('currentNode', node);
     if (node.children) {
-        for (var i = 0; i < node.children.length; i++) {
+        for (let i = 0; i < node.children.length; i++) {
             paths = paths.concat(utils.allChildren(node.children[i]));
         }
     }
@@ -378,17 +378,17 @@ utils.allChildren = function (node) {
 // builds a d3 Hierarchy from a collection
 // TODO: turn this monster method something better.
 utils.toHierarchy = function (list, accessor) {
-    var root = {'key': 'root', 'children': []};
-    for (var i = 0; i < list.length; i++) {
-        var data = list[i];
-        var parts = data.key;
-        var value = accessor(data);
-        var currentNode = root;
-        for (var j = 0; j < parts.length; j++) {
-            var currentPath = parts.slice(0, j + 1);
-            var children = currentNode.children;
-            var nodeName = parts[j];
-            var childNode;
+    const root = {'key': 'root', 'children': []};
+    for (let i = 0; i < list.length; i++) {
+        const data = list[i];
+        const parts = data.key;
+        const value = accessor(data);
+        let currentNode = root;
+        for (let j = 0; j < parts.length; j++) {
+            const currentPath = parts.slice(0, j + 1);
+            const children = currentNode.children;
+            const nodeName = parts[j];
+            let childNode;
             if (j + 1 < parts.length) {
                 // Not yet at the end of the sequence; move down the tree.
                 childNode = findChild(children, nodeName);
@@ -410,7 +410,7 @@ utils.toHierarchy = function (list, accessor) {
 };
 
 function findChild (children, nodeName) {
-    for (var k = 0; k < children.length; k++) {
+    for (let k = 0; k < children.length; k++) {
         if (children[k].key === nodeName) {
             return children[k];
         }
@@ -418,8 +418,8 @@ function findChild (children, nodeName) {
 }
 
 utils.getAncestors = function (node) {
-    var path = [];
-    var current = node;
+    const path = [];
+    let current = node;
     while (current.parent) {
         path.unshift(current.name);
         current = current.parent;
@@ -428,7 +428,7 @@ utils.getAncestors = function (node) {
 };
 
 utils.arraysIdentical = function (a, b) {
-    var i = a.length;
+    let i = a.length;
     if (i !== b.length) {
         return false;
     }

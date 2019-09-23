@@ -73,8 +73,8 @@ units.fp = {};
  * @returns {Function} start-end unit function
  */
 units.fp.precision = function (precision) {
-    var _f = function (s, e) {
-        var d = Math.abs((e - s) / _f.resolution);
+    const _f = function (s, e) {
+        const d = Math.abs((e - s) / _f.resolution);
         if (utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
         } else {
