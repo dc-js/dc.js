@@ -2,7 +2,8 @@ import * as d3 from 'd3';
 
 import {d3Box} from '../base/d3.box'
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {transition, units} from '../core/core';
+import {transition} from '../core/core';
+import {units} from '../core/units';
 import {utils} from '../core/utils';
 
 // Returns a function to compute the interquartile range.

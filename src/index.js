@@ -8,6 +8,7 @@ export * from './core/logger';
 export * from './core/config';
 export * from './core/events';
 export * from './core/filters';
+export * from './core/units';
 export * from './base/d3.box';
 
 export * from './base/base-mixin';
