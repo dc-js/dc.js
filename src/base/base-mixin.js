@@ -1,7 +1,8 @@
 import * as d3 from 'd3';
 
 import {pluck, printers, utils} from '../core/utils';
-import {deregisterChart, instanceOfChart, redrawAll, registerChart, renderAll} from '../core/core';
+import {instanceOfChart, redrawAll, renderAll} from '../core/core';
+import {deregisterChart, registerChart} from '../core/chart-registry';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
 import {logger} from '../core/logger';

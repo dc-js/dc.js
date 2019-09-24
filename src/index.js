@@ -1,4 +1,5 @@
 export * from '../generated/version';
+export * from './core/chart-registry';
 export * from './core/constants';
 export * from './core/core';
 export * from './core/bad-argument-exception';
