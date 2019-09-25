@@ -9,22 +9,6 @@ import {BaseMixin} from '../base/base-mixin';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
-function _tweenSlice (d, chart) {
-    let current = this._current;
-    if (chart._isOffCanvas(current)) {
-        current = {x0: 0, x1: 0, y0: 0, y1: 0};
-    }
-    const tweenTarget = {
-        x0: d.x0,
-        x1: d.x1,
-        y0: d.y0,
-        y1: d.y1
-    };
-    const i = d3.interpolate(current, tweenTarget);
-    this._current = i(0);
-    return t => chart._safeArc(chart._buildArcs(), Object.assign({}, d, i(t)));
-}
-
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -188,7 +172,7 @@ class SunburstChart extends ColorMixin(BaseMixin) {
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenSlice.call(this, d, chart);
+                return chart._tweenSlice(d, this);
             });
         }
     }
@@ -249,7 +233,7 @@ class SunburstChart extends ColorMixin(BaseMixin) {
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenSlice.call(this, d, chart);
+                return chart._tweenSlice(d, this);
             });
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
@@ -570,5 +554,21 @@ class SunburstChart extends ColorMixin(BaseMixin) {
                 d3.select(this).classed('highlight', highlighted);
             }
         });
+    }
+
+    _tweenSlice (d, element) {
+        let current = element._current;
+        if (this._isOffCanvas(current)) {
+            current = {x0: 0, x1: 0, y0: 0, y1: 0};
+        }
+        const tweenTarget = {
+            x0: d.x0,
+            x1: d.x1,
+            y0: d.y0,
+            y1: d.y1
+        };
+        const i = d3.interpolate(current, tweenTarget);
+        element._current = i(0);
+        return t => this._safeArc(this._buildArcs(), Object.assign({}, d, i(t)));
     }
 }

@@ -61,7 +61,7 @@ export class SeriesChart extends CompositeChart {
         const nesting = nester.entries(this.data());
         const children =
             nesting.map((sub, i) => {
-                const subChart = this._charts[sub.key] || this._chartFunction.call(this, this, this._chartGroup , sub.key, i);
+                const subChart = this._charts[sub.key] || this._chartFunction(this, this._chartGroup , sub.key, i);
                 if (!this._charts[sub.key]) {
                     childrenChanged = true;
                 }

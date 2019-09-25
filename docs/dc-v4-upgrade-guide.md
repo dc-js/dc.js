@@ -38,7 +38,7 @@ for your case.
 - The previous was of instantiating a chart is still supported.
   However new way is recommended. For example:
   
-    - `dc.pieChart = (parent, chartGroup)` --> `new dc.PieChart(parent, chartGroup)`
+    - `dc.pieChart(parent, chartGroup)` --> `new dc.PieChart(parent, chartGroup)`
 
 - In dcv4, inside a `dc` chart functions set and expect `this` to be the chart
   instance. However `d3` sets it to the d3 element.
