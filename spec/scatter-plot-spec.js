@@ -40,6 +40,13 @@ describe('dc.scatterPlot', function () {
             expect(chart.group().all().length).toBe(chart.selectAll('path.symbol').size());
         });
 
+        it('treats hiddenSize as synonym of emptySize', function () {
+            expect(chart.hiddenSize()).toEqual(chart.emptySize());
+            const newVal = 5;
+            chart.hiddenSize(newVal);
+            expect(chart.emptySize()).toEqual(newVal);
+        });
+
         it('should correctly place the symbols', function () {
             expect(nthSymbol(4).attr('transform')).toMatchTranslate(264, 131);
             expect(nthSymbol(5).attr('transform')).toMatchTranslate(264, 75);

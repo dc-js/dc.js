@@ -69,9 +69,6 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this._symbol.size((d, i) => this._elementSize(d, i));
 
-        // ES6: do we need this
-        this.hiddenSize = this.emptySize;
-
         this.anchor(parent, chartGroup);
     }
 
@@ -509,6 +506,13 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
         this._emptySize = emptySize;
         return this;
+    }
+
+    hiddenSize (emptySize) {
+        if (!arguments.length) {
+            return this.emptySize();
+        }
+        return this.emptySize(emptySize);
     }
 
     /**

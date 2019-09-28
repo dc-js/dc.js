@@ -48,9 +48,15 @@ describe('dc.selectMenu', function () {
         it('select tag does not have size by default', function () {
             expect(chart.selectAll('select').attr('size')).toBeNull();
         });
-        it('can have size set', function () {
+        it('can have numberVisible set', function () {
             chart.numberVisible(10).redraw();
             expect(chart.selectAll('select').attr('size')).toEqual('10');
+        });
+        it('treats size as synonym of numberVisible', function () {
+            chart.numberVisible(10);
+            expect(chart.size()).toEqual(chart.numberVisible());
+            chart.size(20);
+            expect(chart.numberVisible()).toEqual(20);
         });
         it('creates prompt option with empty value', function () {
             var option = chart.selectAll('option').nodes()[0];
