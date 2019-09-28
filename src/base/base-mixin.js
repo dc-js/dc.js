@@ -135,37 +135,6 @@ export class BaseMixin {
         this._removeFilterHandler = _defaultRemoveFilterHandler;
         this._addFilterHandler = _defaultAddFilterHandler;
         this._resetFilterHandler = _defaultResetFilterHandler;
-
-        // ES6: need to figure out proper way to deprecate
-
-        /**
-         * A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
-         * to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-         * right after the chart finishes its transitions, giving you a way to modify the SVGElements.
-         * Renderlet functions take the chart instance as the only input parameter and you can
-         * use the dc API or use raw d3 to achieve pretty much any effect.
-         *
-         * Use {@link dc.baseMixin#on on} with a 'renderlet' prefix.
-         * Generates a random key for the renderlet, which makes it hard to remove.
-         * @method renderlet
-         * @memberof dc.baseMixin
-         * @instance
-         * @deprecated
-         * @example
-         * // do this instead of .renderlet(function(chart) { ... })
-         * chart.on("renderlet", function(chart){
-         *     // mix of dc API and d3 manipulation
-         *     chart.select('g.y').style('display', 'none');
-         *     // its a closure so you can also access other chart variable available in the closure scope
-         *     moveChart.filter(chart.filter());
-         * });
-         * @param {Function} renderletFunction
-         * @returns {dc.baseMixin}
-         */
-        this.renderlet = logger.deprecate(renderletFunction => {
-            this.on('renderlet.' + utils.uniqueId(), renderletFunction);
-            return this;
-        }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
     }
 
     /**
@@ -1570,6 +1539,36 @@ export class BaseMixin {
      */
     on (event, listener) {
         this._listeners.on(event, listener);
+        return this;
+    }
+
+    /**
+     * A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
+     * to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
+     * right after the chart finishes its transitions, giving you a way to modify the SVGElements.
+     * Renderlet functions take the chart instance as the only input parameter and you can
+     * use the dc API or use raw d3 to achieve pretty much any effect.
+     *
+     * Use {@link dc.baseMixin#on on} with a 'renderlet' prefix.
+     * Generates a random key for the renderlet, which makes it hard to remove.
+     * @method renderlet
+     * @memberof dc.baseMixin
+     * @instance
+     * @deprecated chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)
+     * @example
+     * // do this instead of .renderlet(function(chart) { ... })
+     * chart.on("renderlet", function(chart){
+     *     // mix of dc API and d3 manipulation
+     *     chart.select('g.y').style('display', 'none');
+     *     // its a closure so you can also access other chart variable available in the closure scope
+     *     moveChart.filter(chart.filter());
+     * });
+     * @param {Function} renderletFunction
+     * @returns {dc.baseMixin}
+     */
+    renderlet (renderletFunction) {
+        logger.warnOnce('chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
+        this.on('renderlet.' + utils.uniqueId(), renderletFunction);
         return this;
     }
 

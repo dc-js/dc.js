@@ -94,18 +94,6 @@ class BoxPlot extends CoordinateGridMixin {
             return values.length !== 0;
         }));
 
-        /**
-         * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-         * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
-         * for a visual description of how the padding is applied.
-         * @method boxPadding
-         * @memberof dc.boxPlot
-         * @instance
-         * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
-         * @param {Number} [padding=0.8]
-         * @returns {Number|dc.boxPlot}
-         */
-        this.boxPadding = this._rangeBandPadding;
         this.boxPadding(0.8);
 
         /**
@@ -122,6 +110,21 @@ class BoxPlot extends CoordinateGridMixin {
         this.outerPadding(0.5);
 
         this.anchor(parent, chartGroup);
+    }
+
+    /**
+     * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
+     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
+     * for a visual description of how the padding is applied.
+     * @method boxPadding
+     * @memberof dc.boxPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
+     * @param {Number} [padding=0.8]
+     * @returns {Number|dc.boxPlot}
+     */
+    boxPadding (padding) {
+        return this._rangeBandPadding(padding);
     }
 
     /**
