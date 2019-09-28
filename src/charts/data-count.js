@@ -45,12 +45,6 @@ export class DataCount extends BaseMixin {
 
         this._mandatoryAttributes(['crossfilter', 'groupAll']);
 
-        this.dimension = logger.annotate(this.crossfilter,
-                                         'consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
-
-        this.group = logger.annotate(this.groupAll,
-                                     'consider using dataCount.groupAll instead of dataCount.group for clarity');
-
         this.anchor(parent, chartGroup);
     }
 
@@ -132,12 +126,28 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
+    dimension (cf) {
+        logger.warnOnce('consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
+        if (!arguments.length) {
+            return this.crossfilter();
+        }
+        return this.crossfilter(cf);
+    }
+
     groupAll (groupAll) {
         if (!arguments.length) {
             return this._groupAll;
         }
         this._groupAll = groupAll;
         return this;
+    }
+
+    group (groupAll) {
+        logger.warnOnce('consider using dataCount.groupAll instead of dataCount.group for clarity');
+        if (!arguments.length) {
+            return this.groupAll();
+        }
+        return this.groupAll(groupAll);
     }
 }
 

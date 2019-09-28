@@ -51,6 +51,18 @@ describe('dc.dataGrid', function () {
         it('sets the group label', function () {
             expect(chart.selectAll('.dc-grid-group h1.dc-grid-label').nodes()[0].innerHTML).toEqual('Data Grid');
         });
+        it('treats group as synonym of section', function () {
+            expect(chart.group()).toEqual(chart.section());
+            const newSection = () => {};
+            chart.group(newSection);
+            expect(chart.section()).toBe(newSection);
+        });
+        it('treats htmlGroup as synonym of htmlSection', function () {
+            expect(chart.htmlGroup()).toEqual(chart.htmlSection());
+            const newHtmlSection = () => {};
+            chart.htmlGroup(newHtmlSection);
+            expect(chart.htmlSection()).toBe(newHtmlSection);
+        });
         it('creates id div', function () {
             expect(chart.selectAll('.dc-grid-item div#id_9').nodes().length).toEqual(1);
             expect(chart.selectAll('.dc-grid-item div#id_8').nodes().length).toEqual(1);

@@ -61,6 +61,18 @@ describe('dc.dataTable', function () {
             it('group should be set', function () {
                 expect(chart.group()).toEqual(valueGroup);
             });
+            it('treats group as synonym of section', function () {
+                expect(chart.group()).toEqual(chart.section());
+                const newSection = () => {};
+                chart.group(newSection);
+                expect(chart.section()).toBe(newSection);
+            });
+            it('treats showGroups as synonym of showSections', function () {
+                expect(chart.showGroups()).toEqual(chart.showSections());
+                const newVal = !(chart.showGroups());
+                chart.showGroups(newVal);
+                expect(chart.showSections()).toBe(newVal);
+            });
             it('group tr should not be undefined', function () {
                 expect(typeof(chart.selectAll('tr.dc-table-group').nodes()[0])).not.toBe('undefined');
             });
