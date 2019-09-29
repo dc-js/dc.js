@@ -1,8 +1,7 @@
 import * as d3 from 'd3';
-
-import {logger} from '../core/logger';
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
+import {logger} from '../core/logger';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -53,9 +52,6 @@ export class SelectMenu extends BaseMixin {
             }
             return 0;
         };
-
-        // ES6: drop it
-        this.size = logger.deprecate(this.numberVisible, 'selectMenu.size is ambiguous - use numberVisible instead');
 
         this.anchor(parent, chartGroup);
     }
@@ -272,6 +268,14 @@ export class SelectMenu extends BaseMixin {
         this._numberVisible = numberVisible;
 
         return this;
+    }
+
+    size (numberVisible) {
+        logger.warnOnce('selectMenu.size is ambiguous - use selectMenu.numberVisible instead');
+        if (!arguments.length) {
+            return this.numberVisible();
+        }
+        return this.numberVisible(numberVisible);
     }
 }
 

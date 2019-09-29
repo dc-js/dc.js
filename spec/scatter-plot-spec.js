@@ -40,7 +40,7 @@ describe('dc.scatterPlot', function () {
             expect(chart.group().all().length).toBe(chart.selectAll('path.symbol').size());
         });
 
-        it('treats hiddenSize as synonym for emptySize', function () {
+        it('treats hiddenSize as synonym of emptySize', function () {
             expect(chart.hiddenSize()).toEqual(chart.emptySize());
             const newVal = 5;
             chart.hiddenSize(newVal);
