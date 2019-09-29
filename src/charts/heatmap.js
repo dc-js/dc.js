@@ -51,7 +51,6 @@ export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
         this._colsLabel = d => d;
         this._rowsLabel = d => d;
 
-        // ES6: revisit after converting mixins
         this._xAxisOnClick = d => {
             this._filterAxis(0, d);
         };
