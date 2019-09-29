@@ -52,29 +52,6 @@ export class DataGrid extends BaseMixin {
 
         this._mandatoryAttributes(['dimension', 'section']);
 
-        /**
-         * Backward-compatible synonym for {@link dc.dataGrid#section section}.
-         *
-         * @method group
-         * @memberof dc.dataGrid
-         * @instance
-         * @param {Function} groupFunction Function taking a row of data and returning the nest key.
-         * @returns {Function|dc.dataGrid}
-         */
-        this.group = logger.annotate(this.section,
-                                     'consider using dataGrid.section instead of dataGrid.group for clarity');
-
-        /**
-         * Backward-compatible synonym for {@link dc.dataGrid#htmlSection htmlSection}.
-         * @method htmlGroup
-         * @memberof dc.dataGrid
-         * @instance
-         * @param {Function} [htmlGroup]
-         * @returns {Function|dc.dataGrid}
-         */
-        this.htmlGroup = logger.annotate(this.htmlSection,
-                                         'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
-
         this.anchor(parent, chartGroup);
     }
 
@@ -165,6 +142,23 @@ export class DataGrid extends BaseMixin {
     }
 
     /**
+     * Backward-compatible synonym for {@link dc.dataGrid#section section}.
+     *
+     * @method group
+     * @memberof dc.dataGrid
+     * @instance
+     * @param {Function} section Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataGrid}
+     */
+    group (section) {
+        logger.warnOnce('consider using dataGrid.section instead of dataGrid.group for clarity');
+        if (!arguments.length) {
+            return this.section();
+        }
+        return this.section(section);
+    }
+
+    /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
      * @method beginSlice
@@ -250,6 +244,22 @@ export class DataGrid extends BaseMixin {
         }
         this._htmlSection = htmlSection;
         return this;
+    }
+
+    /**
+     * Backward-compatible synonym for {@link dc.dataGrid#htmlSection htmlSection}.
+     * @method htmlGroup
+     * @memberof dc.dataGrid
+     * @instance
+     * @param {Function} [htmlSection]
+     * @returns {Function|dc.dataGrid}
+     */
+    htmlGroup (htmlSection) {
+        logger.warnOnce('consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
+        if (!arguments.length) {
+            return this.htmlSection();
+        }
+        return this.htmlSection(htmlSection);
     }
 
     /**

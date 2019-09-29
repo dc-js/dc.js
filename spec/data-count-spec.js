@@ -30,6 +30,18 @@ describe('dc.dataCount', function () {
         it('should generate something', function () {
             expect(chart).not.toBeNull();
         });
+        it('treats dimension as synonym of crossfilter', function () {
+            expect(chart.dimension()).toEqual(chart.crossfilter());
+            const newVal = () => {}; // Just any value will do
+            chart.dimension(newVal);
+            expect(chart.crossfilter()).toBe(newVal);
+        });
+        it('treats group as synonym of groupAll', function () {
+            expect(chart.group()).toEqual(chart.groupAll());
+            const newVal = () => {}; // Just any value will do
+            chart.group(newVal);
+            expect(chart.groupAll()).toBe(newVal);
+        });
         it('should be registered', function () {
             expect(dc.hasChart(chart)).toBeTruthy();
         });

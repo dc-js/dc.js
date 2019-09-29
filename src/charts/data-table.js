@@ -56,29 +56,6 @@ export class DataTable extends BaseMixin {
 
         this._mandatoryAttributes(['dimension']);
 
-        /**
-         * Backward-compatible synonym for {@link dc.dataTable#section section}.
-         *
-         * @method group
-         * @memberof dc.dataTable
-         * @instance
-         * @param {Function} groupFunction Function taking a row of data and returning the nest key.
-         * @returns {Function|dc.dataTable}
-         */
-        this.group = logger.annotate(this.section,
-                                     'consider using dataTable.section instead of dataTable.group for clarity');
-
-        /**
-         * Backward-compatible synonym for {@link dc.dataTable#showSections showSections}.
-         * @method showGroups
-         * @memberof dc.dataTable
-         * @instance
-         * @param {Boolean} [showGroups=true]
-         * @returns {Boolean|dc.dataTable}
-         */
-        this.showGroups = logger.annotate(this.showSections,
-                                          'consider using dataTable.showSections instead of dataTable.showGroups for clarity');
-
         this.anchor(parent, chartGroup);
     }
 
@@ -248,6 +225,23 @@ export class DataTable extends BaseMixin {
         }
         this._section = section;
         return this;
+    }
+
+    /**
+     * Backward-compatible synonym for {@link dc.dataTable#section section}.
+     *
+     * @method group
+     * @memberof dc.dataTable
+     * @instance
+     * @param {Function} section Function taking a row of data and returning the nest key.
+     * @returns {Function|dc.dataTable}
+     */
+    group (section) {
+        logger.warnOnce('consider using dataTable.section instead of dataTable.group for clarity');
+        if (!arguments.length) {
+            return this.section();
+        }
+        return this.section(section);
     }
 
     /**
@@ -452,6 +446,22 @@ export class DataTable extends BaseMixin {
         }
         this._showSections = showSections;
         return this;
+    }
+
+    /**
+     * Backward-compatible synonym for {@link dc.dataTable#showSections showSections}.
+     * @method showGroups
+     * @memberof dc.dataTable
+     * @instance
+     * @param {Boolean} [showSections=true]
+     * @returns {Boolean|dc.dataTable}
+     */
+    showGroups (showSections) {
+        logger.warnOnce('consider using dataTable.showSections instead of dataTable.showGroups for clarity');
+        if (!arguments.length) {
+            return this.showSections();
+        }
+        return this.showSections(showSections);
     }
 }
 
