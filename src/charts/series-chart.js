@@ -41,11 +41,14 @@ export class SeriesChart extends CompositeChart {
 
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
         this.shareColors(true);
+    }
 
-        // ES6: consider creating a method _compose that calls super.compose and make overridden compose to throw exception
-        // make compose private
-        this._compose = this.compose;
-        delete this.compose;
+    _compose (subChartArray) {
+        super.compose(subChartArray);
+    }
+
+    compose (subChartArray) {
+        throw new Error('Not supported for this chart type');
     }
 
     _preprocessData () {

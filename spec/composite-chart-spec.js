@@ -110,6 +110,14 @@ describe('dc.compositeChart', function () {
         expect(chart.valueAccessor()).not.toBeNull();
     });
 
+    it('should not allow calling yAxisMin', function () {
+        expect(chart.yAxisMin).toThrowError();
+    });
+
+    it('should not allow calling yAxisMax', function () {
+        expect(chart.yAxisMax).toThrowError();
+    });
+
     describe('rendering the chart', function () {
         beforeEach(function () {
             chart.render();

@@ -42,6 +42,10 @@ describe('dc.seriesChart', function () {
             expect(chart.svg()).not.toBeNull();
         });
 
+        it('should not allow calling compose', function () {
+            expect(chart.compose).toThrowError();
+        });
+
         it('should position generated lineCharts using the data', function () {
             var lines = chart.selectAll('path.line');
 
