@@ -161,7 +161,6 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    // ES6: name clashes with instance variable in the BaseMixin
     _renderTitles (regionG, layerIndex, data) {
         if (this.renderTitle()) {
             regionG.selectAll('title').text(d => {
