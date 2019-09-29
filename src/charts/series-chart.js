@@ -79,7 +79,6 @@ export class SeriesChart extends CompositeChart {
                     .valueAccessor(this.valueAccessor())
                     .brushOn(false);
             });
-        // ES6: do we add removal function in composite chart?
         // this works around the fact compositeChart doesn't really
         // have a removal interface
         Object.keys(this._charts)
