@@ -56,12 +56,6 @@ export class CompositeChart extends CoordinateGridMixin {
             }
         });
 
-        // ES6: avoid deleting
-        delete this.yAxisMin;
-
-        // ES6: avoid deleting
-        delete this.yAxisMax;
-
         this.anchor(parent, chartGroup);
     }
 
@@ -553,6 +547,14 @@ export class CompositeChart extends CoordinateGridMixin {
         }
         this._rightYAxis = rightYAxis;
         return this;
+    }
+
+    yAxisMin () {
+        throw new Error('Not supported for this chart type');
+    }
+
+    yAxisMax () {
+        throw new Error('Not supported for this chart type');
     }
 }
 
