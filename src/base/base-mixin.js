@@ -98,7 +98,6 @@ export class BaseMixin {
 
         this._renderLabel = false;
 
-        // ES6: the following can't be promoted to a member function, as it needs to be => function
         this._title = d => this.keyAccessor()(d) + ': ' + this.valueAccessor()(d);
         this._renderTitle = true;
         this._controlsUseVisibility = false;

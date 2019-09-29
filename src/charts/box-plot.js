@@ -95,18 +95,6 @@ class BoxPlot extends CoordinateGridMixin {
         }));
 
         this.boxPadding(0.8);
-
-        /**
-         * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-         * or on charts with a custom {@link dc.boxPlot#boxWidth .boxWidth}. Will pad the width by
-         * `padding * barWidth` on each side of the chart.
-         * @method outerPadding
-         * @memberof dc.boxPlot
-         * @instance
-         * @param {Number} [padding=0.5]
-         * @returns {Number|dc.boxPlot}
-         */
-        this.outerPadding = this._outerRangeBandPadding;
         this.outerPadding(0.5);
 
         this.anchor(parent, chartGroup);
@@ -124,7 +112,27 @@ class BoxPlot extends CoordinateGridMixin {
      * @returns {Number|dc.boxPlot}
      */
     boxPadding (padding) {
+        if (!arguments.length) {
+            return this._rangeBandPadding();
+        }
         return this._rangeBandPadding(padding);
+    }
+
+    /**
+     * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
+     * or on charts with a custom {@link dc.boxPlot#boxWidth .boxWidth}. Will pad the width by
+     * `padding * barWidth` on each side of the chart.
+     * @method outerPadding
+     * @memberof dc.boxPlot
+     * @instance
+     * @param {Number} [padding=0.5]
+     * @returns {Number|dc.boxPlot}
+     */
+    outerPadding (padding) {
+        if (!arguments.length) {
+            return this._outerRangeBandPadding();
+        }
+        return this._outerRangeBandPadding(padding);
     }
 
     /**

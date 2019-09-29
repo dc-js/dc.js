@@ -49,18 +49,23 @@ class BarChart extends StackMixin(CoordinateGridMixin) {
 
         this.label(d => utils.printSingleValue(d.y0 + d.y), false);
 
-        /**
-         * Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
-         * Will pad the width by `padding * barWidth` on each side of the chart.
-         * @method outerPadding
-         * @memberof dc.barChart
-         * @instance
-         * @param {Number} [padding=0.5]
-         * @returns {Number|dc.barChart}
-         */
-        this.outerPadding = this._outerRangeBandPadding;
-
         this.anchor(parent, chartGroup);
+    }
+
+    /**
+     * Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
+     * Will pad the width by `padding * barWidth` on each side of the chart.
+     * @method outerPadding
+     * @memberof dc.barChart
+     * @instance
+     * @param {Number} [padding=0.5]
+     * @returns {Number|dc.barChart}
+     */
+    outerPadding (padding) {
+        if (!arguments.length) {
+            return this._outerRangeBandPadding();
+        }
+        return this._outerRangeBandPadding(padding);
     }
 
     rescale () {
