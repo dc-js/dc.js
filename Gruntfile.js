@@ -38,7 +38,7 @@ module.exports = function (grunt) {
             }
         },
         rollup: {
-            js: {
+            es6: {
                 options: {
                     external: ['d3'],
                     format: 'umd',
@@ -50,6 +50,20 @@ module.exports = function (grunt) {
                 },
                 files: {
                     '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js': ['<%= conf.src %>/index.js']
+                }
+            },
+            esm: {
+                options: {
+                    external: ['d3'],
+                    format: 'esm',
+                    name: 'dc',
+                    sourcemap: true,
+                    globals: {
+                        d3: 'd3'
+                    }
+                },
+                files: {
+                    '<%= conf.dist %>/esm/<%= conf.pkg.name %>.esm.js': ['<%= conf.src %>/index.js']
                 }
             }
         },
@@ -435,7 +449,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat:version.js', 'rollup:js', 'sass', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['concat:version.js', 'rollup:es6', 'rollup:esm', 'sass', 'uglify', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
