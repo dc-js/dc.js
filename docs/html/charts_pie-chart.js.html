@@ -92,20 +92,6 @@ import {transition} from '../core/core';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
-function _tweenPie (b, chart) {
-    b.innerRadius = chart._innerRadius;
-    let current = this._current;
-    if (chart._isOffCanvas(current)) {
-        current = {startAngle: 0, endAngle: 0};
-    } else {
-        // only interpolate startAngle &amp; endAngle, not the whole data object
-        current = {startAngle: current.startAngle, endAngle: current.endAngle};
-    }
-    const i = d3.interpolate(current, b);
-    this._current = i(0);
-    return t => chart._safeArc(i(t), 0, chart._buildArcs());
-}
-
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -206,7 +192,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         const pie = this._pieLayout();
         let pieData;
         // if we have data...
-        if (d3.sum(this.data(), this.cappedValueAccessor)) {
+        if (d3.sum(this.data(), d => this.cappedValueAccessor(d))) {
             pieData = pie(this.data());
             this._g.classed(this._emptyCssClass, false);
         } else {
@@ -258,14 +244,14 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     _createSlicePath (slicesEnter, arc) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', (d, i) => this._pvt_onClick(d, i))
+            .on('click', (d, i) => this._onClick(d, i))
             .attr('d', (d, i) => this._safeArc(d, i, arc));
 
         const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
-            const self = this;
+            const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenPie.call(this, d, self);
+                return chart._tweenPie(d, this);
             });
         }
     }
@@ -311,7 +297,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                     }
                     return classes;
                 })
-                .on('click', (d, i) => this._pvt_onClick(d, i))
+                .on('click', (d, i) => this._onClick(d, i))
                 .on('mouseover', (d, i) => {
                     this._highlightSlice(i, true);
                 })
@@ -323,7 +309,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 this._updateLabelPaths(pieData, arc);
             }
         }
-    };
+    }
 
     _updateLabelPaths (pieData, arc) {
         let polyline = this._g.selectAll('polyline.' + this._sliceCssClass)
@@ -335,7 +321,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .enter()
             .append('polyline')
             .attr('class', (d, i) => 'pie-path _' + i + ' ' + this._sliceCssClass)
-            .on('click', (d, i) => this._pvt_onClick(d, i))
+            .on('click', (d, i) => this._onClick(d, i))
             .on('mouseover', (d, i) => {
                 this._highlightSlice(i, true);
             })
@@ -381,9 +367,9 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .attr('d', (d, i) => this._safeArc(d, i, arc));
         const tranNodes = transition(slicePaths, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
-            const self = this;
+            const chart = this;
             tranNodes.attrTween('d', function (d) {
-                return _tweenPie.call(this, d, self);
+                return chart._tweenPie(d, this);
             });
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
@@ -415,18 +401,18 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _highlightFilter () {
-        const self = this;
+        const chart = this;
         if (this.hasFilter()) {
             this.selectAll('g.' + this._sliceCssClass).each(function (d) {
-                if (self._isSelectedSlice(d)) {
-                    self.highlightSelected(this);
+                if (chart._isSelectedSlice(d)) {
+                    chart.highlightSelected(this);
                 } else {
-                    self.fadeDeselected(this);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
             this.selectAll('g.' + this._sliceCssClass).each(function () {
-                self.resetHighlight(this);
+                chart.resetHighlight(this);
             });
         }
     }
@@ -547,7 +533,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _pieLayout () {
-        return d3.pie().sort(null).value(this.cappedValueAccessor);
+        return d3.pie().sort(null).value(d => this.cappedValueAccessor(d));
     }
 
     _sliceTooSmall (d) {
@@ -567,7 +553,7 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this.getColor(d.data, i);
     }
 
-    _pvt_onClick (d, i) {
+    _onClick (d, i) {
         if (this._g.attr('class') !== this._emptyCssClass) {
             this.onClick(d.data, i);
         }
@@ -680,6 +666,22 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             }
         });
     }
+
+    _tweenPie (b, element) {
+        b.innerRadius = this._innerRadius;
+        let current = element._current;
+        if (this._isOffCanvas(current)) {
+            current = {startAngle: 0, endAngle: 0};
+        } else {
+            // only interpolate startAngle &amp; endAngle, not the whole data object
+            current = {startAngle: current.startAngle, endAngle: current.endAngle};
+        }
+        const i = d3.interpolate(current, b);
+        element._current = i(0);
+        return t => this._safeArc(i(t), 0, this._buildArcs());
+    }
+
+
 }
 
 export const pieChart = (parent, chartGroup) => new PieChart(parent, chartGroup);
@@ -728,7 +730,7 @@ export const pieChart = (parent, chartGroup) => new PieChart(parent, chartGroup)
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Mon Aug 26th 2019
+		on Tue Oct 1st 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

@@ -87,7 +87,7 @@
             class="sunlight-highlight-javascript linenums">import * as d3 from 'd3';
 
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {optionalTransition, override, transition} from '../core/core';
+import {optionalTransition, transition} from '../core/core';
 import {filters} from '../core/filters';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
@@ -115,489 +115,675 @@ import {events} from '../core/events';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.scatterPlot}
  */
-export const scatterPlot = (parent, chartGroup) => new ScatterPlot(parent, chartGroup);
-
 export class ScatterPlot extends CoordinateGridMixin {
     constructor (parent, chartGroup) {
         super();
 
-        const _chart = this;
+        this._symbol = d3.symbol();
 
-        var _symbol = d3.symbol();
+        this._existenceAccessor = d => d.value;
 
-        var _existenceAccessor = function (d) {
-            return d.value;
-        };
+        const originalKeyAccessor = this.keyAccessor();
+        this.keyAccessor(d => originalKeyAccessor(d)[0]);
+        this.valueAccessor(d => originalKeyAccessor(d)[1]);
+        this.colorAccessor(() => this._groupName);
 
-        var originalKeyAccessor = _chart.keyAccessor();
-        _chart.keyAccessor(function (d) {
-            return originalKeyAccessor(d)[0];
-        });
-        _chart.valueAccessor(function (d) {
-            return originalKeyAccessor(d)[1];
-        });
-        _chart.colorAccessor(function () {
-            return _chart._groupName;
-        });
-
-        _chart.title(function (d) {
+        this.title(d => {
             // this basically just counteracts the setting of its own key/value accessors
             // see https://github.com/dc-js/dc.js/issues/702
-            return _chart.keyAccessor()(d) + ',' + _chart.valueAccessor()(d) + ': ' +
-                _chart.existenceAccessor()(d);
+            return this.keyAccessor()(d) + ',' + this.valueAccessor()(d) + ': ' +
+                this.existenceAccessor()(d);
         });
 
-        var _locator = function (d) {
-            return 'translate(' + _chart.x()(_chart.keyAccessor()(d)) + ',' +
-                _chart.y()(_chart.valueAccessor()(d)) + ')';
-        };
+        this._highlightedSize = 7;
+        this._symbolSize = 5;
+        this._excludedSize = 3;
+        this._excludedColor = null;
+        this._excludedOpacity = 1.0;
+        this._emptySize = 0;
+        this._emptyOpacity = 0;
+        this._nonemptyOpacity = 1;
+        this._emptyColor = null;
+        this._filtered = [];
+        this._canvas = null;
+        this._context = null;
+        this._useCanvas = false;
 
-        var _highlightedSize = 7;
-        var _symbolSize = 5;
-        var _excludedSize = 3;
-        var _excludedColor = null;
-        var _excludedOpacity = 1.0;
-        var _emptySize = 0;
-        var _emptyOpacity = 0;
-        var _nonemptyOpacity = 1;
-        var _emptyColor = null;
-        var _filtered = [];
 
         // Use a 2 dimensional brush
-        _chart.brush(d3.brush());
+        this.brush(d3.brush());
 
-        function elementSize (d, i) {
-            if (!_existenceAccessor(d)) {
-                return Math.pow(_emptySize, 2);
-            } else if (_filtered[i]) {
-                return Math.pow(_symbolSize, 2);
-            } else {
-                return Math.pow(_excludedSize, 2);
-            }
+        this._symbol.size((d, i) => this._elementSize(d, i));
+
+        this.anchor(parent, chartGroup);
+    }
+
+    // Calculates element radius for canvas plot to be comparable to D3 area based symbol sizes
+    _canvasElementSize (d, isFiltered) {
+        if (!this._existenceAccessor(d)) {
+            return this._emptySize / Math.sqrt(Math.PI);
+        } else if (isFiltered) {
+            return this._symbolSize / Math.sqrt(Math.PI);
+        } else {
+            return this._excludedSize / Math.sqrt(Math.PI);
+        }
+    }
+
+    _elementSize (d, i) {
+        if (!this._existenceAccessor(d)) {
+            return Math.pow(this._emptySize, 2);
+        } else if (this._filtered[i]) {
+            return Math.pow(this._symbolSize, 2);
+        } else {
+            return Math.pow(this._excludedSize, 2);
+        }
+    }
+
+    _locator (d) {
+        return 'translate(' + this.x()(this.keyAccessor()(d)) + ',' +
+            this.y()(this.valueAccessor()(d)) + ')';
+    }
+
+    filter (filter) {
+        if (!arguments.length) {
+            return super.filter();
         }
 
-        _symbol.size(elementSize);
+        return super.filter(filters.RangedTwoDimensionalFilter(filter));
+    }
 
-        override(_chart, '_filter', function (filter) {
-            if (!arguments.length) {
-                return _chart.__filter();
+    /**
+     * Method that replaces original resetSvg and appropriately inserts canvas
+     * element along with svg element and sets their CSS properties appropriately
+     * so they are overlapped on top of each other.
+     * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
+     * @method resetSvg
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
+     * @returns {SVGElement}
+     */
+    resetSvg () {
+        if (!this._useCanvas) {
+            return super.resetSvg();
+        } else {
+            super.resetSvg(); // Perform original svgReset inherited from baseMixin
+            this.select('canvas').remove(); // remove old canvas
+
+            const svgSel = this.svg();
+            const rootSel = this.root();
+
+            // Set root node to relative positioning and svg to absolute
+            rootSel.style('position', 'relative');
+            svgSel.style('position', 'relative');
+
+            // Check if SVG element already has any extra top/left CSS offsets
+            const svgLeft = isNaN(parseInt(svgSel.style('left'), 10)) ? 0 : parseInt(svgSel.style('left'), 10);
+            const svgTop = isNaN(parseInt(svgSel.style('top'), 10)) ? 0 : parseInt(svgSel.style('top'), 10);
+            const width = this.effectiveWidth();
+            const height = this.effectiveHeight();
+            const margins = this.margins(); // {top: 10, right: 130, bottom: 42, left: 42}
+
+            // Add the canvas element such that it perfectly overlaps the plot area of the scatter plot SVG
+            const devicePixelRatio = window.devicePixelRatio || 1;
+            this._canvas = this.root().append('canvas')
+                .attr('x', 0)
+                .attr('y', 0)
+                .attr('width', (width) * devicePixelRatio)
+                .attr('height', (height) * devicePixelRatio)
+                .style('width', width + 'px')
+                .style('height', height + 'px')
+                .style('position', 'absolute')
+                .style('top', margins.top + svgTop + 'px')
+                .style('left', margins.left + svgLeft + 'px')
+                .style('z-index', -1) // Place behind SVG
+                .style('pointer-events', 'none'); // Disable pointer events on canvas so SVG can capture brushing
+
+            // Define canvas context and set clipping path
+            this._context = this._canvas.node().getContext('2d');
+            this._context.scale(devicePixelRatio, devicePixelRatio);
+            this._context.rect(0, 0, width, height);
+            this._context.clip(); // Setup clipping path
+            this._context.imageSmoothingQuality = 'high';
+
+            return this.svg(); // Respect original return param for this.resetSvg;
+        }
+    }
+
+    /**
+     * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
+     * canvas backend does not currently support
+     * {@link dc.scatterPlot#customSymbol customSymbol} or
+     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting
+     * with filled circles. Symbols are drawn with
+     * {@link dc.scatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
+     * is used when `useCanvas` is set to `false`.
+     * @method useCanvas
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Boolean} [useCanvas=false]
+     * @return {Boolean|d3.selection}
+     */
+    useCanvas (useCanvas) {
+        if (!arguments.length) {
+            return this._useCanvas;
+        }
+        this._useCanvas = useCanvas;
+        return this;
+    }
+
+    /**
+     * Set or get canvas element. You should usually only ever use the get method as
+     * dc.js will handle canvas element generation.  Provides valid canvas only when
+     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
+     * @method canvas
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {CanvasElement|d3.selection} [canvasElement]
+     * @return {CanvasElement|d3.selection}
+     */
+    canvas (canvasElement) {
+        if (!arguments.length) {
+            return this._canvas;
+        }
+        this._canvas = canvasElement;
+        return this;
+    }
+
+    /**
+     * Get canvas 2D context. Provides valid context only when
+     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
+     * @method context
+     * @memberof dc.scatterPlot
+     * @instance
+     * @return {CanvasContext}
+     */
+    context () {
+        return this._context;
+    }
+
+    /*eslint complexity: [2,11] */
+    // Plots data on canvas element. If argument provided, assumes legend is
+    // currently being highlighted and modifies opacity/size of symbols accordingly
+    // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
+    _plotOnCanvas (legendHighlightDatum) {
+        const context = this.context();
+        context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
+        const data = this.data();
+
+        // Draw the data on canvas
+        data.forEach((d, i) => {
+            const isFiltered = !this.filter() || this.filter().isFiltered([d.key[0], d.key[1]]);
+            // Calculate opacity for current data point
+            let cOpacity = 1;
+            if (!this._existenceAccessor(d)) {
+                cOpacity = this._emptyOpacity;
+            } else if (isFiltered) {
+                cOpacity = this._nonemptyOpacity;
+            } else {
+                cOpacity = this.excludedOpacity();
+            }
+            // Calculate color for current data point
+            let cColor = null;
+            if (this._emptyColor &amp;&amp; !this._existenceAccessor(d)) {
+                cColor = this._emptyColor;
+            } else if (this.excludedColor() &amp;&amp; !isFiltered) {
+                cColor = this.excludedColor();
+            } else {
+                cColor = this.getColor(d);
+            }
+            let cSize = this._canvasElementSize(d, isFiltered);
+
+            // Adjust params for data points if legend is highlighted
+            if (legendHighlightDatum) {
+                const isHighlighted = (cColor === legendHighlightDatum.color);
+                // Calculate opacity for current data point
+                const fadeOutOpacity = 0.1; // TODO: Make this programmatically setable
+                if (!isHighlighted) { // Fade out non-highlighted colors + highlighted colors outside filter
+                    cOpacity = fadeOutOpacity;
+                }
+                if (isHighlighted) { // Set size for highlighted color data points
+                    cSize = this._highlightedSize / Math.sqrt(Math.PI);
+                }
             }
 
-            return _chart.__filter(filters.RangedTwoDimensionalFilter(filter));
+            // Draw point on canvas
+            context.save();
+            context.globalAlpha = cOpacity;
+            context.beginPath();
+            context.arc(this.x()(this.keyAccessor()(d)), this.y()(this.valueAccessor()(d)), cSize, 0, 2 * Math.PI, true);
+            context.fillStyle = cColor;
+            context.fill();
+            // context.lineWidth = 0.5; // Commented out code to add stroke around scatter points if desired
+            // context.strokeStyle = '#333';
+            // context.stroke();
+            context.restore();
+        });
+    }
+
+    _plotOnSVG () {
+        let symbols = this.chartBodyG().selectAll('path.symbol')
+            .data(this.data());
+
+        transition(symbols.exit(), this.transitionDuration(), this.transitionDelay())
+            .attr('opacity', 0).remove();
+
+        symbols = symbols
+            .enter()
+            .append('path')
+            .attr('class', 'symbol')
+            .attr('opacity', 0)
+            .attr('fill', this.getColor)
+            .attr('transform', d => this._locator(d))
+            .merge(symbols);
+
+        symbols.call(symbol => this._renderTitles(symbol, this.data()));
+
+        symbols.each((d, i) => {
+            this._filtered[i] = !this.filter() || this.filter().isFiltered([this.keyAccessor()(d), this.valueAccessor()(d)]);
         });
 
-        _chart.plotData = function () {
-            var symbols = _chart.chartBodyG().selectAll('path.symbol')
-                .data(_chart.data());
+        transition(symbols, this.transitionDuration(), this.transitionDelay())
+            .attr('opacity', (d, i) => {
+                if (!this._existenceAccessor(d)) {
+                    return this._emptyOpacity;
+                } else if (this._filtered[i]) {
+                    return this._nonemptyOpacity;
+                } else {
+                    return this.excludedOpacity();
+                }
+            })
+            .attr('fill', (d, i) => {
+                if (this._emptyColor &amp;&amp; !this._existenceAccessor(d)) {
+                    return this._emptyColor;
+                } else if (this.excludedColor() &amp;&amp; !this._filtered[i]) {
+                    return this.excludedColor();
+                } else {
+                    return this.getColor(d);
+                }
+            })
+            .attr('transform', d => this._locator(d))
+            .attr('d', this._symbol);
+    }
 
-            transition(symbols.exit(), _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', 0).remove();
-
-            symbols = symbols
-                .enter()
-                .append('path')
-                .attr('class', 'symbol')
-                .attr('opacity', 0)
-                .attr('fill', _chart.getColor)
-                .attr('transform', _locator)
-                .merge(symbols);
-
-            symbols.call(renderTitles, _chart.data());
-
-            symbols.each(function (d, i) {
-                _filtered[i] = !_chart.filter() || _chart.filter().isFiltered([_chart.keyAccessor()(d), _chart.valueAccessor()(d)]);
-            });
-
-            transition(symbols, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('opacity', function (d, i) {
-                    if (!_existenceAccessor(d)) {
-                        return _emptyOpacity;
-                    } else if (_filtered[i]) {
-                        return _nonemptyOpacity;
-                    } else {
-                        return _chart.excludedOpacity();
-                    }
-                })
-                .attr('fill', function (d, i) {
-                    if (_emptyColor &amp;&amp; !_existenceAccessor(d)) {
-                        return _emptyColor;
-                    } else if (_chart.excludedColor() &amp;&amp; !_filtered[i]) {
-                        return _chart.excludedColor();
-                    } else {
-                        return _chart.getColor(d);
-                    }
-                })
-                .attr('transform', _locator)
-                .attr('d', _symbol);
-        };
-
-        function renderTitles (symbol, d) {
-            if (_chart.renderTitle()) {
-                symbol.selectAll('title').remove();
-                symbol.append('title').text(function (d) {
-                    return _chart.title()(d);
-                });
-            }
+    plotData () {
+        if (this._useCanvas) {
+            this._plotOnCanvas();
+        } else {
+            this._plotOnSVG();
         }
+    }
 
-        /**
-         * Get or set the existence accessor.  If a point exists, it is drawn with
-         * {@link dc.scatterPlot#symbolSize symbolSize} radius and
-         * opacity 1; if it does not exist, it is drawn with
-         * {@link dc.scatterPlot#emptySize emptySize} radius and opacity 0. By default,
-         * the existence accessor checks if the reduced value is truthy.
-         * @method existenceAccessor
-         * @memberof dc.scatterPlot
-         * @instance
-         * @see {@link dc.scatterPlot#symbolSize symbolSize}
-         * @see {@link dc.scatterPlot#emptySize emptySize}
-         * @example
-         * // default accessor
-         * chart.existenceAccessor(function (d) { return d.value; });
-         * @param {Function} [accessor]
-         * @returns {Function|dc.scatterPlot}
-         */
-        _chart.existenceAccessor = function (accessor) {
-            if (!arguments.length) {
-                return _existenceAccessor;
-            }
-            _existenceAccessor = accessor;
-            return this;
-        };
+    _renderTitles (symbol, d) {
+        if (this.renderTitle()) {
+            symbol.selectAll('title').remove();
+            symbol.append('title').text(d => this.title()(d));
+        }
+    }
 
-        /**
-         * Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
-         * Type can be a constant or an accessor.
-         * @method symbol
-         * @memberof dc.scatterPlot
-         * @instance
-         * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_type symbol.type}
-         * @example
-         * // Circle type
-         * chart.symbol(d3.symbolCircle);
-         * // Square type
-         * chart.symbol(d3.symbolSquare);
-         * @param {Function} [type=d3.symbolCircle]
-         * @returns {Function|dc.scatterPlot}
-         */
-        _chart.symbol = function (type) {
-            if (!arguments.length) {
-                return _symbol.type();
-            }
-            _symbol.type(type);
-            return _chart;
-        };
+    /**
+     * Get or set the existence accessor.  If a point exists, it is drawn with
+     * {@link dc.scatterPlot#symbolSize symbolSize} radius and
+     * opacity 1; if it does not exist, it is drawn with
+     * {@link dc.scatterPlot#emptySize emptySize} radius and opacity 0. By default,
+     * the existence accessor checks if the reduced value is truthy.
+     * @method existenceAccessor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link dc.scatterPlot#symbolSize symbolSize}
+     * @see {@link dc.scatterPlot#emptySize emptySize}
+     * @example
+     * // default accessor
+     * chart.existenceAccessor(function (d) { return d.value; });
+     * @param {Function} [accessor]
+     * @returns {Function|dc.scatterPlot}
+     */
+    existenceAccessor (accessor) {
+        if (!arguments.length) {
+            return this._existenceAccessor;
+        }
+        this._existenceAccessor = accessor;
+        return this;
+    }
 
-        /**
-         * Get or set the symbol generator. By default `dc.scatterPlot` will use
-         * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol()}
-         * to generate symbols. `dc.scatterPlot` will set the
-         * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size symbol size accessor}
-         * on the symbol generator.
-         * @method customSymbol
-         * @memberof dc.scatterPlot
-         * @instance
-         * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol}
-         * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
-         * @param {String|Function} [customSymbol=d3.symbol()]
-         * @returns {String|Function|dc.scatterPlot}
-         */
-        _chart.customSymbol = function (customSymbol) {
-            if (!arguments.length) {
-                return _symbol;
-            }
-            _symbol = customSymbol;
-            _symbol.size(elementSize);
-            return _chart;
-        };
+    /**
+     * Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
+     * Type can be a constant or an accessor.
+     * @method symbol
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_type symbol.type}
+     * @example
+     * // Circle type
+     * chart.symbol(d3.symbolCircle);
+     * // Square type
+     * chart.symbol(d3.symbolSquare);
+     * @param {Function} [type=d3.symbolCircle]
+     * @returns {Function|dc.scatterPlot}
+     */
+    symbol (type) {
+        if (!arguments.length) {
+            return this._symbol.type();
+        }
+        this._symbol.type(type);
+        return this;
+    }
 
-        /**
-         * Set or get radius for symbols.
-         * @method symbolSize
-         * @memberof dc.scatterPlot
-         * @instance
-         * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-         * @param {Number} [symbolSize=3]
-         * @returns {Number|dc.scatterPlot}
-         */
-        _chart.symbolSize = function (symbolSize) {
-            if (!arguments.length) {
-                return _symbolSize;
-            }
-            _symbolSize = symbolSize;
-            return _chart;
-        };
+    /**
+     * Get or set the symbol generator. By default `dc.scatterPlot` will use
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol()}
+     * to generate symbols. `dc.scatterPlot` will set the
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size symbol size accessor}
+     * on the symbol generator.
+     * @method customSymbol
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol}
+     * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
+     * @param {String|Function} [customSymbol=d3.symbol()]
+     * @returns {String|Function|dc.scatterPlot}
+     */
+    customSymbol (customSymbol) {
+        if (!arguments.length) {
+            return this._symbol;
+        }
+        this._symbol = customSymbol;
+        this._symbol.size((d, i) => this._elementSize(d, i));
+        return this;
+    }
 
-        /**
-         * Set or get radius for highlighted symbols.
-         * @method highlightedSize
-         * @memberof dc.scatterPlot
-         * @instance
-         * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-         * @param {Number} [highlightedSize=5]
-         * @returns {Number|dc.scatterPlot}
-         */
-        _chart.highlightedSize = function (highlightedSize) {
-            if (!arguments.length) {
-                return _highlightedSize;
-            }
-            _highlightedSize = highlightedSize;
-            return _chart;
-        };
+    /**
+     * Set or get radius for symbols.
+     * @method symbolSize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
+     * @param {Number} [symbolSize=3]
+     * @returns {Number|dc.scatterPlot}
+     */
+    symbolSize (symbolSize) {
+        if (!arguments.length) {
+            return this._symbolSize;
+        }
+        this._symbolSize = symbolSize;
+        return this;
+    }
 
-        /**
-         * Set or get size for symbols excluded from this chart's filter. If null, no
-         * special size is applied for symbols based on their filter status.
-         * @method excludedSize
-         * @memberof dc.scatterPlot
-         * @instance
-         * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-         * @param {Number} [excludedSize=null]
-         * @returns {Number|dc.scatterPlot}
-         */
-        _chart.excludedSize = function (excludedSize) {
-            if (!arguments.length) {
-                return _excludedSize;
-            }
-            _excludedSize = excludedSize;
-            return _chart;
-        };
+    /**
+     * Set or get radius for highlighted symbols.
+     * @method highlightedSize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
+     * @param {Number} [highlightedSize=5]
+     * @returns {Number|dc.scatterPlot}
+     */
+    highlightedSize (highlightedSize) {
+        if (!arguments.length) {
+            return this._highlightedSize;
+        }
+        this._highlightedSize = highlightedSize;
+        return this;
+    }
 
-        /**
-         * Set or get color for symbols excluded from this chart's filter. If null, no
-         * special color is applied for symbols based on their filter status.
-         * @method excludedColor
-         * @memberof dc.scatterPlot
-         * @instance
-         * @param {Number} [excludedColor=null]
-         * @returns {Number|dc.scatterPlot}
-         */
-        _chart.excludedColor = function (excludedColor) {
-            if (!arguments.length) {
-                return _excludedColor;
-            }
-            _excludedColor = excludedColor;
-            return _chart;
-        };
+    /**
+     * Set or get size for symbols excluded from this chart's filter. If null, no
+     * special size is applied for symbols based on their filter status.
+     * @method excludedSize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
+     * @param {Number} [excludedSize=null]
+     * @returns {Number|dc.scatterPlot}
+     */
+    excludedSize (excludedSize) {
+        if (!arguments.length) {
+            return this._excludedSize;
+        }
+        this._excludedSize = excludedSize;
+        return this;
+    }
 
-        /**
-         * Set or get opacity for symbols excluded from this chart's filter.
-         * @method excludedOpacity
-         * @memberof dc.scatterPlot
-         * @instance
-         * @param {Number} [excludedOpacity=1.0]
-         * @returns {Number|dc.scatterPlot}
-         */
-        _chart.excludedOpacity = function (excludedOpacity) {
-            if (!arguments.length) {
-                return _excludedOpacity;
-            }
-            _excludedOpacity = excludedOpacity;
-            return _chart;
-        };
+    /**
+     * Set or get color for symbols excluded from this chart's filter. If null, no
+     * special color is applied for symbols based on their filter status.
+     * @method excludedColor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [excludedColor=null]
+     * @returns {Number|dc.scatterPlot}
+     */
+    excludedColor (excludedColor) {
+        if (!arguments.length) {
+            return this._excludedColor;
+        }
+        this._excludedColor = excludedColor;
+        return this;
+    }
 
-        /**
-         * Set or get radius for symbols when the group is empty.
-         * @method emptySize
-         * @memberof dc.scatterPlot
-         * @instance
-         * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-         * @param {Number} [emptySize=0]
-         * @returns {Number|dc.scatterPlot}
-         */
-        _chart.hiddenSize = _chart.emptySize = function (emptySize) {
-            if (!arguments.length) {
-                return _emptySize;
-            }
-            _emptySize = emptySize;
-            return _chart;
-        };
+    /**
+     * Set or get opacity for symbols excluded from this chart's filter.
+     * @method excludedOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [excludedOpacity=1.0]
+     * @returns {Number|dc.scatterPlot}
+     */
+    excludedOpacity (excludedOpacity) {
+        if (!arguments.length) {
+            return this._excludedOpacity;
+        }
+        this._excludedOpacity = excludedOpacity;
+        return this;
+    }
 
-        /**
-         * Set or get color for symbols when the group is empty. If null, just use the
-         * {@link dc.colorMixin#colors colorMixin.colors} color scale zero value.
-         * @name emptyColor
-         * @memberof dc.scatterPlot
-         * @instance
-         * @param {String} [emptyColor=null]
-         * @return {String}
-         * @return {dc.scatterPlot}/
-         */
-        _chart.emptyColor = function (emptyColor) {
-            if (!arguments.length) {
-                return _emptyColor;
-            }
-            _emptyColor = emptyColor;
-            return _chart;
-        };
+    /**
+     * Set or get radius for symbols when the group is empty.
+     * @method emptySize
+     * @memberof dc.scatterPlot
+     * @instance
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
+     * @param {Number} [emptySize=0]
+     * @returns {Number|dc.scatterPlot}
+     */
+    emptySize (emptySize) {
+        if (!arguments.length) {
+            return this._emptySize;
+        }
+        this._emptySize = emptySize;
+        return this;
+    }
 
-        /**
-         * Set or get opacity for symbols when the group is empty.
-         * @name emptyOpacity
-         * @memberof dc.scatterPlot
-         * @instance
-         * @param {Number} [emptyOpacity=0]
-         * @return {Number}
-         * @return {dc.scatterPlot}
-         */
-        _chart.emptyOpacity = function (emptyOpacity) {
-            if (!arguments.length) {
-                return _emptyOpacity;
-            }
-            _emptyOpacity = emptyOpacity;
-            return _chart;
-        };
+    hiddenSize (emptySize) {
+        if (!arguments.length) {
+            return this.emptySize();
+        }
+        return this.emptySize(emptySize);
+    }
 
-        /**
-         * Set or get opacity for symbols when the group is not empty.
-         * @name nonemptyOpacity
-         * @memberof dc.scatterPlot
-         * @instance
-         * @param {Number} [nonemptyOpacity=1]
-         * @return {Number}
-         * @return {dc.scatterPlot}
-         */
-        _chart.nonemptyOpacity = function (nonemptyOpacity) {
-            if (!arguments.length) {
-                return _emptyOpacity;
-            }
-            _nonemptyOpacity = nonemptyOpacity;
-            return _chart;
-        };
+    /**
+     * Set or get color for symbols when the group is empty. If null, just use the
+     * {@link dc.colorMixin#colors colorMixin.colors} color scale zero value.
+     * @name emptyColor
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {String} [emptyColor=null]
+     * @return {String}
+     * @return {dc.scatterPlot}/
+     */
+    emptyColor (emptyColor) {
+        if (!arguments.length) {
+            return this._emptyColor;
+        }
+        this._emptyColor = emptyColor;
+        return this;
+    }
 
-        _chart.legendables = function () {
-            return [{chart: _chart, name: _chart._groupName, color: _chart.getColor()}];
-        };
+    /**
+     * Set or get opacity for symbols when the group is empty.
+     * @name emptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [emptyOpacity=0]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    emptyOpacity (emptyOpacity) {
+        if (!arguments.length) {
+            return this._emptyOpacity;
+        }
+        this._emptyOpacity = emptyOpacity;
+        return this;
+    }
 
-        _chart.legendHighlight = function (d) {
-            resizeSymbolsWhere(function (symbol) {
-                return symbol.attr('fill') === d.color;
-            }, _highlightedSize);
-            _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+    /**
+     * Set or get opacity for symbols when the group is not empty.
+     * @name nonemptyOpacity
+     * @memberof dc.scatterPlot
+     * @instance
+     * @param {Number} [nonemptyOpacity=1]
+     * @return {Number}
+     * @return {dc.scatterPlot}
+     */
+    nonemptyOpacity (nonemptyOpacity) {
+        if (!arguments.length) {
+            return this._emptyOpacity;
+        }
+        this._nonemptyOpacity = nonemptyOpacity;
+        return this;
+    }
+
+    legendables () {
+        return [{chart: this, name: this._groupName, color: this.getColor()}];
+    }
+
+    legendHighlight (d) {
+        if (this._useCanvas) {
+            this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
+        } else {
+            this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._highlightedSize);
+            this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
                 return d3.select(this).attr('fill') !== d.color;
             }).classed('fadeout', true);
-        };
+        }
+    }
 
-        _chart.legendReset = function (d) {
-            resizeSymbolsWhere(function (symbol) {
-                return symbol.attr('fill') === d.color;
-            }, _symbolSize);
-            _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+    legendReset (d) {
+        if (this._useCanvas) {
+            this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
+        } else {
+            this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._symbolSize);
+            this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
                 return d3.select(this).attr('fill') !== d.color;
             }).classed('fadeout', false);
-        };
+        }
+    }
 
-        function resizeSymbolsWhere (condition, size) {
-            var symbols = _chart.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-                return condition(d3.select(this));
-            });
-            var oldSize = _symbol.size();
-            _symbol.size(Math.pow(size, 2));
-            transition(symbols, _chart.transitionDuration(), _chart.transitionDelay()).attr('d', _symbol);
-            _symbol.size(oldSize);
+    _resizeSymbolsWhere (condition, size) {
+        const symbols = this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
+            return condition(d3.select(this));
+        });
+        const oldSize = this._symbol.size();
+        this._symbol.size(Math.pow(size, 2));
+        transition(symbols, this.transitionDuration(), this.transitionDelay()).attr('d', this._symbol);
+        this._symbol.size(oldSize);
+    }
+    createBrushHandlePaths () {
+        // no handle paths for poly-brushes
+    }
+
+    extendBrush (brushSelection) {
+        if (this.round()) {
+            brushSelection[0] = brushSelection[0].map(this.round());
+            brushSelection[1] = brushSelection[1].map(this.round());
+        }
+        return brushSelection;
+    }
+
+    brushIsEmpty (brushSelection) {
+        return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
+    }
+
+    _brushing () {
+        // Avoids infinite recursion (mutual recursion between range and focus operations)
+        // Source Event will be null when brush.move is called programmatically (see below as well).
+        if (!d3.event.sourceEvent) {
+            return;
         }
 
-        _chart.createBrushHandlePaths = function () {
-            // no handle paths for poly-brushes
-        };
+        // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
+        // In this case we are more worried about this handler causing brush move programmatically which will
+        // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
+        // This check avoids recursive calls
+        if (d3.event.sourceEvent.type &amp;&amp; ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+            return;
+        }
 
-        _chart.extendBrush = function (brushSelection) {
-            if (_chart.round()) {
-                brushSelection[0] = brushSelection[0].map(_chart.round());
-                brushSelection[1] = brushSelection[1].map(_chart.round());
-            }
-            return brushSelection;
-        };
+        let brushSelection = d3.event.selection;
 
-        _chart.brushIsEmpty = function (brushSelection) {
-            return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
-        };
+        // Testing with pixels is more reliable
+        let brushIsEmpty = this.brushIsEmpty(brushSelection);
 
-        _chart._brushing = function () {
-            // Avoids infinite recursion (mutual recursion between range and focus operations)
-            // Source Event will be null when brush.move is called programmatically (see below as well).
-            if (!d3.event.sourceEvent) {
-                return;
-            }
+        if (brushSelection) {
+            brushSelection = brushSelection.map(point => point.map((coord, i) => {
+                const scale = i === 0 ? this.x() : this.y();
+                return scale.invert(coord);
+            }));
 
-            // Ignore event if recursive event - i.e. not directly generated by user action (like mouse/touch etc.)
-            // In this case we are more worried about this handler causing brush move programmatically which will
-            // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
-            // This check avoids recursive calls
-            if (d3.event.sourceEvent.type &amp;&amp; ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
-                return;
-            }
+            brushSelection = this.extendBrush(brushSelection);
 
-            var brushSelection = d3.event.selection;
+            // The rounding process might have made brushSelection empty, so we need to recheck
+            brushIsEmpty = brushIsEmpty &amp;&amp; this.brushIsEmpty(brushSelection);
+        }
 
-            // Testing with pixels is more reliable
-            var brushIsEmpty = _chart.brushIsEmpty(brushSelection);
+        this.redrawBrush(brushSelection, false);
 
-            if (brushSelection) {
-                brushSelection = brushSelection.map(function (point) {
-                    return point.map(function (coord, i) {
-                        var scale = i === 0 ? _chart.x() : _chart.y();
-                        return scale.invert(coord);
-                    });
-                });
+        const ranged2DFilter = brushIsEmpty ? null : filters.RangedTwoDimensionalFilter(brushSelection);
 
-                brushSelection = _chart.extendBrush(brushSelection);
+        events.trigger(() => {
+            this.replaceFilter(ranged2DFilter);
+            this.redrawGroup();
+        }, constants.EVENT_DELAY);
+    }
 
-                // The rounding process might have made brushSelection empty, so we need to recheck
-                brushIsEmpty = brushIsEmpty &amp;&amp; _chart.brushIsEmpty(brushSelection);
+    redrawBrush (brushSelection, doTransition) {
+        // override default x axis brush from parent chart
+        this._brush = this.brush();
+        this._gBrush = this.gBrush();
+
+        if (this.brushOn() &amp;&amp; this._gBrush) {
+            if (this.resizing()) {
+                this.setBrushExtents(doTransition);
             }
 
-            _chart.redrawBrush(brushSelection, false);
+            if (!brushSelection) {
+                this._gBrush
+                    .call(this._brush.move, brushSelection);
 
-            var ranged2DFilter = brushIsEmpty ? null : filters.RangedTwoDimensionalFilter(brushSelection);
+            } else {
+                brushSelection = brushSelection.map(point => point.map((coord, i) => {
+                    const scale = i === 0 ? this.x() : this.y();
+                    return scale(coord);
+                }));
 
-            events.trigger(function () {
-                _chart.replaceFilter(ranged2DFilter);
-                _chart.redrawGroup();
-            }, constants.EVENT_DELAY);
-        };
+                const gBrush =
+                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(this._gBrush);
 
-        _chart.redrawBrush = function (brushSelection, doTransition) {
-            // override default x axis brush from parent chart
-            var _brush = _chart.brush();
-            var _gBrush = _chart.gBrush();
+                gBrush
+                    .call(this._brush.move, brushSelection);
 
-            if (_chart.brushOn() &amp;&amp; _gBrush) {
-                if (_chart.resizing()) {
-                    _chart.setBrushExtents(doTransition);
-                }
-
-                if (!brushSelection) {
-                    _gBrush
-                        .call(_brush.move, brushSelection);
-
-                } else {
-                    brushSelection = brushSelection.map(function (point) {
-                        return point.map(function (coord, i) {
-                            var scale = i === 0 ? _chart.x() : _chart.y();
-                            return scale(coord);
-                        });
-                    });
-
-                    var gBrush =
-                        optionalTransition(doTransition, _chart.transitionDuration(), _chart.transitionDelay())(_gBrush);
-
-                    gBrush
-                        .call(_brush.move, brushSelection);
-
-                }
             }
+        }
 
-            _chart.fadeDeselectedArea(brushSelection);
-        };
+        this.fadeDeselectedArea(brushSelection);
+    }
 
-        _chart.setBrushY = function (gBrush) {
-            gBrush.call(_chart.brush().y(_chart.y()));
-        };
-
-        return _chart.anchor(parent, chartGroup);
+    setBrushY (gBrush) {
+        gBrush.call(this.brush().y(this.y()));
     }
 }
+
+export const scatterPlot = (parent, chartGroup) => new ScatterPlot(parent, chartGroup);
 </pre>
     </article>
 </section>
@@ -643,7 +829,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Mon Aug 26th 2019
+		on Tue Oct 1st 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

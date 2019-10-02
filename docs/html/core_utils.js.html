@@ -89,60 +89,6 @@ import {constants} from './constants';
 import {config} from './config';
 
 /**
- * @namespace printers
- * @memberof dc
- * @type {{}}
- */
-export const printers = {};
-
-/**
- * Converts a list of filters into a readable string.
- * @method filters
- * @memberof dc.printers
- * @param {Array&lt;dc.filters>} filters
- * @returns {String}
- */
-printers.filters = function (filters) {
-    var s = '';
-
-    for (var i = 0; i &lt; filters.length; ++i) {
-        if (i > 0) {
-            s += ', ';
-        }
-        s += printers.filter(filters[i]);
-    }
-
-    return s;
-};
-
-/**
- * Converts a filter into a readable string.
- * @method filter
- * @memberof dc.printers
- * @param {dc.filters|any|Array&lt;any>} filter
- * @returns {String}
- */
-printers.filter = function (filter) {
-    var s = '';
-
-    if (typeof filter !== 'undefined' &amp;&amp; filter !== null) {
-        if (filter instanceof Array) {
-            if (filter.length >= 2) {
-                s = '[' + filter.map(function (e) {
-                    return utils.printSingleValue(e);
-                }).join(' -> ') + ']';
-            } else if (filter.length >= 1) {
-                s = utils.printSingleValue(filter[0]);
-            }
-        } else {
-            s = utils.printSingleValue(filter);
-        }
-    }
-
-    return s;
-};
-
-/**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
  * can be passed as the second argument to also alter the data being returned.
  *
@@ -187,7 +133,7 @@ export const utils = {};
  * @returns {String}
  */
 utils.printSingleValue = function (filter) {
-    var s = '' + filter;
+    let s = '' + filter;
 
     if (filter instanceof Date) {
         s = config.dateFormat(filter);
@@ -247,7 +193,7 @@ utils.add = function (l, r, t) {
         }
         return t.offset(l, r);
     } else if (typeof r === 'string') {
-        var percentage = (+r / 100);
+        const percentage = (+r / 100);
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l + r;
@@ -293,7 +239,7 @@ utils.subtract = function (l, r, t) {
         }
         return t.offset(l, -r);
     } else if (typeof r === 'string') {
-        var percentage = (+r / 100);
+        const percentage = (+r / 100);
         return l &lt; 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l - r;
@@ -407,7 +353,7 @@ utils.nameToId = function (name) {
  */
 utils.appendOrSelect = function (parent, selector, tag) {
     tag = tag || selector;
-    var element = parent.select(selector);
+    let element = parent.select(selector);
     if (element.empty()) {
         element = parent.append(tag);
     }
@@ -450,11 +396,11 @@ utils.arraysEqual = function (a1, a2) {
 
 // ******** Sunburst Chart ********
 utils.allChildren = function (node) {
-    var paths = [];
+    let paths = [];
     paths.push(node.path);
     console.log('currentNode', node);
     if (node.children) {
-        for (var i = 0; i &lt; node.children.length; i++) {
+        for (let i = 0; i &lt; node.children.length; i++) {
             paths = paths.concat(utils.allChildren(node.children[i]));
         }
     }
@@ -464,17 +410,17 @@ utils.allChildren = function (node) {
 // builds a d3 Hierarchy from a collection
 // TODO: turn this monster method something better.
 utils.toHierarchy = function (list, accessor) {
-    var root = {'key': 'root', 'children': []};
-    for (var i = 0; i &lt; list.length; i++) {
-        var data = list[i];
-        var parts = data.key;
-        var value = accessor(data);
-        var currentNode = root;
-        for (var j = 0; j &lt; parts.length; j++) {
-            var currentPath = parts.slice(0, j + 1);
-            var children = currentNode.children;
-            var nodeName = parts[j];
-            var childNode;
+    const root = {'key': 'root', 'children': []};
+    for (let i = 0; i &lt; list.length; i++) {
+        const data = list[i];
+        const parts = data.key;
+        const value = accessor(data);
+        let currentNode = root;
+        for (let j = 0; j &lt; parts.length; j++) {
+            const currentPath = parts.slice(0, j + 1);
+            const children = currentNode.children;
+            const nodeName = parts[j];
+            let childNode;
             if (j + 1 &lt; parts.length) {
                 // Not yet at the end of the sequence; move down the tree.
                 childNode = findChild(children, nodeName);
@@ -496,7 +442,7 @@ utils.toHierarchy = function (list, accessor) {
 };
 
 function findChild (children, nodeName) {
-    for (var k = 0; k &lt; children.length; k++) {
+    for (let k = 0; k &lt; children.length; k++) {
         if (children[k].key === nodeName) {
             return children[k];
         }
@@ -504,8 +450,8 @@ function findChild (children, nodeName) {
 }
 
 utils.getAncestors = function (node) {
-    var path = [];
-    var current = node;
+    const path = [];
+    let current = node;
     while (current.parent) {
         path.unshift(current.name);
         current = current.parent;
@@ -514,7 +460,7 @@ utils.getAncestors = function (node) {
 };
 
 utils.arraysIdentical = function (a, b) {
-    var i = a.length;
+    let i = a.length;
     if (i !== b.length) {
         return false;
     }
@@ -570,7 +516,7 @@ utils.arraysIdentical = function (a, b) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Mon Aug 26th 2019
+		on Tue Oct 1st 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

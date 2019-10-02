@@ -90,7 +90,6 @@ import {transition} from '../core/core';
 import {filters} from '../core/filters';
 import {utils} from '../core/utils';
 import {events} from '../core/events';
-import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 
@@ -126,7 +125,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  **/
 export const sunburstChart = (parent, chartGroup) => new SunburstChart(parent, chartGroup);
 
-class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
+class SunburstChart extends ColorMixin(BaseMixin) {
     constructor (parent, chartGroup) {
         super();
 
@@ -144,11 +143,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
         this._externalLabelRadius = undefined;
 
-        this.colorAccessor(this.cappedKeyAccessor);
+        this.colorAccessor(d => this.keyAccessor()(d));
 
-        this.title(d => this.cappedKeyAccessor(d) + ': ' + this._extendedValueAccessor(d));
+        this.title(d => this.keyAccessor()(d) + ': ' + this._extendedValueAccessor(d));
 
-        this.label(this.cappedKeyAccessor);
+        this.label(d => this.keyAccessor()(d));
         this.renderLabel(true);
 
         this.transitionDuration(350);
@@ -170,33 +169,6 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
             return filters;
         });
 
-        {
-            const self = this;
-            // ES6: it uses this as well as self, carefully handle
-            self._tweenSlice = function (d) {
-                let current = this._current;
-                if (self._isOffCanvas(current)) {
-                    current = {x0: 0, x1: 0, y0: 0, y1: 0};
-                }
-                const tweenTarget = {
-                    x0: d.x0,
-                    x1: d.x1,
-                    y0: d.y0,
-                    y1: d.y1
-                };
-                const i = d3.interpolate(current, tweenTarget);
-                this._current = i(0);
-                return t => self._safeArc(self._buildArcs(), Object.assign({}, d, i(t)));
-            };
-        }
-
-        // ES6 - must remain as an => function - check again later
-        this._onClick = (d, i) => {
-            if (this._g.attr('class') !== this._emptyCssClass) {
-                this._pvt_onClick(d, i);
-            }
-        };
-
         this.anchor(parent, chartGroup);
     }
 
@@ -205,7 +177,7 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         if (d.path) {
             return d.value;
         }
-        return this.cappedValueAccessor(d);
+        return this.valueAccessor()(d);
     }
 
     _doRender () {
@@ -279,12 +251,15 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
     _createSlicePath (slicesEnter, arc) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', (d, i) => this._onClick(d, i))
+            .on('click', (d, i) => this.onClick(d, i))
             .attr('d', d => this._safeArc(arc, d));
 
         const tranNodes = transition(slicePath, this.transitionDuration());
         if (tranNodes.attrTween) {
-            tranNodes.attrTween('d', this._tweenSlice);
+            const chart = this;
+            tranNodes.attrTween('d', function (d) {
+                return chart._tweenSlice(d, this);
+            });
         }
     }
 
@@ -324,7 +299,7 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
                     }
                     return classes;
                 })
-                .on('click', (d, i) => this._onClick(d, i));
+                .on('click', (d, i) => this.onClick(d, i));
             this._positionLabels(labelsEnter, arc);
         }
     }
@@ -342,7 +317,10 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
             .attr('d', (d, i) => this._safeArc(arc, d));
         const tranNodes = transition(slicePaths, this.transitionDuration());
         if (tranNodes.attrTween) {
-            tranNodes.attrTween('d', this._tweenSlice);
+            const chart = this;
+            tranNodes.attrTween('d', function (d) {
+                return chart._tweenSlice(d, this);
+            });
         }
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
@@ -369,18 +347,18 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _highlightFilter () {
-        const self = this;
-        if (self.hasFilter()) {
-            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
-                if (self._isSelectedSlice(d)) {
-                    self.highlightSelected(this);
+        const chart = this;
+        if (chart.hasFilter()) {
+            chart.selectAll('g.' + chart._sliceCssClass).each(function (d) {
+                if (chart._isSelectedSlice(d)) {
+                    chart.highlightSelected(this);
                 } else {
-                    self.fadeDeselected(this);
+                    chart.fadeDeselected(this);
                 }
             });
         } else {
-            self.selectAll('g.' + self._sliceCssClass).each(function (d) {
-                self.resetHighlight(this);
+            chart.selectAll('g.' + chart._sliceCssClass).each(function (d) {
+                chart.resetHighlight(this);
             });
         }
     }
@@ -395,12 +373,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|dc.sunburstChart}
      */
     innerRadius (innerRadius) {
-        const self = this;
         if (!arguments.length) {
-            return self._innerRadius;
+            return this._innerRadius;
         }
-        self._innerRadius = innerRadius;
-        return self;
+        this._innerRadius = innerRadius;
+        return this;
     }
 
     /**
@@ -413,12 +390,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|dc.sunburstChart}
      */
     radius (radius) {
-        const self = this;
         if (!arguments.length) {
-            return self._givenRadius;
+            return this._givenRadius;
         }
-        self._givenRadius = radius;
-        return self;
+        this._givenRadius = radius;
+        return this;
     }
 
     /**
@@ -430,12 +406,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|dc.sunburstChart}
      */
     cx (cx) {
-        const self = this;
         if (!arguments.length) {
-            return (self._cx || self.width() / 2);
+            return (this._cx || this.width() / 2);
         }
-        self._cx = cx;
-        return self;
+        this._cx = cx;
+        return this;
     }
 
     /**
@@ -447,12 +422,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|dc.sunburstChart}
      */
     cy (cy) {
-        const self = this;
         if (!arguments.length) {
-            return (self._cy || self.height() / 2);
+            return (this._cy || this.height() / 2);
         }
-        self._cy = cy;
-        return self;
+        this._cy = cy;
+        return this;
     }
 
     /**
@@ -465,12 +439,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|dc.sunburstChart}
      */
     minAngleForLabel (minAngleForLabel) {
-        const self = this;
         if (!arguments.length) {
-            return self._minAngleForLabel;
+            return this._minAngleForLabel;
         }
-        self._minAngleForLabel = minAngleForLabel;
-        return self;
+        this._minAngleForLabel = minAngleForLabel;
+        return this;
     }
 
     /**
@@ -482,12 +455,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {String|dc.sunburstChart}
      */
     emptyTitle (title) {
-        const self = this;
         if (arguments.length === 0) {
-            return self._emptyTitle;
+            return this._emptyTitle;
         }
-        self._emptyTitle = title;
-        return self;
+        this._emptyTitle = title;
+        return this;
     }
 
     /**
@@ -501,36 +473,32 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|dc.sunburstChart}
      */
     externalLabels (externalLabelRadius) {
-        const self = this;
         if (arguments.length === 0) {
-            return self._externalLabelRadius;
+            return this._externalLabelRadius;
         } else if (externalLabelRadius) {
-            self._externalLabelRadius = externalLabelRadius;
+            this._externalLabelRadius = externalLabelRadius;
         } else {
-            self._externalLabelRadius = undefined;
+            this._externalLabelRadius = undefined;
         }
 
-        return self;
+        return this;
     }
 
     _buildArcs () {
-        const self = this;
         return d3.arc()
             .startAngle(d => d.x0)
             .endAngle(d => d.x1)
-            .innerRadius(d => d.data.path &amp;&amp; d.data.path.length === 1 ? self._innerRadius : Math.sqrt(d.y0))
+            .innerRadius(d => d.data.path &amp;&amp; d.data.path.length === 1 ? this._innerRadius : Math.sqrt(d.y0))
             .outerRadius(d => Math.sqrt(d.y1));
     }
 
     _isSelectedSlice (d) {
-        const self = this;
-        return self._isPathFiltered(d.path);
+        return this._isPathFiltered(d.path);
     }
 
     _isPathFiltered (path) {
-        const self = this;
-        for (let i = 0; i &lt; self.filters().length; i++) {
-            const currentFilter = self.filters()[i];
+        for (let i = 0; i &lt; this.filters().length; i++) {
+            const currentFilter = this.filters()[i];
             if (currentFilter.isFiltered(path)) {
                 return true;
             }
@@ -540,11 +508,10 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     // returns all filters that are a parent or child of the path
     _filtersForPath (path) {
-        const self = this;
         const pathFilter = filters.HierarchyFilter(path);
         const filtersList = [];
-        for (let i = 0; i &lt; self.filters().length; i++) {
-            const currentFilter = self.filters()[i];
+        for (let i = 0; i &lt; this.filters().length; i++) {
+            const currentFilter = this.filters()[i];
             if (currentFilter.isFiltered(path) || pathFilter.isFiltered(currentFilter)) {
                 filtersList.push(currentFilter);
             }
@@ -593,8 +560,11 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this.getColor(d.data, i);
     }
 
-    _pvt_onClick (d) {
-        // Clicking on Legends do not filter, it throws exception
+    onClick (d, i) {
+        if (this._g.attr('class') === this._emptyCssClass) {
+            return;
+        }
+
         // Must be better way to handle this, in legends we need to access `d.key`
         const path = d.path || d.key;
         const filter = filters.HierarchyFilter(path);
@@ -603,12 +573,12 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
         const filtersList = this._filtersForPath(path);
         let exactMatch = false;
         // clear out any filters that cover the path filtered.
-        for (let i = filtersList.length - 1; i >= 0; i--) {
-            const currentFilter = filtersList[i];
+        for (let j = filtersList.length - 1; j >= 0; j--) {
+            const currentFilter = filtersList[j];
             if (utils.arraysIdentical(currentFilter, path)) {
                 exactMatch = true;
             }
-            this.filter(filtersList[i]);
+            this.filter(filtersList[j]);
         }
         events.trigger(() => {
             // if it is a new filter - put it in.
@@ -671,6 +641,22 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
             }
         });
     }
+
+    _tweenSlice (d, element) {
+        let current = element._current;
+        if (this._isOffCanvas(current)) {
+            current = {x0: 0, x1: 0, y0: 0, y1: 0};
+        }
+        const tweenTarget = {
+            x0: d.x0,
+            x1: d.x1,
+            y0: d.y0,
+            y1: d.y1
+        };
+        const i = d3.interpolate(current, tweenTarget);
+        element._current = i(0);
+        return t => this._safeArc(this._buildArcs(), Object.assign({}, d, i(t)));
+    }
 }
 </pre>
     </article>
@@ -717,7 +703,7 @@ class SunburstChart extends CapMixin(ColorMixin(BaseMixin)) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Mon Aug 26th 2019
+		on Tue Oct 1st 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

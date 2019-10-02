@@ -115,124 +115,110 @@ import {transition} from '../core/core';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.bubbleChart}
  */
-export const bubbleChart = (parent, chartGroup) => new BubbleChart(parent, chartGroup);
-
 class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     constructor (parent, chartGroup) {
         super();
 
-        const _chart = this;
+        this.transitionDuration(750);
 
-        _chart.transitionDuration(750);
+        this.transitionDelay(0);
 
-        _chart.transitionDelay(0);
+        this.anchor(parent, chartGroup);
+    }
 
-        var bubbleLocator = function (d) {
-            return 'translate(' + (bubbleX(d)) + ',' + (bubbleY(d)) + ')';
-        };
+    _bubbleLocator (d) {
+        return 'translate(' + (this._bubbleX(d)) + ',' + (this._bubbleY(d)) + ')';
+    }
 
-        _chart.plotData = function () {
-            _chart.calculateRadiusDomain();
-            _chart.r().range([_chart.MIN_RADIUS, _chart.xAxisLength() * _chart.maxBubbleRelativeSize()]);
+    plotData () {
+        this.calculateRadiusDomain();
+        this.r().range([this.MIN_RADIUS, this.xAxisLength() * this.maxBubbleRelativeSize()]);
 
-            var data = _chart.data();
-            var bubbleG = _chart.chartBodyG().selectAll('g.' + _chart.BUBBLE_NODE_CLASS)
-                .data(data, function (d) {
-                    return d.key;
-                });
-            if (_chart.sortBubbleSize()) {
-                // update dom order based on sort
-                bubbleG.order();
-            }
-
-            removeNodes(bubbleG);
-
-            bubbleG = renderNodes(bubbleG);
-
-            updateNodes(bubbleG);
-
-            _chart.fadeDeselectedArea(_chart.filter());
-        };
-
-        function renderNodes (bubbleG) {
-            var bubbleGEnter = bubbleG.enter().append('g');
-
-            bubbleGEnter
-                .attr('class', _chart.BUBBLE_NODE_CLASS)
-                .attr('transform', bubbleLocator)
-                .append('circle').attr('class', function (d, i) {
-                return _chart.BUBBLE_CLASS + ' _' + i;
-            })
-                .on('click', _chart.onClick)
-                .attr('fill', _chart.getColor)
-                .attr('r', 0);
-
-            bubbleG = bubbleGEnter.merge(bubbleG);
-
-            transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
-                .select('circle.' + _chart.BUBBLE_CLASS)
-                .attr('r', function (d) {
-                    return _chart.bubbleR(d);
-                })
-                .attr('opacity', function (d) {
-                    return (_chart.bubbleR(d) > 0) ? 1 : 0;
-                });
-
-            _chart._doRenderLabel(bubbleGEnter);
-
-            _chart._doRenderTitles(bubbleGEnter);
-
-            return bubbleG;
+        const data = this.data();
+        let bubbleG = this.chartBodyG().selectAll('g.' + this.BUBBLE_NODE_CLASS)
+            .data(data, d => d.key);
+        if (this.sortBubbleSize()) {
+            // update dom order based on sort
+            bubbleG.order();
         }
 
-        function updateNodes (bubbleG) {
-            transition(bubbleG, _chart.transitionDuration(), _chart.transitionDelay())
-                .attr('transform', bubbleLocator)
-                .select('circle.' + _chart.BUBBLE_CLASS)
-                .attr('fill', _chart.getColor)
-                .attr('r', function (d) {
-                    return _chart.bubbleR(d);
-                })
-                .attr('opacity', function (d) {
-                    return (_chart.bubbleR(d) > 0) ? 1 : 0;
-                });
+        this._removeNodes(bubbleG);
 
-            _chart.doUpdateLabels(bubbleG);
-            _chart.doUpdateTitles(bubbleG);
+        bubbleG = this._renderNodes(bubbleG);
+
+        this._updateNodes(bubbleG);
+
+        this.fadeDeselectedArea(this.filter());
+    }
+
+    _renderNodes (bubbleG) {
+        const bubbleGEnter = bubbleG.enter().append('g');
+
+        bubbleGEnter
+            .attr('class', this.BUBBLE_NODE_CLASS)
+            .attr('transform', (d) => this._bubbleLocator(d))
+            .append('circle').attr('class', (d, i) => this.BUBBLE_CLASS + ' _' + i)
+            .on('click', d => this.onClick(d))
+            .attr('fill', this.getColor)
+            .attr('r', 0);
+
+        bubbleG = bubbleGEnter.merge(bubbleG);
+
+        transition(bubbleG, this.transitionDuration(), this.transitionDelay())
+            .select('circle.' + this.BUBBLE_CLASS)
+            .attr('r', d => this.bubbleR(d))
+            .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
+
+        this._doRenderLabel(bubbleGEnter);
+
+        this._doRenderTitles(bubbleGEnter);
+
+        return bubbleG;
+    }
+
+    _updateNodes (bubbleG) {
+        transition(bubbleG, this.transitionDuration(), this.transitionDelay())
+            .attr('transform', (d) => this._bubbleLocator(d))
+            .select('circle.' + this.BUBBLE_CLASS)
+            .attr('fill', this.getColor)
+            .attr('r', d => this.bubbleR(d))
+            .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
+
+        this.doUpdateLabels(bubbleG);
+        this.doUpdateTitles(bubbleG);
+    }
+
+    _removeNodes (bubbleG) {
+        bubbleG.exit().remove();
+    }
+
+    _bubbleX (d) {
+        let x = this.x()(this.keyAccessor()(d));
+        if (isNaN(x) || !isFinite(x)) {
+            x = 0;
         }
+        return x;
+    }
 
-        function removeNodes (bubbleG) {
-            bubbleG.exit().remove();
+    _bubbleY (d) {
+        let y = this.y()(this.valueAccessor()(d));
+        if (isNaN(y) || !isFinite(y)) {
+            y = 0;
         }
+        return y;
+    }
 
-        function bubbleX (d) {
-            var x = _chart.x()(_chart.keyAccessor()(d));
-            if (isNaN(x) || !isFinite(x)) {
-                x = 0;
-            }
-            return x;
-        }
+    renderBrush () {
+        // override default x axis brush from parent chart
+    }
 
-        function bubbleY (d) {
-            var y = _chart.y()(_chart.valueAccessor()(d));
-            if (isNaN(y) || !isFinite(y)) {
-                y = 0;
-            }
-            return y;
-        }
-
-        _chart.renderBrush = function () {
-            // override default x axis brush from parent chart
-        };
-
-        _chart.redrawBrush = function (brushSelection, doTransition) {
-            // override default x axis brush from parent chart
-            _chart.fadeDeselectedArea(brushSelection);
-        };
-
-        return _chart.anchor(parent, chartGroup);
+    redrawBrush (brushSelection, doTransition) {
+        // override default x axis brush from parent chart
+        this.fadeDeselectedArea(brushSelection);
     }
 }
+
+export const bubbleChart = (parent, chartGroup) => new BubbleChart(parent, chartGroup);
 </pre>
     </article>
 </section>
@@ -278,7 +264,7 @@ class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Mon Aug 26th 2019
+		on Tue Oct 1st 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

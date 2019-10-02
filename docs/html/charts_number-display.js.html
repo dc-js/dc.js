@@ -88,6 +88,8 @@
 
 import {BaseMixin} from '../base/base-mixin';
 
+const SPAN_CLASS = 'number-display';
+
 /**
  * A display of a single numeric value.
  *
@@ -114,157 +116,157 @@ import {BaseMixin} from '../base/base-mixin';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.numberDisplay}
  */
-export const numberDisplay = (parent, chartGroup) => new NumberDisplay(parent, chartGroup);
-
 export class NumberDisplay extends BaseMixin {
     constructor (parent, chartGroup) {
         super();
 
-        const _chart = this;
-
-        var SPAN_CLASS = 'number-display';
-        var _formatNumber = d3.format('.2s');
-        var _html = {one: '', some: '', none: ''};
-        var _lastValue;
+        this._formatNumber = d3.format('.2s');
+        this._html = {one: '', some: '', none: ''};
+        this._lastValue = undefined;
 
         // dimension not required
-        _chart._mandatoryAttributes(['group']);
+        this._mandatoryAttributes(['group']);
 
         // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-        _chart.ordering(function (kv) {
-            return kv.value;
+        this.ordering(kv => kv.value);
+
+        this.data(group => {
+            const valObj = group.value ? group.value() : this._maxBin(group.all());
+            return this.valueAccessor()(valObj);
         });
 
-        /**
-         * Gets or sets an optional object specifying HTML templates to use depending on the number
-         * displayed.  The text `%number` will be replaced with the current value.
-         * - one: HTML template to use if the number is 1
-         * - zero: HTML template to use if the number is 0
-         * - some: HTML template to use otherwise
-         * @method html
-         * @memberof dc.numberDisplay
-         * @instance
-         * @example
-         * numberWidget.html({
-         *      one:'%number record',
-         *      some:'%number records',
-         *      none:'no records'})
-         * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
-         * @returns {{one:String, some:String, none:String}|dc.numberDisplay}
-         */
-        _chart.html = function (html) {
-            if (!arguments.length) {
-                return _html;
-            }
-            if (html.none) {
-                _html.none = html.none;//if none available
-            } else if (html.one) {
-                _html.none = html.one;//if none not available use one
-            } else if (html.some) {
-                _html.none = html.some;//if none and one not available use some
-            }
-            if (html.one) {
-                _html.one = html.one;//if one available
-            } else if (html.some) {
-                _html.one = html.some;//if one not available use some
-            }
-            if (html.some) {
-                _html.some = html.some;//if some available
-            } else if (html.one) {
-                _html.some = html.one;//if some not available use one
-            }
-            return _chart;
-        };
+        this.transitionDuration(250); // good default
+        this.transitionDelay(0);
 
-        /**
-         * Calculate and return the underlying value of the display.
-         * @method value
-         * @memberof dc.numberDisplay
-         * @instance
-         * @returns {Number}
-         */
-        _chart.value = function () {
-            return _chart.data();
-        };
+        this.anchor(parent, chartGroup);
+    }
 
-        function maxBin (all) {
-            if (!all.length) {
-                return null;
-            }
-            var sorted = _chart._computeOrderedGroups(all);
-            return sorted[sorted.length - 1];
+    /**
+     * Gets or sets an optional object specifying HTML templates to use depending on the number
+     * displayed.  The text `%number` will be replaced with the current value.
+     * - one: HTML template to use if the number is 1
+     * - zero: HTML template to use if the number is 0
+     * - some: HTML template to use otherwise
+     * @method html
+     * @memberof dc.numberDisplay
+     * @instance
+     * @example
+     * numberWidget.html({
+     *      one:'%number record',
+     *      some:'%number records',
+     *      none:'no records'})
+     * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
+     * @returns {{one:String, some:String, none:String}|dc.numberDisplay}
+     */
+    html (html) {
+        if (!arguments.length) {
+            return this._html;
+        }
+        if (html.none) {
+            this._html.none = html.none;//if none available
+        } else if (html.one) {
+            this._html.none = html.one;//if none not available use one
+        } else if (html.some) {
+            this._html.none = html.some;//if none and one not available use some
+        }
+        if (html.one) {
+            this._html.one = html.one;//if one available
+        } else if (html.some) {
+            this._html.one = html.some;//if one not available use some
+        }
+        if (html.some) {
+            this._html.some = html.some;//if some available
+        } else if (html.one) {
+            this._html.some = html.one;//if some not available use one
+        }
+        return this;
+    }
+
+    /**
+     * Calculate and return the underlying value of the display.
+     * @method value
+     * @memberof dc.numberDisplay
+     * @instance
+     * @returns {Number}
+     */
+    value () {
+        return this.data();
+    }
+
+    _maxBin (all) {
+        if (!all.length) {
+            return null;
+        }
+        const sorted = this._computeOrderedGroups(all);
+        return sorted[sorted.length - 1];
+    }
+
+    _doRender () {
+        const newValue = this.value();
+        let span = this.selectAll('.' + SPAN_CLASS);
+
+        if (span.empty()) {
+            span = span.data([0])
+                .enter()
+                .append('span')
+                .attr('class', SPAN_CLASS)
+                .merge(span);
         }
 
-        _chart.data(function (group) {
-            var valObj = group.value ? group.value() : maxBin(group.all());
-            return _chart.valueAccessor()(valObj);
-        });
-
-        _chart.transitionDuration(250); // good default
-        _chart.transitionDelay(0);
-
-        _chart._doRender = function () {
-            var newValue = _chart.value(),
-                span = _chart.selectAll('.' + SPAN_CLASS);
-
-            if (span.empty()) {
-                span = span.data([0])
-                    .enter()
-                    .append('span')
-                    .attr('class', SPAN_CLASS)
-                    .merge(span);
-            }
-
+        {
+            const chart = this;
             span.transition()
-                .duration(_chart.transitionDuration())
-                .delay(_chart.transitionDelay())
+                .duration(chart.transitionDuration())
+                .delay(chart.transitionDelay())
                 .ease(d3.easeQuad)
                 .tween('text', function () {
                     // [XA] don't try and interpolate from Infinity, else this breaks.
-                    var interpStart = isFinite(_lastValue) ? _lastValue : 0;
-                    var interp = d3.interpolateNumber(interpStart || 0, newValue);
-                    _lastValue = newValue;
+                    const interpStart = isFinite(chart._lastValue) ? chart._lastValue : 0;
+                    const interp = d3.interpolateNumber(interpStart || 0, newValue);
+                    chart._lastValue = newValue;
 
                     // need to save it in D3v4
-                    var node = this;
-                    return function (t) {
-                        var html = null, num = _chart.formatNumber()(interp(t));
-                        if (newValue === 0 &amp;&amp; (_html.none !== '')) {
-                            html = _html.none;
-                        } else if (newValue === 1 &amp;&amp; (_html.one !== '')) {
-                            html = _html.one;
-                        } else if (_html.some !== '') {
-                            html = _html.some;
+                    const node = this;
+                    return t => {
+                        let html = null;
+                        const num = chart.formatNumber()(interp(t));
+                        if (newValue === 0 &amp;&amp; (chart._html.none !== '')) {
+                            html = chart._html.none;
+                        } else if (newValue === 1 &amp;&amp; (chart._html.one !== '')) {
+                            html = chart._html.one;
+                        } else if (chart._html.some !== '') {
+                            html = chart._html.some;
                         }
                         node.innerHTML = html ? html.replace('%number', num) : num;
                     };
                 });
-        };
-
-        _chart._doRedraw = function () {
-            return _chart._doRender();
-        };
-
-        /**
-         * Get or set a function to format the value for the display.
-         * @method formatNumber
-         * @memberof dc.numberDisplay
-         * @instance
-         * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
-         * @param {Function} [formatter=d3.format('.2s')]
-         * @returns {Function|dc.numberDisplay}
-         */
-        _chart.formatNumber = function (formatter) {
-            if (!arguments.length) {
-                return _formatNumber;
-            }
-            _formatNumber = formatter;
-            return _chart;
-        };
-
-        return _chart.anchor(parent, chartGroup);
+        }
     }
+
+    _doRedraw () {
+        return this._doRender();
+    }
+
+    /**
+     * Get or set a function to format the value for the display.
+     * @method formatNumber
+     * @memberof dc.numberDisplay
+     * @instance
+     * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
+     * @param {Function} [formatter=d3.format('.2s')]
+     * @returns {Function|dc.numberDisplay}
+     */
+    formatNumber (formatter) {
+        if (!arguments.length) {
+            return this._formatNumber;
+        }
+        this._formatNumber = formatter;
+        return this;
+    }
+
 }
+
+export const numberDisplay = (parent, chartGroup) => new NumberDisplay(parent, chartGroup);
 </pre>
     </article>
 </section>
@@ -310,7 +312,7 @@ export class NumberDisplay extends BaseMixin {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Mon Aug 26th 2019
+		on Tue Oct 1st 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

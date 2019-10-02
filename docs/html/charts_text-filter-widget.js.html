@@ -87,7 +87,7 @@
             class="sunlight-highlight-javascript linenums">import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {redrawAll} from '../core/core';
+import {redrawAll} from '../core/chart-registry';
 
 /**
  * Text Filter Widget
@@ -120,126 +120,121 @@ import {redrawAll} from '../core/core';
  * @returns {dc.textFilterWidget}
  **/
 
-export const textFilterWidget = (parent, chartGroup) => new TextFilterWidget(parent, chartGroup);
+const INPUT_CSS_CLASS = 'dc-text-filter-input';
 
 export class TextFilterWidget extends BaseMixin {
     constructor (parent, chartGroup) {
         super();
 
-        const _chart = this;
+        this._normalize = s => s.toLowerCase();
 
-        var INPUT_CSS_CLASS = 'dc-text-filter-input';
-
-        var _normalize = function (s) {
-            return s.toLowerCase();
+        this._filterFunctionFactory = query => {
+            query = this._normalize(query);
+            return d => this._normalize(d).indexOf(query) !== -1;
         };
 
-        var _filterFunctionFactory = function (query) {
-            query = _normalize(query);
-            return function (d) {
-                return _normalize(d).indexOf(query) !== -1;
-            };
-        };
+        this._placeHolder = 'search';
 
-        var _placeHolder = 'search';
-
-        _chart.group(function () {
+        this.group(() => {
             throw 'the group function on textFilterWidget should never be called, please report the issue';
         });
 
-        _chart._doRender = function () {
-            _chart.select('input').remove();
+        this.anchor(parent, chartGroup);
+    }
 
-            var _input = _chart.root().append('input')
-                .classed(INPUT_CSS_CLASS, true);
+    _doRender () {
+        this.select('input').remove();
 
-            _input.on('input', function () {
-                _chart.dimension().filterFunction(_filterFunctionFactory(this.value));
-                events.trigger(function () {
-                    redrawAll();
-                }, constants.EVENT_DELAY);
-            });
+        this._input = this.root().append('input')
+            .classed(INPUT_CSS_CLASS, true);
 
-            _chart._doRedraw();
+        const chart = this;
+        this._input.on('input', function () {
+            chart.dimension().filterFunction(chart._filterFunctionFactory(this.value));
+            events.trigger(() => {
+                redrawAll();
+            }, constants.EVENT_DELAY);
+        });
 
-            return _chart;
-        };
+        this._doRedraw();
 
-        _chart._doRedraw = function () {
-            _chart.root().selectAll('input')
-                .attr('placeholder', _placeHolder);
+        return this;
+    }
 
-            return _chart;
-        };
+    _doRedraw () {
+        this.root().selectAll('input')
+            .attr('placeholder', this._placeHolder);
 
-        /**
-         * This function will be called on values before calling the filter function.
-         * @name normalize
-         * @memberof dc.textFilterWidget
-         * @instance
-         * @example
-         * // This is the default
-         * chart.normalize(function (s) {
-         *   return s.toLowerCase();
-         * });
-         * @param {function} [normalize]
-         * @returns {dc.textFilterWidget|function}
-         **/
-        _chart.normalize = function (normalize) {
-            if (!arguments.length) {
-                return _normalize;
-            }
-            _normalize = normalize;
-            return _chart;
-        };
+        return this;
+    }
 
-        /**
-         * Placeholder text in the search box.
-         * @name placeHolder
-         * @memberof dc.textFilterWidget
-         * @instance
-         * @example
-         * // This is the default
-         * chart.placeHolder('type to filter');
-         * @param {function} [placeHolder='search']
-         * @returns {dc.textFilterWidget|string}
-         **/
-        _chart.placeHolder = function (placeHolder) {
-            if (!arguments.length) {
-                return _placeHolder;
-            }
-            _placeHolder = placeHolder;
-            return _chart;
-        };
+    /**
+     * This function will be called on values before calling the filter function.
+     * @name normalize
+     * @memberof dc.textFilterWidget
+     * @instance
+     * @example
+     * // This is the default
+     * chart.normalize(function (s) {
+     *   return s.toLowerCase();
+     * });
+     * @param {function} [normalize]
+     * @returns {dc.textFilterWidget|function}
+     **/
+    normalize (normalize) {
+        if (!arguments.length) {
+            return this._normalize;
+        }
+        this._normalize = normalize;
+        return this;
+    }
 
-        /**
-         * This function will be called with the search text, it needs to return a function that will be used to
-         * filter the data. The default function checks presence of the search text.
-         * @name filterFunctionFactory
-         * @memberof dc.textFilterWidget
-         * @instance
-         * @example
-         * // This is the default
-         * function (query) {
-         *     query = _normalize(query);
-         *     return function (d) {
-         *         return _normalize(d).indexOf(query) !== -1;
-         *     };
-         * };
-         * @param {function} [filterFunctionFactory]
-         * @returns {dc.textFilterWidget|function}
-         **/
-        _chart.filterFunctionFactory = function (filterFunctionFactory) {
-            if (!arguments.length) {
-                return _filterFunctionFactory;
-            }
-            _filterFunctionFactory = filterFunctionFactory;
-            return _chart;
-        };
+    /**
+     * Placeholder text in the search box.
+     * @name placeHolder
+     * @memberof dc.textFilterWidget
+     * @instance
+     * @example
+     * // This is the default
+     * chart.placeHolder('type to filter');
+     * @param {function} [placeHolder='search']
+     * @returns {dc.textFilterWidget|string}
+     **/
+    placeHolder (placeHolder) {
+        if (!arguments.length) {
+            return this._placeHolder;
+        }
+        this._placeHolder = placeHolder;
+        return this;
+    }
 
-        return _chart.anchor(parent, chartGroup);
+    /**
+     * This function will be called with the search text, it needs to return a function that will be used to
+     * filter the data. The default function checks presence of the search text.
+     * @name filterFunctionFactory
+     * @memberof dc.textFilterWidget
+     * @instance
+     * @example
+     * // This is the default
+     * function (query) {
+     *     query = _normalize(query);
+     *     return function (d) {
+     *         return _normalize(d).indexOf(query) !== -1;
+     *     };
+     * };
+     * @param {function} [filterFunctionFactory]
+     * @returns {dc.textFilterWidget|function}
+     **/
+    filterFunctionFactory (filterFunctionFactory) {
+        if (!arguments.length) {
+            return this._filterFunctionFactory;
+        }
+        this._filterFunctionFactory = filterFunctionFactory;
+        return this;
     }
 }
+
+export const textFilterWidget = (parent, chartGroup) => new TextFilterWidget(parent, chartGroup);
 </pre>
     </article>
 </section>
@@ -285,7 +280,7 @@ export class TextFilterWidget extends BaseMixin {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Mon Aug 26th 2019
+		on Tue Oct 1st 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
