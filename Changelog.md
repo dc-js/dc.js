@@ -1,3 +1,7 @@
+## 3.1.4
+* Example of [drawing a contour map as a background](http://dc-js.github.io/dc.js/examples/background-drawing.html), by Sven Hertling
+* Example of [capping and sorting by different criteria](https://dc-js.github.io/dc.js/examples/cap-and-sort-differently.html) ([#1474](https://github.com/dc-js/dc.js/issues/1474)
+
 ## 3.1.3
 * Canvas-based scatter plot, by Sudeep Mandal ([#1361](https://github.com/dc-js/dc.js/pull/1361))
 * Better use of data in scatter example

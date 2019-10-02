@@ -65,7 +65,9 @@
                 d[val_col] = +d[val_col];
             });
 
-            var ndx = crossfilter(posts), dateDim, postsGroup;
+            var ndx = crossfilter(posts),
+                dateDim = ndx.dimension(function(d) { return d[date_col]; }),
+                postsGroup;
 
             var intervals = {
                 Days: d3.timeDay,
@@ -80,15 +82,15 @@
                 .text(function(d) { return d; })
                 .attr('selected', function(d) { return d === defint ? '' : null; });
             function setup() {
-                if(dateDim) {
-                    dateDim.dispose();
-                    group.dispose();
-                }
-                var interval = intervals[d3.select('#interval').nodes()[0].value];
-                dateDim = ndx.dimension(function(d) {return interval(d[date_col]);});
+                var start_t = window.performance.now();
+                if(postsGroup)
+                    postsGroup.dispose();
+                var interval_name = d3.select('#interval').nodes()[0].value;
+                var interval = intervals[interval_name];
                 chart.xUnits(interval.range);
-                group = dateDim
-                    .group().reduce(
+                postsGroup = dateDim
+                    .group(function(k) { return interval(k); })
+                    .reduce(
                         function(p, v) {
                             ++p.count;
                             p.total += v[val_col];
@@ -118,9 +120,10 @@
                         return kv.value.total;
                     });
                 }
-                chart.dimension(dateDim).group(group)
-                    .transitionDuration(!find_query('unsafe') && group.all().length > 2000 ? 0 : 1000)
+                chart.dimension(dateDim).group(postsGroup)
+                    .transitionDuration(!find_query('unsafe') && postsGroup.all().length > 2000 ? 0 : 1000)
                     .render();
+                console.log(['setup for', interval_name, 'took', window.performance.now() - start_t, 'ms'].join(' '));
             }
 
             chart
