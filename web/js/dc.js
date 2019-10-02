@@ -1,5 +1,5 @@
 /*!
- *  dc 3.1.3
+ *  dc 3.1.4
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.1.3
+ * @version 3.1.4
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  *      .filter('sunday');
  */
 var dc = {
-    version: '3.1.3',
+    version: '3.1.4',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -5125,9 +5125,9 @@ dc.capMixin = function (_chart) {
      * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. As of
      * 2.1.5, the ordering defaults to sorting from greatest to least like `group.top(N)` did.
      *
-     * If you want to cap by one ordering but sort by another, please
-     * [file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
-     * need to work up an example.
+     * If you want to cap by one ordering but sort by another, you can still do this by
+     * specifying your own {@link dc.baseMixin#data `.data()`} callback. For details, see the example
+     * {@link https://dc-js.github.io/dc.js/examples/cap-and-sort-differently.html Cap and Sort Differently}.
      * @method cap
      * @memberof dc.capMixin
      * @instance
