@@ -4,11 +4,10 @@ import {pluck, utils} from '../core/utils';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stackD3v3.
- * @name stackMixin
- * @memberof dc
+ * @name StackMixin
  * @mixin
  * @param {Object} Base
- * @returns {dc.stackMixin}
+ * @returns {Object}
  */
 export const StackMixin = Base => {
     return class extends Base {
@@ -96,7 +95,7 @@ export const StackMixin = Base => {
          * of keys on the x axis, while stacked vertically. If name is specified then it will be used to
          * generate the legend label.
          * @method stack
-         * @memberof dc.stackMixin
+         * @memberof StackMixin
          * @instance
          * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
          * @example
@@ -107,7 +106,7 @@ export const StackMixin = Base => {
          * @param {crossfilter.group} group
          * @param {String} [name]
          * @param {Function} [accessor]
-         * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|dc.stackMixin}
+         * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|StackMixin}
          */
         stack (group, name, accessor) {
             if (!arguments.length) {
@@ -147,10 +146,10 @@ export const StackMixin = Base => {
          * Allow named stacks to be hidden or shown by clicking on legend items.
          * This does not affect the behavior of hideStack or showStack.
          * @method hidableStacks
-         * @memberof dc.stackMixin
+         * @memberof StackMixin
          * @instance
          * @param {Boolean} [hidableStacks=false]
-         * @returns {Boolean|dc.stackMixin}
+         * @returns {Boolean|StackMixin}
          */
         hidableStacks (hidableStacks) {
             if (!arguments.length) {
@@ -169,10 +168,10 @@ export const StackMixin = Base => {
          * Hide all stacks on the chart with the given name.
          * The chart must be re-rendered for this change to appear.
          * @method hideStack
-         * @memberof dc.stackMixin
+         * @memberof StackMixin
          * @instance
          * @param {String} stackName
-         * @returns {dc.stackMixin}
+         * @returns {StackMixin}
          */
         hideStack (stackName) {
             const layer = this._findLayerByName(stackName);
@@ -186,10 +185,10 @@ export const StackMixin = Base => {
          * Show all stacks on the chart with the given name.
          * The chart must be re-rendered for this change to appear.
          * @method showStack
-         * @memberof dc.stackMixin
+         * @memberof StackMixin
          * @instance
          * @param {String} stackName
-         * @returns {dc.stackMixin}
+         * @returns {StackMixin}
          */
         showStack (stackName) {
             const layer = this._findLayerByName(stackName);
@@ -239,7 +238,7 @@ export const StackMixin = Base => {
          * If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
          * is not provided, the first stack is implied.
          * @method title
-         * @memberof dc.stackMixin
+         * @memberof StackMixin
          * @instance
          * @example
          * // set a title function on 'first stack'
@@ -248,7 +247,7 @@ export const StackMixin = Base => {
          * var secondTitleFunction = chart.title('second stack');
          * @param {String} [stackName]
          * @param {Function} [titleAccessor]
-         * @returns {String|dc.stackMixin}
+         * @returns {String|StackMixin}
          */
         title (stackName, titleAccessor) {
             if (!stackName) {
@@ -275,11 +274,11 @@ export const StackMixin = Base => {
          * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
          * propagates it to the next.
          * @method stackLayout
-         * @memberof dc.stackMixin
+         * @memberof StackMixin
          * @instance
          * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.stackD3v3}
          * @param {Function} [stack=d3.stackD3v3]
-         * @returns {Function|dc.stackMixin}
+         * @returns {Function|StackMixin}
          */
         stackLayout (stack) {
             if (!arguments.length) {
@@ -300,10 +299,10 @@ export const StackMixin = Base => {
          *
          * Once the bug is fixed, this flag will have no effect, and it will be deprecated.
          * @method evadeDomainFilter
-         * @memberof dc.stackMixin
+         * @memberof StackMixin
          * @instance
          * @param {Boolean} [evadeDomainFilter=false]
-         * @returns {Boolean|dc.stackMixin}
+         * @returns {Boolean|StackMixin}
          */
         evadeDomainFilter (evadeDomainFilter) {
             if (!arguments.length) {
