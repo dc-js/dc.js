@@ -103,9 +103,9 @@ export const CapMixin = Base => {
          * If your chart previously relied on `group.order()`, use `chart.ordering()` instead. As of
          * 2.1.5, the ordering defaults to sorting from greatest to least like `group.top(N)` did.
          *
-         * If you want to cap by one ordering but sort by another, please
-         * [file an issue](https://github.com/dc-js/dc.js/issues/new) - it's still possible but we'll
-         * need to work up an example.
+         * If you want to cap by one ordering but sort by another, you can still do this by
+         * specifying your own {@link dc.baseMixin#data `.data()`} callback. For details, see the example
+         * {@link https://dc-js.github.io/dc.js/examples/cap-and-sort-differently.html Cap and Sort Differently}.
          * @method cap
          * @memberof dc.capMixin
          * @instance
