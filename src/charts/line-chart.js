@@ -3,7 +3,6 @@ import * as d3 from 'd3';
 import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
-import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 
 const DEFAULT_DOT_RADIUS = 5;
@@ -40,7 +39,7 @@ const LABEL_PADDING = 3;
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.lineChart}
  */
-class LineChart extends StackMixin(CoordinateGridMixin) {
+class LineChart extends StackMixin {
     constructor (parent, chartGroup) {
         super();
 
