@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 
-import {BaseMixin} from '../base/base-mixin';
 import {CapMixin} from '../base/cap-mixin';
 import {MarginMixin} from '../base/margin-mixin';
 import {ColorMixin} from '../base/color-mixin';
@@ -29,7 +28,7 @@ import {transition} from '../core/core';
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.rowChart}
  */
-class RowChart extends CapMixin(MarginMixin(ColorMixin(BaseMixin))) {
+class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     constructor (parent, chartGroup) {
         super();
 

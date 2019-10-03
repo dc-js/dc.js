@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 
 import {ColorMixin} from './color-mixin';
 import {MarginMixin} from './margin-mixin';
-import {BaseMixin} from './base-mixin';
 import {optionalTransition, transition} from '../core/core';
 import {units} from '../core/units';
 import {constants} from '../core/constants';
@@ -31,7 +30,7 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * @param {Object} self._chart
  * @returns {dc.coordinateGridMixin}
  */
-export class CoordinateGridMixin extends ColorMixin(MarginMixin(BaseMixin)) {
+export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     constructor () {
         super();
 
