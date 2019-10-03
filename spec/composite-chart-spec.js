@@ -54,10 +54,18 @@ describe('dc.compositeChart', function () {
 
     it('should set a width on the chart', function () {
         expect(chart.width()).toBe(500);
+
+        chart.children().forEach(function (child) {
+            expect(child.width()).toBe(500);
+        });
     });
 
     it('should set a height on the chart', function () {
         expect(chart.height()).toBe(150);
+
+        chart.children().forEach(function (child) {
+            expect(child.height()).toBe(150);
+        });
     });
 
     it('should have zero transition duration', function () {
@@ -66,6 +74,10 @@ describe('dc.compositeChart', function () {
 
     it('should set the margins of the chart', function () {
         expect(chart.margins()).not.toBeNull();
+
+        chart.children().forEach(function (child) {
+            expect(child.margins()).toBe(chart.margins());
+        });
     });
 
     it('should set a domain', function () {
@@ -777,6 +789,128 @@ describe('dc.compositeChart', function () {
                 for (var i = 0; i < chart.children().length; ++i) {
                     expect(chart.children()[i].filter()).toEqual(null);
                 }
+            });
+        });
+    });
+
+    describe('composite property', function () {
+        var originalMargins;
+        beforeEach(function () {
+            originalMargins = chart.margins();
+
+            chart.width(1000);
+            chart.height(500);
+            chart.margins({top: 100, right: 100, bottom: 100, left: 100});
+        });
+
+        it('should set width on child charts', function () {
+            expect(chart.width()).toBe(1000);
+
+            chart.children().forEach(function (child) {
+                expect(child.width()).toBe(1000);
+            });
+        });
+
+        it('should set height on child charts', function () {
+            expect(chart.height()).toBe(500);
+
+            chart.children().forEach(function (child) {
+                expect(child.height()).toBe(500);
+            });
+        });
+
+        it('should set margins of child charts', function () {
+            expect(chart.margins()).not.toBeNull();
+            expect(chart.margins()).not.toBe(originalMargins);
+
+            chart.children().forEach(function (child) {
+                expect(child.margins()).toBe(chart.margins());
+            });
+        });
+    });
+
+    describe('rescale', function () {
+        beforeEach(function () {
+            expect(chart.resizing()).toBe(true);
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(true);
+            });
+
+            chart.render();
+
+            expect(chart.resizing()).toBe(false);
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(false);
+            });
+
+            chart.rescale();
+        });
+
+        it('should rescale child charts', function () {
+            expect(chart.resizing()).toBe(true);
+
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(true);
+            });
+        });
+    });
+
+    describe('re-compose rendered chart', function() {
+        beforeEach(function () {
+            chart.render();
+            expect(chart.resizing()).toBe(false);
+
+            chart.compose([
+                dc.lineChart(chart).group(dateGroup)
+            ]);
+        });
+
+        it('should rescale child charts', function () {
+            expect(chart.resizing()).toBe(true);
+
+            chart.children().forEach(function (child) {
+                expect(child.resizing()).toBe(true);
+            });
+        });
+    });
+
+    describe('title and shareTitle', function () {
+        function f (value) { return function () { return value; } }
+
+        it('should propagate existing title', function () {
+            chart.children().forEach(function (child, i) {
+                child.title(f('Title ' + i));
+            });
+
+            chart.shareTitle(false);
+            chart.title(f('Share Me'));
+
+            chart.children().forEach(function (child, i) {
+                console.log(child.title());
+                expect(child.title()()).toBe('Title ' + i);
+            });
+
+            chart.shareTitle(true);
+
+            expect(chart.title()()).toBe('Share Me');
+
+            chart.children().forEach(function (child) {
+                expect(child.title()()).toBe('Share Me');
+            });
+        });
+
+        it('should propagate new title', function () {
+            chart.shareTitle(true);
+            chart.children().forEach(function (child, i) {
+                child.title(f('Title ' + i));
+            });
+
+            chart.title(f('Share Me'));
+
+            expect(chart.title()()).toBe('Share Me');
+
+            chart.children().forEach(function (child) {
+                expect(child.title()()).toBe('Share Me');
             });
         });
     });

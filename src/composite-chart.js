@@ -69,6 +69,27 @@ dc.compositeChart = function (parent, chartGroup) {
         return g;
     });
 
+    dc.override(_chart, 'rescale', function () {
+        _chart._rescale();
+
+        _chart.children().forEach(function (child) {
+            child.rescale();
+        });
+        return _chart;
+    });
+
+    dc.override(_chart, 'resizing', function (resizing) {
+        if (!arguments.length) {
+            return _chart._resizing();
+        }
+        _chart._resizing(resizing);
+
+        _chart.children().forEach(function (child) {
+            child.resizing(resizing);
+        });
+        return _chart;
+    });
+
     _chart.on('filtered.dcjs-composite-chart', function (chart) {
         // Propagate the filters onto the children
         // Notice that on children the call is .replaceFilter and not .filter
@@ -248,7 +269,6 @@ dc.compositeChart = function (parent, chartGroup) {
      * Get or set chart-specific options for all child charts. This is equivalent to calling
      * {@link dc.baseMixin#options .options} on each child chart.
      *
-     * Note: currently you must call this before `compose` in order for the options to be propagated.
      * @method childOptions
      * @memberof dc.compositeChart
      * @instance
@@ -298,10 +318,6 @@ dc.compositeChart = function (parent, chartGroup) {
     /**
      * Combine the given charts into one single composite coordinate grid chart.
      *
-     * Note: currently due to the way it is implemented, you must call this function at the end of
-     * initialization of the composite chart, in particular after `shareTitle`, `childOptions`,
-     * `width`, `height`, and `margins`, in order for the settings to get propagated to the children
-     * correctly.
      * @method compose
      * @memberof dc.compositeChart
      * @instance
@@ -329,9 +345,9 @@ dc.compositeChart = function (parent, chartGroup) {
     _chart.compose = function (subChartArray) {
         _children = subChartArray;
         _children.forEach(function (child) {
-            child.height(_chart.height());
-            child.width(_chart.width());
-            child.margins(_chart.margins());
+            passThruProperties.forEach(function (prop) {
+                child[prop](_chart[prop]());
+            });
 
             if (_shareTitle) {
                 child.title(_chart.title());
@@ -339,8 +355,29 @@ dc.compositeChart = function (parent, chartGroup) {
 
             child.options(_childOptions);
         });
+
+        _chart.rescale();
         return _chart;
     };
+
+    var passThruProperties = ['height', 'width', 'margins'];
+    // properties passed through in compose()
+    passThruProperties.forEach(function (prop) {
+        var _prop = '_' + prop;
+        dc.override(_chart, prop, function (value) {
+            if (!arguments.length) {
+                return _chart[_prop]();
+            }
+
+            _chart[_prop](value);
+
+            _chart.children().forEach(function (child) {
+                child[prop](value);
+            });
+
+            return _chart;
+        });
+    });
 
     /**
      * Returns the child charts which are composed into the composite chart.
@@ -389,8 +426,24 @@ dc.compositeChart = function (parent, chartGroup) {
             return _shareTitle;
         }
         _shareTitle = shareTitle;
+        // Reassign title to propagate to children (if necessary)
+        _chart.title(_chart.title());
         return _chart;
     };
+
+    dc.override(_chart, 'title', function (title) {
+        if (!arguments.length) {
+            return _chart._title();
+        }
+        _chart._title(title);
+
+        if (_shareTitle) {
+            _chart.children().forEach(function (child) {
+                child.title(title);
+            });
+        }
+        return _chart;
+    });
 
     /**
      * Get or set the y scale for the right axis. The right y scale is typically automatically
