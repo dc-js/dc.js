@@ -1,3 +1,6 @@
+## 3.1.5
+* Composite chart properties should pass through regardless of when compose is called, by Keith Dahlby. ([#1365](https://github.com/dc-js/dc.js/pull/1365) / [#554](https://github.com/dc-js/dc.js/issues/554) / [#611](https://github.com/dc-js/dc.js/issues/611) / [#1003](https://github.com/dc-js/dc.js/issues/1003))
+
 ## 3.1.4
 * Example of [drawing a contour map as a background](http://dc-js.github.io/dc.js/examples/background-drawing.html), by Sven Hertling
 * Example of [capping and sorting by different criteria](https://dc-js.github.io/dc.js/examples/cap-and-sort-differently.html) ([#1474](https://github.com/dc-js/dc.js/issues/1474)
