@@ -6,7 +6,6 @@ import {filters} from '../core/filters';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {MarginMixin} from '../base/margin-mixin';
-import {BaseMixin} from '../base/base-mixin';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 
@@ -29,7 +28,7 @@ const DEFAULT_BORDER_RADIUS = 6.75;
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.heatMap}
  */
-export class HeatMap extends ColorMixin(MarginMixin(BaseMixin)) {
+export class HeatMap extends ColorMixin(MarginMixin) {
     constructor (parent, chartGroup) {
         super();
 
