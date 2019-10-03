@@ -1,7 +1,6 @@
 import * as d3 from 'd3';
 
 import {StackMixin} from '../base/stack-mixin';
-import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
@@ -37,7 +36,7 @@ const LABEL_PADDING = 3;
  * Interaction with a chart will only trigger events and redraws within the chart's group.
  * @returns {dc.barChart}
  */
-class BarChart extends StackMixin(CoordinateGridMixin) {
+class BarChart extends StackMixin {
     constructor (parent, chartGroup) {
         super();
 
