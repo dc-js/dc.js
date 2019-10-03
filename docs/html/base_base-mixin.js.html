@@ -86,13 +86,11 @@
         <pre
             class="sunlight-highlight-javascript linenums">import * as d3 from 'd3';
 
-import {pluck, utils} from '../core/utils';
-import {instanceOfChart} from '../core/core';
-import {deregisterChart, redrawAll, registerChart, renderAll} from '../core/chart-registry';
+import {pluck, printers, utils} from '../core/utils';
+import {deregisterChart, instanceOfChart, redrawAll, registerChart, renderAll} from '../core/core';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
 import {logger} from '../core/logger';
-import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
 
@@ -184,6 +182,7 @@ export class BaseMixin {
 
         this._renderLabel = false;
 
+        // ES6: the following can't be promoted to a member function, as it needs to be => function
         this._title = d => this.keyAccessor()(d) + ': ' + this.valueAccessor()(d);
         this._renderTitle = true;
         this._controlsUseVisibility = false;
@@ -220,6 +219,37 @@ export class BaseMixin {
         this._removeFilterHandler = _defaultRemoveFilterHandler;
         this._addFilterHandler = _defaultAddFilterHandler;
         this._resetFilterHandler = _defaultResetFilterHandler;
+
+        // ES6: need to figure out proper way to deprecate
+
+        /**
+         * A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
+         * to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
+         * right after the chart finishes its transitions, giving you a way to modify the SVGElements.
+         * Renderlet functions take the chart instance as the only input parameter and you can
+         * use the dc API or use raw d3 to achieve pretty much any effect.
+         *
+         * Use {@link dc.baseMixin#on on} with a 'renderlet' prefix.
+         * Generates a random key for the renderlet, which makes it hard to remove.
+         * @method renderlet
+         * @memberof dc.baseMixin
+         * @instance
+         * @deprecated
+         * @example
+         * // do this instead of .renderlet(function(chart) { ... })
+         * chart.on("renderlet", function(chart){
+         *     // mix of dc API and d3 manipulation
+         *     chart.select('g.y').style('display', 'none');
+         *     // its a closure so you can also access other chart variable available in the closure scope
+         *     moveChart.filter(chart.filter());
+         * });
+         * @param {Function} renderletFunction
+         * @returns {dc.baseMixin}
+         */
+        this.renderlet = logger.deprecate(renderletFunction => {
+            this.on('renderlet.' + utils.uniqueId(), renderletFunction);
+            return this;
+        }, 'chart.renderlet has been deprecated.  Please use chart.on("renderlet.&lt;renderletKey>", renderletFunction)');
     }
 
     /**
@@ -405,7 +435,7 @@ export class BaseMixin {
      */
     data (callback) {
         if (!arguments.length) {
-            return this._data(this._group);
+            return this._data.call(this, this._group);
         }
         this._data = typeof callback === 'function' ? callback : utils.constant(callback);
         this.expireCache();
@@ -447,11 +477,12 @@ export class BaseMixin {
 
     /**
      * Get or set an accessor to order ordinal dimensions.  The chart uses
-     * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.sort}
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
      * to sort elements; this accessor returns the value to order on.
      * @method ordering
      * @memberof dc.baseMixin
      * @instance
+     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#quicksort_by crossfilter.quicksort.by}
      * @example
      * // Default ordering accessor
      * _chart.ordering(dc.pluck('key'));
@@ -1627,36 +1658,6 @@ export class BaseMixin {
         return this;
     }
 
-    /**
-     * A renderlet is similar to an event listener on rendering event. Multiple renderlets can be added
-     * to an individual chart.  Each time a chart is rerendered or redrawn the renderlets are invoked
-     * right after the chart finishes its transitions, giving you a way to modify the SVGElements.
-     * Renderlet functions take the chart instance as the only input parameter and you can
-     * use the dc API or use raw d3 to achieve pretty much any effect.
-     *
-     * Use {@link dc.baseMixin#on on} with a 'renderlet' prefix.
-     * Generates a random key for the renderlet, which makes it hard to remove.
-     * @method renderlet
-     * @memberof dc.baseMixin
-     * @instance
-     * @deprecated chart.renderlet has been deprecated. Please use chart.on("renderlet.&lt;renderletKey>", renderletFunction)
-     * @example
-     * // do this instead of .renderlet(function(chart) { ... })
-     * chart.on("renderlet", function(chart){
-     *     // mix of dc API and d3 manipulation
-     *     chart.select('g.y').style('display', 'none');
-     *     // its a closure so you can also access other chart variable available in the closure scope
-     *     moveChart.filter(chart.filter());
-     * });
-     * @param {Function} renderletFunction
-     * @returns {dc.baseMixin}
-     */
-    renderlet (renderletFunction) {
-        logger.warnOnce('chart.renderlet has been deprecated. Please use chart.on("renderlet.&lt;renderletKey>", renderletFunction)');
-        this.on('renderlet.' + utils.uniqueId(), renderletFunction);
-        return this;
-    }
-
     _defaultWidthCalc (element) {
         const width = element &amp;&amp; element.getBoundingClientRect &amp;&amp; element.getBoundingClientRect().width;
         return (width &amp;&amp; width > this._minWidth) ? width : this._minWidth;
@@ -1718,7 +1719,7 @@ export const baseMixin = () => new BaseMixin();
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Tue Oct 1st 2019
+		on Thu Sep 19th 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

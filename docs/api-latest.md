@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.1.4  
+**Version**: 3.1.5  
 **Example**  
 ```js
 // Example chaining
@@ -1817,8 +1817,6 @@ are present.
 Get or set chart-specific options for all child charts. This is equivalent to calling
 [.options](#dc.baseMixin+options) on each child chart.
 
-Note: currently you must call this before `compose` in order for the options to be propagated.
-
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
 
 | Param | Type |
@@ -1841,11 +1839,6 @@ Set or get the right y axis label.
 
 #### compositeChart.compose([subChartArray]) ⇒ [<code>compositeChart</code>](#dc.compositeChart)
 Combine the given charts into one single composite coordinate grid chart.
-
-Note: currently due to the way it is implemented, you must call this function at the end of
-initialization of the composite chart, in particular after `shareTitle`, `childOptions`,
-`width`, `height`, and `margins`, in order for the settings to get propagated to the children
-correctly.
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
 

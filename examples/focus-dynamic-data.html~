@@ -28,7 +28,7 @@
   <style>
   #focus .axis.x .tick text {
     text-anchor: end;
-    transform: rotate(-90deg) translate(-10px,-12px);
+    transform: rotate(-60deg) translate(-10px,-12px);
   }
   #range.dc-chart .axis {
     display: none;
@@ -41,29 +41,51 @@
     // we need a slight delay to enable debounce, but a large delay is annoying for brushing
     dc.constants.EVENT_DELAY = 10;
 
+
+    // index a group key -> i and i -> key
+    function ordinal_to_linear_group(group, sort) {
+        var _ord2int, _int2ord;
+        return {
+            all: function() {
+                var ret = group.all();
+                _ord2int = {};
+                _int2ord = [];
+                ret.forEach(function(d, i) {
+                    _ord2int[d.key] = i;
+                    _int2ord[i] = d.key;
+                });
+                return ret;
+            },
+            ord2int: function(o) {
+                if(!_ord2int)
+                    this.all();
+                return _ord2int[o];
+            },
+            int2ord: function(i) {
+                if(!_int2ord)
+                    this.all();
+                return _int2ord[i];
+            }
+        };
+    }
+
     // phrases generated with https://www.fourmilab.ch/javascrypt/pass_phrase.html
     var focus, range;
     d3.json("wide-ordinal.json").then(function(wide) {
-        // map ordinals to integers so that zooming will work
-        var ord2int = {}, int2ord = [];
-        wide.forEach(function(d, i) {
-            ord2int[d.key] = i;
-            int2ord[i] = d.key;
-        });
-
         // dummy crossfilter taking group data and regrouping it to the same thing
         var cf = crossfilter(wide),
             dimension = cf.dimension(function(d) {return d.key;}),
             group = dimension.group().reduceSum(function(d) {return d.value;});
 
+        group = ordinal_to_linear_group(group);
         focus = dc.barChart('#focus');
-        var linear_domain = [-0.5, int2ord.length - 0.5];
+        var linear_domain = [-0.5, wide.length - 0.5];
         focus
-            .width(1000).height(350)
-            .margins({left: 40, top: 0, right: 10, bottom: 175})
+            .width(1000).height(330)
+            .margins({left: 60, top: 0, right: 10, bottom: 145})
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(kv => ord2int[kv.key])
+            .keyAccessor(kv => group.ord2int(kv.key))
             .centerBar(true)
             .yAxisLabel('counts')
             .elasticY(true)
@@ -76,8 +98,7 @@
             .transitionDuration(0);
 
         focus.xAxis()
-            .tickValues(d3.range(int2ord.length))
-            .tickFormat(function(d) { return int2ord[d]; });
+            .tickFormat(function(d) { return group.int2ord(d); });
 
         // unfortunately we have to recreate click-selection, since a focus chart
         // ordinarily filters to the visible area (and we don't want a brush either)
@@ -114,14 +135,20 @@
             });
         });
 
+        focus.on('preRedraw', function(chart) {
+            var domain = chart.x().domain(),
+                min = Math.ceil(domain[0]), max = Math.floor(domain[1]);
+            chart.xAxis().tickValues(d3.range(min, max+1));
+        });
+
         range = dc.barChart('#range');
         range.filterHandler(function() {}); // disable built-in filtering
         range
-            .margins({left: 54, top: 0, right: 20, bottom: 2})
+            .margins({left: 74, top: 0, right: 20, bottom: 2})
             .width(1000).height(20)
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(kv => ord2int[kv.key])
+            .keyAccessor(kv => group.ord2int(kv.key))
             .elasticY(true)
             .brushOn(true)
             .dimension(dimension)
@@ -140,7 +167,8 @@
         var row = dc.rowChart('#first-letters');
         row
             .width(1000)
-            .height(300)
+            .height(350)
+            .gap(1)
             .dimension(letterDimension)
             .group(letterGroup);
 
