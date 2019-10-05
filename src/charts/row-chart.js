@@ -10,25 +10,25 @@ import {transition} from '../core/core';
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @class rowChart
- * @memberof dc
- * @mixes dc.capMixin
- * @mixes dc.marginMixin
- * @mixes dc.colorMixin
- * @mixes dc.baseMixin
- * @example
- * // create a row chart under #chart-container1 element using the default global chart group
- * var chart1 = dc.rowChart('#chart-container1');
- * // create a row chart under #chart-container2 element using chart group A
- * var chart2 = dc.rowChart('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.rowChart}
+ * @mixes CapMixin
+ * @mixes MarginMixin
+ * @mixes ColorMixin
+ * @mixes BaseMixin
  */
 class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
+    /**
+     * Create a Row Chart.
+     * @example
+     * // create a row chart under #chart-container1 element using the default global chart group
+     * var chart1 = new RowChart('#chart-container1');
+     * // create a row chart under #chart-container2 element using chart group A
+     * var chart2 = new RowChart('#chart-container2', 'chartGroupA');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -108,12 +108,9 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     /**
      * Gets or sets the x scale. The x scale can be any d3
      * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}.
-     * @method x
-     * @memberof dc.rowChart
-     * @instance
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [scale]
-     * @returns {d3.scale|dc.rowChart}
+     * @returns {d3.scale|RowChart}
      */
     x (scale) {
         if (!arguments.length) {
@@ -250,11 +247,8 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     /**
      * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
-     * @method renderTitleLabel
-     * @memberof dc.rowChart
-     * @instance
      * @param {Boolean} [renderTitleLabel=false]
-     * @returns {Boolean|dc.rowChart}
+     * @returns {Boolean|RowChart}
      */
     renderTitleLabel (renderTitleLabel) {
         if (!arguments.length) {
@@ -284,9 +278,6 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * Get or sets the x axis for the row chart instance.
      * See the {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * documention for more information.
-     * @method xAxis
-     * @memberof dc.rowChart
-     * @instance
      * @param {d3.axis} [xAxis]
      * @example
      * // customize x axis tick format
@@ -296,7 +287,7 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * // use a top-oriented axis. Note: position of the axis and grid lines will need to
      * // be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
      * chart.xAxis(d3.axisTop())
-     * @returns {d3.axis|dc.rowChart}
+     * @returns {d3.axis|RowChart}
      */
     xAxis (xAxis) {
         if (!arguments.length) {
@@ -311,13 +302,10 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
      * you could fix height as follows (where count = total number of bars in your TopN and gap is
      * your vertical gap space).
-     * @method fixedBarHeight
-     * @memberof dc.rowChart
-     * @instance
      * @example
      * chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
      * @param {Boolean|Number} [fixedBarHeight=false]
-     * @returns {Boolean|Number|dc.rowChart}
+     * @returns {Boolean|Number|RowChart}
      */
     fixedBarHeight (fixedBarHeight) {
         if (!arguments.length) {
@@ -329,11 +317,8 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     /**
      * Get or set the vertical gap space between rows on a particular row chart instance.
-     * @method gap
-     * @memberof dc.rowChart
-     * @instance
      * @param {Number} [gap=5]
-     * @returns {Number|dc.rowChart}
+     * @returns {Number|RowChart}
      */
     gap (gap) {
         if (!arguments.length) {
@@ -346,11 +331,8 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     /**
      * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescale to auto-fit the
      * data range when filtered.
-     * @method elasticX
-     * @memberof dc.rowChart
-     * @instance
      * @param {Boolean} [elasticX]
-     * @returns {Boolean|dc.rowChart}
+     * @returns {Boolean|RowChart}
      */
     elasticX (elasticX) {
         if (!arguments.length) {
@@ -362,11 +344,8 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     /**
      * Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
-     * @method labelOffsetX
-     * @memberof dc.rowChart
-     * @instance
      * @param {Number} [labelOffsetX=10]
-     * @returns {Number|dc.rowChart}
+     * @returns {Number|RowChart}
      */
     labelOffsetX (labelOffsetX) {
         if (!arguments.length) {
@@ -378,11 +357,8 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     /**
      * Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
-     * @method labelOffsetY
-     * @memberof dc.rowChart
-     * @instance
      * @param {Number} [labelOffsety=15]
-     * @returns {Number|dc.rowChart}
+     * @returns {Number|RowChart}
      */
     labelOffsetY (labelOffsety) {
         if (!arguments.length) {
@@ -395,11 +371,8 @@ class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     /**
      * Get of set the x offset (horizontal space between right edge of row and right edge or text.
-     * @method titleLabelOffsetX
-     * @memberof dc.rowChart
-     * @instance
      * @param {Number} [titleLabelOffsetX=2]
-     * @returns {Number|dc.rowChart}
+     * @returns {Number|RowChart}
      */
     titleLabelOffsetX (titleLabelOffsetX) {
         if (!arguments.length) {

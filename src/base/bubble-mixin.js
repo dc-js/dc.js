@@ -6,12 +6,10 @@ import {events} from '../core/events';
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
- * @name bubbleMixin
- * @memberof dc
- * @mixin
- * @mixes dc.colorMixin
+ * @mixin BubbleMixin
+ * @mixes ColorMixin
  * @param {Object} Base
- * @returns {dc.bubbleMixin}
+ * @returns {BubbleMixin}
  */
 export const BubbleMixin = Base => {
     return class extends ColorMixin(Base) {
@@ -51,12 +49,11 @@ export const BubbleMixin = Base => {
          * Get or set the bubble radius scale. By default the bubble chart uses
          * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
          * as its radius scale.
-         * @method r
-         * @memberof dc.bubbleMixin
+         * @memberof BubbleMixin
          * @instance
          * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
          * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
-         * @returns {d3.scale|dc.bubbleMixin}
+         * @returns {d3.scale|BubbleMixin}
          */
         r (bubbleRadiusScale) {
             if (!arguments.length) {
@@ -69,7 +66,6 @@ export const BubbleMixin = Base => {
         /**
          * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
          * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-         * @method elasticRadius
          * @memberof dc.bubbleChart
          * @instance
          * @param {Boolean} [elasticRadius=false]
@@ -94,11 +90,10 @@ export const BubbleMixin = Base => {
          * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
          * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
          * size.
-         * @method radiusValueAccessor
-         * @memberof dc.bubbleMixin
+         * @memberof BubbleMixin
          * @instance
          * @param {Function} [radiusValueAccessor]
-         * @returns {Function|dc.bubbleMixin}
+         * @returns {Function|BubbleMixin}
          */
         radiusValueAccessor (radiusValueAccessor) {
             if (!arguments.length) {
@@ -194,7 +189,6 @@ export const BubbleMixin = Base => {
         /**
          * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
          * bubbles will be sorted by their radius, with smaller bubbles in front.
-         * @method sortBubbleSize
          * @memberof dc.bubbleChart
          * @instance
          * @param {Boolean} [sortBubbleSize=false]
@@ -210,11 +204,10 @@ export const BubbleMixin = Base => {
 
         /**
          * Get or set the minimum radius. This will be used to initialize the radius scale's range.
-         * @method minRadius
-         * @memberof dc.bubbleMixin
+         * @memberof BubbleMixin
          * @instance
          * @param {Number} [radius=10]
-         * @returns {Number|dc.bubbleMixin}
+         * @returns {Number|BubbleMixin}
          */
         minRadius (radius) {
             if (!arguments.length) {
@@ -227,11 +220,10 @@ export const BubbleMixin = Base => {
         /**
          * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
          * then no label will be rendered.
-         * @method minRadiusWithLabel
-         * @memberof dc.bubbleMixin
+         * @memberof BubbleMixin
          * @instance
          * @param {Number} [radius=10]
-         * @returns {Number|dc.bubbleMixin}
+         * @returns {Number|BubbleMixin}
          */
 
         minRadiusWithLabel (radius) {
@@ -245,11 +237,10 @@ export const BubbleMixin = Base => {
         /**
          * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
          * when the difference in radius between bubbles is too great.
-         * @method maxBubbleRelativeSize
-         * @memberof dc.bubbleMixin
+         * @memberof BubbleMixin
          * @instance
          * @param {Number} [relativeSize=0.3]
-         * @returns {Number|dc.bubbleMixin}
+         * @returns {Number|BubbleMixin}
          */
         maxBubbleRelativeSize (relativeSize) {
             if (!arguments.length) {

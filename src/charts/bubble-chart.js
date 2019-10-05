@@ -13,23 +13,24 @@ import {transition} from '../core/core';
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @class bubbleChart
- * @memberof dc
- * @mixes dc.bubbleMixin
- * @mixes dc.coordinateGridMixin
- * @example
- * // create a bubble chart under #chart-container1 element using the default global chart group
- * var bubbleChart1 = dc.bubbleChart('#chart-container1');
- * // create a bubble chart under #chart-container2 element using chart group A
- * var bubbleChart2 = dc.bubbleChart('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.bubbleChart}
+ * @mixes BubbleMixin
+ * @mixes CoordinateGridMixin
  */
 class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
+    /**
+     * Create a Bubble Chart.
+     *
+     * @example
+     * // create a bubble chart under #chart-container1 element using the default global chart group
+     * var bubbleChart1 = new BubbleChart('#chart-container1');
+     * // create a bubble chart under #chart-container2 element using chart group A
+     * var bubbleChart2 = new BubbleChart('#chart-container2', 'chartGroupA');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 

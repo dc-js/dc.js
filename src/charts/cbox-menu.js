@@ -4,34 +4,35 @@ import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {utils} from '../core/utils'
 
-/**
- * The cboxMenu is a simple widget designed to filter a dimension by
- * selecting option(s) from a set of HTML `<input />` elements. The menu can be
- * made into a set of radio buttons (single select) or checkboxes (multiple).
- * @class cboxMenu
- * @memberof dc
- * @mixes dc.baseMixin
- * @example
- * // create a cboxMenu under #cbox-container using the default global chart group
- * var cbox = dc.cboxMenu('#cbox-container')
- *                .dimension(states)
- *                .group(stateGroup);
- * // the option text can be set via the title() function
- * // by default the option text is '`key`: `value`'
- * cbox.title(function (d){
- *     return 'STATE: ' + d.key;
- * })
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
- * Interaction with the widget will only trigger events and redraws within its group.
- * @returns {cboxMenu}
- **/
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
 
+/**
+ * The CboxMenu is a simple widget designed to filter a dimension by
+ * selecting option(s) from a set of HTML `<input />` elements. The menu can be
+ * made into a set of radio buttons (single select) or checkboxes (multiple).
+ * @mixes BaseMixin
+ */
 export class CboxMenu extends BaseMixin {
+    /**
+     * Create a Cbox Menu.
+     *
+     * @example
+     * // create a cboxMenu under #cbox-container using the default global chart group
+     * var cbox = new CboxMenu('#cbox-container')
+     *                .dimension(states)
+     *                .group(stateGroup);
+     * // the option text can be set via the title() function
+     * // by default the option text is '`key`: `value`'
+     * cbox.title(function (d){
+     *     return 'STATE: ' + d.key;
+     * })
+     * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+     * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
+     * Interaction with the widget will only trigger events and redraws within its group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -189,11 +190,8 @@ export class CboxMenu extends BaseMixin {
      * Get or set the function that controls the ordering of option tags in the
      * cbox menu. By default options are ordered by the group key in ascending
      * order.
-     * @method order
-     * @memberof dc.cboxMenu
-     * @instance
      * @param {Function} [order]
-     * @returns {Function|dc.cboxMenu}
+     * @returns {Function|CboxMenu}
      * @example
      * // order by the group's value
      * chart.order(function (a,b) {
@@ -210,11 +208,8 @@ export class CboxMenu extends BaseMixin {
 
     /**
      * Get or set the text displayed in the options used to prompt selection.
-     * @method promptText
-     * @memberof dc.cboxMenu
-     * @instance
      * @param {String} [promptText='Select all']
-     * @returns {String|dc.cboxMenu}
+     * @returns {String|CboxMenu}
      * @example
      * chart.promptText('All states');
      **/
@@ -229,11 +224,8 @@ export class CboxMenu extends BaseMixin {
     /**
      * Get or set the function that filters options prior to display. By default options
      * with a value of < 1 are not displayed.
-     * @method filterDisplayed
-     * @memberof dc.cboxMenu
-     * @instance
      * @param {function} [filterDisplayed]
-     * @returns {Function|dc.cboxMenu}
+     * @returns {Function|CboxMenu}
      * @example
      * // display all options override the `filterDisplayed` function:
      * chart.filterDisplayed(function () {
@@ -251,11 +243,8 @@ export class CboxMenu extends BaseMixin {
     /**
      * Controls the type of input element. Setting it to true converts
      * the HTML `input` tags from radio buttons to checkboxes.
-     * @method multiple
-     * @memberof dc.cboxMenu
-     * @instance
      * @param {boolean} [multiple=false]
-     * @returns {Boolean|dc.cboxMenu}
+     * @returns {Boolean|CboxMenu}
      * @example
      * chart.multiple(true);
      **/
@@ -277,11 +266,8 @@ export class CboxMenu extends BaseMixin {
      * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
      * when only the prompt value is selected. If `null` (the default), no filtering will occur when
      * just the prompt is selected.
-     * @method promptValue
-     * @memberof dc.cboxMenu
-     * @instance
      * @param {?*} [promptValue=null]
-     * @returns {*|dc.cboxMenu}
+     * @returns {*|CboxMenu}
      **/
     promptValue (promptValue) {
         if (!arguments.length) {

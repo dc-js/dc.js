@@ -11,24 +11,24 @@ const DEFAULT_BORDER_RADIUS = 6.75;
 
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
- * @class heatMap
- * @memberof dc
- * @mixes dc.colorMixin
- * @mixes dc.marginMixin
- * @mixes dc.baseMixin
- * @example
- * // create a heat map under #chart-container1 element using the default global chart group
- * var heatMap1 = dc.heatMap('#chart-container1');
- * // create a heat map under #chart-container2 element using chart group A
- * var heatMap2 = dc.heatMap('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.heatMap}
+ * @mixes ColorMixin
+ * @mixes MarginMixin
+ * @mixes BaseMixin
  */
 export class HeatMap extends ColorMixin(MarginMixin) {
+    /**
+     * Create a Heat Map
+     * @example
+     * // create a heat map under #chart-container1 element using the default global chart group
+     * var heatMap1 = new HeatMap('#chart-container1');
+     * // create a heat map under #chart-container2 element using chart group A
+     * var heatMap2 = new HeatMap('#chart-container2', 'chartGroupA');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -70,14 +70,11 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     /**
      * Set or get the column label function. The chart class uses this function to render
      * column labels on the X axis. It is passed the column name.
-     * @method colsLabel
-     * @memberof dc.heatMap
-     * @instance
      * @example
      * // the default label function just returns the name
      * chart.colsLabel(function(d) { return d; });
      * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @returns {Function|dc.heatMap}
+     * @returns {Function|HeatMap}
      */
     colsLabel (labelFunction) {
         if (!arguments.length) {
@@ -90,14 +87,11 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     /**
      * Set or get the row label function. The chart class uses this function to render
      * row labels on the Y axis. It is passed the row name.
-     * @method rowsLabel
-     * @memberof dc.heatMap
-     * @instance
      * @example
      * // the default label function just returns the name
      * chart.rowsLabel(function(d) { return d; });
      * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @returns {Function|dc.heatMap}
+     * @returns {Function|HeatMap}
      */
     rowsLabel (labelFunction) {
         if (!arguments.length) {
@@ -136,11 +130,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     /**
      * Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
      * the values will be fetched from the data using the value accessor.
-     * @method rows
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Array<String|Number>} [rows]
-     * @returns {Array<String|Number>|dc.heatMap}
+     * @returns {Array<String|Number>|HeatMap}
      */
 
     rows (rows) {
@@ -154,11 +145,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     /**
      * Get or set a comparator to order the rows.
      * Default is {@link https://github.com/d3/d3-array#ascending d3.ascending}.
-     * @method rowOrdering
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Function} [rowOrdering]
-     * @returns {Function|dc.heatMap}
+     * @returns {Function|HeatMap}
      */
     rowOrdering (rowOrdering) {
         if (!arguments.length) {
@@ -171,11 +159,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     /**
      * Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
      * the values will be fetched from the data using the key accessor.
-     * @method cols
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Array<String|Number>} [cols]
-     * @returns {Array<String|Number>|dc.heatMap}
+     * @returns {Array<String|Number>|HeatMap}
      */
     cols (cols) {
         if (!arguments.length) {
@@ -188,11 +173,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     /**
      * Get or set a comparator to order the columns.
      * Default is  {@link https://github.com/d3/d3-array#ascending d3.ascending}.
-     * @method colOrdering
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Function} [colOrdering]
-     * @returns {Function|dc.heatMap}
+     * @returns {Function|HeatMap}
      */
     colOrdering (colOrdering) {
         if (!arguments.length) {
@@ -335,9 +317,6 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     /**
      * Gets or sets the handler that fires when an individual cell is clicked in the heatmap.
      * By default, filtering of the cell will be toggled.
-     * @method boxOnClick
-     * @memberof dc.heatMap
-     * @instance
      * @example
      * // default box on click handler
      * chart.boxOnClick(function (d) {
@@ -348,7 +327,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      *     });
      * });
      * @param  {Function} [handler]
-     * @returns {Function|dc.heatMap}
+     * @returns {Function|HeatMap}
      */
     boxOnClick (handler) {
         if (!arguments.length) {
@@ -362,11 +341,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * Gets or sets the handler that fires when a column tick is clicked in the x axis.
      * By default, if any cells in the column are unselected, the whole column will be selected,
      * otherwise the whole column will be unselected.
-     * @method xAxisOnClick
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Function} [handler]
-     * @returns {Function|dc.heatMap}
+     * @returns {Function|HeatMap}
      */
     xAxisOnClick (handler) {
         if (!arguments.length) {
@@ -380,11 +356,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * Gets or sets the handler that fires when a row tick is clicked in the y axis.
      * By default, if any cells in the row are unselected, the whole row will be selected,
      * otherwise the whole row will be unselected.
-     * @method yAxisOnClick
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Function} [handler]
-     * @returns {Function|dc.heatMap}
+     * @returns {Function|HeatMap}
      */
     yAxisOnClick (handler) {
         if (!arguments.length) {
@@ -396,11 +369,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
     /**
      * Gets or sets the X border radius.  Set to 0 to get full rectangles.
-     * @method xBorderRadius
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Number} [xBorderRadius=6.75]
-     * @returns {Number|dc.heatMap}
+     * @returns {Number|HeatMap}
      */
     xBorderRadius (xBorderRadius) {
         if (!arguments.length) {
@@ -412,11 +382,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
     /**
      * Gets or sets the Y border radius.  Set to 0 to get full rectangles.
-     * @method yBorderRadius
-     * @memberof dc.heatMap
-     * @instance
      * @param  {Number} [yBorderRadius=6.75]
-     * @returns {Number|dc.heatMap}
+     * @returns {Number|HeatMap}
      */
     yBorderRadius (yBorderRadius) {
         if (!arguments.length) {

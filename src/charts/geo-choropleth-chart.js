@@ -14,23 +14,23 @@ import {utils} from '../core/utils';
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @class geoChoroplethChart
- * @memberof dc
- * @mixes dc.colorMixin
- * @mixes dc.baseMixin
- * @example
- * // create a choropleth chart under '#us-chart' element using the default global chart group
- * var chart1 = dc.geoChoroplethChart('#us-chart');
- * // create a choropleth chart under '#us-chart2' element using chart group A
- * var chart2 = dc.compositeChart('#us-chart2', 'chartGroupA');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.geoChoroplethChart}
+ * @mixes ColorMixin
+ * @mixes BaseMixin
  */
 export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
+    /**
+     * Create a Geo Choropleth Chart.
+     * @example
+     * // create a choropleth chart under '#us-chart' element using the default global chart group
+     * var chart1 = new GeoChoroplethChart('#us-chart');
+     * // create a choropleth chart under '#us-chart2' element using chart group A
+     * var chart2 = new CompositeChart('#us-chart2', 'chartGroupA');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -187,9 +187,6 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * Use this function to insert a new GeoJson map layer. This function can be invoked multiple times
      * if you have multiple GeoJson data layers to render on top of each other. If you overlay multiple
      * layers with the same name the new overlay will override the existing one.
-     * @method overlayGeoJson
-     * @memberof dc.geoChoroplethChart
-     * @instance
      * @see {@link http://geojson.org/ GeoJSON}
      * @see {@link https://github.com/topojson/topojson/wiki TopoJSON}
      * @see {@link https://github.com/topojson/topojson-1.x-api-reference/blob/master/API-Reference.md#wiki-feature topojson.feature}
@@ -202,7 +199,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * @param {String} name - name of the layer
      * @param {Function} keyAccessor - accessor function used to extract 'key' from the GeoJson data. The key extracted by
      * this function should match the keys returned by the crossfilter groups.
-     * @returns {dc.geoChoroplethChart}
+     * @returns {GeoChoroplethChart}
      */
     overlayGeoJson (json, name, keyAccessor) {
         for (let i = 0; i < this._geoJsons.length; ++i) {
@@ -225,13 +222,10 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
      * Considering that `null` is also a valid value for projection}, if you need
      * projection to be `null` please set it explicitly to `null`.
-     * @method projection
-     * @memberof dc.geoChoroplethChart
-     * @instance
      * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
      * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
      * @param {d3.projection} [projection=d3.geoAlbersUsa()]
-     * @returns {d3.projection|dc.geoChoroplethChart}
+     * @returns {d3.projection|GeoChoroplethChart}
      */
     projection (projection) {
         if (!arguments.length) {
@@ -257,9 +251,6 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * Returns all GeoJson layers currently registered with this chart. The returned array is a
      * reference to this chart's internal data structure, so any modification to this array will also
      * modify this chart's internal registration.
-     * @method geoJsons
-     * @memberof dc.geoChoroplethChart
-     * @instance
      * @returns {Array<{name:String, data: Object, accessor: Function}>}
      */
     geoJsons () {
@@ -270,9 +261,6 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * Returns the {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
-     * @method geoPath
-     * @memberof dc.geoChoroplethChart
-     * @instance
      * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath}
      * @returns {d3.geoPath}
      */
@@ -282,11 +270,8 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
 
     /**
      * Remove a GeoJson layer from this chart by name
-     * @method removeGeoJson
-     * @memberof dc.geoChoroplethChart
-     * @instance
      * @param {String} name
-     * @returns {dc.geoChoroplethChart}
+     * @returns {GeoChoroplethChart}
      */
     removeGeoJson (name) {
         const geoJsons = [];

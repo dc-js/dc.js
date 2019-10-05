@@ -14,24 +14,25 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @class pieChart
- * @memberof dc
- * @mixes dc.capMixin
- * @mixes dc.colorMixin
- * @mixes dc.baseMixin
- * @example
- * // create a pie chart under #chart-container1 element using the default global chart group
- * var chart1 = dc.pieChart('#chart-container1');
- * // create a pie chart under #chart-container2 element using chart group A
- * var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.pieChart}
+ * @mixes CapMixin
+ * @mixes ColorMixin
+ * @mixes BaseMixin
  */
 class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
+    /**
+     * Create a Pie Chart
+     *
+     * @example
+     * // create a pie chart under #chart-container1 element using the default global chart group
+     * var chart1 = new PieChart('#chart-container1');
+     * // create a pie chart under #chart-container2 element using chart group A
+     * var chart2 = new PieChart('#chart-container2', 'chartGroupA');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -71,11 +72,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     /**
      * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
      * value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
-     * @method slicesCap
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [cap]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     slicesCap (cap) {
         return this.cap(cap)
@@ -334,11 +332,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     /**
      * Get or set the external radius padding of the pie chart. This will force the radius of the
      * pie chart to become smaller or larger depending on the value.
-     * @method externalRadiusPadding
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [externalRadiusPadding=0]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     externalRadiusPadding (externalRadiusPadding) {
         if (!arguments.length) {
@@ -351,11 +346,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     /**
      * Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
      * pie chart will be rendered as a doughnut chart.
-     * @method innerRadius
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [innerRadius=0]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     innerRadius (innerRadius) {
         if (!arguments.length) {
@@ -368,11 +360,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     /**
      * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
      * chart width and height.
-     * @method radius
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [radius]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     radius (radius) {
         if (!arguments.length) {
@@ -384,11 +373,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     /**
      * Get or set center x coordinate position. Default is center of svg.
-     * @method cx
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [cx]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     cx (cx) {
         if (!arguments.length) {
@@ -400,11 +386,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     /**
      * Get or set center y coordinate position. Default is center of svg.
-     * @method cy
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [cy]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     cy (cy) {
         if (!arguments.length) {
@@ -432,11 +415,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     /**
      * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
      * display a slice label.
-     * @method minAngleForLabel
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [minAngleForLabel=0.5]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     minAngleForLabel (minAngleForLabel) {
         if (!arguments.length) {
@@ -483,11 +463,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     /**
      * Title to use for the only slice when there is no data.
-     * @method emptyTitle
-     * @memberof dc.pieChart
-     * @instance
      * @param {String} [title]
-     * @returns {String|dc.pieChart}
+     * @returns {String|PieChart}
      */
     emptyTitle (title) {
         if (arguments.length === 0) {
@@ -501,11 +478,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * Position slice labels offset from the outer edge of the chart.
      *
      * The argument specifies the extra radius to be added for slice labels.
-     * @method externalLabels
-     * @memberof dc.pieChart
-     * @instance
      * @param {Number} [externalLabelRadius]
-     * @returns {Number|dc.pieChart}
+     * @returns {Number|PieChart}
      */
     externalLabels (externalLabelRadius) {
         if (arguments.length === 0) {
@@ -522,11 +496,8 @@ class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     /**
      * Get or set whether to draw lines from pie slices to their labels.
      *
-     * @method drawPaths
-     * @memberof dc.pieChart
-     * @instance
      * @param {Boolean} [drawPaths]
-     * @returns {Boolean|dc.pieChart}
+     * @returns {Boolean|PieChart}
      */
     drawPaths (drawPaths) {
         if (arguments.length === 0) {

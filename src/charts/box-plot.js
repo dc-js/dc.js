@@ -36,22 +36,23 @@ function defaultWhiskersIQR (k) {
  * - {@link http://dc-js.github.io/dc.js/examples/boxplot-enhanced.html Boxplot Enhanced example}
  * - {@link http://dc-js.github.io/dc.js/examples/boxplot-render-data.html Boxplot Render Data example}
  * - {@link http://dc-js.github.io/dc.js/examples/boxplot-time.html Boxplot time example}
- * @class boxPlot
- * @memberof dc
- * @mixes dc.coordinateGridMixin
- * @example
- * // create a box plot under #chart-container1 element using the default global chart group
- * var boxPlot1 = dc.boxPlot('#chart-container1');
- * // create a box plot under #chart-container2 element using chart group A
- * var boxPlot2 = dc.boxPlot('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.boxPlot}
+ * @mixes CoordinateGridMixin
  */
 class BoxPlot extends CoordinateGridMixin {
+    /**
+     * Create a BoxP lot.
+     *
+     * @example
+     * // create a box plot under #chart-container1 element using the default global chart group
+     * var boxPlot1 = new BoxPlot('#chart-container1');
+     * // create a box plot under #chart-container2 element using chart group A
+     * var boxPlot2 = new BoxPlot('#chart-container2', 'chartGroupA');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -104,12 +105,9 @@ class BoxPlot extends CoordinateGridMixin {
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
      * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
-     * @method boxPadding
-     * @memberof dc.boxPlot
-     * @instance
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
      * @param {Number} [padding=0.8]
-     * @returns {Number|dc.boxPlot}
+     * @returns {Number|BoxPlot}
      */
     boxPadding (padding) {
         if (!arguments.length) {
@@ -120,13 +118,10 @@ class BoxPlot extends CoordinateGridMixin {
 
     /**
      * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-     * or on charts with a custom {@link dc.boxPlot#boxWidth .boxWidth}. Will pad the width by
+     * or on charts with a custom {@link BoxPlot#boxWidth .boxWidth}. Will pad the width by
      * `padding * barWidth` on each side of the chart.
-     * @method outerPadding
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Number} [padding=0.5]
-     * @returns {Number|dc.boxPlot}
+     * @returns {Number|BoxPlot}
      */
     outerPadding (padding) {
         if (!arguments.length) {
@@ -144,11 +139,8 @@ class BoxPlot extends CoordinateGridMixin {
      * chart.boxWidth(10);
      * // Using function
      * chart.boxWidth((innerChartWidth, xUnits) { ... });
-     * @method boxWidth
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Number|Function} [boxWidth=0.5]
-     * @returns {Number|Function|dc.boxPlot}
+     * @returns {Number|Function|BoxPlot}
      */
     boxWidth (boxWidth) {
         if (!arguments.length) {
@@ -294,11 +286,8 @@ class BoxPlot extends CoordinateGridMixin {
      * @example
      * // format ticks to 2 decimal places
      * chart.tickFormat(d3.format('.2f'));
-     * @method tickFormat
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Function} [tickFormat]
-     * @returns {Number|Function|dc.boxPlot}
+     * @returns {Number|Function|BoxPlot}
      */
     tickFormat (tickFormat) {
         if (!arguments.length) {
@@ -314,11 +303,8 @@ class BoxPlot extends CoordinateGridMixin {
      * @example
      * // allow more space for a bigger whisker font
      * chart.yRangePadding(12);
-     * @method yRangePadding
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Function} [yRangePadding = 8]
-     * @returns {Number|Function|dc.boxPlot}
+     * @returns {Number|Function|BoxPlot}
      */
     yRangePadding (yRangePadding) {
         if (!arguments.length) {
@@ -333,11 +319,8 @@ class BoxPlot extends CoordinateGridMixin {
      * @example
      * // Enable rendering of individual data points
      * chart.renderDataPoints(true);
-     * @method renderDataPoints
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Boolean} [show=false]
-     * @returns {Boolean|dc.boxPlot}
+     * @returns {Boolean|BoxPlot}
      */
     renderDataPoints (show) {
         if (!arguments.length) {
@@ -352,11 +335,8 @@ class BoxPlot extends CoordinateGridMixin {
      * @example
      * // If individual data points are rendered increase the opacity.
      * chart.dataOpacity(0.7);
-     * @method dataOpacity
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Number} [opacity=0.3]
-     * @returns {Number|dc.boxPlot}
+     * @returns {Number|BoxPlot}
      */
     dataOpacity (opacity) {
         if (!arguments.length) {
@@ -371,11 +351,8 @@ class BoxPlot extends CoordinateGridMixin {
      * @example
      * // If individual data points are rendered increase the data box.
      * chart.dataWidthPortion(0.9);
-     * @method dataWidthPortion
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Number} [percentage=0.8]
-     * @returns {Number|dc.boxPlot}
+     * @returns {Number|BoxPlot}
      */
     dataWidthPortion (percentage) {
         if (!arguments.length) {
@@ -390,11 +367,8 @@ class BoxPlot extends CoordinateGridMixin {
      * @example
      * // Disable rendering of outliers
      * chart.showOutliers(false);
-     * @method showOutliers
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Boolean} [show=true]
-     * @returns {Boolean|dc.boxPlot}
+     * @returns {Boolean|BoxPlot}
      */
     showOutliers (show) {
         if (!arguments.length) {
@@ -409,11 +383,8 @@ class BoxPlot extends CoordinateGridMixin {
      * @example
      * // If outliers are rendered display as bold
      * chart.boldOutlier(true);
-     * @method boldOutlier
-     * @memberof dc.boxPlot
-     * @instance
      * @param {Boolean} [show=false]
-     * @returns {Boolean|dc.boxPlot}
+     * @returns {Boolean|BoxPlot}
      */
     boldOutlier (show) {
         if (!arguments.length) {

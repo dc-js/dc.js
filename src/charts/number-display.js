@@ -17,20 +17,21 @@ const SPAN_CLASS = 'number-display';
  * sorting with the {@link https://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#ordering__anchor ordering}
  * function. `numberDisplay` defaults the `ordering` function to sorting by value, so this will display
  * the largest value if the values are numeric.
- * @class numberDisplay
- * @memberof dc
- * @mixes dc.baseMixin
- * @example
- * // create a number display under #chart-container1 element using the default global chart group
- * var display1 = dc.numberDisplay('#chart-container1');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.numberDisplay}
+ * @mixes BaseMixin
  */
 export class NumberDisplay extends BaseMixin {
+    /**
+     * Create a Number Display widget.
+     *
+     * @example
+     * // create a number display under #chart-container1 element using the default global chart group
+     * var display1 = new NumberDisplay('#chart-container1');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -61,16 +62,13 @@ export class NumberDisplay extends BaseMixin {
      * - one: HTML template to use if the number is 1
      * - zero: HTML template to use if the number is 0
      * - some: HTML template to use otherwise
-     * @method html
-     * @memberof dc.numberDisplay
-     * @instance
      * @example
      * numberWidget.html({
      *      one:'%number record',
      *      some:'%number records',
      *      none:'no records'})
      * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
-     * @returns {{one:String, some:String, none:String}|dc.numberDisplay}
+     * @returns {{one:String, some:String, none:String}|NumberDisplay}
      */
     html (html) {
         if (!arguments.length) {
@@ -98,9 +96,6 @@ export class NumberDisplay extends BaseMixin {
 
     /**
      * Calculate and return the underlying value of the display.
-     * @method value
-     * @memberof dc.numberDisplay
-     * @instance
      * @returns {Number}
      */
     value () {
@@ -163,12 +158,9 @@ export class NumberDisplay extends BaseMixin {
 
     /**
      * Get or set a function to format the value for the display.
-     * @method formatNumber
-     * @memberof dc.numberDisplay
-     * @instance
      * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
      * @param {Function} [formatter=d3.format('.2s')]
-     * @returns {Function|dc.numberDisplay}
+     * @returns {Function|NumberDisplay}
      */
     formatNumber (formatter) {
         if (!arguments.length) {

@@ -11,22 +11,22 @@ import {utils} from '../core/utils';
  *
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/series.html Series Chart}
- * @class seriesChart
- * @memberof dc
- * @mixes dc.compositeChart
- * @example
- * // create a series chart under #chart-container1 element using the default global chart group
- * var seriesChart1 = dc.seriesChart("#chart-container1");
- * // create a series chart under #chart-container2 element using chart group A
- * var seriesChart2 = dc.seriesChart("#chart-container2", "chartGroupA");
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.seriesChart}
+ * @mixes CompositeChart
  */
 export class SeriesChart extends CompositeChart {
+    /**
+     * Create a Series Chart.
+     * @example
+     * // create a series chart under #chart-container1 element using the default global chart group
+     * var seriesChart1 = new SeriesChart("#chart-container1");
+     * // create a series chart under #chart-container2 element using chart group A
+     * var seriesChart2 = new SeriesChart("#chart-container2", "chartGroupA");
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super(parent, chartGroup);
 
@@ -107,16 +107,13 @@ export class SeriesChart extends CompositeChart {
 
     /**
      * Get or set the chart function, which generates the child charts.
-     * @method chart
-     * @memberof dc.seriesChart
-     * @instance
      * @example
      * // put curve on the line charts used for the series
      * chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
      * // do a scatter series chart
      * chart.chart(dc.scatterPlot)
      * @param {Function} [chartFunction=dc.lineChart]
-     * @returns {Function|dc.seriesChart}
+     * @returns {Function|SeriesChart}
      */
     chart (chartFunction) {
         if (!arguments.length) {
@@ -132,14 +129,11 @@ export class SeriesChart extends CompositeChart {
      *
      * Get or set accessor function for the displayed series. Given a datum, this function
      * should return the series that datum belongs to.
-     * @method seriesAccessor
-     * @memberof dc.seriesChart
-     * @instance
      * @example
      * // simple series accessor
      * chart.seriesAccessor(function(d) { return "Expt: " + d.key[0]; })
      * @param {Function} [accessor]
-     * @returns {Function|dc.seriesChart}
+     * @returns {Function|SeriesChart}
      */
     seriesAccessor (accessor) {
         if (!arguments.length) {
@@ -152,15 +146,12 @@ export class SeriesChart extends CompositeChart {
 
     /**
      * Get or set a function to sort the list of series by, given series values.
-     * @method seriesSort
-     * @memberof dc.seriesChart
-     * @instance
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.seriesSort(d3.descending);
      * @param {Function} [sortFunction=d3.ascending]
-     * @returns {Function|dc.seriesChart}
+     * @returns {Function|SeriesChart}
      */
     seriesSort (sortFunction) {
         if (!arguments.length) {
@@ -175,9 +166,6 @@ export class SeriesChart extends CompositeChart {
      * Get or set a function to sort each series values by. By default this is the key accessor which,
      * for example, will ensure a lineChart series connects its points in increasing key/x order,
      * rather than haphazardly.
-     * @method valueSort
-     * @memberof dc.seriesChart
-     * @instance
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
@@ -186,7 +174,7 @@ export class SeriesChart extends CompositeChart {
      *     return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
      * });
      * @param {Function} [sortFunction]
-     * @returns {Function|dc.seriesChart}
+     * @returns {Function|SeriesChart}
      */
     valueSort (sortFunction) {
         if (!arguments.length) {

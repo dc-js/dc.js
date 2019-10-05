@@ -9,27 +9,27 @@ const OPTION_CSS_CLASS = 'dc-select-option';
 /**
  * The select menu is a simple widget designed to filter a dimension by selecting an option from
  * an HTML `<select/>` menu. The menu can be optionally turned into a multiselect.
- * @class selectMenu
- * @memberof dc
- * @mixes dc.baseMixin
- * @example
- * // create a select menu under #select-container using the default global chart group
- * var select = dc.selectMenu('#select-container')
- *                .dimension(states)
- *                .group(stateGroup);
- * // the option text can be set via the title() function
- * // by default the option text is '`key`: `value`'
- * select.title(function (d){
- *     return 'STATE: ' + d.key;
- * })
- * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
- * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
- * Interaction with the widget will only trigger events and redraws within its group.
- * @returns {selectMenu}
- **/
+ * @mixes BaseMixin
+ */
 export class SelectMenu extends BaseMixin {
+    /**
+     * Create a Select Menu.
+     * @example
+     * // create a select menu under #select-container using the default global chart group
+     * var select = new SelectMenu('#select-container')
+     *                .dimension(states)
+     *                .group(stateGroup);
+     * // the option text can be set via the title() function
+     * // by default the option text is '`key`: `value`'
+     * select.title(function (d){
+     *     return 'STATE: ' + d.key;
+     * })
+     * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+     * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
+     * Interaction with the widget will only trigger events and redraws within its group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -150,11 +150,8 @@ export class SelectMenu extends BaseMixin {
      * Get or set the function that controls the ordering of option tags in the
      * select menu. By default options are ordered by the group key in ascending
      * order.
-     * @method order
-     * @memberof dc.selectMenu
-     * @instance
      * @param {Function} [order]
-     * @returns {Function|dc.selectMenu}
+     * @returns {Function|SelectMenu}
      * @example
      * // order by the group's value
      * chart.order(function (a,b) {
@@ -171,11 +168,8 @@ export class SelectMenu extends BaseMixin {
 
     /**
      * Get or set the text displayed in the options used to prompt selection.
-     * @method promptText
-     * @memberof dc.selectMenu
-     * @instance
      * @param {String} [promptText='Select all']
-     * @returns {String|dc.selectMenu}
+     * @returns {String|SelectMenu}
      * @example
      * chart.promptText('All states');
      **/
@@ -190,11 +184,8 @@ export class SelectMenu extends BaseMixin {
     /**
      * Get or set the function that filters option tags prior to display. By default options
      * with a value of < 1 are not displayed.
-     * @method filterDisplayed
-     * @memberof dc.selectMenu
-     * @instance
      * @param {function} [filterDisplayed]
-     * @returns {Function|dc.selectMenu}
+     * @returns {Function|SelectMenu}
      * @example
      * // display all options override the `filterDisplayed` function:
      * chart.filterDisplayed(function () {
@@ -212,11 +203,8 @@ export class SelectMenu extends BaseMixin {
     /**
      * Controls the type of select menu. Setting it to true converts the underlying
      * HTML tag into a multiple select.
-     * @method multiple
-     * @memberof dc.selectMenu
-     * @instance
      * @param {boolean} [multiple=false]
-     * @returns {boolean|dc.selectMenu}
+     * @returns {boolean|SelectMenu}
      * @example
      * chart.multiple(true);
      **/
@@ -234,11 +222,8 @@ export class SelectMenu extends BaseMixin {
      * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
      * when only the prompt value is selected. If `null` (the default), no filtering will occur when
      * just the prompt is selected.
-     * @method promptValue
-     * @memberof dc.selectMenu
-     * @instance
      * @param {?*} [promptValue=null]
-     * @returns {*|dc.selectMenu}
+     * @returns {*|SelectMenu}
      **/
     promptValue (promptValue) {
         if (!arguments.length) {
@@ -253,11 +238,8 @@ export class SelectMenu extends BaseMixin {
      * Controls the number of items to show in the select menu, when `.multiple()` is true. This
      * controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
      * the `select` element. If `null` (the default), uses the browser's default height.
-     * @method numberItems
-     * @memberof dc.selectMenu
-     * @instance
      * @param {?number} [numberVisible=null]
-     * @returns {number|dc.selectMenu}
+     * @returns {number|SelectMenu}
      * @example
      * chart.numberVisible(10);
      **/

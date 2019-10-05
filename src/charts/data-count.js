@@ -17,24 +17,24 @@ import {BaseMixin} from '../base/base-mixin';
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @class dataCount
- * @memberof dc
- * @mixes dc.baseMixin
- * @example
- * var ndx = crossfilter(data);
- * var all = ndx.groupAll();
- *
- * dc.dataCount('.dc-data-count')
- *     .crossfilter(ndx)
- *     .groupAll(all);
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.dataCount}
+ * @mixes BaseMixin
  */
 export class DataCount extends BaseMixin {
+    /**
+     * Create a Data Count widget.
+     * @example
+     * var ndx = crossfilter(data);
+     * var all = ndx.groupAll();
+     *
+     * new DataCount('.dc-data-count')
+     *     .crossfilter(ndx)
+     *     .groupAll(all);
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -54,16 +54,13 @@ export class DataCount extends BaseMixin {
      * `%filter-count` will be replaced with the number of selected records.
      * - all: HTML template to use if all items are selected
      * - some: HTML template to use if not all items are selected
-     * @method html
-     * @memberof dc.dataCount
-     * @instance
      * @example
      * counter.html({
      *      some: '%filter-count out of %total-count records selected',
      *      all: 'All records selected. Click on charts to apply filters'
      * })
      * @param {{some:String, all: String}} [options]
-     * @returns {{some:String, all: String}|dc.dataCount}
+     * @returns {{some:String, all: String}|DataCount}
      */
     html (options) {
         if (!arguments.length) {
@@ -80,14 +77,11 @@ export class DataCount extends BaseMixin {
 
     /**
      * Gets or sets an optional function to format the filter count and total count.
-     * @method formatNumber
-     * @memberof dc.dataCount
-     * @instance
      * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
      * @example
      * counter.formatNumber(d3.format('.2g'))
      * @param {Function} [formatter=d3.format('.2g')]
-     * @returns {Function|dc.dataCount}
+     * @returns {Function|DataCount}
      */
     formatNumber (formatter) {
         if (!arguments.length) {

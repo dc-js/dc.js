@@ -12,24 +12,24 @@ import {events} from '../core/events';
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/scatter.html Scatter Chart}
  * - {@link http://dc-js.github.io/dc.js/examples/multi-scatter.html Multi-Scatter Chart}
- * @class scatterPlot
- * @memberof dc
- * @mixes dc.coordinateGridMixin
- * @example
- * // create a scatter plot under #chart-container1 element using the default global chart group
- * var chart1 = dc.scatterPlot('#chart-container1');
- * // create a scatter plot under #chart-container2 element using chart group A
- * var chart2 = dc.scatterPlot('#chart-container2', 'chartGroupA');
- * // create a sub-chart under a composite parent chart
- * var chart3 = dc.scatterPlot(compositeChart);
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.scatterPlot}
+ * @mixes CoordinateGridMixin
  */
 export class ScatterPlot extends CoordinateGridMixin {
+    /**
+     * Create a Scatter Plot.
+     * @example
+     * // create a scatter plot under #chart-container1 element using the default global chart group
+     * var chart1 = new ScatterPlot('#chart-container1');
+     * // create a scatter plot under #chart-container2 element using chart group A
+     * var chart2 = new ScatterPlot('#chart-container2', 'chartGroupA');
+     * // create a sub-chart under a composite parent chart
+     * var chart3 = new ScatterPlot(compositeChart);
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -111,9 +111,6 @@ export class ScatterPlot extends CoordinateGridMixin {
      * element along with svg element and sets their CSS properties appropriately
      * so they are overlapped on top of each other.
      * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
-     * @method resetSvg
-     * @memberof dc.scatterPlot
-     * @instance
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
      * @returns {SVGElement}
      */
@@ -167,14 +164,11 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
      * canvas backend does not currently support
-     * {@link dc.scatterPlot#customSymbol customSymbol} or
-     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting
+     * {@link ScatterPlot#customSymbol customSymbol} or
+     * {@link ScatterPlot#symbol symbol} methods and is limited to always plotting
      * with filled circles. Symbols are drawn with
-     * {@link dc.scatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
+     * {@link ScatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
      * is used when `useCanvas` is set to `false`.
-     * @method useCanvas
-     * @memberof dc.scatterPlot
-     * @instance
      * @param {Boolean} [useCanvas=false]
      * @return {Boolean|d3.selection}
      */
@@ -189,10 +183,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Set or get canvas element. You should usually only ever use the get method as
      * dc.js will handle canvas element generation.  Provides valid canvas only when
-     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
-     * @method canvas
-     * @memberof dc.scatterPlot
-     * @instance
+     * {@link ScatterPlot#useCanvas useCanvas} is set to `true`
      * @param {CanvasElement|d3.selection} [canvasElement]
      * @return {CanvasElement|d3.selection}
      */
@@ -206,10 +197,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Get canvas 2D context. Provides valid context only when
-     * {@link dc.scatterPlot#useCanvas useCanvas} is set to `true`
-     * @method context
-     * @memberof dc.scatterPlot
-     * @instance
+     * {@link ScatterPlot#useCanvas useCanvas} is set to `true`
      * @return {CanvasContext}
      */
     context () {
@@ -337,20 +325,17 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Get or set the existence accessor.  If a point exists, it is drawn with
-     * {@link dc.scatterPlot#symbolSize symbolSize} radius and
+     * {@link ScatterPlot#symbolSize symbolSize} radius and
      * opacity 1; if it does not exist, it is drawn with
-     * {@link dc.scatterPlot#emptySize emptySize} radius and opacity 0. By default,
+     * {@link ScatterPlot#emptySize emptySize} radius and opacity 0. By default,
      * the existence accessor checks if the reduced value is truthy.
-     * @method existenceAccessor
-     * @memberof dc.scatterPlot
-     * @instance
-     * @see {@link dc.scatterPlot#symbolSize symbolSize}
-     * @see {@link dc.scatterPlot#emptySize emptySize}
+     * @see {@link ScatterPlot#symbolSize symbolSize}
+     * @see {@link ScatterPlot#emptySize emptySize}
      * @example
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });
      * @param {Function} [accessor]
-     * @returns {Function|dc.scatterPlot}
+     * @returns {Function|ScatterPlot}
      */
     existenceAccessor (accessor) {
         if (!arguments.length) {
@@ -363,9 +348,6 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
      * Type can be a constant or an accessor.
-     * @method symbol
-     * @memberof dc.scatterPlot
-     * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_type symbol.type}
      * @example
      * // Circle type
@@ -373,7 +355,7 @@ export class ScatterPlot extends CoordinateGridMixin {
      * // Square type
      * chart.symbol(d3.symbolSquare);
      * @param {Function} [type=d3.symbolCircle]
-     * @returns {Function|dc.scatterPlot}
+     * @returns {Function|ScatterPlot}
      */
     symbol (type) {
         if (!arguments.length) {
@@ -384,18 +366,15 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     /**
-     * Get or set the symbol generator. By default `dc.scatterPlot` will use
+     * Get or set the symbol generator. By default `ScatterPlot` will use
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol()}
-     * to generate symbols. `dc.scatterPlot` will set the
+     * to generate symbols. `ScatterPlot` will set the
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size symbol size accessor}
      * on the symbol generator.
-     * @method customSymbol
-     * @memberof dc.scatterPlot
-     * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol}
      * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
      * @param {String|Function} [customSymbol=d3.symbol()]
-     * @returns {String|Function|dc.scatterPlot}
+     * @returns {String|Function|ScatterPlot}
      */
     customSymbol (customSymbol) {
         if (!arguments.length) {
@@ -408,12 +387,9 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Set or get radius for symbols.
-     * @method symbolSize
-     * @memberof dc.scatterPlot
-     * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [symbolSize=3]
-     * @returns {Number|dc.scatterPlot}
+     * @returns {Number|ScatterPlot}
      */
     symbolSize (symbolSize) {
         if (!arguments.length) {
@@ -425,12 +401,9 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Set or get radius for highlighted symbols.
-     * @method highlightedSize
-     * @memberof dc.scatterPlot
-     * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [highlightedSize=5]
-     * @returns {Number|dc.scatterPlot}
+     * @returns {Number|ScatterPlot}
      */
     highlightedSize (highlightedSize) {
         if (!arguments.length) {
@@ -443,12 +416,9 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Set or get size for symbols excluded from this chart's filter. If null, no
      * special size is applied for symbols based on their filter status.
-     * @method excludedSize
-     * @memberof dc.scatterPlot
-     * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [excludedSize=null]
-     * @returns {Number|dc.scatterPlot}
+     * @returns {Number|ScatterPlot}
      */
     excludedSize (excludedSize) {
         if (!arguments.length) {
@@ -461,11 +431,8 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Set or get color for symbols excluded from this chart's filter. If null, no
      * special color is applied for symbols based on their filter status.
-     * @method excludedColor
-     * @memberof dc.scatterPlot
-     * @instance
      * @param {Number} [excludedColor=null]
-     * @returns {Number|dc.scatterPlot}
+     * @returns {Number|ScatterPlot}
      */
     excludedColor (excludedColor) {
         if (!arguments.length) {
@@ -477,11 +444,8 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Set or get opacity for symbols excluded from this chart's filter.
-     * @method excludedOpacity
-     * @memberof dc.scatterPlot
-     * @instance
      * @param {Number} [excludedOpacity=1.0]
-     * @returns {Number|dc.scatterPlot}
+     * @returns {Number|ScatterPlot}
      */
     excludedOpacity (excludedOpacity) {
         if (!arguments.length) {
@@ -493,12 +457,9 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Set or get radius for symbols when the group is empty.
-     * @method emptySize
-     * @memberof dc.scatterPlot
-     * @instance
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
      * @param {Number} [emptySize=0]
-     * @returns {Number|dc.scatterPlot}
+     * @returns {Number|ScatterPlot}
      */
     emptySize (emptySize) {
         if (!arguments.length) {
@@ -518,12 +479,9 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Set or get color for symbols when the group is empty. If null, just use the
      * {@link dc.colorMixin#colors colorMixin.colors} color scale zero value.
-     * @name emptyColor
-     * @memberof dc.scatterPlot
-     * @instance
      * @param {String} [emptyColor=null]
      * @return {String}
-     * @return {dc.scatterPlot}/
+     * @return {ScatterPlot}/
      */
     emptyColor (emptyColor) {
         if (!arguments.length) {
@@ -535,12 +493,9 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Set or get opacity for symbols when the group is empty.
-     * @name emptyOpacity
-     * @memberof dc.scatterPlot
-     * @instance
      * @param {Number} [emptyOpacity=0]
      * @return {Number}
-     * @return {dc.scatterPlot}
+     * @return {ScatterPlot}
      */
     emptyOpacity (emptyOpacity) {
         if (!arguments.length) {
@@ -552,12 +507,9 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Set or get opacity for symbols when the group is not empty.
-     * @name nonemptyOpacity
-     * @memberof dc.scatterPlot
-     * @instance
      * @param {Number} [nonemptyOpacity=1]
      * @return {Number}
-     * @return {dc.scatterPlot}
+     * @return {ScatterPlot}
      */
     nonemptyOpacity (nonemptyOpacity) {
         if (!arguments.length) {

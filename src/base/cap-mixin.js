@@ -8,11 +8,9 @@ import * as d3 from 'd3';
  * will be replaced with an *others* element, with value equal to the sum of the replaced values. The
  * keys of the elements below the cap limit are recorded in order to filter by those keys when the
  * others* element is clicked.
- * @name capMixin
- * @memberof dc
- * @mixin
+ * @mixin CapMixin
  * @param {Object} Base
- * @returns {dc.capMixin}
+ * @returns {CapMixin}
  */
 export const CapMixin = Base => {
     return class extends Base {
@@ -83,13 +81,13 @@ export const CapMixin = Base => {
 
         /**
          * Get or set the count of elements to that will be included in the cap. If there is an
-         * {@link dc.capMixin#othersGrouper othersGrouper}, any further elements will be combined in an
-         * extra element with its name determined by {@link dc.capMixin#othersLabel othersLabel}.
+         * {@link CapMixin#othersGrouper othersGrouper}, any further elements will be combined in an
+         * extra element with its name determined by {@link CapMixin#othersLabel othersLabel}.
          *
          * As of dc.js 2.1 and onward, the capped charts use
          * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all()}
          * and {@link dc.baseMixin#ordering baseMixin.ordering()} to determine the order of
-         * elements. Then `cap` and {@link dc.capMixin#takeFront takeFront} determine how many elements
+         * elements. Then `cap` and {@link CapMixin#takeFront takeFront} determine how many elements
          * to keep, from which end of the resulting array.
          *
          * **Migration note:** Up through dc.js 2.0.*, capping used
@@ -106,11 +104,10 @@ export const CapMixin = Base => {
          * If you want to cap by one ordering but sort by another, you can still do this by
          * specifying your own {@link dc.baseMixin#data `.data()`} callback. For details, see the example
          * {@link https://dc-js.github.io/dc.js/examples/cap-and-sort-differently.html Cap and Sort Differently}.
-         * @method cap
-         * @memberof dc.capMixin
+         * @memberof CapMixin
          * @instance
          * @param {Number} [count=Infinity]
-         * @returns {Number|dc.capMixin}
+         * @returns {Number|CapMixin}
          */
         cap (count) {
             if (!arguments.length) {
@@ -122,13 +119,12 @@ export const CapMixin = Base => {
 
         /**
          * Get or set the direction of capping. If set, the chart takes the first
-         * {@link dc.capMixin#cap cap} elements from the sorted array of elements; otherwise
+         * {@link CapMixin#cap cap} elements from the sorted array of elements; otherwise
          * it takes the last `cap` elements.
-         * @method takeFront
-         * @memberof dc.capMixin
+         * @memberof CapMixin
          * @instance
          * @param {Boolean} [takeFront=true]
-         * @returns {Boolean|dc.capMixin}
+         * @returns {Boolean|CapMixin}
          */
         takeFront (takeFront) {
             if (!arguments.length) {
@@ -140,11 +136,10 @@ export const CapMixin = Base => {
 
         /**
          * Get or set the label for *Others* slice when slices cap is specified.
-         * @method othersLabel
-         * @memberof dc.capMixin
+         * @memberof CapMixin
          * @instance
          * @param {String} [label="Others"]
-         * @returns {String|dc.capMixin}
+         * @returns {String|CapMixin}
          */
         othersLabel (label) {
             if (!arguments.length) {
@@ -160,8 +155,7 @@ export const CapMixin = Base => {
          *
          * The grouper function takes an array of included ("top") items, and an array of the rest of
          * the items. By default the grouper function computes the sum of the rest.
-         * @method othersGrouper
-         * @memberof dc.capMixin
+         * @memberof CapMixin
          * @instance
          * @example
          * // Do not show others
@@ -180,7 +174,7 @@ export const CapMixin = Base => {
          *     return topItems;
          * });
          * @param {Function} [grouperFunction]
-         * @returns {Function|dc.capMixin}
+         * @returns {Function|CapMixin}
          */
         othersGrouper (grouperFunction) {
             if (!arguments.length) {

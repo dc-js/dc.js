@@ -10,22 +10,22 @@ const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
  * Composite charts are a special kind of chart that render multiple charts on the same Coordinate
  * Grid. You can overlay (compose) different bar/line/area charts in a single composite chart to
  * achieve some quite flexible charting effects.
- * @class compositeChart
- * @memberof dc
- * @mixes dc.coordinateGridMixin
- * @example
- * // create a composite chart under #chart-container1 element using the default global chart group
- * var compositeChart1 = dc.compositeChart('#chart-container1');
- * // create a composite chart under #chart-container2 element using chart group A
- * var compositeChart2 = dc.compositeChart('#chart-container2', 'chartGroupA');
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.compositeChart}
+ * @mixes CoordinateGridMixin
  */
 export class CompositeChart extends CoordinateGridMixin {
+    /**
+     * Create a Composite Chart.
+     * @example
+     * // create a composite chart under #chart-container1 element using the default global chart group
+     * var compositeChart1 = new CompositeChart('#chart-container1');
+     * // create a composite chart under #chart-container2 element using chart group A
+     * var compositeChart2 = new CompositeChart('#chart-container2', 'chartGroupA');
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -265,11 +265,8 @@ export class CompositeChart extends CoordinateGridMixin {
      * Get or set whether to draw gridlines from the right y axis.  Drawing from the left y axis is the
      * default behavior. This option is only respected when subcharts with both left and right y-axes
      * are present.
-     * @method useRightAxisGridLines
-     * @memberof dc.compositeChart
-     * @instance
      * @param {Boolean} [useRightAxisGridLines=false]
-     * @returns {Boolean|dc.compositeChart}
+     * @returns {Boolean|CompositeChart}
      */
     useRightAxisGridLines (useRightAxisGridLines) {
         if (!arguments) {
@@ -283,11 +280,8 @@ export class CompositeChart extends CoordinateGridMixin {
     /**
      * Get or set chart-specific options for all child charts. This is equivalent to calling
      * {@link dc.baseMixin#options .options} on each child chart.
-     * @method childOptions
-     * @memberof dc.compositeChart
-     * @instance
      * @param {Object} [childOptions]
-     * @returns {Object|dc.compositeChart}
+     * @returns {Object|CompositeChart}
      */
     childOptions (childOptions) {
         if (!arguments.length) {
@@ -311,12 +305,9 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Set or get the right y axis label.
-     * @method rightYAxisLabel
-     * @memberof dc.compositeChart
-     * @instance
      * @param {String} [rightYAxisLabel]
      * @param {Number} [padding]
-     * @returns {String|dc.compositeChart}
+     * @returns {String|CompositeChart}
      */
     rightYAxisLabel (rightYAxisLabel, padding) {
         if (!arguments.length) {
@@ -331,9 +322,6 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Combine the given charts into one single composite coordinate grid chart.
-     * @method compose
-     * @memberof dc.compositeChart
-     * @instance
      * @example
      * moveChart.compose([
      *     // when creating sub-chart you need to pass in the parent chart
@@ -353,7 +341,7 @@ export class CompositeChart extends CoordinateGridMixin {
      *         .centerBar(true)
      * ]);
      * @param {Array<Chart>} [subChartArray]
-     * @returns {dc.compositeChart}
+     * @returns {CompositeChart}
      */
     compose (subChartArray) {
         this._children = subChartArray;
@@ -408,9 +396,6 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Returns the child charts which are composed into the composite chart.
-     * @method children
-     * @memberof dc.compositeChart
-     * @instance
      * @returns {Array<dc.baseMixin>}
      */
     children () {
@@ -422,11 +407,8 @@ export class CompositeChart extends CoordinateGridMixin {
      * will be shared with composed children. Additionally if the child chart implements
      * Stackable and has not set a custom .colorAccessor, then it will generate a color
      * specific to its order in the composition.
-     * @method shareColors
-     * @memberof dc.compositeChart
-     * @instance
      * @param {Boolean} [shareColors=false]
-     * @returns {Boolean|dc.compositeChart}
+     * @returns {Boolean|CompositeChart}
      */
     shareColors (shareColors) {
         if (!arguments.length) {
@@ -442,11 +424,8 @@ export class CompositeChart extends CoordinateGridMixin {
      *
      * Note: currently you must call this before `compose` or the child will still get the parent's
      * `title` function!
-     * @method shareTitle
-     * @memberof dc.compositeChart
-     * @instance
      * @param {Boolean} [shareTitle=true]
-     * @returns {Boolean|dc.compositeChart}
+     * @returns {Boolean|CompositeChart}
      */
     shareTitle (shareTitle) {
         if (!arguments.length) {
@@ -459,12 +438,9 @@ export class CompositeChart extends CoordinateGridMixin {
     /**
      * Get or set the y scale for the right axis. The right y scale is typically automatically
      * generated by the chart implementation.
-     * @method rightY
-     * @memberof dc.compositeChart
-     * @instance
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
-     * @returns {d3.scale|dc.compositeChart}
+     * @returns {d3.scale|CompositeChart}
      */
     rightY (yScale) {
         if (!arguments.length) {
@@ -478,9 +454,6 @@ export class CompositeChart extends CoordinateGridMixin {
     /**
      * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
      * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
-     * @method alignYAxes
-     * @memberof dc.compositeChart
-     * @instance
      * @param {Boolean} [alignYAxes=false]
      * @returns {Chart}
      */
@@ -580,9 +553,6 @@ export class CompositeChart extends CoordinateGridMixin {
      * returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
-     * @method rightYAxis
-     * @memberof dc.compositeChart
-     * @instance
      * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisRight}
      * @example
      * // customize y axis tick format
@@ -590,7 +560,7 @@ export class CompositeChart extends CoordinateGridMixin {
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.axisRight} [rightYAxis]
-     * @returns {d3.axisRight|dc.compositeChart}
+     * @returns {d3.axisRight|CompositeChart}
      */
     rightYAxis (rightYAxis) {
         if (!arguments.length) {

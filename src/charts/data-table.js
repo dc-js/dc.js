@@ -15,7 +15,7 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  *
  * An interesting feature of the data table is that you can pass a crossfilter group to the
  * `dimension`, if you want to show aggregated data instead of raw data rows. This requires no
- * special code as long as you specify the {@link dc.dataTable#order order} as `d3.descending`,
+ * special code as long as you specify the {@link DataTable#order order} as `d3.descending`,
  * since the data table will use `dimension.top()` to fetch the data in that case, and the method is
  * equally supported on the crossfilter group as the crossfilter dimension.
  *
@@ -23,25 +23,26 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  * in a [fake dimension](https://github.com/dc-js/dc.js/wiki/FAQ#fake-dimensions) to support the
  * `.bottom()` method. See the example linked below for more details.
  *
- * Note: Formerly the data table (and data grid chart) used the {@link dc.dataTable#group group} attribute as a
+ * Note: Formerly the data table (and data grid chart) used the {@link DataTable#group group} attribute as a
  * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
  * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
- *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
  * ({@link https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html source})
- * @class dataTable
- * @memberof dc
- * @mixes dc.baseMixin
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.dataTable}
+ *
+ * @mixes BaseMixin
  */
 export class DataTable extends BaseMixin {
+    /**
+     * Create a Data Table.
+     *
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -207,17 +208,14 @@ export class DataTable extends BaseMixin {
      * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
      * to split rows into sections. By default there will be only one section with no name.
      *
-     * Set {@link dc.dataTable#showSections showSections} to false to hide the section headers
+     * Set {@link DataTable#showSections showSections} to false to hide the section headers
      *
-     * @method section
-     * @memberof dc.dataTable
-     * @instance
      * @example
      * // section rows by the value of their field
      * chart
      *     .section(function(d) { return d.field; })
      * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|dc.dataTable}
+     * @returns {Function|DataTable}
      */
     section (section) {
         if (!arguments.length) {
@@ -228,13 +226,10 @@ export class DataTable extends BaseMixin {
     }
 
     /**
-     * Backward-compatible synonym for {@link dc.dataTable#section section}.
+     * Backward-compatible synonym for {@link DataTable#section section}.
      *
-     * @method group
-     * @memberof dc.dataTable
-     * @instance
      * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|dc.dataTable}
+     * @returns {Function|DataTable}
      */
     group (section) {
         logger.warnOnce('consider using dataTable.section instead of dataTable.group for clarity');
@@ -246,11 +241,8 @@ export class DataTable extends BaseMixin {
 
     /**
      * Get or set the table size which determines the number of rows displayed by the widget.
-     * @method size
-     * @memberof dc.dataTable
-     * @instance
      * @param {Number} [size=25]
-     * @returns {Number|dc.dataTable}
+     * @returns {Number|DataTable}
      */
     size (size) {
         if (!arguments.length) {
@@ -268,11 +260,8 @@ export class DataTable extends BaseMixin {
 
      * See the {@link http://dc-js.github.io/dc.js/examples/table-pagination.html table pagination example}
      * to see how to implement the pagination user interface using `beginSlice` and `endSlice`.
-     * @method beginSlice
-     * @memberof dc.dataTable
-     * @instance
      * @param {Number} [beginSlice=0]
-     * @returns {Number|dc.dataTable}
+     * @returns {Number|DataTable}
      */
     beginSlice (beginSlice) {
         if (!arguments.length) {
@@ -284,12 +273,9 @@ export class DataTable extends BaseMixin {
 
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the
-     * widget. Useful when implementing pagination. See {@link dc.dataTable#beginSlice `beginSlice`} for more information.
-     * @method endSlice
-     * @memberof dc.dataTable
-     * @instance
+     * widget. Useful when implementing pagination. See {@link DataTable#beginSlice `beginSlice`} for more information.
      * @param {Number|undefined} [endSlice=undefined]
-     * @returns {Number|dc.dataTable}
+     * @returns {Number|DataTable}
      */
     endSlice (endSlice) {
         if (!arguments.length) {
@@ -372,11 +358,8 @@ export class DataTable extends BaseMixin {
      * override `_chart._doColumnHeaderFormat` and `_chart._doColumnValueFormat` Be aware that
      * fields without numberFormat specification will be displayed just as they are stored in the
      * data, unformatted.
-     * @method columns
-     * @memberof dc.dataTable
-     * @instance
      * @param {Array<Function>} [columns=[]]
-     * @returns {Array<Function>}|dc.dataTable}
+     * @returns {Array<Function>}|DataTable}
      */
     columns (columns) {
         if (!arguments.length) {
@@ -389,15 +372,12 @@ export class DataTable extends BaseMixin {
     /**
      * Get or set sort-by function. This function works as a value accessor at row level and returns a
      * particular field to be sorted by.
-     * @method sortBy
-     * @memberof dc.dataTable
-     * @instance
      * @example
      * chart.sortBy(function(d) {
      *     return d.date;
      * });
      * @param {Function} [sortBy=identity function]
-     * @returns {Function|dc.dataTable}
+     * @returns {Function|DataTable}
      */
     sortBy (sortBy) {
         if (!arguments.length) {
@@ -410,15 +390,12 @@ export class DataTable extends BaseMixin {
     /**
      * Get or set sort order. If the order is `d3.ascending`, the data table will use
      * `dimension().bottom()` to fetch the data; otherwise it will use `dimension().top()`
-     * @method order
-     * @memberof dc.dataTable
-     * @instance
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @returns {Function|dc.dataTable}
+     * @returns {Function|DataTable}
      */
     order (order) {
         if (!arguments.length) {
@@ -430,15 +407,12 @@ export class DataTable extends BaseMixin {
 
     /**
      * Get or set if section header rows will be shown.
-     * @method showSections
-     * @memberof dc.dataTable
-     * @instance
      * @example
      * chart
      *     .section([value], [name])
      *     .showSections(true|false);
      * @param {Boolean} [showSections=true]
-     * @returns {Boolean|dc.dataTable}
+     * @returns {Boolean|DataTable}
      */
     showSections (showSections) {
         if (!arguments.length) {
@@ -449,12 +423,9 @@ export class DataTable extends BaseMixin {
     }
 
     /**
-     * Backward-compatible synonym for {@link dc.dataTable#showSections showSections}.
-     * @method showGroups
-     * @memberof dc.dataTable
-     * @instance
+     * Backward-compatible synonym for {@link DataTable#showSections showSections}.
      * @param {Boolean} [showSections=true]
-     * @returns {Boolean|dc.dataTable}
+     * @returns {Boolean|DataTable}
      */
     showGroups (showSections) {
         logger.warnOnce('consider using dataTable.showSections instead of dataTable.showGroups for clarity');

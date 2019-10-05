@@ -12,24 +12,23 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
  *
- *
- * Note: Formerly the data grid chart (and data table) used the {@link dc.dataGrid#group group} attribute as a
+ * Note: Formerly the data grid chart (and data table) used the {@link DataGrid#group group} attribute as a
  * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
  * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
  *
  * Examples:
  * - {@link http://europarl.me/dc.js/web/ep/index.html List of members of the european parliament}
- * @class dataGrid
- * @memberof dc
- * @mixes dc.baseMixin
- * @param {String|node|d3.selection} parent - Any valid
- * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
- * a dom block element such as a div; or a dom element or d3 selection.
- * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
- * Interaction with a chart will only trigger events and redraws within the chart's group.
- * @returns {dc.dataGrid}
+ * @mixes BaseMixin
  */
 export class DataGrid extends BaseMixin {
+    /**
+     * Create a Data Grid.
+     * @param {String|node|d3.selection} parent - Any valid
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * a dom block element such as a div; or a dom element or d3 selection.
+     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     */
     constructor (parent, chartGroup) {
         super();
 
@@ -123,15 +122,12 @@ export class DataGrid extends BaseMixin {
      * to split rows into sections.
      *
      * Do not pass in a crossfilter section as this will not work.
-     * @method section
-     * @memberof dc.dataGrid
-     * @instance
      * @example
      * // section rows by the value of their field
      * chart
      *     .section(function(d) { return d.field; })
      * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|dc.dataGrid}
+     * @returns {Function|DataGrid}
      */
     section (section) {
         if (!arguments.length) {
@@ -142,13 +138,10 @@ export class DataGrid extends BaseMixin {
     }
 
     /**
-     * Backward-compatible synonym for {@link dc.dataGrid#section section}.
+     * Backward-compatible synonym for {@link DataGrid#section section}.
      *
-     * @method group
-     * @memberof dc.dataGrid
-     * @instance
      * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|dc.dataGrid}
+     * @returns {Function|DataGrid}
      */
     group (section) {
         logger.warnOnce('consider using dataGrid.section instead of dataGrid.group for clarity');
@@ -161,11 +154,8 @@ export class DataGrid extends BaseMixin {
     /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
-     * @method beginSlice
-     * @memberof dc.dataGrid
-     * @instance
      * @param {Number} [beginSlice=0]
-     * @returns {Number|dc.dataGrid}
+     * @returns {Number|DataGrid}
      */
     beginSlice (beginSlice) {
         if (!arguments.length) {
@@ -178,11 +168,8 @@ export class DataGrid extends BaseMixin {
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
-     * @method endSlice
-     * @memberof dc.dataGrid
-     * @instance
      * @param {Number} [endSlice]
-     * @returns {Number|dc.dataGrid}
+     * @returns {Number|DataGrid}
      */
     endSlice (endSlice) {
         if (!arguments.length) {
@@ -194,11 +181,8 @@ export class DataGrid extends BaseMixin {
 
     /**
      * Get or set the grid size which determines the number of items displayed by the widget.
-     * @method size
-     * @memberof dc.dataGrid
-     * @instance
      * @param {Number} [size=999]
-     * @returns {Number|dc.dataGrid}
+     * @returns {Number|DataGrid}
      */
     size (size) {
         if (!arguments.length) {
@@ -212,13 +196,10 @@ export class DataGrid extends BaseMixin {
      * Get or set the function that formats an item. The data grid widget uses a
      * function to generate dynamic html. Use your favourite templating engine or
      * generate the string directly.
-     * @method html
-     * @memberof dc.dataGrid
-     * @instance
      * @example
      * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
      * @param {Function} [html]
-     * @returns {Function|dc.dataGrid}
+     * @returns {Function|DataGrid}
      */
     html (html) {
         if (!arguments.length) {
@@ -230,13 +211,10 @@ export class DataGrid extends BaseMixin {
 
     /**
      * Get or set the function that formats a section label.
-     * @method htmlSection
-     * @memberof dc.dataGrid
-     * @instance
      * @example
      * chart.htmlSection (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
      * @param {Function} [htmlSection]
-     * @returns {Function|dc.dataGrid}
+     * @returns {Function|DataGrid}
      */
     htmlSection (htmlSection) {
         if (!arguments.length) {
@@ -247,12 +225,9 @@ export class DataGrid extends BaseMixin {
     }
 
     /**
-     * Backward-compatible synonym for {@link dc.dataGrid#htmlSection htmlSection}.
-     * @method htmlGroup
-     * @memberof dc.dataGrid
-     * @instance
+     * Backward-compatible synonym for {@link DataGrid#htmlSection htmlSection}.
      * @param {Function} [htmlSection]
-     * @returns {Function|dc.dataGrid}
+     * @returns {Function|DataGrid}
      */
     htmlGroup (htmlSection) {
         logger.warnOnce('consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
@@ -265,15 +240,12 @@ export class DataGrid extends BaseMixin {
     /**
      * Get or set sort-by function. This function works as a value accessor at the item
      * level and returns a particular field to be sorted.
-     * @method sortBy
-     * @memberof dc.dataGrid
-     * @instance
      * @example
      * chart.sortBy(function(d) {
      *     return d.date;
      * });
      * @param {Function} [sortByFunction]
-     * @returns {Function|dc.dataGrid}
+     * @returns {Function|DataGrid}
      */
     sortBy (sortByFunction) {
         if (!arguments.length) {
@@ -285,15 +257,12 @@ export class DataGrid extends BaseMixin {
 
     /**
      * Get or set sort the order function.
-     * @method order
-     * @memberof dc.dataGrid
-     * @instance
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
      * @param {Function} [order=d3.ascending]
-     * @returns {Function|dc.dataGrid}
+     * @returns {Function|DataGrid}
      */
     order (order) {
         if (!arguments.length) {

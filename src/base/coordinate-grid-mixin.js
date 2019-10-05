@@ -21,14 +21,9 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
 /**
  * Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
  * concrete chart types, e.g. bar chart, line chart, and bubble chart.
- * @name coordinateGridMixin
- * @memberof dc
- * @mixin
- * @mixes dc.colorMixin
- * @mixes dc.marginMixin
- * @mixes dc.baseMixin
- * @param {Object} self._chart
- * @returns {dc.coordinateGridMixin}
+ * @mixin CoordinateGridMixin
+ * @mixes ColorMixin
+ * @mixes MarginMixin
  */
 export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     constructor () {
@@ -94,12 +89,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
-     * with {@link dc.coordinateGridMixin+x .x()} or {@link dc.coordinateGridMixin#y .y()}, and has
+     * with {@link CoordinateGridMixin+x .x()} or {@link CoordinateGridMixin#y .y()}, and has
      * no effect on elastic scales.)
-     * @method rescale
-     * @memberof dc.coordinateGridMixin
-     * @instance
-     * @returns {dc.coordinateGridMixin}
+     * @returns {CoordinateGridMixin}
      */
     rescale () {
         this._unitCount = undefined;
@@ -126,11 +118,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * the focus chart.
      *
      * See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
-     * @method rangeChart
-     * @memberof dc.coordinateGridMixin
-     * @instance
-     * @param {dc.coordinateGridMixin} [rangeChart]
-     * @returns {dc.coordinateGridMixin}
+     * @param {CoordinateGridMixin} [rangeChart]
+     * @returns {CoordinateGridMixin}
      */
     rangeChart (rangeChart) {
         if (!arguments.length) {
@@ -143,11 +132,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Get or set the scale extent for mouse zooms.
-     * @method zoomScale
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Array<Number|Date>} [extent=[1, Infinity]]
-     * @returns {Array<Number|Date>|dc.coordinateGridMixin}
+     * @returns {Array<Number|Date>|CoordinateGridMixin}
      */
     zoomScale (extent) {
         if (!arguments.length) {
@@ -159,11 +145,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Get or set the zoom restriction for the chart. If true limits the zoom to origional domain of the chart.
-     * @method zoomOutRestrict
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [zoomOutRestrict=true]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     zoomOutRestrict (zoomOutRestrict) {
         if (!arguments.length) {
@@ -195,11 +178,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Get or set the root g element. This method is usually used to retrieve the g element in order to
      * overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
      * by dc.js internals, and resetting it might produce unpredictable result.
-     * @method g
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {SVGElement} [gElement]
-     * @returns {SVGElement|dc.coordinateGridMixin}
+     * @returns {SVGElement|CoordinateGridMixin}
      */
     g (gElement) {
         if (!arguments.length) {
@@ -213,11 +193,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
      * zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
      * the range selection brush on the associated range selector chart.
-     * @method mouseZoomable
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [mouseZoomable=false]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     mouseZoomable (mouseZoomable) {
         if (!arguments.length) {
@@ -229,9 +206,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Retrieve the svg group for the chart body.
-     * @method chartBodyG
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {SVGElement} [chartBodyG]
      * @returns {SVGElement}
      */
@@ -249,9 +223,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Get or set the x scale. The x scale can be any d3
      * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale} or
      * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales ordinal scale}
-     * @method x
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
      * // set x to a linear scale
@@ -259,7 +230,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * // set x to a time scale to generate histogram
      * chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
      * @param {d3.scale} [xScale]
-     * @returns {d3.scale|dc.coordinateGridMixin}
+     * @returns {d3.scale|CoordinateGridMixin}
      */
     x (xScale) {
         if (!arguments.length) {
@@ -291,9 +262,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
      * possible to define this function compliant with the d3 range functions. It was already a
      * magic value which caused charts to behave differently, and now it is completely so.
-     * @method xUnits
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @example
      * // set x units to count days
      * chart.xUnits(d3.timeDays);
@@ -313,7 +281,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      *      return 1000;
      * }
      * @param {Function} [xUnits=dc.units.integers]
-     * @returns {Function|dc.coordinateGridMixin}
+     * @returns {Function|CoordinateGridMixin}
      */
     xUnits (xUnits) {
         if (!arguments.length) {
@@ -334,9 +302,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * it returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
          * so attempting to call chart functions after calling `.xAxis()` will fail}.
-     * @method xAxis
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
      * // customize x axis tick format
@@ -344,7 +309,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.axis} [xAxis=d3.axisBottom()]
-     * @returns {d3.axis|dc.coordinateGridMixin}
+     * @returns {d3.axis|CoordinateGridMixin}
      */
     xAxis (xAxis) {
         if (!arguments.length) {
@@ -357,11 +322,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
      * attempt to recalculate the x axis range whenever a redraw event is triggered.
-     * @method elasticX
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [elasticX=false]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     elasticX (elasticX) {
         if (!arguments.length) {
@@ -379,11 +341,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * number or date x axes.  When padding a date axis, an integer represents number of units being padded
      * and a percentage string will be treated the same as an integer. The unit will be determined by the
      * xAxisPaddingUnit variable.
-     * @method xAxisPadding
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Number|String} [padding=0]
-     * @returns {Number|String|dc.coordinateGridMixin}
+     * @returns {Number|String|CoordinateGridMixin}
      */
     xAxisPadding (padding) {
         if (!arguments.length) {
@@ -403,11 +362,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
      * ('day', 'hour', etc). Available arguments are the
      * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
-     * @method xAxisPaddingUnit
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {String} [unit=d3.timeDay]
-     * @returns {String|dc.coordinateGridMixin}
+     * @returns {String|CoordinateGridMixin}
      */
     xAxisPaddingUnit (unit) {
         if (!arguments.length) {
@@ -420,10 +376,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
      * `dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
-     * x unit count is calculated using the {@link dc.coordinateGridMixin#xUnits xUnits} function.
-     * @method xUnitCount
-     * @memberof dc.coordinateGridMixin
-     * @instance
+     * x unit count is calculated using the {@link CoordinateGridMixin#xUnits xUnits} function.
      * @returns {Number}
      */
     xUnitCount () {
@@ -448,11 +401,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
      * used with a chart in a composite chart, allows both left and right Y axes to be shown on a
      * chart.
-     * @method useRightYAxis
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [useRightYAxis=false]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     useRightYAxis (useRightYAxis) {
         if (!arguments.length) {
@@ -474,9 +424,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Returns true if the chart is using ordinal xUnits ({@link dc.units.ordinal dc.units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
-     * @method isOrdinal
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @returns {Boolean}
      */
     isOrdinal () {
@@ -618,9 +565,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * Set or get the x axis label. If setting the label, you may optionally include additional padding to
      * the margin to make room for the label. By default the padded is set to 12 to accomodate the text height.
-     * @method xAxisLabel
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {String} [labelText]
      * @param {Number} [padding=12]
      * @returns {String}
@@ -751,12 +695,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Set or get the y axis label. If setting the label, you may optionally include additional padding
      * to the margin to make room for the label. By default the padding is set to 12 to accommodate the
      * text height.
-     * @method yAxisLabel
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {String} [labelText]
      * @param {Number} [padding=12]
-     * @returns {String|dc.coordinateGridMixin}
+     * @returns {String|CoordinateGridMixin}
      */
     yAxisLabel (labelText, padding) {
         if (!arguments.length) {
@@ -771,12 +712,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
-     * @method y
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @param {d3.scale} [yScale]
-     * @returns {d3.scale|dc.coordinateGridMixin}
+     * @returns {d3.scale|CoordinateGridMixin}
      */
     y (yScale) {
         if (!arguments.length) {
@@ -802,9 +740,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * In addition, depending on whether you are going to use the axis on left or right
      * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
      * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
-     * @method yAxis
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * @example
      * // customize y axis tick format
@@ -812,7 +747,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
      * @param {d3.axisLeft|d3.axisRight} [yAxis]
-     * @returns {d3.axisLeft|d3.axisRight|dc.coordinateGridMixin}
+     * @returns {d3.axisLeft|d3.axisRight|CoordinateGridMixin}
      */
     yAxis (yAxis) {
         if (!arguments.length) {
@@ -828,11 +763,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
      * attempt to recalculate the y axis range whenever a redraw event is triggered.
-     * @method elasticY
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [elasticY=false]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     elasticY (elasticY) {
         if (!arguments.length) {
@@ -844,11 +776,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Turn on/off horizontal grid lines.
-     * @method renderHorizontalGridLines
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [renderHorizontalGridLines=false]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     renderHorizontalGridLines (renderHorizontalGridLines) {
         if (!arguments.length) {
@@ -860,11 +789,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Turn on/off vertical grid lines.
-     * @method renderVerticalGridLines
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [renderVerticalGridLines=false]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     renderVerticalGridLines (renderVerticalGridLines) {
         if (!arguments.length) {
@@ -876,9 +802,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the minimum x value to display in the chart. Includes xAxisPadding if set.
-     * @method xAxisMin
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @returns {*}
      */
     xAxisMin () {
@@ -888,9 +811,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the maximum x value to display in the chart. Includes xAxisPadding if set.
-     * @method xAxisMax
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @returns {*}
      */
     xAxisMax () {
@@ -900,9 +820,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the minimum y value to display in the chart. Includes yAxisPadding if set.
-     * @method yAxisMin
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @returns {*}
      */
     yAxisMin () {
@@ -912,9 +829,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the maximum y value to display in the chart. Includes yAxisPadding if set.
-     * @method yAxisMax
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @returns {*}
      */
     yAxisMax () {
@@ -929,11 +843,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
      * number or date axes. When padding a date axis, an integer represents number of days being padded
      * and a percentage string will be treated the same as an integer.
-     * @method yAxisPadding
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Number|String} [padding=0]
-     * @returns {Number|dc.coordinateGridMixin}
+     * @returns {Number|CoordinateGridMixin}
      */
     yAxisPadding (padding) {
         if (!arguments.length) {
@@ -949,15 +860,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Set or get the rounding function used to quantize the selection when brushing is enabled.
-     * @method round
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @example
      * // set x unit round to by month, this will make sure range selection brush will
      * // select whole months
      * chart.round(d3.timeMonth.round);
      * @param {Function} [round]
-     * @returns {Function|dc.coordinateGridMixin}
+     * @returns {Function|CoordinateGridMixin}
      */
     round (round) {
         if (!arguments.length) {
@@ -1004,11 +912,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * if you want to pass a new brush object. Even if you are only using the getter,
      * the brush object may not behave the way you expect.
      *
-     * @method brush
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {d3.brush} [_]
-     * @returns {d3.brush|dc.coordinateGridMixin}
+     * @returns {d3.brush|CoordinateGridMixin}
      */
     brush (_) {
         if (!arguments.length) {
@@ -1162,11 +1067,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
      * the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
      * will be exactly the chart body area minus the margins.
-     * @method clipPadding
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Number} [padding=5]
-     * @returns {Number|dc.coordinateGridMixin}
+     * @returns {Number|CoordinateGridMixin}
      */
     clipPadding (padding) {
         if (!arguments.length) {
@@ -1372,9 +1274,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * and not try to update back the associated range chart.
      * If you are calling it manually - typically you will leave it to `false` (the default).
      *
-     * @method focus
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @example
      * chart.on('renderlet', function(chart) {
      *     // smooth the rendering through event throttling
@@ -1432,11 +1331,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * un-filter them. However turning on the brush filter will disable other interactive elements on
      * the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
      * if enabled, but only via scrolling (panning will be disabled.)
-     * @method brushOn
-     * @memberof dc.coordinateGridMixin
-     * @instance
      * @param {Boolean} [brushOn=true]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     brushOn (brushOn) {
         if (!arguments.length) {
@@ -1449,12 +1345,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * This will be internally used by composite chart onto children. Please go not invoke directly.
      *
-     * @method parentBrushOn
-     * @memberof dc.coordinateGridMixin
      * @protected
-     * @instance
      * @param {Boolean} [brushOn=false]
-     * @returns {Boolean|dc.coordinateGridMixin}
+     * @returns {Boolean|CoordinateGridMixin}
      */
     parentBrushOn (brushOn) {
         if (!arguments.length) {

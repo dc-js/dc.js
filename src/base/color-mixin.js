@@ -6,11 +6,9 @@ import {utils} from '../core/utils';
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
  * as a mix-in for any concrete chart implementation.
- * @name colorMixin
- * @memberof dc
- * @mixin
+ * @mixin ColorMixin
  * @param {Object} Base
- * @returns {dc.colorMixin}
+ * @returns {ColorMixin}
  */
 export const ColorMixin = Base => {
     return class extends Base {
@@ -32,7 +30,7 @@ export const ColorMixin = Base => {
                 /**
                  * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
                  * @method getColor
-                 * @memberof dc.colorMixin
+                 * @memberof ColorMixin
                  * @instance
                  * @param {*} d
                  * @param {Number} [i]
@@ -48,11 +46,10 @@ export const ColorMixin = Base => {
 
         /**
          * Set the domain by determining the min and max values as retrieved by
-         * {@link dc.colorMixin#colorAccessor .colorAccessor} over the chart's dataset.
-         * @method calculateColorDomain
-         * @memberof dc.colorMixin
+         * {@link ColorMixin#colorAccessor .colorAccessor} over the chart's dataset.
+         * @memberof ColorMixin
          * @instance
-         * @returns {dc.colorMixin}
+         * @returns {ColorMixin}
          */
         calculateColorDomain () {
             const newDomain = [d3.min(this.data(), this.colorAccessor()),
@@ -64,8 +61,7 @@ export const ColorMixin = Base => {
         /**
          * Retrieve current color scale or set a new color scale. This methods accepts any function that
          * operates like a d3 scale.
-         * @method colors
-         * @memberof dc.colorMixin
+         * @memberof ColorMixin
          * @instance
          * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
          * @example
@@ -78,7 +74,7 @@ export const ColorMixin = Base => {
          * // set a linear scale
          * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
          * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
-         * @returns {d3.scale|dc.colorMixin}
+         * @returns {d3.scale|ColorMixin}
          */
         colors (colorScale) {
             if (!arguments.length) {
@@ -96,11 +92,10 @@ export const ColorMixin = Base => {
          * Convenience method to set the color scale to
          * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal} with
          * range `r`.
-         * @method ordinalColors
-         * @memberof dc.colorMixin
+         * @memberof ColorMixin
          * @instance
          * @param {Array<String>} r
-         * @returns {dc.colorMixin}
+         * @returns {ColorMixin}
          */
         ordinalColors (r) {
             return this.colors(d3.scaleOrdinal().range(r));
@@ -108,11 +103,10 @@ export const ColorMixin = Base => {
 
         /**
          * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
-         * @method linearColors
-         * @memberof dc.colorMixin
+         * @memberof ColorMixin
          * @instance
          * @param {Array<Number>} r
-         * @returns {dc.colorMixin}
+         * @returns {ColorMixin}
          */
         linearColors (r) {
             return this.colors(d3.scaleLinear()
@@ -124,8 +118,7 @@ export const ColorMixin = Base => {
          * Set or the get color accessor function. This function will be used to map a data point in a
          * crossfilter group to a color value on the color scale. The default function uses the key
          * accessor.
-         * @method colorAccessor
-         * @memberof dc.colorMixin
+         * @memberof ColorMixin
          * @instance
          * @example
          * // default index based color accessor
@@ -133,7 +126,7 @@ export const ColorMixin = Base => {
          * // color accessor for a multi-value crossfilter reduction
          * .colorAccessor(function (d){return d.value.absGain;})
          * @param {Function} [colorAccessor]
-         * @returns {Function|dc.colorMixin}
+         * @returns {Function|ColorMixin}
          */
         colorAccessor (colorAccessor) {
             if (!arguments.length) {
@@ -148,12 +141,11 @@ export const ColorMixin = Base => {
          * array.
          *
          * Note: previously this method accepted a callback function. Instead you may use a custom scale
-         * set by {@link dc.colorMixin#colors .colors}.
-         * @method colorDomain
-         * @memberof dc.colorMixin
+         * set by {@link ColorMixin#colors .colors}.
+         * @memberof ColorMixin
          * @instance
          * @param {Array<String>} [domain]
-         * @returns {Array<String>|dc.colorMixin}
+         * @returns {Array<String>|ColorMixin}
          */
         colorDomain (domain) {
             if (!arguments.length) {
@@ -171,11 +163,10 @@ export const ColorMixin = Base => {
          *
          * But sometimes it is difficult to get a color scale to produce the desired effect. The `colorCalculator`
          * takes the datum and index and returns a color directly.
-         * @method colorCalculator
-         * @memberof dc.colorMixin
+         * @memberof ColorMixin
          * @instance
          * @param {*} [colorCalculator]
-         * @returns {Function|dc.colorMixin}
+         * @returns {Function|ColorMixin}
          */
         colorCalculator (colorCalculator) {
             if (!arguments.length) {
