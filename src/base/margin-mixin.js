@@ -34,10 +34,20 @@ export class MarginMixin extends BaseMixin {
         return this;
     }
 
+    /**
+     * Effective width of the chart excluding margins (in pixels).
+     *
+     * @returns {number}
+     */
     effectiveWidth () {
         return this.width() - this.margins().left - this.margins().right;
     }
 
+    /**
+     * Effective height of the chart excluding margins (in pixels).
+     *
+     * @returns {number}
+     */
     effectiveHeight () {
         return this.height() - this.margins().top - this.margins().bottom;
     }
