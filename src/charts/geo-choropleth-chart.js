@@ -42,7 +42,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
 
         this._geoJsons = [];
 
-        return this.anchor(parent, chartGroup);
+        this.anchor(parent, chartGroup);
     }
 
     _doRender () {
