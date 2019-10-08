@@ -2,15 +2,15 @@ import {constants} from './constants';
 import {config} from './config';
 
 /**
- * The dc.chartRegistry object maintains sets of all instantiated dc.js charts under named groups
+ * The chartRegistry object maintains sets of all instantiated dc.js charts under named groups
  * and the default group.
  *
  * A chart group often corresponds to a crossfilter instance. It specifies
  * the set of charts which should be updated when a filter changes on one of the charts or when the
- * global functions {@link dc.filterAll dc.filterAll}, {@link dc.refocusAll dc.refocusAll},
- * {@link dc.renderAll dc.renderAll}, {@link dc.redrawAll dc.redrawAll}, or chart functions
- * {@link dc.baseMixin#renderGroup baseMixin.renderGroup},
- * {@link dc.baseMixin#redrawGroup baseMixin.redrawGroup} are called.
+ * global functions {@link filterAll filterAll}, {@link refocusAll refocusAll},
+ * {@link renderAll renderAll}, {@link redrawAll redrawAll}, or chart functions
+ * {@link baseMixin#renderGroup baseMixin.renderGroup},
+ * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  *
  * @namespace chartRegistry
  * @type {{has, register, deregister, clear, list}}
@@ -50,7 +50,7 @@ export const chartRegistry = (function () {
 
         /**
          * Add given chart instance to the given group, creating the group if necessary.
-         * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
          * @method register
          * @memberof chartRegistry
          * @param {Object} chart dc.js chart instance
@@ -64,7 +64,7 @@ export const chartRegistry = (function () {
 
         /**
          * Remove given chart instance from the given group, creating the group if necessary.
-         * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+         * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
          * @method deregister
          * @memberof chartRegistry
          * @param {Object} chart dc.js chart instance
@@ -113,7 +113,7 @@ export const chartRegistry = (function () {
 
 /**
  * Add given chart instance to the given group, creating the group if necessary.
- * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+ * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  * @return {undefined}
@@ -124,7 +124,7 @@ export const registerChart = function (chart, group) {
 
 /**
  * Remove given chart instance from the given group, creating the group if necessary.
- * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
+ * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  * @return {undefined}

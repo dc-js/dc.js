@@ -10,7 +10,7 @@ export const printers = {};
  * Converts a list of filters into a readable string.
  * @method filters
  * @memberof printers
- * @param {Array<dc.filters>} filters
+ * @param {Array<filters>} filters
  * @returns {String}
  */
 printers.filters = function (filters) {
@@ -30,7 +30,7 @@ printers.filters = function (filters) {
  * Converts a filter into a readable string.
  * @method filter
  * @memberof printers
- * @param {dc.filters|any|Array<any>} filter
+ * @param {filters|any|Array<any>} filter
  * @returns {String}
  */
 printers.filter = function (filter) {

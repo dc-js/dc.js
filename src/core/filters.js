@@ -21,7 +21,7 @@ export const filters = {};
 
 /**
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
- * axis brushing for the {@link dc.coordinateGridMixin coordinate grid charts}.
+ * axis brushing for the {@link CoordinateGridMixin coordinate grid charts}.
  *
  * Its `filterType` is 'RangedFilter'
  * @name RangedFilter
@@ -43,7 +43,7 @@ filters.RangedFilter = function (low, high) {
 
 /**
  * TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
- * {@link dc.heatMap heat map chart} to include particular cells as they are clicked.  (Rows and columns are
+ * {@link HeatMap heat map chart} to include particular cells as they are clicked.  (Rows and columns are
  * filtered by filtering all the cells in the row or column.)
  *
  * Its `filterType` is 'TwoDimensionalFilter'
@@ -68,7 +68,7 @@ filters.TwoDimensionalFilter = function (filter) {
 
 /**
  * The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
- * region. It is used by the {@link dc.scatterPlot scatter plot} to implement rectangular brushing.
+ * region. It is used by the {@link ScatterPlot scatter plot} to implement rectangular brushing.
  *
  * It takes two two-dimensional points in the form `[[x1,y1],[x2,y2]]`, and normalizes them so that
  * `x1 <= x2` and `y1 <= y2`. It then returns a filter which accepts any points which are in the
@@ -123,7 +123,7 @@ filters.RangedTwoDimensionalFilter = function (filter) {
 
 /**
  * HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
- * child of, the given path. It is used by the {@link dc.sunburstChart sunburst chart} to include particular cells and all
+ * child of, the given path. It is used by the {@link SunburstChart sunburst chart} to include particular cells and all
  * their children as they are clicked.
  *
  * @name HierarchyFilter

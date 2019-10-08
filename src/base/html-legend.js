@@ -135,7 +135,7 @@ export class HtmlLegend {
      * @returns {Function|HtmlLegend}
      * @example
      * // default legendText
-     * legend.legendText(dc.pluck('name'))
+     * legend.legendText(pluck('name'))
      *
      * // create numbered legend items
      * chart.legend(new HtmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))

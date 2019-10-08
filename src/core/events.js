@@ -12,7 +12,7 @@ export const events = {
  * @example
  * chart.on('renderlet', function(chart) {
  *     // smooth the rendering through event throttling
- *     dc.events.trigger(function(){
+ *     events.trigger(function(){
  *         // focus some other chart to the range selected by user on this chart
  *         someOtherChart.focus(chart.filter());
  *     });

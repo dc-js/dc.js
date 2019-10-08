@@ -321,7 +321,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * // default box on click handler
      * chart.boxOnClick(function (d) {
      *     var filter = d.key;
-     *     dc.events.trigger(function () {
+     *     events.trigger(function () {
      *         _chart.filter(filter);
      *         _chart.redrawGroup();
      *     });

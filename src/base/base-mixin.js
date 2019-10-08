@@ -265,7 +265,7 @@ export class BaseMixin {
      * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter.dimension}
      * @example
      * var index = crossfilter([]);
-     * var dimension = index.dimension(dc.pluck('key'));
+     * var dimension = index.dimension(pluck('key'));
      * chart.dimension(dimension);
      * @param {crossfilter.dimension} [dimension]
      * @returns {crossfilter.dimension|BaseMixin}
@@ -314,7 +314,7 @@ export class BaseMixin {
      * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
      * @example
      * var index = crossfilter([]);
-     * var dimension = index.dimension(dc.pluck('key'));
+     * var dimension = index.dimension(pluck('key'));
      * chart.dimension(dimension);
      * chart.group(dimension.group().reduceSum());
      * @param {crossfilter.group} [group]
@@ -337,7 +337,7 @@ export class BaseMixin {
      * to sort elements; this accessor returns the value to order on.
      * @example
      * // Default ordering accessor
-     * _chart.ordering(dc.pluck('key'));
+     * _chart.ordering(pluck('key'));
      * @param {Function} [orderFunction]
      * @returns {Function|BaseMixin}
      */
@@ -517,7 +517,7 @@ export class BaseMixin {
      * friendly text for filter value(s) associated with the chart instance. The text will get shown
      * in the `.filter element; see {@link BaseMixin#turnOnControls turnOnControls}.
      *
-     * By default dc charts use a default filter printer {@link dc.printers.filters dc.printers.filters}
+     * By default dc charts use a default filter printer {@link printers.filters printers.filters}
      * that provides simple printing support for both single value and ranged filters.
      * @example
      * // for a chart with an ordinal brush, print the filters in upper case
@@ -526,10 +526,10 @@ export class BaseMixin {
      * });
      * // for a chart with a range brush, print the filter as start and extent
      * chart.filterPrinter(function(filters) {
-     *   return 'start ' + dc.utils.printSingleValue(filters[0][0]) +
-     *     ' extent ' + dc.utils.printSingleValue(filters[0][1] - filters[0][0]);
+     *   return 'start ' + utils.printSingleValue(filters[0][0]) +
+     *     ' extent ' + utils.printSingleValue(filters[0][1] - filters[0][0]);
      * });
-     * @param {Function} [filterPrinterFunction=dc.printers.filters]
+     * @param {Function} [filterPrinterFunction=printers.filters]
      * @returns {Function|BaseMixin}
      */
     filterPrinter (filterPrinterFunction) {
@@ -678,7 +678,7 @@ export class BaseMixin {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular {@link dc.redrawAll dc.redrawAll}); therefore, you only need to
+     * events (in particular {@link redrawAll redrawAll}); therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}).
@@ -933,13 +933,13 @@ export class BaseMixin {
      * filters, removed if it is present)
      * * An array containing a single array of values (`[[value,value,value]]`): each value is
      * toggled
-     * * When appropriate for the chart, a {@link dc.filters dc filter object} such as
-     *   * {@link dc.filters.RangedFilter `dc.filters.RangedFilter`} for the
-     * {@link dc.coordinateGridMixin dc.coordinateGridMixin} charts
-     *   * {@link dc.filters.TwoDimensionalFilter `dc.filters.TwoDimensionalFilter`} for the
-     * {@link dc.heatMap heat map}
-     *   * {@link dc.filters.RangedTwoDimensionalFilter `dc.filters.RangedTwoDimensionalFilter`}
-     * for the {@link dc.scatterPlot scatter plot}
+     * * When appropriate for the chart, a {@link filters dc filter object} such as
+     *   * {@link filters.RangedFilter `filters.RangedFilter`} for the
+     * {@link CoordinateGridMixin CoordinateGridMixin} charts
+     *   * {@link filters.TwoDimensionalFilter `filters.TwoDimensionalFilter`} for the
+     * {@link HeatMap heat map}
+     *   * {@link filters.RangedTwoDimensionalFilter `filters.RangedTwoDimensionalFilter`}
+     * for the {@link ScatterPlot scatter plot}
      * * `null`: the filter will be reset using the
      * {@link BaseMixin#resetFilterHandler resetFilterHandler}
      *
@@ -956,7 +956,7 @@ export class BaseMixin {
      * crossfilter dimension, using the {@link BaseMixin#filterHandler filterHandler}.
      *
      * Once you have set the filters, call {@link BaseMixin#redrawGroup `chart.redrawGroup()`}
-     * (or {@link dc.redrawAll `dc.redrawAll()`}) to redraw the chart's group.
+     * (or {@link redrawAll `redrawAll()`}) to redraw the chart's group.
      * @see {@link BaseMixin#addFilterHandler addFilterHandler}
      * @see {@link BaseMixin#removeFilterHandler removeFilterHandler}
      * @see {@link BaseMixin#resetFilterHandler resetFilterHandler}
@@ -968,9 +968,9 @@ export class BaseMixin {
      * chart.filter(18);
      * // filter by a set of states
      * chart.filter([['MA', 'TX', 'ND', 'WA']]);
-     * // filter by range -- note the use of dc.filters.RangedFilter, which is different
+     * // filter by range -- note the use of filters.RangedFilter, which is different
      * // from the syntax for filtering a crossfilter dimension directly, dimension.filter([15,20])
-     * chart.filter(dc.filters.RangedFilter(15,20));
+     * chart.filter(filters.RangedFilter(15,20));
      * @param {*} [filter]
      * @returns {BaseMixin}
      */
@@ -1295,12 +1295,12 @@ export class BaseMixin {
     }
 
     /**
-     * Attach a dc.legend widget to this chart. The legend widget will automatically draw legend labels
+     * Attach a Legend widget to this chart. The legend widget will automatically draw legend labels
      * based on the color setting and names associated with each group.
      * @example
-     * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
-     * @param {dc.legend} [legend]
-     * @returns {dc.legend|BaseMixin}
+     * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
+     * @param {Legend} [legend]
+     * @returns {Legend|BaseMixin}
      */
     legend (legend) {
         if (!arguments.length) {

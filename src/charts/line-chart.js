@@ -32,10 +32,10 @@ class LineChart extends StackMixin {
      * var chart2 = new LineChart('#chart-container2', 'chartGroupA');
      * // create a sub-chart under a composite parent chart
      * var chart3 = new LineChart(compositeChart);
-     * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
      * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
      * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
-     * chart is a sub-chart in a {@link dc.compositeChart Composite Chart} then pass in the parent
+     * chart is a sub-chart in a {@link CompositeChart Composite Chart} then pass in the parent
      * composite chart instance instead.
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -473,7 +473,7 @@ class LineChart extends StackMixin {
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
      * dashed lines back to each respective axis.  This is ignored if the chart
-     * {@link dc.coordinateGridMixin#brushOn brush} is on
+     * {@link CoordinateGridMixin#brushOn brush} is on
      * @param  {Boolean} [xyTipsOn=false]
      * @returns {Boolean|LineChart}
      */

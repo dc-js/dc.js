@@ -279,7 +279,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Get or set chart-specific options for all child charts. This is equivalent to calling
-     * {@link dc.baseMixin#options .options} on each child chart.
+     * {@link BaseMixin#options .options} on each child chart.
      * @param {Object} [childOptions]
      * @returns {Object|CompositeChart}
      */
@@ -325,7 +325,7 @@ export class CompositeChart extends CoordinateGridMixin {
      * @example
      * moveChart.compose([
      *     // when creating sub-chart you need to pass in the parent chart
-     *     dc.lineChart(moveChart)
+     *     new LineChart(moveChart)
      *         .group(indexAvgByMonthGroup) // if group is missing then parent's group will be used
      *         .valueAccessor(function (d){return d.value.avg;})
      *         // most of the normal functions will continue to work in a composed chart
@@ -336,7 +336,7 @@ export class CompositeChart extends CoordinateGridMixin {
      *             if(isNaN(value)) value = 0;
      *             return dateFormat(d.key) + '\n' + numberFormat(value);
      *         }),
-     *     dc.barChart(moveChart)
+     *     new BarChart(moveChart)
      *         .group(volumeByMonthGroup)
      *         .centerBar(true)
      * ]);
@@ -396,14 +396,14 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Returns the child charts which are composed into the composite chart.
-     * @returns {Array<dc.baseMixin>}
+     * @returns {Array<BaseMixin>}
      */
     children () {
         return this._children;
     }
 
     /**
-     * Get or set color sharing for the chart. If set, the {@link dc.colorMixin#colors .colors()} value from this chart
+     * Get or set color sharing for the chart. If set, the {@link ColorMixin#colors .colors()} value from this chart
      * will be shared with composed children. Additionally if the child chart implements
      * Stackable and has not set a custom .colorAccessor, then it will generate a color
      * specific to its order in the composition.
@@ -419,7 +419,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     /**
-     * Get or set title sharing for the chart. If set, the {@link dc.baseMixin#title .title()} value from
+     * Get or set title sharing for the chart. If set, the {@link BaseMixin#title .title()} value from
      * this chart will be shared with composed children.
      *
      * Note: currently you must call this before `compose` or the child will still get the parent's
@@ -453,7 +453,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-     * will be parallel to x axis. This only has effect when {@link #dc.coordinateGridMixin+elasticY elasticY} is true.
+     * will be parallel to x axis. This only has effect when {@link CoordinateGridMixin#elasticY elasticY} is true.
      * @param {Boolean} [alignYAxes=false]
      * @returns {Chart}
      */

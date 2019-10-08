@@ -5,7 +5,7 @@ import {BaseMixin} from './base-mixin';
  * Charts.
  * @mixin MarginMixin
  * @param {Object} Base
- * @returns {dc.marginMixin}
+ * @returns {MarginMixin}
  */
 export class MarginMixin extends BaseMixin {
     constructor () {

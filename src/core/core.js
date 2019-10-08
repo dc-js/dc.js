@@ -2,7 +2,7 @@ import {config} from './config';
 
 /**
  * Start a transition on a selection if transitions are globally enabled
- * ({@link dc.disableTransitions} is false) and the duration is greater than zero; otherwise return
+ * ({@link disableTransitions} is false) and the duration is greater than zero; otherwise return
  * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
  * allows a common code path for both cases.
  * @param {d3.selection} selection - the selection to be transitioned

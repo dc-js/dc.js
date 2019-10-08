@@ -8,17 +8,17 @@ import {config} from './config';
  *
  * This can be a useful shorthand method to create accessor functions.
  * @example
- * var xPluck = dc.pluck('x');
+ * var xPluck = pluck('x');
  * var objA = {x: 1};
  * xPluck(objA) // 1
  * @example
- * var xPosition = dc.pluck('x', function (x, i) {
+ * var xPosition = pluck('x', function (x, i) {
  *     // `this` is the original datum,
  *     // `x` is the x property of the datum,
  *     // `i` is the position in the array
  *     return this.radius + x;
  * });
- * dc.selectAll('.circle').data(...).x(xPosition);
+ * selectAll('.circle').data(...).x(xPosition);
  * @param {String} n
  * @param {Function} [f]
  * @returns {Function}

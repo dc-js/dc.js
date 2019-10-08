@@ -151,7 +151,7 @@ export class Legend {
      * @returns {Function|Legend}
      * @example
      * // default legendText
-     * legend.legendText(dc.pluck('name'))
+     * legend.legendText(pluck('name'))
      *
      * // create numbered legend items
      * chart.legend(new Legend().legendText(function(d, i) { return i + '. ' + d.name; }))

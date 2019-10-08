@@ -30,7 +30,7 @@ export class TextFilterWidget extends BaseMixin {
      *     .dimension(dimension);
      *     // you don't need the group() function
      *
-     * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
      * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
      * specifying a dom block element such as a div; or a dom element or d3 selection.
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.

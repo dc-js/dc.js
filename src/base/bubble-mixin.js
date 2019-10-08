@@ -66,10 +66,8 @@ export const BubbleMixin = Base => {
         /**
          * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
          * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-         * @memberof dc.bubbleChart
-         * @instance
          * @param {Boolean} [elasticRadius=false]
-         * @returns {Boolean|dc.bubbleChart}
+         * @returns {Boolean|BubbleChart}
          */
         elasticRadius (elasticRadius) {
             if (!arguments.length) {
@@ -189,10 +187,10 @@ export const BubbleMixin = Base => {
         /**
          * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
          * bubbles will be sorted by their radius, with smaller bubbles in front.
-         * @memberof dc.bubbleChart
+         * @memberof BubbleChart
          * @instance
          * @param {Boolean} [sortBubbleSize=false]
-         * @returns {Boolean|dc.bubbleChart}
+         * @returns {Boolean|BubbleChart}
          */
         sortBubbleSize (sortBubbleSize) {
             if (!arguments.length) {

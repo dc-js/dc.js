@@ -109,10 +109,10 @@ export class SeriesChart extends CompositeChart {
      * Get or set the chart function, which generates the child charts.
      * @example
      * // put curve on the line charts used for the series
-     * chart.chart(function(c) { return dc.lineChart(c).curve(d3.curveBasis); })
+     * chart.chart(function(c) { return new LineChart(c).curve(d3.curveBasis); })
      * // do a scatter series chart
-     * chart.chart(dc.scatterPlot)
-     * @param {Function} [chartFunction=dc.lineChart]
+     * chart.chart(anchor => new ScatterPlot(anchor))
+     * @param {Function} [chartFunction= (anchor) =>  new LineChart(anchor)]
      * @returns {Function|SeriesChart}
      */
     chart (chartFunction) {

@@ -29,7 +29,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
      * // create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
      * var bubbleChart1 = BubbleOverlayChart('#chart-container1').svg(d3.select('#chart-container1 svg'));
      * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
-     * var bubbleChart2 = dc.compositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
+     * var bubbleChart2 = new CompositeChart('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
      * @param {String|node|d3.selection} parent - Any valid
      * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
      * a dom block element such as a div; or a dom element or d3 selection.

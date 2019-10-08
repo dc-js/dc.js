@@ -12,12 +12,12 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by {@link dc.baseMixin#ordering ordering} which defaults to sorting
+ * slice relative to the sum of all values. Slices are ordered by {@link BaseMixin#ordering ordering} which defaults to sorting
  * by key.
  *
  * The keys used in the sunburst chart should be arrays, representing paths in the tree.
  *
- * When filtering, the sunburst chart creates instances of {@link dc.filters.HierarchyFilter HierarchyFilter}.
+ * When filtering, the sunburst chart creates instances of {@link Filters.HierarchyFilter HierarchyFilter}.
  *
  * @mixes CapMixin
  * @mixes ColorMixin

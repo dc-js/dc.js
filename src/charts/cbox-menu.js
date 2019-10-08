@@ -27,7 +27,7 @@ export class CboxMenu extends BaseMixin {
      * cbox.title(function (d){
      *     return 'STATE: ' + d.key;
      * })
-     * @param {String|node|d3.selection|dc.compositeChart} parent - Any valid
+     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
      * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
      * a dom block element such as a div; or a dom element or d3 selection.
      * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.

@@ -13,7 +13,7 @@ import {BaseMixin} from '../base/base-mixin';
  *
  * Note: this widget works best for the specific case of showing the number of records out of a
  * total. If you want a more general-purpose numeric display, please use the
- * {@link dc.numberDisplay} widget instead.
+ * {@link NumberDisplay} widget instead.
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}

@@ -478,7 +478,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Set or get color for symbols when the group is empty. If null, just use the
-     * {@link dc.colorMixin#colors colorMixin.colors} color scale zero value.
+     * {@link ColorMixin#colors colorMixin.colors} color scale zero value.
      * @param {String} [emptyColor=null]
      * @return {String}
      * @return {ScatterPlot}/

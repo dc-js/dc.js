@@ -95,7 +95,7 @@ export const logger = (function () {
      *    }
      *    _interpolate = interpolate;
      *    return _chart;
-     * }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+     * }, 'lineChart.interpolate has been deprecated since version 3.0 use lineChart.curve instead');
      * @param {Function} [fn]
      * @param {String} [msg]
      * @returns {Function}
@@ -129,7 +129,7 @@ export const logger = (function () {
      *    }
      *    _interpolate = interpolate;
      *    return _chart;
-     * }, 'dc.lineChart.interpolate has been annotated since version 3.0 use dc.lineChart.curve instead');
+     * }, 'lineChart.interpolate has been annotated since version 3.0 use lineChart.curve instead');
      * @param {Function} [fn]
      * @param {String} [msg]
      * @returns {Function}

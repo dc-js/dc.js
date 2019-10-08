@@ -39,7 +39,7 @@ export class Config {
      * @example
      * config.defaultColors(d3.schemeSet1)
      * @param {Array} [colors]
-     * @returns {Array|dc.config}
+     * @returns {Array|config}
      */
     defaultColors (colors) {
         if (!arguments.length) {

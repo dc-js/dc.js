@@ -256,10 +256,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
      * xUnits functions.
      *
-     * dc.js also provides a few units function, see the {@link dc.units Units Namespace} for
+     * dc.js also provides a few units function, see the {@link units Units Namespace} for
      * a list of built-in units functions.
      *
-     * Note that as of dc.js 3.0, `dc.units.ordinal` is not a real function, because it is not
+     * Note that as of dc.js 3.0, `units.ordinal` is not a real function, because it is not
      * possible to define this function compliant with the d3 range functions. It was already a
      * magic value which caused charts to behave differently, and now it is completely so.
      * @example
@@ -280,7 +280,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      *      // be aware using fixed units will disable the focus/zoom ability on the chart
      *      return 1000;
      * }
-     * @param {Function} [xUnits=dc.units.integers]
+     * @param {Function} [xUnits=units.integers]
      * @returns {Function|CoordinateGridMixin}
      */
     xUnits (xUnits) {
@@ -375,7 +375,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
-     * `dc.units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
+     * `units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
      * x unit count is calculated using the {@link CoordinateGridMixin#xUnits xUnits} function.
      * @returns {Number}
      */
@@ -421,7 +421,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Returns true if the chart is using ordinal xUnits ({@link dc.units.ordinal dc.units.ordinal}, or false
+     * Returns true if the chart is using ordinal xUnits ({@link units.ordinal units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
      * @returns {Boolean}
@@ -1277,7 +1277,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @example
      * chart.on('renderlet', function(chart) {
      *     // smooth the rendering through event throttling
-     *     dc.events.trigger(function(){
+     *     events.trigger(function(){
      *          // focus some other chart to the range selected by user on this chart
      *          someOtherChart.focus(chart.filter());
      *     });
