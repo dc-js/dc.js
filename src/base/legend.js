@@ -9,10 +9,8 @@ const LABEL_GAP = 2;
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @class Legend
- * @memberof dc
  * @example
- * chart.legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+ * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
  * @returns {Legend}
  */
 export class Legend {
@@ -42,11 +40,8 @@ export class Legend {
 
     /**
      * Set or get x coordinate for legend widget.
-     * @method x
-     * @memberof dc.legend
-     * @instance
      * @param  {Number} [x=0]
-     * @returns {Number|dc.legend}
+     * @returns {Number|Legend}
      */
     x (x) {
         if (!arguments.length) {
@@ -58,11 +53,8 @@ export class Legend {
 
     /**
      * Set or get y coordinate for legend widget.
-     * @method y
-     * @memberof dc.legend
-     * @instance
      * @param  {Number} [y=0]
-     * @returns {Number|dc.legend}
+     * @returns {Number|Legend}
      */
     y (y) {
         if (!arguments.length) {
@@ -74,11 +66,8 @@ export class Legend {
 
     /**
      * Set or get gap between legend items.
-     * @method gap
-     * @memberof dc.legend
-     * @instance
      * @param  {Number} [gap=5]
-     * @returns {Number|dc.legend}
+     * @returns {Number|Legend}
      */
     gap (gap) {
         if (!arguments.length) {
@@ -90,11 +79,8 @@ export class Legend {
 
     /**
      * Set or get legend item height.
-     * @method itemHeight
-     * @memberof dc.legend
-     * @instance
      * @param  {Number} [itemHeight=12]
-     * @returns {Number|dc.legend}
+     * @returns {Number|Legend}
      */
     itemHeight (itemHeight) {
         if (!arguments.length) {
@@ -106,11 +92,8 @@ export class Legend {
 
     /**
      * Position legend horizontally instead of vertically.
-     * @method horizontal
-     * @memberof dc.legend
-     * @instance
      * @param  {Boolean} [horizontal=false]
-     * @returns {Boolean|dc.legend}
+     * @returns {Boolean|Legend}
      */
     horizontal (horizontal) {
         if (!arguments.length) {
@@ -122,11 +105,8 @@ export class Legend {
 
     /**
      * Maximum width for horizontal legend.
-     * @method legendWidth
-     * @memberof dc.legend
-     * @instance
      * @param  {Number} [legendWidth=500]
-     * @returns {Number|dc.legend}
+     * @returns {Number|Legend}
      */
     legendWidth (legendWidth) {
         if (!arguments.length) {
@@ -138,11 +118,8 @@ export class Legend {
 
     /**
      * Legend item width for horizontal legend.
-     * @method itemWidth
-     * @memberof dc.legend
-     * @instance
      * @param  {Number} [itemWidth=70]
-     * @returns {Number|dc.legend}
+     * @returns {Number|Legend}
      */
     itemWidth (itemWidth) {
         if (!arguments.length) {
@@ -153,13 +130,10 @@ export class Legend {
     }
 
     /**
-     * Turn automatic width for legend items on or off. If true, {@link dc.legend#itemWidth itemWidth} is ignored.
-     * This setting takes into account the {@link dc.legend#gap gap}.
-     * @method autoItemWidth
-     * @memberof dc.legend
-     * @instance
+     * Turn automatic width for legend items on or off. If true, {@link Legend#itemWidth itemWidth} is ignored.
+     * This setting takes into account the {@link Legend#gap gap}.
      * @param  {Boolean} [autoItemWidth=false]
-     * @returns {Boolean|dc.legend}
+     * @returns {Boolean|Legend}
      */
     autoItemWidth (autoItemWidth) {
         if (!arguments.length) {
@@ -173,20 +147,17 @@ export class Legend {
      * Set or get the legend text function. The legend widget uses this function to render the legend
      * text for each item. If no function is specified the legend widget will display the names
      * associated with each group.
-     * @method legendText
-     * @memberof dc.legend
-     * @instance
      * @param  {Function} [legendText]
-     * @returns {Function|dc.legend}
+     * @returns {Function|Legend}
      * @example
      * // default legendText
      * legend.legendText(dc.pluck('name'))
      *
      * // create numbered legend items
-     * chart.legend(dc.legend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     * chart.legend(new Legend().legendText(function(d, i) { return i + '. ' + d.name; }))
      *
      * // create legend displaying group counts
-     * chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
+     * chart.legend(new Legend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
     legendText (legendText) {
         if (!arguments.length) {
@@ -198,11 +169,8 @@ export class Legend {
 
     /**
      * Maximum number of legend items to display
-     * @method maxItems
-     * @memberof dc.legend
-     * @instance
      * @param  {Number} [maxItems]
-     * @return {dc.legend}
+     * @return {Legend}
      */
     maxItems (maxItems) {
         if (!arguments.length) {

@@ -7,8 +7,6 @@ import {config} from './config';
  * can be passed as the second argument to also alter the data being returned.
  *
  * This can be a useful shorthand method to create accessor functions.
- * @method pluck
- * @memberof dc
  * @example
  * var xPluck = dc.pluck('x');
  * var objA = {x: 1};
@@ -34,7 +32,6 @@ export const pluck = function (n, f) {
 
 /**
  * @namespace utils
- * @memberof dc
  * @type {{}}
  */
 export const utils = {};
@@ -42,7 +39,7 @@ export const utils = {};
 /**
  * Print a single value filter.
  * @method printSingleValue
- * @memberof dc.utils
+ * @memberof utils
  * @param {any} filter
  * @returns {String}
  */
@@ -72,15 +69,15 @@ utils.toTimeFunc = function (t) {
  * Arbitrary add one value to another.
  *
  * If the value l is of type Date, adds r units to it. t becomes the unit.
- * For example dc.utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
+ * For example utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
  *
  * If l is of type numeric, t is ignored. In this case if r is of type string,
  * it is assumed to be percentage (whether or not it includes %). For example
- * dc.utils.add(30, 10) will give 40 and dc.utils.add(30, '10') will give 33.
+ * utils.add(30, 10) will give 40 and utils.add(30, '10') will give 33.
  *
  * They also generate strange results if l is a string.
  * @method add
- * @memberof dc.utils
+ * @memberof utils
  * @param {Date|Number} l the value to modify
  * @param {String|Number} r the amount by which to modify the value
  * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
@@ -118,15 +115,15 @@ utils.add = function (l, r, t) {
  * Arbitrary subtract one value from another.
  *
  * If the value l is of type Date, subtracts r units from it. t becomes the unit.
- * For example dc.utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
+ * For example utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
  *
  * If l is of type numeric, t is ignored. In this case if r is of type string,
  * it is assumed to be percentage (whether or not it includes %). For example
- * dc.utils.subtract(30, 10) will give 20 and dc.utils.subtract(30, '10') will give 27.
+ * utils.subtract(30, 10) will give 20 and utils.subtract(30, '10') will give 27.
  *
  * They also generate strange results if l is a string.
  * @method subtract
- * @memberof dc.utils
+ * @memberof utils
  * @param {Date|Number} l the value to modify
  * @param {String|Number} r the amount by which to modify the value
  * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
@@ -163,7 +160,7 @@ utils.subtract = function (l, r, t) {
 /**
  * Is the value a number?
  * @method isNumber
- * @memberof dc.utils
+ * @memberof utils
  * @param {any} n
  * @returns {Boolean}
  */
@@ -174,7 +171,7 @@ utils.isNumber = function (n) {
 /**
  * Is the value a float?
  * @method isFloat
- * @memberof dc.utils
+ * @memberof utils
  * @param {any} n
  * @returns {Boolean}
  */
@@ -185,7 +182,7 @@ utils.isFloat = function (n) {
 /**
  * Is the value an integer?
  * @method isInteger
- * @memberof dc.utils
+ * @memberof utils
  * @param {any} n
  * @returns {Boolean}
  */
@@ -196,7 +193,7 @@ utils.isInteger = function (n) {
 /**
  * Is the value very close to zero?
  * @method isNegligible
- * @memberof dc.utils
+ * @memberof utils
  * @param {any} n
  * @returns {Boolean}
  */
@@ -207,7 +204,7 @@ utils.isNegligible = function (n) {
 /**
  * Ensure the value is no greater or less than the min/max values.  If it is return the boundary value.
  * @method clamp
- * @memberof dc.utils
+ * @memberof utils
  * @param {any} val
  * @param {any} min
  * @param {any} max
@@ -222,9 +219,9 @@ utils.clamp = function (val, min, max) {
  *
  * {@link https://github.com/d3/d3/blob/master/CHANGES.md#internals `d3.functor` was removed in d3 version 4}.
  * This function helps to implement the replacement,
- * `typeof x === "function" ? x : dc.utils.constant(x)`
+ * `typeof x === "function" ? x : utils.constant(x)`
  * @method constant
- * @memberof dc.utils
+ * @memberof utils
  * @param {any} x
  * @returns {Function}
  */
@@ -237,7 +234,7 @@ utils.constant = function (x) {
 /**
  * Using a simple static counter, provide a unique integer id.
  * @method uniqueId
- * @memberof dc.utils
+ * @memberof utils
  * @returns {Number}
  */
 let _idCounter = 0;
@@ -248,7 +245,7 @@ utils.uniqueId = function () {
 /**
  * Convert a name to an ID.
  * @method nameToId
- * @memberof dc.utils
+ * @memberof utils
  * @param {String} name
  * @returns {String}
  */
@@ -259,7 +256,7 @@ utils.nameToId = function (name) {
 /**
  * Append or select an item on a parent element.
  * @method appendOrSelect
- * @memberof dc.utils
+ * @memberof utils
  * @param {d3.selection} parent
  * @param {String} selector
  * @param {String} tag
@@ -277,7 +274,7 @@ utils.appendOrSelect = function (parent, selector, tag) {
 /**
  * Return the number if the value is a number; else 0.
  * @method safeNumber
- * @memberof dc.utils
+ * @memberof utils
  * @param {Number|any} n
  * @returns {Number}
  */
@@ -286,7 +283,7 @@ utils.safeNumber = function (n) { return utils.isNumber(+n) ? +n : 0;};
 /**
  * Return true if both arrays are equal, if both array are null these are considered equal
  * @method arraysEqual
- * @memberof dc.utils
+ * @memberof utils
  * @param {Array|null} a1
  * @param {Array|null} a2
  * @returns {Boolean}

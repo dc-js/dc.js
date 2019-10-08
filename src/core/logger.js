@@ -1,8 +1,7 @@
 /**
  * Provides basis logging and deprecation utilities
  * @class logger
- * @memberof dc
- * @returns {dc.logger}
+ * @returns {logger}
  */
 export const logger = (function () {
 
@@ -11,7 +10,7 @@ export const logger = (function () {
     /**
      * Enable debug level logging. Set to `false` by default.
      * @name enableDebugLog
-     * @memberof dc.logger
+     * @memberof logger
      * @instance
      */
     _logger.enableDebugLog = false;
@@ -19,12 +18,12 @@ export const logger = (function () {
     /**
      * Put a warning message to console
      * @method warn
-     * @memberof dc.logger
+     * @memberof logger
      * @instance
      * @example
-     * dc.logger.warn('Invalid use of .tension on CurveLinear');
+     * logger.warn('Invalid use of .tension on CurveLinear');
      * @param {String} [msg]
-     * @returns {dc.logger}
+     * @returns {logger}
      */
     _logger.warn = function (msg) {
         if (console) {
@@ -43,12 +42,12 @@ export const logger = (function () {
     /**
      * Put a warning message to console. It will warn only on unique messages.
      * @method warnOnce
-     * @memberof dc.logger
+     * @memberof logger
      * @instance
      * @example
-     * dc.logger.warnOnce('Invalid use of .tension on CurveLinear');
+     * logger.warnOnce('Invalid use of .tension on CurveLinear');
      * @param {String} [msg]
-     * @returns {dc.logger}
+     * @returns {logger}
      */
     _logger.warnOnce = function (msg) {
         if (!_alreadyWarned[msg]) {
@@ -61,14 +60,14 @@ export const logger = (function () {
     };
 
     /**
-     * Put a debug message to console. It is controlled by `dc.logger.enableDebugLog`
+     * Put a debug message to console. It is controlled by `logger.enableDebugLog`
      * @method debug
-     * @memberof dc.logger
+     * @memberof logger
      * @instance
      * @example
-     * dc.logger.debug('Total number of slices: ' + numSlices);
+     * logger.debug('Total number of slices: ' + numSlices);
      * @param {String} [msg]
-     * @returns {dc.logger}
+     * @returns {logger}
      */
     _logger.debug = function (msg) {
         if (_logger.enableDebugLog && console) {
@@ -87,10 +86,10 @@ export const logger = (function () {
      * will issue a warning when invoked. The warning will be issued only once.
      *
      * @method deprecate
-     * @memberof dc.logger
+     * @memberof logger
      * @instance
      * @example
-     * _chart.interpolate = dc.logger.deprecate(function (interpolate) {
+     * _chart.interpolate = logger.deprecate(function (interpolate) {
      *    if (!arguments.length) {
      *        return _interpolate;
      *    }
@@ -121,10 +120,10 @@ export const logger = (function () {
      * issued only once.
      *
      * @method annotate
-     * @memberof dc.logger
+     * @memberof logger
      * @instance
      * @example
-     * _chart.interpolate = dc.logger.annotate(function (interpolate) {
+     * _chart.interpolate = logger.annotate(function (interpolate) {
      *    if (!arguments.length) {
      *        return _interpolate;
      *    }

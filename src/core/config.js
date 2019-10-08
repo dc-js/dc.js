@@ -3,24 +3,16 @@ import * as d3 from 'd3';
 
 /**
  * General configuration
- *
- * @class config
- * @memberof dc
- * @returns {dc.config}
  */
 export class Config {
-
-
-    /**
-     * The default date format for dc.js
-     * @name dateFormat
-     * @memberof dc
-     * @type {Function}
-     * @default d3.timeFormat('%m/%d/%Y')
-     */
-
     constructor () {
         this._defaultColors = Config._schemeCategory20c;
+
+        /**
+         * The default date format for dc.js
+         * @type {Function}
+         * @default d3.timeFormat('%m/%d/%Y')
+         */
         this.dateFormat = d3.timeFormat('%m/%d/%Y');
 
         this._renderlet = null;
@@ -45,10 +37,7 @@ export class Config {
      * In DC 3.1 release it will change to a more appropriate default.
      *
      * @example
-     * dc.config.defaultColors(d3.schemeSet1)
-     * @method defaultColors
-     * @memberof dc.config
-     * @instance
+     * config.defaultColors(d3.schemeSet1)
      * @param {Array} [colors]
      * @returns {Array|dc.config}
      */
@@ -81,7 +70,6 @@ Config._schemeCategory20c = [
  * General configuration
  *
  * @class config
- * @memberof dc
- * @returns {dc.config}
+ * @returns {Config}
  */
 export const config = new Config();

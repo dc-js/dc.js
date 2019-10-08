@@ -6,11 +6,9 @@ import {constants} from '../core/constants';
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
  * labels.
- * @class htmlLegend
- * @memberof dc
  * @example
- * chart.legend(dc.htmlLegend().container(legendContainerElement).horizontal(false))
- * @returns {dc.htmlLegend}
+ * chart.legend(HtmlLegend().container(legendContainerElement).horizontal(false))
+ * @returns {HtmlLegend}
  */
 export class HtmlLegend {
     constructor () {
@@ -74,11 +72,8 @@ export class HtmlLegend {
 
     /**
      * Set the container selector for the legend widget. Required.
-     * @method container
-     * @memberof dc.htmlLegend
-     * @instance
      * @param {String} [container]
-     * @return {String|dc.htmlLegend}
+     * @return {String|HtmlLegend}
      */
     container (container) {
         if (!arguments.length) {
@@ -94,11 +89,8 @@ export class HtmlLegend {
      * the style for all charts.
      *
      * Setting this will disable the highlighting of selected items also.
-     * @method legendItemClass
-     * @memberof dc.htmlLegend
-     * @instance
      * @param {String} [legendItemClass]
-     * @return {String|dc.htmlLegend}
+     * @return {String|HtmlLegend}
      */
     legendItemClass (legendItemClass) {
         if (!arguments.length) {
@@ -111,11 +103,8 @@ export class HtmlLegend {
     /**
      * This can be optionally used to enable highlighting legends for the selections/filters for the
      * chart.
-     * @method highlightSelected
-     * @memberof dc.htmlLegend
-     * @instance
      * @param {String} [highlightSelected]
-     * @return {String|dc.htmlLegend}
+     * @return {String|HtmlLegend}
      */
     highlightSelected (highlightSelected) {
         if (!arguments.length) {
@@ -127,11 +116,8 @@ export class HtmlLegend {
 
     /**
      * Display the legend horizontally instead of vertically
-     * @method horizontal
-     * @memberof dc.htmlLegend
-     * @instance
      * @param {String} [horizontal]
-     * @return {String|dc.htmlLegend}
+     * @return {String|HtmlLegend}
      */
     horizontal (horizontal) {
         if (!arguments.length) {
@@ -145,20 +131,17 @@ export class HtmlLegend {
      * Set or get the legend text function. The legend widget uses this function to render the legend
      * text for each item. If no function is specified the legend widget will display the names
      * associated with each group.
-     * @method legendText
-     * @memberof dc.htmlLegend
-     * @instance
      * @param  {Function} [legendText]
-     * @returns {Function|dc.htmlLegend}
+     * @returns {Function|HtmlLegend}
      * @example
      * // default legendText
      * legend.legendText(dc.pluck('name'))
      *
      * // create numbered legend items
-     * chart.legend(dc.htmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
+     * chart.legend(new HtmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
      *
      * // create legend displaying group counts
-     * chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
+     * chart.legend(new HtmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
     legendText (legendText) {
         if (!arguments.length) {
@@ -170,11 +153,8 @@ export class HtmlLegend {
 
     /**
      * Maximum number of legend items to display
-     * @method maxItems
-     * @memberof dc.htmlLegend
-     * @instance
      * @param  {Number} [maxItems]
-     * @return {dc.htmlLegend}
+     * @return {HtmlLegend}
      */
     maxItems (maxItems) {
         if (!arguments.length) {

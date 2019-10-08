@@ -13,7 +13,6 @@ import {config} from './config';
  * {@link dc.baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  *
  * @namespace chartRegistry
- * @memberof dc
  * @type {{has, register, deregister, clear, list}}
  */
 export const chartRegistry = (function () {
@@ -36,7 +35,7 @@ export const chartRegistry = (function () {
         /**
          * Determine if a given chart instance resides in any group in the registry.
          * @method has
-         * @memberof dc.chartRegistry
+         * @memberof chartRegistry
          * @param {Object} chart dc.js chart instance
          * @returns {Boolean}
          */
@@ -53,7 +52,7 @@ export const chartRegistry = (function () {
          * Add given chart instance to the given group, creating the group if necessary.
          * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
          * @method register
-         * @memberof dc.chartRegistry
+         * @memberof chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
          * @return {undefined}
@@ -67,7 +66,7 @@ export const chartRegistry = (function () {
          * Remove given chart instance from the given group, creating the group if necessary.
          * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
          * @method deregister
-         * @memberof dc.chartRegistry
+         * @memberof chartRegistry
          * @param {Object} chart dc.js chart instance
          * @param {String} [group] Group name
          * @return {undefined}
@@ -85,7 +84,7 @@ export const chartRegistry = (function () {
         /**
          * Clear given group if one is provided, otherwise clears all groups.
          * @method clear
-         * @memberof dc.chartRegistry
+         * @memberof chartRegistry
          * @param {String} group Group name
          * @return {undefined}
          */
@@ -101,7 +100,7 @@ export const chartRegistry = (function () {
          * Get an array of each chart instance in the given group.
          * If no group is provided, the charts in the default group are returned.
          * @method list
-         * @memberof dc.chartRegistry
+         * @memberof chartRegistry
          * @param {String} [group] Group name
          * @returns {Array<Object>}
          */
@@ -115,8 +114,6 @@ export const chartRegistry = (function () {
 /**
  * Add given chart instance to the given group, creating the group if necessary.
  * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
- * @memberof dc
- * @method registerChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  * @return {undefined}
@@ -128,8 +125,6 @@ export const registerChart = function (chart, group) {
 /**
  * Remove given chart instance from the given group, creating the group if necessary.
  * If no group is provided, the default group `dc.constants.DEFAULT_CHART_GROUP` will be used.
- * @memberof dc
- * @method deregisterChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  * @return {undefined}
@@ -140,8 +135,6 @@ export const deregisterChart = function (chart, group) {
 
 /**
  * Determine if a given chart instance resides in any group in the registry.
- * @memberof dc
- * @method hasChart
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
@@ -151,8 +144,6 @@ export const hasChart = function (chart) {
 
 /**
  * Clear given group if one is provided, otherwise clears all groups.
- * @memberof dc
- * @method deregisterAllCharts
  * @param {String} group Group name
  * @return {undefined}
  */
@@ -161,28 +152,8 @@ export const deregisterAllCharts = function (group) {
 };
 
 /**
- * The entire dc.js library is scoped under the **dc** name space. It does not introduce
- * anything else into the global name space.
- *
- * Most `dc` functions are designed to allow function chaining, meaning they return the current chart
- * instance whenever it is appropriate.  The getter forms of functions do not participate in function
- * chaining because they return values that are not the chart, although some,
- * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
- * return values that are themselves chainable d3 objects.
- * @namespace dc
- * @version <%= conf.pkg.version %>
- * @example
- * // Example chaining
- * chart.width(300)
- *      .height(300)
- *      .filter('sunday');
- */
-
-/**
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
  * only charts that belong to the default chart group will be reset.
- * @memberof dc
- * @method filterAll
  * @param {String} [group]
  * @return {undefined}
  */
@@ -196,8 +167,6 @@ export const filterAll = function (group) {
 /**
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
  * not given then only charts that belong to the default chart group will be reset.
- * @memberof dc
- * @method refocusAll
  * @param {String} [group]
  * @return {undefined}
  */
@@ -213,8 +182,6 @@ export const refocusAll = function (group) {
 /**
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
  * charts that belong to the default chart group will be re-rendered.
- * @memberof dc
- * @method renderAll
  * @param {String} [group]
  * @return {undefined}
  */
@@ -234,8 +201,6 @@ export const renderAll = function (group) {
  * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
  * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
  * from scratch.
- * @memberof dc
- * @method redrawAll
  * @param {String} [group]
  * @return {undefined}
  */

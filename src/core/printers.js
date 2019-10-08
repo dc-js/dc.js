@@ -2,7 +2,6 @@ import {utils} from './utils';
 
 /**
  * @namespace printers
- * @memberof dc
  * @type {{}}
  */
 export const printers = {};
@@ -10,7 +9,7 @@ export const printers = {};
 /**
  * Converts a list of filters into a readable string.
  * @method filters
- * @memberof dc.printers
+ * @memberof printers
  * @param {Array<dc.filters>} filters
  * @returns {String}
  */
@@ -30,7 +29,7 @@ printers.filters = function (filters) {
 /**
  * Converts a filter into a readable string.
  * @method filter
- * @memberof dc.printers
+ * @memberof printers
  * @param {dc.filters|any|Array<any>} filter
  * @returns {String}
  */
