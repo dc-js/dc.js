@@ -545,7 +545,7 @@ export class BaseMixin {
      * chart reset and filter controls, for less disruption to the layout.
      * @param {Boolean} [controlsUseVisibility=false]
      * @returns {Boolean|BaseMixin}
-     **/
+     */
     controlsUseVisibility (controlsUseVisibility) {
         if (!arguments.length) {
             return this._controlsUseVisibility;
@@ -917,7 +917,7 @@ export class BaseMixin {
      *
      * @param {*} [filter]
      * @returns {BaseMixin}
-     **/
+     */
     replaceFilter (filter) {
         this._filters = this._resetFilterHandler(this._filters);
         this.filter(filter);

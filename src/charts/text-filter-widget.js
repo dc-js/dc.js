@@ -90,7 +90,7 @@ export class TextFilterWidget extends BaseMixin {
      * });
      * @param {function} [normalize]
      * @returns {TextFilterWidget|function}
-     **/
+     */
     normalize (normalize) {
         if (!arguments.length) {
             return this._normalize;
@@ -106,7 +106,7 @@ export class TextFilterWidget extends BaseMixin {
      * chart.placeHolder('type to filter');
      * @param {function} [placeHolder='search']
      * @returns {TextFilterWidget|string}
-     **/
+     */
     placeHolder (placeHolder) {
         if (!arguments.length) {
             return this._placeHolder;
@@ -128,7 +128,7 @@ export class TextFilterWidget extends BaseMixin {
      * };
      * @param {function} [filterFunctionFactory]
      * @returns {TextFilterWidget|function}
-     **/
+     */
     filterFunctionFactory (filterFunctionFactory) {
         if (!arguments.length) {
             return this._filterFunctionFactory;

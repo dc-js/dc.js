@@ -187,7 +187,7 @@ export class Legend {
      *
      * // create legend displaying group counts
      * chart.legend(dc.legend().legendText(function(d) { return d.name + ': ' d.data; }))
-     **/
+     */
     legendText (legendText) {
         if (!arguments.length) {
             return this._legendText;

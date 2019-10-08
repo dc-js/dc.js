@@ -79,7 +79,7 @@ export class HtmlLegend {
      * @instance
      * @param {String} [container]
      * @return {String|dc.htmlLegend}
-     **/
+     */
     container (container) {
         if (!arguments.length) {
             return this._container;
@@ -99,7 +99,7 @@ export class HtmlLegend {
      * @instance
      * @param {String} [legendItemClass]
      * @return {String|dc.htmlLegend}
-     **/
+     */
     legendItemClass (legendItemClass) {
         if (!arguments.length) {
             return this._legendItemClass;
@@ -116,7 +116,7 @@ export class HtmlLegend {
      * @instance
      * @param {String} [highlightSelected]
      * @return {String|dc.htmlLegend}
-     **/
+     */
     highlightSelected (highlightSelected) {
         if (!arguments.length) {
             return this._highlightSelected;
@@ -132,7 +132,7 @@ export class HtmlLegend {
      * @instance
      * @param {String} [horizontal]
      * @return {String|dc.htmlLegend}
-     **/
+     */
     horizontal (horizontal) {
         if (!arguments.length) {
             return this._horizontal;
@@ -159,7 +159,7 @@ export class HtmlLegend {
      *
      * // create legend displaying group counts
      * chart.legend(dc.htmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
-     **/
+     */
     legendText (legendText) {
         if (!arguments.length) {
             return this._legendText;

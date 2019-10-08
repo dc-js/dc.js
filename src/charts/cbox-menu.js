@@ -197,7 +197,7 @@ export class CboxMenu extends BaseMixin {
      * chart.order(function (a,b) {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
-     **/
+     */
     order (order) {
         if (!arguments.length) {
             return this._order;
@@ -212,7 +212,7 @@ export class CboxMenu extends BaseMixin {
      * @returns {String|CboxMenu}
      * @example
      * chart.promptText('All states');
-     **/
+     */
     promptText (promptText) {
         if (!arguments.length) {
             return this._promptText;
@@ -231,7 +231,7 @@ export class CboxMenu extends BaseMixin {
      * chart.filterDisplayed(function () {
      *     return true;
      * });
-     **/
+     */
     filterDisplayed (filterDisplayed) {
         if (!arguments.length) {
             return this._filterDisplayed;
@@ -247,7 +247,7 @@ export class CboxMenu extends BaseMixin {
      * @returns {Boolean|CboxMenu}
      * @example
      * chart.multiple(true);
-     **/
+     */
     multiple (multiple) {
         if (!arguments.length) {
             return this._multiple;
@@ -268,7 +268,7 @@ export class CboxMenu extends BaseMixin {
      * just the prompt is selected.
      * @param {?*} [promptValue=null]
      * @returns {*|CboxMenu}
-     **/
+     */
     promptValue (promptValue) {
         if (!arguments.length) {
             return this._promptValue;

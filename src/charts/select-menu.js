@@ -157,7 +157,7 @@ export class SelectMenu extends BaseMixin {
      * chart.order(function (a,b) {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
-     **/
+     */
     order (order) {
         if (!arguments.length) {
             return this._order;
@@ -172,7 +172,7 @@ export class SelectMenu extends BaseMixin {
      * @returns {String|SelectMenu}
      * @example
      * chart.promptText('All states');
-     **/
+     */
     promptText (promptText) {
         if (!arguments.length) {
             return this._promptText;
@@ -191,7 +191,7 @@ export class SelectMenu extends BaseMixin {
      * chart.filterDisplayed(function () {
      *     return true;
      * });
-     **/
+     */
     filterDisplayed (filterDisplayed) {
         if (!arguments.length) {
             return this._filterDisplayed;
@@ -207,7 +207,7 @@ export class SelectMenu extends BaseMixin {
      * @returns {boolean|SelectMenu}
      * @example
      * chart.multiple(true);
-     **/
+     */
     multiple (multiple) {
         if (!arguments.length) {
             return this._multiple;
@@ -224,7 +224,7 @@ export class SelectMenu extends BaseMixin {
      * just the prompt is selected.
      * @param {?*} [promptValue=null]
      * @returns {*|SelectMenu}
-     **/
+     */
     promptValue (promptValue) {
         if (!arguments.length) {
             return this._promptValue;
@@ -242,7 +242,7 @@ export class SelectMenu extends BaseMixin {
      * @returns {number|SelectMenu}
      * @example
      * chart.numberVisible(10);
-     **/
+     */
     numberVisible (numberVisible) {
         if (!arguments.length) {
             return this._numberVisible;
