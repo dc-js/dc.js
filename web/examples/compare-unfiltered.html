@@ -43,6 +43,7 @@
         points |
         <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a><br>
       </div>
+      <label><input type="checkbox" id="unfiltered" name="unfiltered" checked>&nbsp;Show Unfiltered</label>
     </div>
   </div>
   <!-- First row of charts -->
@@ -168,6 +169,7 @@
       });
 
       var breathing_room = 0.05;
+      var show_unfiltered = true;
 
       chart_specs.forEach(function(spec, i) {
           d3.select(spec.selector).select('h5.chart-title').text(spec.variable);
@@ -179,7 +181,7 @@
               static_group = static_copy_group(group);
 
           charts[i].on('pretransition', function(chart) {
-              var any_filters = charts.some(chart => chart.filters().length);
+              var any_filters = !show_unfiltered || charts.some(chart => chart.filters().length);
               chart.select('.sub._1')
                   .attr('visibility', any_filters ? 'visible' : 'hidden')
           });
@@ -208,6 +210,27 @@
               .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
               .xUnits(function(start, end, xDomain) { return (end - start) / spec.resolution; })
               .controlsUseVisibility(true);
+      });
+
+      function ydomain_from_child1(chart) {
+          chart.y().domain([0, chart.children()[1].yAxisMax()]);
+      }
+      d3.select('#unfiltered').on('change', function() {
+          show_unfiltered = this.checked;
+          charts.forEach(chart => {
+              chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden');
+              chart.elasticY(show_unfiltered);
+              if(!show_unfiltered) {
+                  ydomain_from_child1(chart);
+                  chart.children()[1].colors(d3.schemeCategory10);
+                  chart.on('preRedraw.hide-unfiltered', ydomain_from_child1);
+              }
+              else {
+                  chart.children()[1].colors('red');
+                  chart.on('preRedraw.hide-unfiltered', null);
+              }
+          })
+          dc.redrawAll();
       });
 
       dc.renderAll();
