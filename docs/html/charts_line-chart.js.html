@@ -148,59 +148,6 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
 
         this.label(d => utils.printSingleValue(d.y0 + d.y), false);
 
-        /**
-         * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
-         * functions, splines, and cubic interpolation.
-         *
-         * Possible values are: 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis',
-         * 'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
-         * 'monotone'.
-         *
-         * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
-         * which is generic and provides more options.
-         * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
-         * @method interpolate
-         * @memberof dc.lineChart
-         * @instance
-         * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
-         * @see {@link dc.lineChart#curve}
-         * @param  {d3.curve} [interpolate=d3.curveLinear]
-         * @returns {d3.curve|dc.lineChart}
-         */
-        this.interpolate = logger.deprecate(function (interpolate) {
-            if (!arguments.length) {
-                return this._interpolate;
-            }
-            this._interpolate = interpolate;
-            return this;
-        }, 'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
-
-        /**
-         * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
-         *
-         * Passed to the {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve function}
-         * if it provides a `.tension` function. Example:
-         * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
-         *
-         * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
-         * which is generic and provides more options.
-         * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
-         * @method tension
-         * @memberof dc.lineChart
-         * @instance
-         * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
-         * @see {@link dc.lineChart#curve}
-         * @param  {Number} [tension=0]
-         * @returns {Number|dc.lineChart}
-         */
-        this.tension = logger.deprecate(function (tension) {
-            if (!arguments.length) {
-                return this._tension;
-            }
-            this._tension = tension;
-            return this;
-        }, 'dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
-
         this.anchor(parent, chartGroup);
     }
 
@@ -267,6 +214,61 @@ class LineChart extends StackMixin(CoordinateGridMixin) {
             return this._curve;
         }
         this._curve = curve;
+        return this;
+    }
+
+    /**
+     * Gets or sets the interpolator to use for lines drawn, by string name, allowing e.g. step
+     * functions, splines, and cubic interpolation.
+     *
+     * Possible values are: 'linear', 'linear-closed', 'step', 'step-before', 'step-after', 'basis',
+     * 'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
+     * 'monotone'.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
+     * @method interpolate
+     * @memberof dc.lineChart
+     * @instance
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
+     * @param  {d3.curve} [interpolate=d3.curveLinear]
+     * @returns {d3.curve|dc.lineChart}
+     */
+    interpolate (interpolate) {
+        logger.warnOnce('dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+        if (!arguments.length) {
+            return this._interpolate;
+        }
+        this._interpolate = interpolate;
+        return this;
+    }
+
+    /**
+     * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
+     *
+     * Passed to the {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve function}
+     * if it provides a `.tension` function. Example:
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
+     *
+     * This function exists for backward compatibility. Use {@link dc.lineChart#curve}
+     * which is generic and provides more options.
+     * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
+     * @method tension
+     * @memberof dc.lineChart
+     * @instance
+     * @deprecated since version 3.0 use {@link dc.lineChart#curve} instead
+     * @see {@link dc.lineChart#curve}
+     * @param  {Number} [tension=0]
+     * @returns {Number|dc.lineChart}
+     */
+    tension (tension) {
+        logger.warnOnce('dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
+        if (!arguments.length) {
+            return this._tension;
+        }
+        this._tension = tension;
         return this;
     }
 
@@ -721,7 +723,7 @@ export const lineChart = (parent, chartGroup) => new LineChart(parent, chartGrou
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Thu Sep 19th 2019
+		on Tue Oct 8th 2019
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
