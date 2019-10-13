@@ -34,16 +34,16 @@
   <div class="row">
     <h2>Comparing filtered data against unfiltered</h2>
     <p>by copying the initial group values into a fake group, and displaying them in a composite bar chart.</p>
-    <p>See <a href="https://stackoverflow.com/questions/55066391/display-original-conditional-brushed-unbrushed-crossfilter-bars-with-dc-js-wit">this Stack Overflow answer</a> for a description of the technique</p>
+    <p>See <a href="https://stackoverflow.com/questions/55066391/display-original-conditional-brushed-unbrushed-crossfilter-bars-with-dc-js-wit">this Stack Overflow answer</a> for a description of the technique. (<a href="https://stackoverflow.com/questions/58304325/unfiltered-data-on-off">This answer</a> describes the toggling logic.)</p>
     <div class="col-md-3 well well-sm">
       <div class="dc-data-count" id="data-count">
+        <label style="display: inline-block"><input type="checkbox" id="unfiltered" name="unfiltered" checked>&nbsp;Show Unfiltered</label> |
         <span class="filter-count"></span>
         selected out of
         <span class="total-count"></span>
         points |
-        <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a><br>
+        <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
       </div>
-      <label><input type="checkbox" id="unfiltered" name="unfiltered" checked>&nbsp;Show Unfiltered</label>
     </div>
   </div>
   <!-- First row of charts -->
