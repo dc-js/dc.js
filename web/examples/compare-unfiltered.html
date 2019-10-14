@@ -216,6 +216,7 @@
 
       function ydomain_from_child1(chart) {
           chart.y().domain([0, chart.children()[1].yAxisMax()]);
+          chart.resizing(true);
       }
       d3.select('#unfiltered').on('change', function() {
           show_unfiltered = this.checked;
