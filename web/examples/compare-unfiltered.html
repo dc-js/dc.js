@@ -182,22 +182,16 @@
               }).reduceCount(),
               static_group = static_copy_group(group);
 
-          charts[i].on('pretransition', function(chart) {
-              var any_filters = !show_unfiltered || charts.some(chart => chart.filters().length);
-              chart.select('.sub._1')
-                  .attr('visibility', any_filters ? 'visible' : 'hidden')
-          });
-
           charts[i]
               .compose([
                   dc.barChart(charts[i])
                       .dimension(dim)
                       .group(static_group)
+                      .colors('#ccc') // same as .deselected
                       .controlsUseVisibility(true),
                   dc.barChart(charts[i])
                       .dimension(dim)
                       .group(group)
-                      .colors('red')
                       .controlsUseVisibility(true)
                       .brushOn(false)
               ]);
@@ -228,10 +222,7 @@
                   chart.children()[1].colors(d3.schemeCategory10);
                   chart.on('preRedraw.hide-unfiltered', ydomain_from_child1);
               }
-              else {
-                  chart.children()[1].colors('red');
-                  chart.on('preRedraw.hide-unfiltered', null);
-              }
+              else chart.on('preRedraw.hide-unfiltered', null);
           })
           dc.redrawAll();
       });
