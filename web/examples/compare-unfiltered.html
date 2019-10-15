@@ -42,7 +42,7 @@
         selected out of
         <span class="total-count"></span>
         points |
-        <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+        <a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
       </div>
     </div>
   </div>
@@ -212,18 +212,27 @@
           chart.y().domain([0, chart.children()[1].yAxisMax()]);
           chart.resizing(true);
       }
+      // hide/unhide the unfiltered layer after any render/redraw
+      charts.forEach(
+          chart => chart.on(
+              'pretransition.hide-unfiltered',
+              chart => chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')
+          ));
       d3.select('#unfiltered').on('change', function() {
           show_unfiltered = this.checked;
           charts.forEach(chart => {
-              chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden');
               chart.elasticY(show_unfiltered);
               if(!show_unfiltered) {
                   ydomain_from_child1(chart);
                   chart.children()[1].colors(d3.schemeCategory10);
                   chart.on('preRedraw.hide-unfiltered', ydomain_from_child1);
+                  chart.on('preRender.hide-unfiltered', ydomain_from_child1);
               }
-              else chart.on('preRedraw.hide-unfiltered', null);
-          })
+              else {
+                  chart.on('preRedraw.hide-unfiltered', null);
+                  chart.on('preRender.hide-unfiltered', null);
+              }
+         })
           dc.redrawAll();
       });
 
