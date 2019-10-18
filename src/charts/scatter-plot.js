@@ -171,6 +171,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             .attr('height', (height) * devicePixelRatio)
             .style('width', width + 'px')
             .style('height', height + 'px');
+        this._context.scale(devicePixelRatio, devicePixelRatio);
     }
 
 
