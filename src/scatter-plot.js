@@ -156,10 +156,12 @@ dc.scatterPlot = function (parent, chartGroup) {
         var height = _chart.effectiveHeight();
 
         var devicePixelRatio = window.devicePixelRatio || 1;
-        _canvas.attr('width', (width) * devicePixelRatio)
+        _canvas
+            .attr('width', (width) * devicePixelRatio)
             .attr('height', (height) * devicePixelRatio)
             .style('width', width + 'px')
             .style('height', height + 'px');
+        _context.scale(devicePixelRatio, devicePixelRatio);
     };
 
     /**
