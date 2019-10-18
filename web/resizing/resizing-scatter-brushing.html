@@ -19,7 +19,8 @@
   <script type="text/javascript">
 
 const urlParams = new URLSearchParams(window.location.search),
-    useCanvas = !!urlParams.get('canvas');
+    useCanvas = !!urlParams.get('canvas'),
+    resizeObserver = !!urlParams.get('observer');
 
     dc.constants.EVENT_DELAY = 0;
 
@@ -81,20 +82,30 @@ chart2.width(window.innerWidth/2 - fudge)
 dc.renderAll();
 
 // respond to browser resize (not necessary if width/height is static)
-window.onresize = function() {
-    chart1
-        .width(window.innerWidth/2 - fudge)
-        .height(window.innerHeight - fudge)
-        .rescale();
+if(resizeObserver) {
+    const callback = chart => entries => {
+        chart
+            .width(entries[0].target.offsetWidth)
+            .height(entries[0].target.offsetHeight)
+            .rescale();
+    };
+    new ResizeObserver(callback(chart1)).observe(d3.select('#test1').node());
+    new ResizeObserver(callback(chart2)).observe(d3.select('#test2').node());
+} else {
+    window.onresize = function() {
+        chart1
+            .width(window.innerWidth/2 - fudge)
+            .height(window.innerHeight - fudge)
+            .rescale();
 
-    chart2
-        .width(window.innerWidth/2 - fudge)
-        .height(window.innerHeight - fudge)
-        .rescale();
+        chart2
+            .width(window.innerWidth/2 - fudge)
+            .height(window.innerHeight - fudge)
+            .rescale();
 
-    dc.redrawAll();
-};
-
+        dc.redrawAll();
+    };
+}
   </script>
 
 </div>
