@@ -583,7 +583,7 @@ describe('dc.coordinateGridChart', function () {
             expect(chart.xUnitCount()).not.toEqual(originalUnitCount);
         });
 
-        it('should be resizing until render', function() {
+        it('should be resizing until render', function () {
             expect(chart.resizing()).toBe(true);
             chart.render();
             expect(chart.resizing()).toBe(false);
