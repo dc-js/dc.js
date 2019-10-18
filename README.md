@@ -1,6 +1,7 @@
 [![Build Status](https://api.travis-ci.org/dc-js/dc.js.svg?branch=master)](http://travis-ci.org/dc-js/dc.js)
 [![Sauce Status](https://saucelabs.com/buildstatus/sclevine)](https://saucelabs.com/u/sclevine)
 [![NPM Status](https://badge.fury.io/js/dc.svg)](http://badge.fury.io/js/dc)
+[![cdnjs Status](https://img.shields.io/cdnjs/v/dc?color=green)](https://cdnjs.com/libraries/dc)
 [![Join the chat at https://gitter.im/dc-js/dc.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/dc-js/dc.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 dc.js
