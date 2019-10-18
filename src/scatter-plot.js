@@ -151,6 +151,17 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     };
 
+    _chart.resizeCanvas = function () {
+        var width = _chart.effectiveWidth();
+        var height = _chart.effectiveHeight();
+
+        var devicePixelRatio = window.devicePixelRatio || 1;
+        _canvas.attr('width', (width) * devicePixelRatio)
+            .attr('height', (height) * devicePixelRatio)
+            .style('width', width + 'px')
+            .style('height', height + 'px');
+    };
+
     /**
      * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
      * canvas backend does not currently support 
@@ -208,6 +219,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     // currently being highlighted and modifies opacity/size of symbols accordingly
     // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
     function plotOnCanvas (legendHighlightDatum) {
+        _chart.resizeCanvas();
         var context = _chart.context();
         context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
         var data = _chart.data();
