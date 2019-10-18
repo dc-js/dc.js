@@ -78,6 +78,11 @@ chart2.width(window.innerWidth/2 - fudge)
     .excludedColor('#ddd')
     .group(group2);
 
+if(useCanvas) {
+    chart1.transitionDuration(0);
+    chart2.transitionDuration(0);
+}
+
 dc.renderAll();
 
 // respond to browser resize (not necessary if width/height is static)

@@ -91,6 +91,11 @@ chart2.width(null)
     .excludedColor('#ddd')
     .group(group2);
 
+if(useCanvas) {
+    chart1.transitionDuration(0);
+    chart2.transitionDuration(0);
+}
+
 dc.renderAll();
 
 const callback = chart => entries => {
