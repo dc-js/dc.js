@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.1.5  
+**Version**: 3.1.6  
 **Example**  
 ```js
 // Example chaining
@@ -2784,9 +2784,9 @@ Remove the chart's SVGElements from the dom and recreate the container SVGElemen
 
 #### scatterPlot.useCanvas([useCanvas]) ⇒ <code>Boolean</code> \| <code>d3.selection</code>
 Set or get whether to use canvas backend for plotting scatterPlot. Note that the
-canvas backend does not currently support 
-[customSymbol](#dc.scatterPlot+customSymbol) or 
-[symbol](#dc.scatterPlot+symbol) methods and is limited to always plotting 
+canvas backend does not currently support
+[customSymbol](#dc.scatterPlot+customSymbol) or
+[symbol](#dc.scatterPlot+symbol) methods and is limited to always plotting
 with filled circles. Symbols are drawn with
 [symbolSize](#dc.scatterPlot+symbolSize) radius. By default, the SVG backend
 is used when `useCanvas` is set to `false`.

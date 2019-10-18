@@ -1,3 +1,6 @@
+## 3.1.6
+* allow resizing of canvas-based scatter plots ([#1596](https://github.com/dc-js/dc.js/issues/1596))
+
 ## 3.1.5
 * Composite chart properties should pass through regardless of when compose is called, by Keith Dahlby. ([#1365](https://github.com/dc-js/dc.js/pull/1365) / [#554](https://github.com/dc-js/dc.js/issues/554) / [#611](https://github.com/dc-js/dc.js/issues/611) / [#1003](https://github.com/dc-js/dc.js/issues/1003))
 

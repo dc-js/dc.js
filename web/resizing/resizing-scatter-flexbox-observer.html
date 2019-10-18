@@ -1,10 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>dc.js - Resizing Scatter Plot Brushing Example</title>
+  <title>dc.js - Resizing Scatter Plot using ResizeObserver</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
+    <style>
+      body,.container {
+          position: absolute;
+          left: 0; top: 0; right: 0; bottom: 0;
+      }
+      .container {
+          display: flex;
+          flex-direction: row;
+      }
+      #test1,#test2 {
+          min-width: 0;
+          flex: 1;
+      }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -56,8 +69,8 @@ var ndx = crossfilter(data),
 
 var fudge = 40;
 
-chart1.width(window.innerWidth/2 - fudge)
-    .height(window.innerHeight - fudge)
+chart1.width(null)
+    .height(null)
     .useCanvas(useCanvas)
     .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("y")
@@ -67,8 +80,8 @@ chart1.width(window.innerWidth/2 - fudge)
     .excludedOpacity(0.5)
     .group(group1);
 
-chart2.width(window.innerWidth/2 - fudge)
-    .height(window.innerHeight - fudge)
+chart2.width(null)
+    .height(null)
     .useCanvas(useCanvas)
     .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("z")
@@ -80,21 +93,15 @@ chart2.width(window.innerWidth/2 - fudge)
 
 dc.renderAll();
 
-// respond to browser resize (not necessary if width/height is static)
-window.onresize = function() {
-    chart1
-        .width(window.innerWidth/2 - fudge)
-        .height(window.innerHeight - fudge)
-        .rescale();
-
-    chart2
-        .width(window.innerWidth/2 - fudge)
-        .height(window.innerHeight - fudge)
-        .rescale();
-
-    dc.redrawAll();
+const callback = chart => entries => {
+    chart
+        .width(null)
+        .height(null)
+        .rescale()
+        .redraw();
 };
-
+new ResizeObserver(callback(chart1)).observe(d3.select('#test1').node());
+new ResizeObserver(callback(chart2)).observe(d3.select('#test2').node());
   </script>
 
 </div>

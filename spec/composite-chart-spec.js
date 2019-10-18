@@ -855,7 +855,7 @@ describe('dc.compositeChart', function () {
         });
     });
 
-    describe('re-compose rendered chart', function() {
+    describe('re-compose rendered chart', function () {
         beforeEach(function () {
             chart.render();
             expect(chart.resizing()).toBe(false);

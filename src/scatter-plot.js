@@ -151,14 +151,27 @@ dc.scatterPlot = function (parent, chartGroup) {
         }
     };
 
+    _chart.resizeCanvas = function () {
+        var width = _chart.effectiveWidth();
+        var height = _chart.effectiveHeight();
+
+        var devicePixelRatio = window.devicePixelRatio || 1;
+        _canvas
+            .attr('width', (width) * devicePixelRatio)
+            .attr('height', (height) * devicePixelRatio)
+            .style('width', width + 'px')
+            .style('height', height + 'px');
+        _context.scale(devicePixelRatio, devicePixelRatio);
+    };
+
     /**
      * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
-     * canvas backend does not currently support 
-     * {@link dc.scatterPlot#customSymbol customSymbol} or 
-     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting 
+     * canvas backend does not currently support
+     * {@link dc.scatterPlot#customSymbol customSymbol} or
+     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting
      * with filled circles. Symbols are drawn with
      * {@link dc.scatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
-     * is used when `useCanvas` is set to `false`. 
+     * is used when `useCanvas` is set to `false`.
      * @method useCanvas
      * @memberof dc.scatterPlot
      * @instance
@@ -208,6 +221,7 @@ dc.scatterPlot = function (parent, chartGroup) {
     // currently being highlighted and modifies opacity/size of symbols accordingly
     // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
     function plotOnCanvas (legendHighlightDatum) {
+        _chart.resizeCanvas();
         var context = _chart.context();
         context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
         var data = _chart.data();
