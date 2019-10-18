@@ -161,6 +161,19 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
+    _resizeCanvas () {
+        const width = this.effectiveWidth();
+        const height = this.effectiveHeight();
+
+        var devicePixelRatio = window.devicePixelRatio || 1;
+        this._canvas
+            .attr('width', (width) * devicePixelRatio)
+            .attr('height', (height) * devicePixelRatio)
+            .style('width', width + 'px')
+            .style('height', height + 'px');
+    }
+
+
     /**
      * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
      * canvas backend does not currently support
@@ -209,6 +222,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     // currently being highlighted and modifies opacity/size of symbols accordingly
     // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
     _plotOnCanvas (legendHighlightDatum) {
+        this._resizeCanvas();
         const context = this.context();
         context.clearRect(0, 0, (context.canvas.width + 2) * 1, (context.canvas.height + 2) * 1);
         const data = this.data();
