@@ -18,6 +18,9 @@
   <script type="text/javascript" src="../js/dc.js"></script>
   <script type="text/javascript">
 
+const urlParams = new URLSearchParams(window.location.search),
+    useCanvas = !!urlParams.get('canvas');
+
     dc.constants.EVENT_DELAY = 0;
 
 var chart1 = dc.scatterPlot("#test1");
@@ -55,6 +58,7 @@ var fudge = 40;
 
 chart1.width(window.innerWidth/2 - fudge)
     .height(window.innerHeight - fudge)
+    .useCanvas(useCanvas)
     .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("y")
     .xAxisLabel("x")
@@ -65,6 +69,7 @@ chart1.width(window.innerWidth/2 - fudge)
 
 chart2.width(window.innerWidth/2 - fudge)
     .height(window.innerHeight - fudge)
+    .useCanvas(useCanvas)
     .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("z")
     .xAxisLabel("y")
