@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>dc.js - Range / Focus Ordinal Bar Chart</title>
+    <title>dc.js - Bar Chart Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
@@ -10,96 +10,41 @@
 
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
-<div id="focus"></div>
-<div id="range"></div>
+<div id="test"></div>
 
     <script type="text/javascript" src="../js/promise-polyfill.js"></script>
     <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
-  <style>
-  #focus .axis.x .tick text {
-    text-anchor: end;
-    transform: rotate(-90deg) translate(-10px,-12px);
-  }
-  #range.dc-chart .axis {
-    display: none;
-  }
-  </style>
 <script type="text/javascript">
 
-    var chart, range;
-    d3.json("wide.json").then(function(wide) {
-        // map ordinals to integers so that zooming will work
-        var ord2int = {}, int2ord = [];
-        wide.forEach(function(d, i) {
-            ord2int[d.key] = i;
-            int2ord[i] = d.key;
+var chart = dc.barChart("#test");
+d3.csv("morley.csv").then(function(experiments) {
+
+  experiments.forEach(function(x) {
+    x.Speed = +x.Speed;
+  });
+
+  var ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
+      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+
+  chart
+    .width(768)
+    .height(480)
+    .x(d3.scaleLinear().domain([6,20]))
+    .brushOn(false)
+    .yAxisLabel("This is the Y Axis!")
+    .dimension(runDimension)
+    .group(speedSumGroup)
+    .on('renderlet', function(chart) {
+        chart.selectAll('rect').on("click", function(d) {
+            console.log("click!", d);
         });
-
-        // dummy crossfilter taking group data and regrouping it to the same thing
-        var cf = crossfilter(wide),
-            dimension = cf.dimension(function(d) {return d.key;}),
-            group = dimension.group().reduceSum(function(d) {return d.value;});
-
-        chart = dc.barChart (
-            '#focus'
-        ).width (
-            1000
-        ).height (
-            400
-        ).margins(
-            {left: 30, top: 10, right: 10, bottom: 220}
-        ).x (
-            d3.scaleLinear().domain([0, int2ord.length+1])
-        ).xUnits (
-            dc.units.integers
-        ).keyAccessor(kv => ord2int[kv.key]
-                     ).centerBar(true
-        ).yAxisLabel (
-            'counts'
-        ).elasticY (
-            true
-        ).brushOn (
-            false
-        ).dimension (
-            dimension
-        ).mouseZoomable(true)
-            .group (
-                group
-            )
-            .title(kv => kv.key)
-
-        chart.xAxis().tickValues(d3.range(int2ord.length)).tickFormat(function(d) { return int2ord[d]; });
-
-        range = dc.barChart (
-            '#range'
-        ).margins (
-            {left: 0, top: 0, right: 0, bottom: 0}
-        ).width (
-            1000
-        ).height (
-            50
-        ).x (
-            d3.scaleLinear().domain([0, int2ord.length+1])
-        ).xUnits (
-            dc.units.integers
-        ).keyAccessor(kv => ord2int[kv.key]
-        ).elasticY (
-            true
-        ).brushOn (
-            true
-        ).dimension (
-            dimension
-        ).group (
-            group
-        );
-
-        chart.rangeChart(range);
-
-        dc.renderAll();
     });
+    chart.render();
+});
 
 </script>
 
