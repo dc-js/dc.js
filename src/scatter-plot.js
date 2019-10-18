@@ -166,12 +166,12 @@ dc.scatterPlot = function (parent, chartGroup) {
 
     /**
      * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
-     * canvas backend does not currently support 
-     * {@link dc.scatterPlot#customSymbol customSymbol} or 
-     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting 
+     * canvas backend does not currently support
+     * {@link dc.scatterPlot#customSymbol customSymbol} or
+     * {@link dc.scatterPlot#symbol symbol} methods and is limited to always plotting
      * with filled circles. Symbols are drawn with
      * {@link dc.scatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
-     * is used when `useCanvas` is set to `false`. 
+     * is used when `useCanvas` is set to `false`.
      * @method useCanvas
      * @memberof dc.scatterPlot
      * @instance
