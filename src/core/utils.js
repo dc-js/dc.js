@@ -60,9 +60,18 @@ utils.printSingleValue = function (filter) {
 };
 utils.printSingleValue.fformat = d3.format('.2f');
 
-// convert 'day' to 'timeDay' and similar
-utils.toTimeFunc = function (t) {
-    return 'time' + t.charAt(0).toUpperCase() + t.slice(1);
+// convert 'day' to d3.timeDay and similar
+utils._toTimeFunc = function (t) {
+    const mappings = {
+        'second': d3.timeSecond,
+        'minute': d3.timeMinute,
+        'hour': d3.timeHour,
+        'day': d3.timeDay,
+        'week': d3.timeWeek,
+        'month': d3.timeMonth,
+        'year': d3.timeYear
+    };
+    return mappings[t];
 };
 
 /**
@@ -100,7 +109,7 @@ utils.add = function (l, r, t) {
         }
         t = t || d3.timeDay;
         if (typeof t !== 'function') {
-            t = d3[utils.toTimeFunc(t)];
+            t = utils._toTimeFunc(t);
         }
         return t.offset(l, r);
     } else if (typeof r === 'string') {
@@ -146,7 +155,7 @@ utils.subtract = function (l, r, t) {
         }
         t = t || d3.timeDay;
         if (typeof t !== 'function') {
-            t = d3[utils.toTimeFunc(t)];
+            t = utils._toTimeFunc(t);
         }
         return t.offset(l, -r);
     } else if (typeof r === 'string') {
