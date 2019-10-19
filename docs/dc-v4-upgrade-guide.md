@@ -37,7 +37,7 @@ Please raise an issue on GitHub if you run into problems not covered here!
     - `dc.round.round` --> `Math.round`
     - `dc.round.ceil` --> `Math.ceil`
 
-- The previous was of instantiating a chart is still supported.
+- The previous way of instantiating a chart is still supported.
   However, it is recommended to use the `new` operator instead. For example:
 
     - `dc.pieChart(parent, chartGroup)` --> `new dc.PieChart(parent, chartGroup)`
@@ -70,3 +70,31 @@ chart.on('renderlet', function (_chart) {
     - `dc.coordinateGridChart` --> `dc.coordinateGridMixin`
     - `dc.marginable` --> `dc.marginMixin`
     - `dc.stackableChart` --> `dc.stackMixin`
+
+- `dc.override` has been removed.
+   It was used to override a method in an object (typically a chart).
+   You can either create a derived class extending the chart class,
+   or you can override specific methods on your instance of a chart, e.g.:
+   
+```javascript
+        // Using inheritance
+        class MyLineChart extends dc.LineChart {
+            yAxisMin () {
+                // you can access super.yAxisMin() in this approach
+                const min = d3.min(this.data(), layer => d3.min(layer.values, p => p.y + p.y0));
+                return dc.utils.subtract(min, this.yAxisPadding());
+            }
+        }
+        const chart01 = new MyLineChart('#chart01');
+    
+        // Or, using direct assignment
+        const chart02 = new dc.BarChart('#chart02');
+        chart02.yAxisMin = function() {
+            const min = d3.min(this.data(), layer => d3.min(layer.values, p => p.y + p.y0));
+            return dc.utils.subtract(min, this.yAxisPadding());
+        };
+```
+   Please see: 
+   http://dc-js.github.io/dc.js/examples/focus-dynamic-interval.html
+   and http://dc-js.github.io/dc.js/examples/stacked-bar.html
+   for example.
