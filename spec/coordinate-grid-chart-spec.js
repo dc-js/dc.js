@@ -442,7 +442,7 @@ describe('dc.coordinateGridChart', function () {
                     expect(chart.selectAll('.axis.y').size()).toBe(1);
                 });
 
-                // No longer valid in D3v4
+                // can't determine axis orientation in D3v4+, see d3/d3-axis#16
                 /*it('should orient the y-axis text to the left by default', function () {
                     expect(chart.yAxis().orient()).toBe('left');
                 });*/
@@ -490,7 +490,7 @@ describe('dc.coordinateGridChart', function () {
                     expect(chart.selectAll('.axis.y').size()).toBe(1);
                 });
 
-                // Not applicable in D3v4
+                // can't determine axis orientation in D3v4+, see d3/d3-axis#16
                 /*it('should orient the y-axis text to the right', function () {
                     expect(chart.yAxis().orient()).toBe('right');
                 });*/
