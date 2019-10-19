@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <title>dc.js - Stacked Bar Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
     <style>
-      .dc-chart g.chart-body {
-          clip-path: none;
-      }
+        .dc-chart g.chart-body {
+            clip-path: none;
+        }
     </style>
-  </head>
+</head>
 <body>
 
 <div class="container">
-<script type="text/javascript" src="header.js"></script>
+    <script type="text/javascript" src="header.js"></script>
     <div id="test"></div>
 
     <script type="text/javascript" src="../js/promise-polyfill.js"></script>
@@ -24,60 +24,60 @@
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.barChart("#test");
-      d3.csv("morley.csv").then(function(experiments) {
+        class MyBarChart extends dc.BarChart {
+            legendables () {
+                const items = super.legendables();
+                return items.reverse();
+            }
+        }
 
-          experiments.forEach(function(x) {
-              x.Speed = +x.Speed;
-          });
+        const chart = new MyBarChart('#test');
 
-          var ndx                 = crossfilter(experiments),
-              runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-              speedSumGroup       = runDimension.group().reduce(function(p, v) {
-                  p[v.Expt] = (p[v.Expt] || 0) + v.Speed;
-                  return p;
-              }, function(p, v) {
-                  p[v.Expt] = (p[v.Expt] || 0) - v.Speed;
-                  return p;
-              }, function() {
-                  return {};
-              });
+        d3.csv('morley.csv').then(experiments => {
 
-          function sel_stack(i) {
-              return function(d) {
-                  return d.value[i];
-              };
-          }
+            experiments.forEach(x => {
+                x.Speed = +x.Speed;
+            });
 
-          chart
-              .width(768)
-              .height(480)
-              .x(d3.scaleLinear().domain([1,21]))
-              .margins({left: 80, top: 20, right: 10, bottom: 20})
-              .brushOn(false)
-              .clipPadding(10)
-              .title(function(d) {
-                  return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
-              })
-              .dimension(runDimension)
-              .group(speedSumGroup, "1", sel_stack('1'))
-              .renderLabel(true);
+            const ndx = crossfilter(experiments),
+                runDimension = ndx.dimension(d => +d.Run),
+                speedSumGroup = runDimension.group().reduce((p, v) => {
+                    p[v.Expt] = (p[v.Expt] || 0) + v.Speed;
+                    return p;
+                }, (p, v) => {
+                    p[v.Expt] = (p[v.Expt] || 0) - v.Speed;
+                    return p;
+                }, () => ({}));
 
-          chart.legend(dc.legend());
+            function sel_stack (i) {
+                return d => d.value[i];
+            }
 
-          dc.override(chart, 'legendables', function() {
-              var items = chart._legendables();
-              return items.reverse();
-          });
+            chart
+                .width(768)
+                .height(480)
+                .x(d3.scaleLinear().domain([1, 21]))
+                .margins({left: 80, top: 20, right: 10, bottom: 20})
+                .brushOn(false)
+                .clipPadding(10)
+                .title(function (d) {
+                    return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
+                })
+                .dimension(runDimension)
+                .group(speedSumGroup, '1', sel_stack('1'))
+                .renderLabel(true);
 
-          for(var i = 2; i<6; ++i)
-              chart.stack(speedSumGroup, ''+i, sel_stack(i));
-          chart.render();
+            chart.legend(dc.legend());
 
-      });
+            for (var i = 2; i < 6; ++i) {
+                chart.stack(speedSumGroup, '' + i, sel_stack(i));
+            }
+
+            chart.render();
+        });
 
     </script>
 
 </div>
-  </body>
+</body>
 </html>
