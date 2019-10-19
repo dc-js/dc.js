@@ -15,7 +15,7 @@ import {transition} from '../core/core';
  * @mixes ColorMixin
  * @mixes BaseMixin
  */
-class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
+export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     /**
      * Create a Row Chart.
      * @example

@@ -18,7 +18,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes ColorMixin
  * @mixes BaseMixin
  */
-class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
+export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     /**
      * Create a Pie Chart
      *

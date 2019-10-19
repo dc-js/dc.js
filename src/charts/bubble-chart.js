@@ -16,7 +16,7 @@ import {transition} from '../core/core';
  * @mixes BubbleMixin
  * @mixes CoordinateGridMixin
  */
-class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
+export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     /**
      * Create a Bubble Chart.
      *

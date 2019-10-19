@@ -38,7 +38,7 @@ function defaultWhiskersIQR (k) {
  * - {@link http://dc-js.github.io/dc.js/examples/boxplot-time.html Boxplot time example}
  * @mixes CoordinateGridMixin
  */
-class BoxPlot extends CoordinateGridMixin {
+export class BoxPlot extends CoordinateGridMixin {
     /**
      * Create a BoxP lot.
      *

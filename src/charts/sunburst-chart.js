@@ -23,7 +23,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes ColorMixin
  * @mixes BaseMixin
  */
-class SunburstChart extends ColorMixin(BaseMixin) {
+export class SunburstChart extends ColorMixin(BaseMixin) {
     /**
      * Create a Sunburst Chart
      * @example

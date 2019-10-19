@@ -18,7 +18,7 @@ const LABEL_PADDING = 3;
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
  * @mixes StackMixin
  */
-class BarChart extends StackMixin {
+export class BarChart extends StackMixin {
     /**
      * Create a Bar Chart
      * @example

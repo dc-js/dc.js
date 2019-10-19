@@ -22,7 +22,7 @@ const LABEL_PADDING = 3;
  * @mixes StackMixin
  * @mixes CoordinateGridMixin
  */
-class LineChart extends StackMixin {
+export class LineChart extends StackMixin {
     /**
      * Create a Line Chart.
      * @example
