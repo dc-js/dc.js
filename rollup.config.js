@@ -1,4 +1,7 @@
 import {terser} from 'rollup-plugin-terser';
+import json from 'rollup-plugin-json';
+
+const jsonPlugin = json({include: 'package.json', preferConst: true});
 
 const umdConf = {
     file: 'dist/es6/dc.js',
@@ -50,9 +53,10 @@ const modulesMap = {
 export default [
     {
         input: 'src/index.js',
-        plugins: [terser({
-            include: [/^.+\.min\.js$/]
-        })],
+        plugins: [
+            terser({include: [/^.+\.min\.js$/]}),
+            jsonPlugin
+        ],
         output: [
             umdConf,
             umdMinConf,
@@ -62,14 +66,20 @@ export default [
     },
     {
         input: modulesMap,
+        plugins: [
+            jsonPlugin
+        ],
         output: {
             dir: 'dist/esm',
             format: 'esm'
         }
     },
     {
-        plugins: [terser()],
         input: modulesMap,
+        plugins: [
+            terser(),
+            jsonPlugin
+        ],
         output: {
             dir: 'dist/esm-min',
             format: 'esm'
