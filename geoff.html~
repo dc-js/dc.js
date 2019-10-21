@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script type="text/javascript" src="https://d3js.org/d3.v5.min.js"></script>
+<style>
+div.popup {
+        position: absolute;
+        text-align: left;
+        width: 200px; height: 200px; padding: 3px;
+        background: lightsteelblue;
+        border: 0px; border-radius: 4px;
+}
+</style>
+</head>
+<body>
+        <script>
+                var popup=d3.select("body")
+                        .append("div")
+                        .attr("class","popup")
+                        .style("opacity",0)
+                        .style("overflow","auto");
+                var bucket=d3.select("body")
+                        .append("div").text("DIV")
+                        .attr("id","bucket");
+                bucket.append("div").attr("class","xxx").text("List: ");
+                document.addEventListener("DOMContentLoaded", function(e) {
+                        var ptypes=["Pigs","Geese","Ducks","Elephants"];
+                        var content=[];
+                        for(i=0; i<ptypes.length; i++) {
+                                content.push({"key":ptypes[i],"data":"xxx"});
+                        }
+                        keys=d3.select("body").selectAll(".xxx");
+                        d3.select("body").select(".xxx")
+                                .selectAll("p")
+                                .data(content)
+                                .enter()
+                                .append("span")
+                                .html(function(d) {return "   "+d.key+"   "; })
+                                .on("mouseover",function(d) {
+                                        popup.text(d.data)
+                                        .style("opacity",0.9)
+                                        .style("left", (d3.event.pageX) + "px")    
+                                .style("top", (d3.event.pageY+20) + "px");
+                                })
+                                .on("mouseout",function(d) {
+                                        popup.style("opacity",0)
+                                });
+                });
+        </script>
+</body>
+</html>
