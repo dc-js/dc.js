@@ -7,7 +7,8 @@
     <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
 </head>
 <body>
-<div class="container">
+  <label style="display: inline-block"><input type="checkbox" id="canvas">Use Canvas</label>
+  <div class="container">
   <div id="test1"></div>
   <div id="test2"></div>
 
@@ -20,6 +21,10 @@
 
 const urlParams = new URLSearchParams(window.location.search),
     useCanvas = !!urlParams.get('canvas');
+
+    d3.select('#canvas').property('checked', useCanvas).on('change', function() {
+        window.location.href = window.location.href.split('?')[0] + (this.checked ? '?canvas=t' : '');
+    })
 
     dc.constants.EVENT_DELAY = 0;
 
