@@ -5,7 +5,6 @@ const jsonPlugin = json({include: 'package.json', preferConst: true});
 
 const umdConf = {
     file: 'dist/es6/dc.js',
-    external: ['d3'],
     format: 'umd',
     name: 'dc',
     sourcemap: true,
@@ -53,6 +52,7 @@ const modulesMap = {
 export default [
     {
         input: 'src/index.js',
+        external: ['d3'],
         plugins: [
             terser({include: [/^.+\.min\.js$/]}),
             jsonPlugin
@@ -66,6 +66,7 @@ export default [
     },
     {
         input: modulesMap,
+        external: ['d3'],
         plugins: [
             jsonPlugin
         ],
@@ -76,6 +77,7 @@ export default [
     },
     {
         input: modulesMap,
+        external: ['d3'],
         plugins: [
             terser(),
             jsonPlugin
