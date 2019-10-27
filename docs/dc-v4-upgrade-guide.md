@@ -98,3 +98,5 @@ chart.on('renderlet', function (_chart) {
    http://dc-js.github.io/dc.js/examples/focus-dynamic-interval.html
    and http://dc-js.github.io/dc.js/examples/stacked-bar.html
    for example.
+
+- [bower](https://bower.io/) support is being dropped from this version.
