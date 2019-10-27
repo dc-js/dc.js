@@ -7,7 +7,6 @@ module.exports = function (grunt) {
     require('time-grunt')(grunt);
 
     grunt.loadNpmTasks('grunt-karma');
-    grunt.loadNpmTasks('grunt-rollup');
 
     var formatFileList = require('./grunt/format-file-list')(grunt);
 
@@ -28,45 +27,6 @@ module.exports = function (grunt) {
     grunt.initConfig({
         conf: config,
 
-        concat: {
-            'version.js': {
-                src: '<%= conf.src %>/version.templ.js',
-                dest: 'generated/version.js',
-                options: {
-                    process: true
-                }
-            }
-        },
-        rollup: {
-            es6: {
-                options: {
-                    external: ['d3'],
-                    format: 'umd',
-                    name: 'dc',
-                    sourcemap: true,
-                    globals: {
-                        d3: 'd3'
-                    }
-                },
-                files: {
-                    '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js': ['<%= conf.src %>/index.js']
-                }
-            },
-            esm: {
-                options: {
-                    external: ['d3'],
-                    format: 'esm',
-                    name: 'dc',
-                    sourcemap: true,
-                    globals: {
-                        d3: 'd3'
-                    }
-                },
-                files: {
-                    '<%= conf.dist %>/esm/<%= conf.pkg.name %>.esm.js': ['<%= conf.src %>/index.js']
-                }
-            }
-        },
         sass: {
             options: {
                 implementation: sass
@@ -75,18 +35,6 @@ module.exports = function (grunt) {
                 files: {
                     '<%= conf.dist %>/style/<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
                 }
-            }
-        },
-        uglify: {
-            jsmin: {
-                options: {
-                    mangle: true,
-                    compress: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
-                },
-                src: '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js',
-                dest: '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js'
             }
         },
         cssmin: {
@@ -413,6 +361,9 @@ module.exports = function (grunt) {
             },
             hierarchy: {
                 command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
+            },
+            rollup: {
+                command: 'rm -rf dist/; rollup --config'
             }
         }
     });
@@ -449,7 +400,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat:version.js', 'rollup:es6', 'rollup:esm', 'sass', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['shell:rollup', 'sass', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
