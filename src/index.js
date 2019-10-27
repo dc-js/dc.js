@@ -1,4 +1,6 @@
-export * from '../generated/version';
+// Need rollup-plugin-json from the following magic
+export {version} from '../package.json';
+
 export * from './core/chart-registry';
 export * from './core/constants';
 export * from './core/core';
