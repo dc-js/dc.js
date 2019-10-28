@@ -239,15 +239,9 @@ module.exports = function (grunt) {
                             'node_modules/d3/' + d3pkgSubDir + '/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
-                            'node_modules/reductio/reductio.js',
-                            'node_modules/whatwg-fetch/dist/fetch.umd.js'
+                            'node_modules/reductio/reductio.js'
                         ],
                         dest: '<%= conf.web %>/js/'
-                    },
-                    {
-                        nonull: true,
-                        src: 'node_modules/promise-polyfill/dist/polyfill.js',
-                        dest: '<%= conf.web %>/js/promise-polyfill.js'
                     },
                     {
                         expand: true,
