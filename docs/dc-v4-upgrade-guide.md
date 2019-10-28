@@ -99,4 +99,5 @@ chart.on('renderlet', function (_chart) {
    and http://dc-js.github.io/dc.js/examples/stacked-bar.html
    for example.
 
-- [bower](https://bower.io/) support is being dropped from this version.
+- [bower](https://bower.io/) support is dropped from version 4.0. Please use version 3.* for
+   Bower support.
