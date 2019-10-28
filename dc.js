@@ -1,5 +1,5 @@
 /*!
- *  dc 3.1.6
+ *  dc 3.1.7
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.1.6
+ * @version 3.1.7
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  *      .filter('sunday');
  */
 var dc = {
-    version: '3.1.6',
+    version: '3.1.7',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',

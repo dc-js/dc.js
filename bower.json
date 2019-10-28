@@ -18,7 +18,7 @@
     "!README.md"
   ],
   "dependencies": {
-    "d3": "3.x",
+    "d3": "5.x",
     "crossfilter2": "~1.4"
   }
 }

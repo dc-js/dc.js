@@ -11,7 +11,16 @@
       }
       .container {
           display: flex;
+          flex-direction: column;
+      }
+      .controls {
+          flex: 0;
+      }
+      .chart-holder {
+          flex: 1;
+          display: flex;
           flex-direction: row;
+          min-height: 0;
       }
       #test1,#test2 {
           min-width: 0;
@@ -20,9 +29,14 @@
     </style>
 </head>
 <body>
-<div class="container">
-  <div id="test1"></div>
-  <div id="test2"></div>
+  <div class="container">
+    <div class=".controls">
+      <label style="display: inline-block"><input type="checkbox" id="canvas">Use Canvas</label>
+    </div>
+    <div class="chart-holder">
+      <div id="test1"></div>
+      <div id="test2"></div>
+    </div>
 
     <script type="text/javascript" src="../js/promise-polyfill.js"></script>
     <script type="text/javascript" src="../js/fetch.umd.js"></script>
@@ -33,6 +47,10 @@
 
 const urlParams = new URLSearchParams(window.location.search),
     useCanvas = !!urlParams.get('canvas');
+
+d3.select('#canvas').property('checked', useCanvas).on('change', function() {
+    window.location.href = window.location.href.split('?')[0] + (this.checked ? '?canvas=t' : '');
+})
 
     dc.constants.EVENT_DELAY = 0;
 
@@ -91,7 +109,14 @@ chart2.width(null)
     .excludedColor('#ddd')
     .group(group2);
 
-dc.renderAll();
+if(useCanvas) {
+    chart1.transitionDuration(0);
+    chart2.transitionDuration(0);
+}
+
+    dc.renderAll();
+
+    let n=0;
 
 const callback = chart => entries => {
     chart
