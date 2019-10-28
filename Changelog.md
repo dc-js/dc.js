@@ -1,3 +1,6 @@
+## 3.1.7
+* Updating `bower.json` to D3v5, with apologies for [#1458](https://github.com/dc-js/dc.js/issues/1458). Bower support will be dropped in dc.js version 4.0 - please specify dc version `3.x` if you are using bower
+
 ## 3.1.6
 * allow resizing of canvas-based scatter plots ([#1596](https://github.com/dc-js/dc.js/issues/1596))
 
