@@ -55,13 +55,6 @@ npm install dc
 ```
 
 
-Install with bower
---------------------
-```
-bower install dcjs
-```
-
-
 Install without npm
 --------------------
 Download
