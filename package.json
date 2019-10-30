@@ -64,6 +64,7 @@
     "reductio": "0.6.x",
     "rollup": "^1.26.0",
     "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-license": "^0.12.1",
     "rollup-plugin-terser": "^5.1.2",
     "time-grunt": "~1.4",
     "whatwg-fetch": "^3.0.0"

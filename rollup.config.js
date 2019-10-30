@@ -1,7 +1,16 @@
 import {terser} from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
+import license from 'rollup-plugin-license';
 
 const jsonPlugin = json({include: 'package.json', preferConst: true});
+const licensePlugin = license({
+    sourcemap: true,
+    banner: {
+        content: {
+            file: 'LICENSE_BANNER'
+        }
+    }
+});
 
 const umdConf = {
     file: 'dist/es6/dc.js',
@@ -55,7 +64,8 @@ export default [
         external: ['d3'],
         plugins: [
             terser({include: [/^.+\.min\.js$/]}),
-            jsonPlugin
+            jsonPlugin,
+            licensePlugin
         ],
         output: [
             umdConf,
@@ -68,7 +78,8 @@ export default [
         input: modulesMap,
         external: ['d3'],
         plugins: [
-            jsonPlugin
+            jsonPlugin,
+            licensePlugin
         ],
         output: {
             dir: 'dist/esm',
@@ -80,7 +91,8 @@ export default [
         external: ['d3'],
         plugins: [
             terser(),
-            jsonPlugin
+            jsonPlugin,
+            licensePlugin
         ],
         output: {
             dir: 'dist/esm-min',

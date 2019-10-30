@@ -1,7 +1,7 @@
 /*!
- *  dc <%= conf.pkg.version %>
+ *  dc <%= pkg.version %>
  *  http://dc-js.github.io/dc.js/
- *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
+ *  Copyright 2012-<%= moment().format('YYYY') %> Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
