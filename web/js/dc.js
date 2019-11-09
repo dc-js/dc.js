@@ -1,5 +1,5 @@
 /*!
- *  dc 3.1.7
+ *  dc 3.1.8
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.1.7
+ * @version 3.1.8
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  *      .filter('sunday');
  */
 var dc = {
-    version: '3.1.7',
+    version: '3.1.8',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -1751,7 +1751,7 @@ dc.baseMixin = function (_chart) {
 
     _chart._computeOrderedGroups = function (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort(function (a, b) { return _ordering(a) - _ordering(b) });
+        return data.slice().sort(function (a, b) { return _ordering(a) - _ordering(b) });
     };
 
     /**
