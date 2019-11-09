@@ -349,7 +349,7 @@ dc.baseMixin = function (_chart) {
 
     _chart._computeOrderedGroups = function (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort(function (a, b) { return _ordering(a) - _ordering(b) });
+        return data.slice().sort(function (a, b) { return _ordering(a) - _ordering(b) });
     };
 
     /**
