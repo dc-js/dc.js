@@ -90,14 +90,14 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
             .margins({left: 75, top: 0, right: 10, bottom: 140})
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(kv => group.ord2int(kv.key))
+            .keyAccessor(function(kv) { return  group.ord2int(kv.key); })
             .centerBar(true)
             .yAxisLabel('counts')
             .elasticY(true)
             .brushOn(true)
             .dimension(dimension)
             .group(group)
-            .title(kv => kv.key);
+            .title(function(kv) { return kv.key });
 
         bar.xAxis()
             .tickValues(d3.range(short.length))
@@ -115,7 +115,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
                 return filters[0][0] <= i && i < filters[0][1];
             }).map(function(kv) { return kv.key; });
             dimension.filterFunction(function(d) {
-                return inside.includes(d);
+                return inside.indexOf(d) >= 0;
             });
             return filters;
         });

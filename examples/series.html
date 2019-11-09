@@ -58,7 +58,7 @@ d3.csv("morley.csv").then(function(experiments) {
 function load_button(file) {
     return function load_it() {
         d3.csv(file).then(function(experiments) {
-            ndx.remove(() => true);
+            ndx.remove(function() { return true; });
             ndx.add(experiments);
             dc.redrawAll();
         });

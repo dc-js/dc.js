@@ -85,7 +85,7 @@
             .margins({left: 60, top: 0, right: 10, bottom: 145})
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(kv => group.ord2int(kv.key))
+            .keyAccessor(function(kv) { return group.ord2int(kv.key); })
             .centerBar(true)
             .yAxisLabel('counts')
             .elasticY(true)
@@ -94,7 +94,7 @@
             .mouseZoomable(true)
             .zoomScale([4,8])
             .group(group)
-            .title(kv => kv.key)
+            .title(function(kv) { return kv.key; })
             .transitionDuration(0);
 
         focus.xAxis()
@@ -109,10 +109,10 @@
             var bars = _chart.chartBodyG().selectAll('rect.bar');
             if (focusFilter.length) {
                 bars.classed(dc.constants.SELECTED_CLASS, function (d) {
-                    return focusFilter.includes(d.data.key);
+                    return focusFilter.indexOf(d.data.key) >= 0;
                 });
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return !focusFilter.includes(d.data.key);
+                    return focusFilter.indexOf(d.data.key) === -1;
                 });
             } else {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
@@ -128,7 +128,7 @@
                     focusFilter.push(d.data.key);
                 if(focusFilter.length)
                     chart.dimension().filterFunction(function(k) {
-                        return focusFilter.includes(k);
+                        return focusFilter.indexOf(k) >= 0;
                     });
                 else chart.dimension().filter(null);
                 chart.redrawGroup();
@@ -148,7 +148,7 @@
             .width(1000).height(20)
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(kv => group.ord2int(kv.key))
+            .keyAccessor(function(kv) { return group.ord2int(kv.key); })
             .elasticY(true)
             .brushOn(true)
             .dimension(dimension)

@@ -48,7 +48,7 @@ function generateFmeasureContours(width, height, beta){
   var thresholds = d3.range(0.0, 1.0, 0.05);
   var color = d3.scaleLinear()
   .domain(d3.extent(thresholds))
-  .interpolate(d => d3.interpolateRdYlGn)
+  .interpolate(function() { return d3.interpolateRdYlGn; }) // don't understand the function() here
   var contours = d3.contours()
   .size([width, height])
   .thresholds(thresholds)
@@ -82,7 +82,8 @@ chart
         .merge(contourLayer);
 
     var width = chart.effectiveWidth(), height = chart.effectiveHeight();
-    [contours, color] = generateFmeasureContours(width,height, 1);
+    var concol = generateFmeasureContours(width,height, 1);
+    var contours = concol[0], color = concol[1];
 
     contourLayer
       .selectAll("path")
@@ -90,7 +91,7 @@ chart
       .enter()
       .append("path")
       .attr("d", d3.geoPath())
-      .attr("fill",  d => color(d.value));
+      .attr("fill",  function(d) { return color(d.value); });
   });
 
 chart.render();
