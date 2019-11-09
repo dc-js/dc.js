@@ -69,7 +69,7 @@ var data2 = [
 // As of crossfilter 1.4, there is no need for this messy (and potentially buggy) workaround.
 // Use the predicate form and there is no need to mess with dimension filters:
 function resetData(ndx) {
-    ndx.remove(() => true);
+    ndx.remove(function() { return true; });
 }
 
 // set crossfilter with first dataset

@@ -57,7 +57,7 @@ var chart = dc.pieChart("#test");
         items = items.slice(start);
       }
     }
-    items.sort((a,b) => d3.ascending(a.key, b.key));
+    items.sort(function(a,b) { return d3.ascending(a.key, b.key); });
     if (chart.othersGrouper()) {
       return chart.othersGrouper()(items, rest);
     }
