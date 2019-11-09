@@ -20,6 +20,7 @@
 
       <script type="text/javascript" src="../js/promise-polyfill.js"></script>
       <script type="text/javascript" src="../js/fetch.umd.js"></script>
+      <script type="text/javascript" src="../js/url-search-params-polyfill.js"></script>
       <script type="text/javascript" src="../js/d3.js"></script>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
@@ -59,7 +60,7 @@
 
                 // instead, we'll need to set the x scale each time, and calculate domain
                 if(!zoom.filters().length) {
-                    var xExtent = d3.extent(speedSumGroup.all(), kv => kv.key);
+                    var xExtent = d3.extent(speedSumGroup.all(), function(kv) { return kv.key; });
                     focus.x(focus.x().domain(xExtent));
                 }
             }
@@ -81,10 +82,10 @@
 
             var run = 21;
             setInterval(
-                () => {
+                function() {
                     ndx.add([{Expt: 6, Run: run++, Speed: 5000 + 5 * run}]);
                     if(remove)
-                        ndx.remove(d => d.Run < run-20);
+                        ndx.remove(function(d) { return d.Run < run-20; });
                     dc.redrawAll()
                 },
                 5000);

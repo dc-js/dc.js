@@ -335,6 +335,11 @@ module.exports = function (grunt) {
                         dest: '<%= conf.web %>/js/promise-polyfill.js'
                     },
                     {
+                        nonull: true,
+                        src: 'node_modules/url-search-params-polyfill/index.js',
+                        dest: '<%= conf.web %>/js/url-search-params-polyfill.js'
+                    },
+                    {
                         expand: true,
                         flatten: true,
                         nonull: true,

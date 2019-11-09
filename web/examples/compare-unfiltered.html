@@ -110,7 +110,7 @@
   var data_count = dc.dataCount('.dc-data-count');
 
   function static_copy_group(group) {
-      var all = group.all().map(kv => ({key: kv.key, value: kv.value}));
+      var all = group.all().map(function(kv) { return {key: kv.key, value: kv.value}; });
       return {
           all: function() {
               return all;
@@ -214,13 +214,13 @@
       }
       // hide/unhide the unfiltered layer after any render/redraw
       charts.forEach(
-          chart => chart.on(
+          function(chart) { return chart.on(
               'pretransition.hide-unfiltered',
-              chart => chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')
-          ));
+              function(chart) { return chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')}
+          )});
       d3.select('#unfiltered').on('change', function() {
           show_unfiltered = this.checked;
-          charts.forEach(chart => {
+          charts.forEach(function(chart) {
               chart.elasticY(show_unfiltered);
               if(!show_unfiltered) {
                   ydomain_from_child1(chart);

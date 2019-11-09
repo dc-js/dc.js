@@ -938,21 +938,26 @@ module.exports = result;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{}],3:[function(require,module,exports){
-module.exports={"version":"1.4.7"}
+module.exports={"version":"1.4.8"}
 },{}],4:[function(require,module,exports){
+var crossfilter_array8 = crossfilter_arrayUntyped,
+    crossfilter_array16 = crossfilter_arrayUntyped,
+    crossfilter_array32 = crossfilter_arrayUntyped,
+    crossfilter_arrayLengthen = crossfilter_arrayLengthenUntyped,
+    crossfilter_arrayWiden = crossfilter_arrayWidenUntyped;
 if (typeof Uint8Array !== "undefined") {
-  var crossfilter_array8 = function(n) { return new Uint8Array(n); };
-  var crossfilter_array16 = function(n) { return new Uint16Array(n); };
-  var crossfilter_array32 = function(n) { return new Uint32Array(n); };
+  crossfilter_array8 = function(n) { return new Uint8Array(n); };
+  crossfilter_array16 = function(n) { return new Uint16Array(n); };
+  crossfilter_array32 = function(n) { return new Uint32Array(n); };
 
-  var crossfilter_arrayLengthen = function(array, length) {
+  crossfilter_arrayLengthen = function(array, length) {
     if (array.length >= length) return array;
     var copy = new array.constructor(length);
     copy.set(array);
     return copy;
   };
 
-  var crossfilter_arrayWiden = function(array, width) {
+  crossfilter_arrayWiden = function(array, width) {
     var copy;
     switch (width) {
       case 16: copy = crossfilter_array16(array.length); break;
@@ -1008,7 +1013,8 @@ crossfilter_bitarray.prototype.add = function() {
   for (i = 0, len = this.subarrays; i < len; ++i) {
     m = this.masks[i];
     w = this.width - (32 * i);
-    one = ~m & -~m;
+    // isolate the rightmost zero bit and return it as an unsigned int of 32 bits, if NaN or -1, return a 0 
+    one = (~m & (m + 1)) >>> 0;
 
     if (w >= 32 && !one) {
       continue;
@@ -1053,7 +1059,6 @@ crossfilter_bitarray.prototype.truncate = function(n) {
     for (var j = this.length - 1; j >= n; j--) {
       this[i][j] = 0;
     }
-    this[i].length = n;
   }
   this.length = n;
 };
@@ -1080,7 +1085,7 @@ crossfilter_bitarray.prototype.zeroExcept = function(n, offset, zero) {
   return true;
 };
 
-// Checks that all bits for the given indez are 0 except for the specified mask.
+// Checks that all bits for the given index are 0 except for the specified mask.
 // The mask should be an array of the same size as the filter subarrays width.
 crossfilter_bitarray.prototype.zeroExceptMask = function(n, mask) {
   var i, len;
@@ -1119,11 +1124,11 @@ crossfilter_bitarray.prototype.onlyExcept = function(n, offset, zero, onlyOffset
 };
 
 module.exports = {
-  array8: crossfilter_arrayUntyped,
-  array16: crossfilter_arrayUntyped,
-  array32: crossfilter_arrayUntyped,
-  arrayLengthen: crossfilter_arrayLengthenUntyped,
-  arrayWiden: crossfilter_arrayWidenUntyped,
+  array8: crossfilter_array8,
+  array16: crossfilter_array16,
+  array32: crossfilter_array32,
+  arrayLengthen: crossfilter_arrayLengthen,
+  arrayWiden: crossfilter_arrayWiden,
   bitarray: crossfilter_bitarray
 };
 
@@ -1253,7 +1258,7 @@ function crossfilter() {
   // removes all records matching the predicate (ignoring filters).
   function removeData(predicate) {
     var // Mapping from old record indexes to new indexes (after records removed)
-        newIndex = crossfilter_index(n, n),
+        newIndex = new Array(n),
         removed = [],
         usePred = typeof predicate === 'function',
         shouldRemove = function (i) {
@@ -1346,9 +1351,7 @@ function crossfilter() {
         newValues, // temporary array storing newly-added values
         newIndex, // temporary array storing newly-added index
         iterablesIndexCount,
-        newIterablesIndexCount,
         iterablesIndexFilterStatus,
-        newIterablesIndexFilterStatus,
         iterablesEmptyRows = [],
         sort = quicksort.by(function(i) { return newValues[i]; }),
         refilter = xfilterFilter.filterAll, // for recomputing filter
@@ -1388,6 +1391,8 @@ function crossfilter() {
     // Incorporates the specified new records into this dimension.
     // This function is responsible for updating filters, values, and index.
     function preAdd(newData, n0, n1) {
+      var newIterablesIndexCount,
+          newIterablesIndexFilterStatus;
 
       if (iterable){
         // Count all the values
@@ -1440,27 +1445,49 @@ function crossfilter() {
         newValues = permute(newValues, newIndex);
       }
 
-      if(iterable) {
-        n1 = t;
-      }
-
       // Bisect newValues to determine which new records are selected.
       var bounds = refilter(newValues), lo1 = bounds[0], hi1 = bounds[1];
-      if (refilterFunction) {
-        for (var index2 = 0; index2 < n1; ++index2) {
-          if (!refilterFunction(newValues[index2], index2)) {
-            filters[offset][newIndex[index2] + n0] |= one;
-            if(iterable) newIterablesIndexFilterStatus[index2] = 1;
+
+      var index2, index3, index4;
+      if(iterable) {
+        n1 = t;
+        if (refilterFunction) {
+          for (index2 = 0; index2 < n1; ++index2) {
+            if (!refilterFunction(newValues[index2], index2)) {
+              if(--newIterablesIndexCount[newIndex[index2]] === 0) {
+                filters[offset][newIndex[index2] + n0] |= one;
+              }
+              newIterablesIndexFilterStatus[index2] = 1;
+            }
+          }
+        } else {
+          for (index3 = 0; index3 < lo1; ++index3) {
+            if(--newIterablesIndexCount[newIndex[index3]] === 0) {
+              filters[offset][newIndex[index3] + n0] |= one;
+            }
+            newIterablesIndexFilterStatus[index3] = 1;
+          }
+          for (index4 = hi1; index4 < n1; ++index4) {
+            if(--newIterablesIndexCount[newIndex[index4]] === 0) {
+              filters[offset][newIndex[index4] + n0] |= one;
+            }
+            newIterablesIndexFilterStatus[index4] = 1;
           }
         }
       } else {
-        for (var index3 = 0; index3 < lo1; ++index3) {
-          filters[offset][newIndex[index3] + n0] |= one;
-          if(iterable) newIterablesIndexFilterStatus[index3] = 1;
-        }
-        for (var index4 = hi1; index4 < n1; ++index4) {
-          filters[offset][newIndex[index4] + n0] |= one;
-          if(iterable) newIterablesIndexFilterStatus[index4] = 1;
+        if (refilterFunction) {
+          for (index2 = 0; index2 < n1; ++index2) {
+            if (!refilterFunction(newValues[index2], index2)) {
+              filters[offset][newIndex[index2] + n0] |= one;
+            }
+          }
+        } else {
+          for (index3 = 0; index3 < lo1; ++index3) {
+            filters[offset][newIndex[index3] + n0] |= one;
+          }
+          for (index4 = hi1; index4 < n1; ++index4) {
+            filters[offset][newIndex[index4] + n0] |= one;
+          }
         }
       }
 
@@ -1559,7 +1586,7 @@ function crossfilter() {
             i1++;
           }
         }
-        iterablesIndexCount.length = i1;
+        iterablesIndexCount = iterablesIndexCount.slice(0, i1);
       }
       // Rewrite our index, overwriting removed values
       var n0 = values.length;
@@ -1575,7 +1602,7 @@ function crossfilter() {
         }
       }
       values.length = j;
-      if (iterable) iterablesIndexFilterStatus.length = j;
+      if (iterable) iterablesIndexFilterStatus = iterablesIndexFilterStatus.slice(0, j);
       while (j < n0) index[j++] = 0;
 
       // Bisect again to recompute lo0 and hi0.
@@ -1672,7 +1699,7 @@ function crossfilter() {
         removed = newRemoved;
 
         // Now handle empty rows.
-        if(bounds[0] === 0 && bounds[1] === values.length) {
+        if(refilter === xfilterFilter.filterAll) {
           for(i = 0; i < iterablesEmptyRows.length; i++) {
             if((filters[offset][k = iterablesEmptyRows[i]] & one)) {
               // Was not in the filter, so set the filter and add
