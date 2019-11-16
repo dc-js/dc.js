@@ -87,5 +87,5 @@
   ],
   "browser": "dist/es6/dc.js",
   "main": "dist/es6/dc.js",
-  "module": "dist/es6/dc.esm.js"
+  "module": "dist/esm/index.js"
 }
