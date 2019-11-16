@@ -1,5 +1,6 @@
 import {terser} from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
+import glob from 'glob';
 import license from 'rollup-plugin-license';
 
 const jsonPlugin = json({include: 'package.json', preferConst: true});
@@ -32,31 +33,21 @@ const esmFlat = {
 
 const esmFlatMin = Object.assign({}, esmFlat, {file: 'dist/esf/dc.esm.min.js'});
 
-const modulesMap = {
-    'index': 'src/index.js',
-    'legend': 'src/base/legend.js',
+/*
+It will have entries like
+{
     'html-legend': 'src/base/html-legend.js',
-    'bar-chart': 'src/charts/bar-chart.js',
-    'box-plot': 'src/charts/box-plot.js',
-    'bubble-chart': 'src/charts/bubble-chart.js',
-    'bubble-overlay': 'src/charts/bubble-overlay.js',
-    'cbox-menu': 'src/charts/cbox-menu.js',
-    'composite-chart': 'src/charts/composite-chart.js',
-    'data-count': 'src/charts/data-count.js',
-    'data-grid': 'src/charts/data-grid.js',
-    'data-table': 'src/charts/data-table.js',
-    'geo-choropleth-chart': 'src/charts/geo-choropleth-chart.js',
-    'heatmap': 'src/charts/heatmap.js',
-    'line-chart': 'src/charts/line-chart.js',
-    'number-display': 'src/charts/number-display.js',
-    'pie-chart': 'src/charts/pie-chart.js',
-    'row-chart': 'src/charts/row-chart.js',
-    'scatter-plot': 'src/charts/scatter-plot.js',
-    'select-menu': 'src/charts/select-menu.js',
-    'series-chart': 'src/charts/series-chart.js',
-    'sunburst-chart': 'src/charts/sunburst-chart.js',
-    'text-filter-widget': 'src/charts/text-filter-widget.js'
-};
+    'bar-chart': 'src/charts/bar-chart.js'
+}
+
+This list is populated base on files in the src folder.
+If needed, some entries can be removed.
+*/
+const modulesMap = {};
+glob.sync('src/**/*.js', {}).forEach(function (f) {
+    const res = f.match(/\/([^\/]*).js$/);
+    modulesMap[res[1]] = f;
+});
 
 export default [
     {
