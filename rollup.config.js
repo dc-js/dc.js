@@ -1,6 +1,5 @@
 import {terser} from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
-import glob from 'glob';
 import license from 'rollup-plugin-license';
 
 const jsonPlugin = json({include: 'package.json', preferConst: true});
@@ -25,22 +24,6 @@ const umdConf = {
 
 const umdMinConf = Object.assign({}, umdConf, {file: 'dist/dc.min.js'});
 
-/*
-It will have entries like
-{
-    'html-legend': 'src/base/html-legend.js',
-    'bar-chart': 'src/charts/bar-chart.js'
-}
-
-This list is populated base on files in the src folder.
-If needed, some entries can be removed.
-*/
-const modulesMap = {};
-glob.sync('src/**/*.js', {}).forEach(function (f) {
-    const res = f.match(/\/([^\/]*).js$/);
-    modulesMap[res[1]] = f;
-});
-
 export default [
     {
         input: 'src/index-with-version.js',
@@ -54,17 +37,5 @@ export default [
             umdConf,
             umdMinConf
         ]
-    },
-    {
-        input: modulesMap,
-        external: ['d3'],
-        plugins: [
-            jsonPlugin,
-            licensePlugin
-        ],
-        output: {
-            dir: 'dist/esm',
-            format: 'esm'
-        }
     }
 ];
