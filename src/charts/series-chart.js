@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {ascending} from 'd3-array';
+import {nest} from 'd3-collection';
 
 import {CompositeChart} from './composite-chart';
 import {lineChart} from './line-chart';
@@ -30,13 +31,13 @@ export class SeriesChart extends CompositeChart {
     constructor (parent, chartGroup) {
         super(parent, chartGroup);
 
-        this._keySort = (a, b) => d3.ascending(this.keyAccessor()(a), this.keyAccessor()(b));
+        this._keySort = (a, b) => ascending(this.keyAccessor()(a), this.keyAccessor()(b));
 
         this._charts = {};
         this._chartFunction = lineChart;
         this._chartGroup = chartGroup;
         this._seriesAccessor = undefined;
-        this._seriesSort = d3.ascending;
+        this._seriesSort = ascending;
         this._valueSort = this._keySort;
 
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
@@ -54,7 +55,7 @@ export class SeriesChart extends CompositeChart {
     _preprocessData () {
         const keep = [];
         let childrenChanged;
-        const nester = d3.nest().key(this._seriesAccessor);
+        const nester = nest().key(this._seriesAccessor);
         if (this._seriesSort) {
             nester.sortKeys(this._seriesSort);
         }

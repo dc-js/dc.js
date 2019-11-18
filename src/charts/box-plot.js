@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {scaleBand} from 'd3-scale';
+import {select} from 'd3-selection';
+import {min, max} from 'd3-array';
 
 import {d3Box} from '../base/d3.box'
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
@@ -81,7 +83,7 @@ export class BoxPlot extends CoordinateGridMixin {
         };
 
         // default to ordinal
-        this.x(d3.scaleBand());
+        this.x(scaleBand());
         this.xUnits(units.ordinal);
 
         // valueAccessor should return an array of values that can be coerced into numbers
@@ -208,8 +210,8 @@ export class BoxPlot extends CoordinateGridMixin {
             .call(this._box)
             .each(function (d) {
                 const color = chart.getColor(d, 0);
-                d3.select(this).select('rect.box').attr('fill', color);
-                d3.select(this).selectAll('circle.data').attr('fill', color);
+                select(this).select('rect.box').attr('fill', color);
+                select(this).selectAll('circle.data').attr('fill', color);
             });
     }
 
@@ -218,14 +220,14 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     _minDataValue () {
-        return d3.min(this.data(), e => {
-            return d3.min(this.valueAccessor()(e));
+        return min(this.data(), e => {
+            return min(this.valueAccessor()(e));
         });
     }
 
     _maxDataValue () {
-        return d3.max(this.data(), e => {
-            return d3.max(this.valueAccessor()(e));
+        return max(this.data(), e => {
+            return max(this.valueAccessor()(e));
         });
     }
 

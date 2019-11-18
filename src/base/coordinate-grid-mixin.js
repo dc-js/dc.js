@@ -1,4 +1,11 @@
-import * as d3 from 'd3';
+import {schemeCategory10} from 'd3-scale-chromatic';
+import {timeDay} from 'd3-time';
+import {max, min} from 'd3-array';
+import {scaleBand, scaleLinear, scaleOrdinal} from 'd3-scale';
+import {axisBottom, axisLeft, axisRight} from 'd3-axis';
+import {zoom, zoomIdentity} from 'd3-zoom';
+import {brushX} from 'd3-brush';
+import {event} from 'd3-selection';
 
 import {ColorMixin} from './color-mixin';
 import {MarginMixin} from './margin-mixin';
@@ -29,7 +36,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     constructor () {
         super();
 
-        this.colors(d3.scaleOrdinal(d3.schemeCategory10));
+        this.colors(scaleOrdinal(schemeCategory10));
         this._mandatoryAttributes().push('x');
         this._parent = undefined;
         this._g = undefined;
@@ -38,10 +45,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._x = undefined;
         this._origX = undefined; // Will hold original scale in case of zoom
         this._xOriginalDomain = undefined;
-        this._xAxis = d3.axisBottom();
+        this._xAxis = axisBottom();
         this._xUnits = units.integers;
         this._xAxisPadding = 0;
-        this._xAxisPaddingUnit = d3.timeDay;
+        this._xAxisPaddingUnit = timeDay;
         this._xElasticity = false;
         this._xAxisLabel = undefined;
         this._xAxisLabelPadding = 0;
@@ -54,7 +61,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._yAxisLabel = undefined;
         this._yAxisLabelPadding = 0;
 
-        this._brush = d3.brushX();
+        this._brush = brushX();
 
         this._gBrush = undefined;
         this._brushOn = true;
@@ -70,8 +77,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._zoomScale = [1, Infinity];
         this._zoomOutRestrict = true;
 
-        this._zoom = d3.zoom().on('zoom', () => this._onZoom());
-        this._nullZoom = d3.zoom().on('zoom', null);
+        this._zoom = zoom().on('zoom', () => this._onZoom());
+        this._nullZoom = zoom().on('zoom', null);
         this._hasBeenMouseZoomable = false;
 
         this._rangeChart = undefined;
@@ -455,7 +462,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                     'd3.scaleBand() for the x scale, instead of d3.scaleOrdinal(). ' +
                     'Replacing .x() with a d3.scaleBand with the same domain - ' +
                     'make the same change in your code to avoid this warning!');
-                this._x = d3.scaleBand().domain(this._x.domain());
+                this._x = scaleBand().domain(this._x.domain());
             }
 
             if (this.elasticX() || this._x.domain().length === 0) {
@@ -581,13 +588,13 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     _createYAxis () {
-        return this._useRightYAxis ? d3.axisRight() : d3.axisLeft();
+        return this._useRightYAxis ? axisRight() : axisLeft();
     }
 
     _prepareYAxis (g) {
         if (this._y === undefined || this.elasticY()) {
             if (this._y === undefined) {
-                this._y = d3.scaleLinear();
+                this._y = scaleLinear();
             }
             const min = this.yAxisMin() || 0,
                 max = this.yAxisMax() || 0;
@@ -805,8 +812,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     xAxisMin () {
-        const min = d3.min(this.data(), e => this.keyAccessor()(e));
-        return utils.subtract(min, this._xAxisPadding, this._xAxisPaddingUnit);
+        const m = min(this.data(), e => this.keyAccessor()(e));
+        return utils.subtract(m, this._xAxisPadding, this._xAxisPaddingUnit);
     }
 
     /**
@@ -814,8 +821,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     xAxisMax () {
-        const max = d3.max(this.data(), e => this.keyAccessor()(e));
-        return utils.add(max, this._xAxisPadding, this._xAxisPaddingUnit);
+        const m = max(this.data(), e => this.keyAccessor()(e));
+        return utils.add(m, this._xAxisPadding, this._xAxisPaddingUnit);
     }
 
     /**
@@ -823,8 +830,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     yAxisMin () {
-        const min = d3.min(this.data(), e => this.valueAccessor()(e));
-        return utils.subtract(min, this._yAxisPadding);
+        const m = min(this.data(), e => this.valueAccessor()(e));
+        return utils.subtract(m, this._yAxisPadding);
     }
 
     /**
@@ -832,8 +839,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     yAxisMax () {
-        const max = d3.max(this.data(), e => this.valueAccessor()(e));
-        return utils.add(max, this._yAxisPadding);
+        const m = max(this.data(), e => this.valueAccessor()(e));
+        return utils.add(m, this._yAxisPadding);
     }
 
     /**
@@ -968,7 +975,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     _brushing () {
         // Avoids infinite recursion (mutual recursion between range and focus operations)
         // Source Event will be null when brush.move is called programmatically (see below as well).
-        if (!d3.event.sourceEvent) {
+        if (!event.sourceEvent) {
             return;
         }
 
@@ -976,11 +983,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         // In this case we are more worried about this handler causing brush move programmatically which will
         // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
         // This check avoids recursive calls
-        if (d3.event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+        if (event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(event.sourceEvent.type) !== -1) {
             return;
         }
 
-        let brushSelection = d3.event.selection;
+        let brushSelection = event.selection;
         if (brushSelection) {
             brushSelection = brushSelection.map(this.x().invert);
         }
@@ -1222,7 +1229,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         const k = (origDomain[1] - origDomain[0]) / (newDomain[1] - newDomain[0]);
         const xt = -1 * xScale(newDomain[0]);
 
-        return d3.zoomIdentity.scale(k).translate(xt, 0);
+        return zoomIdentity.scale(k).translate(xt, 0);
     }
 
     // If we changing zoom status (for example by calling focus), tell D3 zoom about it
@@ -1235,7 +1242,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     _onZoom () {
         // Avoids infinite recursion (mutual recursion between range and focus operations)
         // Source Event will be null when zoom is called programmatically (see below as well).
-        if (!d3.event.sourceEvent) {
+        if (!event.sourceEvent) {
             return;
         }
 
@@ -1243,11 +1250,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         // In this case we are more worried about this handler causing zoom programmatically which will
         // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
         // This check avoids recursive calls
-        if (d3.event.sourceEvent.type && ['start', 'zoom', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+        if (event.sourceEvent.type && ['start', 'zoom', 'end'].indexOf(event.sourceEvent.type) !== -1) {
             return;
         }
 
-        const newDomain = d3.event.transform.rescaleX(this._origX).domain();
+        const newDomain = event.transform.rescaleX(this._origX).domain();
         this.focus(newDomain, false);
     }
 

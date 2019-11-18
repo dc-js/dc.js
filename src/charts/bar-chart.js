@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import {select} from 'd3-selection';
 
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
@@ -94,7 +94,7 @@ export class BarChart extends StackMixin {
         {
             const chart = this;
             layers.each(function (d, i) {
-                const layer = d3.select(this);
+                const layer = select(this);
 
                 chart._renderBars(layer, i, d);
 
@@ -338,7 +338,7 @@ export class BarChart extends StackMixin {
 
     legendHighlight (d) {
         const colorFilter = (color, inv) => function () {
-            const item = d3.select(this);
+            const item = select(this);
             const match = item.attr('fill') === color;
             return inv ? !match : match;
         };

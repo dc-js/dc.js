@@ -1,4 +1,8 @@
-import * as d3 from 'd3';
+import {min, sum} from 'd3-array';
+import {arc, pie} from 'd3-shape';
+import {select} from 'd3-selection';
+import {interpolate} from 'd3-interpolate';
+
 import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
@@ -96,21 +100,21 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     _drawChart () {
         // set radius from chart size if none given, or if given radius is too large
-        const maxRadius = d3.min([this.width(), this.height()]) / 2;
+        const maxRadius = min([this.width(), this.height()]) / 2;
         this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
 
-        const arc = this._buildArcs();
+        const arcs = this._buildArcs();
 
-        const pie = this._pieLayout();
+        const pieLayout = this._pieLayout();
         let pieData;
         // if we have data...
-        if (d3.sum(this.data(), d => this.cappedValueAccessor(d))) {
-            pieData = pie(this.data());
+        if (sum(this.data(), d => this.cappedValueAccessor(d))) {
+            pieData = pieLayout(this.data());
             this._g.classed(this._emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
-            pieData = pie([{key: this._emptyTitle, value: 1, others: [this._emptyTitle]}]);
+            pieData = pieLayout([{key: this._emptyTitle, value: 1, others: [this._emptyTitle]}]);
             this._g.classed(this._emptyCssClass, true);
         }
 
@@ -125,9 +129,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
             this._removeElements(slices, labels);
 
-            this._createElements(slices, labels, arc, pieData);
+            this._createElements(slices, labels, arcs, pieData);
 
-            this._updateElements(pieData, arc);
+            this._updateElements(pieData, arcs);
 
             this._highlightFilter();
 
@@ -136,14 +140,14 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    _createElements (slices, labels, arc, pieData) {
+    _createElements (slices, labels, arcs, pieData) {
         const slicesEnter = this._createSliceNodes(slices);
 
-        this._createSlicePath(slicesEnter, arc);
+        this._createSlicePath(slicesEnter, arcs);
 
         this._createTitles(slicesEnter);
 
-        this._createLabels(labels, pieData, arc);
+        this._createLabels(labels, pieData, arcs);
     }
 
     _createSliceNodes (slices) {
@@ -153,11 +157,11 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .attr('class', (d, i) => this._sliceCssClass + ' _' + i);
     }
 
-    _createSlicePath (slicesEnter, arc) {
+    _createSlicePath (slicesEnter, arcs) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', (d, i) => this._onClick(d, i))
-            .attr('d', (d, i) => this._safeArc(d, i, arc));
+            .attr('d', (d, i) => this._safeArc(d, i, arcs));
 
         const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
@@ -185,10 +189,10 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             });
     }
 
-    _positionLabels (labels, arc) {
+    _positionLabels (labels, arcs) {
         this._applyLabelText(labels);
         transition(labels, this.transitionDuration(), this.transitionDelay())
-            .attr('transform', d => this._labelPosition(d, arc))
+            .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle');
     }
 
@@ -197,7 +201,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .classed('highlight', whether);
     }
 
-    _createLabels (labels, pieData, arc) {
+    _createLabels (labels, pieData, arcs) {
         if (this.renderLabel()) {
             const labelsEnter = labels
                 .enter()
@@ -216,14 +220,14 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 .on('mouseout', (d, i) => {
                     this._highlightSlice(i, false);
                 });
-            this._positionLabels(labelsEnter, arc);
+            this._positionLabels(labelsEnter, arcs);
             if (this._externalLabelRadius && this._drawPaths) {
-                this._updateLabelPaths(pieData, arc);
+                this._updateLabelPaths(pieData, arcs);
             }
         }
     }
 
-    _updateLabelPaths (pieData, arc) {
+    _updateLabelPaths (pieData, arcs) {
         let polyline = this._g.selectAll('polyline.' + this._sliceCssClass)
             .data(pieData);
 
@@ -242,7 +246,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             })
             .merge(polyline);
 
-        const arc2 = d3.arc()
+        const arc2 = arc()
             .outerRadius(this._radius - this._externalRadiusPadding + this._externalLabelRadius)
             .innerRadius(this._radius - this._externalRadiusPadding);
         const tranNodes = transition(polyline, this.transitionDuration(), this.transitionDelay());
@@ -252,31 +256,31 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 .attrTween('points', function (d) {
                     let current = this._current || d;
                     current = {startAngle: current.startAngle, endAngle: current.endAngle};
-                    const interpolate = d3.interpolate(current, d);
+                    const interpolate = interpolate(current, d);
                     this._current = interpolate(0);
                     return t => {
                         const d2 = interpolate(t);
-                        return [arc.centroid(d2), arc2.centroid(d2)];
+                        return [arcs.centroid(d2), arc2.centroid(d2)];
                     };
                 });
         } else {
-            tranNodes.attr('points', d => [arc.centroid(d), arc2.centroid(d)]);
+            tranNodes.attr('points', d => [arcs.centroid(d), arc2.centroid(d)]);
         }
         tranNodes.style('visibility', d => d.endAngle - d.startAngle < 0.0001 ? 'hidden' : 'visible');
 
     }
 
-    _updateElements (pieData, arc) {
-        this._updateSlicePaths(pieData, arc);
-        this._updateLabels(pieData, arc);
+    _updateElements (pieData, arcs) {
+        this._updateSlicePaths(pieData, arcs);
+        this._updateLabels(pieData, arcs);
         this._updateTitles(pieData);
     }
 
-    _updateSlicePaths (pieData, arc) {
+    _updateSlicePaths (pieData, arcs) {
         const slicePaths = this._g.selectAll('g.' + this._sliceCssClass)
             .data(pieData)
             .select('path')
-            .attr('d', (d, i) => this._safeArc(d, i, arc));
+            .attr('d', (d, i) => this._safeArc(d, i, arcs));
         const tranNodes = transition(slicePaths, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
             const chart = this;
@@ -287,13 +291,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
 
-    _updateLabels (pieData, arc) {
+    _updateLabels (pieData, arcs) {
         if (this.renderLabel()) {
             const labels = this._g.selectAll('text.' + this._labelCssClass)
                 .data(pieData);
-            this._positionLabels(labels, arc);
+            this._positionLabels(labels, arcs);
             if (this._externalLabelRadius && this._drawPaths) {
-                this._updateLabelPaths(pieData, arc);
+                this._updateLabelPaths(pieData, arcs);
             }
         }
     }
@@ -398,7 +402,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _buildArcs () {
-        return d3.arc()
+        return arc()
             .outerRadius(this._radius - this._externalRadiusPadding)
             .innerRadius(this._innerRadius);
     }
@@ -427,7 +431,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _pieLayout () {
-        return d3.pie().sort(null).value(d => this.cappedValueAccessor(d));
+        return pie().sort(null).value(d => this.cappedValueAccessor(d));
     }
 
     _sliceTooSmall (d) {
@@ -453,8 +457,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    _safeArc (d, i, arc) {
-        let path = arc(d, i);
+    _safeArc (d, i, _arc) {
+        let path = _arc(d, i);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
         }
@@ -507,15 +511,15 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    _labelPosition (d, arc) {
+    _labelPosition (d, _arc) {
         let centroid;
         if (this._externalLabelRadius) {
-            centroid = d3.arc()
+            centroid = arc()
                 .outerRadius(this._radius - this._externalRadiusPadding + this._externalLabelRadius)
                 .innerRadius(this._radius - this._externalRadiusPadding + this._externalLabelRadius)
                 .centroid(d);
         } else {
-            centroid = arc.centroid(d);
+            centroid = _arc.centroid(d);
         }
         if (isNaN(centroid[0]) || isNaN(centroid[1])) {
             return 'translate(0,0)';
@@ -547,7 +551,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     _highlightSliceFromLegendable (legendable, highlighted) {
         this.selectAll('g.pie-slice').each(function (d) {
             if (legendable.name === d.data.key) {
-                d3.select(this).classed('highlight', highlighted);
+                select(this).classed('highlight', highlighted);
             }
         });
     }
@@ -561,7 +565,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             // only interpolate startAngle & endAngle, not the whole data object
             current = {startAngle: current.startAngle, endAngle: current.endAngle};
         }
-        const i = d3.interpolate(current, b);
+        const i = interpolate(current, b);
         element._current = i(0);
         return t => this._safeArc(i(t), 0, this._buildArcs());
     }

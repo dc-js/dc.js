@@ -1,4 +1,21 @@
-import * as d3 from 'd3';
+import {
+    area,
+    curveBasis,
+    curveBasisClosed,
+    curveBasisOpen,
+    curveBundle,
+    curveCardinal,
+    curveCardinalClosed,
+    curveCardinalOpen,
+    curveLinear,
+    curveLinearClosed,
+    curveMonotoneX,
+    curveStep,
+    curveStepAfter,
+    curveStepBefore,
+    line
+} from 'd3-shape';
+import {select} from 'd3-selection';
 
 import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
@@ -251,26 +268,26 @@ export class LineChart extends StackMixin {
         } else {
             // If _interpolate is string
             const mapping = {
-                'linear': d3.curveLinear,
-                'linear-closed': d3.curveLinearClosed,
-                'step': d3.curveStep,
-                'step-before': d3.curveStepBefore,
-                'step-after': d3.curveStepAfter,
-                'basis': d3.curveBasis,
-                'basis-open': d3.curveBasisOpen,
-                'basis-closed': d3.curveBasisClosed,
-                'bundle': d3.curveBundle,
-                'cardinal': d3.curveCardinal,
-                'cardinal-open': d3.curveCardinalOpen,
-                'cardinal-closed': d3.curveCardinalClosed,
-                'monotone': d3.curveMonotoneX
+                'linear': curveLinear,
+                'linear-closed': curveLinearClosed,
+                'step': curveStep,
+                'step-before': curveStepBefore,
+                'step-after': curveStepAfter,
+                'basis': curveBasis,
+                'basis-open': curveBasisOpen,
+                'basis-closed': curveBasisClosed,
+                'bundle': curveBundle,
+                'cardinal': curveCardinal,
+                'cardinal-open': curveCardinalOpen,
+                'cardinal-closed': curveCardinalClosed,
+                'monotone': curveMonotoneX
             };
             curve = mapping[this._interpolate];
         }
 
         // Default value
         if (!curve) {
-            curve = d3.curveLinear;
+            curve = curveLinear;
         }
 
         if (this._tension !== null) {
@@ -284,12 +301,12 @@ export class LineChart extends StackMixin {
     }
 
     _drawLine (layersEnter, layers) {
-        const line = d3.line()
+        const _line = line()
             .x(d => this.x()(d.x))
             .y(d => this.y()(d.y + d.y0))
             .curve(this._getCurveFactory());
         if (this._defined) {
-            line.defined(this._defined);
+            _line.defined(this._defined);
         }
 
         const path = layersEnter.append('path')
@@ -302,29 +319,29 @@ export class LineChart extends StackMixin {
         transition(layers.select('path.line'), this.transitionDuration(), this.transitionDelay())
         //.ease('linear')
             .attr('stroke', (d, i) => this._getColor(d, i))
-            .attr('d', d => this._safeD(line(d.values)));
+            .attr('d', d => this._safeD(_line(d.values)));
     }
 
     _drawArea (layersEnter, layers) {
         if (this._renderArea) {
-            const area = d3.area()
+            const _area = area()
                 .x(d => this.x()(d.x))
                 .y1(d => this.y()(d.y + d.y0))
                 .y0(d => this.y()(d.y0))
                 .curve(this._getCurveFactory());
             if (this._defined) {
-                area.defined(this._defined);
+                _area.defined(this._defined);
             }
 
             layersEnter.append('path')
                 .attr('class', 'area')
                 .attr('fill', (d, i) => this._getColor(d, i))
-                .attr('d', d => this._safeD(area(d.values)));
+                .attr('d', d => this._safeD(_area(d.values)));
 
             transition(layers.select('path.area'), this.transitionDuration(), this.transitionDelay())
             //.ease('linear')
                 .attr('fill', (d, i) => this._getColor(d, i))
-                .attr('d', d => this._safeD(area(d.values)));
+                .attr('d', d => this._safeD(_area(d.values)));
         }
     }
 
@@ -370,12 +387,12 @@ export class LineChart extends StackMixin {
                     .attr('fill', this.getColor)
                     .attr('stroke', this.getColor)
                     .on('mousemove', function () {
-                        const dot = d3.select(this);
+                        const dot = select(this);
                         chart._showDot(dot);
                         chart._showRefLines(dot, g);
                     })
                     .on('mouseout', function () {
-                        const dot = d3.select(this);
+                        const dot = select(this);
                         chart._hideDot(dot);
                         chart._hideRefLines(g);
                     })
@@ -396,7 +413,7 @@ export class LineChart extends StackMixin {
     _drawLabels (layers) {
         const chart = this;
         layers.each(function (d, layerIndex) {
-            const layer = d3.select(this);
+            const layer = select(this);
             const labels = layer.selectAll('text.lineLabel')
                 .data(d.values, pluck('x'));
 
@@ -529,7 +546,7 @@ export class LineChart extends StackMixin {
 
     _colorFilter (color, dashstyle, inv) {
         return function () {
-            const item = d3.select(this);
+            const item = select(this);
             const match = (item.attr('stroke') === color &&
                 item.attr('stroke-dasharray') === ((dashstyle instanceof Array) ?
                     dashstyle.join(',') : null)) || item.attr('fill') === color;

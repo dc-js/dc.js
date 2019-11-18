@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {format} from 'd3-format';
+import {easeQuad} from 'd3-ease';
+import {interpolateNumber} from 'd3-interpolate';
 
 import {BaseMixin} from '../base/base-mixin';
 
@@ -35,7 +37,7 @@ export class NumberDisplay extends BaseMixin {
     constructor (parent, chartGroup) {
         super();
 
-        this._formatNumber = d3.format('.2s');
+        this._formatNumber = format('.2s');
         this._html = {one: '', some: '', none: ''};
         this._lastValue = undefined;
 
@@ -127,11 +129,11 @@ export class NumberDisplay extends BaseMixin {
             span.transition()
                 .duration(chart.transitionDuration())
                 .delay(chart.transitionDelay())
-                .ease(d3.easeQuad)
+                .ease(easeQuad)
                 .tween('text', function () {
                     // [XA] don't try and interpolate from Infinity, else this breaks.
                     const interpStart = isFinite(chart._lastValue) ? chart._lastValue : 0;
-                    const interp = d3.interpolateNumber(interpStart || 0, newValue);
+                    const interp = interpolateNumber(interpStart || 0, newValue);
                     chart._lastValue = newValue;
 
                     // need to save it in D3v4

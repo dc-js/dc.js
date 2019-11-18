@@ -1,4 +1,8 @@
-import * as d3 from 'd3';
+import {hierarchy, partition} from 'd3-hierarchy';
+import {ascending, min, sum} from 'd3-array';
+import {arc} from 'd3-shape';
+import {select} from 'd3-selection';
+import {interpolate} from 'd3-interpolate';
 
 import {transition} from '../core/core';
 import {filters} from '../core/filters';
@@ -106,14 +110,14 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     _drawChart () {
         // set radius from chart size if none given, or if given radius is too large
-        const maxRadius = d3.min([this.width(), this.height()]) / 2;
+        const maxRadius = min([this.width(), this.height()]) / 2;
         this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
 
-        const arc = this._buildArcs();
+        const arcs = this._buildArcs();
 
         let sunburstData, cdata;
         // if we have data...
-        if (d3.sum(this.data(), this.valueAccessor())) {
+        if (sum(this.data(), this.valueAccessor())) {
             cdata = utils.toHierarchy(this.data(), this.valueAccessor());
             sunburstData = this._partitionNodes(cdata);
             // First one is the root, which is not needed
@@ -130,9 +134,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         if (this._g) {
             const slices = this._g.selectAll('g.' + this._sliceCssClass)
                 .data(sunburstData);
-            this._createElements(slices, arc, sunburstData);
+            this._createElements(slices, arcs, sunburstData);
 
-            this._updateElements(sunburstData, arc);
+            this._updateElements(sunburstData, arcs);
 
             this._removeElements(slices);
 
@@ -143,12 +147,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _createElements (slices, arc, sunburstData) {
+    _createElements (slices, arcs, sunburstData) {
         const slicesEnter = this._createSliceNodes(slices);
 
-        this._createSlicePath(slicesEnter, arc);
+        this._createSlicePath(slicesEnter, arcs);
         this._createTitles(slicesEnter);
-        this._createLabels(sunburstData, arc);
+        this._createLabels(sunburstData, arcs);
     }
 
     _createSliceNodes (slices) {
@@ -160,11 +164,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 this._sliceCssClass + '-level-' + d.depth);
     }
 
-    _createSlicePath (slicesEnter, arc) {
+    _createSlicePath (slicesEnter, arcs) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', (d, i) => this.onClick(d, i))
-            .attr('d', d => this._safeArc(arc, d));
+            .attr('d', d => this._safeArc(arcs, d));
 
         const tranNodes = transition(slicePath, this.transitionDuration());
         if (tranNodes.attrTween) {
@@ -181,9 +185,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _positionLabels (labelsEnter, arc) {
+    _positionLabels (labelsEnter, arcs) {
         transition(labelsEnter, this.transitionDuration())
-            .attr('transform', d => this._labelPosition(d, arc))
+            .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle')
             .text(d => {
                 // position label...
@@ -194,7 +198,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             });
     }
 
-    _createLabels (sunburstData, arc) {
+    _createLabels (sunburstData, arcs) {
         if (this.renderLabel()) {
             const labels = this._g.selectAll('text.' + this._sliceCssClass)
                 .data(sunburstData);
@@ -212,21 +216,21 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                     return classes;
                 })
                 .on('click', (d, i) => this.onClick(d, i));
-            this._positionLabels(labelsEnter, arc);
+            this._positionLabels(labelsEnter, arcs);
         }
     }
 
-    _updateElements (sunburstData, arc) {
-        this._updateSlicePaths(sunburstData, arc);
-        this._updateLabels(sunburstData, arc);
+    _updateElements (sunburstData, arcs) {
+        this._updateSlicePaths(sunburstData, arcs);
+        this._updateLabels(sunburstData, arcs);
         this._updateTitles(sunburstData);
     }
 
-    _updateSlicePaths (sunburstData, arc) {
+    _updateSlicePaths (sunburstData, arcs) {
         const slicePaths = this._g.selectAll('g.' + this._sliceCssClass)
             .data(sunburstData)
             .select('path')
-            .attr('d', (d, i) => this._safeArc(arc, d));
+            .attr('d', (d, i) => this._safeArc(arcs, d));
         const tranNodes = transition(slicePaths, this.transitionDuration());
         if (tranNodes.attrTween) {
             const chart = this;
@@ -237,11 +241,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
 
-    _updateLabels (sunburstData, arc) {
+    _updateLabels (sunburstData, arcs) {
         if (this.renderLabel()) {
             const labels = this._g.selectAll('text.' + this._sliceCssClass)
                 .data(sunburstData);
-            this._positionLabels(labels, arc);
+            this._positionLabels(labels, arcs);
         }
     }
 
@@ -376,7 +380,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     _buildArcs () {
-        return d3.arc()
+        return arc()
             .startAngle(d => d.x0)
             .endAngle(d => d.x1)
             .innerRadius(d => d.data.path && d.data.path.length === 1 ? this._innerRadius : Math.sqrt(d.y0))
@@ -417,17 +421,17 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     _partitionNodes (data) {
         // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
-        const hierarchy = d3.hierarchy(data)
+        const _hierarchy = hierarchy(data)
             .sum(d => d.children ? 0 : this._extendedValueAccessor(d))
-            .sort((a, b) => d3.ascending(a.data.path, b.data.path));
+            .sort((a, b) => ascending(a.data.path, b.data.path));
 
-        const partition = d3.partition()
+        const _partition = partition()
             .size([2 * Math.PI, this._radius * this._radius]);
 
-        partition(hierarchy);
+        _partition(_hierarchy);
 
         // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
-        return hierarchy.descendants().map(d => {
+        return _hierarchy.descendants().map(d => {
             d.key = d.data.key;
             d.path = d.data.path;
             return d;
@@ -480,23 +484,23 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    _safeArc (arc, d) {
-        let path = arc(d);
+    _safeArc (_arc, d) {
+        let path = _arc(d);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
         }
         return path;
     }
 
-    _labelPosition (d, arc) {
+    _labelPosition (d, _arc) {
         let centroid;
         if (this._externalLabelRadius) {
-            centroid = d3.svg.arc()
+            centroid = arc()
                 .outerRadius(this._radius + this._externalLabelRadius)
                 .innerRadius(this._radius + this._externalLabelRadius)
                 .centroid(d);
         } else {
-            centroid = arc.centroid(d);
+            centroid = _arc.centroid(d);
         }
         if (isNaN(centroid[0]) || isNaN(centroid[1])) {
             return 'translate(0,0)';
@@ -528,7 +532,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     _highlightSliceFromLegendable (legendable, highlighted) {
         this.selectAll('g.pie-slice').each(function (d) {
             if (legendable.name === d.key) {
-                d3.select(this).classed('highlight', highlighted);
+                select(this).classed('highlight', highlighted);
             }
         });
     }
@@ -544,7 +548,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             y0: d.y0,
             y1: d.y1
         };
-        const i = d3.interpolate(current, tweenTarget);
+        const i = interpolate(current, tweenTarget);
         element._current = i(0);
         return t => this._safeArc(this._buildArcs(), Object.assign({}, d, i(t)));
     }

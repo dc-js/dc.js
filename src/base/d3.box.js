@@ -33,7 +33,11 @@
 
 // Inspired by http://informationandvisualization.de/blog/box-plot
 
-import * as d3 from 'd3';
+import {ascending, quantile, range} from 'd3-array';
+import {select} from 'd3-selection';
+import {scaleLinear} from 'd3-scale';
+import {timerFlush} from 'd3-timer';
+
 import {utils} from '../core/utils';
 
 export const d3Box = function () {
@@ -60,8 +64,8 @@ export const d3Box = function () {
     // For each small multiple…
     function box (g) {
         g.each(function (d, i) {
-            d = d.map(value).sort(d3.ascending);
-            const g = d3.select(this);
+            d = d.map(value).sort(ascending);
+            const g = select(this);
             const n = d.length;
             let min;
             let max;
@@ -81,7 +85,7 @@ export const d3Box = function () {
             // Compute outliers. If no whiskers are specified, all data are 'outliers'.
             // We compute the outliers as indices, so that we can join across transitions!
             const outlierIndices = whiskerIndices ?
-                d3.range(0, whiskerIndices[0]).concat(d3.range(whiskerIndices[1] + 1, n)) : d3.range(n);
+                range(0, whiskerIndices[0]).concat(range(whiskerIndices[1] + 1, n)) : range(n);
 
             // Determine the maximum value based on if outliers are shown
             if (showOutliers) {
@@ -91,15 +95,15 @@ export const d3Box = function () {
                 min = d[whiskerIndices[0]];
                 max = d[whiskerIndices[1]];
             }
-            const pointIndices = d3.range(whiskerIndices[0], whiskerIndices[1] + 1);
+            const pointIndices = range(whiskerIndices[0], whiskerIndices[1] + 1);
 
             // Compute the new x-scale.
-            const x1 = d3.scaleLinear()
+            const x1 = scaleLinear()
                 .domain(domain && domain.call(this, d, i) || [min, max])
                 .range([height, 0]);
 
             // Retrieve the old x-scale, if this is an update.
-            const x0 = this.__chart__ || d3.scaleLinear()
+            const x0 = this.__chart__ || scaleLinear()
                 .domain([0, Infinity])
                 .range(x1.range());
 
@@ -384,7 +388,7 @@ export const d3Box = function () {
             // Remove temporary quartiles element from within data array.
             delete d.quartiles;
         });
-        d3.timerFlush();
+        timerFlush();
     }
 
     box.width = function (x) {
@@ -508,8 +512,8 @@ function boxWhiskers (d) {
 
 function boxQuartiles (d) {
     return [
-        d3.quantile(d, 0.25),
-        d3.quantile(d, 0.5),
-        d3.quantile(d, 0.75)
+        quantile(d, 0.25),
+        quantile(d, 0.5),
+        quantile(d, 0.75)
     ];
 }

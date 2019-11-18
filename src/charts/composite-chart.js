@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {min, max} from 'd3-array';
+import {scaleLinear} from 'd3-scale';
+import {axisRight} from 'd3-axis';
 
 import {utils} from '../core/utils';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
@@ -37,7 +39,7 @@ export class CompositeChart extends CoordinateGridMixin {
         this._shareTitle = true;
         this._alignYAxes = false;
 
-        this._rightYAxis = d3.axisRight();
+        this._rightYAxis = axisRight();
         this._rightYAxisLabel = 0;
         this._rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING;
         this._rightY = undefined;
@@ -190,7 +192,7 @@ export class CompositeChart extends CoordinateGridMixin {
         const needDomain = this.rightY() === undefined || this.elasticY(),
             needRange = needDomain || this.resizing();
         if (this.rightY() === undefined) {
-            this.rightY(d3.scaleLinear());
+            this.rightY(scaleLinear());
         }
         if (needDomain) {
             this.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
@@ -210,7 +212,7 @@ export class CompositeChart extends CoordinateGridMixin {
         const needDomain = this.y() === undefined || this.elasticY(),
             needRange = needDomain || this.resizing();
         if (this.y() === undefined) {
-            this.y(d3.scaleLinear());
+            this.y(scaleLinear());
         }
         if (needDomain) {
             this.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
@@ -479,11 +481,11 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     _yAxisMin () {
-        return d3.min(this._getYAxisMin(this._leftYAxisChildren()));
+        return min(this._getYAxisMin(this._leftYAxisChildren()));
     }
 
     _rightYAxisMin () {
-        return d3.min(this._getYAxisMin(this._rightYAxisChildren()));
+        return min(this._getYAxisMin(this._rightYAxisChildren()));
     }
 
     _getYAxisMax (charts) {
@@ -491,11 +493,11 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     _yAxisMax () {
-        return utils.add(d3.max(this._getYAxisMax(this._leftYAxisChildren())), this.yAxisPadding());
+        return utils.add(max(this._getYAxisMax(this._leftYAxisChildren())), this.yAxisPadding());
     }
 
     _rightYAxisMax () {
-        return utils.add(d3.max(this._getYAxisMax(this._rightYAxisChildren())), this.yAxisPadding());
+        return utils.add(max(this._getYAxisMax(this._rightYAxisChildren())), this.yAxisPadding());
     }
 
     _getAllXAxisMinFromChildCharts () {
@@ -503,7 +505,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     xAxisMin () {
-        return utils.subtract(d3.min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
+        return utils.subtract(min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     _getAllXAxisMaxFromChildCharts () {
@@ -511,7 +513,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     xAxisMax () {
-        return utils.add(d3.max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
+        return utils.add(max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     legendables () {

@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear} from 'd3-time';
+import {format} from 'd3-format';
+
 import {constants} from './constants';
 import {config} from './config';
 
@@ -48,7 +50,7 @@ utils.printSingleValue = function (filter) {
 
     if (filter instanceof Date) {
         s = config.dateFormat(filter);
-    } else if (typeof(filter) === 'string') {
+    } else if (typeof (filter) === 'string') {
         s = filter;
     } else if (utils.isFloat(filter)) {
         s = utils.printSingleValue.fformat(filter);
@@ -58,18 +60,18 @@ utils.printSingleValue = function (filter) {
 
     return s;
 };
-utils.printSingleValue.fformat = d3.format('.2f');
+utils.printSingleValue.fformat = format('.2f');
 
 // convert 'day' to d3.timeDay and similar
 utils._toTimeFunc = function (t) {
     const mappings = {
-        'second': d3.timeSecond,
-        'minute': d3.timeMinute,
-        'hour': d3.timeHour,
-        'day': d3.timeDay,
-        'week': d3.timeWeek,
-        'month': d3.timeMonth,
-        'year': d3.timeYear
+        'second': timeSecond,
+        'minute': timeMinute,
+        'hour': timeHour,
+        'day': timeDay,
+        'week': timeWeek,
+        'month': timeMonth,
+        'year': timeYear
     };
     return mappings[t];
 };
@@ -107,7 +109,7 @@ utils.add = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() + r);
         }
-        t = t || d3.timeDay;
+        t = t || timeDay;
         if (typeof t !== 'function') {
             t = utils._toTimeFunc(t);
         }
@@ -153,7 +155,7 @@ utils.subtract = function (l, r, t) {
         if (t === 'millis') {
             return new Date(l.getTime() - r);
         }
-        t = t || d3.timeDay;
+        t = t || timeDay;
         if (typeof t !== 'function') {
             t = utils._toTimeFunc(t);
         }

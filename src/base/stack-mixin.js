@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {stack} from 'd3-shape';
+import {max, min} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
@@ -12,7 +13,7 @@ export class StackMixin extends CoordinateGridMixin {
     constructor () {
         super();
 
-        this._stackLayout = d3.stack();
+        this._stackLayout = stack();
 
         this._stack = [];
         this._titles = {};
@@ -189,13 +190,13 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     yAxisMin () {
-        const min = d3.min(this._flattenStack(), p => (p.y < 0) ? (p.y + p.y0) : p.y0);
-        return utils.subtract(min, this.yAxisPadding());
+        const m = min(this._flattenStack(), p => (p.y < 0) ? (p.y + p.y0) : p.y0);
+        return utils.subtract(m, this.yAxisPadding());
     }
 
     yAxisMax () {
-        const max = d3.max(this._flattenStack(), p => (p.y > 0) ? (p.y + p.y0) : p.y0);
-        return utils.add(max, this.yAxisPadding());
+        const m = max(this._flattenStack(), p => (p.y > 0) ? (p.y + p.y0) : p.y0);
+        return utils.add(m, this.yAxisPadding());
     }
 
     _flattenStack () {
@@ -206,13 +207,13 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     xAxisMin () {
-        const min = d3.min(this._flattenStack(), pluck('x'));
-        return utils.subtract(min, this.xAxisPadding(), this.xAxisPaddingUnit());
+        const m = min(this._flattenStack(), pluck('x'));
+        return utils.subtract(m, this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     xAxisMax () {
-        const max = d3.max(this._flattenStack(), pluck('x'));
-        return utils.add(max, this.xAxisPadding(), this.xAxisPaddingUnit());
+        const m = max(this._flattenStack(), pluck('x'));
+        return utils.add(m, this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     /**

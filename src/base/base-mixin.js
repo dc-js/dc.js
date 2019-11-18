@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {select} from 'd3-selection';
+import {dispatch} from 'd3-dispatch';
 
 import {pluck, utils} from '../core/utils';
 import {instanceOfChart} from '../core/core';
@@ -108,7 +109,7 @@ export class BaseMixin {
 
         this._chartGroup = constants.DEFAULT_CHART_GROUP;
 
-        this._listeners = d3.dispatch(
+        this._listeners = dispatch(
             'preRender',
             'postRender',
             'preRedraw',
@@ -424,7 +425,7 @@ export class BaseMixin {
             } else {
                 this._anchor = parent;
             }
-            this._root = d3.select(this._anchor);
+            this._root = select(this._anchor);
             this._root.classed(constants.CHART_CLASS, true);
             registerChart(this, chartGroup);
             this._isChild = false;
@@ -1020,18 +1021,18 @@ export class BaseMixin {
     }
 
     highlightSelected (e) {
-        d3.select(e).classed(constants.SELECTED_CLASS, true);
-        d3.select(e).classed(constants.DESELECTED_CLASS, false);
+        select(e).classed(constants.SELECTED_CLASS, true);
+        select(e).classed(constants.DESELECTED_CLASS, false);
     }
 
     fadeDeselected (e) {
-        d3.select(e).classed(constants.SELECTED_CLASS, false);
-        d3.select(e).classed(constants.DESELECTED_CLASS, true);
+        select(e).classed(constants.SELECTED_CLASS, false);
+        select(e).classed(constants.DESELECTED_CLASS, true);
     }
 
     resetHighlight (e) {
-        d3.select(e).classed(constants.SELECTED_CLASS, false);
-        d3.select(e).classed(constants.DESELECTED_CLASS, false);
+        select(e).classed(constants.SELECTED_CLASS, false);
+        select(e).classed(constants.DESELECTED_CLASS, false);
     }
 
     /**

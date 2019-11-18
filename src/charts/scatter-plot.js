@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {symbol} from 'd3-shape';
+import {event, select} from 'd3-selection';
+import {brush} from 'd3-brush';
 
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {optionalTransition, transition} from '../core/core';
@@ -33,7 +35,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     constructor (parent, chartGroup) {
         super();
 
-        this._symbol = d3.symbol();
+        this._symbol = symbol();
 
         this._existenceAccessor = d => d.value;
 
@@ -65,7 +67,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
 
         // Use a 2 dimensional brush
-        this.brush(d3.brush());
+        this.brush(brush());
 
         this._symbol.size((d, i) => this._elementSize(d, i));
 
@@ -544,7 +546,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         } else {
             this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._highlightedSize);
             this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-                return d3.select(this).attr('fill') !== d.color;
+                return select(this).attr('fill') !== d.color;
             }).classed('fadeout', true);
         }
     }
@@ -555,14 +557,14 @@ export class ScatterPlot extends CoordinateGridMixin {
         } else {
             this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._symbolSize);
             this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-                return d3.select(this).attr('fill') !== d.color;
+                return select(this).attr('fill') !== d.color;
             }).classed('fadeout', false);
         }
     }
 
     _resizeSymbolsWhere (condition, size) {
         const symbols = this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-            return condition(d3.select(this));
+            return condition(select(this));
         });
         const oldSize = this._symbol.size();
         this._symbol.size(Math.pow(size, 2));
@@ -588,7 +590,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     _brushing () {
         // Avoids infinite recursion (mutual recursion between range and focus operations)
         // Source Event will be null when brush.move is called programmatically (see below as well).
-        if (!d3.event.sourceEvent) {
+        if (!event.sourceEvent) {
             return;
         }
 
@@ -596,11 +598,11 @@ export class ScatterPlot extends CoordinateGridMixin {
         // In this case we are more worried about this handler causing brush move programmatically which will
         // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
         // This check avoids recursive calls
-        if (d3.event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(d3.event.sourceEvent.type) !== -1) {
+        if (event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(event.sourceEvent.type) !== -1) {
             return;
         }
 
-        let brushSelection = d3.event.selection;
+        let brushSelection = event.selection;
 
         // Testing with pixels is more reliable
         let brushIsEmpty = this.brushIsEmpty(brushSelection);

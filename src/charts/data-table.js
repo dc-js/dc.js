@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {ascending} from 'd3-array';
+import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
@@ -49,7 +50,7 @@ export class DataTable extends BaseMixin {
         this._size = 25;
         this._columns = [];
         this._sortBy = d => d;
-        this._order = d3.ascending;
+        this._order = ascending;
         this._beginSlice = 0;
         this._endSlice = undefined;
         this._showSections = true;
@@ -167,13 +168,13 @@ export class DataTable extends BaseMixin {
 
     _nestEntries () {
         let entries;
-        if (this._order === d3.ascending) {
+        if (this._order === ascending) {
             entries = this.dimension().bottom(this._size);
         } else {
             entries = this.dimension().top(this._size);
         }
 
-        return d3.nest()
+        return nest()
             .key(this.section())
             .sortKeys(this._order)
             .entries(entries.sort((a, b) => this._order(this._sortBy(a), this._sortBy(b))).slice(this._beginSlice, this._endSlice));

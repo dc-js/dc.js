@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import {sum} from 'd3-array';
 
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
@@ -67,7 +67,7 @@ export const CapMixin = Base => {
         }
 
         _othersGrouper (topItems, restItems) {
-            const restItemsSum = d3.sum(restItems, this.valueAccessor()),
+            const restItemsSum = sum(restItems, this.valueAccessor()),
                 restKeys = restItems.map(this.keyAccessor());
             if (restItemsSum > 0) {
                 return topItems.concat([{

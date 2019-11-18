@@ -1,5 +1,6 @@
+import {timeFormat} from 'd3-time-format';
+
 import {logger} from './logger';
-import * as d3 from 'd3';
 
 /**
  * General configuration
@@ -13,7 +14,7 @@ export class Config {
          * @type {Function}
          * @default d3.timeFormat('%m/%d/%Y')
          */
-        this.dateFormat = d3.timeFormat('%m/%d/%Y');
+        this.dateFormat = timeFormat('%m/%d/%Y');
 
         this._renderlet = null;
 

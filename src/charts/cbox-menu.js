@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import {event, select} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
@@ -142,7 +142,7 @@ export class CboxMenu extends BaseMixin {
             .selectAll('li.' + ITEM_CSS_CLASS)
             .sort(this._order);
 
-        this._cbox.on('change',  function (d, i) {
+        this._cbox.on('change', function (d, i) {
             return chart._onChange(d, i, this);
         });
         return options;
@@ -150,13 +150,13 @@ export class CboxMenu extends BaseMixin {
 
     _onChange (d, i, element) {
         let values;
-        const target = d3.select(d3.event.target);
+        const target = select(event.target);
         let options;
 
         if (!target.datum()) {
             values = this._promptValue || null;
         } else {
-            options = d3.select(element).selectAll('input')
+            options = select(element).selectAll('input')
                 .filter(function (o) {
                     if (o) {
                         return this.checked;

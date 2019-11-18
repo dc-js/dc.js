@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {ascending} from 'd3-array';
+import {scaleBand} from 'd3-scale';
 
 import {transition} from '../core/core';
 import {logger} from '../core/logger';
@@ -36,10 +37,10 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         this._cols = undefined;
         this._rows = undefined;
-        this._colOrdering = d3.ascending;
-        this._rowOrdering = d3.ascending;
-        this._colScale = d3.scaleBand();
-        this._rowScale = d3.scaleBand();
+        this._colOrdering = ascending;
+        this._rowOrdering = ascending;
+        this._colScale = scaleBand();
+        this._rowScale = scaleBand();
 
         this._xBorderRadius = DEFAULT_BORDER_RADIUS;
         this._yBorderRadius = DEFAULT_BORDER_RADIUS;

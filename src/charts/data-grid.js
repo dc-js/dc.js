@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {ascending} from 'd3-array';
+import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
@@ -40,7 +41,7 @@ export class DataGrid extends BaseMixin {
         this._sortBy = function (d) {
             return d;
         };
-        this._order = d3.ascending;
+        this._order = ascending;
         this._beginSlice = 0;
         this._endSlice = undefined;
 
@@ -83,7 +84,7 @@ export class DataGrid extends BaseMixin {
     _nestEntries () {
         const entries = this.dimension().top(this._size);
 
-        return d3.nest()
+        return nest()
             .key(this.section())
             .sortKeys(this._order)
             .entries(

@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {geoPath, geoAlbersUsa} from 'd3-geo';
+import {select} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';
 import {ColorMixin} from '../base/color-mixin';
@@ -36,7 +37,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
 
         this.colorAccessor(d => d || 0);
 
-        this._geoPath = d3.geoPath();
+        this._geoPath = geoPath();
         this._projectionFlag = undefined;
         this._projection = undefined;
 
@@ -140,7 +141,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         const paths = regionG
             .select('path')
             .attr('fill', function () {
-                const currentFill = d3.select(this).attr('fill');
+                const currentFill = select(this).attr('fill');
                 if (currentFill) {
                     return currentFill;
                 }
@@ -241,7 +242,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         if (this._projection === undefined) {
             logger.warn('choropleth projection default of geoAlbers is deprecated,' +
                 ' in next version projection will need to be set explicitly');
-            return this._geoPath.projection(d3.geoAlbersUsa());
+            return this._geoPath.projection(geoAlbersUsa());
         }
 
         return this._geoPath.projection(this._projection);

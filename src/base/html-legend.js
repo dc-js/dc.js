@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import {select} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
 import {constants} from '../core/constants';
@@ -79,7 +79,7 @@ export class HtmlLegend {
         if (!arguments.length) {
             return this._container;
         }
-        this._container = d3.select(container);
+        this._container = select(container);
         return this;
     }
 

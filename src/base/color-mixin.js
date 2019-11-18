@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {scaleLinear, scaleOrdinal, scaleQuantize} from 'd3-scale';
+import {interpolateHcl} from 'd3-interpolate';
+import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
 import {utils} from '../core/utils';
@@ -15,7 +17,7 @@ export const ColorMixin = Base => {
         constructor () {
             super();
 
-            this._colors = d3.scaleOrdinal(config.defaultColors());
+            this._colors = scaleOrdinal(config.defaultColors());
 
             this._colorAccessor = (d) => {
                 return this.keyAccessor()(d);
@@ -52,8 +54,8 @@ export const ColorMixin = Base => {
          * @returns {ColorMixin}
          */
         calculateColorDomain () {
-            const newDomain = [d3.min(this.data(), this.colorAccessor()),
-                               d3.max(this.data(), this.colorAccessor())];
+            const newDomain = [min(this.data(), this.colorAccessor()),
+                               max(this.data(), this.colorAccessor())];
             this._colors.domain(newDomain);
             return this;
         }
@@ -81,7 +83,7 @@ export const ColorMixin = Base => {
                 return this._colors;
             }
             if (colorScale instanceof Array) {
-                this._colors = d3.scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
+                this._colors = scaleQuantize().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
             } else {
                 this._colors = typeof colorScale === 'function' ? colorScale : utils.constant(colorScale);
             }
@@ -98,7 +100,7 @@ export const ColorMixin = Base => {
          * @returns {ColorMixin}
          */
         ordinalColors (r) {
-            return this.colors(d3.scaleOrdinal().range(r));
+            return this.colors(scaleOrdinal().range(r));
         }
 
         /**
@@ -109,9 +111,9 @@ export const ColorMixin = Base => {
          * @returns {ColorMixin}
          */
         linearColors (r) {
-            return this.colors(d3.scaleLinear()
+            return this.colors(scaleLinear()
                 .range(r)
-                .interpolate(d3.interpolateHcl));
+                .interpolate(interpolateHcl));
         }
 
         /**

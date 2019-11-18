@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import {mouse} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';
 import {BubbleMixin} from '../base/bubble-mixin';
@@ -196,7 +196,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
                 .attr('width', this.width())
                 .attr('height', this.height())
                 .on('mousemove', () => {
-                    const position = d3.mouse(debugG.node());
+                    const position = mouse(debugG.node());
                     const msg = position[0] + ', ' + position[1];
                     debugText.text(msg);
                 });

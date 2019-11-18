@@ -1,4 +1,4 @@
-import * as d3 from 'd3';
+import {format} from 'd3-format';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
@@ -38,7 +38,7 @@ export class DataCount extends BaseMixin {
     constructor (parent, chartGroup) {
         super();
 
-        this._formatNumber = d3.format(',d');
+        this._formatNumber = format(',d');
         this._crossfilter = null;
         this._groupAll = null;
         this._html = {some: '', all: ''};

@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import { descending, min, max } from 'd3-array';
+import { scaleLinear } from 'd3-scale';
 
 import {ColorMixin} from './color-mixin';
 import {transition} from '../core/core';
@@ -33,12 +34,12 @@ export const BubbleMixin = Base => {
                 if (this._sortBubbleSize) {
                     // sort descending so smaller bubbles are on top
                     const radiusAccessor = this.radiusValueAccessor();
-                    data.sort((a, b) => d3.descending(radiusAccessor(a), radiusAccessor(b)));
+                    data.sort((a, b) => descending(radiusAccessor(a), radiusAccessor(b)));
                 }
                 return data;
             });
 
-            this._r = d3.scaleLinear().domain([0, 100]);
+            this._r = scaleLinear().domain([0, 100]);
         }
 
         _rValueAccessor (d) {
@@ -102,11 +103,11 @@ export const BubbleMixin = Base => {
         }
 
         rMin () {
-            return d3.min(this.data(), e => this.radiusValueAccessor()(e));
+            return min(this.data(), e => this.radiusValueAccessor()(e));
         }
 
         rMax () {
-            return d3.max(this.data(), e => this.radiusValueAccessor()(e));
+            return max(this.data(), e => this.radiusValueAccessor()(e));
         }
 
         bubbleR (d) {

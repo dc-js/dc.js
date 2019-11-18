@@ -1,4 +1,5 @@
-import * as d3 from 'd3';
+import {event} from 'd3-selection';
+
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {logger} from '../core/logger';
@@ -101,13 +102,13 @@ export class SelectMenu extends BaseMixin {
 
     _onChange (d, i) {
         let values;
-        const target = d3.event.target;
+        const target = event.target;
         if (target.selectedOptions) {
             const selectedOptions = Array.prototype.slice.call(target.selectedOptions);
             values = selectedOptions.map(d => d.value);
         } else { // IE and other browsers do not support selectedOptions
             // adapted from this polyfill: https://gist.github.com/brettz9/4212217
-            const options = [].slice.call(d3.event.target.options);
+            const options = [].slice.call(event.target.options);
             values = options.filter(option => option.selected).map(option => option.value);
         }
         // console.log(values);

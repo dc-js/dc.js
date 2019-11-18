@@ -1,4 +1,6 @@
-import * as d3 from 'd3';
+import {extent} from 'd3-array';
+import {axisBottom} from 'd3-axis';
+import {scaleLinear} from 'd3-scale';
 
 import {CapMixin} from '../base/cap-mixin';
 import {MarginMixin} from '../base/margin-mixin';
@@ -51,7 +53,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this._elasticX = undefined;
 
-        this._xAxis = d3.axisBottom();
+        this._xAxis = axisBottom();
 
         this._rowData = undefined;
 
@@ -66,14 +68,14 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     _calculateAxisScale () {
         if (!this._x || this._elasticX) {
-            const extent = d3.extent(this._rowData, d => this.cappedValueAccessor(d));
-            if (extent[0] > 0) {
-                extent[0] = 0;
+            const _extent = extent(this._rowData, d => this.cappedValueAccessor(d));
+            if (_extent[0] > 0) {
+                _extent[0] = 0;
             }
-            if (extent[1] < 0) {
-                extent[1] = 0;
+            if (_extent[1] < 0) {
+                _extent[1] = 0;
             }
-            this._x = d3.scaleLinear().domain(extent)
+            this._x = scaleLinear().domain(_extent)
                 .range([0, this.effectiveWidth()]);
         }
         this._xAxis.scale(this._x);
