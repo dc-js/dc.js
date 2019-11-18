@@ -66,18 +66,5 @@ export default [
             dir: 'dist/esm',
             format: 'esm'
         }
-    },
-    {
-        input: modulesMap,
-        external: ['d3'],
-        plugins: [
-            terser(),
-            jsonPlugin,
-            licensePlugin
-        ],
-        output: {
-            dir: 'dist/esm-min',
-            format: 'esm'
-        }
     }
 ];
