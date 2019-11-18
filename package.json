@@ -80,12 +80,12 @@
       "files": [
         "dist/style/dc.css",
         "dist/style/dc.min.css",
-        "dist/es6/dc.min.js",
-        "dist/es6/dc.js"
+        "dist/dc.min.js",
+        "dist/dc.js"
       ]
     }
   ],
-  "browser": "dist/es6/dc.js",
-  "main": "dist/es6/dc.js",
+  "browser": "dist/dc.js",
+  "main": "dist/dc.js",
   "module": "dist/esm/index.js"
 }

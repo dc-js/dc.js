@@ -79,11 +79,11 @@ module.exports = function (grunt) {
                 tasks: ['test']
             },
             reload: {
-                files: ['<%= conf.dist %>/es6/<%= conf.pkg.name %>.js',
+                files: ['<%= conf.dist %>/<%= conf.pkg.name %>.js',
                         '<%= conf.dist %>/style/<%= conf.pkg.name %>.css',
                         '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
                         '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
-                        '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js'],
+                        '<%= conf.dist %>/<%= conf.pkg.name %>.min.js'],
                 options: {
                     livereload: true
                 }
@@ -117,7 +117,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= conf.web %>/js/d3.js',
                     '<%= conf.web %>/js/crossfilter.js',
-                    '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js'
+                    '<%= conf.dist %>/<%= conf.pkg.name %>.js'
                 ]
             }
         },
@@ -133,7 +133,7 @@ module.exports = function (grunt) {
                     // source files, that you wanna generate coverage for
                     // do not include tests or libraries
                     // (these files will be instrumented by Istanbul)
-                    '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js': ['coverage']
+                    '<%= conf.dist %>/<%= conf.pkg.name %>.js': ['coverage']
                 },
 
                 // optionally, configure the reporter
@@ -199,7 +199,7 @@ module.exports = function (grunt) {
         },
         jsdoc2md: {
             dist: {
-                src: '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js',
+                src: '<%= conf.dist %>/<%= conf.pkg.name %>.js',
                 dest: 'web/docs/api-latest.md'
             }
         },
@@ -232,10 +232,10 @@ module.exports = function (grunt) {
                         flatten: true,
                         nonull: true,
                         src: [
-                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js',
-                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.js.map',
-                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js',
-                            '<%= conf.dist %>/es6/<%= conf.pkg.name %>.min.js.map',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.js',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.js.map',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.min.js',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.min.js.map',
                             'node_modules/d3/' + d3pkgSubDir + '/d3.js',
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',

@@ -14,7 +14,7 @@ const licensePlugin = license({
 });
 
 const umdConf = {
-    file: 'dist/es6/dc.js',
+    file: 'dist/dc.js',
     format: 'umd',
     name: 'dc',
     sourcemap: true,
@@ -23,7 +23,7 @@ const umdConf = {
     }
 };
 
-const umdMinConf = Object.assign({}, umdConf, {file: 'dist/es6/dc.min.js'});
+const umdMinConf = Object.assign({}, umdConf, {file: 'dist/dc.min.js'});
 
 /*
 It will have entries like
