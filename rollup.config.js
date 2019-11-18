@@ -43,7 +43,7 @@ glob.sync('src/**/*.js', {}).forEach(function (f) {
 
 export default [
     {
-        input: 'src/index.js',
+        input: 'src/index-with-version.js',
         external: ['d3'],
         plugins: [
             terser({include: [/^.+\.min\.js$/]}),
