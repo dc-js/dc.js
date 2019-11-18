@@ -25,14 +25,6 @@ const umdConf = {
 
 const umdMinConf = Object.assign({}, umdConf, {file: 'dist/es6/dc.min.js'});
 
-const esmFlat = {
-    format: 'esm',
-    sourcemap: true,
-    file: 'dist/esf/dc.esm.js'
-};
-
-const esmFlatMin = Object.assign({}, esmFlat, {file: 'dist/esf/dc.esm.min.js'});
-
 /*
 It will have entries like
 {
@@ -60,9 +52,7 @@ export default [
         ],
         output: [
             umdConf,
-            umdMinConf,
-            esmFlat,
-            esmFlatMin
+            umdMinConf
         ]
     },
     {
