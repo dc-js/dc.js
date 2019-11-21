@@ -596,9 +596,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             if (this._y === undefined) {
                 this._y = scaleLinear();
             }
-            const min = this.yAxisMin() || 0,
-                max = this.yAxisMax() || 0;
-            this._y.domain([min, max]).rangeRound([this.yAxisHeight(), 0]);
+            const _min = this.yAxisMin() || 0;
+            const _max = this.yAxisMax() || 0;
+            this._y.domain([_min, _max]).rangeRound([this.yAxisHeight(), 0]);
         }
 
         this._y.range([this.yAxisHeight(), 0]);

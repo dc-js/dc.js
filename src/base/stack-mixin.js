@@ -258,14 +258,14 @@ export class StackMixin extends CoordinateGridMixin {
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
      * propagates it to the next.
      * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.stackD3v3}
-     * @param {Function} [stack=d3.stackD3v3]
+     * @param {Function} [_stack=d3.stackD3v3]
      * @returns {Function|StackMixin}
      */
-    stackLayout (stack) {
+    stackLayout (_stack) {
         if (!arguments.length) {
             return this._stackLayout;
         }
-        this._stackLayout = stack;
+        this._stackLayout = _stack;
         return this;
     }
 

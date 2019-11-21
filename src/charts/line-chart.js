@@ -358,8 +358,8 @@ export class LineChart extends StackMixin {
                 tooltips = chartBody.append('g').attr('class', tooltipListClass);
             }
 
-            layers.each((d, layerIndex) => {
-                let points = d.values;
+            layers.each((data, layerIndex) => {
+                let points = data.values;
                 if (this._defined) {
                     points = points.filter(this._defined);
                 }
@@ -398,7 +398,7 @@ export class LineChart extends StackMixin {
                     })
                     .merge(dots);
 
-                dotsEnterModify.call(dot => this._doRenderTitle(dot, d));
+                dotsEnterModify.call(dot => this._doRenderTitle(dot, data));
 
                 transition(dotsEnterModify, this.transitionDuration())
                     .attr('cx', d => utils.safeNumber(this.x()(d.x)))
@@ -412,10 +412,10 @@ export class LineChart extends StackMixin {
 
     _drawLabels (layers) {
         const chart = this;
-        layers.each(function (d, layerIndex) {
+        layers.each(function (data, layerIndex) {
             const layer = select(this);
             const labels = layer.selectAll('text.lineLabel')
-                .data(d.values, pluck('x'));
+                .data(data.values, pluck('x'));
 
             const labelsEnterModify = labels
                 .enter()

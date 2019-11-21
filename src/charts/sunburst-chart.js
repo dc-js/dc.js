@@ -68,13 +68,13 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this.transitionDuration(350);
 
-        this.filterHandler((dimension, filters) => {
-            if (filters.length === 0) {
+        this.filterHandler((dimension, _filters) => {
+            if (_filters.length === 0) {
                 dimension.filter(null);
             } else {
                 dimension.filterFunction(d => {
-                    for (let i = 0; i < filters.length; i++) {
-                        const filter = filters[i];
+                    for (let i = 0; i < _filters.length; i++) {
+                        const filter = _filters[i];
                         if (filter.isFiltered && filter.isFiltered(d)) {
                             return true;
                         }
@@ -82,7 +82,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                     return false;
                 });
             }
-            return filters;
+            return _filters;
         });
 
         this.anchor(parent, chartGroup);

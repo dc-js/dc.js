@@ -40,7 +40,7 @@ export const chartRegistry = (function () {
          * @returns {Boolean}
          */
         has: function (chart) {
-            for (let e in _chartMap) {
+            for (const e in _chartMap) {
                 if (_chartMap[e].indexOf(chart) >= 0) {
                     return true;
                 }

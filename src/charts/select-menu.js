@@ -100,7 +100,7 @@ export class SelectMenu extends BaseMixin {
         this._select.on('change', (d, i) => this._onChange(d, i));
     }
 
-    _onChange (d, i) {
+    _onChange (_d, i) {
         let values;
         const target = event.target;
         if (target.selectedOptions) {

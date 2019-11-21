@@ -1,9 +1,9 @@
 /* global appendChartID, coordsFromTranslate, loadDateFixture */
 describe('dc.legend', function () {
-    var id, chart, dateDimension, dateValueSumGroup, dateIdSumGroup;
+    let id, chart, dateDimension, dateValueSumGroup, dateIdSumGroup;
 
     beforeEach(function () {
-        var data = crossfilter(loadDateFixture());
+        const data = crossfilter(loadDateFixture());
         dateDimension = data.dimension(function (d) { return d3.utcDay(d.dd); });
         dateValueSumGroup = dateDimension.group().reduceSum(function (d) { return d.value; });
         dateIdSumGroup = dateDimension.group().reduceSum(function (d) { return d.id; });
@@ -95,7 +95,7 @@ describe('dc.legend', function () {
         });
 
         describe('with .horizontal(true) and defined legendWidth and itemWidth', function () {
-            var legendCoords;
+            let legendCoords;
             beforeEach(function () {
                 chart.legend(dc.legend().horizontal(true).legendWidth(60).itemWidth(30));
                 chart.render();
@@ -145,7 +145,7 @@ describe('dc.legend', function () {
 
         describe('with .horizontal(true) and .autoItemWidth(true)', function () {
 
-            var fixedWidthOffset1, autoWidthCoords;
+            let fixedWidthOffset1, autoWidthCoords;
 
             beforeEach(function () {
                 chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
@@ -170,7 +170,7 @@ describe('dc.legend', function () {
         describe('with .legendText()', function () {
             beforeEach(function () {
                 chart.legend(dc.legend().legendText(function (d, i) {
-                    var _i = i + 1;
+                    const _i = i + 1;
 
                     return _i + '. ' + d.name;
                 }));
@@ -213,13 +213,13 @@ describe('dc.legend', function () {
             appendChartID(id);
             chart = dc.compositeChart('#' + id);
 
-            var subChart1 = dc.lineChart(chart);
+            const subChart1 = dc.lineChart(chart);
             subChart1
                 .dimension(dateDimension)
                 .group(dateIdSumGroup, 'Id Sum')
                 .dashStyle([10,1]);
 
-            var subChart2 = dc.lineChart(chart);
+            const subChart2 = dc.lineChart(chart);
             subChart2
                 .dimension(dateDimension)
                 .group(dateValueSumGroup, 'Value Sum')

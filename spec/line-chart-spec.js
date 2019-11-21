@@ -1,7 +1,7 @@
 /* global appendChartID, loadDateFixture, makeDate */
 describe('dc.lineChart', function () {
-    var id, chart, data;
-    var dimension, group;
+    let id, chart, data;
+    let dimension, group;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -43,7 +43,7 @@ describe('dc.lineChart', function () {
 
             it('should use default options', function () {
                 chart.selectAll('circle.dot').each(function () {
-                    var dot = d3.select(this);
+                    const dot = d3.select(this);
                     expect(dot.style('fill-opacity')).toBeWithinDelta(0.8);
                     expect(dot.style('stroke-opacity')).toBeWithinDelta(0.0);
                     expect(dot.attr('r')).toBe('2');
@@ -54,7 +54,7 @@ describe('dc.lineChart', function () {
                 chart.renderDataPoints({radius: 3, fillOpacity: 1, strokeOpacity: 1})
                     .render();
                 chart.selectAll('circle.dot').each(function () {
-                    var dot = d3.select(this);
+                    const dot = d3.select(this);
                     expect(dot.style('fill-opacity')).toBe('1');
                     expect(dot.style('stroke-opacity')).toBe('1');
                     expect(dot.attr('r')).toBe('3');
@@ -63,7 +63,7 @@ describe('dc.lineChart', function () {
 
             it('should change the radius on mousemove', function () {
                 chart.selectAll('circle.dot').each(function () {
-                    var dot = d3.select(this);
+                    const dot = d3.select(this);
                     dot.on('mousemove').call(this);
                     expect(dot.attr('r')).toBe('5');
                 });
@@ -71,7 +71,7 @@ describe('dc.lineChart', function () {
 
             it('should revert to original radius on mouseout', function () {
                 chart.selectAll('circle.dot').each(function () {
-                    var dot = d3.select(this);
+                    const dot = d3.select(this);
                     dot.on('mousemove').call(this);
                     dot.on('mouseout').call(this);
                     expect(dot.attr('r')).toBe('2');
@@ -92,7 +92,7 @@ describe('dc.lineChart', function () {
 
                 it('should not change showing the data point on mousemove', function () {
                     chart.selectAll('circle.dot').each(function () {
-                        var dot = d3.select(this);
+                        const dot = d3.select(this);
                         dot.on('mousemove').call(this);
                         expect(dot.style('fill-opacity')).toBeWithinDelta(0.8);
                         expect(dot.style('stroke-opacity')).toBeWithinDelta(0.8);
@@ -101,7 +101,7 @@ describe('dc.lineChart', function () {
 
                 it('should not change returning to extremely low opacity on hover out', function () {
                     chart.selectAll('circle.dot').each(function () {
-                        var dot = d3.select(this);
+                        const dot = d3.select(this);
                         dot.on('mousemove').call(this);
                         dot.on('mouseout').call(this);
                         expect(dot.style('fill-opacity')).toBeWithinDelta(1e-6);
@@ -213,7 +213,7 @@ describe('dc.lineChart', function () {
 
             it('should become visible when hovered over', function () {
                 chart.selectAll('circle.dot').each(function () {
-                    var dot = d3.select(this);
+                    const dot = d3.select(this);
                     dot.on('mousemove').call(this);
                     expect(dot.style('fill-opacity')).toBeWithinDelta(0.8);
                     expect(dot.style('stroke-opacity')).toBeWithinDelta(0.8);
@@ -222,7 +222,7 @@ describe('dc.lineChart', function () {
 
             it('should return to extremely low opacity on hover out', function () {
                 chart.selectAll('circle.dot').each(function () {
-                    var dot = d3.select(this);
+                    const dot = d3.select(this);
                     dot.on('mousemove').call(this);
                     dot.on('mouseout').call(this);
                     expect(dot.style('fill-opacity')).toBeWithinDelta(1e-6);
@@ -249,15 +249,15 @@ describe('dc.lineChart', function () {
 
                 describe('when dot is hovered over', function () {
                     describe('for vertical ref lines', function () {
-                        var x;
+                        let x;
                         beforeEach(function () {
-                            var dot = chart.select('circle.dot');
+                            const dot = chart.select('circle.dot');
                             dot.on('mousemove').call(dot.nodes()[0]);
                             x = dot.attr('cx');
                         });
 
                         it('shows the ref line from the bottom of the graph', function () {
-                            var path = 'M' + x + ' 160 L ' + x + ' 107';
+                            const path = 'M' + x + ' 160 L ' + x + ' 107';
                             expect(chart.select('path.xRef').attr('d')).toMatchPath(path);
                             expect(chart.select('path.xRef').attr('display')).not.toBe('none');
                         });
@@ -265,31 +265,31 @@ describe('dc.lineChart', function () {
 
                     describe('for horizontal ref lines', function () {
                         describe('for a left y-axis chart', function () {
-                            var x;
+                            let x;
                             beforeEach(function () {
-                                var dot = chart.select('circle.dot');
+                                const dot = chart.select('circle.dot');
                                 dot.on('mousemove').call(dot.nodes()[0]);
                                 x = dot.attr('cx');
                             });
 
                             it('shows the ref line on the left', function () {
-                                var path = 'M0 107 L ' + x + ' 107';
+                                const path = 'M0 107 L ' + x + ' 107';
                                 expect(chart.select('path.yRef').attr('d')).toMatchPath(path);
                                 expect(chart.select('path.yRef').attr('display')).not.toBe('none');
                             });
                         });
 
                         describe('for a right y-axis chart', function () {
-                            var x;
+                            let x;
                             beforeEach(function () {
                                 chart.useRightYAxis(true).render();
-                                var dot = chart.select('circle.dot');
+                                const dot = chart.select('circle.dot');
                                 dot.on('mousemove').call(dot.nodes()[0]);
                                 x = dot.attr('cx');
                             });
 
                             it('shows the ref line on the right', function () {
-                                var path = 'M1020 107L' + x + ' 107';
+                                const path = 'M1020 107L' + x + ' 107';
                                 expect(chart.select('path.yRef').attr('d')).toMatchPath(path); //"M1020 107L405 107");
                                 expect(chart.select('path.yRef').attr('display')).not.toBe('none');
                             });
@@ -331,8 +331,10 @@ describe('dc.lineChart', function () {
 
         describe('with an ordinal x domain', function () {
             beforeEach(function () {
-                var stateDimension = data.dimension(function (d) { return d.state; });
-                var stateGroup = stateDimension.group();
+                const stateDimension = data.dimension(function (d) {
+                    return d.state;
+                });
+                const stateGroup = stateDimension.group();
 
                 chart.dimension(stateDimension)
                     .group(stateGroup)
@@ -353,8 +355,12 @@ describe('dc.lineChart', function () {
         describe('with stacked data', function () {
             describe('with positive data', function () {
                 beforeEach(function () {
-                    var idGroup = dimension.group().reduceSum(function (d) { return d.id; });
-                    var valueGroup = dimension.group().reduceSum(function (d) { return d.value; });
+                    const idGroup = dimension.group().reduceSum(function (d) {
+                        return d.id;
+                    });
+                    const valueGroup = dimension.group().reduceSum(function (d) {
+                        return d.value;
+                    });
 
                     chart.dimension(dimension)
                         .brushOn(false)
@@ -427,24 +433,24 @@ describe('dc.lineChart', function () {
                     });
 
                     it('should draw tooltip dots on top of paths and areas', function () {
-                        var list = chart.selectAll('circle.dot, path.line, path.area');
+                        const list = chart.selectAll('circle.dot, path.line, path.area');
 
-                        var indexOfLastLine = list.nodes().indexOf(list.filter('path.line').nodes()[2]);
-                        var indexOfLastArea = list.nodes().indexOf(list.filter('path.area').nodes()[2]);
-                        var indexOfDot = list.nodes().indexOf(list.filter('circle.dot').nodes()[0]);
+                        const indexOfLastLine = list.nodes().indexOf(list.filter('path.line').nodes()[2]);
+                        const indexOfLastArea = list.nodes().indexOf(list.filter('path.area').nodes()[2]);
+                        const indexOfDot = list.nodes().indexOf(list.filter('circle.dot').nodes()[0]);
 
                         expect(indexOfDot).toBeGreaterThan(indexOfLastArea);
                         expect(indexOfDot).toBeGreaterThan(indexOfLastLine);
                     });
 
                     it('should draw tooltip ref lines on top of paths', function () {
-                        var list = chart.selectAll('path.yRef, path.xRef, path.line, path.area');
+                        const list = chart.selectAll('path.yRef, path.xRef, path.line, path.area');
 
-                        var indexOfLastLine = list.nodes().indexOf(list.filter('path.line').nodes()[2]);
-                        var indexOfLastArea = list.nodes().indexOf(list.filter('path.area').nodes()[2]);
+                        const indexOfLastLine = list.nodes().indexOf(list.filter('path.line').nodes()[2]);
+                        const indexOfLastArea = list.nodes().indexOf(list.filter('path.area').nodes()[2]);
 
-                        var indexOfFirstYRef = list.nodes().indexOf(list.filter('path.yRef').nodes()[0]);
-                        var indexOfFirstXRef = list.nodes().indexOf(list.filter('path.xRef').nodes()[0]);
+                        const indexOfFirstYRef = list.nodes().indexOf(list.filter('path.yRef').nodes()[0]);
+                        const indexOfFirstXRef = list.nodes().indexOf(list.filter('path.xRef').nodes()[0]);
 
                         expect(indexOfLastLine).toBeLessThan(indexOfFirstXRef);
                         expect(indexOfLastLine).toBeLessThan(indexOfFirstYRef);
@@ -487,8 +493,8 @@ describe('dc.lineChart', function () {
                         });
 
                         it('should color chart dots the same as line paths', function () {
-                            var lineColor = chart.select('g._1 path.line').attr('stroke');
-                            var circleColor = chart.select('g._1 circle.dot').attr('fill');
+                            const lineColor = chart.select('g._1 path.line').attr('stroke');
+                            const circleColor = chart.select('g._1 circle.dot').attr('fill');
                             expect(lineColor).toEqual(circleColor);
                         });
 
@@ -526,7 +532,9 @@ describe('dc.lineChart', function () {
 
             describe('with mixed positive and negative data', function () {
                 beforeEach(function () {
-                    var mixedGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
+                    const mixedGroup = dimension.group().reduceSum(function (d) {
+                        return d.nvalue;
+                    });
 
                     chart.group(mixedGroup).stack(mixedGroup).stack(mixedGroup);
                     chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -558,7 +566,9 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
+                    const nthText = function (n) {
+                        return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]);
+                    };
 
                     expect(nthText(0).text()).toBe('-20');
                     expect(nthText(1).text()).toBe('0');
@@ -578,7 +588,9 @@ describe('dc.lineChart', function () {
 
             describe('with negative data', function () {
                 beforeEach(function () {
-                    var negativeGroup = dimension.group().reduceSum(function (d) { return -Math.abs(d.nvalue); });
+                    const negativeGroup = dimension.group().reduceSum(function (d) {
+                        return -Math.abs(d.nvalue);
+                    });
 
                     chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
                     chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -592,7 +604,9 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
+                    const nthText = function (n) {
+                        return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]);
+                    };
 
                     expect(nthText(0).text()).toBe('-30');
                     expect(nthText(1).text()).toBe('-20');
@@ -603,7 +617,7 @@ describe('dc.lineChart', function () {
         });
 
         describe('legend hovering', function () {
-            var firstItem;
+            let firstItem;
 
             beforeEach(function () {
                 chart.stack(group)
@@ -673,7 +687,7 @@ describe('dc.lineChart', function () {
                 });
 
                 it('should create a fancy brush resize handle', function () {
-                    var selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
+                    const selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
                     expect(selectAll.size()).toBe(2);
                     selectAll.each(function (d, i) {
                         if (i === 0) {
@@ -712,7 +726,7 @@ describe('dc.lineChart', function () {
             });
         });
         describe('changing data', function () {
-            var stateDimension;
+            let stateDimension;
             beforeEach(function () {
                 chart.brushOn(false)
                     .title(function (d) { return d.value; })
@@ -751,7 +765,7 @@ describe('dc.lineChart', function () {
     }
 
     function lineLabelPositions () {
-        var LABEL_PADDING = 3;
+        const LABEL_PADDING = 3;
         chart.selectAll('.stack').nodes().forEach(function (stack, i) {
             d3.select(stack).selectAll('text.lineLabel').nodes().forEach(function (lineLabel, j) {
                 expect(+d3.select(lineLabel).attr('x')).toBeCloseTo(chart.x()(chart.data()[i].values[j].x));

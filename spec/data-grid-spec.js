@@ -1,9 +1,9 @@
 /* global appendChartID, loadDateFixture */
 describe('dc.dataGrid', function () {
-    var id, chart, data;
-    var dateFixture;
-    var dimension;
-    var countryDimension;
+    let id, chart, data;
+    let dateFixture;
+    let dimension;
+    let countryDimension;
 
     beforeEach(function () {
         dateFixture = loadDateFixture();
@@ -108,10 +108,10 @@ describe('dc.dataGrid', function () {
     });
 
     describe('renderlet', function () {
-        var derlet;
+        let derlet;
         beforeEach(function () {
-            derlet = jasmine.createSpy('renderlet', function (chart) {
-                chart.selectAll('.dc-grid-label').text('changed');
+            derlet = jasmine.createSpy('renderlet', function (_chart) {
+                _chart.selectAll('.dc-grid-label').text('changed');
             });
             derlet.and.callThrough();
             chart.on('renderlet', derlet);

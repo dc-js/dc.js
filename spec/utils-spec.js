@@ -1,7 +1,7 @@
 /* global makeDate */
 describe('dc utils', function () {
     describe('dc.printer.filters', function () {
-        var printer;
+        let printer;
         beforeEach(function () {
             printer = dc.printers.filters;
         });
@@ -17,7 +17,7 @@ describe('dc utils', function () {
     });
 
     describe('dc.printer.filter', function () {
-        var printer;
+        let printer;
         beforeEach(function () {
             printer = dc.printers.filter;
             dc.config.dateFormat = d3.utcFormat('%m/%d/%Y');
@@ -58,140 +58,140 @@ describe('dc utils', function () {
     });
 
     describe('dc.utils.add', function () {
-        var add;
+        let add;
         beforeEach(function () {
             add = dc.utils.add;
         });
         it('should be able to add days', function () {
-            var date = add(makeDate(2012, 0, 1), 10);
+            const date = add(makeDate(2012, 0, 1), 10);
             expect(date.toString()).toEqual((makeDate(2012, 0, 11)).toString());
         });
         it('should be able to add numbers', function () {
-            var num = add(10, 10);
+            const num = add(10, 10);
             expect(num).toEqual(20);
         });
         it('should be able to add numbers w/ %', function () {
-            var num = add(10, '10%');
+            const num = add(10, '10%');
             expect(num).toEqual(11);
         });
         it('should be able to add negative numbers w/ %', function () {
-            var num = add(-10, '10%');
+            const num = add(-10, '10%');
             expect(num).toEqual(-9);
         });
         it('should ignore % when adding dates', function () {
-            var date = add(makeDate(2012, 0, 1), '10%');
+            const date = add(makeDate(2012, 0, 1), '10%');
             expect(date.toString()).toEqual(makeDate(2012, 0, 11).toString());
         });
         it('should be able to add hours to dates', function () {
-            var date = add(makeDate(2012, 0, 1), '24', 'hour');
+            const date = add(makeDate(2012, 0, 1), '24', 'hour');
             expect(date.toString()).toEqual(makeDate(2012, 0, 2).toString());
         });
         it('should be able to add weeks to dates', function () {
-            var date = add(makeDate(2012, 0, 1), '1', 'week');
+            const date = add(makeDate(2012, 0, 1), '1', 'week');
             expect(date.toString()).toEqual(makeDate(2012, 0, 8).toString());
         });
         it('should be able to add month to dates', function () {
-            var date = add(makeDate(2012, 0, 1), '1', 'month');
+            const date = add(makeDate(2012, 0, 1), '1', 'month');
             expect(date.toString()).toEqual(makeDate(2012, 1, 1).toString());
         });
     });
     describe('dc.utils.subtract', function () {
-        var subtract;
+        let subtract;
         beforeEach(function () {
             subtract = dc.utils.subtract;
         });
         it('should be able to subtract dates', function () {
-            var date = subtract(makeDate(2012, 0, 11), 10);
+            const date = subtract(makeDate(2012, 0, 11), 10);
             expect(date.toString()).toEqual((makeDate(2012, 0, 1)).toString());
         });
         it('should be able to subtract numbers', function () {
-            var num = subtract(10, 10);
+            const num = subtract(10, 10);
             expect(num).toEqual(0);
         });
         it('should be able to subtract numbers w/ %', function () {
-            var num = subtract(10, '10%');
+            const num = subtract(10, '10%');
             expect(num).toEqual(9);
         });
         it('should be able to subtract negative numbers w/ %', function () {
-            var num = subtract(-10, '10%');
+            const num = subtract(-10, '10%');
             expect(num).toEqual(-11);
         });
         it('should ignore % when subtracting dates', function () {
-            var date = subtract(makeDate(2012, 0, 11), '10%');
+            const date = subtract(makeDate(2012, 0, 11), '10%');
             expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
         it('should be able to subtract hours from dates', function () {
-            var date = subtract(makeDate(2012, 0, 2), '24', 'hour');
+            const date = subtract(makeDate(2012, 0, 2), '24', 'hour');
             expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
         it('should be able to subtract week from dates', function () {
-            var date = subtract(makeDate(2012, 0, 8), '1', 'week');
+            const date = subtract(makeDate(2012, 0, 8), '1', 'week');
             expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
         it('should be able to subtract month from dates', function () {
-            var date = subtract(makeDate(2012, 1, 1), '1', 'month');
+            const date = subtract(makeDate(2012, 1, 1), '1', 'month');
             expect(date.toString()).toEqual(makeDate(2012, 0, 1).toString());
         });
     });
     describe('dc.utils.arraysEqual', function () {
         it('nulls should be equal', function () {
-            var a1 = null;
-            var a2 = null;
+            const a1 = null;
+            const a2 = null;
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
         it('null and undefined should be equal', function () {
-            var a1 = null;
-            var a2; // undefined
+            const a1 = null;
+            let a2; // undefined
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
         it('null should not be equal to any array', function () {
-            var a1 = null;
-            var a2 = [];
+            const a1 = null;
+            const a2 = [];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
         });
         it('any array should not be equal to null', function () {
-            var a1 = null;
-            var a2 = [];
+            const a1 = null;
+            const a2 = [];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
         });
         it('empty arrays should be', function () {
-            var a1 = [];
-            var a2 = [];
+            const a1 = [];
+            const a2 = [];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
         it('should identify equal arrays - numbers', function () {
-            var a1 = [1, 2, 3];
-            var a2 = [1, 2, 3];
+            const a1 = [1, 2, 3];
+            const a2 = [1, 2, 3];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
         it('should identify equal arrays - strings', function () {
-            var a1 = ['apple', 'mangoes', 'oranges', 'bananas'];
-            var a2 = ['apple', 'mangoes', 'oranges', 'bananas'];
+            const a1 = ['apple', 'mangoes', 'oranges', 'bananas'];
+            const a2 = ['apple', 'mangoes', 'oranges', 'bananas'];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
         it('should identify equal arrays - dates', function () {
-            var a1 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
-            var a2 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
+            const a1 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
+            const a2 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
         it('should identify unequal arrays - numbers', function () {
-            var a1 = [4, 2, 3];
-            var a2 = [1, 2, 3];
+            const a1 = [4, 2, 3];
+            const a2 = [1, 2, 3];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
         });
         it('should identify unequal arrays - strings', function () {
-            var a1 = ['apple', 'cherries', 'oranges', 'bananas'];
-            var a2 = ['apple', 'mangoes', 'oranges', 'bananas'];
+            const a1 = ['apple', 'cherries', 'oranges', 'bananas'];
+            const a2 = ['apple', 'mangoes', 'oranges', 'bananas'];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
         });
         it('should identify unequal arrays - dates', function () {
-            var a1 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
-            var a2 = [makeDate(2012, 1, 1), makeDate(2013, 10, 16)];
+            const a1 = [makeDate(2012, 1, 1), makeDate(2013, 10, 15)];
+            const a2 = [makeDate(2012, 1, 1), makeDate(2013, 10, 16)];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(false);
         });
         it('should identify equal arrays with one of the elements as 0', function () {
-            var a1 = [0, 20];
-            var a2 = [0, 20];
+            const a1 = [0, 20];
+            const a2 = [0, 20];
             expect(dc.utils.arraysEqual(a1, a2)).toBe(true);
         });
     });

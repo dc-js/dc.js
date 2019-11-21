@@ -45,16 +45,16 @@ export const optionalTransition = function (enable, duration, delay, name) {
 };
 
 // See http://stackoverflow.com/a/20773846
-export const afterTransition = function (transition, callback) {
-    if (transition.empty() || !transition.duration) {
-        callback.call(transition);
+export const afterTransition = function (_transition, callback) {
+    if (_transition.empty() || !_transition.duration) {
+        callback.call(_transition);
     } else {
         let n = 0;
-        transition
+        _transition
             .each(function () { ++n; })
             .on('end', function () {
                 if (!--n) {
-                    callback.call(transition);
+                    callback.call(_transition);
                 }
             });
     }

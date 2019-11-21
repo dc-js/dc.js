@@ -1,15 +1,15 @@
 /* global appendChartID, loadDateFixture, makeDate */
 describe('dc.pieChart', function () {
-    var width = 200;
-    var height = 200;
-    var radius = 100;
-    var defaultCenter = {x: width / 2, y: height / 2};
-    var newCenter = {x: 101, y: 99};
-    var innerRadius = 30;
-    var data, valueDimension, valueGroup;
-    var regionDimension, statusDimension;
-    var countryDimension, countryGroup, dateDimension;
-    var statusGroup, statusMultiGroup;
+    const width = 200;
+    const height = 200;
+    const radius = 100;
+    const defaultCenter = {x: width / 2, y: height / 2};
+    const newCenter = {x: 101, y: 99};
+    const innerRadius = 30;
+    let data, valueDimension, valueGroup;
+    let regionDimension, statusDimension;
+    let countryDimension, countryGroup, dateDimension;
+    let statusGroup, statusMultiGroup;
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
         valueDimension = data.dimension(function (d) {
@@ -51,10 +51,10 @@ describe('dc.pieChart', function () {
     });
 
     function buildChart (id) {
-        var div = appendChartID(id);
+        const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        var chart = dc.pieChart('#' + id);
+        const chart = dc.pieChart('#' + id);
         chart.dimension(valueDimension).group(valueGroup)
             .width(width)
             .height(height)
@@ -65,10 +65,10 @@ describe('dc.pieChart', function () {
     }
 
     function buildCountryChart (id) {
-        var div = appendChartID(id);
+        const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        var chart = dc.pieChart('#' + id);
+        const chart = dc.pieChart('#' + id);
         chart.dimension(countryDimension).group(countryGroup)
             .width(width)
             .height(height)
@@ -79,7 +79,7 @@ describe('dc.pieChart', function () {
     }
 
     describe('generation', function () {
-        var chart,
+        let chart,
             countryChart;
 
         beforeEach(function () {
@@ -157,8 +157,8 @@ describe('dc.pieChart', function () {
             });
         });
         it('slice path fill should be set correctly', function () {
-            var numSlices = 5;
-            for (var i = 0; i < numSlices; i++) {
+            const numSlices = 5;
+            for (let i = 0; i < numSlices; i++) {
                 expect(d3.select(chart.selectAll('g.pie-slice path').nodes()[i]).attr('fill'))
                     .toMatchColor(dc.config.defaultColors()[i]);
             }
@@ -320,7 +320,7 @@ describe('dc.pieChart', function () {
                 chart.filterAll();
                 chart.redraw();
                 chart.selectAll('.pie-slice path').each(function (d) {
-                    var cls = d3.select(this).attr('class');
+                    const cls = d3.select(this).attr('class');
                     expect(cls === null || cls === '').toBeTruthy();
                 });
             });
@@ -371,7 +371,7 @@ describe('dc.pieChart', function () {
             });
         });
         describe('comparing crossfilter and chart ordering', function () {
-            var crossfilterOrder,
+            let crossfilterOrder,
                 crossfilterTop2;
             beforeEach(function () {
                 countryChart = buildCountryChart('country-chart');
@@ -429,7 +429,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('redraw after empty selection', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart2');
             dateDimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);
@@ -448,7 +448,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('small slices', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart3');
             chart.minAngleForLabel(1)
@@ -473,7 +473,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('custom label & title generation', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart3');
             chart.label(function (d) {
@@ -508,7 +508,7 @@ describe('dc.pieChart', function () {
 
     describe('pie chart slices cap and group switching', function () {
         // again, group.all starts with 22 -> 2, 33 -> 2, 44 -> 3, 55 -> 2, 66 -> 1
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart4');
             chart.slicesCap(2)
@@ -536,7 +536,7 @@ describe('dc.pieChart', function () {
                     .toEqual([3,2,5]);
             });
             describe('clicking others slice', function () {
-                var event;
+                let event;
                 beforeEach(function () {
                     event = document.createEvent('MouseEvents');
                     event.initEvent('click', true, true);
@@ -617,7 +617,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('pie chart w/o label', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart4');
             chart.innerRadius(innerRadius);
@@ -630,7 +630,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('renderlet', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('chart-renderlet');
             chart.on('renderlet', function () {
@@ -648,7 +648,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('pie chart label and title w/ value accessor', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart-default-label-title');
             chart.dimension(statusGroup)
@@ -699,7 +699,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('custom filter handler', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart-filter-handler');
             chart.filterHandler(function (dimension, filters) {
@@ -718,7 +718,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('external labeling', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart-external-labeling')
                 .externalLabels(10)
@@ -726,9 +726,9 @@ describe('dc.pieChart', function () {
                 .render();
         });
         it('should place labels outside of pie offset by given radius', function () {
-            var label = d3.select('#pie-chart-external-labeling svg g text.pie-slice');
+            const label = d3.select('#pie-chart-external-labeling svg g text.pie-slice');
 
-            var centroid = d3.arc()
+            const centroid = d3.arc()
                 .outerRadius(chart.radius() + 10)
                 .innerRadius(chart.radius() + 10)
                 .centroid(label.datum());
@@ -747,9 +747,9 @@ describe('dc.pieChart', function () {
             chart.externalLabels(false).render();
 
             d3.selectAll('#pie-chart-external-labeling svg g text.pie-slice').each(function () {
-                var label = d3.select(this);
+                const label = d3.select(this);
 
-                var centroid = d3.arc()
+                const centroid = d3.arc()
                     .outerRadius(chart.radius())
                     .innerRadius(chart.innerRadius())
                     .centroid(label.datum());
@@ -760,7 +760,7 @@ describe('dc.pieChart', function () {
         });
         it('hovering on label should highlight corresponding slice', function () {
             chart.selectAll('#pie-chart-external-labeling text.pie-slice').each(function (d, i) {
-                var legendItem = d3.select(this);
+                const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum(), i);
 
                 expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
@@ -769,7 +769,7 @@ describe('dc.pieChart', function () {
         });
         it('unhovering label removes highlight from corresponding slice', function () {
             chart.selectAll('#pie-chart-external-labeling text.pie-slice').each(function (d, i) {
-                var legendItem = d3.select(this);
+                const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum(), i);
                 legendItem.on('mouseout')(legendItem.datum(), i);
 
@@ -779,7 +779,7 @@ describe('dc.pieChart', function () {
 
         it('hovering on path should highlight corresponding slice', function () {
             chart.selectAll('#pie-chart-external-labeling polyline.pie-path').each(function (d, i) {
-                var legendItem = d3.select(this);
+                const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum(), i);
 
                 expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
@@ -788,7 +788,7 @@ describe('dc.pieChart', function () {
         });
         it('unhovering label removes highlight from corresponding slice', function () {
             chart.selectAll('#pie-chart-external-labeling polyline.pie-path').each(function (d, i) {
-                var legendItem = d3.select(this);
+                const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum(), i);
                 legendItem.on('mouseout')(legendItem.datum(), i);
 
@@ -798,7 +798,7 @@ describe('dc.pieChart', function () {
     });
 
     describe('legends', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart-legend')
                 .cap(3)
@@ -809,7 +809,7 @@ describe('dc.pieChart', function () {
             expect(chart.selectAll('g.dc-legend g.dc-legend-item').size()).toEqual(chart.data().length);
         });
         it('should include "others" item', function () {
-            var numOthersGroups = chart.selectAll('g.dc-legend g.dc-legend-item text').filter(function (d, i) {
+            const numOthersGroups = chart.selectAll('g.dc-legend g.dc-legend-item text').filter(function (d, i) {
                 return d.name === 'Others';
             }).size();
 
@@ -822,7 +822,7 @@ describe('dc.pieChart', function () {
         });
         it('hovering on items should highlight corresponding slice', function () {
             chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
-                var legendItem = d3.select(this);
+                const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum());
 
                 expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
@@ -831,7 +831,7 @@ describe('dc.pieChart', function () {
         });
         it('unhovering removes highlight from corresponding slice', function () {
             chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
-                var legendItem = d3.select(this);
+                const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum());
                 legendItem.on('mouseout')(legendItem.datum());
 
@@ -840,7 +840,7 @@ describe('dc.pieChart', function () {
         });
         it('clicking on items filters them', function () {
             chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
-                var legendItem = d3.select(this);
+                const legendItem = d3.select(this);
                 legendItem.on('click')(legendItem.datum());
 
                 expect(chart.hasFilter(d.name)).toBeTruthy();

@@ -1,8 +1,8 @@
 /* global appendChartID, loadDateFixture */
 describe('dc.selectMenu', function () {
-    var id, chart;
-    var data, regionDimension, regionGroup;
-    var stateDimension, stateGroup;
+    let id, chart;
+    let data, regionDimension, regionGroup;
+    let stateDimension, stateGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -59,12 +59,12 @@ describe('dc.selectMenu', function () {
             expect(chart.numberVisible()).toEqual(20);
         });
         it('creates prompt option with empty value', function () {
-            var option = chart.selectAll('option').nodes()[0];
+            const option = chart.selectAll('option').nodes()[0];
             expect(option).not.toBeNull();
             expect(option.value).toEqual('');
         });
         it('creates prompt option with default prompt text', function () {
-            var option = chart.selectAll('option').nodes()[0];
+            const option = chart.selectAll('option').nodes()[0];
             expect(option.text).toEqual('Select all');
         });
         it('creates correct number of options', function () {
@@ -73,7 +73,7 @@ describe('dc.selectMenu', function () {
     });
 
     describe('select options', function () {
-        var firstOption, lastOption, lastIndex;
+        let firstOption, lastOption, lastIndex;
         beforeEach(function () {
             lastIndex = stateGroup.all().length - 1;
             firstOption = getOption(chart, 0);
@@ -155,7 +155,7 @@ describe('dc.selectMenu', function () {
             expect(regionGroup.all()[0].value).toEqual(1);
         });
         it('selects all options corresponding to active filters on redraw', function () {
-            var selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(function (d) {
+            const selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(function (d) {
                 // IE returns an extra option with value '', not sure what it means
                 return d.value && d.selected;
             });
@@ -165,7 +165,7 @@ describe('dc.selectMenu', function () {
         it('does not deselect previously filtered options when new option is added', function () {
             chart.onChange([stateGroup.all()[0].key, stateGroup.all()[1].key, stateGroup.all()[5].key]);
 
-            var selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(function (d) {
+            const selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(function (d) {
                 // IE returns an extra option with value '', not sure what it means
                 return d.value && d.selected;
             });
@@ -202,7 +202,7 @@ describe('dc.selectMenu', function () {
         });
     });
 
-    function getOption (chart, i) {
-        return chart.selectAll('option.dc-select-option').nodes()[i];
+    function getOption (_chart, i) {
+        return _chart.selectAll('option.dc-select-option').nodes()[i];
     }
 });

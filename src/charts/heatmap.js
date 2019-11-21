@@ -115,7 +115,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
     filter (filter) {
         const nonstandardFilter = logger.deprecate(
-            filter => this._filter(filters.TwoDimensionalFilter(filter)),
+            f => this._filter(filters.TwoDimensionalFilter(f)),
             'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
 
         if (!arguments.length) {

@@ -1,7 +1,7 @@
 /* global appendChartID, loadDateFixture, makeDate, cleanDateRange, simulateChartBrushing */
 describe('dc.barChart', function () {
-    var id, chart, data;
-    var dimension, group;
+    let id, chart, data;
+    let dimension, group;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -50,9 +50,9 @@ describe('dc.barChart', function () {
             });
 
             it('should position bars centered around their data points', function () {
-                var halfBarWidth = 0.5;
+                const halfBarWidth = 0.5;
                 forEachBar(function (bar, datum) {
-                    var barPosition = chart.x()(datum.data.key);
+                    const barPosition = chart.x()(datum.data.key);
                     expect(+bar.attr('x')).toBeCloseTo(barPosition - halfBarWidth, 3);
                 });
             });
@@ -61,7 +61,7 @@ describe('dc.barChart', function () {
         describe('without centered bars', function () {
             it('should position bars starting at their data points', function () {
                 forEachBar(function (bar, datum) {
-                    var barPosition = chart.x()(datum.data.key);
+                    const barPosition = chart.x()(datum.data.key);
                     expect(+bar.attr('x')).toBeCloseTo(barPosition, 3);
                 });
             });
@@ -123,7 +123,7 @@ describe('dc.barChart', function () {
             beforeEach(function () {
                 chart.rescale(); // BUG: barWidth cannot change after initial rendering
 
-                var domain = [makeDate(2012, 4, 20), makeDate(2012, 7, 15)];
+                const domain = [makeDate(2012, 4, 20), makeDate(2012, 7, 15)];
 
                 chart.x(d3.scaleUtc().domain(domain))
                     .group(dimension.group().reduceSum(function (d) {
@@ -172,12 +172,12 @@ describe('dc.barChart', function () {
         });
 
         describe('with an ordinal x domain', function () {
-            var stateDimension;
+            let stateDimension;
 
             beforeEach(function () {
                 stateDimension = data.dimension(function (d) { return d.state; });
-                var stateGroup = stateDimension.group();
-                var ordinalDomainValues = ['California', 'Colorado', 'Delaware', 'Ontario', 'Mississippi', 'Oklahoma'];
+                const stateGroup = stateDimension.group();
+                const ordinalDomainValues = ['California', 'Colorado', 'Delaware', 'Ontario', 'Mississippi', 'Oklahoma'];
 
                 chart.rescale(); // BUG: barWidth cannot change after initial rendering
 
@@ -220,9 +220,9 @@ describe('dc.barChart', function () {
                 // Note that bar chart works differently from pie chart.  The bar objects (the
                 // actual DOM nodes) don't get reordered by the custom ordering, but they are
                 // placed so that they are drawn in the order specified.
-                var ontarioXPos = nthStack(0).nthBar(5).attr('x');
-                var mississippiXPos = nthStack(0).nthBar(3).attr('x');
-                var oklahomaXPos = nthStack(0).nthBar(4).attr('x');
+                const ontarioXPos = nthStack(0).nthBar(5).attr('x');
+                const mississippiXPos = nthStack(0).nthBar(3).attr('x');
+                const oklahomaXPos = nthStack(0).nthBar(4).attr('x');
 
                 expect(ontarioXPos).toBeLessThan(mississippiXPos);
                 expect(mississippiXPos).toBeLessThan(oklahomaXPos);
@@ -244,12 +244,12 @@ describe('dc.barChart', function () {
                 });
 
                 it('should use alphabetical ordering', function () {
-                    var data = chart.selectAll('rect.bar').data();
-                    var expectedData = ['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario'];
+                    const data02 = chart.selectAll('rect.bar').data();
+                    const expectedData = ['California', 'Colorado', 'Delaware', 'Mississippi', 'Oklahoma', 'Ontario'];
 
-                    expect(data.map(function (datum) { return datum.x; })).toEqual(expectedData);
+                    expect(data02.map(function (datum) { return datum.x; })).toEqual(expectedData);
 
-                    var oldX = -Infinity;
+                    let oldX = -Infinity;
                     forEachBar(function (bar) {
                         expect(bar.attr('x')).toBeGreaterThan(oldX);
                         oldX = bar.attr('x');
@@ -274,7 +274,7 @@ describe('dc.barChart', function () {
                 it('causes other dimension to be filtered', function () {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     // fake a click
-                    var abar = chart.selectAll('rect.bar:nth-child(3)');
+                    const abar = chart.selectAll('rect.bar:nth-child(3)');
                     abar.on('click')(abar.datum());
                     expect(dimension.top(Infinity).length).toEqual(1);
                 });
@@ -288,7 +288,7 @@ describe('dc.barChart', function () {
                 it('causes other dimension to be filtered', function () {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     // fake a click
-                    var alabel = chart.select('text.barLabel');
+                    const alabel = chart.select('text.barLabel');
                     alabel.on('click')(alabel.datum());
                     expect(dimension.top(Infinity).length).toEqual(3);
                 });
@@ -296,14 +296,14 @@ describe('dc.barChart', function () {
         });
 
         describe('d3.scaleOrdinal() deprecation for ordinal x domain', function () {
-            var stateDimension;
+            let stateDimension;
 
             beforeEach(function () {
                 spyOn(dc.logger, 'warn');
 
                 stateDimension = data.dimension(function (d) { return d.state; });
-                var stateGroup = stateDimension.group();
-                var ordinalDomainValues = ['California', 'Colorado', 'Delaware', 'Ontario', 'Mississippi', 'Oklahoma'];
+                const stateGroup = stateDimension.group();
+                const ordinalDomainValues = ['California', 'Colorado', 'Delaware', 'Ontario', 'Mississippi', 'Oklahoma'];
 
                 chart.rescale(); // BUG: barWidth cannot change after initial rendering
 
@@ -328,8 +328,10 @@ describe('dc.barChart', function () {
 
         describe('with a linear x domain', function () {
             beforeEach(function () {
-                var linearDimension = data.dimension(function (d) { return +d.value; });
-                var linearGroup = linearDimension.group();
+                const linearDimension = data.dimension(function (d) {
+                    return +d.value;
+                });
+                const linearGroup = linearDimension.group();
 
                 chart.rescale(); // BUG: barWidth cannot change after initial rendering
 
@@ -366,7 +368,7 @@ describe('dc.barChart', function () {
                 });
                 it('clicking causes another dimension to be filtered', function () {
                     expect(dimension.top(Infinity).length).toEqual(10);
-                    var abar = chart.selectAll('rect.bar:nth-child(3)');
+                    const abar = chart.selectAll('rect.bar:nth-child(3)');
                     abar.on('click')(abar.datum());
                     expect(dimension.top(Infinity).length).toEqual(3);
                 });
@@ -376,8 +378,12 @@ describe('dc.barChart', function () {
         describe('with stacked data', function () {
             describe('with positive data', function () {
                 beforeEach(function () {
-                    var idGroup = dimension.group().reduceSum(function (d) { return d.id; });
-                    var sumGroup = dimension.group().reduceSum(function (d) { return d.value; });
+                    const idGroup = dimension.group().reduceSum(function (d) {
+                        return d.id;
+                    });
+                    const sumGroup = dimension.group().reduceSum(function (d) {
+                        return d.value;
+                    });
 
                     chart
                         .brushOn(false)
@@ -528,7 +534,9 @@ describe('dc.barChart', function () {
 
             describe('with mixed positive and negative data', function () {
                 beforeEach(function () {
-                    var mixedGroup = dimension.group().reduceSum(function (d) { return d.nvalue; });
+                    const mixedGroup = dimension.group().reduceSum(function (d) {
+                        return d.nvalue;
+                    });
 
                     chart.group(mixedGroup).stack(mixedGroup).stack(mixedGroup);
                     chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -583,7 +591,9 @@ describe('dc.barChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
+                    const nthText = function (n) {
+                        return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]);
+                    };
 
                     expect(nthText(0).text()).toBe('-20');
                     expect(nthText(1).text()).toBe('0');
@@ -593,7 +603,9 @@ describe('dc.barChart', function () {
 
             describe('with negative data', function () {
                 beforeEach(function () {
-                    var negativeGroup = dimension.group().reduceSum(function (d) { return -Math.abs(d.nvalue); });
+                    const negativeGroup = dimension.group().reduceSum(function (d) {
+                        return -Math.abs(d.nvalue);
+                    });
 
                     chart.group(negativeGroup).stack(negativeGroup).stack(negativeGroup);
                     chart.x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]));
@@ -607,7 +619,9 @@ describe('dc.barChart', function () {
                 });
 
                 it('should generate y axis domain dynamically', function () {
-                    var nthText = function (n) { return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]); };
+                    const nthText = function (n) {
+                        return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]);
+                    };
 
                     expect(nthText(0).text()).toBe('-30');
                     expect(nthText(1).text()).toBe('-20');
@@ -679,7 +693,7 @@ describe('dc.barChart', function () {
         });
 
         describe('legend hovering', function () {
-            var firstItem;
+            let firstItem;
 
             beforeEach(function () {
                 chart.stack(group)
@@ -756,7 +770,7 @@ describe('dc.barChart', function () {
                 });
 
                 it('should create a fancy brush resize handle', function () {
-                    var selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
+                    const selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
                     expect(selectAll.size()).toBe(2);
                     selectAll.each(function (d, i) {
                         if (i === 0) {
@@ -803,7 +817,7 @@ describe('dc.barChart', function () {
 
                     it('should push all bars to the foreground', function () {
                         chart.selectAll('rect.bar').each(function () {
-                            var bar = d3.select(this);
+                            const bar = d3.select(this);
                             expect(bar.classed('deselected')).toBeFalsy();
                         });
                     });
@@ -838,17 +852,21 @@ describe('dc.barChart', function () {
 
         describe('a chart with a linear numerical domain', function () {
             beforeEach(function () {
-                var numericalDimension = data.dimension(function (d) { return +d.value; });
+                const numericalDimension = data.dimension(function (d) {
+                    return +d.value;
+                });
                 chart.dimension(numericalDimension).group(numericalDimension.group());
                 chart.x(d3.scaleLinear().domain([10, 80])).elasticY(true);
                 chart.render();
             });
 
             it('should base the y-axis height on the maximum value in the data', function () {
-                var yAxisMax = 3.0;
-                var ticks = chart.selectAll('g.y g.tick');
-                var tickValues = ticks.nodes().map(function (tick) { return +d3.select(tick).text(); });
-                var maxTickValue = Math.max.apply(this, tickValues);
+                const yAxisMax = 3.0;
+                const ticks = chart.selectAll('g.y g.tick');
+                const tickValues = ticks.nodes().map(function (tick) {
+                    return +d3.select(tick).text();
+                });
+                const maxTickValue = Math.max.apply(this, tickValues);
                 expect(maxTickValue).toBe(yAxisMax);
             });
 
@@ -859,10 +877,12 @@ describe('dc.barChart', function () {
                 });
 
                 it('should rescale the y-axis after applying a filter', function () {
-                    var yAxisMax = 1.0;
-                    var ticks = chart.selectAll('g.y g.tick');
-                    var tickValues = ticks.nodes().map(function (tick) { return +d3.select(tick).text(); });
-                    var maxTickValue = Math.max.apply(this, tickValues);
+                    const yAxisMax = 1.0;
+                    const ticks = chart.selectAll('g.y g.tick');
+                    const tickValues = ticks.nodes().map(function (tick) {
+                        return +d3.select(tick).text();
+                    });
+                    const maxTickValue = Math.max.apply(this, tickValues);
                     expect(maxTickValue).toBe(yAxisMax);
                 });
             });
@@ -871,7 +891,7 @@ describe('dc.barChart', function () {
 
     describe('with another ordinal domain', function () {
         beforeEach(function () {
-            var rows = [];
+            const rows = [];
             rows.push({State: 'CA', 'Population': 2704659});
             rows.push({State: 'TX', 'Population': 1827307});
             data = crossfilter(rows);
@@ -887,7 +907,7 @@ describe('dc.barChart', function () {
             chart.render();
         });
         it('should not overlap bars', function () {
-            var x = numAttr('x'), wid = numAttr('width');
+            const x = numAttr('x'), wid = numAttr('width');
             expect(x(nthStack(0).nthBar(0)) + wid(nthStack(0).nthBar(0)))
                 .toBeLessThan(x(nthStack(0).nthBar(1)));
         });
@@ -895,7 +915,7 @@ describe('dc.barChart', function () {
 
     describe('with yetnother ordinal domain', function () {
         beforeEach(function () {
-            var rows = [{
+            const rows = [{
                 name: 'Venezuela',
                 sale: 300
             }, {
@@ -937,7 +957,7 @@ describe('dc.barChart', function () {
             chart.render();
         });
         it('should not overlap bars', function () {
-            for (var i = 0; i < 7; ++i) {
+            for (let i = 0; i < 7; ++i) {
                 checkBarOverlap(i);
             }
         });
@@ -945,7 +965,7 @@ describe('dc.barChart', function () {
 
     describe('with changing number of bars', function () {
         beforeEach(function () {
-            var rows1 = [
+            const rows1 = [
                 {x: 1, y: 3},
                 {x: 2, y: 9},
                 {x: 5, y: 10},
@@ -969,13 +989,13 @@ describe('dc.barChart', function () {
             chart.render();
         });
         it('should not overlap bars', function () {
-            for (var i = 0; i < 3; ++i) {
+            for (let i = 0; i < 3; ++i) {
                 checkBarOverlap(i);
             }
         });
         describe('with bars added', function () {
             beforeEach(function () {
-                var rows2 = [
+                const rows2 = [
                     {x: 7, y: 4},
                     {x: 12, y: 9}
                 ];
@@ -985,16 +1005,16 @@ describe('dc.barChart', function () {
                 chart.render();
             });
             it('should not overlap bars', function () {
-                for (var i = 0; i < 5; ++i) {
+                for (let i = 0; i < 5; ++i) {
                     checkBarOverlap(i);
                 }
             });
         });
     });
     describe('with elasticX and x-axis padding', function () {
-        var date = makeDate(2012, 5, 1);
+        const date = makeDate(2012, 5, 1);
         beforeEach(function () {
-            var rows = [
+            const rows = [
                 {x: date, y: 4},
             ];
             data = crossfilter(rows);
@@ -1022,8 +1042,8 @@ describe('dc.barChart', function () {
         it('should render the right xAxisMax/Min when 10 day padding', function () {
             chart.xAxisPadding(10)
                 .render();
-            var expectedStartDate = d3.utcDay.offset(date, -10);
-            var expectedEndDate = d3.utcDay.offset(date, 10);
+            const expectedStartDate = d3.utcDay.offset(date, -10);
+            const expectedEndDate = d3.utcDay.offset(date, 10);
             expect(chart.xAxisMin()).toEqual(expectedStartDate);
             expect(chart.xAxisMax()).toEqual(expectedEndDate);
         });
@@ -1031,15 +1051,15 @@ describe('dc.barChart', function () {
             chart.xAxisPaddingUnit('month')
                 .xAxisPadding(2)
                 .render();
-            var expectedStartDate = d3.utcMonth.offset(date, -2);
-            var expectedEndDate = d3.utcMonth.offset(date, 2);
+            const expectedStartDate = d3.utcMonth.offset(date, -2);
+            const expectedEndDate = d3.utcMonth.offset(date, 2);
             expect(chart.xAxisMin()).toEqual(expectedStartDate);
             expect(chart.xAxisMax()).toEqual(expectedEndDate);
         });
     });
     describe('with changing number of bars and elasticX', function () {
         beforeEach(function () {
-            var rows1 = [
+            const rows1 = [
                 {x: 1, y: 3},
                 {x: 2, y: 9},
                 {x: 5, y: 10},
@@ -1063,13 +1083,13 @@ describe('dc.barChart', function () {
             chart.render();
         });
         it('should not overlap bars', function () {
-            for (var i = 0; i < 3; ++i) {
+            for (let i = 0; i < 3; ++i) {
                 checkBarOverlap(i);
             }
         });
         describe('with bars added', function () {
             beforeEach(function () {
-                var rows2 = [
+                const rows2 = [
                     {x: 7, y: 4},
                     {x: 12, y: 9}
                 ];
@@ -1078,7 +1098,7 @@ describe('dc.barChart', function () {
                 chart.render();
             });
             it('should not overlap bars', function () {
-                for (var i = 0; i < 5; ++i) {
+                for (let i = 0; i < 5; ++i) {
                     checkBarOverlap(i);
                 }
             });
@@ -1087,7 +1107,7 @@ describe('dc.barChart', function () {
 
     describe('with changing number of ordinal bars and elasticX', function () {
         beforeEach(function () {
-            var rows1 = [
+            const rows1 = [
                 {x: 'a', y: 3},
                 {x: 'b', y: 9},
                 {x: 'e', y: 10},
@@ -1112,13 +1132,13 @@ describe('dc.barChart', function () {
             chart.render();
         });
         it('should not overlap bars', function () {
-            for (var i = 0; i < 3; ++i) {
+            for (let i = 0; i < 3; ++i) {
                 checkBarOverlap(i);
             }
         });
         describe('with bars added', function () {
             beforeEach(function () {
-                var rows2 = [
+                const rows2 = [
                     {x: 'g', y: 4},
                     {x: 'l', y: 9}
                 ];
@@ -1127,7 +1147,7 @@ describe('dc.barChart', function () {
                 chart.render();
             });
             it('should not overlap bars', function () {
-                for (var i = 0; i < 5; ++i) {
+                for (let i = 0; i < 5; ++i) {
                     checkBarOverlap(i);
                 }
             });
@@ -1143,7 +1163,7 @@ describe('dc.barChart', function () {
         });
 
         describe('with alwaysUseRounding disabled', function () {
-            var consoleWarnSpy;
+            let consoleWarnSpy;
 
             beforeEach(function () {
                 chart.alwaysUseRounding(false);
@@ -1159,7 +1179,7 @@ describe('dc.barChart', function () {
 
             it('should not round the brush', function () {
                 jasmine.clock().tick(100);
-                var filter = cleanDateRange(chart.filter());
+                const filter = cleanDateRange(chart.filter());
                 expect(filter).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);
             });
         });
@@ -1174,7 +1194,7 @@ describe('dc.barChart', function () {
 
             it('should round the brush', function () {
                 jasmine.clock().tick(100);
-                var filter = cleanDateRange(chart.filter());
+                const filter = cleanDateRange(chart.filter());
                 expect(filter).toEqual([makeDate(2012, 6, 1), makeDate(2012, 7, 1)]);
             });
         });
@@ -1182,7 +1202,7 @@ describe('dc.barChart', function () {
 
     describe('check ordering option of the x axis', function () {
         beforeEach(function () {
-            var rows = [
+            const rows = [
                 {x: 'a', y: 1},
                 {x: 'b', y: 3},
                 {x: 'd', y: 4},
@@ -1210,9 +1230,9 @@ describe('dc.barChart', function () {
         });
 
         it('should be ordered by default alphabetical order', function () {
-            var data = chart.data()['0'].values;
-            var expectedData = ['a', 'b', 'c', 'd'];
-            expect(data.map(function (d) { return d.x; })).toEqual(expectedData);
+            const data02 = chart.data()['0'].values;
+            const expectedData = ['a', 'b', 'c', 'd'];
+            expect(data02.map(function (d) { return d.x; })).toEqual(expectedData);
         });
 
         it('should be ordered by value increasing', function () {
@@ -1240,7 +1260,7 @@ describe('dc.barChart', function () {
 
     describe('ordering with stacks', function () {
         beforeEach(function () {
-            var rows = [
+            const rows = [
                 {x: 'a', y: 1, z: 10},
                 {x: 'b', y: 3, z: 20},
                 {x: 'd', y: 4, z: 30},
@@ -1256,7 +1276,7 @@ describe('dc.barChart', function () {
             group = dimension.group().reduceSum(function (d) {
                 return d.y;
             });
-            var group2 = dimension.group().reduceSum(function (d) {
+            const group2 = dimension.group().reduceSum(function (d) {
                 return d.z;
             });
 
@@ -1272,9 +1292,9 @@ describe('dc.barChart', function () {
         });
 
         it('should be ordered by default alphabetical order', function () {
-            var data = chart.data()['0'].values;
-            var expectedData = ['a', 'b', 'c', 'd'];
-            expect(data.map(function (d) { return d.x; })).toEqual(expectedData);
+            const data02 = chart.data()['0'].values;
+            const expectedData = ['a', 'b', 'c', 'd'];
+            expect(data02.map(function (d) { return d.x; })).toEqual(expectedData);
         });
 
         // note: semantics are kind of screwy here: which stack do you want to sort
@@ -1303,14 +1323,14 @@ describe('dc.barChart', function () {
     });
 
     function nthStack (n) {
-        var stack = d3.select(chart.selectAll('.stack').nodes()[n]);
+        const stack = d3.select(chart.selectAll('.stack').nodes()[n]);
 
-        stack.nthBar = function (n) {
-            return d3.select(this.selectAll('rect.bar').nodes()[n]);
+        stack.nthBar = function (i) {
+            return d3.select(this.selectAll('rect.bar').nodes()[i]);
         };
 
-        stack.nthLabel = function (n) {
-            return d3.select(this.selectAll('text.barLabel').nodes()[n]);
+        stack.nthLabel = function (i) {
+            return d3.select(this.selectAll('text.barLabel').nodes()[i]);
         };
 
         stack.forEachBar = function (assertions) {
@@ -1336,7 +1356,7 @@ describe('dc.barChart', function () {
     }
 
     function checkBarOverlap (n) {
-        var x = numAttr('x'), wid = numAttr('width');
+        const x = numAttr('x'), wid = numAttr('width');
         expect(x(nthStack(0).nthBar(n)) + wid(nthStack(0).nthBar(n)))
             .toBeLessThan(x(nthStack(0).nthBar(n + 1)));
     }

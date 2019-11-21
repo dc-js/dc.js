@@ -19,7 +19,7 @@ describe('dc.colorMixin', function () {
         });
 
         it('does not issue a warning when default color scheme has been changed', function () {
-            var origColors = dc.config.defaultColors();
+            const origColors = dc.config.defaultColors();
 
             spyOn(dc.logger, 'warnOnce');
 
@@ -34,7 +34,7 @@ describe('dc.colorMixin', function () {
     });
 
     describe('with ordinal domain' , function () {
-        var chart, domain;
+        let chart, domain;
 
         beforeEach(function () {
             chart = new ColorMixinTester();
@@ -73,7 +73,7 @@ describe('dc.colorMixin', function () {
         // that is not there, it is added to the domain.
         // Please see https://github.com/d3/d3-scale/blob/master/README.md#_ordinal
         // Linear scales work differently.
-        var chart, domain, test, expectedColorIndices;
+        let chart, domain, test, expectedColorIndices;
 
         beforeEach(function () {
             chart = new ColorMixinTester();
@@ -93,7 +93,7 @@ describe('dc.colorMixin', function () {
         });
 
         it('default', function () {
-            var expected = expectedColorIndices.map(function (c) {
+            const expected = expectedColorIndices.map(function (c) {
                 return dc.config.defaultColors()[c];
             });
             expect(colorTest(chart, domain, test)).toMatchColors(expected);
@@ -101,7 +101,7 @@ describe('dc.colorMixin', function () {
 
         it('custom', function () {
             chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
-            var expected = expectedColorIndices.map(function (c) {
+            const expected = expectedColorIndices.map(function (c) {
                 return d3.schemeCategory10[c];
             });
             expect(colorTest(chart, domain, test)).toMatchColors(expected);
@@ -117,7 +117,7 @@ describe('dc.colorMixin', function () {
             // interpolateHcl (note the adjustment for one changed value for d3 5.1)
             chart.linearColors(['#4575b4','#ffffbf']);
 
-            var changedInD3v51 = 'rgb(88, 198, 186)';
+            let changedInD3v51 = 'rgb(88, 198, 186)';
             // https://github.com/omichelsen/compare-versions
             if (compareVersions(d3.version, '5.1') === -1) {
                 // d3 is older than v5.1
@@ -129,14 +129,14 @@ describe('dc.colorMixin', function () {
         });
     });
     describe('calculateColorDomain' , function () {
-        var chart;
+        let chart;
 
         beforeEach(function () {
-            var data = crossfilter(loadDateFixture());
-            var valueDimension = data.dimension(function (d) {
+            const data = crossfilter(loadDateFixture());
+            const valueDimension = data.dimension(function (d) {
                 return d.value;
             });
-            var valueGroup = valueDimension.group();
+            const valueGroup = valueDimension.group();
             chart = new ColorMixinTester()
                 .colorAccessor(function (d) {return d.value;})
                 .group(valueGroup);

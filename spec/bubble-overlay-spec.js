@@ -1,17 +1,17 @@
 /* global appendChartID, loadDateFixture */
 describe('dc.bubbleOverlay', function () {
-    var chart, data;
-    var dimension, group;
+    let chart, data;
+    let dimension, group;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
         dimension = data.dimension(function (d) {return d.state;});
         group = dimension.group().reduceSum(function (d) {return d.value;});
 
-        var id = 'bubble-overlay';
-        var parent = appendChartID(id);
-        var width = 600, height = 400;
-        var svg = parent.append('svg')
+        const id = 'bubble-overlay';
+        const parent = appendChartID(id);
+        const width = 600, height = 400;
+        const svg = parent.append('svg')
             .attr('width', width)
             .attr('height', height);
 
@@ -103,23 +103,23 @@ describe('dc.bubbleOverlay', function () {
         });
     });
 
-    function removeEmptyBins (group) {
+    function removeEmptyBins (grp) {
         return {
             all: function () {
-                return group.all().filter(function (d) {
+                return grp.all().filter(function (d) {
                     return d.value !== 0;
                 });
             }
         };
     }
     describe('filtering another dimension', function () {
-        var regionDim;
+        let regionDim;
         beforeEach(function () {
             chart.group(removeEmptyBins(group)).render();
             regionDim = data.dimension(function (d) { return d.region; });
         });
         function expectRadii (expected) {
-            var circles = chart.selectAll('circle.bubble').nodes();
+            const circles = chart.selectAll('circle.bubble').nodes();
             circles.forEach(function (c, i) {
                 expect(+d3.select(c).attr('r')).toBeWithinDelta(expected[i], 0.1);
             });

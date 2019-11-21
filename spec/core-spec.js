@@ -1,9 +1,9 @@
 /* global loadDateFixture */
 describe('dc.core', function () {
-    var valueDimension, valueGroup;
+    let valueDimension, valueGroup;
 
     beforeEach(function () {
-        var data = crossfilter(loadDateFixture());
+        const data = crossfilter(loadDateFixture());
         valueDimension = data.dimension(function (d) {
             return d.value;
         });
@@ -17,13 +17,13 @@ describe('dc.core', function () {
             //               | | 3 segment version
             //               | |                    |optional release prefixed by '-'
             //               | |                    |                                        |optional build prefixed by '+'
-            var reSemver = /^v?((\d+)\.(\d+)\.(\d+))(?:-([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?(?:\+([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?$/;
+            const reSemver = /^v?((\d+)\.(\d+)\.(\d+))(?:-([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?(?:\+([\dA-Za-z\-]+(?:\.[\dA-Za-z\-]+)*))?$/;
             expect(dc.version).toMatch(reSemver);
         });
     });
 
     describe('charts', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = dc.pieChart('#id')
                     .dimension(valueDimension)
@@ -55,9 +55,9 @@ describe('dc.core', function () {
     });
 
     describe('chartsRegistry', function () {
-        var chart;
-        var chartGrouped;
-        var chartGroup = 'testChartGroup';
+        let chart;
+        let chartGrouped;
+        const chartGroup = 'testChartGroup';
         beforeEach(function () {
             chart = dc.pieChart('#id')
                     .dimension(valueDimension)
@@ -98,7 +98,7 @@ describe('dc.core', function () {
     });
 
     describe('transition', function () {
-        var selections;
+        let selections;
 
         beforeEach(function () {
             selections = {
@@ -168,7 +168,7 @@ describe('dc.core', function () {
 
     describe('units', function () {
         describe('.integers', function () {
-            var result;
+            let result;
             beforeEach(function () {
                 result = dc.units.integers(0, 100);
             });
@@ -178,7 +178,7 @@ describe('dc.core', function () {
         });
 
         describe('.float', function () {
-            var result;
+            let result;
             beforeEach(function () {
                 result = dc.units.fp.precision(0.001)(0.49999, 1.0);
             });
@@ -195,7 +195,7 @@ describe('dc.core', function () {
     });
 
     describe('charts w/ grouping', function () {
-        var chart;
+        let chart;
 
         beforeEach(function () {
             chart = dc.pieChart('#a', 'groupA').dimension(valueDimension).group(valueGroup);
@@ -241,7 +241,7 @@ describe('dc.core', function () {
     });
 
     describe('render/redraw all call back', function () {
-        var result;
+        let result;
 
         beforeEach(function () {
             dc.renderlet(function (group) {

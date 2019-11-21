@@ -1,14 +1,15 @@
 /* global appendChartID, loadDateFixture */
 describe('dc.numberDisplay', function () {
-    var data, meanGroup;
-    var countryDimension;
+    let data, meanGroup;
+    let countryDimension;
+
     function average (d) {
         return d.n ? d.tot / d.n : 0;
     }
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        var groupAll = data.groupAll();
+        const groupAll = data.groupAll();
         meanGroup = groupAll.reduce(
             function (p, v) {
                 ++p.n;
@@ -29,20 +30,20 @@ describe('dc.numberDisplay', function () {
     });
 
     function buildChart (id) {
-        var chart = dc.numberDisplay(id)
-                .transitionDuration(0)
-                .group(meanGroup)
-                .formatNumber(d3.format('.3s'))
-                .valueAccessor(average);
+        const chart = dc.numberDisplay(id)
+            .transitionDuration(0)
+            .group(meanGroup)
+            .formatNumber(d3.format('.3s'))
+            .valueAccessor(average);
         chart.render();
         d3.timerFlush();
         return chart;
     }
 
     describe('Empty Div', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
-            var id = 'empty-div';
+            const id = 'empty-div';
             appendChartID(id);
             chart = buildChart('#' + id);
         });
@@ -135,10 +136,10 @@ describe('dc.numberDisplay', function () {
         });
     });
     describe('Div with embedded span', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
-            var id = 'full-div';
-            var div = appendChartID(id);
+            const id = 'full-div';
+            const div = appendChartID(id);
             div.append('p').html('There are <span class="number-display">_</span> Total Widgets.');
             chart = buildChart('#' + id);
         });
@@ -151,7 +152,7 @@ describe('dc.numberDisplay', function () {
     });
     describe('Inline nonspan element' , function () {
         beforeEach(function () {
-            var div = d3.select('body').append('div').attr('id', 'number-display-test-section');
+            const div = d3.select('body').append('div').attr('id', 'number-display-test-section');
             div.append('p').html('There are <em id="nonspan"></em> Total Widgets.');
             buildChart('#nonspan');
         });
@@ -166,11 +167,11 @@ describe('dc.numberDisplay', function () {
         });
     });
     describe('with group with multiple values', function () {
-        var group, chart;
+        let group, chart;
         beforeEach(function () {
             countryDimension.filterAll();
             group = countryDimension.group().reduceSum(function (d) { return +d.value; });
-            var id = 'empty-div';
+            const id = 'empty-div';
             appendChartID(id);
             chart = buildChart('#' + id);
             chart
@@ -197,9 +198,9 @@ describe('dc.numberDisplay', function () {
 
     });
     describe('Infinity', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
-            var id = 'empty-div';
+            const id = 'empty-div';
             appendChartID(id);
             chart = buildChart('#' + id);
             chart.valueAccessor(function (x) { return x; })

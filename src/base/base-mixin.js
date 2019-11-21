@@ -1341,7 +1341,7 @@ export class BaseMixin {
             'overlayGeoJson'
         ];
 
-        for (let o in opts) {
+        for (const o in opts) {
             if (typeof (this[o]) === 'function') {
                 if (opts[o] instanceof Array && applyOptions.indexOf(o) !== -1) {
                     this[o].apply(this, opts[o]);

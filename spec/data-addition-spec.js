@@ -1,9 +1,9 @@
 /* global appendChartID, loadDateFixture, loadDateFixture2, makeDate */
 describe('Dynamic data addition in crossfilter', function () {
-    var width = 200;
-    var height = 200;
-    var radius = 100;
-    var baseData, moreData;
+    const width = 200;
+    const height = 200;
+    const radius = 100;
+    let baseData, moreData;
 
     beforeEach(function () {
         baseData = crossfilter(loadDateFixture());
@@ -15,23 +15,24 @@ describe('Dynamic data addition in crossfilter', function () {
     }
 
     describe('pie chart slice addition', function () {
-        var valueDimension, valueGroup;
-        var chart;
+        let valueDimension, valueGroup;
+        let chart;
+
         function buildPieChart (id) {
-            var div = appendChartID(id);
+            const div = appendChartID(id);
             div.append('a').attr('class', 'reset').style('display', 'none');
             div.append('span').attr('class', 'filter').style('display', 'none');
-            var chart = dc.pieChart('#' + id);
-            chart.dimension(valueDimension).group(valueGroup)
+            const pieChart = dc.pieChart('#' + id);
+            pieChart.dimension(valueDimension).group(valueGroup)
                 .width(width)
                 .height(height)
                 .radius(radius)
                 .ordering(function (kv) { return kv.key; })
                 .transitionDuration(0);
-            chart.render();
+            pieChart.render();
             baseData.add(moreData);
-            chart.expireCache();
-            return chart;
+            pieChart.expireCache();
+            return pieChart;
         }
         beforeEach(function () {
             valueDimension = baseData.dimension(function (d) {
@@ -62,12 +63,13 @@ describe('Dynamic data addition in crossfilter', function () {
         });
     });
     describe('line chart segment addition', function () {
-        var timeDimension, timeGroup;
-        var chart;
+        let timeDimension, timeGroup;
+        let chart;
+
         function buildLineChart (id) {
             appendChartID(id);
-            var chart = dc.lineChart('#' + id);
-            chart.dimension(timeDimension).group(timeGroup)
+            const lineChart = dc.lineChart('#' + id);
+            lineChart.dimension(timeDimension).group(timeGroup)
                 .width(width).height(height)
                 .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                 .transitionDuration(0)
@@ -75,10 +77,10 @@ describe('Dynamic data addition in crossfilter', function () {
                 .brushOn(false)
                 .renderArea(true)
                 .renderTitle(true);
-            chart.render();
+            lineChart.render();
             baseData.add(moreData);
-            chart.expireCache();
-            return chart;
+            lineChart.expireCache();
+            return lineChart;
         }
         beforeEach(function () {
             timeDimension = baseData.dimension(function (d) {
@@ -92,23 +94,23 @@ describe('Dynamic data addition in crossfilter', function () {
             expect(chart.selectAll('circle.dot').nodes().length).toEqual(timeGroup.size());
         });
         it('number of line segments should equal the size of the group', function () {
-            var path = chart.selectAll('path.line').attr('d');
+            const path = chart.selectAll('path.line').attr('d');
             expect(occurrences(path, 'L') + 1).toEqual(timeGroup.size());
         });
         it('number of area segments should equal twice the size of the group', function () {
-            var path = chart.selectAll('path.area').attr('d');
+            const path = chart.selectAll('path.area').attr('d');
             expect(occurrences(path, 'L') + 1).toEqual(timeGroup.size() * 2);
         });
 
         describe('resetting line chart with fewer data points', function () {
             beforeEach(function () {
-                var chart = buildLineChart('stackable-line-chart');
-                chart.render();
+                const lineChart = buildLineChart('stackable-line-chart');
+                lineChart.render();
 
                 timeDimension.filterAll();
                 baseData.remove();
                 baseData.add(moreData);
-                chart.render();
+                lineChart.render();
             });
 
             it('it should not contain stale data points', function () {

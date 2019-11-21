@@ -1,11 +1,13 @@
 /* global appendChartID, comparePaths, loadDateFixture, makeDate, simulateChart2DBrushing */
 describe('dc.scatterPlot', function () {
-    var id, chart;
-    var data, group, dimension;
+    let id, chart;
+    let data, group, dimension;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
+        dimension = data.dimension(function (d) {
+            return [+d.value, +d.nvalue];
+        });
         group = dimension.group();
 
         id = 'scatter-plot';
@@ -60,9 +62,8 @@ describe('dc.scatterPlot', function () {
         });
 
         it('should generate the correct titles', function () {
-            var titles = chart.selectAll('path.symbol title');
-            var expected = ['22,-2: 1','22,10: 1','33,1: 2','44,-3: 1','44,-4: 1',
-                            '44,2: 1','55,-3: 1','55,-5: 1','66,-4: 1'];
+            const titles = chart.selectAll('path.symbol title');
+            const expected = ['22,-2: 1', '22,10: 1', '33,1: 2', '44,-3: 1', '44,-4: 1', '44,2: 1', '55,-3: 1', '55,-5: 1', '66,-4: 1'];
             expect(titles.size()).toBe(expected.length);
             titles.each(function (d) {
                 expect(this.textContent).toBe(expected.shift());
@@ -82,21 +83,23 @@ describe('dc.scatterPlot', function () {
         });
 
         function fishSymbol () {
-            var size;
-            var points = [[2, 0], [1, -1], [-1, 1], [-1, -1], [1, 1]];
+            let size;
+            const points = [[2, 0], [1, -1], [-1, 1], [-1, -1], [1, 1]];
+
             function symbol (d, i) {
                 // native size is 3 square pixels, so to get size N, multiply by sqrt(N)/3
-                var m = size.call(this, d, i);
+                let m = size.call(this, d, i);
                 m = Math.sqrt(m) / 3;
-                var path = d3.line()
-                        .x(function (d) {
-                            return d[0] * m;
-                        })
-                        .y(function (d) {
-                            return d[1] * m;
-                        });
+                const path = d3.line()
+                    .x(function (_d) {
+                        return _d[0] * m;
+                    })
+                    .y(function (_d) {
+                        return _d[1] * m;
+                    });
                 return path(points) + 'Z';
             }
+
             symbol.type = function () {
                 if (arguments.length) {
                     throw new Error('no, you must have fish');
@@ -112,6 +115,7 @@ describe('dc.scatterPlot', function () {
             };
             return symbol;
         }
+
         describe('with a fish symbol', function () {
             beforeEach(function () {
                 chart.customSymbol(fishSymbol().size(chart.symbolSize()))
@@ -134,10 +138,12 @@ describe('dc.scatterPlot', function () {
         });
 
         describe('filtering the chart', function () {
-            var otherDimension;
+            let otherDimension;
 
             beforeEach(function () {
-                otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
+                otherDimension = data.dimension(function (d) {
+                    return [+d.value, +d.nvalue];
+                });
 
                 chart.filterAll();
                 chart.filter([[22, -3], [44, 2]]);
@@ -161,41 +167,43 @@ describe('dc.scatterPlot', function () {
 
         function filteringAnotherDimension () {
             describe('filtering another dimension', function () {
-                var otherDimension;
+                let otherDimension;
 
                 beforeEach(function () {
-                    otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
-                    var ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
+                    otherDimension = data.dimension(function (d) {
+                        return [+d.value, +d.nvalue];
+                    });
+                    const ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
                     otherDimension.filterFunction(ff);
                     chart.redraw();
                 });
 
                 it('should show the included points', function () {
-                    var shownPoints = symbolsOfRadius(10); // test symbolSize
+                    const shownPoints = symbolsOfRadius(10); // test symbolSize
                     expect(shownPoints.length).toBe(2);
                     expect(shownPoints[0].key).toEqual([22, -2]);
                     expect(shownPoints[1].key).toEqual([33, 1]);
                 });
                 it('should hide the excluded points', function () {
-                    var emptyPoints = symbolsOfRadius(4); // test emptySize
+                    const emptyPoints = symbolsOfRadius(4); // test emptySize
                     expect(emptyPoints.length).toBe(7);
                 });
                 it('should use emptyOpacity for excluded points', function () {
-                    var translucentPoints = symbolsMatching(function () {
+                    const translucentPoints = symbolsMatching(function () {
                         return +d3.select(this).attr('opacity') === 0.5; // emptyOpacity
                     });
                     expect(translucentPoints.length).toBe(7);
                 });
                 it('should use emptyColor for excluded points', function () {
-                    var chartreusePoints = symbolsMatching(function () { // don't try this at home
+                    const chartreusePoints = symbolsMatching(function () { // don't try this at home
                         return /#DFFF00/i.test(d3.select(this).attr('fill')); // emptyColor
                     });
                     expect(chartreusePoints.length).toBe(7);
                 });
                 it('should update the titles', function () {
-                    var titles = chart.selectAll('path.symbol title');
-                    var expected = ['22,-2: 1','22,10: 0','33,1: 2','44,-3: 0','44,-4: 0',
-                                    '44,2: 0','55,-3: 0','55,-5: 0','66,-4: 0'];
+                    const titles = chart.selectAll('path.symbol title');
+                    const expected =
+                        ['22,-2: 1', '22,10: 0', '33,1: 2', '44,-3: 0', '44,-4: 0', '44,2: 0', '55,-3: 0', '55,-5: 0', '66,-4: 0'];
                     expect(titles.size()).toBe(expected.length);
                     titles.each(function (d) {
                         expect(this.textContent).toBe(expected.shift());
@@ -203,12 +211,13 @@ describe('dc.scatterPlot', function () {
                 });
             });
         }
+
         filteringAnotherDimension();
 
-        function cloneGroup (group) {
+        function cloneGroup (grp) {
             return {
                 all: function () {
-                    return group.all().map(function (kv) {
+                    return grp.all().map(function (kv) {
                         return {
                             key: kv.key.slice(0),
                             value: kv.value
@@ -217,6 +226,7 @@ describe('dc.scatterPlot', function () {
                 }
             };
         }
+
         describe('with cloned data', function () {
             beforeEach(function () {
                 chart.group(cloneGroup(group))
@@ -238,29 +248,33 @@ describe('dc.scatterPlot', function () {
         }
 
         describe('with empty bins removed', function () {
-            var otherDimension;
+            let otherDimension;
             beforeEach(function () {
                 chart.group(removeEmptyBins(group))
                     .render();
-                otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
-                var ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
+                otherDimension = data.dimension(function (d) {
+                    return [+d.value, +d.nvalue];
+                });
+                const ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
                 otherDimension.filterFunction(ff);
                 chart.redraw();
             });
 
             it('should only contain the included points', function () {
-                var emptyPoints = symbolsMatching(function () { return true; });
+                const emptyPoints = symbolsMatching(function () {
+                    return true;
+                });
                 expect(emptyPoints.length).toBe(2);
             });
             it('should show the included points', function () {
-                var shownPoints = symbolsOfRadius(10); // test symbolSize
+                const shownPoints = symbolsOfRadius(10); // test symbolSize
                 expect(shownPoints.length).toBe(2);
                 expect(shownPoints[0].key).toEqual([22, -2]);
                 expect(shownPoints[1].key).toEqual([33, 1]);
             });
             it('should update the titles', function () {
-                var titles = chart.selectAll('path.symbol title');
-                var expected = ['22,-2: 1','33,1: 2'];
+                const titles = chart.selectAll('path.symbol title');
+                const expected = ['22,-2: 1', '33,1: 2'];
                 expect(titles.size()).toBe(expected.length);
                 titles.each(function (d) {
                     expect(this.textContent).toBe(expected.shift());
@@ -269,10 +283,12 @@ describe('dc.scatterPlot', function () {
         });
 
         describe('brushing', function () {
-            var otherDimension;
+            let otherDimension;
 
             beforeEach(function () {
-                otherDimension = data.dimension(function (d) { return [+d.value, +d.nvalue]; });
+                otherDimension = data.dimension(function (d) {
+                    return [+d.value, +d.nvalue];
+                });
 
                 simulateChart2DBrushing(chart, [[22, -3], [44, 2]]);
 
@@ -280,7 +296,7 @@ describe('dc.scatterPlot', function () {
             });
 
             it('should not create brush handles', function () {
-                var selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
+                const selectAll = chart.select('g.brush').selectAll('path.custom-brush-handle');
                 expect(selectAll.size()).toBe(0);
             });
 
@@ -300,22 +316,22 @@ describe('dc.scatterPlot', function () {
             });
 
             describe('excluded points', function () {
-                var selectedPoints;
+                let selectedPoints;
 
                 beforeEach(function () {
                     jasmine.clock().tick(100);
                 });
 
-                var isOpaque = function () {
+                const isOpaque = function () {
                     return +d3.select(this).attr('opacity') === 0.9; // test nonemptyOpacity
                 };
-                var isTranslucent = function () {
+                const isTranslucent = function () {
                     return +d3.select(this).attr('opacity') === 0.25; // test excludedOpacity
                 };
-                var isBlue = function () {
+                const isBlue = function () {
                     return d3.select(this).attr('fill') === '#1f77b4';
                 };
-                var isGrey = function () {
+                const isGrey = function () {
                     return d3.select(this).attr('fill') === '#ccc'; // test excludedColor
                 };
 
@@ -392,20 +408,20 @@ describe('dc.scatterPlot', function () {
 
     function matchSymbolSize (r) {
         return function () {
-            var symbol = d3.select(this);
-            var size = Math.pow(r, 2);
-            var path = d3.symbol().size(size)();
-            var result = comparePaths(symbol.attr('d'), path);
+            const symbol = d3.select(this);
+            const size = Math.pow(r, 2);
+            const path = d3.symbol().size(size)();
+            const result = comparePaths(symbol.attr('d'), path);
             return result.pass;
         };
     }
 
     function matchSymbol (s, r) {
         return function () {
-            var symbol = d3.select(this);
-            var size = Math.pow(r, 2);
-            var path = s.size(size)();
-            var result = comparePaths(symbol.attr('d'), path);
+            const symbol = d3.select(this);
+            const size = Math.pow(r, 2);
+            const path = s.size(size)();
+            const result = comparePaths(symbol.attr('d'), path);
             return result.pass;
         };
     }
@@ -416,6 +432,7 @@ describe('dc.scatterPlot', function () {
                 return d3.select(symbol).datum();
             });
         }
+
         return getData(chart.selectAll('path.symbol').filter(pred));
     }
 
@@ -424,9 +441,9 @@ describe('dc.scatterPlot', function () {
     }
 
     describe('legends', function () {
-        var compositeChart, id;
-        var subChart1, subChart2;
-        var firstItem;
+        let compositeChart;
+        let subChart1, subChart2;
+        let firstItem;
 
         beforeEach(function () {
             id = 'scatter-plot-composite';
@@ -485,7 +502,7 @@ describe('dc.scatterPlot', function () {
         });
 
         function nthChart (n) {
-            var subChart = d3.select(compositeChart.selectAll('g.sub').nodes()[n]);
+            const subChart = d3.select(compositeChart.selectAll('g.sub').nodes()[n]);
 
             subChart.expectPlotSymbolsToHaveClass = function (className) {
                 subChart.selectAll('path.symbol').each(function () {
@@ -494,7 +511,7 @@ describe('dc.scatterPlot', function () {
             };
 
             subChart.expectPlotSymbolsToHaveSize = function (size) {
-                var match = matchSymbolSize(size);
+                const match = matchSymbolSize(size);
                 subChart.selectAll('path.symbol').each(function () {
                     expect(match.apply(this)).toBeTruthy();
                 });
@@ -511,15 +528,19 @@ describe('dc.scatterPlot', function () {
     });
     describe('with ordinal axes', function () {
         beforeEach(function () {
-            dimension = data.dimension(function (d) { return [d.state, d.region]; });
+            dimension = data.dimension(function (d) {
+                return [d.state, d.region];
+            });
             group = dimension.group();
             chart
                 .margins({left: 50, top: 10, right: 0, bottom: 20})
                 .dimension(dimension)
                 .group(group)
                 .x(d3.scaleBand())
-            // ordinal axes work but you have to set the padding for both axes & give the y domain
-                .y(d3.scaleBand().paddingInner(1).domain(group.all().map(function (kv) { return kv.key[1]; })))
+                // ordinal axes work but you have to set the padding for both axes & give the y domain
+                .y(d3.scaleBand().paddingInner(1).domain(group.all().map(function (kv) {
+                    return kv.key[1];
+                })))
                 .xUnits(dc.units.ordinal)
                 ._rangeBandPadding(1)
                 .render();
@@ -542,6 +563,7 @@ describe('dc.scatterPlot', function () {
             });
         });
     });
+
     function nthSymbol (i) {
         return d3.select(chart.selectAll('path.symbol').nodes()[i]);
     }
