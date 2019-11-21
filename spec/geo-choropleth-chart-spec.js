@@ -1,8 +1,8 @@
 /* global appendChartID, loadDateFixture, loadGeoFixture, loadGeoFixture2, loadGeoFixture3 */
 describe('dc.geoChoropleth', function () {
-    var data;
-    var stateDimension, stateValueSumGroup, districtDimension, districtValueEnrollGroup;
-    var geoJson, geoJson2, geoJson3;
+    let data;
+    let stateDimension, stateValueSumGroup, districtDimension, districtValueEnrollGroup;
+    let geoJson, geoJson2, geoJson3;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -23,10 +23,10 @@ describe('dc.geoChoropleth', function () {
     });
 
     function buildChart (id) {
-        var div = appendChartID(id);
+        const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        var chart = dc.geoChoroplethChart('#' + id);
+        const chart = dc.geoChoroplethChart('#' + id);
         chart.dimension(stateDimension)
             .group(stateValueSumGroup)
             .width(990)
@@ -46,10 +46,10 @@ describe('dc.geoChoropleth', function () {
     }
 
     function buildChartWithCustomProjection (id) {
-        var div = appendChartID(id);
+        const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        var chart = dc.geoChoroplethChart('#' + id);
+        const chart = dc.geoChoroplethChart('#' + id);
         chart.dimension(districtDimension)
             .group(districtValueEnrollGroup)
             .projection(d3.geoMercator()
@@ -71,7 +71,7 @@ describe('dc.geoChoropleth', function () {
     }
 
     describe('creation', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('choropleth-chart');
         });
@@ -151,7 +151,7 @@ describe('dc.geoChoropleth', function () {
     });
 
     describe('filter and highlight', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('choropleth-chart-with-filter');
             chart.filter('Colorado');
@@ -170,7 +170,7 @@ describe('dc.geoChoropleth', function () {
     });
 
     describe('respond to external filter', function () {
-        var chart, nvalueDim;
+        let chart, nvalueDim;
         beforeEach(function () {
             chart = buildChart('choropleth-chart-being-filtered');
             nvalueDim = data.dimension(function (d) { return +d.nvalue; });
@@ -255,7 +255,7 @@ describe('dc.geoChoropleth', function () {
     });
 
     describe('custom projection', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChartWithCustomProjection('choropleth-chart-with-projection');
         });
@@ -269,7 +269,7 @@ describe('dc.geoChoropleth', function () {
     });
 
     describe('replace and remove layer', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('choropleth-chart-replace-layer');
             chart.overlayGeoJson(geoJson3.features, 'state', function (d) {

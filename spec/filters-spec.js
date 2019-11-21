@@ -2,7 +2,7 @@
 
 describe('dc.filters', function () {
     describe('RangedFilter', function () {
-        var filter;
+        let filter;
         beforeEach(function () {
             filter = dc.filters.RangedFilter(0, 10);
         });
@@ -31,7 +31,7 @@ describe('dc.filters', function () {
     });
 
     describe('RangedFilter with Dates', function () {
-        var filter;
+        let filter;
         beforeEach(function () {
             filter = dc.filters.RangedFilter(makeDate(2015, 7, 1), makeDate(2015, 8, 20));
         });
@@ -56,7 +56,7 @@ describe('dc.filters', function () {
     });
 
     describe('TwoDimensionalFilter', function () {
-        var filter;
+        let filter;
         beforeEach(function () {
             filter = dc.filters.TwoDimensionalFilter([1,2]);
         });
@@ -85,7 +85,7 @@ describe('dc.filters', function () {
     });
 
     describe('RangedTwoDimensionalFilter', function () {
-        var filter;
+        let filter;
 
         it('should return null if filtered with null', function () {
             expect(dc.filters.RangedTwoDimensionalFilter(null)).toBe(null);
@@ -166,7 +166,7 @@ describe('dc.filters', function () {
     });
 
     describe('RangedTwoDimensionalFilter with Dates', function () {
-        var filter;
+        let filter;
 
         describe('two-dimensional filtering', function () {
             beforeEach(function () {

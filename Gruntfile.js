@@ -8,9 +8,9 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-karma');
 
-    var formatFileList = require('./grunt/format-file-list')(grunt);
+    const formatFileList = require('./grunt/format-file-list')(grunt);
 
-    var config = {
+    const config = {
         src: 'src',
         spec: 'spec',
         web: 'web',
@@ -20,9 +20,9 @@ module.exports = function (grunt) {
     };
 
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
-    var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
+    const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    var sass = require('node-sass');
+    const sass = require('node-sass');
 
     grunt.initConfig({
         conf: config,

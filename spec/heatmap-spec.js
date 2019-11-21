@@ -1,6 +1,6 @@
 /* global appendChartID, loadColorFixture, loadColorFixture2, loadIrisFixture */
 describe('dc.heatmap', function () {
-    var id, data, dimension, group, chart, chartHeight, chartWidth;
+    let id, data, dimension, group, chart, chartHeight, chartWidth;
 
     beforeEach(function () {
         data = crossfilter(loadColorFixture());
@@ -44,7 +44,7 @@ describe('dc.heatmap', function () {
         });
 
         it('should position the heatboxes in a matrix', function () {
-            var heatBoxes = chart.selectAll('rect.heat-box');
+            const heatBoxes = chart.selectAll('rect.heat-box');
 
             expect(+heatBoxes.nodes()[0].getAttribute('x')).toEqual(0);
             expect(+heatBoxes.nodes()[0].getAttribute('y')).toEqual(100);
@@ -60,7 +60,7 @@ describe('dc.heatmap', function () {
         });
 
         it('should color heatboxes using the provided color option', function () {
-            var heatBoxes = chart.selectAll('rect.heat-box');
+            const heatBoxes = chart.selectAll('rect.heat-box');
 
             expect(heatBoxes.nodes()[0].getAttribute('fill')).toMatch(/#000001/i);
             expect(heatBoxes.nodes()[1].getAttribute('fill')).toMatch(/#000002/i);
@@ -76,7 +76,7 @@ describe('dc.heatmap', function () {
         });
 
         it('should position the y-axis labels with their associated rows', function () {
-            var yaxisTexts = chart.selectAll('.rows.axis text');
+            const yaxisTexts = chart.selectAll('.rows.axis text');
             expect(+yaxisTexts.nodes()[0].getAttribute('y')).toEqual(150);
             expect(+yaxisTexts.nodes()[0].getAttribute('x')).toEqual(0);
             expect(+yaxisTexts.nodes()[1].getAttribute('y')).toEqual(50);
@@ -84,13 +84,13 @@ describe('dc.heatmap', function () {
         });
 
         it('should have labels on the y-axis corresponding to the row values', function () {
-            var yaxisTexts = chart.selectAll('.rows.axis text');
+            const yaxisTexts = chart.selectAll('.rows.axis text');
             expect(yaxisTexts.nodes()[0].textContent).toEqual('1');
             expect(yaxisTexts.nodes()[1].textContent).toEqual('2');
         });
 
         it('should position the x-axis labels with their associated columns', function () {
-            var xaxisTexts = chart.selectAll('.cols.axis text');
+            const xaxisTexts = chart.selectAll('.cols.axis text');
             expect(+xaxisTexts.nodes()[0].getAttribute('y')).toEqual(200);
             expect(+xaxisTexts.nodes()[0].getAttribute('x')).toEqual(50);
             expect(+xaxisTexts.nodes()[1].getAttribute('y')).toEqual(200);
@@ -98,13 +98,13 @@ describe('dc.heatmap', function () {
         });
 
         it('should have labels on the x-axis corresponding to the row values', function () {
-            var xaxisTexts = chart.selectAll('.cols.axis text');
+            const xaxisTexts = chart.selectAll('.cols.axis text');
             expect(xaxisTexts.nodes()[0].textContent).toEqual('1');
             expect(xaxisTexts.nodes()[1].textContent).toEqual('2');
         });
 
         it('should have tooltips (titles)', function () {
-            var titles = chart.selectAll('title');
+            const titles = chart.selectAll('title');
             expect(titles.nodes().length).toEqual(4);
             expect(titles.nodes()[0].textContent).toEqual('1,1: 2');
             expect(titles.nodes()[2].textContent).toEqual('2,1: 6');
@@ -117,12 +117,12 @@ describe('dc.heatmap', function () {
                     .redraw();
             });
             it('should display the custom labels on the x axis', function () {
-                var xaxisTexts = chart.selectAll('.cols.axis text');
+                const xaxisTexts = chart.selectAll('.cols.axis text');
                 expect(xaxisTexts.nodes()[0].textContent).toEqual('col 1');
                 expect(xaxisTexts.nodes()[1].textContent).toEqual('col 2');
             });
             it('should display the custom labels on the y axis', function () {
-                var yaxisTexts = chart.selectAll('.rows.axis text');
+                const yaxisTexts = chart.selectAll('.rows.axis text');
                 expect(yaxisTexts.nodes()[0].textContent).toEqual('row 1');
                 expect(yaxisTexts.nodes()[1].textContent).toEqual('row 2');
             });
@@ -170,13 +170,13 @@ describe('dc.heatmap', function () {
         });
 
         it('should only have 1 row on the y axis', function () {
-            var yaxisTexts = chart.selectAll('.rows.axis text');
+            const yaxisTexts = chart.selectAll('.rows.axis text');
             expect(yaxisTexts.nodes().length).toEqual(1);
             expect(yaxisTexts.nodes()[0].textContent).toEqual('1');
         });
 
         it('should only have 1 col on the x axis', function () {
-            var xaxisTexts = chart.selectAll('.cols.axis text');
+            const xaxisTexts = chart.selectAll('.cols.axis text');
             expect(xaxisTexts.nodes().length).toEqual(1);
             expect(xaxisTexts.nodes()[0].textContent).toEqual('1');
         });
@@ -184,7 +184,7 @@ describe('dc.heatmap', function () {
         it('should reset the rows to using the chart data on the y axis', function () {
             chart.rows(null);
             chart.redraw();
-            var yaxisTexts = chart.selectAll('.rows.axis text');
+            const yaxisTexts = chart.selectAll('.rows.axis text');
             expect(yaxisTexts.nodes().length).toEqual(2);
             expect(yaxisTexts.nodes()[0].textContent).toEqual('1');
             expect(yaxisTexts.nodes()[1].textContent).toEqual('2');
@@ -193,7 +193,7 @@ describe('dc.heatmap', function () {
         it('should reset the cols to using the chart data on the y axis', function () {
             chart.cols(null);
             chart.redraw();
-            var xaxisTexts = chart.selectAll('.cols.axis text');
+            const xaxisTexts = chart.selectAll('.cols.axis text');
             expect(xaxisTexts.nodes().length).toEqual(2);
             expect(xaxisTexts.nodes()[0].textContent).toEqual('1');
             expect(xaxisTexts.nodes()[1].textContent).toEqual('2');
@@ -208,23 +208,23 @@ describe('dc.heatmap', function () {
         });
 
         it('should have descending rows', function () {
-            var yaxisTexts = chart.selectAll('.rows.axis text');
+            const yaxisTexts = chart.selectAll('.rows.axis text');
             expect(yaxisTexts.nodes()[0].textContent).toEqual('2');
             expect(yaxisTexts.nodes()[1].textContent).toEqual('1');
         });
 
         it('should have descending cols', function () {
-            var yaxisTexts = chart.selectAll('.rows.axis text');
+            const yaxisTexts = chart.selectAll('.rows.axis text');
             expect(yaxisTexts.nodes()[0].textContent).toEqual('2');
             expect(yaxisTexts.nodes()[1].textContent).toEqual('1');
         });
     });
 
     describe('change crossfilter', function () {
-        var data2, dimension2, group2, originalDomain;
+        let data2, dimension2, group2, originalDomain;
 
-        var reduceDimensionValues = function (dimension) {
-            return dimension.top(Infinity).reduce(function (p, d) {
+        const reduceDimensionValues = function (dmsn) {
+            return dmsn.top(Infinity).reduce(function (p, d) {
                 p.cols.add(d.colData);
                 p.rows.add(d.rowData);
                 return p;
@@ -265,7 +265,7 @@ describe('dc.heatmap', function () {
     });
 
     describe('indirect filtering', function () {
-        var dimension2;
+        let dimension2;
         beforeEach(function () {
             dimension2 = data.dimension(function (d) { return +d.colorData; });
 
@@ -276,8 +276,8 @@ describe('dc.heatmap', function () {
         });
 
         it('should update the title of the boxes', function () {
-            var titles = chart.selectAll('.box-group title');
-            var expected = ['1,1: 0', '1,2: 0', '2,1: 6', '2,2: 0'];
+            const titles = chart.selectAll('.box-group title');
+            const expected = ['1,1: 0', '1,2: 0', '2,1: 6', '2,2: 0'];
             titles.each(function (d) {
                 expect(this.textContent).toBe(expected.shift());
             });
@@ -285,8 +285,8 @@ describe('dc.heatmap', function () {
     });
 
     describe('filtering', function () {
-        var filterX, filterY;
-        var otherDimension;
+        let filterX, filterY;
+        let otherDimension;
 
         beforeEach(function () {
             filterX = Math.ceil(Math.random() * 2);
@@ -295,8 +295,8 @@ describe('dc.heatmap', function () {
             chart.render();
         });
 
-        function clickCellOnChart (chart, x, y) {
-            var oneCell = chart.selectAll('.box-group').filter(function (d) {
+        function clickCellOnChart (_chart, x, y) {
+            const oneCell = _chart.selectAll('.box-group').filter(function (d) {
                 return d.key[0] === x && d.key[1] === y;
             });
             oneCell.select('rect').on('click')(oneCell.datum());
@@ -306,7 +306,7 @@ describe('dc.heatmap', function () {
         it('cells should have the appropriate class', function () {
             clickCellOnChart(chart, filterX, filterY);
             chart.selectAll('.box-group').each(function (d) {
-                var cell = d3.select(this);
+                const cell = d3.select(this);
                 if (d.key[0] === filterX && d.key[1] === filterY) {
                     expect(cell.classed('selected')).toBeTruthy();
                     expect(chart.hasFilter(d.key)).toBeTruthy();
@@ -318,11 +318,13 @@ describe('dc.heatmap', function () {
         });
 
         it('should keep all data points for that cell', function () {
-            var otherGroup = otherDimension.group().reduceSum(function (d) { return +d.colorData; });
-            var otherChart = dc.baseMixin().dimension(otherDimension).group(otherGroup);
+            const otherGroup = otherDimension.group().reduceSum(function (d) {
+                return +d.colorData;
+            });
+            const otherChart = dc.baseMixin().dimension(otherDimension).group(otherGroup);
 
             otherChart.render();
-            var clickedCell = clickCellOnChart(chart, filterX, filterY);
+            const clickedCell = clickCellOnChart(chart, filterX, filterY);
             expect(otherChart.data()[filterX - 1].value).toEqual(clickedCell.datum().value);
         });
 
@@ -340,7 +342,7 @@ describe('dc.heatmap', function () {
         });
         it('should toggle a filter for the clicked box', function () {
             chart.selectAll('.box-group').each(function (d) {
-                var cell = d3.select(this).select('rect');
+                const cell = d3.select(this).select('rect');
                 cell.on('click')(d);
                 expect(chart.hasFilter(d.key)).toBeTruthy();
                 cell.on('click')(d);
@@ -348,12 +350,12 @@ describe('dc.heatmap', function () {
             });
         });
         describe('on axis labels', function () {
-            function assertOnlyThisAxisIsFiltered (chart, axis, value) {
-                chart.selectAll('.box-group').each(function (d) {
+            function assertOnlyThisAxisIsFiltered (_chart, axis, value) {
+                _chart.selectAll('.box-group').each(function (d) {
                     if (d.key[axis] === value) {
-                        expect(chart.hasFilter(d.key)).toBeTruthy();
+                        expect(_chart.hasFilter(d.key)).toBeTruthy();
                     } else {
-                        expect(chart.hasFilter(d.key)).toBeFalsy();
+                        expect(_chart.hasFilter(d.key)).toBeFalsy();
                     }
                 });
             }
@@ -361,13 +363,13 @@ describe('dc.heatmap', function () {
             describe('with nothing previously filtered', function () {
                 it('should filter all cells on that axis', function () {
                     chart.selectAll('.cols.axis text').each(function (d) {
-                        var axisLabel = d3.select(this);
+                        const axisLabel = d3.select(this);
                         axisLabel.on('click')(d);
                         assertOnlyThisAxisIsFiltered(chart, 0, d);
                         axisLabel.on('click')(d);
                     });
                     chart.selectAll('.rows.axis text').each(function (d) {
-                        var axisLabel = d3.select(this);
+                        const axisLabel = d3.select(this);
                         axisLabel.on('click')(d);
                         assertOnlyThisAxisIsFiltered(chart, 1, d);
                         axisLabel.on('click')(d);
@@ -376,17 +378,17 @@ describe('dc.heatmap', function () {
             });
             describe('with one cell on that axis already filtered', function () {
                 it('should filter all cells on that axis (and the original cell should remain filtered)', function () {
-                    var boxNodes = chart.selectAll('.box-group').nodes();
-                    var box = d3.select(boxNodes[Math.floor(Math.random() * boxNodes.length)]);
+                    const boxNodes = chart.selectAll('.box-group').nodes();
+                    const box = d3.select(boxNodes[Math.floor(Math.random() * boxNodes.length)]);
 
                     box.select('rect').on('click')(box.datum());
 
                     expect(chart.hasFilter(box.datum().key)).toBeTruthy();
 
-                    var xVal = box.datum().key[0];
+                    const xVal = box.datum().key[0];
 
-                    var columns = chart.selectAll('.cols.axis text');
-                    var column = columns.filter(function (columnData) {
+                    const columns = chart.selectAll('.cols.axis text');
+                    const column = columns.filter(function (columnData) {
                         return columnData === xVal;
                     });
 
@@ -399,9 +401,9 @@ describe('dc.heatmap', function () {
             });
             describe('with all cells on that axis already filtered', function () {
                 it('should remove all filters on that axis', function () {
-                    var xVal = 1;
+                    const xVal = 1;
                     chart.selectAll('.box-group').each(function (d) {
-                        var box = d3.select(this);
+                        const box = d3.select(this);
                         if (d.key[0] === xVal) {
                             box.select('rect').on('click')(box.datum());
                         }
@@ -409,8 +411,8 @@ describe('dc.heatmap', function () {
 
                     assertOnlyThisAxisIsFiltered(chart, 0, xVal);
 
-                    var columns = chart.selectAll('.cols.axis text');
-                    var column = columns.filter(function (columnData) {
+                    const columns = chart.selectAll('.cols.axis text');
+                    const column = columns.filter(function (columnData) {
                         return columnData === xVal;
                     });
 
@@ -426,14 +428,15 @@ describe('dc.heatmap', function () {
     describe('iris filtering', function () {
         /* eslint camelcase: 0 */
         // 2-chart version of from http://bl.ocks.org/gordonwoodhull/14c623b95993808d69620563508edba6
-        var irisData, bubbleChart, petalDim, petalGroup;
-        var fields = {
+        let irisData, bubbleChart, petalDim, petalGroup;
+        const fields = {
             sl: 'sepal_length',
             sw: 'sepal_width',
             pl: 'petal_length',
             pw: 'petal_width'
         };
-        var keyfuncs = {};
+        const keyfuncs = {};
+
         function duo_key (ab1, ab2) {
             return function (d) {
                 return [keyfuncs[ab1](d[fields[ab1]]), keyfuncs[ab2](d[fields[ab2]])];
@@ -442,7 +445,7 @@ describe('dc.heatmap', function () {
         beforeEach(function () {
             irisData = loadIrisFixture();
 
-            var species = ['setosa', 'versicolor', 'virginica'];
+            const species = ['setosa', 'versicolor', 'virginica'];
 
             irisData.forEach(function (d) {
                 Object.keys(fields).forEach(function (ab) {
@@ -451,12 +454,13 @@ describe('dc.heatmap', function () {
             });
             // autogenerate a key function for an extent
             function key_function (extent) {
-                var div = extent[1] - extent[0] < 5 ? 2 : 1;
+                const div = extent[1] - extent[0] < 5 ? 2 : 1;
                 return function (k) {
                     return Math.floor(k * div) / div;
                 };
             }
-            var extents = {};
+
+            const extents = {};
             Object.keys(fields).forEach(function (ab) {
                 extents[ab] = d3.extent(irisData, function (d) { return d[fields[ab]]; });
                 keyfuncs[ab] = key_function(extents[ab]);
@@ -467,8 +471,8 @@ describe('dc.heatmap', function () {
                     return kv.key[i];
                 };
             }
-            function reduce_species (group) {
-                group.reduce(
+            function reduce_species (grp) {
+                grp.reduce(
                     function (p, v) {
                         p[v.species]++;
                         p.total++;
@@ -478,14 +482,14 @@ describe('dc.heatmap', function () {
                         p.total--;
                         return p;
                     }, function () {
-                        var init = {total: 0};
+                        const init = {total: 0};
                         species.forEach(function (s) { init[s] = 0; });
                         return init;
                     }
                 );
             }
             function max_species (d) {
-                var max = 0, i = -1;
+                let max = 0, i = -1;
                 species.forEach(function (s, j) {
                     if (d.value[s] > max) {
                         max = d.value[s];
@@ -494,8 +498,8 @@ describe('dc.heatmap', function () {
                 });
                 return i >= 0 ? species[i] : null;
             }
-            function initialize_bubble (bubbleChart) {
-                bubbleChart
+            function initialize_bubble (bblChart) {
+                bblChart
                     .width(400)
                     .height(400)
                     .transitionDuration(0)
@@ -534,11 +538,11 @@ describe('dc.heatmap', function () {
                     });
             }
 
-            var bubbleId = 'bubble-chart';
+            const bubbleId = 'bubble-chart';
             appendChartID(bubbleId);
 
             bubbleChart = dc.bubbleChart('#' + bubbleId);
-            var sepalDim = data.dimension(duo_key('sl', 'sw')), sepalGroup = sepalDim.group();
+            const sepalDim = data.dimension(duo_key('sl', 'sw')), sepalGroup = sepalDim.group();
             petalDim = data.dimension(duo_key('pl', 'pw')); petalGroup = petalDim.group();
 
             reduce_species(sepalGroup);
@@ -549,7 +553,7 @@ describe('dc.heatmap', function () {
             chart.render();
         });
         // return brand-new objects and keys every time
-        function clone_group (group) {
+        function clone_group (grp) {
             function clone_kvs (all) {
                 return all.map(function (kv) {
                     return {
@@ -560,16 +564,16 @@ describe('dc.heatmap', function () {
             }
             return {
                 all: function () {
-                    return clone_kvs(group.all());
+                    return clone_kvs(grp.all());
                 },
                 top: function (N) {
-                    return clone_kvs(group.top(N));
+                    return clone_kvs(grp.top(N));
                 }
             };
         }
 
-        function testRectFillsBubble12 (chart) {
-            var rects = chart.selectAll('rect').nodes();
+        function testRectFillsBubble12 (bblChart) {
+            const rects = bblChart.selectAll('rect').nodes();
             expect(d3.select(rects[0]).attr('fill')).toMatch(/#f8f8f8/i);
             expect(d3.select(rects[3]).attr('fill')).toMatch(/#377eb8/i);
             expect(d3.select(rects[4]).attr('fill')).toMatch(/#377eb8/i);
@@ -579,8 +583,8 @@ describe('dc.heatmap', function () {
             expect(d3.select(rects[11]).attr('fill')).toMatch(/#f8f8f8/i);
             expect(d3.select(rects[12]).attr('fill')).toMatch(/#f8f8f8/i);
         }
-        function testRectTitlesBubble12 (chart) {
-            var titles = chart.selectAll('g.box-group title').nodes();
+        function testRectTitlesBubble12 (bblChart) {
+            const titles = bblChart.selectAll('g.box-group title').nodes();
             expect(JSON.parse(d3.select(titles[0]).text()).total).toBe(0);
             expect(JSON.parse(d3.select(titles[2]).text()).total).toBe(0);
             expect(JSON.parse(d3.select(titles[3]).text()).total).toBe(2);

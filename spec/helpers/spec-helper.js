@@ -26,7 +26,7 @@ function appendChartID (id) {
 }
 
 function coordsFromTranslate (translationString) {
-    var result = parseTranslate(translationString);
+    const result = parseTranslate(translationString);
     expect(result).not.toBeNull();
     return {x: +result[1], y: +result[2]};
 }
@@ -51,9 +51,9 @@ function flushAllD3Transitions () {
 }
 
 // Simulate a dummy event - just enough for the handler to get fooled
-var simulateChartBrushing = function (chart, domainSelection) {
+const simulateChartBrushing = function (chart, domainSelection) {
     // D3v4 needs scaled coordinates for the event
-    var scaledSelection = domainSelection.map(function (coord) {
+    const scaledSelection = domainSelection.map(function (coord) {
         return chart.x()(coord);
     });
 
@@ -70,11 +70,11 @@ var simulateChartBrushing = function (chart, domainSelection) {
 };
 
 // Simulate a dummy event - just enough for the handler to get fooled
-var simulateChart2DBrushing = function (chart, domainSelection) {
+const simulateChart2DBrushing = function (chart, domainSelection) {
     // D3v4 needs scaled coordinates for the event
-    var scaledSelection = domainSelection.map(function (point) {
+    const scaledSelection = domainSelection.map(function (point) {
         return point.map(function (coord, i) {
-            var scale = i === 0 ? chart.x() : chart.y();
+            const scale = i === 0 ? chart.x() : chart.y();
             return scale(coord);
         });
     });

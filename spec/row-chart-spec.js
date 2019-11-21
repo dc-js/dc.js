@@ -1,12 +1,12 @@
 /* global appendChartID, loadDateFixture, makeDate */
 describe('dc.rowChart', function () {
-    var id, chart;
-    var data, dimension, nvdimension;
-    var positiveGroupHolder = {groupType: 'positive signed'};
-    var negativeGroupHolder = {groupType: 'negative signed'};
-    var mixedGroupHolder = {groupType: 'mixed signed'};
-    var largerGroupHolder = {groupType: 'larger'};
-    var statusDimension, statusMultiGroup;
+    let id, chart;
+    let data, dimension, nvdimension;
+    const positiveGroupHolder = {groupType: 'positive signed'};
+    const negativeGroupHolder = {groupType: 'negative signed'};
+    const mixedGroupHolder = {groupType: 'mixed signed'};
+    const largerGroupHolder = {groupType: 'larger'};
+    let statusDimension, statusMultiGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -205,7 +205,7 @@ describe('dc.rowChart', function () {
                 });
 
                 it('should fill each row rect with pre-defined colors', function () {
-                    for (var i = 0; i < N; i++) {
+                    for (let i = 0; i < N; i++) {
                         expect(d3.select(chart.selectAll('g.row rect').nodes()[i]).attr('fill'))
                             .toMatchColor(dc.config.defaultColors()[i]);
                     }
@@ -220,7 +220,7 @@ describe('dc.rowChart', function () {
                 });
 
                 describe('row label vertical position', function () {
-                    var labels, rows;
+                    let labels, rows;
                     beforeEach(function () {
                         labels = chart.selectAll('svg text.row');
                         rows = chart.selectAll('g.row rect');
@@ -228,13 +228,13 @@ describe('dc.rowChart', function () {
 
                     function itShouldVerticallyCenterLabelWithinRow (i) {
                         it('should place label ' + i + ' within row ' + i, function () {
-                            var rowpos = rows.nodes()[i].getBoundingClientRect(),
+                            const rowpos = rows.nodes()[i].getBoundingClientRect(),
                                 textpos = labels.nodes()[i].getBoundingClientRect();
                             expect((textpos.top + textpos.bottom) / 2)
                                 .toBeWithinDelta((rowpos.top + rowpos.bottom) / 2, 2);
                         });
                     }
-                    for (var i = 0; i < N ; ++i) {
+                    for (let i = 0; i < N ; ++i) {
                         itShouldVerticallyCenterLabelWithinRow(i);
                     }
                 });
@@ -261,12 +261,12 @@ describe('dc.rowChart', function () {
                 });
 
                 it('should not modify the underlying crossfilter group', function () {
-                    var oldGroupData = chart.group().all().slice(0);
+                    const oldGroupData = chart.group().all().slice(0);
                     chart.ordering(dc.pluck('value'));
                     chart.filter('66').render();
 
                     expect(chart.group().all().length).toBe(oldGroupData.length);
-                    for (var i = 0; i < oldGroupData.length; i++) {
+                    for (let i = 0; i < oldGroupData.length; i++) {
                         expect(chart.group().all()[i]).toBe(oldGroupData[i]);
                     }
                 });
@@ -468,9 +468,9 @@ describe('dc.rowChart', function () {
                     });
 
                     it('should generate x axis domain dynamically', function () {
-                        var nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text').nodes()[n]); };
+                        const nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text').nodes()[n]); };
 
-                        for (var i = 0; i < xAxisTicks.length; i++) {
+                        for (let i = 0; i < xAxisTicks.length; i++) {
                             expect(nthText(i).text()).toBe(xAxisTicks[i]);
                         }
                     });

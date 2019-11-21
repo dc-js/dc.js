@@ -1,15 +1,15 @@
 /* global appendChartID, loadDateFixture, makeDate */
 describe('dc.sunburstChart', function () {
-    var width = 200;
-    var height = 200;
-    var radius = 100;
-    var defaultCenter = {x: width / 2, y: height / 2};
-    var newCenter = {x: 101, y: 99};
-    var innerRadius = 30;
-    var data, valueDimension, valueGroup;
-    var countryRegionStateDimension, countryRegionStateGroup;
-    var statusDimension;
-    var dateDimension;
+    const width = 200;
+    const height = 200;
+    const radius = 100;
+    const defaultCenter = {x: width / 2, y: height / 2};
+    const newCenter = {x: 101, y: 99};
+    const innerRadius = 30;
+    let data, valueDimension, valueGroup;
+    let countryRegionStateDimension, countryRegionStateGroup;
+    let statusDimension;
+    let dateDimension;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -35,10 +35,10 @@ describe('dc.sunburstChart', function () {
     });
 
     function buildChart (id) {
-        var div = appendChartID(id);
+        const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        var chart = dc.sunburstChart('#' + id);
+        const chart = dc.sunburstChart('#' + id);
         chart.dimension(countryRegionStateDimension).group(countryRegionStateGroup)
             .width(width)
             .height(height)
@@ -48,7 +48,7 @@ describe('dc.sunburstChart', function () {
     }
 
     describe('generation', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart-age');
             chart.render();
@@ -262,7 +262,7 @@ describe('dc.sunburstChart', function () {
                 chart.filterAll();
                 chart.redraw();
                 chart.selectAll('.pie-slice path').each(function (d) {
-                    var cls = d3.select(this).attr('class');
+                    const cls = d3.select(this).attr('class');
                     expect(cls === null || cls === '').toBeTruthy();
                 });
             });
@@ -270,13 +270,13 @@ describe('dc.sunburstChart', function () {
         describe('filter through clicking', function () {
             it('onClick should trigger filtering of according group', function () {
                 expect(chart.filters()).toEqual([]);
-                var d = chart.select('.pie-slice-level-3').datum();
+                const d = chart.select('.pie-slice-level-3').datum();
                 chart.onClick(d);
                 expect(chart.filter().slice(0)).toEqual(d.path);
             });
             it('onClick should reset filter if clicked twice', function () {
                 expect(chart.filters()).toEqual([]);
-                var d = chart.select('.pie-slice-level-3').datum();
+                const d = chart.select('.pie-slice-level-3').datum();
                 chart.onClick(d);
                 chart.onClick(d);
                 expect(chart.filter()).toEqual(null);
@@ -285,7 +285,7 @@ describe('dc.sunburstChart', function () {
     });
 
     describe('redraw after empty selection', function () {
-        var chart;
+        let chart;
         beforeEach(function () {
             chart = buildChart('pie-chart2');
             dateDimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);

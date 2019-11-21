@@ -1,21 +1,21 @@
 /* global appendChartID */
 describe('dc.seriesChart', function () {
 
-    var chart;
-    var colorRows = [
+    let chart;
+    const colorRows = [
         {colData: 1, rowData: 1, colorData: 1},
         {colData: 1, rowData: 2, colorData: 2},
         {colData: 2, rowData: 1, colorData: 3},
         {colData: 2, rowData: 2, colorData: 4}
     ];
-    var colorData;
+    let colorData;
 
     beforeEach(function () {
         colorData = crossfilter(colorRows);
-        var dimensionColorData = colorData.dimension(function (d) { return [+d.colData, +d.rowData]; });
-        var groupColorData = dimensionColorData.group().reduceSum(function (d) { return +d.colorData; });
+        const dimensionColorData = colorData.dimension(function (d) { return [+d.colData, +d.rowData]; });
+        const groupColorData = dimensionColorData.group().reduceSum(function (d) { return +d.colorData; });
 
-        var id = 'series-chart';
+        const id = 'series-chart';
         appendChartID(id);
         chart = dc.seriesChart('#' + id);
 
@@ -47,14 +47,14 @@ describe('dc.seriesChart', function () {
         });
 
         it('should position generated lineCharts using the data', function () {
-            var lines = chart.selectAll('path.line');
+            const lines = chart.selectAll('path.line');
 
             expect(d3.select(lines.nodes()[0]).attr('d')).toMatchPath('M0,128L130,85');
             expect(d3.select(lines.nodes()[1]).attr('d')).toMatchPath('M0,43L130,0');
         });
 
         it('should color lines using the colors in the data', function () {
-            var lines = chart.selectAll('path.line');
+            const lines = chart.selectAll('path.line');
 
             expect(d3.select(lines.nodes()[0]).attr('stroke')).toMatch(/#000001/i);
             expect(d3.select(lines.nodes()[1]).attr('stroke')).toMatch(/#000002/i);
@@ -63,7 +63,7 @@ describe('dc.seriesChart', function () {
         describe('with brush off', function () {
             it('should create line chart dots', function () {
                 chart.brushOn(false).render();
-                var dots = chart.selectAll('circle.dot');
+                const dots = chart.selectAll('circle.dot');
                 expect(dots.nodes().length).toEqual(4);
                 chart.brushOn(true);
             });
@@ -78,7 +78,7 @@ describe('dc.seriesChart', function () {
         });
 
         it('should order lineCharts in the order specified', function () {
-            var lines = chart.selectAll('path.line');
+            const lines = chart.selectAll('path.line');
 
             expect(d3.select(lines.nodes()[1]).attr('d')).toMatchPath('M0,128L130,85');
             expect(d3.select(lines.nodes()[0]).attr('d')).toMatchPath('M0,43L130,0');
@@ -91,8 +91,8 @@ describe('dc.seriesChart', function () {
         });
 
         it('should apply options to all lines in the chart', function () {
-            var lines = chart.selectAll('path.line');
-            var areas = chart.selectAll('path.area');
+            const lines = chart.selectAll('path.line');
+            const areas = chart.selectAll('path.area');
 
             expect(d3.select(lines.nodes()[0]).attr('stroke-dasharray')).toEqualIntOrPixelList('3,1,1');
             expect(d3.select(lines.nodes()[1]).attr('stroke-dasharray')).toEqualIntOrPixelList('3,1,1');
@@ -103,7 +103,7 @@ describe('dc.seriesChart', function () {
     });
 
     describe('#redraw', function () {
-        var colorRows2 = [
+        const colorRows2 = [
             {colData: 1, rowData: 1, colorData: 1},
             {colData: 1, rowData: 2, colorData: 2},
             {colData: 2, rowData: 1, colorData: 3},
@@ -111,14 +111,14 @@ describe('dc.seriesChart', function () {
             {colData: 3, rowData: 1, colorData: 5},
             {colData: 3, rowData: 2, colorData: 6}
         ];
-        var colorData2;
+        let colorData2;
         beforeEach(function () {
             colorData2 = crossfilter(colorRows2);
             chart.brushOn(false);
             chart.render();
 
-            var dimensionData = colorData2.dimension(function (d) { return [+d.colData, +d.rowData]; });
-            var groupData = dimensionData.group().reduceSum(function (d) { return +d.colorData; });
+            const dimensionData = colorData2.dimension(function (d) { return [+d.colData, +d.rowData]; });
+            const groupData = dimensionData.group().reduceSum(function (d) { return +d.colorData; });
 
             chart.dimension(dimensionData).group(groupData);
 
@@ -130,7 +130,7 @@ describe('dc.seriesChart', function () {
         });
 
         it('is redrawn with dots', function () {
-            var dots = chart.selectAll('circle.dot');
+            const dots = chart.selectAll('circle.dot');
             expect(dots.nodes().length).toEqual(6);
         });
     });

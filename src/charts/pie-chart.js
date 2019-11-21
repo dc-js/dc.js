@@ -256,10 +256,10 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 .attrTween('points', function (d) {
                     let current = this._current || d;
                     current = {startAngle: current.startAngle, endAngle: current.endAngle};
-                    const interpolate = interpolate(current, d);
-                    this._current = interpolate(0);
+                    const _interpolate = interpolate(current, d);
+                    this._current = _interpolate(0);
                     return t => {
-                        const d2 = interpolate(t);
+                        const d2 = _interpolate(t);
                         return [arcs.centroid(d2), arc2.centroid(d2)];
                     };
                 });

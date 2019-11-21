@@ -1,7 +1,7 @@
 /* global appendChartID, loadDateFixture */
 describe('dc.dataCount', function () {
-    var data, countryDimension, groupAll;
-    var chart;
+    let data, countryDimension, groupAll;
+    let chart;
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
         groupAll = data.groupAll();
@@ -11,18 +11,18 @@ describe('dc.dataCount', function () {
         countryDimension.filter('CA');
     });
     function buildChart (id) {
-        var chart = dc.dataCount('#' + id)
+        const dataCount = dc.dataCount('#' + id)
             .transitionDuration(0)
             .dimension(data)
             .group(groupAll);
-        chart.render();
+        dataCount.render();
         d3.timerFlush();
-        return chart;
+        return dataCount;
     }
     describe('creation', function () {
         beforeEach(function () {
-            var id = 'data-count';
-            var div = appendChartID(id);
+            const id = 'data-count';
+            const div = appendChartID(id);
             div.append('span').attr('class', 'filter-count');
             div.append('span').attr('class', 'total-count');
             chart = buildChart(id);
@@ -71,8 +71,8 @@ describe('dc.dataCount', function () {
 
     describe('creation with html attribute', function () {
         beforeEach(function () {
-            var id = 'data-count';
-            var div = appendChartID(id);
+            const id = 'data-count';
+            const div = appendChartID(id);
             div.append('span').attr('class', 'filter-count');
             div.append('span').attr('class', 'total-count');
             chart = buildChart(id);
@@ -105,8 +105,8 @@ describe('dc.dataCount', function () {
 
     describe('creation with just html.some attribute', function () {
         beforeEach(function () {
-            var id = 'data-count';
-            var div = appendChartID(id);
+            const id = 'data-count';
+            const div = appendChartID(id);
             div.append('span').attr('class', 'filter-count');
             div.append('span').attr('class', 'total-count');
             chart = buildChart(id);
@@ -133,8 +133,8 @@ describe('dc.dataCount', function () {
 
     describe('creation with just html.all attribute', function () {
         beforeEach(function () {
-            var id = 'data-count';
-            var div = appendChartID(id);
+            const id = 'data-count';
+            const div = appendChartID(id);
             div.append('span').attr('class', 'filter-count');
             div.append('span').attr('class', 'total-count');
             chart = buildChart(id);
@@ -164,8 +164,8 @@ describe('dc.dataCount', function () {
 
     describe('creation with formatNumber attribute', function () {
         beforeEach(function () {
-            var id = 'data-count';
-            var div = appendChartID(id);
+            const id = 'data-count';
+            const div = appendChartID(id);
             div.append('span').attr('class', 'filter-count');
             div.append('span').attr('class', 'total-count');
             chart = buildChart(id);

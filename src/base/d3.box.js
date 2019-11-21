@@ -63,10 +63,10 @@ export const d3Box = function () {
 
     // For each small multiple…
     function box (g) {
-        g.each(function (d, i) {
-            d = d.map(value).sort(ascending);
-            const g = select(this);
-            const n = d.length;
+        g.each(function (data, index) {
+            data = data.map(value).sort(ascending);
+            const _g = select(this);
+            const n = data.length;
             let min;
             let max;
 
@@ -74,12 +74,12 @@ export const d3Box = function () {
             if (n === 0) {return;}
 
             // Compute quartiles. Must return exactly 3 elements.
-            const quartileData = d.quartiles = quartiles(d);
+            const quartileData = data.quartiles = quartiles(data);
 
             // Compute whiskers. Must return exactly 2 elements, or null.
-            const whiskerIndices = whiskers && whiskers.call(this, d, i),
-                whiskerData = whiskerIndices && whiskerIndices.map(function (i) {
-                    return d[i];
+            const whiskerIndices = whiskers && whiskers.call(this, data, index),
+                whiskerData = whiskerIndices && whiskerIndices.map(function (_i) {
+                    return data[_i];
                 });
 
             // Compute outliers. If no whiskers are specified, all data are 'outliers'.
@@ -89,17 +89,17 @@ export const d3Box = function () {
 
             // Determine the maximum value based on if outliers are shown
             if (showOutliers) {
-                min = d[0];
-                max = d[n - 1];
+                min = data[0];
+                max = data[n - 1];
             } else {
-                min = d[whiskerIndices[0]];
-                max = d[whiskerIndices[1]];
+                min = data[whiskerIndices[0]];
+                max = data[whiskerIndices[1]];
             }
             const pointIndices = range(whiskerIndices[0], whiskerIndices[1] + 1);
 
             // Compute the new x-scale.
             const x1 = scaleLinear()
-                .domain(domain && domain.call(this, d, i) || [min, max])
+                .domain(domain && domain.call(this, data, index) || [min, max])
                 .range([height, 0]);
 
             // Retrieve the old x-scale, if this is an update.
@@ -116,7 +116,7 @@ export const d3Box = function () {
             // elements also fade in and out.
 
             // Update center line: the vertical line spanning the whiskers.
-            const center = g.selectAll('line.center')
+            const center = _g.selectAll('line.center')
                 .data(whiskerData ? [whiskerData] : []);
 
             center.enter().insert('line', 'rect')
@@ -151,10 +151,10 @@ export const d3Box = function () {
                 .remove();
 
             // Update innerquartile box.
-            const box = g.selectAll('rect.box')
+            const _box = _g.selectAll('rect.box')
                 .data([quartileData]);
 
-            box.enter().append('rect')
+            _box.enter().append('rect')
                 .attr('class', 'box')
                 .attr('x', 0)
                 .attr('y', function (d) {return x0(d[2]);})
@@ -167,7 +167,7 @@ export const d3Box = function () {
                 .attr('y', function (d) {return x1(d[2]);})
                 .attr('height', function (d) {return x1(d[0]) - x1(d[2]);});
 
-            box.transition()
+            _box.transition()
                 .duration(duration)
                 .delay(delay)
                 .attr('width', width)
@@ -175,7 +175,7 @@ export const d3Box = function () {
                 .attr('height', function (d) {return x1(d[0]) - x1(d[2]);});
 
             // Update median line.
-            const medianLine = g.selectAll('line.median')
+            const medianLine = _g.selectAll('line.median')
                 .data([quartileData[1]]);
 
             medianLine.enter().append('line')
@@ -199,7 +199,7 @@ export const d3Box = function () {
                 .attr('y2', x1);
 
             // Update whiskers.
-            const whisker = g.selectAll('line.whisker')
+            const whisker = _g.selectAll('line.whisker')
                 .data(whiskerData || []);
 
             whisker.enter().insert('line', 'circle, text')
@@ -247,31 +247,31 @@ export const d3Box = function () {
                         return width / 2;
                     };
 
-                const outlier = g.selectAll('circle.' + outlierClass)
+                const outlier = _g.selectAll('circle.' + outlierClass)
                     .data(outlierIndices, Number);
 
                 outlier.enter().insert('circle', 'text')
                     .attr('class', outlierClass)
                     .attr('r', outlierSize)
                     .attr('cx', outlierX)
-                    .attr('cy', function (i) { return x0(d[i]); })
+                    .attr('cy', function (i) { return x0(data[i]); })
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
                     .delay(delay)
-                    .attr('cy', function (i) { return x1(d[i]); })
+                    .attr('cy', function (i) { return x1(data[i]); })
                     .style('opacity', 0.6);
 
                 if (renderTitle) {
                     outlier.selectAll('title').remove();
-                    outlier.append('title').text(function (i) {return d[i]; });
+                    outlier.append('title').text(function (i) {return data[i]; });
                 }
 
                 outlier.transition()
                     .duration(duration)
                     .delay(delay)
                     .attr('cx', outlierX)
-                    .attr('cy', function (i) { return x1(d[i]); })
+                    .attr('cy', function (i) { return x1(data[i]); })
                     .style('opacity', 0.6);
 
                 outlier.exit().transition()
@@ -284,7 +284,7 @@ export const d3Box = function () {
 
             // Update Values
             if (renderDataPoints) {
-                const point = g.selectAll('circle.data')
+                const point = _g.selectAll('circle.data')
                     .data(pointIndices);
 
                 point.enter().insert('circle', 'text')
@@ -293,17 +293,17 @@ export const d3Box = function () {
                     .attr('cx', function () { return Math.floor(Math.random() *
                             (width * dataWidthPortion) +
                             1 + ((width - (width * dataWidthPortion)) / 2)); })
-                    .attr('cy', function (i) { return x0(d[i]); })
+                    .attr('cy', function (i) { return x0(data[i]); })
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
                     .delay(delay)
-                    .attr('cy', function (i) { return x1(d[i]); })
+                    .attr('cy', function (i) { return x1(data[i]); })
                     .style('opacity', dataOpacity);
 
                 if (renderTitle) {
                     point.selectAll('title').remove();
-                    point.append('title').text(function (i) { return d[i]; });
+                    point.append('title').text(function (i) { return data[i]; });
                 }
 
                 point.transition()
@@ -312,7 +312,7 @@ export const d3Box = function () {
                     .attr('cx', function () { return Math.floor(Math.random() *
                             (width * dataWidthPortion) +
                             1 + ((width - (width * dataWidthPortion)) / 2)); })
-                    .attr('cy', function (i) { return x1(d[i]); })
+                    .attr('cy', function (i) { return x1(data[i]); })
                     .style('opacity', dataOpacity);
 
                 point.exit().transition()
@@ -327,7 +327,7 @@ export const d3Box = function () {
             const format = tickFormat || x1.tickFormat(8);
 
             // Update box ticks.
-            const boxTick = g.selectAll('text.box')
+            const boxTick = _g.selectAll('text.box')
                 .data(quartileData);
 
             boxTick.enter().append('text')
@@ -353,7 +353,7 @@ export const d3Box = function () {
             // Update whisker ticks. These are handled separately from the box
             // ticks because they may or may not exist, and we want don't want
             // to join box ticks pre-transition with whisker ticks post-.
-            const whiskerTick = g.selectAll('text.whisker')
+            const whiskerTick = _g.selectAll('text.whisker')
                 .data(whiskerData || []);
 
             whiskerTick.enter().append('text')
@@ -386,7 +386,7 @@ export const d3Box = function () {
                 .remove();
 
             // Remove temporary quartiles element from within data array.
-            delete d.quartiles;
+            delete data.quartiles;
         });
         timerFlush();
     }

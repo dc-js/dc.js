@@ -167,7 +167,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         const width = this.effectiveWidth();
         const height = this.effectiveHeight();
 
-        var devicePixelRatio = window.devicePixelRatio || 1;
+        const devicePixelRatio = window.devicePixelRatio || 1;
         this._canvas
             .attr('width', (width) * devicePixelRatio)
             .attr('height', (height) * devicePixelRatio)
@@ -296,7 +296,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             .attr('transform', d => this._locator(d))
             .merge(symbols);
 
-        symbols.call(symbol => this._renderTitles(symbol, this.data()));
+        symbols.call(s => this._renderTitles(s, this.data()));
 
         symbols.each((d, i) => {
             this._filtered[i] = !this.filter() || this.filter().isFiltered([this.keyAccessor()(d), this.valueAccessor()(d)]);
@@ -333,10 +333,10 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
-    _renderTitles (symbol, d) {
+    _renderTitles (_symbol, _d) {
         if (this.renderTitle()) {
-            symbol.selectAll('title').remove();
-            symbol.append('title').text(d => this.title()(d));
+            _symbol.selectAll('title').remove();
+            _symbol.append('title').text(d => this.title()(d));
         }
     }
 
@@ -544,7 +544,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         if (this._useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
-            this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._highlightedSize);
+            this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._highlightedSize);
             this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
                 return select(this).attr('fill') !== d.color;
             }).classed('fadeout', true);
@@ -555,7 +555,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         if (this._useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
-            this._resizeSymbolsWhere(symbol => symbol.attr('fill') === d.color, this._symbolSize);
+            this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._symbolSize);
             this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
                 return select(this).attr('fill') !== d.color;
             }).classed('fadeout', false);

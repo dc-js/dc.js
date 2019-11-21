@@ -1,9 +1,9 @@
 /* global appendChartID, flushAllD3Transitions, loadDateFixture */
 describe('dc.baseMixin', function () {
-    var id, chart, dimension, group, addFilterHandler, removeFilterHandler, hasFilterHandler, resetFilterHandler;
+    let id, chart, dimension, group, addFilterHandler, removeFilterHandler, hasFilterHandler, resetFilterHandler;
 
     beforeEach(function () {
-        var data = crossfilter(loadDateFixture());
+        const data = crossfilter(loadDateFixture());
         dimension = data.dimension(function (d) {
             return d3.utcDay(d.dd);
         });
@@ -29,7 +29,7 @@ describe('dc.baseMixin', function () {
 
     describe('renderlets', function () {
         it('should not execute a renderlet until after the render transitions', function (done) {
-            var firstRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            const firstRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 done();
             });
@@ -41,7 +41,7 @@ describe('dc.baseMixin', function () {
         });
 
         it('should not execute a renderlet until after the redraw transitions', function (done) {
-            var firstRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            const firstRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 done();
             });
@@ -53,7 +53,7 @@ describe('dc.baseMixin', function () {
         });
 
         it('should execute pretransition event before the render transitions', function () {
-            var pretransition = jasmine.createSpy();
+            const pretransition = jasmine.createSpy();
             chart.on('pretransition.pret', pretransition);
             chart.render();
             expect(pretransition).toHaveBeenCalledWith(chart);
@@ -61,7 +61,7 @@ describe('dc.baseMixin', function () {
         });
 
         it('should execute pretransition event before the redraw transitions', function () {
-            var pretransition = jasmine.createSpy();
+            const pretransition = jasmine.createSpy();
             chart.on('pretransition.pret', pretransition);
             chart.redraw();
             expect(pretransition).toHaveBeenCalledWith(chart);
@@ -69,15 +69,15 @@ describe('dc.baseMixin', function () {
         });
 
         it('should execute each renderlet after a render', function (done) {
-            var count = 0;
-            var renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            let count = 0;
+            const renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 count++;
                 if (count === 2) {
                     done();
                 }
             });
-            var firstRenderlet = renderlet;
+            const firstRenderlet = renderlet;
             chart.renderlet(firstRenderlet);
             chart.renderlet(firstRenderlet);
             chart.render();
@@ -86,15 +86,15 @@ describe('dc.baseMixin', function () {
         });
 
         it('should execute each renderlet after a redraw', function (done) {
-            var count = 0;
-            var renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            let count = 0;
+            const renderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 count++;
                 if (count === 2) {
                     done();
                 }
             });
-            var firstRenderlet = renderlet;
+            const firstRenderlet = renderlet;
             chart.renderlet(firstRenderlet);
             chart.renderlet(firstRenderlet);
             chart.redraw();
@@ -103,7 +103,7 @@ describe('dc.baseMixin', function () {
         });
 
         it('should execute a named renderlet after a render', function (done) {
-            var thirdRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            const thirdRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 done();
             });
@@ -115,7 +115,7 @@ describe('dc.baseMixin', function () {
         });
 
         it('should execute a named renderlet after a redraw', function (done) {
-            var thirdRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            const thirdRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(callbackChart).toBe(chart);
                 done();
             });
@@ -126,11 +126,11 @@ describe('dc.baseMixin', function () {
         });
 
         it('should remove a named renderlet expect no call after a redraw', function (done) {
-            var secondRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            const thirdRenderlet = jasmine.createSpy();
+            const secondRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(thirdRenderlet).not.toHaveBeenCalled();
                 done();
             });
-            var thirdRenderlet = jasmine.createSpy();
             chart.on('renderlet.third' , secondRenderlet);
             chart.renderlet(secondRenderlet);
             chart.on('renderlet.third');
@@ -140,11 +140,11 @@ describe('dc.baseMixin', function () {
         });
 
         it('should remove a named renderlet and expect no call after a render', function (done) {
-            var secondRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
+            const thirdRenderlet = jasmine.createSpy();
+            const secondRenderlet = jasmine.createSpy().and.callFake(function (callbackChart) {
                 expect(thirdRenderlet).not.toHaveBeenCalled();
                 done();
             });
-            var thirdRenderlet = jasmine.createSpy();
             chart.on('renderlet.third' , secondRenderlet);
             chart.renderlet(secondRenderlet);
             chart.on('renderlet.third');
@@ -157,7 +157,7 @@ describe('dc.baseMixin', function () {
     describe('event listeners', function () {
         describe('on render', function () {
             it('should execute the preRender callback', function () {
-                var preRenderSpy = jasmine.createSpy();
+                const preRenderSpy = jasmine.createSpy();
                 chart.on('preRender', preRenderSpy);
                 chart.render();
                 flushAllD3Transitions();
@@ -165,8 +165,8 @@ describe('dc.baseMixin', function () {
             });
 
             it('should execute the postRender callback', function (done) {
-                var preRenderSpy = jasmine.createSpy();
-                var postRender = function (callbackChart) {
+                const preRenderSpy = jasmine.createSpy();
+                const postRender = function (callbackChart) {
                     // By now preRender must have been called
                     expect(preRenderSpy).toHaveBeenCalledWith(chart);
 
@@ -183,11 +183,11 @@ describe('dc.baseMixin', function () {
         });
 
         describe('on filter double', function () {
-            var filterSpy, filterSpy2, filter;
+            let filterSpy, filterSpy2, filter;
             beforeEach(function () {
                 filter = '1';
 
-                var expectedCallbackSignature = function (callbackChart, callbackFilter) {
+                const expectedCallbackSignature = function (callbackChart, callbackFilter) {
                     expect(callbackChart).toBe(chart);
                     expect(callbackFilter).toEqual(filter);
                 };
@@ -215,11 +215,11 @@ describe('dc.baseMixin', function () {
         });
 
         describe('on filter', function () {
-            var filterSpy, filter;
+            let filterSpy, filter;
             beforeEach(function () {
                 filter = '1';
 
-                var expectedCallbackSignature = function (callbackChart, callbackFilter) {
+                const expectedCallbackSignature = function (callbackChart, callbackFilter) {
                     expect(callbackChart).toBe(chart);
                     expect(callbackFilter).toEqual(filter);
                 };
@@ -241,7 +241,7 @@ describe('dc.baseMixin', function () {
 
         describe('on redraw', function () {
             it('should execute the preRedraw callback before transitions', function () {
-                var preRedrawSpy = jasmine.createSpy();
+                const preRedrawSpy = jasmine.createSpy();
                 chart.on('preRedraw', preRedrawSpy);
                 chart.redraw();
                 expect(preRedrawSpy).toHaveBeenCalledWith(chart);
@@ -249,15 +249,15 @@ describe('dc.baseMixin', function () {
             });
 
             it('should execute the postRedraw callback after transitions', function (done) {
-                var preRedrawSpy = jasmine.createSpy();
-                var postRedraw = function (callbackChart) {
+                const preRedrawSpy = jasmine.createSpy();
+                const postRedraw = function (callbackChart) {
                     // By now preRedraw must have been called
                     expect(preRedrawSpy).toHaveBeenCalledWith(chart);
 
                     expect(callbackChart).toBe(chart);
                     done();
                 };
-                var postRedrawSpy = jasmine.createSpy().and.callFake(postRedraw);
+                const postRedrawSpy = jasmine.createSpy().and.callFake(postRedraw);
                 chart.on('preRedraw', preRedrawSpy);
                 chart.on('postRedraw', postRedraw);
                 chart.redraw();
@@ -290,14 +290,12 @@ describe('dc.baseMixin', function () {
     });
 
     describe('anchoring chart to dom', function () {
-        var id;
-
         beforeEach(function () {
             id = 'chart-id';
         });
 
         describe('using a d3-created dom element', function () {
-            var anchorDiv;
+            let anchorDiv;
 
             beforeEach(function () {
                 anchorDiv = d3.select('body').append('div').attr('id', id).node();
@@ -336,7 +334,7 @@ describe('dc.baseMixin', function () {
         });
 
         describe('using a d3 selection', function () {
-            var anchorDiv;
+            let anchorDiv;
 
             beforeEach(function () {
                 anchorDiv = d3.select('body').append('div').attr('id', id);
@@ -395,14 +393,14 @@ describe('dc.baseMixin', function () {
     });
 
     describe('calculation of dimensions', function () {
-        var dimdiv;
+        let dimdiv;
         beforeEach(function () {
             dimdiv = appendChartID('dimensionTest');
             chart.anchor('#dimensionTest');
         });
 
         describe('when set to a falsy on a sized div', function () {
-            var h0, w0;
+            let h0, w0;
             beforeEach(function () {
                 dimdiv
                     .style('height', '220px')
@@ -448,7 +446,7 @@ describe('dc.baseMixin', function () {
         });
 
         describe('when set to a falsy on an unsized div with junk in it', function () {
-            var h0, w0;
+            let h0, w0;
             beforeEach(function () {
                 dimdiv.append('h1').text('helL0');
                 chart.width(null).height(null)
@@ -493,7 +491,7 @@ describe('dc.baseMixin', function () {
         });
 
         describe('when set to a callback function', function () {
-            var setterSpy;
+            let setterSpy;
             beforeEach(function () {
                 setterSpy = jasmine.createSpy().and.returnValue(800);
                 chart.width(setterSpy).render();
@@ -553,7 +551,7 @@ describe('dc.baseMixin', function () {
     });
 
     describe('filter handling', function () {
-        var filter, notFilter;
+        let filter, notFilter;
         beforeEach(function () {
             // 1 && 0 should handle most cases.  Could be true/false booleans...
             filter = 1;
@@ -587,7 +585,7 @@ describe('dc.baseMixin', function () {
             expect(chart.filters().length).toEqual(1);
         });
         it('with a noop addFilterHandler', function () {
-            chart.addFilterHandler(function (filters, filter) {
+            chart.addFilterHandler(function (filters, f) {
                 return filters;
             });
             chart.filter(filter);
@@ -596,7 +594,7 @@ describe('dc.baseMixin', function () {
             expect(chart.filters().length).toEqual(0);
         });
         it('with a static addFilterHandler', function () {
-            chart.addFilterHandler(function (filters, filter) {
+            chart.addFilterHandler(function (filters, f) {
                 filters.push(notFilter);
                 return filters;
             });
@@ -621,7 +619,7 @@ describe('dc.baseMixin', function () {
         it('with a noop removeFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
-            chart.removeFilterHandler(function (filters, filter) {
+            chart.removeFilterHandler(function (filters, f) {
                 return filters;
             });
             expect(chart.filters().length).toEqual(2);
@@ -637,7 +635,7 @@ describe('dc.baseMixin', function () {
         it('with a shift removeFilterHandler', function () {
             chart.filter(filter);
             chart.filter(notFilter);
-            chart.removeFilterHandler(function (filters, filter) {
+            chart.removeFilterHandler(function (filters, f) {
                 if (filters.length > 0) {
                     filters.shift();
                 }

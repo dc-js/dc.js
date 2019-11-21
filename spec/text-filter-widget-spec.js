@@ -1,8 +1,8 @@
 /* global loadDateFixture, appendChartID */
 describe('dc.textFilterWidget', function () {
-    var dateFixture;
-    var id, chart, data;
-    var dimension, group;
+    let dateFixture;
+    let id, chart, data;
+    let dimension, group;
 
     beforeEach(function () {
         dateFixture = loadDateFixture();
@@ -39,23 +39,23 @@ describe('dc.textFilterWidget', function () {
 
     describe('default accessor functions', function () {
         it('exists for normalize()', function () {
-            var normalize = chart.normalize();
+            const normalize = chart.normalize();
             expect(typeof normalize).toBe('function');
         });
         it('exists for filterFunctionFactory()', function () {
-            var filterFunctionFactory = chart.filterFunctionFactory();
+            const filterFunctionFactory = chart.filterFunctionFactory();
             expect(typeof filterFunctionFactory).toBe('function');
         });
         it('exists for placeHolder()', function () {
-            var placeHolder = chart.placeHolder();
+            const placeHolder = chart.placeHolder();
             expect(typeof placeHolder).toBe('string');
             expect(placeHolder).toBe('search');
         });
     });
 
     describe('filter when typing', function () {
-        var mockTyping = function (q) {
-            var i = d3.select('input');
+        const mockTyping = function (q) {
+            const i = d3.select('input');
             i.nodes()[0].value = q;
             i.on('input').call(i.node(), i.datum());
         };

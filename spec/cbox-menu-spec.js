@@ -1,8 +1,8 @@
 /* global appendChartID, loadDateFixture */
 describe('dc.cboxMenu', function () {
-    var id, chart;
-    var data, regionDimension, regionGroup;
-    var stateDimension, stateGroup;
+    let id, chart;
+    let data, regionDimension, regionGroup;
+    let stateDimension, stateGroup;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
@@ -49,7 +49,7 @@ describe('dc.cboxMenu', function () {
         });
         // check labels and IDs
         it('creates input elements with IDs and labels with the corresponding "for" attribute', function () {
-            var str = chart.selectAll('input').nodes().map(function (e) {
+            const str = chart.selectAll('input').nodes().map(function (e) {
                 return e.id;
             }).join('--');
             expect(str).toMatch(/^(input_\d+_\d+--)+input_\d+_all$/);
@@ -68,11 +68,11 @@ describe('dc.cboxMenu', function () {
         });
         // select all:
         it('creates a select all option with default prompt text', function () {
-            var option = chart.selectAll('li label').nodes().pop();
+            const option = chart.selectAll('li label').nodes().pop();
             expect(option.textContent).toEqual('Select all');
         });
         it('creates a select all option with no value', function () {
-            var option = chart.selectAll('li input').nodes().pop();
+            const option = chart.selectAll('li input').nodes().pop();
             expect(option.name).toMatch(/^domain_\d+$/);
             expect(option.getAttribute('value')).toBeNull();
         });
@@ -88,20 +88,20 @@ describe('dc.cboxMenu', function () {
         // select all multiple:
         it('has a reset button in multiple mode', function () {
             chart.multiple(true).redraw();
-            var option = chart.selectAll('li input').nodes().pop();
+            const option = chart.selectAll('li input').nodes().pop();
             expect(option.type).toEqual('reset');
             expect(chart.selectAll('input[type=reset]').nodes().length).toEqual(1);
         });
         it('creates prompt option with default prompt text', function () {
             chart.multiple(true).redraw();
-            var option = chart.selectAll('li input').nodes().pop();
+            const option = chart.selectAll('li input').nodes().pop();
             expect(option.textContent).toEqual('Select all');
         });
 
     });
 
     describe('select options', function () {
-        var firstOption, lastOption, lastIndex;
+        let firstOption, lastOption, lastIndex;
         beforeEach(function () {
             lastIndex = stateGroup.all().length - 1;
             firstOption = getOption(chart, 0);
@@ -183,14 +183,14 @@ describe('dc.cboxMenu', function () {
             expect(regionGroup.all()[0].value).toEqual(1);
         });
         it('selects all options corresponding to active filters on redraw', function () {
-            var selectedOptions = getSelectedOptions(chart);
+            const selectedOptions = getSelectedOptions(chart);
             expect(selectedOptions.length).toEqual(2);
             expect(selectedOptions.map(function (d) { return d.value; })).toEqual(['California', 'Colorado']);
         });
         it('does not deselect previously filtered options when new option is added', function () {
             chart.onChange([stateGroup.all()[0].key, stateGroup.all()[1].key, stateGroup.all()[5].key]);
 
-            var selectedOptions = getSelectedOptions(chart);
+            const selectedOptions = getSelectedOptions(chart);
             expect(selectedOptions.length).toEqual(3);
             expect(selectedOptions.map(function (d) { return d.value; })).toEqual(['California', 'Colorado', 'Ontario']);
         });
@@ -224,13 +224,13 @@ describe('dc.cboxMenu', function () {
         });
     });
 
-    function getSelectedOptions (chart) {
-        return chart.selectAll('.dc-cbox-item input').nodes().filter(function (d) {
+    function getSelectedOptions (_chart) {
+        return _chart.selectAll('.dc-cbox-item input').nodes().filter(function (d) {
             return d.value && d.checked;
         });
     }
 
-    function getOption (chart, i) {
-        return chart.selectAll('.dc-cbox-item label').nodes()[i];
+    function getOption (_chart, i) {
+        return _chart.selectAll('.dc-cbox-item label').nodes()[i];
     }
 });

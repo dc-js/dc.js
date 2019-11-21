@@ -130,9 +130,9 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(y - LABEL_PADDING);
     }
 
-    _renderLabels (layer, layerIndex, d) {
+    _renderLabels (layer, layerIndex, data) {
         const labels = layer.selectAll('text.barLabel')
-            .data(d.values, pluck('x'));
+            .data(data.values, pluck('x'));
 
         const labelsEnterUpdate = labels
             .enter()
@@ -169,9 +169,9 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(x);
     }
 
-    _renderBars (layer, layerIndex, d) {
+    _renderBars (layer, layerIndex, data) {
         const bars = layer.selectAll('rect.bar')
-            .data(d.values, pluck('x'));
+            .data(data.values, pluck('x'));
 
         const enter = bars.enter()
             .append('rect')
@@ -184,7 +184,7 @@ export class BarChart extends StackMixin {
         const barsEnterUpdate = enter.merge(bars);
 
         if (this.renderTitle()) {
-            enter.append('title').text(pluck('data', this.title(d.name)));
+            enter.append('title').text(pluck('data', this.title(data.name)));
         }
 
         if (this.isOrdinal()) {
@@ -205,7 +205,7 @@ export class BarChart extends StackMixin {
             .attr('width', this._barWidth)
             .attr('height', d => this._barHeight(d))
             .attr('fill', pluck('data', this.getColor))
-            .select('title').text(pluck('data', this.title(d.name)));
+            .select('title').text(pluck('data', this.title(data.name)));
 
         transition(bars.exit(), this.transitionDuration(), this.transitionDelay())
             .attr('x', d => this.x()(d.x))

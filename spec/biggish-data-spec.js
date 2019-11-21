@@ -8,12 +8,10 @@ describe('dc.barChart.biggish', function () {
     beforeEach(function () {
         appendChartID('stack-chart');
         appendChartID('range-chart');
-        var chartAttemptSeries = dc.lineChart('#stack-chart');
-        var chartRange = dc.barChart('#range-chart');
+        const chartAttemptSeries = dc.lineChart('#stack-chart');
+        const chartRange = dc.barChart('#range-chart');
 
-        var xfilter;
-
-        var data = biggishData();
+        const data = biggishData();
 
         data.forEach(function (row) {
             // coerce k(ind) into a number
@@ -28,16 +26,20 @@ describe('dc.barChart.biggish', function () {
             row.n = +row.n;
         });
 
-        xfilter = crossfilter(data);
+        const xfilter = crossfilter(data);
 
         // hour dimension (across all kinds)
-        var dimHour = xfilter.dimension(function (row) { return row.hour; });
+        const dimHour = xfilter.dimension(function (row) {
+            return row.hour;
+        });
 
         // grouping used by the range chart (sum of number of attempts for all kinds per hour)
-        var groupHourSum = dimHour.group().reduceSum(function (row) { return row.n; });
+        const groupHourSum = dimHour.group().reduceSum(function (row) {
+            return row.n;
+        });
 
         // groupings used by the stacked bar chart (one value for each kind)
-        var groupHourSeries = dimHour.group().reduce(
+        const groupHourSeries = dimHour.group().reduce(
             function (p, v) {
                 switch (v.k) {
                     case 1:
@@ -76,7 +78,9 @@ describe('dc.barChart.biggish', function () {
         );
 
         // calculate day extent (two element array of first and last items in the range) - of the hour data
-        var extentDay = d3.extent(data, function (row) { return row.day; });
+        const extentDay = d3.extent(data, function (row) {
+            return row.day;
+        });
         // select the following day for the end of the extent
         extentDay[1] = d3.utcDay.offset(extentDay[1], 1);
 

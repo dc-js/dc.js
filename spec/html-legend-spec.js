@@ -1,6 +1,6 @@
 /* global appendChartID, loadDateFixture */
 describe('dc.htmlLegend', function () {
-    var id, chart, dateDimension, dateValueSumGroup, dateIdSumGroup, legend, legendId;
+    let id, chart, dateDimension, dateValueSumGroup, dateIdSumGroup, legend, legendId;
 
     function legendItem (n, orientation) {
         return d3.select(legend.selectAll('div.dc-html-legend div.dc-legend-item-' + orientation).nodes()[n]);
@@ -18,7 +18,7 @@ describe('dc.htmlLegend', function () {
 
     describe('htmlLegend for lineChart', function () {
         beforeEach(function () {
-            var data = crossfilter(loadDateFixture());
+            const data = crossfilter(loadDateFixture());
             dateDimension = data.dimension(function (d) {
                 return d3.timeDay(d.dd);
             });
@@ -105,7 +105,7 @@ describe('dc.htmlLegend', function () {
             });
 
             it('not allow hiding stacks be default', function () {
-                var firstLegendItem = legendItem(0, 'horizontal');
+                const firstLegendItem = legendItem(0, 'horizontal');
                 firstLegendItem.on('click').call(firstLegendItem.nodes()[0], firstLegendItem.datum());
                 expect(chart.selectAll('path.line').size()).toBe(3);
             });
@@ -134,7 +134,7 @@ describe('dc.htmlLegend', function () {
         describe('with .legendText()', function () {
             beforeEach(function () {
                 chart.legend(dc.htmlLegend().container('#' + legendId).legendText(function (d, i) {
-                    var _i = i + 1;
+                    const _i = i + 1;
                     return _i + '. ' + d.name;
                 }));
                 chart.render();

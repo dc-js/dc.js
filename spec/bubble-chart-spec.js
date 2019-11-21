@@ -1,10 +1,10 @@
 /* global appendChartID, loadDateFixture, loadIrisFixture, makeDate */
 describe('dc.bubbleChart', function () {
-    var id, chart, data;
-    var dateFixture;
-    var dimension, group;
-    var countryDimension;
-    var width = 900, height = 350;
+    let id, chart, data;
+    let dateFixture;
+    let dimension, group;
+    let countryDimension;
+    const width = 900, height = 350;
 
     beforeEach(function () {
         dateFixture = loadDateFixture();
@@ -355,12 +355,12 @@ describe('dc.bubbleChart', function () {
     });
 
     describe('renderlet', function () {
-        var renderlet;
+        let renderlet;
 
         beforeEach(function () {
             // spyOn doesn't seem to work with plain functions
-            renderlet = jasmine.createSpy('renderlet', function (chart) {
-                chart.selectAll('circle').attr('fill', 'red');
+            renderlet = jasmine.createSpy('renderlet', function (_chart) {
+                _chart.selectAll('circle').attr('fill', 'red');
             });
             renderlet.and.callThrough();
             chart.on('renderlet', renderlet);
@@ -382,10 +382,10 @@ describe('dc.bubbleChart', function () {
     describe('non-unique keys', function () {
         // plot all rows as (value, nvalue) - a common scatterplot scenario
         beforeEach(function () {
-            var rowDimension = data.dimension(function (d, i) {
+            const rowDimension = data.dimension(function (d, i) {
                 return i;
             });
-            var rowGroup = rowDimension.group();
+            const rowGroup = rowDimension.group();
 
             chart.dimension(rowDimension).group(rowGroup)
                 .keyAccessor(function (kv) {
@@ -429,10 +429,10 @@ describe('dc.bubbleChart', function () {
 
     describe('with logarithmic scales', function () {
         beforeEach(function () {
-            var rowDimension = data.dimension(function (d, i) {
+            const rowDimension = data.dimension(function (d, i) {
                 return i;
             });
-            var rowGroup = rowDimension.group();
+            const rowGroup = rowDimension.group();
 
             chart
                 .dimension(rowDimension)
@@ -485,8 +485,8 @@ describe('dc.bubbleChart', function () {
         });
 
         it('draws bubbles in appropriate locations', function () {
-            var coords = [
-                [0,310], [149.1,310], [170.4,0], [394,310], [489.9,155], [820,155],
+            const coords = [
+                [0, 310], [149.1, 310], [170.4, 0], [394, 310], [489.9, 155], [820, 155],
             ];
             chart.selectAll('g.node').each(function (d, i) {
                 expect(d3.select(this).attr('transform'))
@@ -542,17 +542,17 @@ describe('dc.bubbleChart', function () {
     describe('iris filtering', function () {
         /* eslint camelcase: 0 */
         // 2-chart version of from http://bl.ocks.org/gordonwoodhull/14c623b95993808d69620563508edba6
-        var irisData, heatMap, sepalDim, sepalGroup;
+        let irisData, heatMap, sepalDim, sepalGroup;
         beforeEach(function () {
             irisData = loadIrisFixture();
 
-            var fields = {
+            const fields = {
                 sl: 'sepal_length',
                 sw: 'sepal_width',
                 pl: 'petal_length',
                 pw: 'petal_width'
             };
-            var species = ['setosa', 'versicolor', 'virginica'];
+            const species = ['setosa', 'versicolor', 'virginica'];
 
             irisData.forEach(function (d) {
                 Object.keys(fields).forEach(function (ab) {
@@ -561,13 +561,14 @@ describe('dc.bubbleChart', function () {
             });
             // autogenerate a key function for an extent
             function key_function (extent) {
-                var div = extent[1] - extent[0] < 5 ? 2 : 1;
+                const div = extent[1] - extent[0] < 5 ? 2 : 1;
                 return function (k) {
                     return Math.floor(k * div) / div;
                 };
             }
-            var extents = {};
-            var keyfuncs = {};
+
+            const extents = {};
+            const keyfuncs = {};
             Object.keys(fields).forEach(function (ab) {
                 extents[ab] = d3.extent(irisData, function (d) { return d[fields[ab]]; });
                 keyfuncs[ab] = key_function(extents[ab]);
@@ -583,8 +584,8 @@ describe('dc.bubbleChart', function () {
                     return kv.key[i];
                 };
             }
-            function reduce_species (group) {
-                group.reduce(
+            function reduce_species (grp) {
+                grp.reduce(
                     function (p, v) {
                         p[v.species]++;
                         p.total++;
@@ -594,14 +595,14 @@ describe('dc.bubbleChart', function () {
                         p.total--;
                         return p;
                     }, function () {
-                        var init = {total: 0};
+                        const init = {total: 0};
                         species.forEach(function (s) { init[s] = 0; });
                         return init;
                     }
                 );
             }
             function max_species (d) {
-                var max = 0, i = -1;
+                let max = 0, i = -1;
                 species.forEach(function (s, j) {
                     if (d.value[s] > max) {
                         max = d.value[s];
@@ -636,8 +637,8 @@ describe('dc.bubbleChart', function () {
                         return JSON.stringify(d.value, null, 2);
                     });
             }
-            function initialize_heatmap (heatMap) {
-                heatMap
+            function initialize_heatmap (htMap) {
+                htMap
                     .transitionDuration(0)
                     .width(400)
                     .height(400)
@@ -652,12 +653,12 @@ describe('dc.bubbleChart', function () {
                     });
             }
 
-            var heatId = 'heat-map';
+            const heatId = 'heat-map';
             appendChartID(heatId);
 
             heatMap = dc.heatMap('#' + heatId);
             sepalDim = data.dimension(duo_key('sl', 'sw')); sepalGroup = sepalDim.group();
-            var petalDim = data.dimension(duo_key('pl', 'pw')), petalGroup = petalDim.group();
+            const petalDim = data.dimension(duo_key('pl', 'pw')), petalGroup = petalDim.group();
 
             reduce_species(sepalGroup);
             reduce_species(petalGroup);
@@ -667,7 +668,7 @@ describe('dc.bubbleChart', function () {
             heatMap.render();
         });
         // return brand-new objects and keys every time
-        function clone_group (group) {
+        function clone_group (grp) {
             function clone_kvs (all) {
                 return all.map(function (kv) {
                     return {
@@ -678,52 +679,52 @@ describe('dc.bubbleChart', function () {
             }
             return {
                 all: function () {
-                    return clone_kvs(group.all());
+                    return clone_kvs(grp.all());
                 },
                 top: function (N) {
-                    return clone_kvs(group.top(N));
+                    return clone_kvs(grp.top(N));
                 }
             };
         }
 
-        function testBubbleRadiiCol3 (chart) {
-            var bubbles = chart.selectAll('circle.bubble').nodes();
-            var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34.5, 16.1, 0, 0, 16.1, 59.1, 34.5, 16.1, 96, 0, 22.2, 0, 0, 0, 0];
+        function testBubbleRadiiCol3 (_chart) {
+            const bubbles = _chart.selectAll('circle.bubble').nodes();
+            const expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34.5, 16.1, 0, 0, 16.1, 59.1, 34.5, 16.1, 96, 0, 22.2, 0, 0, 0, 0];
             bubbles.forEach(function (b, i) {
                 expect(+d3.select(b).attr('r')).toBeWithinDelta(expected[i], 0.1);
             });
         }
-        function testBubbleTitlesCol3 (chart) {
-            var titles = chart.selectAll('g.node title').nodes();
-            var expected = [
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 4,'setosa': 0,'versicolor': 0,'virginica': 4},{'total': 1,'setosa': 0,'versicolor': 0,'virginica': 1},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 1,'setosa': 0,'versicolor': 0,'virginica': 1},{'total': 8,'setosa': 0,'versicolor': 1,'virginica': 7},
-                {'total': 4,'setosa': 0,'versicolor': 0,'virginica': 4},{'total': 1,'setosa': 0,'versicolor': 0,'virginica': 1},
-                {'total': 14,'setosa': 0,'versicolor': 1,'virginica': 13},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 2,'setosa': 0,'versicolor': 0,'virginica': 2},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},{'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0},
-                {'total': 0,'setosa': 0,'versicolor': 0,'virginica': 0}];
+        function testBubbleTitlesCol3 (_chart) {
+            const titles = _chart.selectAll('g.node title').nodes();
+            const expected = [
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 4, 'setosa': 0, 'versicolor': 0, 'virginica': 4}, {'total': 1, 'setosa': 0, 'versicolor': 0, 'virginica': 1},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 1, 'setosa': 0, 'versicolor': 0, 'virginica': 1}, {'total': 8, 'setosa': 0, 'versicolor': 1, 'virginica': 7},
+                {'total': 4, 'setosa': 0, 'versicolor': 0, 'virginica': 4}, {'total': 1, 'setosa': 0, 'versicolor': 0, 'virginica': 1},
+                {'total': 14, 'setosa': 0, 'versicolor': 1, 'virginica': 13}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 2, 'setosa': 0, 'versicolor': 0, 'virginica': 2}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}, {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0},
+                {'total': 0, 'setosa': 0, 'versicolor': 0, 'virginica': 0}];
             titles.forEach(function (t, i) {
                 expect(JSON.parse(d3.select(t).text())).toEqual(expected[i]);
             });
         }
-        function testBubbleLabelsCol3 (chart) {
-            var labels = chart.selectAll('g.node text').nodes();
-            var expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 8, 4, 1, 14, 0, 2, 0, 0, 0, 0];
+        function testBubbleLabelsCol3 (_chart) {
+            const labels = _chart.selectAll('g.node text').nodes();
+            const expected = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 1, 0, 0, 1, 8, 4, 1, 14, 0, 2, 0, 0, 0, 0];
             labels.forEach(function (l, i) {
                 expect(+d3.select(l).text()).toBe(expected[i]);
             });
         }
         describe('column filtering with straight crossfilter', function () {
             beforeEach(function () {
-                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
+                const axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
                 d3.timerFlush();
             });
@@ -741,7 +742,7 @@ describe('dc.bubbleChart', function () {
             beforeEach(function () {
                 chart.group(clone_group(sepalGroup));
                 chart.render();
-                var axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
+                const axisLabel = d3.select(heatMap.selectAll('.cols.axis text').nodes()[3]);
                 axisLabel.on('click')(axisLabel.datum());
                 d3.timerFlush();
             });

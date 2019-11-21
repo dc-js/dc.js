@@ -1,6 +1,6 @@
 describe('dc event engine', function () {
     describe('event execution', function () {
-        var engine, trigger;
+        let engine, trigger;
         beforeEach(function () {
             engine = dc.events;
             trigger = jasmine.createSpy('trigger');
@@ -19,9 +19,9 @@ describe('dc event engine', function () {
         });
 
         it('multiple events dispatched with delay should be throttled', function () {
-            var times = 0;
-            var i = 0;
-            var increment = function () {
+            let times = 0;
+            let i = 0;
+            const increment = function () {
                 times++;
             };
 

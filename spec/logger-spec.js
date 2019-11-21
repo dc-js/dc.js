@@ -1,5 +1,5 @@
 describe('dc.logger', function () {
-    var message = 'Watch out for the bears';
+    const message = 'Watch out for the bears';
 
     describe('logging a warning', function () {
         describe('when console.warn is defined', function () {
@@ -79,7 +79,7 @@ describe('dc.logger', function () {
     });
 
     describe('deprecate', function () {
-        var dummy, wrappedFn;
+        let dummy, wrappedFn;
 
         beforeEach(function () {
             dummy = {

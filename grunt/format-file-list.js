@@ -1,23 +1,23 @@
 module.exports = function (grunt) {
-    var PER_ROW = 4;
+    const PER_ROW = 4;
     return function (list, opts) {
-        var files = list.sort().map(function (entry) {
-            var f = entry.replace(/.*\//, '');
+        const files = list.sort().map(function (entry) {
+            const f = entry.replace(/.*\//, '');
             return [f.replace('.html', '').replace(/-/g, ' '), f];
         }).filter(function (e) { return e[0] !== 'index'; });
-        var rows = [];
-        for (var i = 0; i < files.length; i += PER_ROW) {
-            var cols = [];
-            for (var j = 0; j < PER_ROW; ++j) {
+        const rows = [];
+        for (let i = 0; i < files.length; i += PER_ROW) {
+            const cols = [];
+            for (let j = 0; j < PER_ROW; ++j) {
                 if (i + j >= files.length) {
                     break;
                 }
-                var file = files[i + j];
+                const file = files[i + j];
                 cols.push('    <td><a href="' + file[1] + '">' + file[0] + '</a></td>');
             }
             rows.push('  <tr>\n' + cols.join('\n') + '\n  </tr>');
         }
-        var body = '<table class="table">\n' + rows.join('\n') + '\n</table>';
+        const body = '<table class="table">\n' + rows.join('\n') + '\n</table>';
         return [
             '<html><head><title>' + opts.title + '</title>',
             '<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"></head>',

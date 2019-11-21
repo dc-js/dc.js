@@ -1,7 +1,7 @@
 /* global loadDateFixture */
 describe('dc.capMixin', function () {
-    var data, dimension, group;
-    var mixin, total;
+    let data, dimension, group;
+    let mixin, total;
 
     beforeEach(function () {
         data = crossfilter(loadDateFixture());
