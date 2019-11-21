@@ -38,7 +38,8 @@ const umdConf = {
     format: 'umd',
     name: 'dc',
     sourcemap: true,
-    globals: d3Modules
+    globals: d3Modules,
+    paths: d3Modules
 };
 
 const umdMinConf = Object.assign({}, umdConf, {file: 'dist/dc.min.js'});
