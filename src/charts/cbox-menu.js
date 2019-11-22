@@ -44,10 +44,10 @@ export class CboxMenu extends BaseMixin {
 
         this._uniqueId = utils.uniqueId();
 
-        this.data((group) => group.all().filter(this._filterDisplayed));
+        this.data(group => group.all().filter(this._filterDisplayed));
 
         // There is an accessor for this attribute, initialized with default value
-        this._filterDisplayed = (d) => this.valueAccessor()(d) > 0;
+        this._filterDisplayed = d => this.valueAccessor()(d) > 0;
 
         this._order = (a, b) => {
             if (this.keyAccessor()(a) > this.keyAccessor()(b)) {
@@ -75,10 +75,8 @@ export class CboxMenu extends BaseMixin {
 
         if (this.hasFilter() && this._multiple) {
             this._cbox.selectAll('input')
-                .property('checked', d => {
-                    // adding `false` avoids failing test cases in phantomjs
-                    return d && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0 || false;
-                });
+            // adding `false` avoids failing test cases in phantomjs
+                .property('checked', d => d && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0 || false);
         } else if (this.hasFilter()) {
             this._cbox.selectAll('input')
                 .property('checked', d => {
@@ -162,9 +160,7 @@ export class CboxMenu extends BaseMixin {
                         return this.checked;
                     }
                 });
-            values = options.nodes().map(function (option) {
-                return option.value;
-            });
+            values = options.nodes().map(option => option.value);
             // check if only prompt option is selected
             if (!this._multiple && values.length === 1) {
                 values = values[0];

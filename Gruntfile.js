@@ -362,7 +362,7 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('merge', 'Merge a github pull request.', function (pr) {
+    grunt.registerTask('merge', 'Merge a github pull request.', pr => {
         grunt.log.writeln('Merge Github Pull Request #' + pr);
         grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
     });
@@ -375,7 +375,7 @@ module.exports = function (grunt) {
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
-    grunt.registerTask('watch:scripts-sass-docs', function () {
+    grunt.registerTask('watch:scripts-sass-docs', () => {
         grunt.config('watch', {
             options: {
                 interrupt: true
@@ -385,7 +385,7 @@ module.exports = function (grunt) {
         });
         grunt.task.run('watch');
     });
-    grunt.registerTask('safe-sauce-labs', function () {
+    grunt.registerTask('safe-sauce-labs', () => {
         if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
             grunt.log.writeln('Skipping Sauce Lab tests - SAUCE_USERNAME/SAUCE_ACCESS_KEY not set');
             return;

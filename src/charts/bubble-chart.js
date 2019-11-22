@@ -71,7 +71,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 
         bubbleGEnter
             .attr('class', this.BUBBLE_NODE_CLASS)
-            .attr('transform', (d) => this._bubbleLocator(d))
+            .attr('transform', d => this._bubbleLocator(d))
             .append('circle').attr('class', (d, i) => this.BUBBLE_CLASS + ' _' + i)
             .on('click', d => this.onClick(d))
             .attr('fill', this.getColor)
@@ -93,7 +93,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 
     _updateNodes (bubbleG) {
         transition(bubbleG, this.transitionDuration(), this.transitionDelay())
-            .attr('transform', (d) => this._bubbleLocator(d))
+            .attr('transform', d => this._bubbleLocator(d))
             .select('circle.' + this.BUBBLE_CLASS)
             .attr('fill', this.getColor)
             .attr('r', d => this.bubbleR(d))

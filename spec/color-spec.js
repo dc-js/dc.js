@@ -1,5 +1,5 @@
 /* global loadDateFixture, compareVersions */
-describe('dc.colorMixin', function () {
+describe('dc.colorMixin', () => {
     function colorTest (chart, domain, test) {
         chart.colorDomain(domain);
         return (test || domain).map(chart.getColor);
@@ -9,8 +9,8 @@ describe('dc.colorMixin', function () {
 
     const ColorMixinTester = dc.ColorMixin(dc.BaseMixin);
 
-    describe('deprecation', function () {
-        it('issues a one time warning when using default color scheme', function () {
+    describe('deprecation', () => {
+        it('issues a one time warning when using default color scheme', () => {
             spyOn(dc.logger, 'warnOnce');
 
             new ColorMixinTester(); // eslint-disable-line no-new
@@ -18,7 +18,7 @@ describe('dc.colorMixin', function () {
             expect(dc.logger.warnOnce).toHaveBeenCalled();
         });
 
-        it('does not issue a warning when default color scheme has been changed', function () {
+        it('does not issue a warning when default color scheme has been changed', () => {
             const origColors = dc.config.defaultColors();
 
             spyOn(dc.logger, 'warnOnce');
@@ -33,31 +33,31 @@ describe('dc.colorMixin', function () {
         });
     });
 
-    describe('with ordinal domain' , function () {
+    describe('with ordinal domain' , () => {
         let chart, domain;
 
-        beforeEach(function () {
+        beforeEach(() => {
             chart = new ColorMixinTester();
             chart.colorAccessor(identity);
             domain = ['a','b','c','d','e'];
         });
 
-        it('default', function () {
+        it('default', () => {
             expect(colorTest(chart, domain))
                 .toMatchColors(dc.config.defaultColors().slice(0, 5));
         });
 
-        it('custom', function () {
+        it('custom', () => {
             chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
             expect(colorTest(chart, domain)).toMatchColors(['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd']);
         });
 
-        it('ordinal', function () {
+        it('ordinal', () => {
             chart.ordinalColors(['red','green','blue']);
             expect(colorTest(chart, domain)).toMatchColors(['red','green','blue','red','green']);
         });
 
-        it('linear', function () {
+        it('linear', () => {
             // GIGO: mapping ordinal domain to linear scale is nonsensical
             // d3 pre-5.8: scaled to NaN and corrected to black; 5.8+: scale returns undefined
             chart.linearColors(['#ff0000','#00ff00']);
@@ -68,14 +68,14 @@ describe('dc.colorMixin', function () {
             }
         });
     });
-    describe('with numeric domain' , function () {
+    describe('with numeric domain' , () => {
         // These tests try to validate an interesting case. In an Ordinal scale if we try to map a key
         // that is not there, it is added to the domain.
         // Please see https://github.com/d3/d3-scale/blob/master/README.md#_ordinal
         // Linear scales work differently.
         let chart, domain, test, expectedColorIndices;
 
-        beforeEach(function () {
+        beforeEach(() => {
             chart = new ColorMixinTester();
             chart.colorAccessor(identity);
             domain = [1, 100];
@@ -87,33 +87,29 @@ describe('dc.colorMixin', function () {
             expectedColorIndices = [2, 0, 3, 1, 4, 0];
         });
 
-        it('updates the domain corresponding to unknown values', function () {
+        it('updates the domain corresponding to unknown values', () => {
             colorTest(chart, domain, test);
             expect(chart.colors().domain()).toEqual([1, 100, 0, 50, 101]);
         });
 
-        it('default', function () {
-            const expected = expectedColorIndices.map(function (c) {
-                return dc.config.defaultColors()[c];
-            });
+        it('default', () => {
+            const expected = expectedColorIndices.map(c => dc.config.defaultColors()[c]);
             expect(colorTest(chart, domain, test)).toMatchColors(expected);
         });
 
-        it('custom', function () {
+        it('custom', () => {
             chart.colors(d3.scaleOrdinal(d3.schemeCategory10));
-            const expected = expectedColorIndices.map(function (c) {
-                return d3.schemeCategory10[c];
-            });
+            const expected = expectedColorIndices.map(c => d3.schemeCategory10[c]);
             expect(colorTest(chart, domain, test)).toMatchColors(expected);
         });
 
-        it('ordinal', function () {
+        it('ordinal', () => {
             chart.ordinalColors(['red','green','blue']);
             // If there are lesser number of colors in range than the number of domain items, it starts reusing
             expect(colorTest(chart, domain, test)).toMatchColors(['blue', 'red', 'red', 'green', 'green', 'red']);
         });
 
-        it('linear', function () {
+        it('linear', () => {
             // interpolateHcl (note the adjustment for one changed value for d3 5.1)
             chart.linearColors(['#4575b4','#ffffbf']);
 
@@ -128,21 +124,19 @@ describe('dc.colorMixin', function () {
                 .toMatchColors(['#4773b3', '#4575b4', changedInD3v51, '#ffffbf', '#ffffc0', '#4575b4']);
         });
     });
-    describe('calculateColorDomain' , function () {
+    describe('calculateColorDomain' , () => {
         let chart;
 
-        beforeEach(function () {
+        beforeEach(() => {
             const data = crossfilter(loadDateFixture());
-            const valueDimension = data.dimension(function (d) {
-                return d.value;
-            });
+            const valueDimension = data.dimension(d => d.value);
             const valueGroup = valueDimension.group();
             chart = new ColorMixinTester()
-                .colorAccessor(function (d) {return d.value;})
+                .colorAccessor(d => d.value)
                 .group(valueGroup);
         });
 
-        it('check domain', function () {
+        it('check domain', () => {
             chart.calculateColorDomain();
             expect(chart.colorDomain()).toEqual([1,3]);
         });

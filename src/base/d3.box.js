@@ -78,9 +78,7 @@ export const d3Box = function () {
 
             // Compute whiskers. Must return exactly 2 elements, or null.
             const whiskerIndices = whiskers && whiskers.call(this, data, index),
-                whiskerData = whiskerIndices && whiskerIndices.map(function (_i) {
-                    return data[_i];
-                });
+                whiskerData = whiskerIndices && whiskerIndices.map(_i => data[_i]);
 
             // Compute outliers. If no whiskers are specified, all data are 'outliers'.
             // We compute the outliers as indices, so that we can join across transitions!
@@ -122,16 +120,16 @@ export const d3Box = function () {
             center.enter().insert('line', 'rect')
                 .attr('class', 'center')
                 .attr('x1', width / 2)
-                .attr('y1', function (d) {return x0(d[0]);})
+                .attr('y1', d => x0(d[0]))
                 .attr('x2', width / 2)
-                .attr('y2', function (d) {return x0(d[1]);})
+                .attr('y2', d => x0(d[1]))
                 .style('opacity', 1e-6)
                 .transition()
                 .duration(duration)
                 .delay(delay)
                 .style('opacity', 1)
-                .attr('y1', function (d) {return x1(d[0]);})
-                .attr('y2', function (d) {return x1(d[1]);});
+                .attr('y1', d => x1(d[0]))
+                .attr('y2', d => x1(d[1]));
 
             center.transition()
                 .duration(duration)
@@ -139,15 +137,15 @@ export const d3Box = function () {
                 .style('opacity', 1)
                 .attr('x1', width / 2)
                 .attr('x2', width / 2)
-                .attr('y1', function (d) {return x1(d[0]);})
-                .attr('y2', function (d) {return x1(d[1]);});
+                .attr('y1', d => x1(d[0]))
+                .attr('y2', d => x1(d[1]));
 
             center.exit().transition()
                 .duration(duration)
                 .delay(delay)
                 .style('opacity', 1e-6)
-                .attr('y1', function (d) {return x1(d[0]);})
-                .attr('y2', function (d) {return x1(d[1]);})
+                .attr('y1', d => x1(d[0]))
+                .attr('y2', d => x1(d[1]))
                 .remove();
 
             // Update innerquartile box.
@@ -157,22 +155,22 @@ export const d3Box = function () {
             _box.enter().append('rect')
                 .attr('class', 'box')
                 .attr('x', 0)
-                .attr('y', function (d) {return x0(d[2]);})
+                .attr('y', d => x0(d[2]))
                 .attr('width', width)
-                .attr('height', function (d) {return x0(d[0]) - x0(d[2]);})
+                .attr('height', d => x0(d[0]) - x0(d[2]))
                 .style('fill-opacity', (renderDataPoints) ? 0.1 : 1)
                 .transition()
                 .duration(duration)
                 .delay(delay)
-                .attr('y', function (d) {return x1(d[2]);})
-                .attr('height', function (d) {return x1(d[0]) - x1(d[2]);});
+                .attr('y', d => x1(d[2]))
+                .attr('height', d => x1(d[0]) - x1(d[2]));
 
             _box.transition()
                 .duration(duration)
                 .delay(delay)
                 .attr('width', width)
-                .attr('y', function (d) {return x1(d[2]);})
-                .attr('height', function (d) {return x1(d[0]) - x1(d[2]);});
+                .attr('y', d => x1(d[2]))
+                .attr('height', d => x1(d[0]) - x1(d[2]));
 
             // Update median line.
             const medianLine = _g.selectAll('line.median')
@@ -254,24 +252,24 @@ export const d3Box = function () {
                     .attr('class', outlierClass)
                     .attr('r', outlierSize)
                     .attr('cx', outlierX)
-                    .attr('cy', function (i) { return x0(data[i]); })
+                    .attr('cy', i => x0(data[i]))
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
                     .delay(delay)
-                    .attr('cy', function (i) { return x1(data[i]); })
+                    .attr('cy', i => x1(data[i]))
                     .style('opacity', 0.6);
 
                 if (renderTitle) {
                     outlier.selectAll('title').remove();
-                    outlier.append('title').text(function (i) {return data[i]; });
+                    outlier.append('title').text(i => data[i]);
                 }
 
                 outlier.transition()
                     .duration(duration)
                     .delay(delay)
                     .attr('cx', outlierX)
-                    .attr('cy', function (i) { return x1(data[i]); })
+                    .attr('cy', i => x1(data[i]))
                     .style('opacity', 0.6);
 
                 outlier.exit().transition()
@@ -290,29 +288,29 @@ export const d3Box = function () {
                 point.enter().insert('circle', 'text')
                     .attr('class', 'data')
                     .attr('r', dataRadius)
-                    .attr('cx', function () { return Math.floor(Math.random() *
+                    .attr('cx', () => Math.floor(Math.random() *
                             (width * dataWidthPortion) +
-                            1 + ((width - (width * dataWidthPortion)) / 2)); })
-                    .attr('cy', function (i) { return x0(data[i]); })
+                            1 + ((width - (width * dataWidthPortion)) / 2)))
+                    .attr('cy', i => x0(data[i]))
                     .style('opacity', 1e-6)
                     .transition()
                     .duration(duration)
                     .delay(delay)
-                    .attr('cy', function (i) { return x1(data[i]); })
+                    .attr('cy', i => x1(data[i]))
                     .style('opacity', dataOpacity);
 
                 if (renderTitle) {
                     point.selectAll('title').remove();
-                    point.append('title').text(function (i) { return data[i]; });
+                    point.append('title').text(i => data[i]);
                 }
 
                 point.transition()
                     .duration(duration)
                     .delay(delay)
-                    .attr('cx', function () { return Math.floor(Math.random() *
+                    .attr('cx', () => Math.floor(Math.random() *
                             (width * dataWidthPortion) +
-                            1 + ((width - (width * dataWidthPortion)) / 2)); })
-                    .attr('cy', function (i) { return x1(data[i]); })
+                            1 + ((width - (width * dataWidthPortion)) / 2)))
+                    .attr('cy', i => x1(data[i]))
                     .style('opacity', dataOpacity);
 
                 point.exit().transition()
@@ -333,10 +331,10 @@ export const d3Box = function () {
             boxTick.enter().append('text')
                 .attr('class', 'box')
                 .attr('dy', '.3em')
-                .attr('dx', function (d, i) { return i & 1 ? 6 : -6; })
-                .attr('x', function (d, i) { return i & 1 ? width : 0; })
+                .attr('dx', (d, i) => i & 1 ? 6 : -6)
+                .attr('x', (d, i) => i & 1 ? width : 0)
                 .attr('y', x0)
-                .attr('text-anchor', function (d, i) { return i & 1 ? 'start' : 'end'; })
+                .attr('text-anchor', (d, i) => i & 1 ? 'start' : 'end')
                 .text(format)
                 .transition()
                 .duration(duration)
@@ -347,7 +345,7 @@ export const d3Box = function () {
                 .duration(duration)
                 .delay(delay)
                 .text(format)
-                .attr('x', function (d, i) { return i & 1 ? width : 0; })
+                .attr('x', (d, i) => i & 1 ? width : 0)
                 .attr('y', x1);
 
             // Update whisker ticks. These are handled separately from the box

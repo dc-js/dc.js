@@ -8,15 +8,15 @@
 // Create chart objects associated with the container elements identified by the css selector.
 // Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or
 // filtered by other page controls.
-var gainOrLossChart = dc.pieChart('#gain-loss-chart');
-var fluctuationChart = dc.barChart('#fluctuation-chart');
-var quarterChart = dc.pieChart('#quarter-chart');
-var dayOfWeekChart = dc.rowChart('#day-of-week-chart');
-var moveChart = dc.lineChart('#monthly-move-chart');
-var volumeChart = dc.barChart('#monthly-volume-chart');
-var yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
-var nasdaqCount = dc.dataCount('.dc-data-count');
-var nasdaqTable = dc.dataTable('.dc-data-table');
+const gainOrLossChart = dc.pieChart('#gain-loss-chart');
+const fluctuationChart = dc.barChart('#fluctuation-chart');
+const quarterChart = dc.pieChart('#quarter-chart');
+const dayOfWeekChart = dc.rowChart('#day-of-week-chart');
+const moveChart = dc.lineChart('#monthly-move-chart');
+const volumeChart = dc.barChart('#monthly-volume-chart');
+const yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
+const nasdaqCount = dc.dataCount('.dc-data-count');
+const nasdaqTable = dc.dataTable('.dc-data-table');
 
 // ### Anchor Div for Charts
 /*
@@ -59,14 +59,14 @@ var nasdaqTable = dc.dataTable('.dc-data-table');
 //d3.json('data.json').then(function(data) {...});
 //jQuery.getJson('data.json', function(data){...});
 //```
-d3.csv('ndx.csv').then(function (data) {
+d3.csv('ndx.csv').then(data => {
     // Since its a csv file we need to format the data a bit.
-    var dateFormatSpecifier = '%m/%d/%Y';
-    var dateFormat = d3.timeFormat(dateFormatSpecifier);
-    var dateFormatParser = d3.timeParse(dateFormatSpecifier);
-    var numberFormat = d3.format('.2f');
+    const dateFormatSpecifier = '%m/%d/%Y';
+    const dateFormat = d3.timeFormat(dateFormatSpecifier);
+    const dateFormatParser = d3.timeParse(dateFormatSpecifier);
+    const numberFormat = d3.format('.2f');
 
-    data.forEach(function (d) {
+    data.forEach(d => {
         d.dd = dateFormatParser(d.date);
         d.month = d3.timeMonth(d.dd); // pre-calculate month for better performance
         d.close = +d.close; // coerce to number
@@ -76,17 +76,15 @@ d3.csv('ndx.csv').then(function (data) {
     //### Create Crossfilter Dimensions and Groups
 
     //See the [crossfilter API](https://github.com/square/crossfilter/wiki/API-Reference) for reference.
-    var ndx = crossfilter(data);
-    var all = ndx.groupAll();
+    const ndx = crossfilter(data);
+    const all = ndx.groupAll();
 
     // Dimension by year
-    var yearlyDimension = ndx.dimension(function (d) {
-        return d3.timeYear(d.dd).getFullYear();
-    });
+    const yearlyDimension = ndx.dimension(d => d3.timeYear(d.dd).getFullYear());
     // Maintain running tallies by year as filters are applied or removed
-    var yearlyPerformanceGroup = yearlyDimension.group().reduce(
+    const yearlyPerformanceGroup = yearlyDimension.group().reduce(
         /* callback for when data is added to the current filter results */
-        function (p, v) {
+        (p, v) => {
             ++p.count;
             p.absGain += v.close - v.open;
             p.fluctuation += Math.abs(v.close - v.open);
@@ -97,7 +95,7 @@ d3.csv('ndx.csv').then(function (data) {
             return p;
         },
         /* callback for when data is removed from the current filter results */
-        function (p, v) {
+        (p, v) => {
             --p.count;
             p.absGain -= v.close - v.open;
             p.fluctuation -= Math.abs(v.close - v.open);
@@ -108,70 +106,54 @@ d3.csv('ndx.csv').then(function (data) {
             return p;
         },
         /* initialize p */
-        function () {
-            return {
-                count: 0,
-                absGain: 0,
-                fluctuation: 0,
-                fluctuationPercentage: 0,
-                sumIndex: 0,
-                avgIndex: 0,
-                percentageGain: 0
-            };
-        }
+        () => ({
+            count: 0,
+            absGain: 0,
+            fluctuation: 0,
+            fluctuationPercentage: 0,
+            sumIndex: 0,
+            avgIndex: 0,
+            percentageGain: 0
+        })
     );
 
     // Dimension by full date
-    var dateDimension = ndx.dimension(function (d) {
-        return d.dd;
-    });
+    const dateDimension = ndx.dimension(d => d.dd);
 
     // Dimension by month
-    var moveMonths = ndx.dimension(function (d) {
-        return d.month;
-    });
+    const moveMonths = ndx.dimension(d => d.month);
     // Group by total movement within month
-    var monthlyMoveGroup = moveMonths.group().reduceSum(function (d) {
-        return Math.abs(d.close - d.open);
-    });
+    const monthlyMoveGroup = moveMonths.group().reduceSum(d => Math.abs(d.close - d.open));
     // Group by total volume within move, and scale down result
-    var volumeByMonthGroup = moveMonths.group().reduceSum(function (d) {
-        return d.volume / 500000;
-    });
-    var indexAvgByMonthGroup = moveMonths.group().reduce(
-        function (p, v) {
+    const volumeByMonthGroup = moveMonths.group().reduceSum(d => d.volume / 500000);
+    const indexAvgByMonthGroup = moveMonths.group().reduce(
+        (p, v) => {
             ++p.days;
             p.total += (v.open + v.close) / 2;
             p.avg = Math.round(p.total / p.days);
             return p;
         },
-        function (p, v) {
+        (p, v) => {
             --p.days;
             p.total -= (v.open + v.close) / 2;
             p.avg = p.days ? Math.round(p.total / p.days) : 0;
             return p;
         },
-        function () {
-            return {days: 0, total: 0, avg: 0};
-        }
+        () => ({days: 0, total: 0, avg: 0})
     );
 
     // Create categorical dimension
-    var gainOrLoss = ndx.dimension(function (d) {
-        return d.open > d.close ? 'Loss' : 'Gain';
-    });
+    const gainOrLoss = ndx.dimension(d => d.open > d.close ? 'Loss' : 'Gain');
     // Produce counts records in the dimension
-    var gainOrLossGroup = gainOrLoss.group();
+    const gainOrLossGroup = gainOrLoss.group();
 
     // Determine a histogram of percent changes
-    var fluctuation = ndx.dimension(function (d) {
-        return Math.round((d.close - d.open) / d.open * 100);
-    });
-    var fluctuationGroup = fluctuation.group();
+    const fluctuation = ndx.dimension(d => Math.round((d.close - d.open) / d.open * 100));
+    const fluctuationGroup = fluctuation.group();
 
     // Summarize volume by quarter
-    var quarter = ndx.dimension(function (d) {
-        var month = d.dd.getMonth();
+    const quarter = ndx.dimension(d => {
+        const month = d.dd.getMonth();
         if (month <= 2) {
             return 'Q1';
         } else if (month > 2 && month <= 5) {
@@ -182,17 +164,15 @@ d3.csv('ndx.csv').then(function (data) {
             return 'Q4';
         }
     });
-    var quarterGroup = quarter.group().reduceSum(function (d) {
-        return d.volume;
-    });
+    const quarterGroup = quarter.group().reduceSum(d => d.volume);
 
     // Counts per weekday
-    var dayOfWeek = ndx.dimension(function (d) {
-        var day = d.dd.getDay();
-        var name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const dayOfWeek = ndx.dimension(d => {
+        const day = d.dd.getDay();
+        const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
         return day + '.' + name[day];
     });
-    var dayOfWeekGroup = dayOfWeek.group();
+    const dayOfWeekGroup = dayOfWeek.group();
 
     //### Define Chart Attributes
     // Define chart attributes using fluent methods. See the
@@ -228,22 +208,14 @@ d3.csv('ndx.csv').then(function (data) {
     //Accessor functions are applied to each value returned by the grouping
 
         // `.colorAccessor` - the returned value will be passed to the `.colors()` scale to determine a fill color
-        .colorAccessor(function (d) {
-            return d.value.absGain;
-        })
+        .colorAccessor(d => d.value.absGain)
         // `.keyAccessor` - the `X` value will be passed to the `.x()` scale to determine pixel location
-        .keyAccessor(function (p) {
-            return p.value.absGain;
-        })
+        .keyAccessor(p => p.value.absGain)
         // `.valueAccessor` - the `Y` value will be passed to the `.y()` scale to determine pixel location
-        .valueAccessor(function (p) {
-            return p.value.percentageGain;
-        })
+        .valueAccessor(p => p.value.percentageGain)
         // `.radiusValueAccessor` - the value will be passed to the `.r()` scale to determine radius size;
         //   by default this maps linearly to [0,100]
-        .radiusValueAccessor(function (p) {
-            return p.value.fluctuationPercentage;
-        })
+        .radiusValueAccessor(p => p.value.fluctuationPercentage)
         .maxBubbleRelativeSize(0.3)
         .x(d3.scaleLinear().domain([-2500, 2500]))
         .y(d3.scaleLinear().domain([-100, 100]))
@@ -270,26 +242,20 @@ d3.csv('ndx.csv').then(function (data) {
         //Labels are displayed on the chart for each bubble. Titles displayed on mouseover.
         // (_optional_) whether chart should render labels, `default = true`
         .renderLabel(true)
-        .label(function (p) {
-            return p.key;
-        })
+        .label(p => p.key)
         // (_optional_) whether chart should render titles, `default = false`
         .renderTitle(true)
-        .title(function (p) {
-            return [
-                p.key,
-                'Index Gain: ' + numberFormat(p.value.absGain),
-                'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%',
-                'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
-            ].join('\n');
-        })
+        .title(p => [
+            p.key,
+            'Index Gain: ' + numberFormat(p.value.absGain),
+            'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%',
+            'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
+        ].join('\n'))
         //#### Customize Axes
 
         // Set a custom tick format. Both `.yAxis()` and `.xAxis()` return an axis object,
         // so any additional method chaining applies to the axis, not the chart.
-        .yAxis().tickFormat(function (v) {
-            return v + '%';
-        });
+        .yAxis().tickFormat(v => v + '%');
 
     // #### Pie/Donut Charts
 
@@ -311,11 +277,11 @@ d3.csv('ndx.csv').then(function (data) {
     // Set group
         .group(gainOrLossGroup)
     // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
-        .label(function (d) {
+        .label(d => {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
                 return d.key + '(0%)';
             }
-            var label = d.key;
+            let label = d.key;
             if (all.value()) {
                 label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
             }
@@ -359,13 +325,9 @@ d3.csv('ndx.csv').then(function (data) {
         .dimension(dayOfWeek)
         // Assign colors to each value in the x scale domain
         .ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb'])
-        .label(function (d) {
-            return d.key.split('.')[1];
-        })
+        .label(d => d.key.split('.')[1])
         // Title sets the row text
-        .title(function (d) {
-            return d.value;
-        })
+        .title(d => d.value)
         .elasticX(true)
         .xAxis().ticks(4);
 
@@ -393,15 +355,16 @@ d3.csv('ndx.csv').then(function (data) {
         .x(d3.scaleLinear().domain([-25, 25]))
         .renderHorizontalGridLines(true)
         // Customize the filter displayed in the control span
-        .filterPrinter(function (filters) {
-            var filter = filters[0], s = '';
+        .filterPrinter(filters => {
+            const filter = filters[0];
+            let s = '';
             s += numberFormat(filter[0]) + '% -> ' + numberFormat(filter[1]) + '%';
             return s;
         });
 
     // Customize axes
     fluctuationChart.xAxis().tickFormat(
-        function (v) { return v + '%'; });
+        v => v + '%');
     fluctuationChart.yAxis().ticks(5);
 
     //#### Stacked Area Chart
@@ -433,17 +396,13 @@ d3.csv('ndx.csv').then(function (data) {
         // legend.
         // The `.valueAccessor` will be used for the base layer
         .group(indexAvgByMonthGroup, 'Monthly Index Average')
-        .valueAccessor(function (d) {
-            return d.value.avg;
-        })
+        .valueAccessor(d => d.value.avg)
         // Stack additional layers with `.stack`. The first paramenter is a new group.
         // The second parameter is the series name. The third is a value accessor.
-        .stack(monthlyMoveGroup, 'Monthly Index Move', function (d) {
-            return d.value;
-        })
+        .stack(monthlyMoveGroup, 'Monthly Index Move', d => d.value)
         // Title can be called by any stack layer.
-        .title(function (d) {
-            var value = d.value.avg ? d.value.avg : d.value;
+        .title(d => {
+            let value = d.value.avg ? d.value.avg : d.value;
             if (isNaN(value)) {
                 value = 0;
             }
@@ -522,8 +481,8 @@ d3.csv('ndx.csv').then(function (data) {
     nasdaqTable /* dc.dataTable('.dc-data-table', 'chartGroup') */
         .dimension(dateDimension)
         // Specify a section function to nest rows of the table
-        .section(function (d) {
-            var format = d3.format('02d');
+        .section(d => {
+            const format = d3.format('02d');
             return d.dd.getFullYear() + '/' + format((d.dd.getMonth() + 1));
         })
         // (_optional_) max number of records to be shown, `default = 25`
@@ -548,13 +507,11 @@ d3.csv('ndx.csv').then(function (data) {
         ])
 
         // (_optional_) sort using the given field, `default = function(d){return d;}`
-        .sortBy(function (d) {
-            return d.dd;
-        })
+        .sortBy(d => d.dd)
         // (_optional_) sort order, `default = d3.ascending`
         .order(d3.ascending)
         // (_optional_) custom renderlet to post-process chart using [D3](http://d3js.org)
-        .on('renderlet', function (table) {
+        .on('renderlet', table => {
             table.selectAll('.dc-table-group').classed('info', true);
         });
 
@@ -680,7 +637,7 @@ d3.csv('ndx.csv').then(function (data) {
 d3.selectAll('#version').text(dc.version);
 
 // Determine latest stable version in the repo via Github API
-d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest').then(function (latestRelease) {
+d3.json('https://api.github.com/repos/dc-js/dc.js/releases/latest').then(latestRelease => {
     /* eslint camelcase: 0 */
     d3.selectAll('#latest').text(latestRelease.tag_name);
 });

@@ -73,17 +73,13 @@ export class StackMixin extends CoordinateGridMixin {
         if (this.isOrdinal()) {
             // TODO #416
             //var domainSet = d3.set(xDomain);
-            return () => {
-                return true; //domainSet.has(p.x);
-            };
+            return () => true //domainSet.has(p.x);
+            ;
         }
         if (this.elasticX()) {
             return () => true;
         }
-        return p => {
-            //return true;
-            return p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1];
-        };
+        return p => p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1];
     }
 
     /**

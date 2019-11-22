@@ -12,74 +12,73 @@ import {sum} from 'd3-array';
  * @param {Object} Base
  * @returns {CapMixin}
  */
-export const CapMixin = Base => {
-    return class extends Base {
-        constructor () {
-            super();
+export const CapMixin = Base => class extends Base {
+    constructor () {
+        super();
 
-            this._cap = Infinity;
-            this._takeFront = true;
-            this._othersLabel = 'Others';
+        this._cap = Infinity;
+        this._takeFront = true;
+        this._othersLabel = 'Others';
 
-            // emulate old group.top(N) ordering
-            this.ordering(kv => -kv.value);
+        // emulate old group.top(N) ordering
+        this.ordering(kv => -kv.value);
 
-            // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
-            // whether top means front or back depends on takeFront
-            this.data(group => {
-                if (this._cap === Infinity) {
-                    return this._computeOrderedGroups(group.all());
-                } else {
-                    let items = group.all(), rest;
-                    items = this._computeOrderedGroups(items); // sort by baseMixin.ordering
+        // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
+        // whether top means front or back depends on takeFront
+        this.data(group => {
+            if (this._cap === Infinity) {
+                return this._computeOrderedGroups(group.all());
+            } else {
+                let items = group.all(), rest;
+                items = this._computeOrderedGroups(items); // sort by baseMixin.ordering
 
-                    if (this._cap) {
-                        if (this._takeFront) {
-                            rest = items.slice(this._cap);
-                            items = items.slice(0, this._cap);
-                        } else {
-                            const start = Math.max(0, items.length - this._cap);
-                            rest = items.slice(0, start);
-                            items = items.slice(start);
-                        }
+                if (this._cap) {
+                    if (this._takeFront) {
+                        rest = items.slice(this._cap);
+                        items = items.slice(0, this._cap);
+                    } else {
+                        const start = Math.max(0, items.length - this._cap);
+                        rest = items.slice(0, start);
+                        items = items.slice(start);
                     }
-
-                    if (this._othersGrouper) {
-                        return this._othersGrouper(items, rest);
-                    }
-                    return items;
                 }
-            });
-        }
 
-        cappedKeyAccessor (d, i) {
-            if (d.others) {
-                return d.key;
+                if (this._othersGrouper) {
+                    return this._othersGrouper(items, rest);
+                }
+                return items;
             }
-            return this.keyAccessor()(d, i);
-        }
+        });
+    }
 
-        cappedValueAccessor (d, i) {
-            if (d.others) {
-                return d.value;
-            }
-            return this.valueAccessor()(d, i);
+    cappedKeyAccessor (d, i) {
+        if (d.others) {
+            return d.key;
         }
+        return this.keyAccessor()(d, i);
+    }
 
-        _othersGrouper (topItems, restItems) {
-            const restItemsSum = sum(restItems, this.valueAccessor()),
-                restKeys = restItems.map(this.keyAccessor());
-            if (restItemsSum > 0) {
-                return topItems.concat([{
-                    others: restKeys,
-                    key: this.othersLabel(),
-                    value: restItemsSum
-                }]);
-            }
-            return topItems;
+    cappedValueAccessor (d, i) {
+        if (d.others) {
+            return d.value;
         }
+        return this.valueAccessor()(d, i);
+    }
 
-        /**
+    _othersGrouper (topItems, restItems) {
+        const restItemsSum = sum(restItems, this.valueAccessor()),
+            restKeys = restItems.map(this.keyAccessor());
+        if (restItemsSum > 0) {
+            return topItems.concat([{
+                others: restKeys,
+                key: this.othersLabel(),
+                value: restItemsSum
+            }]);
+        }
+        return topItems;
+    }
+
+    /**
          * Get or set the count of elements to that will be included in the cap. If there is an
          * {@link CapMixin#othersGrouper othersGrouper}, any further elements will be combined in an
          * extra element with its name determined by {@link CapMixin#othersLabel othersLabel}.
@@ -109,15 +108,15 @@ export const CapMixin = Base => {
          * @param {Number} [count=Infinity]
          * @returns {Number|CapMixin}
          */
-        cap (count) {
-            if (!arguments.length) {
-                return this._cap;
-            }
-            this._cap = count;
-            return this;
+    cap (count) {
+        if (!arguments.length) {
+            return this._cap;
         }
+        this._cap = count;
+        return this;
+    }
 
-        /**
+    /**
          * Get or set the direction of capping. If set, the chart takes the first
          * {@link CapMixin#cap cap} elements from the sorted array of elements; otherwise
          * it takes the last `cap` elements.
@@ -126,30 +125,30 @@ export const CapMixin = Base => {
          * @param {Boolean} [takeFront=true]
          * @returns {Boolean|CapMixin}
          */
-        takeFront (takeFront) {
-            if (!arguments.length) {
-                return this._takeFront;
-            }
-            this._takeFront = takeFront;
-            return this;
+    takeFront (takeFront) {
+        if (!arguments.length) {
+            return this._takeFront;
         }
+        this._takeFront = takeFront;
+        return this;
+    }
 
-        /**
+    /**
          * Get or set the label for *Others* slice when slices cap is specified.
          * @memberof CapMixin
          * @instance
          * @param {String} [label="Others"]
          * @returns {String|CapMixin}
          */
-        othersLabel (label) {
-            if (!arguments.length) {
-                return this._othersLabel;
-            }
-            this._othersLabel = label;
-            return this;
+    othersLabel (label) {
+        if (!arguments.length) {
+            return this._othersLabel;
         }
+        this._othersLabel = label;
+        return this;
+    }
 
-        /**
+    /**
          * Get or set the grouper function that will perform the insertion of data for the *Others* slice
          * if the slices cap is specified. If set to a falsy value, no others will be added.
          *
@@ -176,19 +175,18 @@ export const CapMixin = Base => {
          * @param {Function} [grouperFunction]
          * @returns {Function|CapMixin}
          */
-        othersGrouper (grouperFunction) {
-            if (!arguments.length) {
-                return this._othersGrouper;
-            }
-            this._othersGrouper = grouperFunction;
-            return this;
+    othersGrouper (grouperFunction) {
+        if (!arguments.length) {
+            return this._othersGrouper;
         }
+        this._othersGrouper = grouperFunction;
+        return this;
+    }
 
-        onClick (d) {
-            if (d.others) {
-                this.filter([d.others]);
-            }
-            super.onClick(d);
+    onClick (d) {
+        if (d.others) {
+            this.filter([d.others]);
         }
+        super.onClick(d);
     }
 };

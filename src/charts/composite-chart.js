@@ -49,7 +49,7 @@ export class CompositeChart extends CoordinateGridMixin {
         this.transitionDuration(500);
         this.transitionDelay(0);
 
-        this.on('filtered.dcjs-composite-chart', (chart) => {
+        this.on('filtered.dcjs-composite-chart', chart => {
             // Propagate the filters onto the children
             // Notice that on children the call is .replaceFilter and not .filter
             //   the reason is that _chart.filter() returns the entire current set of filters not just the last added one
@@ -92,7 +92,7 @@ export class CompositeChart extends CoordinateGridMixin {
     rescale () {
         super.rescale();
 
-        this._children.forEach(function (child) {
+        this._children.forEach(child => {
             child.rescale();
         });
 
@@ -105,7 +105,7 @@ export class CompositeChart extends CoordinateGridMixin {
         }
         super.resizing(resizing);
 
-        this._children.forEach(function (child) {
+        this._children.forEach(child => {
             child.resizing(resizing);
         });
 
@@ -363,7 +363,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     _setChildrenProperty (prop, value) {
-        this._children.forEach(function (child) {
+        this._children.forEach(child => {
             child[prop](value);
         });
     }

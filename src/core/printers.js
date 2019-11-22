@@ -39,9 +39,7 @@ printers.filter = function (filter) {
     if (typeof filter !== 'undefined' && filter !== null) {
         if (filter instanceof Array) {
             if (filter.length >= 2) {
-                s = '[' + filter.map(function (e) {
-                    return utils.printSingleValue(e);
-                }).join(' -> ') + ']';
+                s = '[' + filter.map(e => utils.printSingleValue(e)).join(' -> ') + ']';
             } else if (filter.length >= 1) {
                 s = utils.printSingleValue(filter[0]);
             }

@@ -104,6 +104,10 @@
     "dot-notation": 0,
     "no-invalid-this": 0,
     "require-yield": 0,
+    "prefer-arrow-callback": "error",
+    "arrow-body-style": "error",
+    "implicit-arrow-linebreak": "error",
+    "arrow-parens": ["error", "as-needed"],
     "space-before-function-paren": [
       2,
       "always"
