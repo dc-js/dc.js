@@ -53,7 +53,7 @@ module.exports = function (grunt) {
                 src: [
                     '<%= conf.src %>/**/*.js',
                     '<%= conf.spec %>/**/*.js',
-                    'Gruntfile.js',
+                    '*.js',
                     'grunt/*.js',
                     '<%= conf.web %>/stock.js'],
             },

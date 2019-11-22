@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Thu Jul 05 2018 16:43:26 GMT+0530 (IST)
 
-module.exports = function(config) {
+module.exports = function (config) {
     config.set({
         basePath: '',
         frameworks: ['jasmine'],
