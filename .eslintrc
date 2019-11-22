@@ -16,7 +16,6 @@
     "global": false,
     "module": false,
     "process": false,
-    "require": false,
     "jasmine": false,
     "expect": false,
     "describe": false,
