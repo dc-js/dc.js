@@ -49,10 +49,7 @@
       }
     ],
     "no-caller": 2,
-    "no-irregular-whitespace": 2,
     "no-new": 2,
-    "no-empty": 2,
-    "no-undef": 2,
     "no-unused-vars": [
       "error",
       {
@@ -81,7 +78,6 @@
     ],
     "no-var": "error",
     "prefer-const": "error",
-    "no-extra-semi": "error",
     "no-shadow": "error",
     "prefer-arrow-callback": "error",
     "arrow-body-style": "error",
