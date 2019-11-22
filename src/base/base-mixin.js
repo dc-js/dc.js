@@ -643,7 +643,7 @@ export class BaseMixin {
         this._listeners.call('preRender', this, this);
 
         if (this._mandatoryAttributesList) {
-            this._mandatoryAttributesList.forEach((e) => this.checkForMandatoryAttributes(e));
+            this._mandatoryAttributesList.forEach(e => this.checkForMandatoryAttributes(e));
         }
 
         const result = this._doRender();

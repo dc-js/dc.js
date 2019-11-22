@@ -166,7 +166,7 @@ function normalizeColor (c) {
     return d3.color(c).toString();
 }
 
-beforeEach(function () {
+beforeEach(() => {
     jasmine.addMatchers({
         toBeWithinDelta: function (_) {
             return {

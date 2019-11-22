@@ -4,12 +4,12 @@
 /*exported appendChartID, coordsFromTranslate, makeDate, cleanDateRange, flushAllD3Transitions */
 /*exported simulateChartBrushing, simulateChart2DBrushing */
 
-beforeEach(function () {
+beforeEach(() => {
     jasmine.clock().install();
     d3.select('body').append('div').attr('id', 'test-content');
 });
 
-afterEach(function () {
+afterEach(() => {
     dc.deregisterAllCharts();
     dc.renderlet(null);
     d3.selectAll('#test-content').remove();
@@ -48,9 +48,7 @@ function flushAllD3Transitions () {
 // Simulate a dummy event - just enough for the handler to get fooled
 const simulateChartBrushing = function (chart, domainSelection) {
     // D3v4 needs scaled coordinates for the event
-    const scaledSelection = domainSelection.map(function (coord) {
-        return chart.x()(coord);
-    });
+    const scaledSelection = domainSelection.map(coord => chart.x()(coord));
 
     d3.event = {
         sourceEvent: true,
@@ -67,12 +65,10 @@ const simulateChartBrushing = function (chart, domainSelection) {
 // Simulate a dummy event - just enough for the handler to get fooled
 const simulateChart2DBrushing = function (chart, domainSelection) {
     // D3v4 needs scaled coordinates for the event
-    const scaledSelection = domainSelection.map(function (point) {
-        return point.map(function (coord, i) {
-            const scale = i === 0 ? chart.x() : chart.y();
-            return scale(coord);
-        });
-    });
+    const scaledSelection = domainSelection.map(point => point.map((coord, i) => {
+        const scale = i === 0 ? chart.x() : chart.y();
+        return scale(coord);
+    }));
 
     d3.event = {
         sourceEvent: true,

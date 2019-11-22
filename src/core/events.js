@@ -29,7 +29,7 @@ events.trigger = function (closure, delay) {
 
     events.current = closure;
 
-    setTimeout(function () {
+    setTimeout(() => {
         if (closure === events.current) {
             closure();
         }

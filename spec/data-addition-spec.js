@@ -1,11 +1,11 @@
 /* global appendChartID, loadDateFixture, loadDateFixture2, makeDate */
-describe('Dynamic data addition in crossfilter', function () {
+describe('Dynamic data addition in crossfilter', () => {
     const width = 200;
     const height = 200;
     const radius = 100;
     let baseData, moreData;
 
-    beforeEach(function () {
+    beforeEach(() => {
         baseData = crossfilter(loadDateFixture());
         moreData = loadDateFixture2();
     });
@@ -14,7 +14,7 @@ describe('Dynamic data addition in crossfilter', function () {
         return (str.split(value)).length - 1;
     }
 
-    describe('pie chart slice addition', function () {
+    describe('pie chart slice addition', () => {
         let valueDimension, valueGroup;
         let chart;
 
@@ -27,42 +27,40 @@ describe('Dynamic data addition in crossfilter', function () {
                 .width(width)
                 .height(height)
                 .radius(radius)
-                .ordering(function (kv) { return kv.key; })
+                .ordering(kv => kv.key)
                 .transitionDuration(0);
             pieChart.render();
             baseData.add(moreData);
             pieChart.expireCache();
             return pieChart;
         }
-        beforeEach(function () {
-            valueDimension = baseData.dimension(function (d) {
-                return d.value;
-            });
+        beforeEach(() => {
+            valueDimension = baseData.dimension(d => d.value);
             valueGroup = valueDimension.group();
             chart = buildPieChart('pie-chart');
             chart.redraw();
         });
-        it('slice g should be created with class', function () {
+        it('slice g should be created with class', () => {
             expect(chart.selectAll('svg g g.pie-slice').data().length).toEqual(7);
         });
-        it('slice path should be created', function () {
+        it('slice path should be created', () => {
             expect(chart.selectAll('svg g g.pie-slice path').data().length).toEqual(7);
         });
-        it('default function should be used to dynamically generate label', function () {
+        it('default function should be used to dynamically generate label', () => {
             expect(d3.select(chart.selectAll('text.pie-slice').nodes()[0]).text()).toEqual('11');
         });
-        it('pie chart slices should be in numerical order', function () {
-            expect(chart.selectAll('text.pie-slice').data().map(function (slice) { return slice.data.key; }))
+        it('pie chart slices should be in numerical order', () => {
+            expect(chart.selectAll('text.pie-slice').data().map(slice => slice.data.key))
                 .toEqual(['11','22','33','44','55','66','76']);
         });
-        it('default function should be used to dynamically generate title', function () {
+        it('default function should be used to dynamically generate title', () => {
             expect(d3.select(chart.selectAll('g.pie-slice title').nodes()[0]).text()).toEqual('11: 1');
         });
-        afterEach(function () {
+        afterEach(() => {
             valueDimension.filterAll();
         });
     });
-    describe('line chart segment addition', function () {
+    describe('line chart segment addition', () => {
         let timeDimension, timeGroup;
         let chart;
 
@@ -82,28 +80,26 @@ describe('Dynamic data addition in crossfilter', function () {
             lineChart.expireCache();
             return lineChart;
         }
-        beforeEach(function () {
-            timeDimension = baseData.dimension(function (d) {
-                return d.dd;
-            });
+        beforeEach(() => {
+            timeDimension = baseData.dimension(d => d.dd);
             timeGroup = timeDimension.group();
             chart = buildLineChart('line-chart');
             chart.render();
         });
-        it('number of dots should equal the size of the group', function () {
+        it('number of dots should equal the size of the group', () => {
             expect(chart.selectAll('circle.dot').nodes().length).toEqual(timeGroup.size());
         });
-        it('number of line segments should equal the size of the group', function () {
+        it('number of line segments should equal the size of the group', () => {
             const path = chart.selectAll('path.line').attr('d');
             expect(occurrences(path, 'L') + 1).toEqual(timeGroup.size());
         });
-        it('number of area segments should equal twice the size of the group', function () {
+        it('number of area segments should equal twice the size of the group', () => {
             const path = chart.selectAll('path.area').attr('d');
             expect(occurrences(path, 'L') + 1).toEqual(timeGroup.size() * 2);
         });
 
-        describe('resetting line chart with fewer data points', function () {
-            beforeEach(function () {
+        describe('resetting line chart with fewer data points', () => {
+            beforeEach(() => {
                 const lineChart = buildLineChart('stackable-line-chart');
                 lineChart.render();
 
@@ -113,12 +109,12 @@ describe('Dynamic data addition in crossfilter', function () {
                 lineChart.render();
             });
 
-            it('it should not contain stale data points', function () {
+            it('it should not contain stale data points', () => {
                 expect(chart.data()[0].values.length).toEqual(2);
             });
         });
 
-        afterEach(function () {
+        afterEach(() => {
             timeDimension.filterAll();
         });
     });

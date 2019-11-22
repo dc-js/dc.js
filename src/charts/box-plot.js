@@ -220,15 +220,11 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     _minDataValue () {
-        return min(this.data(), e => {
-            return min(this.valueAccessor()(e));
-        });
+        return min(this.data(), e => min(this.valueAccessor()(e)));
     }
 
     _maxDataValue () {
-        return max(this.data(), e => {
-            return max(this.valueAccessor()(e));
-        });
+        return max(this.data(), e => max(this.valueAccessor()(e)));
     }
 
     _yAxisRangeRatio () {

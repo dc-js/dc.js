@@ -44,12 +44,12 @@ export class ScatterPlot extends CoordinateGridMixin {
         this.valueAccessor(d => originalKeyAccessor(d)[1]);
         this.colorAccessor(() => this._groupName);
 
-        this.title(d => {
+        this.title(d => 
             // this basically just counteracts the setting of its own key/value accessors
             // see https://github.com/dc-js/dc.js/issues/702
-            return this.keyAccessor()(d) + ',' + this.valueAccessor()(d) + ': ' +
-                this.existenceAccessor()(d);
-        });
+            this.keyAccessor()(d) + ',' + this.valueAccessor()(d) + ': ' +
+                this.existenceAccessor()(d)
+        );
 
         this._highlightedSize = 7;
         this._symbolSize = 5;

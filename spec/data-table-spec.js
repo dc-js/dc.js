@@ -1,20 +1,16 @@
 /* global appendChartID, loadDateFixture */
-describe('dc.dataTable', function () {
+describe('dc.dataTable', () => {
     let id, chart, data;
     let dateFixture;
     let dimension;
     let countryDimension;
     let valueGroup;
 
-    beforeEach(function () {
+    beforeEach(() => {
         dateFixture = loadDateFixture();
         data = crossfilter(dateFixture);
-        dimension = data.dimension(function (d) {
-            return d3.utcDay(d.dd);
-        });
-        countryDimension = data.dimension(function (d) {
-            return d.countrycode;
-        });
+        dimension = data.dimension(d => d3.utcDay(d.dd));
+        countryDimension = data.dimension(d => d.countrycode);
         valueGroup = function () {
             return 'Data Table';
         };
@@ -26,7 +22,7 @@ describe('dc.dataTable', function () {
             .group(valueGroup)
             .transitionDuration(0)
             .size(3)
-            .sortBy(function (d) {return d.id;})
+            .sortBy(d => d.id)
             .order(d3.descending)
             .columns(
                 [function (d) {
@@ -37,71 +33,71 @@ describe('dc.dataTable', function () {
             );
     });
 
-    describe('simple table', function () {
-        beforeEach(function () {
+    describe('simple table', () => {
+        beforeEach(() => {
             chart.render();
         });
 
-        describe('creation', function () {
-            it('generates something', function () {
+        describe('creation', () => {
+            it('generates something', () => {
                 expect(chart).not.toBeNull();
             });
-            it('registers', function () {
+            it('registers', () => {
                 expect(dc.hasChart(chart)).toBeTruthy();
             });
-            it('sets size', function () {
+            it('sets size', () => {
                 expect(chart.size()).toEqual(3);
             });
-            it('sets sortBy', function () {
+            it('sets sortBy', () => {
                 expect(chart.sortBy()).not.toBeNull();
             });
-            it('sets order', function () {
+            it('sets order', () => {
                 expect(chart.order()).toBe(d3.descending);
             });
-            it('group should be set', function () {
+            it('group should be set', () => {
                 expect(chart.group()).toEqual(valueGroup);
             });
-            it('treats group as synonym of section', function () {
+            it('treats group as synonym of section', () => {
                 expect(chart.group()).toEqual(chart.section());
                 const newSection = () => {};
                 chart.group(newSection);
                 expect(chart.section()).toBe(newSection);
             });
-            it('treats showGroups as synonym of showSections', function () {
+            it('treats showGroups as synonym of showSections', () => {
                 expect(chart.showGroups()).toEqual(chart.showSections());
                 const newVal = !(chart.showGroups());
                 chart.showGroups(newVal);
                 expect(chart.showSections()).toBe(newVal);
             });
-            it('group tr should not be undefined', function () {
+            it('group tr should not be undefined', () => {
                 expect(typeof(chart.selectAll('tr.dc-table-group').nodes()[0])).not.toBe('undefined');
             });
-            it('sets column span set on group tr', function () {
+            it('sets column span set on group tr', () => {
                 expect(chart.selectAll('tr.dc-table-group td').nodes()[0].getAttribute('colspan')).toEqual('2');
             });
-            it('creates id column', function () {
+            it('creates id column', () => {
                 expect(chart.selectAll('td._0').nodes()[0].innerHTML).toEqual('9');
                 expect(chart.selectAll('td._0').nodes()[1].innerHTML).toEqual('8');
                 expect(chart.selectAll('td._0').nodes()[2].innerHTML).toEqual('3');
             });
-            it('creates status column', function () {
+            it('creates status column', () => {
                 expect(chart.selectAll('td._1').nodes()[0].innerHTML).toEqual('T');
                 expect(chart.selectAll('td._1').nodes()[1].innerHTML).toEqual('F');
                 expect(chart.selectAll('td._1').nodes()[2].innerHTML).toEqual('T');
             });
         });
 
-        describe('slicing entries', function () {
-            beforeEach(function () {
+        describe('slicing entries', () => {
+            beforeEach(() => {
                 chart.beginSlice(1);
                 chart.redraw();
             });
 
-            it('slice beginning', function () {
+            it('slice beginning', () => {
                 expect(chart.selectAll('tr.dc-table-row').nodes().length).toEqual(2);
             });
 
-            it('slice beginning and end', function () {
+            it('slice beginning and end', () => {
                 chart.endSlice(2);
                 chart.redraw();
 
@@ -109,96 +105,88 @@ describe('dc.dataTable', function () {
             });
         });
 
-        describe('external filter', function () {
-            beforeEach(function () {
+        describe('external filter', () => {
+            beforeEach(() => {
                 countryDimension.filter('CA');
                 chart.redraw();
             });
-            it('renders only filtered data set', function () {
+            it('renders only filtered data set', () => {
                 expect(chart.selectAll('td._0').nodes().length).toEqual(2);
             });
-            it('renders the correctly filtered records', function () {
+            it('renders the correctly filtered records', () => {
                 expect(chart.selectAll('td._0').nodes()[0].innerHTML).toEqual('7');
                 expect(chart.selectAll('td._0').nodes()[1].innerHTML).toEqual('5');
             });
         });
 
-        describe('ascending order', function () {
-            beforeEach(function () {
+        describe('ascending order', () => {
+            beforeEach(() => {
                 chart.order(d3.ascending);
                 chart.redraw();
             });
-            it('uses dimension.bottom() instead of top()', function () {
+            it('uses dimension.bottom() instead of top()', () => {
                 expect(chart.selectAll('td._0').nodes()[0].innerHTML).toEqual('1');
             });
         });
     });
 
-    describe('renderlet', function () {
+    describe('renderlet', () => {
         let derlet;
-        beforeEach(function () {
-            derlet = jasmine.createSpy('renderlet', function (_chart) {
+        beforeEach(() => {
+            derlet = jasmine.createSpy('renderlet', _chart => {
                 _chart.selectAll('td.dc-table-label').text('changed');
             });
             derlet.and.callThrough();
             chart.on('renderlet', derlet);
         });
-        it('custom renderlet should be invoked with render', function () {
+        it('custom renderlet should be invoked with render', () => {
             chart.render();
             expect(chart.selectAll('td.dc-table-label').text()).toEqual('changed');
             expect(derlet).toHaveBeenCalled();
         });
-        it('custom renderlet should be invoked with redraw', function () {
+        it('custom renderlet should be invoked with redraw', () => {
             chart.redraw();
             expect(chart.selectAll('td.dc-table-label').text()).toEqual('changed');
             expect(derlet).toHaveBeenCalled();
         });
     });
 
-    describe('specifying chart columns with label', function () {
-        beforeEach(function () {
+    describe('specifying chart columns with label', () => {
+        beforeEach(() => {
             chart.columns(['state']);
             chart.render();
         });
-        it('should render value and capitalized header', function () {
-            const cols = chart.selectAll('td.dc-table-column').nodes().map(function (d) {
-                return d.textContent;
-            });
+        it('should render value and capitalized header', () => {
+            const cols = chart.selectAll('td.dc-table-column').nodes().map(d => d.textContent);
             const expected = ['Mississippi', 'Mississippi', 'Delaware'];
             expect(cols.length).toEqual(expected.length);
-            expected.forEach(function (d) {
+            expected.forEach(d => {
                 expect(cols).toContain(d);
             });
-            const colheader = chart.selectAll('th.dc-table-head').nodes().map(function (d) {
-                return d.textContent;
-            });
+            const colheader = chart.selectAll('th.dc-table-head').nodes().map(d => d.textContent);
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('State');
 
         });
     });
-    describe('specifying chart columns with function', function () {
-        beforeEach(function () {
+    describe('specifying chart columns with function', () => {
+        beforeEach(() => {
             chart.columns([function (d) {return '' + d.id + 'test';}]);
             chart.render();
         });
-        it('should render function result and no header', function () {
-            const cols = chart.selectAll('td.dc-table-column').nodes().map(function (d) {
-                return d.textContent;
-            });
+        it('should render function result and no header', () => {
+            const cols = chart.selectAll('td.dc-table-column').nodes().map(d => d.textContent);
             const expected = ['9test', '8test', '3test'];
             expect(cols.length).toEqual(expected.length);
-            expected.forEach(function (d) {
+            expected.forEach(d => {
                 expect(cols).toContain(d);
             });
-            const colheader = chart.selectAll('th.dc-table-head').nodes().map(function (d) {
-                return d.textContent;
-            });
+            const colheader = chart.selectAll('th.dc-table-head').nodes().map(d => d.textContent);
             expect(colheader.length).toEqual(0);
         });
     });
-    describe('specifying chart columns with object', function () {
-        beforeEach(function () {
+    describe('specifying chart columns with object', () => {
+        beforeEach(() => {
             chart.columns([{
                 label: 'Test ID',
                 format: function (d) {
@@ -207,32 +195,28 @@ describe('dc.dataTable', function () {
             }]);
             chart.render();
         });
-        it('should produce correct table header with single column', function () {
+        it('should produce correct table header with single column', () => {
             const thead = chart.selectAll('thead');
             expect(thead.nodes().length).toBe(1);
             const tr = thead.selectAll('tr');
             expect(tr.nodes().length).toBe(1);
-            const colheader = tr.selectAll('th.dc-table-head').nodes().map(function (d) {
-                return d.textContent;
-            });
+            const colheader = tr.selectAll('th.dc-table-head').nodes().map(d => d.textContent);
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('Test ID');
         });
 
-        it('should render correct values in rows', function () {
-            const cols = chart.selectAll('td.dc-table-column').nodes().map(function (d) {
-                return d.textContent;
-            });
+        it('should render correct values in rows', () => {
+            const cols = chart.selectAll('td.dc-table-column').nodes().map(d => d.textContent);
             const expected = ['test9', 'test8', 'test3'];
             expect(cols.length).toEqual(expected.length);
-            expected.forEach(function (d, i) {
+            expected.forEach((d, i) => {
                 expect(cols[i]).toEqual(d);
             });
         });
     });
 
-    describe('with existing table header', function () {
-        beforeEach(function () {
+    describe('with existing table header', () => {
+        beforeEach(() => {
             // add some garbage for table to replace
             d3.select('#data-table')
                 .selectAll('thead').data([0]).enter().append('thead')
@@ -246,30 +230,28 @@ describe('dc.dataTable', function () {
             }]);
             chart.render();
         });
-        it('should produce correct table header with single column', function () {
+        it('should produce correct table header with single column', () => {
             const thead = chart.selectAll('thead');
             expect(thead.nodes().length).toBe(1);
             const tr = thead.selectAll('tr');
             expect(tr.nodes().length).toBe(1);
-            const colheader = tr.selectAll('th.dc-table-head').nodes().map(function (d) {
-                return d.textContent;
-            });
+            const colheader = tr.selectAll('th.dc-table-head').nodes().map(d => d.textContent);
             expect(colheader.length).toEqual(1);
             expect(colheader[0]).toEqual('Test ID');
         });
     });
 
-    describe('specifying showGroups as false', function () {
-        beforeEach(function () {
+    describe('specifying showGroups as false', () => {
+        beforeEach(() => {
             chart.showGroups(false);
             chart.render();
         });
-        it('group tr should be undefined', function () {
+        it('group tr should be undefined', () => {
             expect(typeof(chart.selectAll('tr.dc-table-group').nodes()[0])).toBe('undefined');
         });
     });
 
-    afterEach(function () {
+    afterEach(() => {
         dimension.filterAll();
         countryDimension.filterAll();
     });

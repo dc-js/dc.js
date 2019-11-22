@@ -1,10 +1,10 @@
 module.exports = function (grunt) {
     const PER_ROW = 4;
     return function (list, opts) {
-        const files = list.sort().map(function (entry) {
+        const files = list.sort().map(entry => {
             const f = entry.replace(/.*\//, '');
             return [f.replace('.html', '').replace(/-/g, ' '), f];
-        }).filter(function (e) { return e[0] !== 'index'; });
+        }).filter(e => e[0] !== 'index');
         const rows = [];
         for (let i = 0; i < files.length; i += PER_ROW) {
             const cols = [];

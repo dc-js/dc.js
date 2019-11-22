@@ -51,8 +51,8 @@ export const afterTransition = function (_transition, callback) {
     } else {
         let n = 0;
         _transition
-            .each(function () { ++n; })
-            .on('end', function () {
+            .each(() => { ++n; })
+            .on('end', () => {
                 if (!--n) {
                     callback.call(_transition);
                 }

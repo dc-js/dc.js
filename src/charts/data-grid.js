@@ -45,10 +45,8 @@ export class DataGrid extends BaseMixin {
         this._beginSlice = 0;
         this._endSlice = undefined;
 
-        this._htmlSection = d => {
-            return '<div class=\'' + SECTION_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
+        this._htmlSection = d => '<div class=\'' + SECTION_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
                 this.keyAccessor()(d) + '</h1></div>';
-        };
 
         this._mandatoryAttributes(['dimension', 'section']);
 
@@ -97,9 +95,7 @@ export class DataGrid extends BaseMixin {
     _renderItems (sections) {
         let items = sections.order()
             .selectAll('div.' + ITEM_CSS_CLASS)
-            .data(function (d) {
-                return d.values;
-            });
+            .data(d => d.values);
 
         items.exit().remove();
 
