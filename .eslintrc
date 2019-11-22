@@ -25,7 +25,10 @@
     "afterEach": false,
     "spyOn": false
   },
+  "extends": "eslint:recommended",
   "rules": {
+    "no-useless-escape": "off",
+    "no-console": "off",
     "camelcase": 2,
     "curly": 2,
     "eqeqeq": 2,
