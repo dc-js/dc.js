@@ -356,7 +356,8 @@ d3.csv('ndx.csv').then(data => {
         .renderHorizontalGridLines(true)
         // Customize the filter displayed in the control span
         .filterPrinter(filters => {
-            let filter = filters[0], s = '';
+            const filter = filters[0];
+            let s = '';
             s += numberFormat(filter[0]) + '% -> ' + numberFormat(filter[1]) + '%';
             return s;
         });

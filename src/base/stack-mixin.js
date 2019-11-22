@@ -79,10 +79,7 @@ export class StackMixin extends CoordinateGridMixin {
         if (this.elasticX()) {
             return () => true;
         }
-        return p => 
-            //return true;
-            p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1]
-        ;
+        return p => p.x >= xDomain[0] && p.x <= xDomain[xDomain.length - 1];
     }
 
     /**

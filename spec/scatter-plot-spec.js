@@ -227,10 +227,8 @@ describe('dc.scatterPlot', () => {
         function removeEmptyBins (sourceGroup) {
             return {
                 all: function () {
-                    return sourceGroup.all().filter(d => 
-                        //return Math.abs(d.value) > 0.00001; // if using floating-point numbers
-                        d.value !== 0 // if integers only
-                    );
+                    //return Math.abs(d.value) > 0.00001; // if using floating-point numbers
+                    return sourceGroup.all().filter(d => d.value !== 0); // if integers only
                 }
             };
         }

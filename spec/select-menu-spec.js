@@ -155,20 +155,16 @@ describe('dc.selectMenu', () => {
             expect(regionGroup.all()[0].value).toEqual(1);
         });
         it('selects all options corresponding to active filters on redraw', () => {
-            const selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(d => 
-                // IE returns an extra option with value '', not sure what it means
-                d.value && d.selected
-            );
+            // IE returns an extra option with value '', not sure what it means
+            const selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(d => d.value && d.selected);
             expect(selectedOptions.length).toEqual(2);
             expect(selectedOptions.map(d => d.value)).toEqual(['California', 'Colorado']);
         });
         it('does not deselect previously filtered options when new option is added', () => {
             chart.onChange([stateGroup.all()[0].key, stateGroup.all()[1].key, stateGroup.all()[5].key]);
 
-            const selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(d => 
-                // IE returns an extra option with value '', not sure what it means
-                d.value && d.selected
-            );
+            // IE returns an extra option with value '', not sure what it means
+            const selectedOptions = chart.selectAll('select').selectAll('option').nodes().filter(d => d.value && d.selected);
             expect(selectedOptions.length).toEqual(3);
             expect(selectedOptions.map(d => d.value)).toEqual(['California', 'Colorado', 'Ontario']);
         });

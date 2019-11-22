@@ -20,7 +20,7 @@ describe('dc.dataGrid', () => {
             .size(3)
             .sortBy(d => d.id)
             .order(d3.descending)
-            .html(d => '<div id=\'id_' + d.id + '\' class=\'' + d.countrycode + ' ' + d.region + '\'>' + d.state + ':' + d.value + '</div>');
+            .html(d => `<div id='id_${d.id}' class='${d.countrycode} ${d.region}'>${d.state}:${d.value}</div>`);
         chart.render();
     });
 

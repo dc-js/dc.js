@@ -75,10 +75,8 @@ export class CboxMenu extends BaseMixin {
 
         if (this.hasFilter() && this._multiple) {
             this._cbox.selectAll('input')
-                .property('checked', d => 
-                    // adding `false` avoids failing test cases in phantomjs
-                    d && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0 || false
-                );
+            // adding `false` avoids failing test cases in phantomjs
+                .property('checked', d => d && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0 || false);
         } else if (this.hasFilter()) {
             this._cbox.selectAll('input')
                 .property('checked', d => {
