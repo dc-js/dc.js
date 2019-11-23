@@ -15,7 +15,7 @@ describe('dc.compositeChart', () => {
         id = 'composite-chart';
         appendChartID(id);
 
-        chart = dc.compositeChart('#' + id);
+        chart = dc.compositeChart(`#${id}`);
         chart
             .dimension(dateDimension)
             .group(dateIdSumGroup)
@@ -244,7 +244,7 @@ describe('dc.compositeChart', () => {
             it('should have clip path refs', () => {
                 expect(chart.selectAll('g.chart-body').size()).not.toBe(0);
                 chart.selectAll('g.chart-body').each(function () {
-                    expect(d3.select(this).attr('clip-path')).toMatchUrl(window.location.href + '#composite-chart-clip');
+                    expect(d3.select(this).attr('clip-path')).toMatchUrl(`${window.location.href}#composite-chart-clip`);
                 });
             });
         });
@@ -460,7 +460,7 @@ describe('dc.compositeChart', () => {
                             if (isNaN(value)) {
                                 value = 0;
                             }
-                            return 'Count: ' + d3.format('d')(value);
+                            return `Count: ${d3.format('d')(value)}`;
                         }),
                     dc.lineChart(chart)
                         .group(group, 'Series 2')
@@ -470,7 +470,7 @@ describe('dc.compositeChart', () => {
                             if (isNaN(value)) {
                                 value = 0;
                             }
-                            return 'Value: ' + d3.format('d')(value);
+                            return `Value: ${d3.format('d')(value)}`;
 
                         })
                 ]).render();

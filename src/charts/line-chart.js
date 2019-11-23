@@ -94,7 +94,7 @@ export class LineChart extends StackMixin {
         const layersEnter = layers
             .enter()
             .append('g')
-            .attr('class', (d, i) => 'stack _' + i);
+            .attr('class', (d, i) => `stack _${i}`);
 
         layers = layersEnter.merge(layers);
 
@@ -351,8 +351,8 @@ export class LineChart extends StackMixin {
 
     _drawDots (chartBody, layers) {
         if (this.xyTipsOn() === 'always' || (!(this.brushOn() || this.parentBrushOn()) && this.xyTipsOn())) {
-            const tooltipListClass = TOOLTIP_G_CLASS + '-list';
-            let tooltips = chartBody.select('g.' + tooltipListClass);
+            const tooltipListClass = `${TOOLTIP_G_CLASS}-list`;
+            let tooltips = chartBody.select(`g.${tooltipListClass}`);
 
             if (tooltips.empty()) {
                 tooltips = chartBody.append('g').attr('class', tooltipListClass);
@@ -364,14 +364,14 @@ export class LineChart extends StackMixin {
                     points = points.filter(this._defined);
                 }
 
-                let g = tooltips.select('g.' + TOOLTIP_G_CLASS + '._' + layerIndex);
+                let g = tooltips.select(`g.${TOOLTIP_G_CLASS}._${layerIndex}`);
                 if (g.empty()) {
-                    g = tooltips.append('g').attr('class', TOOLTIP_G_CLASS + ' _' + layerIndex);
+                    g = tooltips.append('g').attr('class', `${TOOLTIP_G_CLASS} _${layerIndex}`);
                 }
 
                 this._createRefLines(g);
 
-                const dots = g.selectAll('circle.' + DOT_CIRCLE_CLASS)
+                const dots = g.selectAll(`circle.${DOT_CIRCLE_CLASS}`)
                     .data(points, pluck('x'));
 
                 const chart = this;
@@ -439,12 +439,12 @@ export class LineChart extends StackMixin {
     }
 
     _createRefLines (g) {
-        const yRefLine = g.select('path.' + Y_AXIS_REF_LINE_CLASS).empty() ?
-            g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select('path.' + Y_AXIS_REF_LINE_CLASS);
+        const yRefLine = g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).empty() ?
+            g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select(`path.${Y_AXIS_REF_LINE_CLASS}`);
         yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
 
-        const xRefLine = g.select('path.' + X_AXIS_REF_LINE_CLASS).empty() ?
-            g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select('path.' + X_AXIS_REF_LINE_CLASS);
+        const xRefLine = g.select(`path.${X_AXIS_REF_LINE_CLASS}`).empty() ?
+            g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select(`path.${X_AXIS_REF_LINE_CLASS}`);
         xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
     }
 
@@ -459,10 +459,10 @@ export class LineChart extends StackMixin {
         const x = dot.attr('cx');
         const y = dot.attr('cy');
         const yAxisX = (this._yAxisX() - this.margins().left);
-        const yAxisRefPathD = 'M' + yAxisX + ' ' + y + 'L' + (x) + ' ' + (y);
-        const xAxisRefPathD = 'M' + x + ' ' + this.yAxisHeight() + 'L' + x + ' ' + y;
-        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', '').attr('d', yAxisRefPathD);
-        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', '').attr('d', xAxisRefPathD);
+        const yAxisRefPathD = `M${yAxisX} ${y}L${x} ${y}`;
+        const xAxisRefPathD = `M${x} ${this.yAxisHeight()}L${x} ${y}`;
+        g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', yAxisRefPathD);
+        g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', xAxisRefPathD);
     }
 
     _getDotRadius () {
@@ -476,8 +476,8 @@ export class LineChart extends StackMixin {
     }
 
     _hideRefLines (g) {
-        g.select('path.' + Y_AXIS_REF_LINE_CLASS).style('display', 'none');
-        g.select('path.' + X_AXIS_REF_LINE_CLASS).style('display', 'none');
+        g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', 'none');
+        g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', 'none');
     }
 
     _doRenderTitle (dot, d) {

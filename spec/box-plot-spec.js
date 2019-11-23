@@ -16,7 +16,7 @@ describe('dc.boxPlot', () => {
         id = 'boxplot';
         appendChartID(id);
 
-        chart = dc.boxPlot('#' + id);
+        chart = dc.boxPlot(`#${id}`);
         chart
             .dimension(dimension)
             .group(group)

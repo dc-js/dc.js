@@ -42,7 +42,7 @@ describe('dc.pieChart', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.pieChart('#' + id);
+        const chart = dc.pieChart(`#${id}`);
         chart.dimension(valueDimension).group(valueGroup)
             .width(width)
             .height(height)
@@ -56,7 +56,7 @@ describe('dc.pieChart', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.pieChart('#' + id);
+        const chart = dc.pieChart(`#${id}`);
         chart.dimension(countryDimension).group(countryGroup)
             .width(width)
             .height(height)
@@ -131,7 +131,7 @@ describe('dc.pieChart', () => {
         });
         it('slice css class should be numbered with index', () => {
             chart.selectAll('g.pie-slice').each(function (p, i) {
-                expect(d3.select(this).attr('class')).toEqual('pie-slice _' + i);
+                expect(d3.select(this).attr('class')).toEqual(`pie-slice _${i}`);
             });
         });
         it('slice path should be filled', () => {
@@ -192,7 +192,7 @@ describe('dc.pieChart', () => {
                     .render();
                 return chart;
             });
-            it('root g should be translated to ' + newCenter.x + ',' + newCenter.y, () => {
+            it(`root g should be translated to ${newCenter.x},${newCenter.y}`, () => {
                 expect(chart.select('svg g').attr('transform')).toMatchTranslate(newCenter.x, newCenter.y);
             });
         });
@@ -731,7 +731,7 @@ describe('dc.pieChart', () => {
                 const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum(), i);
 
-                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
+                expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeTruthy();
                 legendItem.on('mouseout')(legendItem.datum());
             });
         });
@@ -741,7 +741,7 @@ describe('dc.pieChart', () => {
                 legendItem.on('mouseover')(legendItem.datum(), i);
                 legendItem.on('mouseout')(legendItem.datum(), i);
 
-                expect(chart.select('.pie-slice._' + i).classed('highlight')).toBeFalsy();
+                expect(chart.select(`.pie-slice._${i}`).classed('highlight')).toBeFalsy();
             });
         });
 
@@ -750,7 +750,7 @@ describe('dc.pieChart', () => {
                 const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum(), i);
 
-                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
+                expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeTruthy();
                 legendItem.on('mouseout')(legendItem.datum());
             });
         });
@@ -760,7 +760,7 @@ describe('dc.pieChart', () => {
                 legendItem.on('mouseover')(legendItem.datum(), i);
                 legendItem.on('mouseout')(legendItem.datum(), i);
 
-                expect(chart.select('.pie-slice._' + i).classed('highlight')).toBeFalsy();
+                expect(chart.select(`.pie-slice._${i}`).classed('highlight')).toBeFalsy();
             });
         });
     });
@@ -791,7 +791,7 @@ describe('dc.pieChart', () => {
                 const legendItem = d3.select(this);
                 legendItem.on('mouseover')(legendItem.datum());
 
-                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeTruthy();
+                expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeTruthy();
                 legendItem.on('mouseout')(legendItem.datum());
             });
         });
@@ -801,7 +801,7 @@ describe('dc.pieChart', () => {
                 legendItem.on('mouseover')(legendItem.datum());
                 legendItem.on('mouseout')(legendItem.datum());
 
-                expect(chart.select('g.pie-slice._' + i).classed('highlight')).toBeFalsy();
+                expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeFalsy();
             });
         });
         it('clicking on items filters them', () => {

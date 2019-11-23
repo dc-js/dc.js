@@ -251,7 +251,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     fadeDeselectedArea (selection) {
         if (this.hasFilter()) {
             const chart = this;
-            this.selectAll('g.' + chart.BUBBLE_NODE_CLASS).each(function (d) {
+            this.selectAll(`g.${chart.BUBBLE_NODE_CLASS}`).each(function (d) {
                 if (chart.isSelectedNode(d)) {
                     chart.highlightSelected(this);
                 } else {
@@ -260,7 +260,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
             });
         } else {
             const chart = this;
-            this.selectAll('g.' + chart.BUBBLE_NODE_CLASS).each(function () {
+            this.selectAll(`g.${chart.BUBBLE_NODE_CLASS}`).each(function () {
                 chart.resetHighlight(this);
             });
         }

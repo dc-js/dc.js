@@ -50,9 +50,9 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         this.resetSvg();
         for (let layerIndex = 0; layerIndex < this._geoJsons.length; ++layerIndex) {
             const states = this.svg().append('g')
-                .attr('class', 'layer' + layerIndex);
+                .attr('class', `layer${layerIndex}`);
 
-            let regionG = states.selectAll('g.' + this._geoJson(layerIndex).name)
+            let regionG = states.selectAll(`g.${this._geoJson(layerIndex).name}`)
                 .data(this._geoJson(layerIndex).data);
 
             regionG = regionG.enter()
@@ -105,7 +105,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             .attr('class', d => {
                 const layerNameClass = this._geoJson(layerIndex).name;
                 const regionClass = utils.nameToId(this._geoJson(layerIndex).keyAccessor(d));
-                let baseClasses = layerNameClass + ' ' + regionClass;
+                let baseClasses = `${layerNameClass} ${regionClass}`;
                 if (this._isSelected(layerIndex, d)) {
                     baseClasses += ' selected';
                 }
@@ -118,7 +118,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     }
 
     _layerSelector (layerIndex) {
-        return 'g.layer' + layerIndex + ' g.' + this._geoJson(layerIndex).name;
+        return `g.layer${layerIndex} g.${this._geoJson(layerIndex).name}`;
     }
 
     _isSelected (layerIndex, d) {
@@ -175,7 +175,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         for (let layerIndex = 0; layerIndex < this._geoJsons.length; ++layerIndex) {
             this._plotData(layerIndex);
             if (this._projectionFlag) {
-                this.svg().selectAll('g.' + this._geoJson(layerIndex).name + ' path').attr('d', this._getGeoPath());
+                this.svg().selectAll(`g.${this._geoJson(layerIndex).name} path`).attr('d', this._getGeoPath());
             }
         }
         this._projectionFlag = false;

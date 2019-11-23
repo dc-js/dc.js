@@ -33,7 +33,7 @@ describe('dc.bubbleChart', () => {
         id = 'bubble-chart';
         appendChartID(id);
 
-        chart = dc.bubbleChart('#' + id);
+        chart = dc.bubbleChart(`#${id}`);
         chart.dimension(dimension).group(group)
             .width(width).height(height)
             .colors(['#a60000', '#ff0000', '#ff4040', '#ff7373', '#67e667', '#39e639', '#00cc00'])
@@ -49,7 +49,7 @@ describe('dc.bubbleChart', () => {
             .transitionDuration(0)
             .renderLabel(true)
             .renderTitle(true)
-            .title(p => p.key + ': {count:' + p.value.count + ',value:' + p.value.value + '}');
+            .title(p => `${p.key}: {count:${p.value.count},value:${p.value.value}}`);
     });
 
     it('assigns colors', () => {
@@ -610,7 +610,7 @@ describe('dc.bubbleChart', () => {
             const heatId = 'heat-map';
             appendChartID(heatId);
 
-            heatMap = dc.heatMap('#' + heatId);
+            heatMap = dc.heatMap(`#${heatId}`);
             sepalDim = data.dimension(duo_key('sl', 'sw')); sepalGroup = sepalDim.group();
             const petalDim = data.dimension(duo_key('pl', 'pw')), petalGroup = petalDim.group();
 

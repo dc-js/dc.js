@@ -11,7 +11,7 @@ describe('dc.scatterPlot', () => {
         id = 'scatter-plot';
         appendChartID(id);
 
-        chart = dc.scatterPlot('#' + id);
+        chart = dc.scatterPlot(`#${id}`);
         chart.dimension(dimension)
             .group(group)
             .width(500).height(180)
@@ -91,7 +91,7 @@ describe('dc.scatterPlot', () => {
                 const path = d3.line()
                     .x(_d => _d[0] * m)
                     .y(_d => _d[1] * m);
-                return path(points) + 'Z';
+                return `${path(points)}Z`;
             }
 
             symbol.type = function () {
@@ -427,7 +427,7 @@ describe('dc.scatterPlot', () => {
             id = 'scatter-plot-composite';
             appendChartID(id);
 
-            compositeChart = dc.compositeChart('#' + id);
+            compositeChart = dc.compositeChart(`#${id}`);
             compositeChart
                 .dimension(dimension)
                 .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))

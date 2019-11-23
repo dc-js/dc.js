@@ -190,7 +190,7 @@ export class Legend {
         this._parent.svg().select('g.dc-legend').remove();
         this._g = this._parent.svg().append('g')
             .attr('class', 'dc-legend')
-            .attr('transform', 'translate(' + this._x + ',' + this._y + ')');
+            .attr('transform', `translate(${this._x},${this._y})`);
         let legendables = this._parent.legendables();
 
         if (this._maxItems !== undefined) {
@@ -257,11 +257,11 @@ export class Legend {
                         ++row;
                         cumulativeLegendTextWidth = 0;
                     }
-                    const translateBy = 'translate(' + cumulativeLegendTextWidth + ',' + row * self._legendItemHeight() + ')';
+                    const translateBy = `translate(${cumulativeLegendTextWidth},${row * self._legendItemHeight()})`;
                     cumulativeLegendTextWidth += itemWidth;
                     return translateBy;
                 } else {
-                    return 'translate(0,' + i * self._legendItemHeight() + ')';
+                    return `translate(0,${i * self._legendItemHeight()})`;
                 }
             });
         }

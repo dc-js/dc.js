@@ -12,7 +12,7 @@ describe('dc.heatmap', () => {
 
         id = 'heatmap-chart';
         appendChartID(id);
-        chart = dc.heatMap('#' + id);
+        chart = dc.heatMap(`#${id}`);
 
         chart
             .dimension(dimension)
@@ -21,7 +21,7 @@ describe('dc.heatmap', () => {
             .valueAccessor(d => d.key[1])
             .colorAccessor(d => d.value)
             .colors(['#000001', '#000002', '#000003', '#000004'])
-            .title(d => d.key + ': ' + d.value)
+            .title(d => `${d.key}: ${d.value}`)
             .height(chartHeight)
             .width(chartWidth)
             .transitionDuration(0)
@@ -112,8 +112,8 @@ describe('dc.heatmap', () => {
 
         describe('with custom labels', () => {
             beforeEach(() => {
-                chart.colsLabel(x => 'col ' + x)
-                    .rowsLabel(x => 'row ' + x)
+                chart.colsLabel(x => `col ${x}`)
+                    .rowsLabel(x => `row ${x}`)
                     .redraw();
             });
             it('should display the custom labels on the x axis', () => {
@@ -527,7 +527,7 @@ describe('dc.heatmap', () => {
             const bubbleId = 'bubble-chart';
             appendChartID(bubbleId);
 
-            bubbleChart = dc.bubbleChart('#' + bubbleId);
+            bubbleChart = dc.bubbleChart(`#${bubbleId}`);
             const sepalDim = data.dimension(duo_key('sl', 'sw')), sepalGroup = sepalDim.group();
             petalDim = data.dimension(duo_key('pl', 'pw')); petalGroup = petalDim.group();
 

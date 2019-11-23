@@ -15,14 +15,14 @@ describe('dc.bubbleOverlay', () => {
             .attr('width', width)
             .attr('height', height);
 
-        chart = dc.bubbleOverlay('#' + id)
+        chart = dc.bubbleOverlay(`#${id}`)
             .svg(svg)
             .dimension(dimension)
             .group(group)
             .width(width)
             .height(height)
             .transitionDuration(0)
-            .title(d => 'Title: ' + d.key)
+            .title(d => `Title: ${d.key}`)
             .r(d3.scaleLinear().domain([0, 100]))
             .maxBubbleRelativeSize(0.1)
             .ordinalColors(['blue'])

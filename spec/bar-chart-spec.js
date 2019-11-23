@@ -11,7 +11,7 @@ describe('dc.barChart', () => {
         id = 'bar-chart';
         appendChartID(id);
 
-        chart = dc.barChart('#' + id);
+        chart = dc.barChart(`#${id}`);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
             .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
@@ -379,9 +379,9 @@ describe('dc.barChart', () => {
                         .brushOn(false)
                         .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                         .group(idGroup, 'stack 0')
-                        .title('stack 0', d => 'stack 0: ' + d.value)
+                        .title('stack 0', d => `stack 0: ${d.value}`)
                         .stack(sumGroup, 'stack 1')
-                        .title('stack 1', d => 'stack 1: ' + d.value)
+                        .title('stack 1', d => `stack 1: ${d.value}`)
                         .stack(sumGroup, 'stack 2', d => 3)
                         .elasticY(true)
                         .renderLabel(true)
@@ -432,13 +432,13 @@ describe('dc.barChart', () => {
                 it('should have titles rendered for extra stacks', () => {
                     nthStack(1).forEachBar((bar, datum) => {
                         expect(bar.selectAll('title').nodes().length).toBe(1);
-                        expect(bar.select('title').text()).toBe('stack 1: ' + datum.data.value);
+                        expect(bar.select('title').text()).toBe(`stack 1: ${datum.data.value}`);
                     });
                 });
 
                 it('should default to first stack title for untitled stacks', () => {
                     nthStack(2).forEachBar((bar, datum) => {
-                        expect(bar.select('title').text()).toBe('stack 0: ' + datum.data.value);
+                        expect(bar.select('title').text()).toBe(`stack 0: ${datum.data.value}`);
                     });
                 });
 
@@ -485,7 +485,7 @@ describe('dc.barChart', () => {
 
                     describe('any other stack', () => {
                         beforeEach(() => {
-                            chart.title('stack 2', d => 'stack 2: ' + d.value);
+                            chart.title('stack 2', d => `stack 2: ${d.value}`);
                             chart.hideStack('stack 1').render();
                         });
 
@@ -502,7 +502,7 @@ describe('dc.barChart', () => {
 
                         it('should still show the title for a visible stack', () => {
                             nthStack(1).forEachBar((bar, datum) => {
-                                expect(bar.select('title').text()).toBe('stack 2: ' + datum.data.value);
+                                expect(bar.select('title').text()).toBe(`stack 2: ${datum.data.value}`);
                             });
                         });
                     });
@@ -723,8 +723,8 @@ describe('dc.barChart', () => {
 
         describe('filtering', () => {
             beforeEach(() => {
-                d3.select('#' + id).append('span').attr('class', 'filter').style('visibility', 'hidden');
-                d3.select('#' + id).append('a').attr('class', 'reset').style('visibility', 'hidden');
+                d3.select(`#${id}`).append('span').attr('class', 'filter').style('visibility', 'hidden');
+                d3.select(`#${id}`).append('a').attr('class', 'reset').style('visibility', 'hidden');
                 chart.filter([makeDate(2012, 5, 1), makeDate(2012, 5, 30)]).redraw();
                 dc.config.dateFormat = d3.utcFormat('%m/%d/%Y');
                 chart.redraw();
@@ -878,7 +878,7 @@ describe('dc.barChart', () => {
             dimension  = data.dimension(dc.pluck('State'));
             group = dimension.group().reduceSum(dc.pluck('Population'));
 
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.xUnits(dc.units.ordinal)
                 .x(d3.scaleBand())
                 .transitionDuration(0)
@@ -923,7 +923,7 @@ describe('dc.barChart', () => {
             data = crossfilter(rows);
             dimension  = data.dimension(d => d.name);
             group = dimension.group().reduceSum(d => d.sale);
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.transitionDuration(0)
                 .outerPadding(0)
                 .dimension(dimension)
@@ -952,7 +952,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleLinear().domain([0,7]))
                 .elasticY(true)
@@ -992,7 +992,7 @@ describe('dc.barChart', () => {
             data = crossfilter(rows);
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.width(500)
                 .transitionDuration(0)
                 .x(d3.scaleUtc())
@@ -1038,7 +1038,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleLinear())
                 .elasticY(true).elasticX(true)
@@ -1082,7 +1082,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
@@ -1175,7 +1175,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
@@ -1230,7 +1230,7 @@ describe('dc.barChart', () => {
             group = dimension.group().reduceSum(d => d.y);
             const group2 = dimension.group().reduceSum(d => d.z);
 
-            chart = dc.barChart('#' + id);
+            chart = dc.barChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)

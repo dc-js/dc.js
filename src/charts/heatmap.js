@@ -191,7 +191,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         this._chartBody = this.svg()
             .append('g')
             .attr('class', 'heatmap')
-            .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
+            .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
 
         return this._doRedraw();
     }
@@ -218,7 +218,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         rows.rangeRound([this.effectiveHeight(), 0]);
 
         let boxes = this._chartBody.selectAll('g.box-group').data(this.data(),
-                                                                  (d, i) => this.keyAccessor()(d, i) + '\0' + this.valueAccessor()(d, i));
+                                                                  (d, i) => `${this.keyAccessor()(d, i)}\0${this.valueAccessor()(d, i)}`);
 
         boxes.exit().remove();
 

@@ -95,7 +95,7 @@ export class BaseMixin {
 
         this._renderLabel = false;
 
-        this._title = d => this.keyAccessor()(d) + ': ' + this.valueAccessor()(d);
+        this._title = d => `${this.keyAccessor()(d)}: ${this.valueAccessor()(d)}`;
         this._renderTitle = true;
         this._controlsUseVisibility = false;
 
@@ -415,7 +415,7 @@ export class BaseMixin {
         if (instanceOfChart(parent)) {
             this._anchor = parent.anchor();
             if (this._anchor.children) { // is _anchor a div?
-                this._anchor = '#' + parent.anchorName();
+                this._anchor = `#${parent.anchorName()}`;
             }
             this._root = parent.root();
             this._isChild = true;
@@ -448,7 +448,7 @@ export class BaseMixin {
         if (a && a.replace) {
             return a.replace('#', '');
         }
-        return 'dc-chart' + this.chartID();
+        return `dc-chart${this.chartID()}`;
     }
 
     /**
@@ -502,7 +502,7 @@ export class BaseMixin {
                     .attr('height', this.height());
             } else if (!this._svg.attr('viewBox')) {
                 this._svg
-                    .attr('viewBox', '0 0 ' + this.width() + ' ' + this.height());
+                    .attr('viewBox', `0 0 ${this.width()} ${this.height()}`);
             }
         }
     }
@@ -626,8 +626,7 @@ export class BaseMixin {
 
     checkForMandatoryAttributes (a) {
         if (!this[a] || !this[a]()) {
-            throw new InvalidStateException('Mandatory attribute chart.' + a +
-                ' is missing on chart[#' + this.anchorName() + ']');
+            throw new InvalidStateException(`Mandatory attribute chart.${a} is missing on chart[#${this.anchorName()}]`);
         }
     }
 
@@ -1349,7 +1348,7 @@ export class BaseMixin {
                     this[o].call(this, opts[o]);
                 }
             } else {
-                logger.debug('Not a valid option setter name: ' + o);
+                logger.debug(`Not a valid option setter name: ${o}`);
             }
         }
         return this;
@@ -1411,7 +1410,7 @@ export class BaseMixin {
      */
     renderlet (renderletFunction) {
         logger.warnOnce('chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
-        this.on('renderlet.' + utils.uniqueId(), renderletFunction);
+        this.on(`renderlet.${utils.uniqueId()}`, renderletFunction);
         return this;
     }
 

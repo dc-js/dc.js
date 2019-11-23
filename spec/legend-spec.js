@@ -10,7 +10,7 @@ describe('dc.legend', () => {
 
         id = 'legend-chart';
         appendChartID(id);
-        chart = dc.lineChart('#' + id);
+        chart = dc.lineChart(`#${id}`);
 
         chart
             .dimension(dateDimension)
@@ -168,7 +168,7 @@ describe('dc.legend', () => {
                 chart.legend(dc.legend().legendText((d, i) => {
                     const _i = i + 1;
 
-                    return _i + '. ' + d.name;
+                    return `${_i}. ${d.name}`;
                 }));
                 chart.render();
             });
@@ -207,7 +207,7 @@ describe('dc.legend', () => {
         beforeEach(() => {
             id = 'legend-chart-dashed';
             appendChartID(id);
-            chart = dc.compositeChart('#' + id);
+            chart = dc.compositeChart(`#${id}`);
 
             const subChart1 = dc.lineChart(chart);
             subChart1

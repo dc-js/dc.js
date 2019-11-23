@@ -13,19 +13,19 @@ module.exports = function (grunt) {
                     break;
                 }
                 const file = files[i + j];
-                cols.push('    <td><a href="' + file[1] + '">' + file[0] + '</a></td>');
+                cols.push(`    <td><a href="${file[1]}">${file[0]}</a></td>`);
             }
-            rows.push('  <tr>\n' + cols.join('\n') + '\n  </tr>');
+            rows.push(`  <tr>\n${cols.join('\n')}\n  </tr>`);
         }
-        const body = '<table class="table">\n' + rows.join('\n') + '\n</table>';
+        const body = `<table class="table">\n${rows.join('\n')}\n</table>`;
         return [
-            '<html><head><title>' + opts.title + '</title>',
+            `<html><head><title>${opts.title}</title>`,
             '<link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css"></head>',
             '<body><div class="container">',
-            '<h2>' + opts.heading + '</h2>',
-            '<p>' + opts.description + '</p>',
+            `<h2>${opts.heading}</h2>`,
+            `<p>${opts.description}</p>`,
             '<p>Contributions <a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md">welcome</a>.',
-            'Source <a href="' + opts.sourceLink + '">',
+            `Source <a href="${opts.sourceLink}">`,
             'here</a>.</p>',
             body,
             '</div></body></html>'

@@ -42,7 +42,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     }
 
     _bubbleLocator (d) {
-        return 'translate(' + (this._bubbleX(d)) + ',' + (this._bubbleY(d)) + ')';
+        return `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
     }
 
     plotData () {
@@ -50,7 +50,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.r().range([this.MIN_RADIUS, this.xAxisLength() * this.maxBubbleRelativeSize()]);
 
         const data = this.data();
-        let bubbleG = this.chartBodyG().selectAll('g.' + this.BUBBLE_NODE_CLASS)
+        let bubbleG = this.chartBodyG().selectAll(`g.${this.BUBBLE_NODE_CLASS}`)
             .data(data, d => d.key);
         if (this.sortBubbleSize()) {
             // update dom order based on sort
@@ -72,7 +72,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         bubbleGEnter
             .attr('class', this.BUBBLE_NODE_CLASS)
             .attr('transform', d => this._bubbleLocator(d))
-            .append('circle').attr('class', (d, i) => this.BUBBLE_CLASS + ' _' + i)
+            .append('circle').attr('class', (d, i) => `${this.BUBBLE_CLASS} _${i}`)
             .on('click', d => this.onClick(d))
             .attr('fill', this.getColor)
             .attr('r', 0);
@@ -80,7 +80,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         bubbleG = bubbleGEnter.merge(bubbleG);
 
         transition(bubbleG, this.transitionDuration(), this.transitionDelay())
-            .select('circle.' + this.BUBBLE_CLASS)
+            .select(`circle.${this.BUBBLE_CLASS}`)
             .attr('r', d => this.bubbleR(d))
             .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
 
@@ -94,7 +94,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     _updateNodes (bubbleG) {
         transition(bubbleG, this.transitionDuration(), this.transitionDelay())
             .attr('transform', d => this._bubbleLocator(d))
-            .select('circle.' + this.BUBBLE_CLASS)
+            .select(`circle.${this.BUBBLE_CLASS}`)
             .attr('fill', this.getColor)
             .attr('r', d => this.bubbleR(d))
             .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);

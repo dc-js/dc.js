@@ -11,7 +11,7 @@ describe('dc.lineChart', () => {
         id = 'line-chart';
         appendChartID(id);
 
-        chart = dc.lineChart('#' + id);
+        chart = dc.lineChart(`#${id}`);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
             .x(d3.scaleUtc().domain([makeDate(2012, 1, 1), makeDate(2012, 11, 31)]))
@@ -257,7 +257,7 @@ describe('dc.lineChart', () => {
                         });
 
                         it('shows the ref line from the bottom of the graph', () => {
-                            const path = 'M' + x + ' 160 L ' + x + ' 107';
+                            const path = `M${x} 160 L ${x} 107`;
                             expect(chart.select('path.xRef').attr('d')).toMatchPath(path);
                             expect(chart.select('path.xRef').attr('display')).not.toBe('none');
                         });
@@ -273,7 +273,7 @@ describe('dc.lineChart', () => {
                             });
 
                             it('shows the ref line on the left', () => {
-                                const path = 'M0 107 L ' + x + ' 107';
+                                const path = `M0 107 L ${x} 107`;
                                 expect(chart.select('path.yRef').attr('d')).toMatchPath(path);
                                 expect(chart.select('path.yRef').attr('display')).not.toBe('none');
                             });
@@ -289,7 +289,7 @@ describe('dc.lineChart', () => {
                             });
 
                             it('shows the ref line on the right', () => {
-                                const path = 'M1020 107L' + x + ' 107';
+                                const path = `M1020 107L${x} 107`;
                                 expect(chart.select('path.yRef').attr('d')).toMatchPath(path); //"M1020 107L405 107");
                                 expect(chart.select('path.yRef').attr('display')).not.toBe('none');
                             });
@@ -360,9 +360,9 @@ describe('dc.lineChart', () => {
                         .brushOn(false)
                         .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))
                         .group(idGroup, 'stack 0')
-                        .title('stack 0', d => 'stack 0: ' + d.value)
+                        .title('stack 0', d => `stack 0: ${d.value}`)
                         .stack(valueGroup, 'stack 1')
-                        .title('stack 1', d => 'stack 1: ' + d.value)
+                        .title('stack 1', d => `stack 1: ${d.value}`)
                         .stack(valueGroup, 'stack 2')
                         .elasticY(true)
                         .render();
@@ -392,13 +392,13 @@ describe('dc.lineChart', () => {
 
                 it('should have titles rendered for extra stacks', () => {
                     chart.selectAll('g._1 circle.dot').each(function (d) {
-                        expect(d3.select(this).select('title').text()).toBe('stack 1: ' + d.data.value);
+                        expect(d3.select(this).select('title').text()).toBe(`stack 1: ${d.data.value}`);
                     });
                 });
 
                 it('should default to first stack title for untitled stacks', () => {
                     chart.selectAll('g._2 circle.dot').each(function (d) {
-                        expect(d3.select(this).select('title').text()).toBe('stack 0: ' + d.data.value);
+                        expect(d3.select(this).select('title').text()).toBe(`stack 0: ${d.data.value}`);
                     });
                 });
 
@@ -473,7 +473,7 @@ describe('dc.lineChart', () => {
 
                     describe('any other stack', () => {
                         beforeEach(() => {
-                            chart.title('stack 2', d => 'stack 2: ' + d.value);
+                            chart.title('stack 2', d => `stack 2: ${d.value}`);
                             chart.hideStack('stack 1').render();
                         });
 
@@ -494,7 +494,7 @@ describe('dc.lineChart', () => {
 
                         it('should still show the title for a visible stack', () => {
                             chart.selectAll('g._1 circle.dot').each(function (d) {
-                                expect(d3.select(this).select('title').text()).toBe('stack 2: ' + d.data.value);
+                                expect(d3.select(this).select('title').text()).toBe(`stack 2: ${d.data.value}`);
                             });
                         });
                     });

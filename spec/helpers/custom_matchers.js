@@ -55,11 +55,11 @@ function compareWithinDelta (actual, expected, delta) {
 
     result.pass = actual >= (+expected - delta) && actual <= (+expected + delta);
 
-    const pre = 'Expected ' + actual + ' to ',
-        post = 'be within [' + (+expected - delta) + '/' + (+expected + delta) + ']';
+    const pre = `Expected ${actual} to `,
+        post = `be within [${+expected - delta}/${+expected + delta}]`;
 
     if (result.pass) {
-        result.message = pre + 'not ' + post;
+        result.message = `${pre}not ${post}`;
     } else {
         result.message = pre + post;
     }
@@ -72,25 +72,25 @@ function compareWithinDelta (actual, expected, delta) {
 
 function compareSubPath (got, wanted, i, j, delta) {
     for (let k = 0; k !== wanted.length; ++k) {
-        const commandNum = 'path command #' + i + k;
+        const commandNum = `path command #${i}${k}`;
         if (got[i + k].op.toUpperCase() !== wanted[j + k].op.toUpperCase()) {
             return {
                 pass: false,
-                message: commandNum + ' actual \'' + got[i + k].op.toUpperCase() +
-                '\' != expected \'' + wanted[j + k].op.toUpperCase() + '\''
+                message: `${commandNum} actual '${got[i + k].op.toUpperCase() 
+                }' != expected '${wanted[j + k].op.toUpperCase()}'`
             };
         }
         if (got[i + k].args.length !== wanted[j + k].args.length) {
             return {
                 pass: false,
-                message: commandNum + ' number of arguments ' +
-                got[i + k].args.length + ' != expected ' + wanted[j + k].args.length
+                message: `${commandNum} number of arguments ${ 
+                    got[i + k].args.length} != expected ${wanted[j + k].args.length}`
             };
         }
         for (let h = 0; h < got[i + k].args.length; ++h) {
             const result = compareWithinDelta(got[i + k].args[h], wanted[j + k].args[h], delta);
             if (!result.pass) {
-                result.message = commandNum + ', element ' + h + ': ' + result.message;
+                result.message = `${commandNum}, element ${h}: ${result.message}`;
                 return result;
             }
         }
@@ -105,8 +105,8 @@ function comparePaths (actual, expected, delta) {
     if (got.length !== wanted.length) {
         return {
             pass: false,
-            message: 'actual number of path cmds ' + actual.length +
-            ' did not match expected number ' + expected.length
+            message: `actual number of path cmds ${actual.length 
+            } did not match expected number ${expected.length}`
         };
     }
     return compareSubPath(got, wanted, 0, 0, delta);
@@ -125,7 +125,7 @@ function findSubPath (actual, expected, delta) {
     }
     return {
         pass: false,
-        message: 'did not find expected subpath \'' + expected + '\' in actual path \'' + actual + '\''
+        message: `did not find expected subpath '${expected}' in actual path '${actual}'`
     };
 }
 
@@ -135,17 +135,17 @@ function compareIntListOptSuffix (actual, expected, suffix) {
     if (aparts.length !== eparts.length) {
         return {
             pass: false,
-            message: 'actual number of list items ' + aparts.length +
-                ' did not match expected number ' + eparts.length
+            message: `actual number of list items ${aparts.length 
+            } did not match expected number ${eparts.length}`
         };
     }
-    const suffixRE = suffix ? new RegExp(suffix + '$') : '';
+    const suffixRE = suffix ? new RegExp(`${suffix}$`) : '';
     for (let i = 0; i < eparts.length; ++i) {
         const apart = aparts[i].replace(suffixRE, '');
         if (+apart !== +eparts[i]) {
             return {
                 pass: false,
-                message: 'list item[' + i + '] value ' + aparts[i] + ' did not equal expected value ' + eparts[i]
+                message: `list item[${i}] value ${aparts[i]} did not equal expected value ${eparts[i]}`
             };
         }
     }
@@ -180,7 +180,7 @@ beforeEach(() => {
                 compare: function (actual, x, y, prec) {
                     const parts = parseTranslate(actual);
                     if (!parts) {
-                        return {pass: false, message: '\'' + actual + '\' did not match translate(x[,y]) regexp'};
+                        return {pass: false, message: `'${actual}' did not match translate(x[,y]) regexp`};
                     }
                     expect(+parts[1]).toBeCloseTo(x, prec);
                     expect(+parts[2]).toBeCloseTo(y, prec);
@@ -193,7 +193,7 @@ beforeEach(() => {
                 compare: function (actual, x, y, r, prec) {
                     const parts = parseTranslateRotate(actual);
                     if (!parts) {
-                        return {pass: false, message: '\'' + actual + '\' did not match translate(x[,y]),rotate(r) regexp'};
+                        return {pass: false, message: `'${actual}' did not match translate(x[,y]),rotate(r) regexp`};
                     }
                     expect(+parts[1]).toBeCloseTo(x, prec);
                     expect(+parts[2]).toBeCloseTo(y, prec);

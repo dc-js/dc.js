@@ -58,8 +58,8 @@
     "arrow-parens": ["error", "as-needed"],
     "space-before-function-paren": ["error", "always"],
     "no-useless-concat": "error",
-    "prefer-template": "off",
-    "template-curly-spacing": "off",
+    "prefer-template": "error",
+    "template-curly-spacing": "error",
     "valid-jsdoc": ["error", {"requireParamDescription": false, "requireReturnDescription": false}]
   }
 }

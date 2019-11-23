@@ -46,7 +46,7 @@ export const utils = {};
  * @returns {String}
  */
 utils.printSingleValue = function (filter) {
-    let s = '' + filter;
+    let s = `${filter}`;
 
     if (filter instanceof Date) {
         s = config.dateFormat(filter);

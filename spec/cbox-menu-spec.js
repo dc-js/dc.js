@@ -15,7 +15,7 @@ describe('dc.cboxMenu', () => {
         id = 'cbox-menu';
         appendChartID(id);
 
-        chart = dc.cboxMenu('#' + id);
+        chart = dc.cboxMenu(`#${id}`);
         chart.dimension(stateDimension)
             .group(stateGroup)
             .transitionDuration(0);

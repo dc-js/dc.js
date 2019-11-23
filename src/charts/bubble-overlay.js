@@ -93,7 +93,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
     }
 
     _initOverlayG () {
-        this._g = this.select('g.' + BUBBLE_OVERLAY_CLASS);
+        this._g = this.select(`g.${BUBBLE_OVERLAY_CLASS}`);
         if (this._g.empty()) {
             this._g = this.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
         }
@@ -107,7 +107,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         this._points.forEach(point => {
             const nodeG = this._getNodeG(point, data);
 
-            let circle = nodeG.select('circle.' + BUBBLE_CLASS);
+            let circle = nodeG.select(`circle.${BUBBLE_CLASS}`);
 
             if (circle.empty()) {
                 circle = nodeG.append('circle')
@@ -135,14 +135,14 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
     }
 
     _getNodeG (point, data) {
-        const bubbleNodeClass = BUBBLE_NODE_CLASS + ' ' + utils.nameToId(point.name);
+        const bubbleNodeClass = `${BUBBLE_NODE_CLASS} ${utils.nameToId(point.name)}`;
 
-        let nodeG = this._g.select('g.' + utils.nameToId(point.name));
+        let nodeG = this._g.select(`g.${utils.nameToId(point.name)}`);
 
         if (nodeG.empty()) {
             nodeG = this._g.append('g')
                 .attr('class', bubbleNodeClass)
-                .attr('transform', 'translate(' + point.x + ',' + point.y + ')');
+                .attr('transform', `translate(${point.x},${point.y})`);
         }
 
         nodeG.datum(data[point.name]);
@@ -165,7 +165,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         this._points.forEach(point => {
             const nodeG = this._getNodeG(point, data);
 
-            const circle = nodeG.select('circle.' + BUBBLE_CLASS);
+            const circle = nodeG.select(`circle.${BUBBLE_CLASS}`);
 
             transition(circle, this.transitionDuration(), this.transitionDelay())
                 .attr('r', d => this.bubbleR(d))
@@ -179,7 +179,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
 
     debug (flag) {
         if (flag) {
-            let debugG = this.select('g.' + constants.DEBUG_GROUP_CLASS);
+            let debugG = this.select(`g.${constants.DEBUG_GROUP_CLASS}`);
 
             if (debugG.empty()) {
                 debugG = this.svg()
@@ -197,7 +197,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
                 .attr('height', this.height())
                 .on('mousemove', () => {
                     const position = mouse(debugG.node());
-                    const msg = position[0] + ', ' + position[1];
+                    const msg = `${position[0]}, ${position[1]}`;
                     debugText.text(msg);
                 });
         } else {

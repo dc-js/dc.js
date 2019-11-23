@@ -230,7 +230,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
     _generateChildG (child, i) {
         child._generateG(this.g());
-        child.g().attr('class', SUB_CHART_CLASS + ' _' + i);
+        child.g().attr('class', `${SUB_CHART_CLASS} _${i}`);
     }
 
     plotData () {

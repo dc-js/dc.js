@@ -36,7 +36,7 @@ export class DataGrid extends BaseMixin {
         this._section = null;
         this._size = 999; // shouldn't be needed, but you might
         this._html = function (d) {
-            return 'you need to provide an html() handling param:  ' + JSON.stringify(d);
+            return `you need to provide an html() handling param:  ${JSON.stringify(d)}`;
         };
         this._sortBy = function (d) {
             return d;
@@ -45,8 +45,8 @@ export class DataGrid extends BaseMixin {
         this._beginSlice = 0;
         this._endSlice = undefined;
 
-        this._htmlSection = d => '<div class=\'' + SECTION_CSS_CLASS + '\'><h1 class=\'' + LABEL_CSS_CLASS + '\'>' +
-                this.keyAccessor()(d) + '</h1></div>';
+        this._htmlSection = d => `<div class='${SECTION_CSS_CLASS}'><h1 class='${LABEL_CSS_CLASS}'>${ 
+            this.keyAccessor()(d)}</h1></div>`;
 
         this._mandatoryAttributes(['dimension', 'section']);
 
@@ -54,7 +54,7 @@ export class DataGrid extends BaseMixin {
     }
 
     _doRender () {
-        this.selectAll('div.' + GRID_CSS_CLASS).remove();
+        this.selectAll(`div.${GRID_CSS_CLASS}`).remove();
 
         this._renderItems(this._renderSections());
 
@@ -62,7 +62,7 @@ export class DataGrid extends BaseMixin {
     }
 
     _renderSections () {
-        const sections = this.root().selectAll('div.' + GRID_CSS_CLASS)
+        const sections = this.root().selectAll(`div.${GRID_CSS_CLASS}`)
             .data(this._nestEntries(), d => this.keyAccessor()(d));
 
         const itemSection = sections
@@ -94,7 +94,7 @@ export class DataGrid extends BaseMixin {
 
     _renderItems (sections) {
         let items = sections.order()
-            .selectAll('div.' + ITEM_CSS_CLASS)
+            .selectAll(`div.${ITEM_CSS_CLASS}`)
             .data(d => d.values);
 
         items.exit().remove();

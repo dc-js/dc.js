@@ -91,7 +91,7 @@ export class CboxMenu extends BaseMixin {
 
     _renderOptions () {
         let options = this._cbox
-            .selectAll('li.' + ITEM_CSS_CLASS)
+            .selectAll(`li.${ITEM_CSS_CLASS}`)
             .data(this.data(), d => this.keyAccessor()(d));
 
         options.exit().remove();
@@ -105,11 +105,11 @@ export class CboxMenu extends BaseMixin {
             .append('input')
             .attr('type', this._inputType)
             .attr('value', d => this.keyAccessor()(d))
-            .attr('name', 'domain_' + this._uniqueId)
-            .attr('id', (d, i) => 'input_' + this._uniqueId + '_' + i);
+            .attr('name', `domain_${this._uniqueId}`)
+            .attr('id', (d, i) => `input_${this._uniqueId}_${i}`);
         options
             .append('label')
-            .attr('for', (d, i) => 'input_' + this._uniqueId + '_' + i)
+            .attr('for', (d, i) => `input_${this._uniqueId}_${i}`)
             .text(this.title());
 
         const chart = this;
@@ -128,16 +128,16 @@ export class CboxMenu extends BaseMixin {
             li.append('input')
                 .attr('type', this._inputType)
                 .attr('value', this._promptValue)
-                .attr('name', 'domain_' + this._uniqueId)
-                .attr('id', (d, i) => 'input_' + this._uniqueId + '_all')
+                .attr('name', `domain_${this._uniqueId}`)
+                .attr('id', (d, i) => `input_${this._uniqueId}_all`)
                 .property('checked', true);
             li.append('label')
-                .attr('for', (d, i) => 'input_' + this._uniqueId + '_all')
+                .attr('for', (d, i) => `input_${this._uniqueId}_all`)
                 .text(this._promptText);
         }
 
         this._cbox
-            .selectAll('li.' + ITEM_CSS_CLASS)
+            .selectAll(`li.${ITEM_CSS_CLASS}`)
             .sort(this._order);
 
         this._cbox.on('change', function (d, i) {

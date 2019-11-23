@@ -236,7 +236,7 @@ module.exports = function (grunt) {
                             '<%= conf.dist %>/<%= conf.pkg.name %>.js.map',
                             '<%= conf.dist %>/<%= conf.pkg.name %>.min.js',
                             '<%= conf.dist %>/<%= conf.pkg.name %>.min.js.map',
-                            'node_modules/d3/' + d3pkgSubDir + '/d3.js',
+                            `node_modules/d3/${d3pkgSubDir}/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
                             'node_modules/reductio/reductio.js'
@@ -252,7 +252,7 @@ module.exports = function (grunt) {
                         ],
                         dest: '<%= conf.web %>/js/',
                         rename: function (dest, src) {
-                            return dest + 'compare-versions.js';
+                            return `${dest}compare-versions.js`;
                         }
                     }
                 ]
@@ -334,7 +334,7 @@ module.exports = function (grunt) {
                         'git checkout master',
                         'git reset --hard origin/master',
                         'git fetch origin',
-                        'git merge --no-ff origin/pr/' + pr + ' -m \'Merge pull request #' + pr + '\''
+                        `git merge --no-ff origin/pr/${pr} -m 'Merge pull request #${pr}'`
                     ].join('&&');
                 },
                 options: {
@@ -363,8 +363,8 @@ module.exports = function (grunt) {
     });
 
     grunt.registerTask('merge', 'Merge a github pull request.', pr => {
-        grunt.log.writeln('Merge Github Pull Request #' + pr);
-        grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
+        grunt.log.writeln(`Merge Github Pull Request #${pr}`);
+        grunt.task.run([`shell:merge:${pr}`, 'test' , 'shell:amend']);
     });
     grunt.registerTask(
         'test-stock-example',

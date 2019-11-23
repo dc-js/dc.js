@@ -46,7 +46,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702
-        this.title(d => this.keyAccessor()(d) + ',' + this.valueAccessor()(d) + ': ' + this.existenceAccessor()(d));
+        this.title(d => `${this.keyAccessor()(d)},${this.valueAccessor()(d)}: ${this.existenceAccessor()(d)}`);
 
         this._highlightedSize = 7;
         this._symbolSize = 5;
@@ -93,8 +93,8 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     _locator (d) {
-        return 'translate(' + this.x()(this.keyAccessor()(d)) + ',' +
-            this.y()(this.valueAccessor()(d)) + ')';
+        return `translate(${this.x()(this.keyAccessor()(d))},${ 
+            this.y()(this.valueAccessor()(d))})`;
     }
 
     filter (filter) {
@@ -141,11 +141,11 @@ export class ScatterPlot extends CoordinateGridMixin {
                 .attr('y', 0)
                 .attr('width', (width) * devicePixelRatio)
                 .attr('height', (height) * devicePixelRatio)
-                .style('width', width + 'px')
-                .style('height', height + 'px')
+                .style('width', `${width}px`)
+                .style('height', `${height}px`)
                 .style('position', 'absolute')
-                .style('top', margins.top + svgTop + 'px')
-                .style('left', margins.left + svgLeft + 'px')
+                .style('top', `${margins.top + svgTop}px`)
+                .style('left', `${margins.left + svgLeft}px`)
                 .style('z-index', -1) // Place behind SVG
                 .style('pointer-events', 'none'); // Disable pointer events on canvas so SVG can capture brushing
 
@@ -168,8 +168,8 @@ export class ScatterPlot extends CoordinateGridMixin {
         this._canvas
             .attr('width', (width) * devicePixelRatio)
             .attr('height', (height) * devicePixelRatio)
-            .style('width', width + 'px')
-            .style('height', height + 'px');
+            .style('width', `${width}px`)
+            .style('height', `${height}px`);
         this._context.scale(devicePixelRatio, devicePixelRatio);
     }
 

@@ -114,7 +114,7 @@ export class NumberDisplay extends BaseMixin {
 
     _doRender () {
         const newValue = this.value();
-        let span = this.selectAll('.' + SPAN_CLASS);
+        let span = this.selectAll(`.${SPAN_CLASS}`);
 
         if (span.empty()) {
             span = span.data([0])

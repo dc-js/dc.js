@@ -59,7 +59,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this.rowsCap = this.cap;
 
-        this.title(d => this.cappedKeyAccessor(d) + ': ' + this.cappedValueAccessor(d));
+        this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
 
         this.label(d => this.cappedKeyAccessor(d));
 
@@ -89,7 +89,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         if (axisG.empty()) {
             axisG = this._g.append('g').attr('class', 'axis');
         }
-        axisG.attr('transform', 'translate(0, ' + this.effectiveHeight() + ')');
+        axisG.attr('transform', `translate(0, ${this.effectiveHeight()})`);
 
         transition(axisG, this.transitionDuration(), this.transitionDelay())
             .call(this._xAxis);
@@ -100,7 +100,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this._g = this.svg()
             .append('g')
-            .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
+            .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
 
         this._drawChart();
 
@@ -142,7 +142,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._drawAxis();
         this._drawGridLines();
 
-        let rows = this._g.selectAll('g.' + this._rowCssClass)
+        let rows = this._g.selectAll(`g.${this._rowCssClass}`)
             .data(this._rowData);
 
         this._removeElements(rows);
@@ -154,7 +154,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     _createElements (rows) {
         const rowEnter = rows.enter()
             .append('g')
-            .attr('class', (d, i) => this._rowCssClass + ' _' + i);
+            .attr('class', (d, i) => `${this._rowCssClass} _${i}`);
 
         rowEnter.append('rect').attr('width', 0);
 
@@ -187,7 +187,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             this._labelOffsetY = height / 2;
         }
 
-        const rect = rows.attr('transform', (d, i) => 'translate(0,' + ((i + 1) * this._gap + i * height) + ')').select('rect')
+        const rect = rows.attr('transform', (d, i) => `translate(0,${(i + 1) * this._gap + i * height})`).select('rect')
             .attr('height', height)
             .attr('fill', this.getColor)
             .on('click', d => this._onClick(d))
@@ -228,19 +228,19 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
                 .on('click', d => this._onClick(d))
-                .attr('class', (d, i) => this._rowCssClass + ' _' + i)
+                .attr('class', (d, i) => `${this._rowCssClass} _${i}`)
                 .text(d => this.label()(d));
             transition(lab, this.transitionDuration(), this.transitionDelay())
                 .attr('transform', d => this._translateX(d));
         }
         if (this.renderTitleLabel()) {
-            const titlelab = rows.select('.' + this._titleRowCssClass)
+            const titlelab = rows.select(`.${this._titleRowCssClass}`)
                 .attr('x', this.effectiveWidth() - this._titleLabelOffsetX)
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
                 .attr('text-anchor', 'end')
                 .on('click', d => this._onClick(d))
-                .attr('class', (d, i) => this._titleRowCssClass + ' _' + i)
+                .attr('class', (d, i) => `${this._titleRowCssClass} _${i}`)
                 .text(d => this.title()(d));
             transition(titlelab, this.transitionDuration(), this.transitionDelay())
                 .attr('transform', d => this._translateX(d));
@@ -268,7 +268,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         const x = this._x(this.cappedValueAccessor(d)),
             x0 = this._rootValue(),
             s = x > x0 ? x0 : x;
-        return 'translate(' + s + ',0)';
+        return `translate(${s},0)`;
     }
 
     _doRedraw () {

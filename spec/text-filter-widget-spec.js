@@ -7,12 +7,12 @@ describe('dc.textFilterWidget', () => {
     beforeEach(() => {
         dateFixture = loadDateFixture();
         data = crossfilter(dateFixture);
-        dimension = data.dimension(d => d.countrycode + ' ' + d.state);
+        dimension = data.dimension(d => `${d.countrycode} ${d.state}`);
         group = dimension.group().reduceSum(d => 1);
 
         id = 'input-filter';
         appendChartID(id);
-        chart = dc.textFilterWidget('#' + id)
+        chart = dc.textFilterWidget(`#${id}`)
             .dimension(dimension)
             .group(group);
         chart.render();

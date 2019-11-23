@@ -11,7 +11,7 @@ describe('dc.coordinateGridChart', () => {
         id = 'coordinate-grid-chart';
         appendChartID(id);
 
-        chart = dc.lineChart('#' + id)
+        chart = dc.lineChart(`#${id}`)
             .width(500)
             .height(150)
             .dimension(dimension)
@@ -169,7 +169,7 @@ describe('dc.coordinateGridChart', () => {
 
             it('should add clip path refs to the chart body', () => {
                 chart.selectAll('g.chart-body').each(function () {
-                    expect(d3.select(this).attr('clip-path')).toMatchUrl(window.location.href + '#coordinate-grid-chart-clip');
+                    expect(d3.select(this).attr('clip-path')).toMatchUrl(`${window.location.href}#coordinate-grid-chart-clip`);
                 });
             });
 
@@ -958,7 +958,7 @@ describe('dc.coordinateGridChart', () => {
     function buildRangeChart () {
         const rangeId = 'range-chart';
         appendChartID(rangeId);
-        return dc.lineChart('#' + rangeId)
+        return dc.lineChart(`#${rangeId}`)
             .dimension(dimension)
             .group(dimension.group().reduceSum(d => d.id))
             .x(d3.scaleUtc().domain([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]));

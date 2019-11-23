@@ -245,7 +245,7 @@ export const d3Box = function () {
                         return width / 2;
                     };
 
-                const outlier = _g.selectAll('circle.' + outlierClass)
+                const outlier = _g.selectAll(`circle.${outlierClass}`)
                     .data(outlierIndices, Number);
 
                 outlier.enter().insert('circle', 'text')

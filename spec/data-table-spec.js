@@ -17,7 +17,7 @@ describe('dc.dataTable', () => {
 
         id = 'data-table';
         appendChartID(id);
-        chart = dc.dataTable('#' + id)
+        chart = dc.dataTable(`#${id}`)
             .dimension(dimension)
             .group(valueGroup)
             .transitionDuration(0)
@@ -171,7 +171,7 @@ describe('dc.dataTable', () => {
     });
     describe('specifying chart columns with function', () => {
         beforeEach(() => {
-            chart.columns([function (d) {return '' + d.id + 'test';}]);
+            chart.columns([function (d) {return `${d.id}test`;}]);
             chart.render();
         });
         it('should render function result and no header', () => {
@@ -190,7 +190,7 @@ describe('dc.dataTable', () => {
             chart.columns([{
                 label: 'Test ID',
                 format: function (d) {
-                    return 'test' + d.id;
+                    return `test${d.id}`;
                 }
             }]);
             chart.render();
@@ -225,7 +225,7 @@ describe('dc.dataTable', () => {
             chart.columns([{
                 label: 'Test ID',
                 format: function (d) {
-                    return 'test' + d.id;
+                    return `test${d.id}`;
                 }
             }]);
             chart.render();

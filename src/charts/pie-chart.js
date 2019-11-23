@@ -62,7 +62,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
         this.colorAccessor(d => this.cappedKeyAccessor(d));
 
-        this.title(d => this.cappedKeyAccessor(d) + ': ' + this.cappedValueAccessor(d));
+        this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
 
         this.label(d => this.cappedKeyAccessor(d));
         this.renderLabel(true);
@@ -88,7 +88,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
         this._g = this.svg()
             .append('g')
-            .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
+            .attr('transform', `translate(${this.cx()},${this.cy()})`);
 
         this._g.append('g').attr('class', this._sliceGroupCssClass);
         this._g.append('g').attr('class', this._labelGroupCssClass);
@@ -119,12 +119,12 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
 
         if (this._g) {
-            const slices = this._g.select('g.' + this._sliceGroupCssClass)
-                .selectAll('g.' + this._sliceCssClass)
+            const slices = this._g.select(`g.${this._sliceGroupCssClass}`)
+                .selectAll(`g.${this._sliceCssClass}`)
                 .data(pieData);
 
-            const labels = this._g.select('g.' + this._labelGroupCssClass)
-                .selectAll('text.' + this._labelCssClass)
+            const labels = this._g.select(`g.${this._labelGroupCssClass}`)
+                .selectAll(`text.${this._labelCssClass}`)
                 .data(pieData);
 
             this._removeElements(slices, labels);
@@ -136,7 +136,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             this._highlightFilter();
 
             transition(this._g, this.transitionDuration(), this.transitionDelay())
-                .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
+                .attr('transform', `translate(${this.cx()},${this.cy()})`);
         }
     }
 
@@ -154,7 +154,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return slices
             .enter()
             .append('g')
-            .attr('class', (d, i) => this._sliceCssClass + ' _' + i);
+            .attr('class', (d, i) => `${this._sliceCssClass} _${i}`);
     }
 
     _createSlicePath (slicesEnter, arcs) {
@@ -197,7 +197,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _highlightSlice (i, whether) {
-        this.select('g.pie-slice._' + i)
+        this.select(`g.pie-slice._${i}`)
             .classed('highlight', whether);
     }
 
@@ -207,7 +207,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 .enter()
                 .append('text')
                 .attr('class', (d, i) => {
-                    let classes = this._sliceCssClass + ' ' + this._labelCssClass + ' _' + i;
+                    let classes = `${this._sliceCssClass} ${this._labelCssClass} _${i}`;
                     if (this._externalLabelRadius) {
                         classes += ' external';
                     }
@@ -228,7 +228,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _updateLabelPaths (pieData, arcs) {
-        let polyline = this._g.selectAll('polyline.' + this._sliceCssClass)
+        let polyline = this._g.selectAll(`polyline.${this._sliceCssClass}`)
             .data(pieData);
 
         polyline.exit().remove();
@@ -236,7 +236,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         polyline = polyline
             .enter()
             .append('polyline')
-            .attr('class', (d, i) => 'pie-path _' + i + ' ' + this._sliceCssClass)
+            .attr('class', (d, i) => `pie-path _${i} ${this._sliceCssClass}`)
             .on('click', (d, i) => this._onClick(d, i))
             .on('mouseover', (d, i) => {
                 this._highlightSlice(i, true);
@@ -277,7 +277,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _updateSlicePaths (pieData, arcs) {
-        const slicePaths = this._g.selectAll('g.' + this._sliceCssClass)
+        const slicePaths = this._g.selectAll(`g.${this._sliceCssClass}`)
             .data(pieData)
             .select('path')
             .attr('d', (d, i) => this._safeArc(d, i, arcs));
@@ -293,7 +293,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     _updateLabels (pieData, arcs) {
         if (this.renderLabel()) {
-            const labels = this._g.selectAll('text.' + this._labelCssClass)
+            const labels = this._g.selectAll(`text.${this._labelCssClass}`)
                 .data(pieData);
             this._positionLabels(labels, arcs);
             if (this._externalLabelRadius && this._drawPaths) {
@@ -304,7 +304,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     _updateTitles (pieData) {
         if (this.renderTitle()) {
-            this._g.selectAll('g.' + this._sliceCssClass)
+            this._g.selectAll(`g.${this._sliceCssClass}`)
                 .data(pieData)
                 .select('title')
                 .text(d => this.title()(d.data));
@@ -319,7 +319,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     _highlightFilter () {
         const chart = this;
         if (this.hasFilter()) {
-            this.selectAll('g.' + this._sliceCssClass).each(function (d) {
+            this.selectAll(`g.${this._sliceCssClass}`).each(function (d) {
                 if (chart._isSelectedSlice(d)) {
                     chart.highlightSelected(this);
                 } else {
@@ -327,7 +327,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 }
             });
         } else {
-            this.selectAll('g.' + this._sliceCssClass).each(function () {
+            this.selectAll(`g.${this._sliceCssClass}`).each(function () {
                 chart.resetHighlight(this);
             });
         }
@@ -524,7 +524,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         if (isNaN(centroid[0]) || isNaN(centroid[1])) {
             return 'translate(0,0)';
         } else {
-            return 'translate(' + centroid + ')';
+            return `translate(${centroid})`;
         }
     }
 

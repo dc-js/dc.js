@@ -9,7 +9,7 @@ describe('dc.dataCount', () => {
         countryDimension.filter('CA');
     });
     function buildChart (id) {
-        const dataCount = dc.dataCount('#' + id)
+        const dataCount = dc.dataCount(`#${id}`)
             .transitionDuration(0)
             .dimension(data)
             .group(groupAll);

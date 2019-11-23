@@ -168,7 +168,7 @@ d3.csv('ndx.csv').then(data => {
     const dayOfWeek = ndx.dimension(d => {
         const day = d.dd.getDay();
         const name = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        return day + '.' + name[day];
+        return `${day}.${name[day]}`;
     });
     const dayOfWeekGroup = dayOfWeek.group();
 
@@ -245,15 +245,15 @@ d3.csv('ndx.csv').then(data => {
         .renderTitle(true)
         .title(p => [
             p.key,
-            'Index Gain: ' + numberFormat(p.value.absGain),
-            'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%',
-            'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%'
+            `Index Gain: ${numberFormat(p.value.absGain)}`,
+            `Index Gain in Percentage: ${numberFormat(p.value.percentageGain)}%`,
+            `Fluctuation / Index Ratio: ${numberFormat(p.value.fluctuationPercentage)}%`
         ].join('\n'))
         //#### Customize Axes
 
         // Set a custom tick format. Both `.yAxis()` and `.xAxis()` return an axis object,
         // so any additional method chaining applies to the axis, not the chart.
-        .yAxis().tickFormat(v => v + '%');
+        .yAxis().tickFormat(v => `${v}%`);
 
     // #### Pie/Donut Charts
 
@@ -277,11 +277,11 @@ d3.csv('ndx.csv').then(data => {
     // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
         .label(d => {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
-                return d.key + '(0%)';
+                return `${d.key}(0%)`;
             }
             let label = d.key;
             if (all.value()) {
-                label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
+                label += `(${Math.floor(d.value / all.value() * 100)}%)`;
             }
             return label;
         })
@@ -356,13 +356,13 @@ d3.csv('ndx.csv').then(data => {
         .filterPrinter(filters => {
             const filter = filters[0];
             let s = '';
-            s += numberFormat(filter[0]) + '% -> ' + numberFormat(filter[1]) + '%';
+            s += `${numberFormat(filter[0])}% -> ${numberFormat(filter[1])}%`;
             return s;
         });
 
     // Customize axes
     fluctuationChart.xAxis().tickFormat(
-        v => v + '%');
+        v => `${v}%`);
     fluctuationChart.yAxis().ticks(5);
 
     //#### Stacked Area Chart
@@ -404,7 +404,7 @@ d3.csv('ndx.csv').then(data => {
             if (isNaN(value)) {
                 value = 0;
             }
-            return dateFormat(d.key) + '\n' + numberFormat(value);
+            return `${dateFormat(d.key)}\n${numberFormat(value)}`;
         });
 
     //#### Range Chart
@@ -481,7 +481,7 @@ d3.csv('ndx.csv').then(data => {
         // Specify a section function to nest rows of the table
         .section(d => {
             const format = d3.format('02d');
-            return d.dd.getFullYear() + '/' + format((d.dd.getMonth() + 1));
+            return `${d.dd.getFullYear()}/${format((d.dd.getMonth() + 1))}`;
         })
         // (_optional_) max number of records to be shown, `default = 25`
         .size(10)

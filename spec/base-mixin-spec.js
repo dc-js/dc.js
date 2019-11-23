@@ -15,7 +15,7 @@ describe('dc.baseMixin', () => {
             });
         id = 'base-chart';
         appendChartID(id);
-        chart.anchor('#' + id)
+        chart.anchor(`#${id}`)
             .resetSvg(); // so that renderlets can fire
         addFilterHandler = chart.addFilterHandler();
         hasFilterHandler = chart.hasFilterHandler();
@@ -312,7 +312,7 @@ describe('dc.baseMixin', () => {
 
             describe('without an id', () => {
                 beforeEach(() => {
-                    d3.select('#' + id).remove();
+                    d3.select(`#${id}`).remove();
                     anchorDiv = d3.select('body').append('div').attr('class', 'no-id').node();
                     chart.anchor(anchorDiv);
                 });
@@ -351,7 +351,7 @@ describe('dc.baseMixin', () => {
 
             describe('without an id', () => {
                 beforeEach(() => {
-                    d3.select('#' + id).remove();
+                    d3.select(`#${id}`).remove();
                     anchorDiv = d3.select('body').append('div').attr('class', 'no-id').node();
                     chart.anchor(anchorDiv);
                 });
@@ -371,7 +371,7 @@ describe('dc.baseMixin', () => {
         describe('using an id selector', () => {
             beforeEach(() => {
                 d3.select('body').append('div').attr('id', id);
-                chart.anchor('#' + id);
+                chart.anchor(`#${id}`);
             });
 
             it('should add the dc chart class to its parent div', () => {
@@ -379,7 +379,7 @@ describe('dc.baseMixin', () => {
             });
 
             it('should return the id selector when anchor is called', () => {
-                expect(chart.anchor()).toEqual('#' + id);
+                expect(chart.anchor()).toEqual(`#${id}`);
             });
 
             it('should return the id when anchorName is called', () => {

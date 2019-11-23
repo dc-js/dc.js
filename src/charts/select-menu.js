@@ -83,7 +83,7 @@ export class SelectMenu extends BaseMixin {
     }
 
     _renderOptions () {
-        const options = this._select.selectAll('option.' + OPTION_CSS_CLASS)
+        const options = this._select.selectAll(`option.${OPTION_CSS_CLASS}`)
             .data(this.data(), d => this.keyAccessor()(d));
 
         options.exit().remove();
@@ -95,7 +95,7 @@ export class SelectMenu extends BaseMixin {
             .merge(options)
             .text(this.title());
 
-        this._select.selectAll('option.' + OPTION_CSS_CLASS).sort(this._order);
+        this._select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(this._order);
 
         this._select.on('change', (d, i) => this._onChange(d, i));
     }

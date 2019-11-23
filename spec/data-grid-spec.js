@@ -13,7 +13,7 @@ describe('dc.dataGrid', () => {
 
         id = 'data-grid';
         appendChartID(id);
-        chart = dc.dataGrid('#' + id)
+        chart = dc.dataGrid(`#${id}`)
             .dimension(dimension)
             .group(d => 'Data Grid')
             .transitionDuration(0)

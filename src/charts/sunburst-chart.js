@@ -61,7 +61,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this.colorAccessor(d => this.keyAccessor()(d));
 
-        this.title(d => this.keyAccessor()(d) + ': ' + this._extendedValueAccessor(d));
+        this.title(d => `${this.keyAccessor()(d)}: ${this._extendedValueAccessor(d)}`);
 
         this.label(d => this.keyAccessor()(d));
         this.renderLabel(true);
@@ -101,7 +101,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this._g = this.svg()
             .append('g')
-            .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
+            .attr('transform', `translate(${this.cx()},${this.cy()})`);
 
         this._drawChart();
 
@@ -132,7 +132,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
 
         if (this._g) {
-            const slices = this._g.selectAll('g.' + this._sliceCssClass)
+            const slices = this._g.selectAll(`g.${this._sliceCssClass}`)
                 .data(sunburstData);
             this._createElements(slices, arcs, sunburstData);
 
@@ -143,7 +143,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             this._highlightFilter();
 
             transition(this._g, this.transitionDuration(), this.transitionDelay())
-                .attr('transform', 'translate(' + this.cx() + ',' + this.cy() + ')');
+                .attr('transform', `translate(${this.cx()},${this.cy()})`);
         }
     }
 
@@ -159,9 +159,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return slices
             .enter()
             .append('g')
-            .attr('class', (d, i) => this._sliceCssClass +
-                ' _' + i + ' ' +
-                this._sliceCssClass + '-level-' + d.depth);
+            .attr('class', (d, i) => `${this._sliceCssClass 
+            } _${i} ${ 
+                this._sliceCssClass}-level-${d.depth}`);
     }
 
     _createSlicePath (slicesEnter, arcs) {
@@ -200,7 +200,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     _createLabels (sunburstData, arcs) {
         if (this.renderLabel()) {
-            const labels = this._g.selectAll('text.' + this._sliceCssClass)
+            const labels = this._g.selectAll(`text.${this._sliceCssClass}`)
                 .data(sunburstData);
 
             labels.exit().remove();
@@ -209,7 +209,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 .enter()
                 .append('text')
                 .attr('class', (d, i) => {
-                    let classes = this._sliceCssClass + ' _' + i;
+                    let classes = `${this._sliceCssClass} _${i}`;
                     if (this._externalLabelRadius) {
                         classes += ' external';
                     }
@@ -227,7 +227,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     _updateSlicePaths (sunburstData, arcs) {
-        const slicePaths = this._g.selectAll('g.' + this._sliceCssClass)
+        const slicePaths = this._g.selectAll(`g.${this._sliceCssClass}`)
             .data(sunburstData)
             .select('path')
             .attr('d', (d, i) => this._safeArc(arcs, d));
@@ -243,7 +243,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     _updateLabels (sunburstData, arcs) {
         if (this.renderLabel()) {
-            const labels = this._g.selectAll('text.' + this._sliceCssClass)
+            const labels = this._g.selectAll(`text.${this._sliceCssClass}`)
                 .data(sunburstData);
             this._positionLabels(labels, arcs);
         }
@@ -251,7 +251,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     _updateTitles (sunburstData) {
         if (this.renderTitle()) {
-            this._g.selectAll('g.' + this._sliceCssClass)
+            this._g.selectAll(`g.${this._sliceCssClass}`)
                 .data(sunburstData)
                 .select('title')
                 .text(d => this.title()(d));
@@ -265,7 +265,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     _highlightFilter () {
         const chart = this;
         if (chart.hasFilter()) {
-            chart.selectAll('g.' + chart._sliceCssClass).each(function (d) {
+            chart.selectAll(`g.${chart._sliceCssClass}`).each(function (d) {
                 if (chart._isSelectedSlice(d)) {
                     chart.highlightSelected(this);
                 } else {
@@ -273,7 +273,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 }
             });
         } else {
-            chart.selectAll('g.' + chart._sliceCssClass).each(function (d) {
+            chart.selectAll(`g.${chart._sliceCssClass}`).each(function (d) {
                 chart.resetHighlight(this);
             });
         }
@@ -505,7 +505,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         if (isNaN(centroid[0]) || isNaN(centroid[1])) {
             return 'translate(0,0)';
         } else {
-            return 'translate(' + centroid + ')';
+            return `translate(${centroid})`;
         }
     }
 

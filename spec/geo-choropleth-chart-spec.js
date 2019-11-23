@@ -26,7 +26,7 @@ describe('dc.geoChoropleth', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.geoChoroplethChart('#' + id);
+        const chart = dc.geoChoroplethChart(`#${id}`);
         chart.dimension(stateDimension)
             .group(stateValueSumGroup)
             .width(990)
@@ -36,7 +36,7 @@ describe('dc.geoChoropleth', () => {
             .overlayGeoJson(geoJson.features, 'state', d => d.properties.name)
             .overlayGeoJson(geoJson2.features, 'county')
             .transitionDuration(0)
-            .title(d => d.key + ' : ' + (d.value ? d.value : 0));
+            .title(d => `${d.key} : ${d.value ? d.value : 0}`);
         chart.render();
         return chart;
     }
@@ -45,7 +45,7 @@ describe('dc.geoChoropleth', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.geoChoroplethChart('#' + id);
+        const chart = dc.geoChoroplethChart(`#${id}`);
         chart.dimension(districtDimension)
             .group(districtValueEnrollGroup)
             .projection(d3.geoMercator()
@@ -57,7 +57,7 @@ describe('dc.geoChoropleth', () => {
             .colorDomain([0, 155])
             .overlayGeoJson(geoJson3.features, 'district', d => d.properties.NAME)
             .transitionDuration(0)
-            .title(d => d.key + ' : ' + (d.value ? d.value : 0));
+            .title(d => `${d.key} : ${d.value ? d.value : 0}`);
         chart.render();
         return chart;
     }

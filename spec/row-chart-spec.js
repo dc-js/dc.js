@@ -44,7 +44,7 @@ describe('dc.rowChart', () => {
         id = 'row-chart';
         appendChartID(id);
 
-        chart = dc.rowChart('#' + id);
+        chart = dc.rowChart(`#${id}`);
         chart.dimension(dimension)
             .width(600).height(200).gap(10)
             .transitionDuration(0);
@@ -164,7 +164,7 @@ describe('dc.rowChart', () => {
     });
 
     function itShouldBehaveLikeARowChartWithGroup (groupHolder, N, xAxisTicks) {
-        describe('for ' + groupHolder.groupType + ' data', () => {
+        describe(`for ${groupHolder.groupType} data`, () => {
             beforeEach(() => {
                 chart.group(groupHolder.group);
             });
@@ -184,7 +184,7 @@ describe('dc.rowChart', () => {
 
                 it('should number each row sequentially with classes', () => {
                     chart.selectAll('svg g g.row').each(function (r, i) {
-                        expect(d3.select(this).attr('class')).toBe('row _' + i);
+                        expect(d3.select(this).attr('class')).toBe(`row _${i}`);
                     });
                 });
 
@@ -211,7 +211,7 @@ describe('dc.rowChart', () => {
                     });
 
                     function itShouldVerticallyCenterLabelWithinRow (i) {
-                        it('should place label ' + i + ' within row ' + i, () => {
+                        it(`should place label ${i} within row ${i}`, () => {
                             const rowpos = rows.nodes()[i].getBoundingClientRect(),
                                 textpos = labels.nodes()[i].getBoundingClientRect();
                             expect((textpos.top + textpos.bottom) / 2)
@@ -237,7 +237,7 @@ describe('dc.rowChart', () => {
             describe('chart filters', () => {
                 beforeEach(() => {
                     chart.render();
-                    d3.select('#' + id).append('span').classed('filter', true);
+                    d3.select(`#${id}`).append('span').classed('filter', true);
                 });
 
                 it('should not have filter by default', () => {

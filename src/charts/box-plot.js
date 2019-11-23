@@ -154,7 +154,7 @@ export class BoxPlot extends CoordinateGridMixin {
 
     _boxTransform (d, i) {
         const xOffset = this.x()(this.keyAccessor()(d, i));
-        return 'translate(' + xOffset + ', 0)';
+        return `translate(${xOffset}, 0)`;
     }
 
     _preprocessData () {

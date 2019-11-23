@@ -43,7 +43,7 @@ describe('dc.numberDisplay', () => {
         beforeEach(() => {
             const id = 'empty-div';
             appendChartID(id);
-            chart = buildChart('#' + id);
+            chart = buildChart(`#${id}`);
         });
         it('should generate something', () => {
             expect(chart).not.toBeNull();
@@ -139,7 +139,7 @@ describe('dc.numberDisplay', () => {
             const id = 'full-div';
             const div = appendChartID(id);
             div.append('p').html('There are <span class="number-display">_</span> Total Widgets.');
-            chart = buildChart('#' + id);
+            chart = buildChart(`#${id}`);
         });
         it('should have text value in child', () => {
             expect(chart.root().text()).toEqual('There are 38.5 Total Widgets.');
@@ -171,7 +171,7 @@ describe('dc.numberDisplay', () => {
             group = countryDimension.group().reduceSum(d => +d.value);
             const id = 'empty-div';
             appendChartID(id);
-            chart = buildChart('#' + id);
+            chart = buildChart(`#${id}`);
             chart
                 .group(group)
                 .valueAccessor(kv => kv.value)
@@ -200,7 +200,7 @@ describe('dc.numberDisplay', () => {
         beforeEach(() => {
             const id = 'empty-div';
             appendChartID(id);
-            chart = buildChart('#' + id);
+            chart = buildChart(`#${id}`);
             chart.valueAccessor(x => x)
                 .group({value: function () { return Infinity; }})
                 .formatNumber(d => d)

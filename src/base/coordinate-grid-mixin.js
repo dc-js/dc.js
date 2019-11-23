@@ -175,8 +175,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._g = this._parent.append('g');
 
         this._chartBodyG = this._g.append('g').attr('class', 'chart-body')
-            .attr('transform', 'translate(' + this.margins().left + ', ' + this.margins().top + ')')
-            .attr('clip-path', 'url(' + href + '#' + this._getClipPathId() + ')');
+            .attr('transform', `translate(${this.margins().left}, ${this.margins().top})`)
+            .attr('clip-path', `url(${href}#${this._getClipPathId()})`);
 
         return this._g;
     }
@@ -497,15 +497,15 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         if (axisXG.empty()) {
             axisXG = g.append('g')
                 .attr('class', 'axis x')
-                .attr('transform', 'translate(' + this.margins().left + ',' + this._xAxisY() + ')');
+                .attr('transform', `translate(${this.margins().left},${this._xAxisY()})`);
         }
 
-        let axisXLab = g.select('text.' + X_AXIS_LABEL_CLASS);
+        let axisXLab = g.select(`text.${X_AXIS_LABEL_CLASS}`);
         if (axisXLab.empty() && this.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('transform', 'translate(' + (this.margins().left + this.xAxisLength() / 2) + ',' +
-                    (this.height() - this._xAxisLabelPadding) + ')')
+                .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${ 
+                    this.height() - this._xAxisLabelPadding})`)
                 .attr('text-anchor', 'middle');
         }
         if (this.xAxisLabel() && axisXLab.text() !== this.xAxisLabel()) {
@@ -513,21 +513,21 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
 
         transition(axisXG, this.transitionDuration(), this.transitionDelay())
-            .attr('transform', 'translate(' + this.margins().left + ',' + this._xAxisY() + ')')
+            .attr('transform', `translate(${this.margins().left},${this._xAxisY()})`)
             .call(this._xAxis);
         transition(axisXLab, this.transitionDuration(), this.transitionDelay())
-            .attr('transform', 'translate(' + (this.margins().left + this.xAxisLength() / 2) + ',' +
-                (this.height() - this._xAxisLabelPadding) + ')');
+            .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${ 
+                this.height() - this._xAxisLabelPadding})`);
     }
 
     _renderVerticalGridLines (g) {
-        let gridLineG = g.select('g.' + VERTICAL_CLASS);
+        let gridLineG = g.select(`g.${VERTICAL_CLASS}`);
 
         if (this._renderVerticalGridLine) {
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
-                    .attr('class', GRID_LINE_CLASS + ' ' + VERTICAL_CLASS)
-                    .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
+                    .attr('class', `${GRID_LINE_CLASS} ${VERTICAL_CLASS}`)
+                    .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
             }
 
             const ticks = this._xAxis.tickValues() ? this._xAxis.tickValues() :
@@ -615,12 +615,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     renderYAxisLabel (axisClass, text, rotation, labelXPosition) {
         labelXPosition = labelXPosition || this._yAxisLabelPadding;
 
-        let axisYLab = this.g().select('text.' + Y_AXIS_LABEL_CLASS + '.' + axisClass + '-label');
+        let axisYLab = this.g().select(`text.${Y_AXIS_LABEL_CLASS}.${axisClass}-label`);
         const labelYPosition = (this.margins().top + this.yAxisHeight() / 2);
         if (axisYLab.empty() && text) {
             axisYLab = this.g().append('text')
-                .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')')
-                .attr('class', Y_AXIS_LABEL_CLASS + ' ' + axisClass + '-label')
+                .attr('transform', `translate(${labelXPosition},${labelYPosition}),rotate(${rotation})`)
+                .attr('class', `${Y_AXIS_LABEL_CLASS} ${axisClass}-label`)
                 .attr('text-anchor', 'middle')
                 .text(text);
         }
@@ -628,19 +628,19 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             axisYLab.text(text);
         }
         transition(axisYLab, this.transitionDuration(), this.transitionDelay())
-            .attr('transform', 'translate(' + labelXPosition + ',' + labelYPosition + '),rotate(' + rotation + ')');
+            .attr('transform', `translate(${labelXPosition},${labelYPosition}),rotate(${rotation})`);
     }
 
     renderYAxisAt (axisClass, axis, position) {
-        let axisYG = this.g().select('g.' + axisClass);
+        let axisYG = this.g().select(`g.${axisClass}`);
         if (axisYG.empty()) {
             axisYG = this.g().append('g')
-                .attr('class', 'axis ' + axisClass)
-                .attr('transform', 'translate(' + position + ',' + this.margins().top + ')');
+                .attr('class', `axis ${axisClass}`)
+                .attr('transform', `translate(${position},${this.margins().top})`);
         }
 
         transition(axisYG, this.transitionDuration(), this.transitionDelay())
-            .attr('transform', 'translate(' + position + ',' + this.margins().top + ')')
+            .attr('transform', `translate(${position},${this.margins().top})`)
             .call(axis);
     }
 
@@ -653,7 +653,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     _renderHorizontalGridLinesForAxis (g, scale, axis) {
-        let gridLineG = g.select('g.' + HORIZONTAL_CLASS);
+        let gridLineG = g.select(`g.${HORIZONTAL_CLASS}`);
 
         if (this._renderHorizontalGridLine) {
             // see https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
@@ -662,8 +662,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
-                    .attr('class', GRID_LINE_CLASS + ' ' + HORIZONTAL_CLASS)
-                    .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
+                    .attr('class', `${GRID_LINE_CLASS} ${HORIZONTAL_CLASS}`)
+                    .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
             }
 
             const lines = gridLineG.selectAll('line')
@@ -937,7 +937,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             // To retrieve selection we need self._gBrush
             this._gBrush = g.append('g')
                 .attr('class', 'brush')
-                .attr('transform', 'translate(' + this.margins().left + ',' + this.margins().top + ')');
+                .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
 
             this.setBrushExtents();
 
@@ -948,7 +948,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     createBrushHandlePaths (gBrush) {
-        let brushHandles = gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS).data([{type: 'w'}, {type: 'e'}]);
+        let brushHandles = gBrush.selectAll(`path.${CUSTOM_BRUSH_HANDLE_CLASS}`).data([{type: 'w'}, {type: 'e'}]);
 
         brushHandles = brushHandles
             .enter()
@@ -1027,7 +1027,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 this._gBrush
                     .call(this._brush.move, null);
 
-                this._gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                this._gBrush.selectAll(`path.${CUSTOM_BRUSH_HANDLE_CLASS}`)
                     .attr('display', 'none');
             } else {
                 const scaledSelection = [this._x(brushSelection[0]), this._x(brushSelection[1])];
@@ -1038,9 +1038,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 gBrush
                     .call(this._brush.move, scaledSelection);
 
-                gBrush.selectAll('path.' + CUSTOM_BRUSH_HANDLE_CLASS)
+                gBrush.selectAll(`path.${CUSTOM_BRUSH_HANDLE_CLASS}`)
                     .attr('display', null)
-                    .attr('transform', (d, i) => 'translate(' + this._x(brushSelection[i]) + ', 0)')
+                    .attr('transform', (d, i) => `translate(${this._x(brushSelection[i])}, 0)`)
                     .attr('d', d => this.resizeHandlePath(d));
             }
         }
@@ -1055,19 +1055,19 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     resizeHandlePath (d) {
         d = d.type;
         const e = +(d === 'e'), x = e ? 1 : -1, y = this.effectiveHeight() / 3;
-        return 'M' + (0.5 * x) + ',' + y +
-            'A6,6 0 0 ' + e + ' ' + (6.5 * x) + ',' + (y + 6) +
-            'V' + (2 * y - 6) +
-            'A6,6 0 0 ' + e + ' ' + (0.5 * x) + ',' + (2 * y) +
-            'Z' +
-            'M' + (2.5 * x) + ',' + (y + 8) +
-            'V' + (2 * y - 8) +
-            'M' + (4.5 * x) + ',' + (y + 8) +
-            'V' + (2 * y - 8);
+        return `M${0.5 * x},${y 
+        }A6,6 0 0 ${e} ${6.5 * x},${y + 6 
+        }V${2 * y - 6 
+        }A6,6 0 0 ${e} ${0.5 * x},${2 * y 
+        }Z` +
+            `M${2.5 * x},${y + 8 
+            }V${2 * y - 8 
+            }M${4.5 * x},${y + 8 
+            }V${2 * y - 8}`;
     }
 
     _getClipPathId () {
-        return this.anchorName().replace(/[ .#=\[\]"]/g, '-') + '-clip';
+        return `${this.anchorName().replace(/[ .#=\[\]"]/g, '-')}-clip`;
     }
 
     /**
@@ -1090,14 +1090,14 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         // cannot select <clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
         const id = this._getClipPathId();
-        const chartBodyClip = utils.appendOrSelect(defs, '#' + id, 'clipPath').attr('id', id);
+        const chartBodyClip = utils.appendOrSelect(defs, `#${id}`, 'clipPath').attr('id', id);
 
         const padding = this._clipPadding * 2;
 
         utils.appendOrSelect(chartBodyClip, 'rect')
             .attr('width', this.xAxisLength() + padding)
             .attr('height', this.yAxisHeight() + padding)
-            .attr('transform', 'translate(-' + this._clipPadding + ', -' + this._clipPadding + ')');
+            .attr('transform', `translate(-${this._clipPadding}, -${this._clipPadding})`);
     }
 
     _preprocessData () {

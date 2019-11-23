@@ -182,7 +182,7 @@ export class DataTable extends BaseMixin {
 
     _renderRows (sections) {
         const rows = sections.order()
-            .selectAll('tr.' + ROW_CSS_CLASS)
+            .selectAll(`tr.${ROW_CSS_CLASS}`)
             .data(d => d.values);
 
         const rowEnter = rows.enter()
@@ -191,7 +191,7 @@ export class DataTable extends BaseMixin {
 
         this._columns.forEach((v, i) => {
             rowEnter.append('td')
-                .attr('class', COLUMN_CSS_CLASS + ' _' + i)
+                .attr('class', `${COLUMN_CSS_CLASS} _${i}`)
                 .html(d => this._doColumnValueFormat(v, d));
         });
 

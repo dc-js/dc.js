@@ -30,7 +30,7 @@ describe('dc.sunburstChart', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.sunburstChart('#' + id);
+        const chart = dc.sunburstChart(`#${id}`);
         chart.dimension(countryRegionStateDimension).group(countryRegionStateGroup)
             .width(width)
             .height(height)
@@ -102,7 +102,7 @@ describe('dc.sunburstChart', () => {
         });
         it('slice css class should be numbered with index', () => {
             chart.selectAll('g.pie-slice').each(function (p, i) {
-                expect(d3.select(this).attr('class')).toContain('pie-slice _' + i);
+                expect(d3.select(this).attr('class')).toContain(`pie-slice _${i}`);
             });
         });
         it('slice path should be filled', () => {
@@ -152,7 +152,7 @@ describe('dc.sunburstChart', () => {
                     .render();
                 return chart;
             });
-            it('root g should be translated to ' + newCenter.x + ',' + newCenter.y, () => {
+            it(`root g should be translated to ${newCenter.x},${newCenter.y}`, () => {
                 expect(chart.select('svg g').attr('transform')).toMatchTranslate(newCenter.x, newCenter.y);
             });
         });
