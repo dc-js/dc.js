@@ -57,6 +57,9 @@
     "implicit-arrow-linebreak": "error",
     "arrow-parens": ["error", "as-needed"],
     "space-before-function-paren": ["error", "always"],
+    "no-useless-concat": "error",
+    "prefer-template": "off",
+    "template-curly-spacing": "off",
     "valid-jsdoc": ["error", {"requireParamDescription": false, "requireReturnDescription": false}]
   }
 }

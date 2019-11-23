@@ -87,7 +87,7 @@ export class BarChart extends StackMixin {
         layers = layers
             .enter()
             .append('g')
-            .attr('class', (d, i) => 'stack ' + '_' + i)
+            .attr('class', (d, i) => 'stack _' + i)
             .merge(layers);
 
         const last = layers.size() - 1;

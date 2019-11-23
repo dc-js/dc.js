@@ -94,7 +94,7 @@ export class LineChart extends StackMixin {
         const layersEnter = layers
             .enter()
             .append('g')
-            .attr('class', (d, i) => 'stack ' + '_' + i);
+            .attr('class', (d, i) => 'stack _' + i);
 
         layers = layersEnter.merge(layers);
 

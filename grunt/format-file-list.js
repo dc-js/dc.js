@@ -24,7 +24,7 @@ module.exports = function (grunt) {
             '<body><div class="container">',
             '<h2>' + opts.heading + '</h2>',
             '<p>' + opts.description + '</p>',
-            '<p>Contributions <a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md">' + 'welcome</a>.',
+            '<p>Contributions <a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md">welcome</a>.',
             'Source <a href="' + opts.sourceLink + '">',
             'here</a>.</p>',
             body,
