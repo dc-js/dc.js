@@ -1,8 +1,6 @@
 //# dc.js Getting Started and How-To Guide
 'use strict';
 
-/* global dc,d3,crossfilter */
-
 // ### Create Chart Objects
 
 // Create chart objects associated with the container elements identified by the css selector.
