@@ -22,6 +22,8 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
+    const lintableFiles = `'${config.src}/**/*.js' '${config.spec}/**/*.js' '*.js' 'grunt/*.js' '${config.web}/stock.js'`;
+
     const sass = require('node-sass');
 
     grunt.initConfig({
@@ -46,19 +48,6 @@ module.exports = function (grunt) {
                 files: {
                     '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css': ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css']
                 }
-            }
-        },
-        eslint: {
-            source: {
-                src: [
-                    '<%= conf.src %>/**/*.js',
-                    '<%= conf.spec %>/**/*.js',
-                    '*.js',
-                    'grunt/*.js',
-                    '<%= conf.web %>/stock.js'],
-            },
-            options: {
-                configFile: '.eslintrc'
             }
         },
         watch: {
@@ -358,6 +347,12 @@ module.exports = function (grunt) {
             },
             rollup: {
                 command: 'rm -rf dist/; rollup --config'
+            },
+            eslint: {
+                command: `eslint -c .eslintrc ${lintableFiles}`
+            },
+            'eslint-fix': {
+                command: `eslint -c .eslintrc ${lintableFiles} --fix`
             }
         }
     });
@@ -405,7 +400,8 @@ module.exports = function (grunt) {
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
-    grunt.registerTask('lint', ['eslint']);
+    grunt.registerTask('lint', ['shell:eslint']);
+    grunt.registerTask('lint-fix', ['shell:eslint-fix']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };
