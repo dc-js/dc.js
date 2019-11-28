@@ -26,6 +26,7 @@ export class Legend {
         this._autoItemWidth = false;
         this._legendText = pluck('name');
         this._maxItems = undefined;
+        this._highlightSelected = false;
 
         this._g = undefined;
     }
@@ -74,6 +75,23 @@ export class Legend {
             return this._gap;
         }
         this._gap = gap;
+        return this;
+    }
+
+    /**
+     * This can be optionally used to enable highlighting legends for the selections/filters for the
+     * chart.
+     * @method highlightSelected
+     * @memberof dc.legend
+     * @instance
+     * @param {String} [highlightSelected]
+     * @return {String|dc.legend}
+     **/
+    highlightSelected (highlightSelected) {
+        if (!arguments.length) {
+            return this._highlightSelected;
+        }
+        this._highlightSelected = highlightSelected;
         return this;
     }
 
@@ -192,6 +210,7 @@ export class Legend {
             .attr('class', 'dc-legend')
             .attr('transform', `translate(${this._x},${this._y})`);
         let legendables = this._parent.legendables();
+        const filters = this._parent.filters();
 
         if (this._maxItems !== undefined) {
             legendables = legendables.slice(0, this._maxItems);
@@ -211,6 +230,12 @@ export class Legend {
             .on('click', d => {
                 d.chart.legendToggle(d);
             });
+
+        if (this._highlightSelected) {
+            itemEnter.classed(dc.constants.SELECTED_CLASS,
+                              d => filters.indexOf(d.name) !== -1);
+        }
+
 
         this._g.selectAll('g.dc-legend-item')
             .classed('fadeout', d => d.chart.isLegendableHidden(d));
