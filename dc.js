@@ -10495,7 +10495,8 @@ dc.legend = function () {
         _itemWidth = 70,
         _autoItemWidth = false,
         _legendText = dc.pluck('name'),
-        _maxItems;
+        _maxItems,
+        _highlightSelected = false;
 
     var _g;
 
@@ -10532,6 +10533,12 @@ dc.legend = function () {
             .on('click', function (d) {
                 d.chart.legendToggle(d);
             });
+
+        if (_highlightSelected) {
+            itemEnter.classed(dc.constants.SELECTED_CLASS, function (d) {
+                return filters.indexOf(d.name) !== -1;
+            });
+        }
 
         _g.selectAll('g.dc-legend-item')
             .classed('fadeout', function (d) {
@@ -10630,6 +10637,23 @@ dc.legend = function () {
             return _gap;
         }
         _gap = gap;
+        return _legend;
+    };
+
+    /**
+     * This can be optionally used to enable highlighting legends for the selections/filters for the
+     * chart.
+     * @method highlightSelected
+     * @memberof dc.legend
+     * @instance
+     * @param {String} [highlightSelected]
+     * @return {String|dc.legend}
+     **/
+    _legend.highlightSelected = function (highlightSelected) {
+        if (!arguments.length) {
+            return _highlightSelected;
+        }
+        _highlightSelected = highlightSelected;
         return _legend;
     };
 
