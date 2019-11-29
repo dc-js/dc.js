@@ -265,6 +265,9 @@ $font_sans_serif: sans-serif;
     g.dc-legend-item.fadeout {
         @extend %extend_1;
     }
+    g.dc-legend-item.selected {
+        fill: blue;
+    }
 }
 
 .dc-hard .number-display {

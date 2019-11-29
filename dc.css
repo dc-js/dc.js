@@ -203,11 +203,6 @@
   font-size: 11px; }
   .dc-legend .dc-legend-item {
     cursor: pointer; }
-  .dc-legend .dc-legend-item.selected{
-    /* background-color: #3182bd;
-    color: white; */
-    fill: #1e70f9;
-  }
 
 .dc-hard .number-display {
   float: none; }
