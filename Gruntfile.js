@@ -241,18 +241,6 @@ module.exports = function (grunt) {
                             'node_modules/reductio/reductio.js'
                         ],
                         dest: '<%= conf.web %>/js/'
-                    },
-                    {
-                        expand: true,
-                        flatten: true,
-                        nonull: true,
-                        src: [
-                            'node_modules/compare-versions/index.js'
-                        ],
-                        dest: '<%= conf.web %>/js/',
-                        rename: function (dest, src) {
-                            return `${dest}compare-versions.js`;
-                        }
                     }
                 ]
             },
