@@ -41,3 +41,6 @@ web/docs/html
 
 # Ignore, needed only for Github pages
 web/
+
+# Igonore, copied from npm modules
+spec/3rd-party/

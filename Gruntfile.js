@@ -93,19 +93,16 @@ module.exports = function (grunt) {
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
-                        '<%= conf.web %>/js/jasmine-jsreporter.js',
-                        '<%= conf.web %>/js/compare-versions.js',
-                        '<%= conf.spec %>/helpers/*.js'
+                        '<%= conf.spec %>/helpers/*.js',
+                        '<%= conf.spec %>/3rd-party/*.js'
                     ],
                     styles: [
-                        '<%= conf.web %>/css/dc.css'
+                        '<%= conf.dist %>/style/dc.css'
                     ],
                     outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
                 },
                 src: [
-                    '<%= conf.web %>/js/d3.js',
-                    '<%= conf.web %>/js/crossfilter.js',
                     '<%= conf.dist %>/<%= conf.pkg.name %>.js'
                 ]
             }
@@ -253,6 +250,32 @@ module.exports = function (grunt) {
                             'node_modules/compare-versions/index.js'
                         ],
                         dest: '<%= conf.web %>/js/',
+                        rename: function (dest, src) {
+                            return `${dest}compare-versions.js`;
+                        }
+                    }
+                ]
+            },
+            'specs': {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        nonull: true,
+                        src: [
+                            `node_modules/d3/${d3pkgSubDir}/d3.js`,
+                            'node_modules/crossfilter2/crossfilter.js',
+                        ],
+                        dest: '<%= conf.spec %>/3rd-party/'
+                    },
+                    {
+                        expand: true,
+                        flatten: true,
+                        nonull: true,
+                        src: [
+                            'node_modules/compare-versions/index.js'
+                        ],
+                        dest: '<%= conf.spec %>/3rd-party/',
                         rename: function (dest, src) {
                             return `${dest}compare-versions.js`;
                         }

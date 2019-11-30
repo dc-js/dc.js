@@ -7,14 +7,11 @@ module.exports = function (config) {
         frameworks: ['jasmine'],
         files: [
             // CSS files
-            'web/css/dc.css',
+            'dist/style/dc.css',
             // Helpers
-            'web/js/jasmine-jsreporter.js',
-            'web/js/compare-versions.js',
             'spec/helpers/*.js',
             // JS code dependencies
-            'web/js/d3.js',
-            'web/js/crossfilter.js',
+            'spec/3rd-party/*.js',
             // Code to be tested
             'dist/dc.js',
             // Jasmine spec files
