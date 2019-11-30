@@ -218,6 +218,12 @@ module.exports = function (grunt) {
                     },
                     {
                         expand: true,
+                        cwd: 'docs/old-api-docs',
+                        src: '**',
+                        dest: 'web/docs/'
+                    },
+                    {
+                        expand: true,
                         flatten: true,
                         nonull: true,
                         src: ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css', '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css'],
