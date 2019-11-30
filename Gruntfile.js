@@ -211,6 +211,13 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
+                        nonull: true,
+                        cwd: 'web-src',
+                        src: '**',
+                        dest: 'web/'
+                    },
+                    {
+                        expand: true,
                         flatten: true,
                         nonull: true,
                         src: ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css', '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css'],

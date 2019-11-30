@@ -39,5 +39,5 @@ web/docs/public
 # html docs are only checked into gh-pages branch
 web/docs/html
 
-# It is a generated file
-generated/
+# Ignore, needed only for Github pages
+web/
