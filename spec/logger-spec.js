@@ -78,32 +78,6 @@ describe('dc.logger', () => {
         });
     });
 
-    describe('deprecate', () => {
-        let dummy, wrappedFn;
-
-        beforeEach(() => {
-            dummy = {
-                origFn: function () {
-                }
-            };
-            spyOn(dummy, 'origFn');
-            spyOn(dc.logger, 'warn');
-
-            wrappedFn = dc.logger.deprecate(dummy.origFn, 'origFn is deprecated');
-        });
-        it('should call deprecated function and issue a warning', () => {
-            wrappedFn('a');
-            expect(dummy.origFn).toHaveBeenCalledWith('a');
-            expect(dc.logger.warn).toHaveBeenCalled();
-        });
-        it('should warn for one deprecated function only once', () => {
-            wrappedFn();
-            wrappedFn();
-            expect(dummy.origFn.calls.count()).toBe(2);
-            expect(dc.logger.warn.calls.count()).toBe(1);
-        });
-    });
-
     describe('warnOnce', () => {
         beforeEach(() => {
             spyOn(dc.logger, 'warn');
