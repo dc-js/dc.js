@@ -22,7 +22,7 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    const lintableFiles = `'${config.src}/**/*.js' '${config.spec}/**/*.js' '*.js' 'grunt/*.js' '${config.web}/stock.js'`;
+    const lintableFiles = `'${config.src}' '${config.spec}' '*.js' 'grunt/*.js' 'web-src/stock.js'`;
 
     const sass = require('node-sass');
 
@@ -373,10 +373,10 @@ module.exports = function (grunt) {
                 command: 'rm -rf dist/; rollup --config'
             },
             eslint: {
-                command: `eslint -c .eslintrc ${lintableFiles}`
+                command: `eslint ${lintableFiles}`
             },
             'eslint-fix': {
-                command: `eslint -c .eslintrc ${lintableFiles} --fix`
+                command: `eslint ${lintableFiles} --fix`
             }
         }
     });
