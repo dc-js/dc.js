@@ -26,7 +26,7 @@ describe('dc.compositeChart', () => {
             .xUnits(d3.utcDays)
             .shareColors(true)
             .compose([
-                dc.barChart(chart)
+                new dc.BarChart(chart)
                     .centerBar(true)
                     .group(dateValueSumGroup, 'Date Value Group Bar')
                     .gap(1),
@@ -501,7 +501,7 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        dc.barChart(chart)
+                        new dc.BarChart(chart)
                             .group(dateValueSumGroup, 'Date Value Group'),
                         rightChart = dc.lineChart(chart)
                             .group(dateIdSumGroup, 'Date ID Group')
@@ -602,7 +602,7 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        leftChart = dc.barChart(chart)
+                        leftChart = new dc.BarChart(chart)
                             .group(dateValueNegativeSumGroup, 'Date Value Group'),
                         rightChart = dc.lineChart(chart)
                             .group(dateIdSumGroup, 'Date ID Group')
@@ -635,7 +635,7 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        leftChart = dc.barChart(chart)
+                        leftChart = new dc.BarChart(chart)
                             .group(dateIdSumGroup, 'Date ID Group'),
                         rightChart = dc.lineChart(chart)
                             .group(dateValueNegativeSumGroup, 'Date Value Group')
@@ -668,7 +668,7 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        leftChart = dc.barChart(chart)
+                        leftChart = new dc.BarChart(chart)
                             .group(dateIdNegativeSumGroup, 'Date ID Group'),
                         rightChart = dc.lineChart(chart)
                             .group(dateValueNegativeSumGroup, 'Date Value Group')

@@ -1,5 +1,5 @@
 /* global appendChartID, loadBoxPlotFixture */
-describe('dc.boxPlot', () => {
+describe('dc.BoxPlot', () => {
     let id, chart;
     let data, dimension, group;
 
@@ -16,7 +16,7 @@ describe('dc.boxPlot', () => {
         id = 'boxplot';
         appendChartID(id);
 
-        chart = dc.boxPlot(`#${id}`);
+        chart = new dc.BoxPlot(`#${id}`);
         chart
             .dimension(dimension)
             .group(group)
