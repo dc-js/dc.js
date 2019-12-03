@@ -396,9 +396,6 @@ module.exports = function (grunt) {
     });
     grunt.registerTask('watch:scripts-sass-docs', () => {
         grunt.config('watch', {
-            options: {
-                interrupt: true
-            },
             scripts: grunt.config('watch').scripts,
             sass: grunt.config('watch').sass
         });
