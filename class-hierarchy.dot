@@ -1,40 +1,40 @@
 digraph dcHierarchy {
 graph [rankdir=LR, ranksep=0.5]
-node [fontname="sans-serif", fontsize=10, margin="0.05,0.05", href="dc.\N.html"]
+node [fontname="sans-serif", fontsize=10, margin="0.05,0.05", href="\N.html"]
 node [style=filled, fillcolor=palegreen]
-{ node [style=filled, fillcolor=lightblue] baseMixin colorMixin marginMixin bubbleMixin coordinateGridMixin stackMixin capMixin }
-baseMixin [href="dc.baseMixin.html"]
-colorMixin -> coordinateGridMixin
-marginMixin -> coordinateGridMixin
-coordinateGridMixin -> stackMixin
-stackMixin -> barChart
-coordinateGridMixin -> boxPlot
-coordinateGridMixin -> bubbleChart
-bubbleMixin -> bubbleChart
-colorMixin -> bubbleMixin
-bubbleMixin -> bubbleOverlay
-coordinateGridMixin -> compositeChart
-compositeChart -> seriesChart
-baseMixin -> dataCount
-baseMixin -> dataGrid
-baseMixin -> dataTable
-baseMixin -> colorMixin
-colorMixin -> geoChoroplethChart
-baseMixin -> marginMixin
-marginMixin -> heatMap
-colorMixin -> heatMap
-stackMixin -> lineChart
-baseMixin -> numberDisplay
-colorMixin -> pieChart
-baseMixin -> capMixin
-capMixin -> pieChart
-capMixin -> rowChart
-marginMixin -> rowChart
-colorMixin -> rowChart
-coordinateGridMixin -> scatterPlot
-baseMixin -> selectMenu
-baseMixin -> cboxMenu
-colorMixin -> sunburstChart
-capMixin -> sunburstChart
-baseMixin -> textFilterWidget
+{ node [style=filled, fillcolor=lightblue] BaseMixin ColorMixin MarginMixin BubbleMixin CoordinateGridMixin StackMixin CapMixin }
+BaseMixin
+ColorMixin -> CoordinateGridMixin
+MarginMixin -> CoordinateGridMixin
+CoordinateGridMixin -> StackMixin
+StackMixin -> BarChart
+CoordinateGridMixin -> BoxPlot
+CoordinateGridMixin -> BubbleChart
+BubbleMixin -> BubbleChart
+ColorMixin -> BubbleMixin
+BubbleMixin -> BubbleOverlay
+CoordinateGridMixin -> CompositeChart
+CompositeChart -> SeriesChart
+BaseMixin -> DataCount
+BaseMixin -> DataGrid
+BaseMixin -> DataTable
+BaseMixin -> ColorMixin
+ColorMixin -> GeoChoroplethChart
+BaseMixin -> MarginMixin
+MarginMixin -> HeatMap
+ColorMixin -> HeatMap
+StackMixin -> LineChart
+BaseMixin -> NumberDisplay
+ColorMixin -> PieChart
+BaseMixin -> CapMixin
+CapMixin -> PieChart
+CapMixin -> RowChart
+MarginMixin -> RowChart
+ColorMixin -> RowChart
+CoordinateGridMixin -> ScatterPlot
+BaseMixin -> SelectMenu
+BaseMixin -> CboxMenu
+ColorMixin -> SunburstChart
+CapMixin -> SunburstChart
+BaseMixin -> TextFilterWidget
 }
