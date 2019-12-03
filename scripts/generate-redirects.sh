@@ -43,7 +43,7 @@ dc.units.html
 dc.utils.html"
 
 generate () {
-    echo "<html><head><title>redirect</title><meta http-equiv=\"refresh\" content=\"0; url=$2\"></head></html>" > $1
+    echo "<html><script>window.location.href = '$2#' + window.location.href.split('#')[1]</script></html>" > $1
 }
 
 for f in $OLDIES; do
