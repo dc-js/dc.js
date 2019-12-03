@@ -66,9 +66,6 @@ Config._schemeCategory20c = [
     '#dadaeb', '#636363', '#969696', '#bdbdbd', '#d9d9d9'];
 
 /**
- * General configuration
- *
- * @class config
- * @returns {Config}
+ * General configuration object; see {@link Config} for members.
  */
 export const config = new Config();
