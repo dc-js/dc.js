@@ -11,7 +11,7 @@ describe('dc.scatterPlot', () => {
         id = 'scatter-plot';
         appendChartID(id);
 
-        chart = dc.scatterPlot(`#${id}`);
+        chart = new dc.ScatterPlot(`#${id}`);
         chart.dimension(dimension)
             .group(group)
             .width(500).height(180)
@@ -432,10 +432,10 @@ describe('dc.scatterPlot', () => {
                 .dimension(dimension)
                 .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
                 .transitionDuration(0)
-                .legend(dc.legend())
+                .legend(new dc.Legend())
                 .compose([
-                    subChart1 = dc.scatterPlot(compositeChart).colors('red').group(group, 'Scatter 1'),
-                    subChart2 = dc.scatterPlot(compositeChart).colors('blue').group(group, 'Scatter 2')
+                    subChart1 = new dc.ScatterPlot(compositeChart).colors('red').group(group, 'Scatter 1'),
+                    subChart2 = new dc.ScatterPlot(compositeChart).colors('blue').group(group, 'Scatter 2')
                 ]).render();
 
             firstItem = compositeChart.select('g.dc-legend g.dc-legend-item');

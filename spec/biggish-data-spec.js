@@ -96,7 +96,7 @@ describe('dc.barChart.biggish', () => {
             .stack(groupHourSeries, 'User Account Hacking', d => d.value.uha)
             .xUnits(d3.utcHours);
 
-        chartAttemptSeries.legend(dc.legend().horizontal(true).x(50).y(0).itemWidth(150).gap(5));
+        chartAttemptSeries.legend(new dc.Legend().horizontal(true).x(50).y(0).itemWidth(150).gap(5));
 
         chartRange
             .height(80)

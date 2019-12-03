@@ -17,7 +17,7 @@ describe('dc.seriesChart', () => {
 
         const id = 'series-chart';
         appendChartID(id);
-        chart = dc.seriesChart(`#${id}`);
+        chart = new dc.SeriesChart(`#${id}`);
 
         chart
             .width(210)

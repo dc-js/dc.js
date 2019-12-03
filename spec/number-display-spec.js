@@ -28,7 +28,7 @@ describe('dc.numberDisplay', () => {
     });
 
     function buildChart (id) {
-        const chart = dc.numberDisplay(id)
+        const chart = new dc.NumberDisplay(id)
             .transitionDuration(0)
             .group(meanGroup)
             .formatNumber(d3.format('.3s'))

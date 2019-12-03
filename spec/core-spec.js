@@ -23,7 +23,7 @@ describe('dc.core', () => {
     describe('charts', () => {
         let chart;
         beforeEach(() => {
-            chart = dc.pieChart('#id')
+            chart = new dc.PieChart('#id')
                     .dimension(valueDimension)
                     .group(valueGroup);
             spyOn(chart, 'filterAll');
@@ -57,10 +57,10 @@ describe('dc.core', () => {
         let chartGrouped;
         const chartGroup = 'testChartGroup';
         beforeEach(() => {
-            chart = dc.pieChart('#id')
+            chart = new dc.PieChart('#id')
                     .dimension(valueDimension)
                     .group(valueGroup);
-            chartGrouped = dc.pieChart('#id2', chartGroup)
+            chartGrouped = new dc.PieChart('#id2', chartGroup)
                     .dimension(valueDimension)
                     .group(valueGroup);
             return chart;
@@ -196,10 +196,10 @@ describe('dc.core', () => {
         let chart;
 
         beforeEach(() => {
-            chart = dc.pieChart('#a', 'groupA').dimension(valueDimension).group(valueGroup);
+            chart = new dc.PieChart('#a', 'groupA').dimension(valueDimension).group(valueGroup);
             spyOn(chart, 'filterAll');
             spyOn(chart, 'render');
-            dc.pieChart('#b', 'groupA').dimension(valueDimension).group(valueGroup);
+            new dc.PieChart('#b', 'groupA').dimension(valueDimension).group(valueGroup);
             new dc.BubbleChart('#c', 'groupB').dimension(valueDimension).group(valueGroup);
             new dc.BarChart('#b1', 'groupB').dimension(valueDimension).group(valueGroup);
             new dc.LineChart('#b2', 'groupB').dimension(valueDimension).group(valueGroup);

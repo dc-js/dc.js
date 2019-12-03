@@ -683,7 +683,7 @@ describe('dc.BarChart', () => {
 
             beforeEach(() => {
                 chart.stack(group)
-                    .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+                    .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
                     .render();
 
                 firstItem = chart.select('g.dc-legend g.dc-legend-item');

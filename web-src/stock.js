@@ -6,9 +6,9 @@
 // Create chart objects associated with the container elements identified by the css selector.
 // Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or
 // filtered by other page controls.
-const gainOrLossChart = dc.pieChart('#gain-loss-chart');
+const gainOrLossChart = new dc.PieChart('#gain-loss-chart');
 const fluctuationChart = new dc.BarChart('#fluctuation-chart');
-const quarterChart = dc.pieChart('#quarter-chart');
+const quarterChart = new dc.PieChart('#quarter-chart');
 const dayOfWeekChart = new dc.RowChart('#day-of-week-chart');
 const moveChart = new dc.LineChart('#monthly-move-chart');
 const volumeChart = new dc.BarChart('#monthly-volume-chart');
@@ -388,7 +388,7 @@ d3.csv('ndx.csv').then(data => {
     //##### Legend
 
         // Position the legend relative to the chart origin and specify items' height and separation.
-        .legend(dc.legend().x(800).y(10).itemHeight(13).gap(5))
+        .legend(new dc.Legend().x(800).y(10).itemHeight(13).gap(5))
         .brushOn(false)
         // Add the base layer of the stack with group. The second parameter specifies a series name for use in the
         // legend.

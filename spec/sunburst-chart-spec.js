@@ -30,7 +30,7 @@ describe('dc.sunburstChart', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.sunburstChart(`#${id}`);
+        const chart = new dc.SunburstChart(`#${id}`);
         chart.dimension(countryRegionStateDimension).group(countryRegionStateGroup)
             .width(width)
             .height(height)

@@ -22,7 +22,7 @@ describe('Dynamic data addition in crossfilter', () => {
             const div = appendChartID(id);
             div.append('a').attr('class', 'reset').style('display', 'none');
             div.append('span').attr('class', 'filter').style('display', 'none');
-            const pieChart = dc.pieChart(`#${id}`);
+            const pieChart = new dc.PieChart(`#${id}`);
             pieChart.dimension(valueDimension).group(valueGroup)
                 .width(width)
                 .height(height)

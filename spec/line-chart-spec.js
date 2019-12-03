@@ -611,7 +611,7 @@ describe('dc.lineChart', () => {
 
             beforeEach(() => {
                 chart.stack(group)
-                    .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+                    .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
                     .renderArea(true)
                     .render();
 

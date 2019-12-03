@@ -15,7 +15,7 @@ describe('dc.selectMenu', () => {
         id = 'select-menu';
         appendChartID(id);
 
-        chart = dc.selectMenu(`#${id}`);
+        chart = new dc.SelectMenu(`#${id}`);
         chart.dimension(stateDimension)
             .group(stateGroup)
             .transitionDuration(0);

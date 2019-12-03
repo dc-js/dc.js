@@ -339,7 +339,7 @@ describe('dc.compositeChart', () => {
 
         describe('legends composed of subchart groups', () => {
             beforeEach(() => {
-                chart.legend(dc.legend().x(200).y(10).itemHeight(13).gap(5)).render();
+                chart.legend(new dc.Legend().x(200).y(10).itemHeight(13).gap(5)).render();
             });
 
             it('should generate a legend item for each subchart', () => {
@@ -720,8 +720,8 @@ describe('dc.compositeChart', () => {
                 .x(d3.scaleLinear().domain([0,70]))
                 .brushOn(true)
                 .compose([
-                    dc.scatterPlot(chart),
-                    dc.scatterPlot(chart),
+                    new dc.ScatterPlot(chart),
+                    new dc.ScatterPlot(chart),
                     new dc.LineChart(chart).dimension(lineDimension).group(lineGroup)
                 ]).render();
         });
