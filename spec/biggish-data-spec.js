@@ -8,7 +8,7 @@ describe('dc.barChart.biggish', () => {
     beforeEach(() => {
         appendChartID('stack-chart');
         appendChartID('range-chart');
-        const chartAttemptSeries = dc.lineChart('#stack-chart');
+        const chartAttemptSeries = new dc.LineChart('#stack-chart');
         const chartRange = new dc.BarChart('#range-chart');
 
         const data = biggishData();

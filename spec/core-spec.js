@@ -200,11 +200,11 @@ describe('dc.core', () => {
             spyOn(chart, 'filterAll');
             spyOn(chart, 'render');
             dc.pieChart('#b', 'groupA').dimension(valueDimension).group(valueGroup);
-            dc.bubbleChart('#c', 'groupB').dimension(valueDimension).group(valueGroup);
+            new dc.BubbleChart('#c', 'groupB').dimension(valueDimension).group(valueGroup);
             new dc.BarChart('#b1', 'groupB').dimension(valueDimension).group(valueGroup);
-            dc.lineChart('#b2', 'groupB').dimension(valueDimension).group(valueGroup);
-            dc.dataCount('#b3', 'groupB').dimension(valueDimension).group(valueGroup);
-            dc.dataTable('#b4', 'groupB').dimension(valueDimension).group(valueGroup);
+            new dc.LineChart('#b2', 'groupB').dimension(valueDimension).group(valueGroup);
+            new dc.DataCount('#b3', 'groupB').dimension(valueDimension).group(valueGroup);
+            new dc.DataTable('#b4', 'groupB').dimension(valueDimension).group(valueGroup);
             return chart;
         });
 

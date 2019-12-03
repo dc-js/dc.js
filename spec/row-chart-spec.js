@@ -44,7 +44,7 @@ describe('dc.rowChart', () => {
         id = 'row-chart';
         appendChartID(id);
 
-        chart = dc.rowChart(`#${id}`);
+        chart = new dc.RowChart(`#${id}`);
         chart.dimension(dimension)
             .width(600).height(200).gap(10)
             .transitionDuration(0);

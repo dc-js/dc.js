@@ -26,7 +26,7 @@ describe('dc.geoChoropleth', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.geoChoroplethChart(`#${id}`);
+        const chart = new dc.GeoChoroplethChart(`#${id}`);
         chart.dimension(stateDimension)
             .group(stateValueSumGroup)
             .width(990)
@@ -45,7 +45,7 @@ describe('dc.geoChoropleth', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.geoChoroplethChart(`#${id}`);
+        const chart = new dc.GeoChoroplethChart(`#${id}`);
         chart.dimension(districtDimension)
             .group(districtValueEnrollGroup)
             .projection(d3.geoMercator()

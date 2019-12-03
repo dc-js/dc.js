@@ -10,7 +10,7 @@ describe('dc.legend', () => {
 
         id = 'legend-chart';
         appendChartID(id);
-        chart = dc.lineChart(`#${id}`);
+        chart = new dc.LineChart(`#${id}`);
 
         chart
             .dimension(dateDimension)
@@ -207,15 +207,15 @@ describe('dc.legend', () => {
         beforeEach(() => {
             id = 'legend-chart-dashed';
             appendChartID(id);
-            chart = dc.compositeChart(`#${id}`);
+            chart = new dc.CompositeChart(`#${id}`);
 
-            const subChart1 = dc.lineChart(chart);
+            const subChart1 = new dc.LineChart(chart);
             subChart1
                 .dimension(dateDimension)
                 .group(dateIdSumGroup, 'Id Sum')
                 .dashStyle([10,1]);
 
-            const subChart2 = dc.lineChart(chart);
+            const subChart2 = new dc.LineChart(chart);
             subChart2
                 .dimension(dateDimension)
                 .group(dateValueSumGroup, 'Value Sum')

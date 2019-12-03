@@ -427,7 +427,7 @@ describe('dc.scatterPlot', () => {
             id = 'scatter-plot-composite';
             appendChartID(id);
 
-            compositeChart = dc.compositeChart(`#${id}`);
+            compositeChart = new dc.CompositeChart(`#${id}`);
             compositeChart
                 .dimension(dimension)
                 .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))

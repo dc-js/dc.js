@@ -28,7 +28,7 @@ describe('dc.htmlLegend', () => {
             appendChartID(id);
             appendChartID(legendId);
 
-            chart = dc.lineChart(`#${id}`);
+            chart = new dc.LineChart(`#${id}`);
             chart
                 .dimension(dateDimension)
                 .group(dateIdSumGroup, 'Id Sum')
@@ -36,7 +36,7 @@ describe('dc.htmlLegend', () => {
                 .stack(dateValueSumGroup, 'Fixed', () => {
                 })
                 .x(d3.scaleTime().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
-                .legend(dc.htmlLegend().container(`#${legendId}`));
+                .legend(new dc.HtmlLegend().container(`#${legendId}`));
             legend = d3.select(`#${legendId}`);
         });
 
@@ -74,7 +74,7 @@ describe('dc.htmlLegend', () => {
 
         describe('with .horizontal(true)', () => {
             beforeEach(() => {
-                chart.legend(dc.htmlLegend().container(`#${legendId}`).horizontal(true));
+                chart.legend(new dc.HtmlLegend().container(`#${legendId}`).horizontal(true));
                 chart.render();
             });
 
@@ -107,7 +107,7 @@ describe('dc.htmlLegend', () => {
 
         describe('with .maxItems(2)', () => {
             beforeEach(() => {
-                chart.legend(dc.htmlLegend().container(`#${legendId}`).horizontal(true).maxItems(2));
+                chart.legend(new dc.HtmlLegend().container(`#${legendId}`).horizontal(true).maxItems(2));
                 chart.render();
             });
             it('should display two items', () => {
@@ -117,7 +117,7 @@ describe('dc.htmlLegend', () => {
 
         describe('with invalid .maxItems', () => {
             beforeEach(() => {
-                chart.legend(dc.htmlLegend().container(`#${legendId}`).horizontal(true).maxItems('foo'));
+                chart.legend(new dc.HtmlLegend().container(`#${legendId}`).horizontal(true).maxItems('foo'));
                 chart.render();
             });
             it('should display three items', () => {
@@ -127,7 +127,7 @@ describe('dc.htmlLegend', () => {
 
         describe('with .legendText()', () => {
             beforeEach(() => {
-                chart.legend(dc.htmlLegend().container(`#${legendId}`).legendText((d, i) => {
+                chart.legend(new dc.HtmlLegend().container(`#${legendId}`).legendText((d, i) => {
                     const _i = i + 1;
                     return `${_i}. ${d.name}`;
                 }));

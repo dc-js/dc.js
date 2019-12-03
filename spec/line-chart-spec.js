@@ -11,7 +11,7 @@ describe('dc.lineChart', () => {
         id = 'line-chart';
         appendChartID(id);
 
-        chart = dc.lineChart(`#${id}`);
+        chart = new dc.LineChart(`#${id}`);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
             .x(d3.scaleUtc().domain([makeDate(2012, 1, 1), makeDate(2012, 11, 31)]))

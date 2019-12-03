@@ -7,14 +7,14 @@
 // Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or
 // filtered by other page controls.
 const gainOrLossChart = dc.pieChart('#gain-loss-chart');
-const fluctuationChart = dc.barChart('#fluctuation-chart');
+const fluctuationChart = new dc.BarChart('#fluctuation-chart');
 const quarterChart = dc.pieChart('#quarter-chart');
-const dayOfWeekChart = dc.rowChart('#day-of-week-chart');
-const moveChart = dc.lineChart('#monthly-move-chart');
-const volumeChart = dc.barChart('#monthly-volume-chart');
-const yearlyBubbleChart = dc.bubbleChart('#yearly-bubble-chart');
-const nasdaqCount = dc.dataCount('.dc-data-count');
-const nasdaqTable = dc.dataTable('.dc-data-table');
+const dayOfWeekChart = new dc.RowChart('#day-of-week-chart');
+const moveChart = new dc.LineChart('#monthly-move-chart');
+const volumeChart = new dc.BarChart('#monthly-volume-chart');
+const yearlyBubbleChart = new dc.BubbleChart('#yearly-bubble-chart');
+const nasdaqCount = new dc.DataCount('.dc-data-count');
+const nasdaqTable = new dc.DataTable('.dc-data-table');
 
 // ### Anchor Div for Charts
 /*
