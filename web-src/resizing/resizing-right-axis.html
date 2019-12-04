@@ -19,7 +19,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript" src="dc-resizing.js"></script>
 <script type="text/javascript">
-    var moveChart = dc.compositeChart("#monthly-move-chart");
+    var moveChart = new dc.CompositeChart("#monthly-move-chart");
 
     d3.csv("../examples/monthly-move.csv").then(function(data) {
         var dateParse = d3.timeParse("%m/%d/%Y");
@@ -72,12 +72,12 @@
                 .legend(dc.legend().x(90).y(10).itemHeight(13).gap(5))
                 .brushOn(true)
                 .compose([
-                    dc.lineChart(moveChart)
+                    new dc.LineChart(moveChart)
                             .group(indexAvgByMonthGroup, "Monthly Index Average")
                             .valueAccessor(function (d) {
                                 return d.value.avg;
                             }),
-                    dc.lineChart(moveChart)
+                    new dc.LineChart(moveChart)
                             .group(monthlyMoveGroup, "Monthly Index Move")
                             .valueAccessor(function (d) {
                                 return Math.sqrt(d.value);

@@ -20,7 +20,7 @@
 <script type="text/javascript">
 
 var chart = dc.boxPlot("#box-test"),
-    pie = dc.pieChart("#pie-chart");
+    pie = new dc.PieChart("#pie-chart");
 d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {

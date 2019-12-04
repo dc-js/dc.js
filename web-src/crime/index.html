@@ -328,12 +328,12 @@
 <script type="text/javascript">
     var numberFormat = d3.format(".2f");
 
-    var caChart = dc.bubbleOverlay("#ca-chart")
+    var caChart = new dc.BubbleOverlay("#ca-chart")
             .svg(d3.select("#ca-chart svg"));
 
-    var incidentChart = dc.barChart("#incident-chart");
+    var incidentChart = new dc.BarChart("#incident-chart");
 
-    var homicideChart = dc.lineChart("#homicide-chart");
+    var homicideChart = new dc.LineChart("#homicide-chart");
 
     function isTotalCrimeRateRecord(v) {
         return v.type === "Total, all violations" && v.sub_type === "Rate per 100,000 population";
@@ -505,7 +505,7 @@
                 .centerBar(true)
                 .elasticY(true)
                 .brushOn(false)
-                .legend(dc.legend().x(250).y(10))
+                .legend(new dc.Legend().x(250).y(10))
                 .title(function(d){
                     return d.key
                             + "\nViolent crime per 100k population: " + Math.round(d.value.violentCrimeAvg)

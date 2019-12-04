@@ -29,8 +29,8 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var fileChart = dc.sunburstChart("#file_chart");
-var typeChart = dc.pieChart("#type_chart");
+var fileChart = new dc.SunburstChart("#file_chart");
+var typeChart = new dc.PieChart("#type_chart");
 
 d3.tsv("cat.tsv").then(function (cats) {
     var ndx = crossfilter(cats);

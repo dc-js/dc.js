@@ -135,7 +135,7 @@
                               return;
                           }
                           cdiv.attr('class', 'chart-holder');
-                          var chart = dc.scatterPlot(cdiv);
+                          var chart = new dc.ScatterPlot(cdiv);
                           var dim = make_dimension(col,row),
                               group = dim.group();
                           var showYAxis = x === 1, showXAxis = y === 4;

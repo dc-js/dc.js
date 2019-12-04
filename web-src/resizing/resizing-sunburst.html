@@ -16,7 +16,7 @@
 <script type="text/javascript" src="dc-resizing.js"></script>
 <script type="text/javascript">
 
-var fileChart = dc.sunburstChart("#file_chart");
+var fileChart = new dc.SunburstChart("#file_chart");
 d3.tsv("../examples/cat.tsv").then(function (cats) {
 
     var ndx = crossfilter(cats);

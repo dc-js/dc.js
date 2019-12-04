@@ -39,10 +39,10 @@
                ];
 
     //## Create Chart Objects
-    var scoreChart = dc.barChart("#dc-score-barchart")
+    var scoreChart = new dc.BarChart("#dc-score-barchart")
                         .xAxisLabel('book_id')
                         .yAxisLabel('score');
-    var goodYesNoPieChart = dc.pieChart('#dc-coreAcc-piechart');
+    var goodYesNoPieChart = new dc.PieChart('#dc-coreAcc-piechart');
 
     //### Create Crossfilter Dimensions and Groups
     var ndx = crossfilter(data);

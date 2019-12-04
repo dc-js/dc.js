@@ -23,8 +23,8 @@
 </style>
 <script type="text/javascript">
 
-  var barChart = dc.barChart("#bartest");
-  var lineChart = dc.lineChart("#linetest");
+  var barChart = new dc.BarChart("#bartest");
+  var lineChart = new dc.LineChart("#linetest");
   d3.csv("morley.csv").then(function(experiments) {
 
       experiments.forEach(function(x) {

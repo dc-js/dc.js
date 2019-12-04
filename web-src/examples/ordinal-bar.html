@@ -17,7 +17,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-  var chart = dc.barChart('#test');
+  var chart = new dc.BarChart('#test');
 
   d3.json('fruits.json').then(function(counts) {
       var ndx            = crossfilter(counts),

@@ -59,7 +59,7 @@
             //     group2 = dim2.group();
 
             var plotColorMap = {0: '#ff7f0e', 1: '#2ca02c'};
-            var chart1 = dc.scatterPlot("#test1").width(300)
+            var chart1 = new dc.ScatterPlot("#test1").width(300)
                 .height(300)
                 .width(350)
                 .useCanvas(false)
@@ -86,7 +86,7 @@
 
             chart1.legend(dc.legend().x(250).y(10).itemHeight(13).gap(5).legendWidth(90).itemWidth(70));
 
-            var chart2 = dc.scatterPlot("#test2").width(300)
+            var chart2 = new dc.ScatterPlot("#test2").width(300)
                 .height(300)
                 .width(350)
                 .useCanvas(false)

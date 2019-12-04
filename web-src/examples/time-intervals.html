@@ -61,8 +61,8 @@ library by Mikola Lysenko.</p>
   var dateFormatSpecifier = '%x';
   var timeFormat = d3.timeFormat(dateFormatSpecifier);
   var dateFormatParser = d3.timeParse(dateFormatSpecifier);
-  var monthChart = dc.barChart("#month");
-  var costChart = dc.barChart("#cost");
+  var monthChart = new dc.BarChart("#month");
+  var costChart = new dc.BarChart("#cost");
   // data from http://stackoverflow.com/questions/22603788/crossfilter-how-to-extract-time-information-from-start-date-and-end-date-column
   d3.csv("intervals.csv").then(function(projects) {
 
