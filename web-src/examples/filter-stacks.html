@@ -35,8 +35,8 @@
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.barChart("#test"),
-          pie = dc.pieChart('#pie');
+      var chart = new dc.BarChart("#test"),
+          pie = new dc.PieChart('#pie');
       d3.csv("morley.csv").then(function(experiments) {
 
           experiments.forEach(function(x) {

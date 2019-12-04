@@ -10,7 +10,7 @@ describe('dc.legend', () => {
 
         id = 'legend-chart';
         appendChartID(id);
-        chart = dc.lineChart(`#${id}`);
+        chart = new dc.LineChart(`#${id}`);
 
         chart
             .dimension(dateDimension)
@@ -18,7 +18,7 @@ describe('dc.legend', () => {
             .stack(dateValueSumGroup, 'Value Sum')
             .stack(dateValueSumGroup, 'Fixed', () => {})
             .x(d3.scaleUtc().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
-            .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5));
+            .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5));
     });
 
     describe('rendering the legend', () => {
@@ -83,7 +83,7 @@ describe('dc.legend', () => {
 
         describe('with .horizontal(true)', () => {
             beforeEach(() => {
-                chart.legend(dc.legend().horizontal(true));
+                chart.legend(new dc.Legend().horizontal(true));
                 chart.render();
             });
 
@@ -97,7 +97,7 @@ describe('dc.legend', () => {
         describe('with .horizontal(true) and defined legendWidth and itemWidth', () => {
             let legendCoords;
             beforeEach(() => {
-                chart.legend(dc.legend().horizontal(true).legendWidth(60).itemWidth(30));
+                chart.legend(new dc.Legend().horizontal(true).legendWidth(60).itemWidth(30));
                 chart.render();
                 legendCoords = d3.range(3).map(i => coordsFromTranslate(legendItem(i).attr('transform')));
             });
@@ -114,7 +114,7 @@ describe('dc.legend', () => {
 
         describe('with .autoItemWidth not called', () => {
             beforeEach(() => {
-                chart.legend(dc.legend());
+                chart.legend(new dc.Legend());
             });
 
             it('_autoItemWidth should be false', () => {
@@ -124,7 +124,7 @@ describe('dc.legend', () => {
 
         describe('with .autoItemWidth(false)', () => {
             beforeEach(() => {
-                chart.legend(dc.legend().autoItemWidth(false));
+                chart.legend(new dc.Legend().autoItemWidth(false));
             });
 
             it('_autoItemWidth should be false', () => {
@@ -134,7 +134,7 @@ describe('dc.legend', () => {
 
         describe('with .autoItemWidth(true)', () => {
             beforeEach(() => {
-                chart.legend(dc.legend().autoItemWidth(true));
+                chart.legend(new dc.Legend().autoItemWidth(true));
             });
             it('_autoItemWidth should be true', () => {
                 expect(chart.legend().autoItemWidth()).toBe(true);
@@ -146,10 +146,10 @@ describe('dc.legend', () => {
             let fixedWidthOffset1, autoWidthCoords;
 
             beforeEach(() => {
-                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(false));
+                chart.legend(new dc.Legend().horizontal(true).itemWidth(30).autoItemWidth(false));
                 chart.render();
                 fixedWidthOffset1 = coordsFromTranslate(legendItem(1).attr('transform')).x;
-                chart.legend(dc.legend().horizontal(true).itemWidth(30).autoItemWidth(true).legendWidth(160));
+                chart.legend(new dc.Legend().horizontal(true).itemWidth(30).autoItemWidth(true).legendWidth(160));
                 chart.render();
                 autoWidthCoords = d3.range(3).map(i => coordsFromTranslate(legendItem(i).attr('transform')));
             });
@@ -165,7 +165,7 @@ describe('dc.legend', () => {
 
         describe('with .legendText()', () => {
             beforeEach(() => {
-                chart.legend(dc.legend().legendText((d, i) => {
+                chart.legend(new dc.Legend().legendText((d, i) => {
                     const _i = i + 1;
 
                     return `${_i}. ${d.name}`;
@@ -207,15 +207,15 @@ describe('dc.legend', () => {
         beforeEach(() => {
             id = 'legend-chart-dashed';
             appendChartID(id);
-            chart = dc.compositeChart(`#${id}`);
+            chart = new dc.CompositeChart(`#${id}`);
 
-            const subChart1 = dc.lineChart(chart);
+            const subChart1 = new dc.LineChart(chart);
             subChart1
                 .dimension(dateDimension)
                 .group(dateIdSumGroup, 'Id Sum')
                 .dashStyle([10,1]);
 
-            const subChart2 = dc.lineChart(chart);
+            const subChart2 = new dc.LineChart(chart);
             subChart2
                 .dimension(dateDimension)
                 .group(dateValueSumGroup, 'Value Sum')
@@ -223,7 +223,7 @@ describe('dc.legend', () => {
 
             chart
                 .x(d3.scaleLinear().domain([0,20]))
-                .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+                .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
                 .compose([subChart1, subChart2])
                 .render();
         });

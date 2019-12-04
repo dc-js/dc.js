@@ -17,14 +17,14 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.pieChart("#test");
+var chart = new dc.PieChart("#test");
 d3.csv("morley.csv").then(function(experiments) {
 
   var ndx           = crossfilter(experiments),
       runDimension  = ndx.dimension(function(d) {
         return "run-"+String.fromCharCode(90 - +d.Run);})
       speedSumGroup = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run;});
-var chart = dc.pieChart("#test");
+var chart = new dc.PieChart("#test");
 
   chart
     .width(768)

@@ -25,8 +25,8 @@
 
 <script type="text/javascript">
 
-var yearRingChart   = dc.pieChart("#chart-ring-year"),
-    spenderRowChart = dc.rowChart("#chart-row-spenders");
+var yearRingChart   = new dc.PieChart("#chart-ring-year"),
+    spenderRowChart = new dc.RowChart("#chart-row-spenders");
 
 var data1 = [
     {Name: 'Mr A', Spent: 40, Year: 2011},

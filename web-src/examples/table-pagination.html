@@ -32,8 +32,8 @@
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.dataTable("#test");
-      var piechart = dc.pieChart("#piechart");
+      var chart = new dc.DataTable("#test");
+      var piechart = new dc.PieChart("#piechart");
 
       var ndx;
       d3.csv("morley.csv").then(function(experiments) {

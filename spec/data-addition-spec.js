@@ -22,7 +22,7 @@ describe('Dynamic data addition in crossfilter', () => {
             const div = appendChartID(id);
             div.append('a').attr('class', 'reset').style('display', 'none');
             div.append('span').attr('class', 'filter').style('display', 'none');
-            const pieChart = dc.pieChart(`#${id}`);
+            const pieChart = new dc.PieChart(`#${id}`);
             pieChart.dimension(valueDimension).group(valueGroup)
                 .width(width)
                 .height(height)
@@ -66,7 +66,7 @@ describe('Dynamic data addition in crossfilter', () => {
 
         function buildLineChart (id) {
             appendChartID(id);
-            const lineChart = dc.lineChart(`#${id}`);
+            const lineChart = new dc.LineChart(`#${id}`);
             lineChart.dimension(timeDimension).group(timeGroup)
                 .width(width).height(height)
                 .x(d3.scaleUtc().domain([makeDate(2012, 4, 20), makeDate(2012, 7, 15)]))

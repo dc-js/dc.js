@@ -11,7 +11,7 @@ describe('dc.coordinateGridChart', () => {
         id = 'coordinate-grid-chart';
         appendChartID(id);
 
-        chart = dc.lineChart(`#${id}`)
+        chart = new dc.LineChart(`#${id}`)
             .width(500)
             .height(150)
             .dimension(dimension)
@@ -196,7 +196,7 @@ describe('dc.coordinateGridChart', () => {
             describe('with a complex selector', () => {
                 beforeEach(() => {
                     appendChartID('coordinate-grid').append('div').attr('class', 'chart');
-                    chart = dc.lineChart('#coordinate-grid .chart')
+                    chart = new dc.LineChart('#coordinate-grid .chart')
                         .width(500)
                         .height(150)
                         .dimension(dimension)
@@ -217,7 +217,7 @@ describe('dc.coordinateGridChart', () => {
             describe('with a selector containing brackets', () => {
                 beforeEach(() => {
                     appendChartID('coordinate-grid').append('div').attr('class', 'chart').attr('foo', '5bar');
-                    chart = dc.lineChart('#coordinate-grid .chart[foo="5bar"]')
+                    chart = new dc.LineChart('#coordinate-grid .chart[foo="5bar"]')
                         .width(500)
                         .height(150)
                         .dimension(dimension)
@@ -958,7 +958,7 @@ describe('dc.coordinateGridChart', () => {
     function buildRangeChart () {
         const rangeId = 'range-chart';
         appendChartID(rangeId);
-        return dc.lineChart(`#${rangeId}`)
+        return new dc.LineChart(`#${rangeId}`)
             .dimension(dimension)
             .group(dimension.group().reduceSum(d => d.id))
             .x(d3.scaleUtc().domain([makeDate(2012, 5, 20), makeDate(2012, 6, 15)]));

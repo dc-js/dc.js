@@ -15,7 +15,7 @@ describe('dc.compositeChart', () => {
         id = 'composite-chart';
         appendChartID(id);
 
-        chart = dc.compositeChart(`#${id}`);
+        chart = new dc.CompositeChart(`#${id}`);
         chart
             .dimension(dateDimension)
             .group(dateIdSumGroup)
@@ -26,16 +26,16 @@ describe('dc.compositeChart', () => {
             .xUnits(d3.utcDays)
             .shareColors(true)
             .compose([
-                dc.barChart(chart)
+                new dc.BarChart(chart)
                     .centerBar(true)
                     .group(dateValueSumGroup, 'Date Value Group Bar')
                     .gap(1),
-                dc.lineChart(chart)
+                new dc.LineChart(chart)
                     .group(dateIdSumGroup, 'Date ID Group')
                     .stack(dateValueSumGroup, 'Date Value Group Line 1')
                     .stack(dateValueSumGroup, 'Date Value Group Line 2')
                     .hidableStacks(true),
-                dc.lineChart(chart)
+                new dc.LineChart(chart)
                     .group(dateGroup, 'Date Group')
             ]);
     });
@@ -339,7 +339,7 @@ describe('dc.compositeChart', () => {
 
         describe('legends composed of subchart groups', () => {
             beforeEach(() => {
-                chart.legend(dc.legend().x(200).y(10).itemHeight(13).gap(5)).render();
+                chart.legend(new dc.Legend().x(200).y(10).itemHeight(13).gap(5)).render();
             });
 
             it('should generate a legend item for each subchart', () => {
@@ -452,7 +452,7 @@ describe('dc.compositeChart', () => {
                 .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
                 .compose([
-                    dc.lineChart(chart)
+                    new dc.LineChart(chart)
                         .group(group, 'Series 1')
                         .valueAccessor(d => d.value.count)
                         .title(d => {
@@ -462,7 +462,7 @@ describe('dc.compositeChart', () => {
                             }
                             return `Count: ${d3.format('d')(value)}`;
                         }),
-                    dc.lineChart(chart)
+                    new dc.LineChart(chart)
                         .group(group, 'Series 2')
                         .valueAccessor(d => d.value.value)
                         .title(d => {
@@ -501,9 +501,9 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        dc.barChart(chart)
+                        new dc.BarChart(chart)
                             .group(dateValueSumGroup, 'Date Value Group'),
-                        rightChart = dc.lineChart(chart)
+                        rightChart = new dc.LineChart(chart)
                             .group(dateIdSumGroup, 'Date ID Group')
                             .stack(dateValueSumGroup, 'Date Value Group')
                             .stack(dateValueSumGroup, 'Date Value Group')
@@ -564,7 +564,7 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart.yAxis().ticks(4);
                 chart.compose([
-                    dc.lineChart(chart).group(dateGroup)
+                    new dc.LineChart(chart).group(dateGroup)
                 ]).renderHorizontalGridLines(true).render();
             });
 
@@ -581,7 +581,7 @@ describe('dc.compositeChart', () => {
         describe('when composing charts with just a right axis', () => {
             beforeEach(() => {
                 chart.compose([
-                    dc.lineChart(chart).group(dateGroup).useRightYAxis(true)
+                    new dc.LineChart(chart).group(dateGroup).useRightYAxis(true)
                 ]).renderHorizontalGridLines(true);
                 chart.rightYAxis().ticks(7);
                 chart.render();
@@ -602,9 +602,9 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        leftChart = dc.barChart(chart)
+                        leftChart = new dc.BarChart(chart)
                             .group(dateValueNegativeSumGroup, 'Date Value Group'),
-                        rightChart = dc.lineChart(chart)
+                        rightChart = new dc.LineChart(chart)
                             .group(dateIdSumGroup, 'Date ID Group')
                             .useRightYAxis(true)
                     ])
@@ -635,9 +635,9 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        leftChart = dc.barChart(chart)
+                        leftChart = new dc.BarChart(chart)
                             .group(dateIdSumGroup, 'Date ID Group'),
-                        rightChart = dc.lineChart(chart)
+                        rightChart = new dc.LineChart(chart)
                             .group(dateValueNegativeSumGroup, 'Date Value Group')
                             .useRightYAxis(true)
                     ])
@@ -668,9 +668,9 @@ describe('dc.compositeChart', () => {
             beforeEach(() => {
                 chart
                     .compose([
-                        leftChart = dc.barChart(chart)
+                        leftChart = new dc.BarChart(chart)
                             .group(dateIdNegativeSumGroup, 'Date ID Group'),
-                        rightChart = dc.lineChart(chart)
+                        rightChart = new dc.LineChart(chart)
                             .group(dateValueNegativeSumGroup, 'Date Value Group')
                             .useRightYAxis(true)
                     ])
@@ -720,9 +720,9 @@ describe('dc.compositeChart', () => {
                 .x(d3.scaleLinear().domain([0,70]))
                 .brushOn(true)
                 .compose([
-                    dc.scatterPlot(chart),
-                    dc.scatterPlot(chart),
-                    dc.lineChart(chart).dimension(lineDimension).group(lineGroup)
+                    new dc.ScatterPlot(chart),
+                    new dc.ScatterPlot(chart),
+                    new dc.LineChart(chart).dimension(lineDimension).group(lineGroup)
                 ]).render();
         });
 
@@ -857,7 +857,7 @@ describe('dc.compositeChart', () => {
             expect(chart.resizing()).toBe(false);
 
             chart.compose([
-                dc.lineChart(chart).group(dateGroup)
+                new dc.LineChart(chart).group(dateGroup)
             ]);
         });
 

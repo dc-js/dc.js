@@ -1,5 +1,5 @@
 /* global appendChartID, loadDateFixture, makeDate, cleanDateRange, simulateChartBrushing */
-describe('dc.barChart', () => {
+describe('dc.BarChart', () => {
     let id, chart, data;
     let dimension, group;
 
@@ -11,7 +11,7 @@ describe('dc.barChart', () => {
         id = 'bar-chart';
         appendChartID(id);
 
-        chart = dc.barChart(`#${id}`);
+        chart = new dc.BarChart(`#${id}`);
         chart.dimension(dimension).group(group)
             .width(1100).height(200)
             .x(d3.scaleUtc().domain([makeDate(2012, 0, 1), makeDate(2012, 11, 31)]))
@@ -683,7 +683,7 @@ describe('dc.barChart', () => {
 
             beforeEach(() => {
                 chart.stack(group)
-                    .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+                    .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
                     .render();
 
                 firstItem = chart.select('g.dc-legend g.dc-legend-item');
@@ -878,7 +878,7 @@ describe('dc.barChart', () => {
             dimension  = data.dimension(dc.pluck('State'));
             group = dimension.group().reduceSum(dc.pluck('Population'));
 
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.xUnits(dc.units.ordinal)
                 .x(d3.scaleBand())
                 .transitionDuration(0)
@@ -923,7 +923,7 @@ describe('dc.barChart', () => {
             data = crossfilter(rows);
             dimension  = data.dimension(d => d.name);
             group = dimension.group().reduceSum(d => d.sale);
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.transitionDuration(0)
                 .outerPadding(0)
                 .dimension(dimension)
@@ -952,7 +952,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleLinear().domain([0,7]))
                 .elasticY(true)
@@ -992,7 +992,7 @@ describe('dc.barChart', () => {
             data = crossfilter(rows);
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.width(500)
                 .transitionDuration(0)
                 .x(d3.scaleUtc())
@@ -1038,7 +1038,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleLinear())
                 .elasticY(true).elasticX(true)
@@ -1082,7 +1082,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
@@ -1175,7 +1175,7 @@ describe('dc.barChart', () => {
             dimension = data.dimension(d => d.x);
             group = dimension.group().reduceSum(d => d.y);
 
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)
@@ -1230,7 +1230,7 @@ describe('dc.barChart', () => {
             group = dimension.group().reduceSum(d => d.y);
             const group2 = dimension.group().reduceSum(d => d.z);
 
-            chart = dc.barChart(`#${id}`);
+            chart = new dc.BarChart(`#${id}`);
             chart.width(500).transitionDuration(0)
                 .x(d3.scaleBand())
                 .xUnits(dc.units.ordinal)

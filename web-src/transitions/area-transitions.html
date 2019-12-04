@@ -23,7 +23,7 @@
     <script type="text/javascript" src="transition-test.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.lineChart("#test");
+      var chart = new dc.LineChart("#test");
       d3.csv("../examples/morley.csv").then(function(experiments) {
 
           experiments.forEach(function(x) {

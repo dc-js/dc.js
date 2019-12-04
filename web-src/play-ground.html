@@ -682,7 +682,7 @@ Country filter: <input id="custom-filter" type="text"/>
 </table>
 
 <script type="text/javascript">
-var pieChartValue = dc.pieChart("#pie-chart-value")
+var pieChartValue = new dc.PieChart("#pie-chart-value")
         .width(250)
         .height(250)
         .radius(100)
@@ -690,7 +690,7 @@ var pieChartValue = dc.pieChart("#pie-chart-value")
         .dimension(valueDimension)
         .group(valueGroup);
 
-var pieChartCountry = dc.pieChart("#pie-chart-country")
+var pieChartCountry = new dc.PieChart("#pie-chart-country")
         .width(250)
         .height(250)
         .radius(100)
@@ -698,7 +698,7 @@ var pieChartCountry = dc.pieChart("#pie-chart-country")
         .group(countryGroup)
         .renderTitle(true);
 
-var choroplethChart = dc.geoChoroplethChart("#choropleth-chart")
+var choroplethChart = new dc.GeoChoroplethChart("#choropleth-chart")
         .width(990)
         .height(600);
 
@@ -721,7 +721,7 @@ d3.json("geo/us-states.json").then(function (states) {
     });
 });
 
-var lineChartDate = dc.lineChart("#line-chart-date");
+var lineChartDate = new dc.LineChart("#line-chart-date");
 lineChartDate.width(500)
         .height(180)
         .margins({top: 30, right: 50, bottom: 30, left: 30})
@@ -739,10 +739,10 @@ lineChartDate.width(500)
         .xUnits(d3.timeDays)
         .elasticY(true)
         .renderArea(true)
-        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+        .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
         .xAxis().ticks(5);
 
-var barChartDate = dc.barChart("#bar-chart-date");
+var barChartDate = new dc.BarChart("#bar-chart-date");
 barChartDate.width(500)
         .height(180)
         .margins({top: 30, right: 50, bottom: 30, left: 30})
@@ -755,11 +755,11 @@ barChartDate.width(500)
         })
         .gap(1)
         .x(d3.scaleTime().domain([new Date(2012, 4, 20), new Date(2012, 7, 15)]))
-        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+        .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
         .xUnits(d3.timeDays)
         .xAxis().ticks(5);
 
-var compositeChartDate = dc.compositeChart("#composite-chart-date");
+var compositeChartDate = new dc.CompositeChart("#composite-chart-date");
 compositeChartDate.width(500)
         .height(180)
         .margins({top: 30, right: 50, bottom: 30, left: 30})
@@ -769,9 +769,9 @@ compositeChartDate.width(500)
         .xUnits(d3.timeDays)
         .shareColors(true)
         .compose([
-            dc.barChart(compositeChartDate).group(dateValueSumGroup, "Value Sum"),
-            dc.lineChart(compositeChartDate),
-            dc.lineChart(compositeChartDate).group(dateGroup, "Date Group")
+            new dc.BarChart(compositeChartDate).group(dateValueSumGroup, "Value Sum"),
+            new dc.LineChart(compositeChartDate),
+            new dc.LineChart(compositeChartDate).group(dateGroup, "Date Group")
         ])
         .on('renderlet', function (chart) {
             dc.events.trigger(function () {
@@ -779,10 +779,10 @@ compositeChartDate.width(500)
                 lineChartDate.focus(chart.filter());
             });
         })
-        .legend(dc.legend().x(400).y(10).itemHeight(13).gap(5))
+        .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
         .xAxis().ticks(5);
 
-var bubbleChart = dc.bubbleChart("#bubble-chart");
+var bubbleChart = new dc.BubbleChart("#bubble-chart");
 bubbleChart.width(990)
         .height(150)
         .dimension(statusDimension)
@@ -816,7 +816,7 @@ bubbleChart.width(990)
             return p.key + ": {count:" + p.value.count + ",value:" + p.value.value + "}"
         });
 
-var ordinalBarChart = dc.barChart("#ordinal-bar-chart");
+var ordinalBarChart = new dc.BarChart("#ordinal-bar-chart");
 ordinalBarChart.width(500)
         .height(150)
         .dimension(stateDimension)
@@ -825,7 +825,7 @@ ordinalBarChart.width(500)
         .x(d3.scaleBand().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
 
-var ordinalLineChart = dc.lineChart("#ordinal-line-chart");
+var ordinalLineChart = new dc.LineChart("#ordinal-line-chart");
 ordinalLineChart.width(500)
         .height(150)
         .dimension(stateDimension)
@@ -836,7 +836,7 @@ ordinalLineChart.width(500)
         .x(d3.scaleBand().domain(["California", "Colorado", "Delaware", "Mississippi", "Oklahoma", "Ontario"]))
         .xUnits(dc.units.ordinal);
 
-var linearBarChart = dc.barChart("#linear-bar-chart");
+var linearBarChart = new dc.BarChart("#linear-bar-chart");
 linearBarChart.width(500)
         .height(150)
         .dimension(valueDimension)
@@ -845,7 +845,7 @@ linearBarChart.width(500)
         .x(d3.scaleLinear().domain([20, 70]))
         .xUnits(dc.units.fp.precision(1));
 
-var barSwitchChart = dc.barChart("#bar-chart-switch");
+var barSwitchChart = new dc.BarChart("#bar-chart-switch");
 barSwitchChart.width(500)
         .height(150)
         .dimension(dateDimension)
@@ -857,7 +857,7 @@ barSwitchChart.width(500)
         .elasticY(true)
         .xAxis().ticks(5);
 
-var negativeBarChart = dc.barChart("#negative-bar-chart");
+var negativeBarChart = new dc.BarChart("#negative-bar-chart");
 negativeBarChart.width(1100)
         .height(200)
         .margins({top: 30, right: 50, bottom: 30, left: 30})
@@ -871,7 +871,7 @@ negativeBarChart.width(1100)
         .renderHorizontalGridLines(true)
         .xUnits(d3.timeDays);
 
-var negativeLineChart = dc.lineChart("#negative-line-chart");
+var negativeLineChart = new dc.LineChart("#negative-line-chart");
 negativeLineChart.width(1100)
         .height(200)
         .margins({top: 30, right: 50, bottom: 30, left: 30})
@@ -886,7 +886,7 @@ negativeLineChart.width(1100)
         .renderHorizontalGridLines(true)
         .xUnits(d3.timeDays);
 
-var rowChart = dc.rowChart("#row-chart");
+var rowChart = new dc.RowChart("#row-chart");
 rowChart.width(1100)
         .height(200)
         .margins({top: 30, left: 10, right: 30, bottom: 30})
@@ -898,7 +898,7 @@ rowChart.width(1100)
             return d.value;
         });
 
-var scatterPlot = dc.scatterPlot("#scatterplot");
+var scatterPlot = new dc.ScatterPlot("#scatterplot");
 scatterPlot.width(500)
             .height(180)
             .dimension(dateDimension)
@@ -907,11 +907,11 @@ scatterPlot.width(500)
             .symbolSize(2);
 
 
-dc.dataCount(".dc-data-count")
+new dc.DataCount(".dc-data-count")
         .crossfilter(data)
         .groupAll(groupAll);
 
-dc.dataTable(".dc-data-table")
+new dc.DataTable(".dc-data-table")
         .dimension(dateDimension)
         .section(function (d) {
             return dateFormat(d3.timeDay(d.dd));
@@ -938,7 +938,7 @@ dc.dataTable(".dc-data-table")
             }
         ]);
 
-var lineChartDateB = dc.lineChart("#line-chart-dateB", "groupB");
+var lineChartDateB = new dc.LineChart("#line-chart-dateB", "groupB");
 lineChartDateB.width(500)
         .height(150)
         .margins({top: 50, right: 50, bottom: 30, left: 30})
@@ -957,7 +957,7 @@ lineChartDateB.width(500)
         .renderHorizontalGridLines(true)
         .xAxis().ticks(5);
 
-var barChartDateB = dc.barChart("#bar-chart-dateB", "groupB");
+var barChartDateB = new dc.BarChart("#bar-chart-dateB", "groupB");
 barChartDateB.width(500)
         .height(150)
         .dimension(dateDimension)
@@ -978,7 +978,7 @@ barChartDateB.width(500)
         .xAxis().tickValues([new Date(2012, 3, 1), new Date(2012, 6, 1), new Date(2012, 9, 1)]);
 barChartDateB.yAxis().tickValues([0, 75, 140]);
 
-var compositeChartDateB = dc.compositeChart("#composite-chart-dateB", "groupB");
+var compositeChartDateB = new dc.CompositeChart("#composite-chart-dateB", "groupB");
 compositeChartDateB.width(500)
         .height(150)
         .dimension(dateDimension)
@@ -987,11 +987,11 @@ compositeChartDateB.width(500)
         .xUnits(d3.timeDays)
         .renderVerticalGridLines(true)
         .compose([
-            dc.barChart(compositeChartDateB).gap(0).group(dateValueSumGroup).title(function (d) {
+            new dc.BarChart(compositeChartDateB).gap(0).group(dateValueSumGroup).title(function (d) {
                 return "Bar key: " + d.key + "\nBar value: " + d.value;
             }),
-            dc.lineChart(compositeChartDateB),
-            dc.lineChart(compositeChartDateB).group(dateGroup)
+            new dc.LineChart(compositeChartDateB),
+            new dc.LineChart(compositeChartDateB).group(dateGroup)
         ])
         .brushOn(false)
         .on('renderlet', function (chart) {
@@ -1003,7 +1003,7 @@ compositeChartDateB.width(500)
 
 dc.renderAll("groupB");
 
-var bubbleOverlay = dc.bubbleOverlay("#bubble-overlay")
+var bubbleOverlay = new dc.BubbleOverlay("#bubble-overlay")
         .svg(d3.select("#bubble-overlay svg"))
         .width(600)
         .height(450)

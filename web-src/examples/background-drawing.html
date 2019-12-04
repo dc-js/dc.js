@@ -54,7 +54,7 @@ function generateFmeasureContours(width, height, beta){
   return [contours, color];
 }
 
-var chart = dc.scatterPlot("#test");
+var chart = new dc.ScatterPlot("#test");
 
 var experiments = d3.csvParse(d3.select('pre#data').text());
 var ndx                 = crossfilter(experiments),

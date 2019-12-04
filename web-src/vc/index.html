@@ -72,9 +72,9 @@
 <script type="text/javascript">
     var numberFormat = d3.format(".2f");
 
-    var usChart = dc.geoChoroplethChart("#us-chart");
-    var industryChart = dc.bubbleChart("#industry-chart");
-    var roundChart = dc.bubbleChart("#round-chart");
+    var usChart = new dc.GeoChoroplethChart("#us-chart");
+    var industryChart = new dc.BubbleChart("#industry-chart");
+    var roundChart = new dc.BubbleChart("#round-chart");
 
     d3.csv("vc.csv").then(function (csv) {
         var data = crossfilter(csv);

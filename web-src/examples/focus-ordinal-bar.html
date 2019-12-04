@@ -76,7 +76,7 @@
             group = dimension.group().reduceSum(function(d) {return d.value;});
 
         group = ordinal_to_linear_group(group);
-        focus = dc.barChart('#focus');
+        focus = new dc.BarChart('#focus');
         var linear_domain = [-0.5, wide.length - 0.5];
         focus
             .width(1000).height(330)
@@ -139,7 +139,7 @@
             chart.xAxis().tickValues(d3.range(min, max+1));
         });
 
-        range = dc.barChart('#range');
+        range = new dc.BarChart('#range');
         range.filterHandler(function() {}); // disable built-in filtering
         range
             .margins({left: 74, top: 0, right: 20, bottom: 2})
@@ -162,7 +162,7 @@
         }, true);
         var letterGroup = letterDimension.group();
 
-        var row = dc.rowChart('#first-letters');
+        var row = new dc.RowChart('#first-letters');
         row
             .width(1000)
             .height(350)

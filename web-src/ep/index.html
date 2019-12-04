@@ -39,7 +39,7 @@ function grid (selector,data) {
 
   adjust (data);
 
-  var pie_group = dc.pieChart(selector +  " .group").innerRadius(20).radius(70);
+  var pie_group = new dc.PieChart(selector +  " .group").innerRadius(20).radius(70);
   var group = ndx.dimension(function(d) {
       if (typeof d.eugroup == "undefined") return "";
       return d.eugroup;
@@ -47,7 +47,7 @@ function grid (selector,data) {
   var groupGroup   = group.group().reduceSum(function(d) {   return 1; });
 
   //var chart_age = dc.barChart(selector + " .age");
-  var chart_age = dc.lineChart(selector + " .age");
+  var chart_age = new dc.LineChart(selector + " .age");
 
   var age = ndx.dimension(function(d) {
       if (typeof d.age == "undefined") return "";
@@ -79,7 +79,7 @@ function grid (selector,data) {
       console.log ("average:" + avg);
     });
 
-  var pie_gender = dc.pieChart(selector +  " .gender").radius(70);
+  var pie_gender = new dc.PieChart(selector +  " .gender").radius(70);
   var gender = ndx.dimension(function(d) {
       if (typeof d.gender == "undefined") return "";
       return d.gender;
@@ -87,7 +87,7 @@ function grid (selector,data) {
 
   var groupGender   = gender.group().reduceSum(function(d) {   return 1; });
 
-  var bar_country = dc.barChart(selector + " .country");
+  var bar_country = new dc.BarChart(selector + " .country");
   var country = ndx.dimension(function(d) {
       if (typeof d.country == "undefined") return "";
       return d.country;
@@ -141,11 +141,11 @@ function grid (selector,data) {
       .attr("transform", function(d) { return "rotate(-90, -4, 9) "; });
   }
 
-  dc.dataCount(".dc-data-count")
+  new dc.DataCount(".dc-data-count")
     .crossfilter(ndx)
     .groupAll(all);
 
-  dc.dataGrid(".dc-data-grid")
+  new dc.DataGrid(".dc-data-grid")
     .dimension(country)
     .section(function (d) {
         return d.country;

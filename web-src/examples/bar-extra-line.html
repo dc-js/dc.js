@@ -23,7 +23,7 @@ dc.js for such "derived" values, but this example is here to tide folks over unt
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.barChart("#test");
+var chart = new dc.BarChart("#test");
 d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {

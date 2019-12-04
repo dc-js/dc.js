@@ -37,7 +37,7 @@ describe('dc.filter-dates', () => {
         appendChartID(row1);
         appendChartID(row2);
 
-        row1 = dc.rowChart('row1')
+        row1 = new dc.RowChart('row1')
             .width(width)
             .height(height)
             .margins(margins)
@@ -46,7 +46,7 @@ describe('dc.filter-dates', () => {
             .gap(1)
             .render();
 
-        row2 = dc.rowChart('row2')
+        row2 = new dc.RowChart('row2')
             .width(width)
             .height(height)
             .margins(margins)

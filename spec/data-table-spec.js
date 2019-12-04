@@ -17,7 +17,7 @@ describe('dc.dataTable', () => {
 
         id = 'data-table';
         appendChartID(id);
-        chart = dc.dataTable(`#${id}`)
+        chart = new dc.DataTable(`#${id}`)
             .dimension(dimension)
             .group(valueGroup)
             .transitionDuration(0)

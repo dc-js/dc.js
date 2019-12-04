@@ -48,11 +48,11 @@
             return d.last_name + ' ' + d.first_name;
         });
 
-    var chart = dc.textFilterWidget("#search")
+    var chart = new dc.TextFilterWidget("#search")
         .dimension(dimension);
 
     var i = 0;
-    dc.dataTable('.dc-data-grid')
+    new dc.DataTable('.dc-data-grid')
         .dimension(dimension)
         .showSections(false)
         .columns([

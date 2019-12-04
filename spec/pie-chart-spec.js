@@ -42,7 +42,7 @@ describe('dc.pieChart', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.pieChart(`#${id}`);
+        const chart = new dc.PieChart(`#${id}`);
         chart.dimension(valueDimension).group(valueGroup)
             .width(width)
             .height(height)
@@ -56,7 +56,7 @@ describe('dc.pieChart', () => {
         const div = appendChartID(id);
         div.append('a').attr('class', 'reset').style('display', 'none');
         div.append('span').attr('class', 'filter').style('display', 'none');
-        const chart = dc.pieChart(`#${id}`);
+        const chart = new dc.PieChart(`#${id}`);
         chart.dimension(countryDimension).group(countryGroup)
             .width(width)
             .height(height)
@@ -770,7 +770,7 @@ describe('dc.pieChart', () => {
         beforeEach(() => {
             chart = buildChart('pie-chart-legend')
                 .cap(3)
-                .legend(dc.legend())
+                .legend(new dc.Legend())
                 .render();
         });
         it('should generate items for each slice', () => {

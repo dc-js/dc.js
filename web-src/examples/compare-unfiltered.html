@@ -105,7 +105,7 @@
 
   dc.config.defaultColors(d3.schemeSet1);
 
-  var data_count = dc.dataCount('.dc-data-count');
+  var data_count = new dc.DataCount('.dc-data-count');
 
   function static_copy_group(group) {
       var all = group.all().map(kv => ({key: kv.key, value: kv.value}));
@@ -165,7 +165,7 @@
           .groupAll(all);
 
       charts = chart_specs.map(function(spec) {
-          return dc.compositeChart(spec.selector);
+          return new dc.CompositeChart(spec.selector);
       });
 
       var breathing_room = 0.05;
@@ -182,12 +182,12 @@
 
           charts[i]
               .compose([
-                  dc.barChart(charts[i])
+                  new dc.BarChart(charts[i])
                       .dimension(dim)
                       .group(static_group)
                       .colors('#ccc') // same as .deselected
                       .controlsUseVisibility(true),
-                  dc.barChart(charts[i])
+                  new dc.BarChart(charts[i])
                       .dimension(dim)
                       .group(group)
                       .controlsUseVisibility(true)

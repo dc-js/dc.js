@@ -56,7 +56,7 @@
             val_col = find_query('val') || 'volume',
             aggregate = find_query('aggregate') || 'average';
 
-        var chart = dc.barChart("#test"), counter = dc.numberDisplay('#counter');
+        var chart = new dc.BarChart("#test"), counter = new dc.NumberDisplay('#counter');
         d3.csv(data).then(function(posts) {
             posts.forEach(function(d) {
                 d[date_col] = new Date(d[date_col]);

@@ -17,7 +17,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-  var chart = dc.pieChart("#test");
+  var chart = new dc.PieChart("#test");
   d3.csv("morley.csv").then(function(experiments) {
 
       var ndx           = crossfilter(experiments),

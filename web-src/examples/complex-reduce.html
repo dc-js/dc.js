@@ -94,7 +94,7 @@
       }, {mode: null, greatestFreq: -Infinity, numMapping: {}}, arr).mode;
   };
 
-  var runChart = dc.barChart("#test-run"), exptChart = dc.barChart("#test-expt");
+  var runChart = new dc.BarChart("#test-run"), exptChart = new dc.BarChart("#test-expt");
   d3.csv("morley.csv").then(function(experiments) {
       experiments.forEach(function(x) {
           x.Speed = +x.Speed;

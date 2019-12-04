@@ -17,7 +17,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var composite = dc.compositeChart("#test_composed");
+var composite = new dc.CompositeChart("#test_composed");
 
 Promise.all([d3.csv("morley.csv"), d3.csv("morley2.csv")]).then(function(results) {
     var exp1 = results[0],
@@ -43,12 +43,12 @@ Promise.all([d3.csv("morley.csv"), d3.csv("morley2.csv")]).then(function(results
         .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
         .renderHorizontalGridLines(true)
         .compose([
-            dc.lineChart(composite)
+            new dc.LineChart(composite)
                 .dimension(dim)
                 .colors('red')
                 .group(grp1, "Top Line")
                 .dashStyle([2,2]),
-            dc.lineChart(composite)
+            new dc.LineChart(composite)
                 .dimension(dim)
                 .colors('blue')
                 .group(grp2, "Bottom Line")

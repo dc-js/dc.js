@@ -15,7 +15,7 @@ describe('dc.bubbleOverlay', () => {
             .attr('width', width)
             .attr('height', height);
 
-        chart = dc.bubbleOverlay(`#${id}`)
+        chart = new dc.BubbleOverlay(`#${id}`)
             .svg(svg)
             .dimension(dimension)
             .group(group)

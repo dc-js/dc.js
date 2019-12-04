@@ -26,7 +26,7 @@
     <script type="text/javascript" src="ordinal-transition.js"></script>
 
     <script type="text/javascript">
-      var chart = dc.rowChart('#test');
+      var chart = new dc.RowChart('#test');
       startOrdinal(function(fruitDimension, fruitGroup) {
           return chart
               .width(768)

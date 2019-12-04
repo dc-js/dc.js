@@ -22,8 +22,8 @@
 <script type="text/javascript">
 
     var chartGroup = "chartGroup";
-    var heatmapChart = dc.heatMap("#heatmap", chartGroup);
-    var barChart = dc.barChart("#barchart", chartGroup);
+    var heatmapChart = new dc.HeatMap("#heatmap", chartGroup);
+    var barChart = new dc.BarChart("#barchart", chartGroup);
 
     d3.csv("../ndx.csv").then(function(data) {
 

@@ -31,7 +31,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.dataTable("#test");
+var chart = new dc.DataTable("#test");
 d3.csv("morley.csv").then(function(experiments) {
   /* Ordinarily a data table will show raw rows of data. But it can also show
      aggregated data, by passing a group as the dimension.

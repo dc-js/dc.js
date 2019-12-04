@@ -151,7 +151,7 @@ if (!Array.prototype.find) {
     let ndx = crossfilter(data);
 
     // -----------------------------------------------
-    var pie01 = dc.pieChart("#pie01");
+    var pie01 = new dc.PieChart("#pie01");
     var pie01Dim = ndx.dimension(function (d) {return d.club});
     var pie01Group = pie01Dim.group();
 
@@ -169,7 +169,7 @@ if (!Array.prototype.find) {
         })
 
     // -----------------------------------------------
-    var pie02 = dc.pieChart("#pie02");
+    var pie02 = new dc.PieChart("#pie02");
     var pie02Dim = ndx.dimension(function (d) {return d.gender});
     var pie02Group = pie02Dim.group();
 
@@ -187,7 +187,7 @@ if (!Array.prototype.find) {
         })
 
     // -----------------------------------------------
-    var pie03 = dc.pieChart("#pie03");
+    var pie03 = new dc.PieChart("#pie03");
     var pie03Dim = ndx.dimension(function (d) {return d.sport});
     var pie03Group = pie03Dim.group();
 

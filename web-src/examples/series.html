@@ -20,7 +20,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.seriesChart("#test");
+var chart = new dc.SeriesChart("#test");
 var ndx, runDimension, runGroup;
 
 d3.csv("morley.csv").then(function(experiments) {
@@ -32,7 +32,7 @@ d3.csv("morley.csv").then(function(experiments) {
   chart
     .width(768)
     .height(480)
-    .chart(function(c) { return dc.lineChart(c).curve(d3.curveCardinal); })
+    .chart(function(c) { return new dc.LineChart(c).curve(d3.curveCardinal); })
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")

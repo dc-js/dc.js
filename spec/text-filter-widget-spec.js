@@ -12,7 +12,7 @@ describe('dc.textFilterWidget', () => {
 
         id = 'input-filter';
         appendChartID(id);
-        chart = dc.textFilterWidget(`#${id}`)
+        chart = new dc.TextFilterWidget(`#${id}`)
             .dimension(dimension)
             .group(group);
         chart.render();

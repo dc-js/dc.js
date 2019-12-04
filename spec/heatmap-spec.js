@@ -12,7 +12,7 @@ describe('dc.heatmap', () => {
 
         id = 'heatmap-chart';
         appendChartID(id);
-        chart = dc.heatMap(`#${id}`);
+        chart = new dc.HeatMap(`#${id}`);
 
         chart
             .dimension(dimension)
@@ -527,7 +527,7 @@ describe('dc.heatmap', () => {
             const bubbleId = 'bubble-chart';
             appendChartID(bubbleId);
 
-            bubbleChart = dc.bubbleChart(`#${bubbleId}`);
+            bubbleChart = new dc.BubbleChart(`#${bubbleId}`);
             const sepalDim = data.dimension(duo_key('sl', 'sw')), sepalGroup = sepalDim.group();
             petalDim = data.dimension(duo_key('pl', 'pw')); petalGroup = petalDim.group();
 

@@ -24,7 +24,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.heatMap("#test");
+var chart = new dc.HeatMap("#test");
 d3.csv("morley.csv").then(function(experiments) {
 
   var ndx    = crossfilter(experiments),
