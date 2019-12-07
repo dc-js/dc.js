@@ -5,7 +5,7 @@ import {pluck, utils} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
 
 /**
- * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stackD3v3.
+ * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
  * @mixin StackMixin
  * @mixes CoordinateGridMixin
  */
