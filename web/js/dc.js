@@ -3390,6 +3390,10 @@ dc.coordinateGridMixin = function (_chart) {
      * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
      * zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
      * the range selection brush on the associated range selector chart.
+     *
+     * **Caution**: elasticX is not compatible with mouseZoomable,
+     * since it permanently locks the x scale domain to the full range of values in the data.
+     * Refer: https://stackoverflow.com/a/56568963/3672474
      * @method mouseZoomable
      * @memberof dc.coordinateGridMixin
      * @instance
