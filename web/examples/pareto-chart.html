@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>dc.js - Pareto Chart Example</title>
+    <link type="text/css" rel="stylesheet" href="../css/dc.css"/>
+    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
+    <script type="text/javascript" src="../js/fetch.umd.js"></script>
+    <script type="text/javascript" src="../js/d3.js" ></script>
+    <script type="text/javascript" src="../js/crossfilter.js"  ></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+</head>
+
+<body>
+
+<div class="container">
+  <script type="text/javascript" src="header.js"></script>
+
+    <p>You can use <a href="https://github.com/dc-js/dc.js/wiki/FAQ#fake-groups">fake groups</a> and a composite chart to implement a dynamic <a href="https://en.wikipedia.org/wiki/Pareto_chart">Pareto chart</a> in dc.js.</p>
+
+    <div id="test_composed"></div>
+    <div id="pie-chart" ></div>
+
+    <script type="text/javascript">
+      var chart = dc.compositeChart("#test_composed"),
+          speed_pie = dc.pieChart("#pie-chart");
+
+      var sample_data = [
+          { reason: "A", time: 1 },
+          { reason: "B", time: 6 },
+          { reason: "C", time: 6 },
+          { reason: "D", time: 5 },
+          { reason: "A", time: 5 },
+          { reason: "B", time: 5 },
+          { reason: "C", time: 8 },
+          { reason: "A", time: 8 },
+          { reason: "B", time: 2 },
+          { reason: "C", time: 2 },
+          { reason: "D", time: 10 },
+          { reason: "C", time: 7 },
+          { reason: "A", time: 3 },
+          { reason: "B", time: 4 },
+          { reason: "C", time: 2 }];
+
+      var ndx_ = crossfilter(sample_data),
+          dim_  = ndx_.dimension( function(d) {return d.reason;} ),
+          allTime_ = dim_.groupAll().reduceSum(d => d.time),
+          grp1_ = dim_.group().reduceSum(function(d){ return d.time;});
+
+      var speedDim_ = ndx_.dimension(d => Math.floor(d.time/3));
+
+      speed_pie
+        .width(300)
+        .height(300)
+        .dimension(speedDim_)
+        .group(speedDim_.group());
+
+      function pareto_group(group, groupall) {
+          return {
+              all: function() {
+                  var total = groupall.value(), cumulate = 0;
+                  return group.all().slice(0)
+                      .sort((a,b) => d3.descending(a.value, b.value))
+                      .map(({key,value}) => ({
+                          key,
+                          value: {
+                              value,
+                              contribution: value/total,
+                              cumulative: (cumulate += value/total)
+                          }
+                      }))
+              }
+          };
+      }
+
+      var pg = pareto_group(grp1_, allTime_);
+
+      chart
+        .width(500)
+        .height(360)
+        .x(d3.scaleBand())
+        .elasticX(true)
+        .clipPadding(2)
+        .xUnits(dc.units.ordinal)
+        .group(pg)
+        ._rangeBandPadding(1)
+        .yAxisLabel("The Y Axis")
+        .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
+        .renderHorizontalGridLines(true)
+        .compose([
+            dc.barChart(chart)
+                .dimension(dim_)
+                .barPadding(1)
+                .gap(1)
+                .centerBar(true)
+                .clipPadding(10)
+                .group(pg, "Contribution", kv => kv.value.value),
+            dc.lineChart(chart)
+                .dimension(dim_)
+                .colors('red')
+                .group(pg, "Cumulative %", kv => Math.floor(kv.value.cumulative*100))
+                .useRightYAxis(true)
+                .dashStyle([2,2])
+        ])
+        .brushOn(false);
+
+      chart.rightYAxis().tickFormat(d => d + '%')
+
+      chart.render();
+      speed_pie.render();
+</script>
+</div>
+</body>
+</html>
