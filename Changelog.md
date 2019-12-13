@@ -1,3 +1,7 @@
+## 3.1.9
+* `highlightSelected` implemented for SVG legend, by Tahirhan Yıldızoğlu
+* [Pareto chart example](http://dc-js.github.io/dc.js/examples/pareto-chart.html)
+
 ## 3.1.8
 Special **Goodbye IE** Edition! dc.js 4.0 will remove support for Internet Explorer, as it has been translated into ES6 by Deepak Kumar. For one last trip down memory lane, here are some IE patches.
 * Do not use `Array.from()` yet in base mixin
