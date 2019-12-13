@@ -479,7 +479,7 @@ dc.coordinateGridMixin = function (_chart) {
 
     function prepareXAxis (g, render) {
         if (!_chart.isOrdinal()) {
-            if (_chart.elasticX()) {
+            if (_chart.elasticX() && (render || (!_chart.mouseZoomable() && !_rangeChart))) {
                 _x.domain([_chart.xAxisMin(), _chart.xAxisMax()]);
             }
         } else { // _chart.isOrdinal()
@@ -499,6 +499,9 @@ dc.coordinateGridMixin = function (_chart) {
             if (_chart.elasticX() || _x.domain().length === 0) {
                 _x.domain(_chart._ordinalXDomain());
             }
+        }
+        if(render && _chart.elasticX()) {
+            _xOriginalDomain = _chart.x().domain();
         }
 
         // has the domain changed?
@@ -1236,7 +1239,7 @@ dc.coordinateGridMixin = function (_chart) {
 
         _chart.plotData();
 
-        if (_chart.elasticX() || _resizing || render) {
+        if (_chart.elasticX() && (!_chart.mouseZoomable() && !_rangeChart) || _resizing || render) {
             _chart.renderXAxis(_chart.g());
         }
 
