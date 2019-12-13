@@ -43,7 +43,7 @@ d3.csv("morley.csv").then(function(experiments) {
         chart
             .width(400)
             .height(300)
-            .x(d3.scaleLinear().domain([6,20]))
+            .x(d3.scaleLinear()).elasticX(true)
             .brushOn(false)
             .yAxisLabel("This is the Y Axis!")
             .dimension(runDimension)
@@ -89,6 +89,7 @@ d3.csv("morley.csv").then(function(experiments) {
         if (!arguments.length) {
             return this._focusCharts;
         }
+        chartlist.forEach(ch => ch.rangeChart(chart1));
         this._focusCharts = chartlist; // only needed to support the getter above
         this.on('filtered', function (range_chart) {
             chartlist.forEach(function(focus_chart) {
