@@ -45,10 +45,10 @@
 
       var ndx_ = crossfilter(sample_data),
           dim_  = ndx_.dimension( function(d) {return d.reason;} ),
-          allTime_ = dim_.groupAll().reduceSum(d => d.time),
+          allTime_ = dim_.groupAll().reduceSum(function(d) { return d.time;}),
           grp1_ = dim_.group().reduceSum(function(d){ return d.time;});
 
-      var speedDim_ = ndx_.dimension(d => Math.floor(d.time/3));
+      var speedDim_ = ndx_.dimension(function(d) { return Math.floor(d.time/3);});
 
       speed_pie
         .width(300)
@@ -61,15 +61,17 @@
               all: function() {
                   var total = groupall.value(), cumulate = 0;
                   return group.all().slice(0)
-                      .sort((a,b) => d3.descending(a.value, b.value))
-                      .map(({key,value}) => ({
-                          key,
-                          value: {
-                              value,
-                              contribution: value/total,
-                              cumulative: (cumulate += value/total)
+                      .sort(function(a,b) { return d3.descending(a.value, b.value);})
+                      .map(function(kv) {
+                          return {
+                              key: kv.key,
+                              value: {
+                                  value: kv.value,
+                                  contribution: kv.value/total,
+                                  cumulative: (cumulate += kv.value/total)
+                              }
                           }
-                      }))
+                      });
               }
           };
       }
@@ -81,7 +83,6 @@
         .height(360)
         .x(d3.scaleBand())
         .elasticX(true)
-        .clipPadding(2)
         .xUnits(dc.units.ordinal)
         .group(pg)
         ._rangeBandPadding(1)
@@ -95,17 +96,17 @@
                 .gap(1)
                 .centerBar(true)
                 .clipPadding(10)
-                .group(pg, "Contribution", kv => kv.value.value),
+                .group(pg, "Contribution", function(kv) { return kv.value.value; }),
             dc.lineChart(chart)
                 .dimension(dim_)
                 .colors('red')
-                .group(pg, "Cumulative %", kv => Math.floor(kv.value.cumulative*100))
+                .group(pg, "Cumulative %", function(kv) { return Math.floor(kv.value.cumulative*100); })
                 .useRightYAxis(true)
                 .dashStyle([2,2])
         ])
         .brushOn(false);
 
-      chart.rightYAxis().tickFormat(d => d + '%')
+      chart.rightYAxis().tickFormat(function(d) { return d + '%'; });
 
       chart.render();
       speed_pie.render();
