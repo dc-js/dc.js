@@ -153,7 +153,7 @@ if (!Array.prototype.find) {
             .yAxisPadding(0.1)
             .valueAccessor(function(kv) { return kv.value.total / kv.value.count; })
             .rangeChart(rangeChart)
-            .x(d3.scaleTime().domain(fullDomain))
+            .x(d3.scaleTime()).elasticX(true)
             .xUnits(d3.timeDay)
             .brushOn(false)
             .mouseZoomable(true)
@@ -172,7 +172,7 @@ if (!Array.prototype.find) {
             .group(groups_by_min_interval[0].group)
             .yAxisPadding(1)
             .valueAccessor(function(kv) { return kv.value.total / kv.value.count; })
-            .x(d3.scaleTime().domain(fullDomain))
+            .x(d3.scaleTime()).elasticX(true)
             .xUnits(d3.timeDay);
 
         rangeChart.on('filtered.dynamic-interval', function(_, filter) {
