@@ -67,7 +67,7 @@
                 .dimension(moveMonths)
                 .mouseZoomable(true)
                 .shareTitle(false)
-                .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+                .x(d3.scaleTime()).elasticX(true)
                 .round(d3.timeMonth.round)
                 .xUnits(d3.timeMonths)
                 .elasticY(true)
