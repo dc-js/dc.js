@@ -45,6 +45,7 @@ d3.csv("morley.csv").then(function(experiments) {
             .height(300)
             .x(d3.scaleLinear()).elasticX(true)
             .brushOn(false)
+            .mouseZoomable(true)
             .yAxisLabel("This is the Y Axis!")
             .dimension(runDimension)
             .group(speedSumGroup);
@@ -52,6 +53,7 @@ d3.csv("morley.csv").then(function(experiments) {
     }
 
     bar_chart(chart1)
+        .mouseZoomable(false)
         .brushOn(true);
     bar_chart(chart2);
     bar_chart(chart3);
