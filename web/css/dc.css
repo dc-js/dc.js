@@ -203,6 +203,8 @@
   font-size: 11px; }
   .dc-legend .dc-legend-item {
     cursor: pointer; }
+  .dc-legend g.dc-legend-item.selected {
+    fill: blue; }
 
 .dc-hard .number-display {
   float: none; }

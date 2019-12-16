@@ -127,7 +127,7 @@
 
     // There is a bug in Safari 10.1 and `Proxy`ing it is not enough.
     var forSureUsePolyfill = !decodesPlusesCorrectly;
-    var useProxy = (!forSureUsePolyfill && nativeURLSearchParams && !isSupportObjectConstructor && self.Proxy)
+    var useProxy = (!forSureUsePolyfill && nativeURLSearchParams && !isSupportObjectConstructor && self.Proxy);
     /*
      * Apply polifill to global object and append other prototype into it
      */
