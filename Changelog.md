@@ -1,3 +1,13 @@
+## 3.1.9
+* `highlightSelected` implemented for SVG legend, by Tahirhan Yıldızoğlu  ([#1625](https://github.com/dc-js/dc.js/pull/1625) /  ([#600](https://github.com/dc-js/dc.js/issues/600))
+* [Pareto chart example](http://dc-js.github.io/dc.js/examples/pareto-chart.html)
+
+## 3.1.8
+Special **Goodbye IE** Edition! dc.js 4.0 will remove support for Internet Explorer, as it has been translated into ES6 by Deepak Kumar. For one last trip down memory lane, here are some IE patches.
+* Do not use `Array.from()` yet in base mixin
+* Use polyfills and don't use ES6 in examples. All examples work in IE11 except where IE is too slow or its CSS too weird to both with.
+* Fully tested with crossfilter 1.4.8, the last crossfilter to support IE
+
 ## 3.1.7
 * Updating `bower.json` to D3v5, with apologies for [#1458](https://github.com/dc-js/dc.js/issues/1458). Bower support will be dropped in dc.js version 4.0 - please specify dc version `3.x` if you are using bower
 
