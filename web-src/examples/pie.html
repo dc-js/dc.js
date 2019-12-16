@@ -31,7 +31,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .innerRadius(100)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .legend(dc.legend())
+    .legend(dc.legend().highlightSelected(true))
     // workaround for #703: not enough data is accessible through .label() to display percentages
     .on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice').text(function(d) {
