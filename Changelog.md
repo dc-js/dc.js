@@ -1,3 +1,6 @@
+## 3.2.0
+* `elasticX` is now compatible with `mouseZoomable` and focus charts. Previously it would always override the domain, making those features not work. Now it only sets the domain when the chart is rendered, not redrawn. It also sets the "original x domain" in this case; this is used for "unfocus" behavior. This should be the expected behavior, but please file an issue or write to the users group if this breaks anything for you.
+
 ## 3.1.9
 * `highlightSelected` implemented for SVG legend, by Tahirhan Yıldızoğlu ([#1625](https://github.com/dc-js/dc.js/pull/1625) /  ([#600](https://github.com/dc-js/dc.js/issues/600))
 * [Pareto chart example](http://dc-js.github.io/dc.js/examples/pareto-chart.html)
