@@ -245,8 +245,8 @@ d3.csv('ndx.csv').then(function (data) {
             return p.value.fluctuationPercentage;
         })
         .maxBubbleRelativeSize(0.3)
-        .x(d3.scaleLinear().domain([-2500, 2500]))
-        .y(d3.scaleLinear().domain([-100, 100]))
+        .x(d3.scaleLinear())
+        .y(d3.scaleLinear())
         .r(d3.scaleLinear().domain([0, 4000]))
         //##### Elastic Scaling
 
@@ -419,7 +419,7 @@ d3.csv('ndx.csv').then(function (data) {
         .mouseZoomable(true)
     // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
         .rangeChart(volumeChart)
-        .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+        .x(d3.scaleTime()).elasticX(true)
         .round(d3.timeMonth.round)
         .xUnits(d3.timeMonths)
         .elasticY(true)
@@ -461,7 +461,7 @@ d3.csv('ndx.csv').then(function (data) {
         .group(volumeByMonthGroup)
         .centerBar(true)
         .gap(1)
-        .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+        .x(d3.scaleTime()).elasticX(true)
         .round(d3.timeMonth.round)
         .alwaysUseRounding(true)
         .xUnits(d3.timeMonths);
