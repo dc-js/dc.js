@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.1.8  
+**Version**: 3.1.9  
 **Example**  
 ```js
 // Example chaining
@@ -148,6 +148,7 @@ chart.width(300)
         * [.x([x])](#dc.legend+x) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
         * [.y([y])](#dc.legend+y) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
         * [.gap([gap])](#dc.legend+gap) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
+        * [.highlightSelected([highlightSelected])](#dc.legend+highlightSelected) ⇒ <code>String</code> \| [<code>legend</code>](#dc.legend)
         * [.itemHeight([itemHeight])](#dc.legend+itemHeight) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
         * [.horizontal([horizontal])](#dc.legend+horizontal) ⇒ <code>Boolean</code> \| [<code>legend</code>](#dc.legend)
         * [.legendWidth([legendWidth])](#dc.legend+legendWidth) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
@@ -2433,6 +2434,7 @@ Get of set the x offset (horizontal space between right edge of row and right ed
     * [.x([x])](#dc.legend+x) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
     * [.y([y])](#dc.legend+y) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
     * [.gap([gap])](#dc.legend+gap) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
+    * [.highlightSelected([highlightSelected])](#dc.legend+highlightSelected) ⇒ <code>String</code> \| [<code>legend</code>](#dc.legend)
     * [.itemHeight([itemHeight])](#dc.legend+itemHeight) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
     * [.horizontal([horizontal])](#dc.legend+horizontal) ⇒ <code>Boolean</code> \| [<code>legend</code>](#dc.legend)
     * [.legendWidth([legendWidth])](#dc.legend+legendWidth) ⇒ <code>Number</code> \| [<code>legend</code>](#dc.legend)
@@ -2487,6 +2489,18 @@ Set or get gap between legend items.
 | Param | Type | Default |
 | --- | --- | --- |
 | [gap] | <code>Number</code> | <code>5</code> | 
+
+<a name="dc.legend+highlightSelected"></a>
+
+#### legend.highlightSelected([highlightSelected]) ⇒ <code>String</code> \| [<code>legend</code>](#dc.legend)
+This can be optionally used to enable highlighting legends for the selections/filters for the
+chart.
+
+**Kind**: instance method of [<code>legend</code>](#dc.legend)  
+
+| Param | Type |
+| --- | --- |
+| [highlightSelected] | <code>String</code> | 
 
 <a name="dc.legend+itemHeight"></a>
 
