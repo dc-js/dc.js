@@ -83,7 +83,7 @@
         focus
             .width(1000).height(330)
             .margins({left: 60, top: 0, right: 10, bottom: 145})
-            .x(d3.scaleLinear().domain(linear_domain))
+            .x(d3.scaleLinear()).elasticX(true).xAxisPadding(0.5)
             .xUnits(dc.units.integers)
             .keyAccessor(function(kv) { return group.ord2int(kv.key); })
             .centerBar(true)
@@ -146,7 +146,7 @@
         range
             .margins({left: 74, top: 0, right: 20, bottom: 2})
             .width(1000).height(20)
-            .x(d3.scaleLinear().domain(linear_domain))
+            .x(d3.scaleLinear()).elasticX(true).xAxisPadding(0.5)
             .xUnits(dc.units.integers)
             .keyAccessor(function(kv) { return group.ord2int(kv.key); })
             .elasticY(true)
