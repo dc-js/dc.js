@@ -20,6 +20,19 @@ export const CapMixin = Base => class extends Base {
         this._takeFront = true;
         this._othersLabel = 'Others';
 
+        this._othersGrouper = (topItems, restItems) => {
+            const restItemsSum = sum(restItems, this.valueAccessor()),
+                restKeys = restItems.map(this.keyAccessor());
+            if (restItemsSum > 0) {
+                return topItems.concat([{
+                    others: restKeys,
+                    key: this.othersLabel(),
+                    value: restItemsSum
+                }]);
+            }
+            return topItems;
+        };
+
         // emulate old group.top(N) ordering
         this.ordering(kv => -kv.value);
 
@@ -63,19 +76,6 @@ export const CapMixin = Base => class extends Base {
             return d.value;
         }
         return this.valueAccessor()(d, i);
-    }
-
-    _othersGrouper (topItems, restItems) {
-        const restItemsSum = sum(restItems, this.valueAccessor()),
-            restKeys = restItems.map(this.keyAccessor());
-        if (restItemsSum > 0) {
-            return topItems.concat([{
-                others: restKeys,
-                key: this.othersLabel(),
-                value: restItemsSum
-            }]);
-        }
-        return topItems;
     }
 
     /**
