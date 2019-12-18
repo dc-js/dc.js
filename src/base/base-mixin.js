@@ -79,9 +79,17 @@ export class BaseMixin {
         this._isChild = undefined;
 
         this._minWidth = 200;
+        this._defaultWidthCalc = element => {
+            const width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
+            return (width && width > this._minWidth) ? width : this._minWidth;
+        };
         this._widthCalc = this._defaultWidthCalc;
 
         this._minHeight = 200;
+        this._defaultHeightCalc = element => {
+            const height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
+            return (height && height > this._minHeight) ? height : this._minHeight;
+        };
         this._heightCalc = this._defaultHeightCalc;
         this._width = undefined;
         this._height = undefined;
@@ -122,6 +130,7 @@ export class BaseMixin {
         this._legend = undefined;
         this._commitHandler = undefined;
 
+        this._defaultData = group => group.all();
         this._data = this._defaultData;
 
         this._filters = [];
@@ -1412,20 +1421,6 @@ export class BaseMixin {
         logger.warnOnce('chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
         this.on(`renderlet.${utils.uniqueId()}`, renderletFunction);
         return this;
-    }
-
-    _defaultWidthCalc (element) {
-        const width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
-        return (width && width > this._minWidth) ? width : this._minWidth;
-    }
-
-    _defaultHeightCalc (element) {
-        const height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
-        return (height && height > this._minHeight) ? height : this._minHeight;
-    }
-
-    _defaultData (group) {
-        return group.all();
     }
 }
 
