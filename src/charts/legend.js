@@ -81,9 +81,6 @@ export class Legend {
     /**
      * This can be optionally used to enable highlighting legends for the selections/filters for the
      * chart.
-     * @method highlightSelected
-     * @memberof dc.legend
-     * @instance
      * @param {String} [highlightSelected]
      * @return {String|dc.legend}
      **/
