@@ -367,7 +367,7 @@ module.exports = function (grunt) {
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
             },
             hierarchy: {
-                command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
+                command: 'dot -Tsvg -o web-src/img/class-hierarchy.svg class-hierarchy.dot'
             },
             rollup: {
                 command: 'rm -rf dist/; rollup --config'
