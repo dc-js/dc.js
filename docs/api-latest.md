@@ -1938,8 +1938,7 @@ d3 axis manipulation.
 **Caution**: The right y axis is usually generated internally by dc; resetting it may cause
 unexpected results.  Note also that when used as a getter, this function is not chainable: it
 returns the axis, not the chart,
-{@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
-so attempting to call chart functions after calling `.yAxis()` will fail}.
+[so attempting to call chart functions after calling `.yAxis()` will fail](https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis).
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
 **See**: [https://github.com/d3/d3-axis/blob/master/README.md#axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)  
@@ -2148,8 +2147,7 @@ Gets or sets a custom geo projection function. See the available
 
 Starting version 3.0 it has been deprecated to rely on the default projection being
 [d3.geoAlbersUsa()](https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa). Please
-set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
-Considering that `null` is also a valid value for projection}, if you need
+set it explicitly. [Considering that `null` is also a valid value for projection](https://bl.ocks.org/mbostock/5557726), if you need
 projection to be `null` please set it explicitly to `null`.
 
 **Kind**: instance method of [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)  
@@ -5226,8 +5224,7 @@ therefore it supports any valid d3 axisBottom manipulation.
 **Caution**: The x axis is usually generated internally by dc; resetting it may cause
 unexpected results. Note also that when used as a getter, this function is not chainable:
 it returns the axis, not the chart,
-{@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
-so attempting to call chart functions after calling `.xAxis()` will fail}.
+[so attempting to call chart functions after calling `.xAxis()` will fail](https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis).
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 **See**: [d3.axisBottom](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom)  
@@ -5371,8 +5368,7 @@ valid d3 axis manipulation.
 **Caution**: The y axis is usually generated internally by dc; resetting it may cause
 unexpected results.  Note also that when used as a getter, this function is not chainable: it
 returns the axis, not the chart,
-{@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
-so attempting to call chart functions after calling `.yAxis()` will fail}.
+[so attempting to call chart functions after calling `.yAxis()` will fail](https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis).
 In addition, depending on whether you are going to use the axis on left or right
 you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
 or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
