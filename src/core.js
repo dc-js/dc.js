@@ -202,7 +202,9 @@ dc.deregisterAllCharts = function (group) {
 dc.filterAll = function (group) {
     var charts = dc.chartRegistry.list(group);
     for (var i = 0; i < charts.length; ++i) {
-        charts[i].filterAll();
+        if (charts[i].hasFilter()) {
+            charts[i].filterAll();
+        }
     }
 };
 

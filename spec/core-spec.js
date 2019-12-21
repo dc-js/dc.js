@@ -38,9 +38,9 @@ describe('dc.core', function () {
             expect(dc.hasChart(chart)).toBeTruthy();
         });
 
-        it('filterAll should invoke filter on each chart', function () {
+        it('filterAll should not invoke filter on each unfiltered chart', function () {
             dc.filterAll();
-            expect(chart.filterAll).toHaveBeenCalled();
+            expect(chart.filterAll).not.toHaveBeenCalled();
         });
 
         it('renderAll should invoke filter on each chart', function () {
@@ -52,6 +52,24 @@ describe('dc.core', function () {
             dc.deregisterAllCharts();
             expect(dc.hasChart(chart)).toBeFalsy();
         });
+    });
+
+    describe('chart w/ filter', function () {
+        var chart;
+        beforeEach(function () {
+            chart = dc.pieChart('#id')
+                    .dimension(valueDimension)
+                    .group(valueGroup)
+                    .filter(0);
+            spyOn(chart, 'filterAll');
+            return chart;
+        });
+
+        it('filterAll should invoke filter on each filtered chart', function () {
+            dc.filterAll();
+            expect(chart.filterAll).toHaveBeenCalled();
+        });
+
     });
 
     describe('chartsRegistry', function () {
@@ -245,15 +263,15 @@ describe('dc.core', function () {
         var chart;
 
         beforeEach(function () {
-            chart = dc.pieChart('#a', 'groupA').dimension(valueDimension).group(valueGroup);
+            chart = dc.pieChart('#a', 'groupA').dimension(valueDimension).group(valueGroup).filter(0);
             spyOn(chart, 'filterAll');
             spyOn(chart, 'render');
-            dc.pieChart('#b', 'groupA').dimension(valueDimension).group(valueGroup);
-            dc.bubbleChart('#c', 'groupB').dimension(valueDimension).group(valueGroup);
-            dc.barChart('#b1', 'groupB').dimension(valueDimension).group(valueGroup);
-            dc.lineChart('#b2', 'groupB').dimension(valueDimension).group(valueGroup);
-            dc.dataCount('#b3', 'groupB').dimension(valueDimension).group(valueGroup);
-            dc.dataTable('#b4', 'groupB').dimension(valueDimension).group(valueGroup);
+            dc.pieChart('#b', 'groupA').dimension(valueDimension).group(valueGroup).filter(0);
+            dc.bubbleChart('#c', 'groupB').dimension(valueDimension).group(valueGroup).filter(0);
+            dc.barChart('#b1', 'groupB').dimension(valueDimension).group(valueGroup).filter(0);
+            dc.lineChart('#b2', 'groupB').dimension(valueDimension).group(valueGroup).filter(0);
+            dc.dataCount('#b3', 'groupB').dimension(valueDimension).group(valueGroup).filter(0);
+            dc.dataTable('#b4', 'groupB').dimension(valueDimension).group(valueGroup).filter(0);
             return chart;
         });
 
