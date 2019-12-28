@@ -16,7 +16,7 @@ using animated transitions.
 Check out the [example page](http://dc-js.github.com/dc.js/)
 and its [annotated source](http://dc-js.github.io/dc.js/docs/stock.html) for a quick five minute
 how-to guide. The detailed [API reference is here](http://dc-js.github.io/dc.js/docs/html/)
-([markdown version](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md)). For
+([markdown version](https://github.com/dc-js/dc.js/blob/master/docs/api-latest.md)). For
 more examples and hints please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
 
 
@@ -25,7 +25,7 @@ Support
 * [Example Site](http://dc-js.github.com/dc.js/)
 * [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
 * [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
-* [v4.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([last - v3.1.9](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-3.1.9.md))</sup>
+* [v4.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/docs/api-latest.md))</sup> <sup>([last - v3.1.9](https://github.com/dc-js/dc.js/blob/master/docs/old-api-docs/api-3.1.9.md))</sup>
 * [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - ask questions and get help
 * [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - discussion and longer topics
 * [GitHub Issues](https://github.com/dc-js/dc.js/issues) - bug reports and feature requests

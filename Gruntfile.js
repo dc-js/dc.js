@@ -186,7 +186,7 @@ module.exports = function (grunt) {
         jsdoc2md: {
             dist: {
                 src: '<%= conf.dist %>/<%= conf.pkg.name %>.js',
-                dest: 'web/docs/api-latest.md'
+                dest: 'docs/api-latest.md'
             }
         },
         docco: {
