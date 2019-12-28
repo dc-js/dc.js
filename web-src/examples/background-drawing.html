@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Background Drawing Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<div id="test"></div>
+
+<pre id="data" style="display: none;">
+Prec,Recall,System
+0.5,0.5,Test
+0.7,0.3,Foo
+0.95,0.87,Bar
+0.1,0.1,Bad
+0.2,0.9,Good
+</pre>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+//helper functions
+function safe_division(numerator, denominator){
+  if (!denominator) {  // Matches +0, -0, NaN
+    return 0.0;
+  }
+  return numerator/denominator;
+}
+function generateFmeasureContours(width, height, beta){
+  //x axis is recall, y axis is precision
+  var betasquared = beta * beta;
+  var values = new Array(height * width);
+  for (var prec = height, k = 0; prec > 0; --prec) {
+    for (var rec = 0; rec < width; ++rec, ++k) {
+      var newPrec = prec/height;
+      var newRec = rec/width;
+      values[k] = safe_division((1 + betasquared) * (newPrec * newRec), (betasquared * newPrec) + newRec);
+    }
+  }
+  var thresholds = d3.range(0.0, 1.0, 0.05);
+  var color = d3.scaleLinear()
+  .domain(d3.extent(thresholds))
+  .interpolate(d => d3.interpolateRdYlGn)
+  var contours = d3.contours()
+  .size([width, height])
+  .thresholds(thresholds)
+  (values);
+  return [contours, color];
+}
+
+var chart = new dc.ScatterPlot("#test");
+
+var experiments = d3.csvParse(d3.select('pre#data').text());
+var ndx                 = crossfilter(experiments),
+    scatterDim          = ndx.dimension(function(d) {return [d.Prec, d.Recall];}),
+    scatterGroup        = scatterDim.group();
+
+chart
+  .width(808)
+  .height(768)
+  .dimension(scatterDim)
+  .group(scatterGroup)
+  .xAxisLabel("Recall")
+  .x(d3.scaleLinear().domain([0,1]))
+  .yAxisLabel("Precision")
+  .y(d3.scaleLinear().domain([0,1]))
+  .on('pretransition', function (chart) {
+    // add contour layer to back (beginning of svg) only if it doesn't exist
+    var contourLayer = chart.g().selectAll('g.contour-layer').data([0]);
+    contourLayer = contourLayer
+        .enter().insert('g', ':first-child')
+        .attr('class', 'contour-layer')
+        .attr('transform', 'translate(' + [chart.margins().left,chart.margins().top].join(',') + ')')
+        .merge(contourLayer);
+
+    var width = chart.effectiveWidth(), height = chart.effectiveHeight();
+    [contours, color] = generateFmeasureContours(width,height, 1);
+
+    contourLayer
+      .selectAll("path")
+      .data(contours)
+      .enter()
+      .append("path")
+      .attr("d", d3.geoPath())
+      .attr("fill",  d => color(d.value));
+  });
+
+chart.render();
+
+</script>
+
+</div>
+</body>
+</html>

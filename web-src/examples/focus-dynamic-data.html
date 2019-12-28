@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Range / Focus with Dynamic Data</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+
+    <div class="container">
+      <script type="text/javascript" src="header.js"></script>
+      <p>This example shows how to display dynamically changing data with a range/focus chart
+        pair. In particular, the focus chart should display the changing X domain unless a brush is
+        active in the range chart.</p>
+      <p>By default, data is only added; append `?remove=1` to the URL to remove data as well
+        (exhibits weird transitions due to <a href="https://github.com/dc-js/dc.js/issues/507">#507</a>).</p>
+      <div id="focus"></div>
+      <div id="range"></div>
+
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <style>
+      </style>
+      <script type="text/javascript">
+        const urlParams = new URLSearchParams(window.location.search),
+          remove = urlParams.get('remove');
+
+        var focus = new dc.LineChart("#focus");
+        var zoom = new dc.LineChart("#range");
+        d3.csv("morley.csv").then(function(experiments) {
+            experiments.forEach(function(x) {
+                x.Speed = +x.Speed;
+            });
+
+            var ndx                 = crossfilter(experiments),
+                runDimension        = ndx.dimension(function(d) {return +d.Run;}),
+                speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+
+            focus
+                .width(768)
+                .height(400)
+                .x(d3.scaleLinear().domain([6,20]))
+                .evadeDomainFilter(true)
+                .elasticY(true)
+                .brushOn(false)
+                .yAxisLabel("This is the Y Axis!")
+                .dimension(runDimension)
+                .group(speedSumGroup)
+                .rangeChart(zoom);
+
+            function expand_focus() {
+                // if the chart were not storing the original domain, this is all we'd
+                // need to do have the focus chart elasticX when not zoomed:
+                //focus.elasticX(!zoom.filters().length);
+
+                // instead, we'll need to set the x scale each time, and calculate domain
+                if(!zoom.filters().length) {
+                    var xExtent = d3.extent(speedSumGroup.all(), kv => kv.key);
+                    focus.x(focus.x().domain(xExtent));
+                }
+            }
+            focus.on('preRender', expand_focus);
+            focus.on('preRedraw', expand_focus);
+
+            zoom
+                .width(768)
+                .height(80)
+                .x(d3.scaleLinear().domain([6,20]))
+                .elasticX(true)
+                .elasticY(true)
+                .brushOn(true)
+                .yAxisLabel("")
+                .dimension(runDimension)
+                .group(speedSumGroup);
+
+            dc.renderAll();
+
+            var run = 21;
+            setInterval(
+                () => {
+                    ndx.add([{Expt: 6, Run: run++, Speed: 5000 + 5 * run}]);
+                    if(remove)
+                        ndx.remove(d => d.Run < run-20);
+                    dc.redrawAll()
+                },
+                5000);
+        });
+
+      </script>
+
+    </div>
+  </body>
+</html>

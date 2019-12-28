@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Comparing Against Unfiltered Data</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      #data-count {
+        margin-top: 0;
+        text-align: left;
+        float: none;
+      }
+
+      table {
+        table-layout: fixed;
+      }
+
+      td {
+        width: 1%;
+      }
+    </style>
+</head>
+<body>
+
+<div class="container">
+  <script type="text/javascript" src="header.js"></script>
+  <script type="text/javascript" src="../js/d3.js"></script>
+  <script type="text/javascript" src="../js/crossfilter.js"></script>
+  <script type="text/javascript" src="../js/dc.js"></script>
+
+  <div class="row">
+    <h2>Comparing filtered data against unfiltered</h2>
+    <p>by copying the initial group values into a fake group, and displaying them in a composite bar chart.</p>
+    <p>See <a href="https://stackoverflow.com/questions/55066391/display-original-conditional-brushed-unbrushed-crossfilter-bars-with-dc-js-wit">this Stack Overflow answer</a> for a description of the technique. (<a href="https://stackoverflow.com/questions/58304325/unfiltered-data-on-off">This answer</a> describes the toggling logic.)</p>
+    <div class="col-md-3 well well-sm">
+      <div class="dc-data-count" id="data-count">
+        <label style="display: inline-block"><input type="checkbox" id="unfiltered" name="unfiltered" checked>&nbsp;Show Unfiltered</label> |
+        <span class="filter-count"></span>
+        selected out of
+        <span class="total-count"></span>
+        points |
+        <a href="javascript:dc.filterAll(); dc.redrawAll();">Reset All</a>
+      </div>
+    </div>
+  </div>
+  <!-- First row of charts -->
+  <div class="row">
+    <div class="span4">
+      <div id="chart-11" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+          <a href="javascript:charts[0].filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-12" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:charts[1].filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-13" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:charts[2].filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Second row of chart -->
+  <div class="row">
+    <div class="span4">
+      <div id="chart-21" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:charts[3].filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-22" style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">range: <span class="filter"></span>
+          <a href="javascript:charts[4].filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+    <div class="span4">
+      <div id="chart-23"style="width:100%;">
+        <h5 class="chart-title"></h5>
+        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
+          <a href="javascript:charts[5].filterAll();dc.redrawAll();">reset</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+  dc.config.defaultColors(d3.schemeSet1);
+
+  var data_count = new dc.DataCount('.dc-data-count');
+
+  function static_copy_group(group) {
+      var all = group.all().map(kv => ({key: kv.key, value: kv.value}));
+      return {
+          all: function() {
+              return all;
+          }
+      }
+  }
+
+  var chart_specs = [
+      {
+          variable: 'x',
+          selector: '#chart-11',
+          resolution: 10
+      },
+      {
+          variable: 'y',
+          selector: '#chart-12',
+          resolution: 10
+      },
+      {
+          variable: 'z',
+          selector: '#chart-13',
+          resolution: 500
+      },
+      {
+          variable: 'a',
+          selector: '#chart-21',
+          resolution: 100
+      },
+      {
+          variable: 'b',
+          selector: '#chart-22',
+          resolution: 20
+      },
+      {
+          variable: 'c',
+          selector: '#chart-23',
+          resolution: 1000
+      }
+  ];
+
+  var charts;
+
+  d3.csv('six-dim.csv').then(function(data) {
+      data.forEach(function(d) {
+          chart_specs.forEach(function(spec) {
+              d[spec.variable] = +d[spec.variable];
+          });
+      });
+
+      var cf = crossfilter(data),
+          all = cf.groupAll();
+
+      data_count.crossfilter(cf)
+          .groupAll(all);
+
+      charts = chart_specs.map(function(spec) {
+          return new dc.CompositeChart(spec.selector);
+      });
+
+      var breathing_room = 0.05;
+      var show_unfiltered = true;
+
+      chart_specs.forEach(function(spec, i) {
+          d3.select(spec.selector).select('h5.chart-title').text(spec.variable);
+
+          var dim = cf.dimension(function(d) { return d[spec.variable]; }),
+              group = dim.group(function(d) {
+                  return Math.floor(d / spec.resolution) * spec.resolution;
+              }).reduceCount(),
+              static_group = static_copy_group(group);
+
+          charts[i]
+              .compose([
+                  new dc.BarChart(charts[i])
+                      .dimension(dim)
+                      .group(static_group)
+                      .colors('#ccc') // same as .deselected
+                      .controlsUseVisibility(true),
+                  new dc.BarChart(charts[i])
+                      .dimension(dim)
+                      .group(group)
+                      .controlsUseVisibility(true)
+                      .brushOn(false)
+              ]);
+
+          var min = dim.bottom(1)[0][spec.variable],
+              max = dim.top(1)[0][spec.variable];
+
+          charts[i]
+              .dimension(dim)
+              .group(group)
+              .round(Math.floor)
+              .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
+              .xUnits(function(start, end, xDomain) { return (end - start) / spec.resolution; })
+              .controlsUseVisibility(true);
+      });
+
+      function ydomain_from_child1(chart) {
+          chart.y().domain([0, chart.children()[1].yAxisMax()]);
+          chart.resizing(true);
+      }
+      // hide/unhide the unfiltered layer after any render/redraw
+      charts.forEach(
+          chart => chart.on(
+              'pretransition.hide-unfiltered',
+              chart => chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')
+          ));
+      d3.select('#unfiltered').on('change', function() {
+          show_unfiltered = this.checked;
+          charts.forEach(chart => {
+              chart.elasticY(show_unfiltered);
+              if(!show_unfiltered) {
+                  ydomain_from_child1(chart);
+                  chart.children()[1].colors(d3.schemeCategory10);
+                  chart.on('preRedraw.hide-unfiltered', ydomain_from_child1);
+                  chart.on('preRender.hide-unfiltered', ydomain_from_child1);
+              }
+              else {
+                  chart.on('preRedraw.hide-unfiltered', null);
+                  chart.on('preRender.hide-unfiltered', null);
+              }
+         })
+          dc.redrawAll();
+      });
+
+      dc.renderAll();
+  });
+</script>
+
+</div>
+</body>
+</html>

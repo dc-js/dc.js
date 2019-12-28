@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Series Progression</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
+
+    <div id="test"></div>
+    <button class="btn" onclick="transitionTest.stop()">stop</button>
+    <button class="btn" onclick="button1()">forward</button>
+    <button class="btn" onclick="button2()">reverse</button>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript" src="transition-test.js"></script>
+    <script type="text/javascript">
+
+      var chart = new dc.SeriesChart("#test");
+      var progression = transitionTest.progression(5, 20, true);
+      var noDimension = {};
+      var progressGroup = {
+          all: function() {
+              return progression.data();
+          }
+      };
+
+      function sel_stack(i) {
+          return function(d) {
+              return d.value[i];
+          };
+      }
+      var doDots = transitionTest.querystring.dots!=="0";
+      chart
+          .transitionDuration(transitionTest.duration)
+          .width(768)
+          .height(480)
+          .chart(function(c) {
+              return new dc.LineChart(c)
+                  .curve(d3.curveCardinal)
+                  .renderDataPoints(doDots);
+          })
+          .seriesAccessor(function(kv) { return kv.key[0]; })
+          .keyAccessor(function(kv) { return kv.key[1]; })
+          .x(d3.scaleLinear())
+          .elasticX(true)
+          .elasticY(true)
+          .margins({left: 50, top: 10, right: 10, bottom: 20})
+          .brushOn(false)
+          .dimension(noDimension)
+          .group(progressGroup);
+
+      chart.render();
+
+      window.button1 = function() {
+          progression
+              .reverse(false)
+              .start();
+      };
+      window.button2 = function() {
+          progression
+              .reverse(true)
+              .start();
+      };
+
+    </script>
+    </div>
+  </body>
+</html>

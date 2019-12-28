@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Focus Chart with Dynamic Intervals</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+
+<div class="container">
+    <script type="text/javascript" src="header.js"></script>
+
+    <p>Zoom test</p>
+    <div id="chart"></div>
+    <div id="range-chart"></div>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript">
+
+        {
+            class MyLineChart extends dc.LineChart {
+                yAxisMin () {
+                    const min = d3.min(this.data(), layer => d3.min(layer.values, p => p.y + p.y0));
+                    return dc.utils.subtract(min, this.yAxisPadding());
+                }
+            }
+
+            const data = [];
+            const items = 500000; // way way too much
+
+            const start = Date.now();
+            for (i = 0; i < items; i++) {
+                const t = start + i * 50;
+                const d = new Date(t);
+                data.push({
+                    value: 10 * Math.sin(2 * Math.PI * t / (60 * 60 * 1000)),
+                    date: d
+                });
+            }
+
+            const chart = new MyLineChart('#chart');
+            const rangeChart = new dc.LineChart('#range-chart');
+            const fullDomain = [data[0].date, data.slice(-1)[0].date];
+            const dimension = crossfilter(data).dimension(d => d.date);
+            const groups_by_min_interval = [
+                {
+                    name: 'minutes',
+                    threshold: 60 * 60 * 1000,
+                    interval: d3.timeMinute
+                }, {
+                    name: 'seconds',
+                    threshold: 60 * 1000,
+                    interval: d3.timeSecond
+                }, {
+                    name: 'milliseconds',
+                    threshold: 0,
+                    interval: d3.timeMillisecond
+                }
+            ];
+
+            function make_group (interval) {
+                return dimension.group(interval).reduce(
+                    (p, v) => {
+                        p.count++;
+                        p.total += v.value;
+                        return p;
+                    },
+                    (p, v) => {
+                        p.count--;
+                        p.total += v.value;
+                        return p;
+                    },
+                    () => ({count: 0, total: 0})
+                );
+            }
+
+            function choose_group (extent) {
+                const d = extent[1].getTime() - extent[0].getTime();
+                const found = groups_by_min_interval.find(mg => mg.threshold < d);
+                console.log('interval ' + d + ' is more than ' + found.threshold + ' ms; choosing ' + found.name +
+                    ' for ' + found.interval.range(extent[0], extent[1]).length + ' points');
+                if (!found.group) {
+                    found.group = make_group(found.interval);
+                }
+                return found.group;
+            }
+
+            chart
+                .width(800)
+                .height(300)
+                .dimension(dimension)
+                .group(choose_group(fullDomain))
+                .yAxisPadding(0.1)
+                .valueAccessor(kv => kv.value.total / kv.value.count)
+                .rangeChart(rangeChart)
+                .x(d3.scaleTime().domain(fullDomain))
+                .xUnits(d3.timeDay)
+                .brushOn(false)
+                .mouseZoomable(true)
+                .zoomScale([1, 100])
+                .zoomOutRestrict(true)
+                .renderVerticalGridLines(true)
+                .elasticY(true)
+                .transitionDuration(100);
+
+            rangeChart
+                .width(800)
+                .height(100)
+                .dimension(dimension)
+                .group(groups_by_min_interval[0].group)
+                .yAxisPadding(1)
+                .valueAccessor(kv => kv.value.total / kv.value.count)
+                .x(d3.scaleTime().domain(fullDomain))
+                .xUnits(d3.timeDay);
+
+            rangeChart.on('filtered.dynamic-interval', (_, filter) => {
+                chart.group(choose_group(filter || fullDomain));
+            });
+
+            chart.yAxis().tickFormat(t => t.toFixed(0));
+            rangeChart.yAxis().tickFormat(t => '');
+            rangeChart.yAxis().ticks(0);
+            dc.renderAll();
+        }
+    </script>
+
+</div>
+</body>
+</html>

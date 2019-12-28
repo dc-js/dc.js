@@ -39,3 +39,8 @@ web/docs/public
 # html docs are only checked into gh-pages branch
 web/docs/html
 
+# Ignore, needed only for Github pages
+web/
+
+# Igonore, copied from npm modules
+spec/3rd-party/

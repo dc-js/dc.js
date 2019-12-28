@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>dc.js - Scatter Plot Brushing Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+</head>
+<body>
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+
+  <p>Plotting 20,000 data points in 2 plots. Plots may take several seconds to load. Brush on one chart to see the points filtered on the other.</p>
+  <div id="test1"></div>
+  <div id="test2"></div>
+
+  <script type="text/javascript" src="../js/d3.js"></script>
+  <script type="text/javascript" src="../js/crossfilter.js"></script>
+  <script type="text/javascript" src="../js/dc.js"></script>
+  <script type="text/javascript">
+
+  d3.csv('sampleData20000.csv').then(function(rowData) {
+    rowData.forEach(function(d) {
+        d.feature1 = +d.feature1;
+        d.feature2 = +d.feature2;
+        d.feature3 = +d.feature3;
+        d.class = +d.class;
+    })
+
+    // Calculate x and y binning with each bin being PIXEL_BIN_SIZE wide
+    const nXBins = 300; const nYBins = 300;
+    const binWidth = 20 / nXBins;
+
+    var ndx = crossfilter(rowData),
+        dim1 = ndx.dimension(function (d) {
+            return [Math.floor(d.feature1 / binWidth) * binWidth,
+                Math.floor(d.feature2 / binWidth) * binWidth, d.class];
+        }),
+        dim2 = ndx.dimension(function (d) {
+            return [Math.floor(d.feature2 / binWidth) * binWidth,
+                Math.floor(d.feature3 / binWidth) * binWidth, d.class];
+        }),
+        group1 = dim1.group(),
+        group2 = dim2.group();
+    // var ndx = crossfilter(rowData),
+    //     dim1 = ndx.dimension(function (d) {
+    //         return [d.feature1, d.feature2, d.class];
+    //     }),
+    //     dim2 = ndx.dimension(function (d) {
+    //         return [d.feature2, d.feature3, d.class];
+    //     }),
+    //     group1 = dim1.group(),
+    //     group2 = dim2.group();
+    var plotColorMap = {0: '#ff7f0e', 1: '#2ca02c'};
+    var chart1 = new dc.ScatterPlot("#test1").width(300)
+        .height(300)
+        .useCanvas(true)
+        .x(d3.scaleLinear().domain([-8, 8]))
+        .yAxisLabel("Feature 2")
+        .xAxisLabel("Feature 1")
+        .keyAccessor(function (d) { return d.key[0]; })
+        .valueAccessor(function (d) { return d.key[1]; })
+        .clipPadding(10)
+        .dimension(dim1)
+        .excludedOpacity(0.5)
+        .excludedColor('#ddd')
+        .highlightedSize(4)
+        .group(group1)
+        .colorAccessor(function (d) { return d.key[2]; })
+        .colors(function(colorKey) { return plotColorMap[colorKey]; });
+
+    chart1.legendables = function () {
+        return [{name: 'Class 0', chart: chart1, color: plotColorMap[0]},
+            {name: 'Class 1', chart: chart1, color: plotColorMap[1]}];
+    }
+
+    chart1.legend(dc.legend().x(200).y(10).itemHeight(13).gap(5).legendWidth(90).itemWidth(70));
+
+    var chart2 = new dc.ScatterPlot("#test2").width(300)
+        .height(300)
+        .useCanvas(true)
+        .x(d3.scaleLinear().domain([-8, 8]))
+        .yAxisLabel("Feature 2")
+        .xAxisLabel("Feature 3")
+        .clipPadding(10)
+        .dimension(dim2)
+        .excludedOpacity(0.5)
+        .excludedColor('#ddd')
+        .highlightedSize(3)
+        .group(group2)
+        .colorAccessor(function (d) { return d.key[2]; })
+        .colors(function(colorKey) { return plotColorMap[colorKey]; });
+
+    chart2.legendables = function () {
+        return [{name: 'Class 0', chart: chart2, color: plotColorMap[0]},
+            {name: 'Class 1', chart: chart2, color: plotColorMap[1]}];
+    }
+    chart2.legend(dc.legend().x(200).y(10).itemHeight(13).gap(5).legendWidth(90).itemWidth(70));
+
+    dc.renderAll();
+});
+
+  </script>
+
+</div>
+</body>
+</html>
