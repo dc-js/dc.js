@@ -8,11 +8,9 @@
 </head>
 
 <body>
-<link rel="stylesheet" type="text/css" href="//dc-js.github.io/dc.js/css/dc.css"/>
+<link rel="stylesheet" type="text/css" href="../css/dc.css"/>
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -27,8 +25,8 @@
 
 <script type="text/javascript">
 
-var yearRingChart   = dc.pieChart("#chart-ring-year"),
-    spenderRowChart = dc.rowChart("#chart-row-spenders");
+var yearRingChart   = new dc.PieChart("#chart-ring-year"),
+    spenderRowChart = new dc.RowChart("#chart-row-spenders");
 
 var data1 = [
     {Name: 'Mr A', Spent: 40, Year: 2011},
@@ -69,7 +67,7 @@ var data2 = [
 // As of crossfilter 1.4, there is no need for this messy (and potentially buggy) workaround.
 // Use the predicate form and there is no need to mess with dimension filters:
 function resetData(ndx) {
-    ndx.remove(function() { return true; });
+    ndx.remove(() => true);
 }
 
 // set crossfilter with first dataset

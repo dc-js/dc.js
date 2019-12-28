@@ -24,8 +24,6 @@
 </div>
 
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -50,11 +48,11 @@
             return d.last_name + ' ' + d.first_name;
         });
 
-    var chart = dc.textFilterWidget("#search")
+    var chart = new dc.TextFilterWidget("#search")
         .dimension(dimension);
 
     var i = 0;
-    dc.dataTable('.dc-data-grid')
+    new dc.DataTable('.dc-data-grid')
         .dimension(dimension)
         .showSections(false)
         .columns([

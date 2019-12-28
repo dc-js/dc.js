@@ -37,8 +37,6 @@
 <div id="datatable"></div>
 
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -72,10 +70,10 @@
 
 <script type="text/javascript">
 
-    var cbox1 = dc.cboxMenu('#cbox1'),
-        cbox2 = dc.cboxMenu('#cbox2'),
-        cbox3 = dc.cboxMenu('#cbox3'),
-        datatable = dc.dataTable('#datatable');
+    var cbox1 = new dc.CboxMenu('#cbox1'),
+        cbox2 = new dc.CboxMenu('#cbox2'),
+        cbox3 = new dc.CboxMenu('#cbox3'),
+        datatable = new dc.DataTable('#datatable');
 
     // create a bunch of crosslinked categorical data
 

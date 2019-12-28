@@ -5,8 +5,6 @@
     <link type="text/css" rel="stylesheet" href="../css/dc.css"/>
     <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js" ></script>
     <script type="text/javascript" src="../js/crossfilter.js"  ></script>
     <script type="text/javascript" src="../js/dc.js"></script>
@@ -41,10 +39,10 @@
                ];
 
     //## Create Chart Objects
-    var scoreChart = dc.barChart("#dc-score-barchart")
+    var scoreChart = new dc.BarChart("#dc-score-barchart")
                         .xAxisLabel('book_id')
                         .yAxisLabel('score');
-    var goodYesNoPieChart = dc.pieChart('#dc-coreAcc-piechart');
+    var goodYesNoPieChart = new dc.PieChart('#dc-coreAcc-piechart');
 
     //### Create Crossfilter Dimensions and Groups
     var ndx = crossfilter(data);

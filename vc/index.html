@@ -66,17 +66,15 @@
                                                   src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png"
                                                   alt="Fork me on GitHub"></a>
 
-<script type="text/javascript" src="../js/promise-polyfill.js"></script>
-<script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
     var numberFormat = d3.format(".2f");
 
-    var usChart = dc.geoChoroplethChart("#us-chart");
-    var industryChart = dc.bubbleChart("#industry-chart");
-    var roundChart = dc.bubbleChart("#round-chart");
+    var usChart = new dc.GeoChoroplethChart("#us-chart");
+    var industryChart = new dc.BubbleChart("#industry-chart");
+    var roundChart = new dc.BubbleChart("#round-chart");
 
     d3.csv("vc.csv").then(function (csv) {
         var data = crossfilter(csv);

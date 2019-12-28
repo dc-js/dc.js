@@ -12,21 +12,19 @@
 <script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.pieChart("#test");
+var chart = new dc.PieChart("#test");
 d3.csv("morley.csv").then(function(experiments) {
 
   var ndx           = crossfilter(experiments),
       runDimension  = ndx.dimension(function(d) {
         return "run-"+String.fromCharCode(90 - +d.Run);})
       speedSumGroup = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run;});
-var chart = dc.pieChart("#test");
+var chart = new dc.PieChart("#test");
 
   chart
     .width(768)
@@ -57,7 +55,7 @@ var chart = dc.pieChart("#test");
         items = items.slice(start);
       }
     }
-    items.sort(function(a,b) { return d3.ascending(a.key, b.key); });
+    items.sort((a,b) => d3.ascending(a.key, b.key));
     if (chart.othersGrouper()) {
       return chart.othersGrouper()(items, rest);
     }

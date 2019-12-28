@@ -24,15 +24,13 @@
   <div id="test1"></div>
   <div id="test2" class="table table-hover" style="width:auto"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
   <script type="text/javascript">
 
-var chart = dc.compositeChart("#test1");
-var dataTable = dc.dataTable("#test2");
+var chart = new dc.CompositeChart("#test1");
+var dataTable = new dc.DataTable("#test2");
 
 var data = [
     {x: 1, y: 1, z: 3},
@@ -70,19 +68,19 @@ chart.width(768)
     .dimension(dimXY)
     .group(groupXY)
     .compose([
-        dc.scatterPlot(chart)
+        new dc.ScatterPlot(chart)
             .symbol(d3.symbolStar)
             .ordinalColors(['red'])
             .symbolSize(8)
             .excludedOpacity(0.5),
-        dc.scatterPlot(chart)
+        new dc.ScatterPlot(chart)
             .dimension(dimXZ)
             .group(groupXZ)
             .symbol(d3.symbolSquare)
             .ordinalColors(['green'])
             .symbolSize(8)
             .excludedOpacity(0.5),
-        dc.barChart(chart)
+        new dc.BarChart(chart)
             .dimension(dimX)
             .group(groupX)
             .valueAccessor(function (d) { return d.value * 3; })

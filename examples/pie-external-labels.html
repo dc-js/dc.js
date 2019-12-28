@@ -12,14 +12,12 @@
 <script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-  var chart = dc.pieChart("#test");
+  var chart = new dc.PieChart("#test");
   d3.csv("morley.csv").then(function(experiments) {
 
       var ndx           = crossfilter(experiments),

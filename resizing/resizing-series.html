@@ -13,15 +13,13 @@
     <button class="btn" onclick="button2()">2</button>
     <button class="btn" onclick="button3()">3</button>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript" src="dc-resizing.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.seriesChart("#test");
+      var chart = new dc.SeriesChart("#test");
       var ndx, runDimension, runGroup;
 
       d3.csv("../examples/morley.csv").then(function( experiments) {
@@ -34,7 +32,7 @@
           chart
               .width(window.innerWidth-adjustX)
               .height(window.innerHeight-adjustY)
-              .chart(function(c) { return dc.lineChart(c).curve(d3.curveCardinal); })
+              .chart(function(c) { return new dc.LineChart(c).curve(d3.curveCardinal); })
               .x(d3.scaleLinear().domain([0,20]))
               .brushOn(true)
               .yAxisLabel("Measured Speed km/s")

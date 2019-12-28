@@ -16,15 +16,13 @@
 <div id="test"></div>
 <div id="test-overview"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var focusChart = dc.seriesChart("#test");
-var overviewChart = dc.seriesChart("#test-overview");
+var focusChart = new dc.SeriesChart("#test");
+var overviewChart = new dc.SeriesChart("#test-overview");
 var ndx, runDimension, runGroup, overviewRunDimension, overviewRunGroup;
 
 d3.csv("morley.csv").then(function(experiments) {
@@ -38,7 +36,7 @@ d3.csv("morley.csv").then(function(experiments) {
   focusChart
     .width(768)
     .height(480)
-    .chart(function(c) { return dc.lineChart(c).curve(d3.curveCardinal).evadeDomainFilter(true); })
+    .chart(function(c) { return new dc.LineChart(c).curve(d3.curveCardinal).evadeDomainFilter(true); })
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)
     .yAxisLabel("Measured Speed km/s")
@@ -59,7 +57,7 @@ d3.csv("morley.csv").then(function(experiments) {
   overviewChart
     .width(768)
     .height(100)
-    .chart(function(c) { return dc.lineChart(c).curve(d3.curveCardinal); })
+    .chart(function(c) { return new dc.LineChart(c).curve(d3.curveCardinal); })
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(true)
     .xAxisLabel("Run")

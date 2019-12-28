@@ -21,8 +21,6 @@ Prec,Recall,System
 0.2,0.9,Good
 </pre>
 
-<script type="text/javascript" src="../js/promise-polyfill.js"></script>
-<script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -48,7 +46,7 @@ function generateFmeasureContours(width, height, beta){
   var thresholds = d3.range(0.0, 1.0, 0.05);
   var color = d3.scaleLinear()
   .domain(d3.extent(thresholds))
-  .interpolate(function() { return d3.interpolateRdYlGn; }) // don't understand the function() here
+  .interpolate(d => d3.interpolateRdYlGn)
   var contours = d3.contours()
   .size([width, height])
   .thresholds(thresholds)
@@ -56,7 +54,7 @@ function generateFmeasureContours(width, height, beta){
   return [contours, color];
 }
 
-var chart = dc.scatterPlot("#test");
+var chart = new dc.ScatterPlot("#test");
 
 var experiments = d3.csvParse(d3.select('pre#data').text());
 var ndx                 = crossfilter(experiments),
@@ -82,8 +80,7 @@ chart
         .merge(contourLayer);
 
     var width = chart.effectiveWidth(), height = chart.effectiveHeight();
-    var concol = generateFmeasureContours(width,height, 1);
-    var contours = concol[0], color = concol[1];
+    [contours, color] = generateFmeasureContours(width,height, 1);
 
     contourLayer
       .selectAll("path")
@@ -91,7 +88,7 @@ chart
       .enter()
       .append("path")
       .attr("d", d3.geoPath())
-      .attr("fill",  function(d) { return color(d.value); });
+      .attr("fill",  d => color(d.value));
   });
 
 chart.render();

@@ -63,8 +63,6 @@
     </style>
   </head>
   <body>
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
@@ -150,7 +148,7 @@
                                 return;
                             }
                             cdiv.attr('class', 'chart-holder');
-                            var chart = dc.compositeChart(cdiv);
+                            var chart = new dc.CompositeChart(cdiv);
                             var ndx = crossfilter(dataset(lposi, rposi)),
                                 dim = ndx.dimension(function(d) { return d.key; }),
                                 lgroup = dim.group().reduceSum(function(d) { return d.lvalue; }),
@@ -165,7 +163,7 @@
                                 .elasticX(true)
                                 .elasticY(true)
                                 .compose([
-                                    dc.lineChart(chart)
+                                    new dc.LineChart(chart)
                                         .dimension(dim)
                                         .group(lgroup)
                                         .x(d3.scaleLinear())
@@ -177,7 +175,7 @@
                                                 {classes: ['left','extreme'], y: d3.max(lgroup.all(), get_value)}
                                             ]);
                                         }),
-                                    dc.lineChart(chart)
+                                    new dc.LineChart(chart)
                                         .dimension(dim)
                                         .group(rgroup)
                                         .x(d3.scaleLinear())

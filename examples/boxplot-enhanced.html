@@ -43,8 +43,6 @@
                          <u>showOutliers</u> (<b><i>true</i></b>/false), <u>boldOutlier</u> (<b><i>true</i></b>/false)</p>
     </div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -153,7 +151,7 @@ if (!Array.prototype.find) {
     let ndx = crossfilter(data);
 
     // -----------------------------------------------
-    var pie01 = dc.pieChart("#pie01");
+    var pie01 = new dc.PieChart("#pie01");
     var pie01Dim = ndx.dimension(function (d) {return d.club});
     var pie01Group = pie01Dim.group();
 
@@ -171,7 +169,7 @@ if (!Array.prototype.find) {
         })
 
     // -----------------------------------------------
-    var pie02 = dc.pieChart("#pie02");
+    var pie02 = new dc.PieChart("#pie02");
     var pie02Dim = ndx.dimension(function (d) {return d.gender});
     var pie02Group = pie02Dim.group();
 
@@ -189,7 +187,7 @@ if (!Array.prototype.find) {
         })
 
     // -----------------------------------------------
-    var pie03 = dc.pieChart("#pie03");
+    var pie03 = new dc.PieChart("#pie03");
     var pie03Dim = ndx.dimension(function (d) {return d.sport});
     var pie03Group = pie03Dim.group();
 

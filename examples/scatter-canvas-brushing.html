@@ -14,8 +14,6 @@
   <div id="test1"></div>
   <div id="test2"></div>
 
-  <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-  <script type="text/javascript" src="../js/fetch.umd.js"></script>
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
@@ -54,7 +52,7 @@
     //     group1 = dim1.group(),
     //     group2 = dim2.group();
     var plotColorMap = {0: '#ff7f0e', 1: '#2ca02c'};
-    var chart1 = dc.scatterPlot("#test1").width(300)
+    var chart1 = new dc.ScatterPlot("#test1").width(300)
         .height(300)
         .useCanvas(true)
         .x(d3.scaleLinear().domain([-8, 8]))
@@ -78,7 +76,7 @@
 
     chart1.legend(dc.legend().x(200).y(10).itemHeight(13).gap(5).legendWidth(90).itemWidth(70));
 
-    var chart2 = dc.scatterPlot("#test2").width(300)
+    var chart2 = new dc.ScatterPlot("#test2").width(300)
         .height(300)
         .useCanvas(true)
         .x(d3.scaleLinear().domain([-8, 8]))

@@ -21,16 +21,14 @@
 <div id="chart-hist-spend"></div>
 <div id="chart-row-spenders"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var yearRingChart   = dc.pieChart("#chart-ring-year"),
-    spendHistChart  = dc.barChart("#chart-hist-spend"),
-    spenderRowChart = dc.rowChart("#chart-row-spenders");
+var yearRingChart   = new dc.PieChart("#chart-ring-year"),
+    spendHistChart  = new dc.BarChart("#chart-hist-spend"),
+    spenderRowChart = new dc.RowChart("#chart-row-spenders");
 
 // use static or load via d3.csv("spendData.csv").then(function(spendData) {/* do stuff */});
 var spendData = [

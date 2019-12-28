@@ -18,9 +18,6 @@
       <div id="focus"></div>
       <div id="range"></div>
 
-      <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-      <script type="text/javascript" src="../js/fetch.umd.js"></script>
-      <script type="text/javascript" src="../js/url-search-params-polyfill.js"></script>
       <script type="text/javascript" src="../js/d3.js"></script>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
@@ -30,8 +27,8 @@
         const urlParams = new URLSearchParams(window.location.search),
           remove = urlParams.get('remove');
 
-        var focus = dc.lineChart("#focus");
-        var zoom = dc.lineChart("#range");
+        var focus = new dc.LineChart("#focus");
+        var zoom = new dc.LineChart("#range");
         d3.csv("morley.csv").then(function(experiments) {
             experiments.forEach(function(x) {
                 x.Speed = +x.Speed;
@@ -60,7 +57,7 @@
 
                 // instead, we'll need to set the x scale each time, and calculate domain
                 if(!zoom.filters().length) {
-                    var xExtent = d3.extent(speedSumGroup.all(), function(kv) { return kv.key; });
+                    var xExtent = d3.extent(speedSumGroup.all(), kv => kv.key);
                     focus.x(focus.x().domain(xExtent));
                 }
             }
@@ -82,10 +79,10 @@
 
             var run = 21;
             setInterval(
-                function() {
+                () => {
                     ndx.add([{Expt: 6, Run: run++, Speed: 5000 + 5 * run}]);
                     if(remove)
-                        ndx.remove(function(d) { return d.Run < run-20; });
+                        ndx.remove(d => d.Run < run-20);
                     dc.redrawAll()
                 },
                 5000);

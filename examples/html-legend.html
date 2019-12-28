@@ -29,8 +29,6 @@
         <div id="name-legend" class="dc-html-legend-container"></div>
     </div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
@@ -68,8 +66,8 @@
         nameGroup = nameDim.group().reduceCount();
 
 
-      var yearChart = dc.pieChart("#year"),
-        nameChart = dc.pieChart("#name");
+      var yearChart = new dc.PieChart("#year"),
+        nameChart = new dc.PieChart("#name");
 
       yearChart
         .width(200)
@@ -77,14 +75,14 @@
         .dimension(yearDim)
         .group(spendPerYearGroup)
         .turnOnControls(true)
-        .legend(dc.htmlLegend().container('#year-legend').horizontal(false).highlightSelected(true));
+        .legend(new dc.HtmlLegend().container('#year-legend').horizontal(false).highlightSelected(true));
 
       nameChart
         .width(200)
         .height(200)
         .dimension(nameDim)
         .group(nameGroup)
-        .legend(dc.htmlLegend().container('#name-legend').horizontal(true).highlightSelected(true));
+        .legend(new dc.HtmlLegend().container('#name-legend').horizontal(true).highlightSelected(true));
 
       yearChart.render();
       nameChart.render();

@@ -12,14 +12,12 @@
 <script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.seriesChart("#test");
+var chart = new dc.SeriesChart("#test");
 var ndx, runDimension, runGroup;
 
 d3.csv("morley.csv").then(function(experiments) {
@@ -31,7 +29,7 @@ d3.csv("morley.csv").then(function(experiments) {
   var symbolScale = d3.scaleOrdinal().range(d3.symbols);
   var symbolAccessor = function(d) { return symbolScale(d.key[0]); };
   var subChart = function(c) {
-    return dc.scatterPlot(c)
+    return new dc.ScatterPlot(c)
         .symbol(symbolAccessor)
         .symbolSize(8)
         .highlightedSize(10)

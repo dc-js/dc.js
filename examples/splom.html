@@ -61,8 +61,6 @@
     </style>
   </head>
   <body>
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
@@ -137,7 +135,7 @@
                               return;
                           }
                           cdiv.attr('class', 'chart-holder');
-                          var chart = dc.scatterPlot(cdiv);
+                          var chart = new dc.ScatterPlot(cdiv);
                           var dim = make_dimension(col,row),
                               group = dim.group();
                           var showYAxis = x === 1, showXAxis = y === 4;

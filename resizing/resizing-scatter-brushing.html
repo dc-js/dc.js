@@ -12,8 +12,6 @@
   <div id="test1"></div>
   <div id="test2"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
@@ -28,8 +26,8 @@ const urlParams = new URLSearchParams(window.location.search),
 
     dc.constants.EVENT_DELAY = 0;
 
-var chart1 = dc.scatterPlot("#test1");
-var chart2 = dc.scatterPlot("#test2");
+var chart1 = new dc.ScatterPlot("#test1");
+var chart2 = new dc.ScatterPlot("#test2");
 var data = "x,y,z\n" +
     "1,1,3\n" +
     "5,2,11\n" +

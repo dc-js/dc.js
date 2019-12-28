@@ -20,8 +20,6 @@
 <div id="focus"></div>
 <div id="first-letters"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -78,14 +76,14 @@
             group = dimension.group().reduceSum(function(d) {return d.value;});
 
         group = ordinal_to_linear_group(group);
-        focus = dc.barChart('#focus');
+        focus = new dc.BarChart('#focus');
         var linear_domain = [-0.5, wide.length - 0.5];
         focus
             .width(1000).height(330)
             .margins({left: 60, top: 0, right: 10, bottom: 145})
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(function(kv) { return group.ord2int(kv.key); })
+            .keyAccessor(kv => group.ord2int(kv.key))
             .centerBar(true)
             .yAxisLabel('counts')
             .elasticY(true)
@@ -94,7 +92,7 @@
             .mouseZoomable(true)
             .zoomScale([4,8])
             .group(group)
-            .title(function(kv) { return kv.key; })
+            .title(kv => kv.key)
             .transitionDuration(0);
 
         focus.xAxis()
@@ -109,10 +107,10 @@
             var bars = _chart.chartBodyG().selectAll('rect.bar');
             if (focusFilter.length) {
                 bars.classed(dc.constants.SELECTED_CLASS, function (d) {
-                    return focusFilter.indexOf(d.data.key) >= 0;
+                    return focusFilter.includes(d.data.key);
                 });
                 bars.classed(dc.constants.DESELECTED_CLASS, function (d) {
-                    return focusFilter.indexOf(d.data.key) === -1;
+                    return !focusFilter.includes(d.data.key);
                 });
             } else {
                 bars.classed(dc.constants.SELECTED_CLASS, false);
@@ -128,7 +126,7 @@
                     focusFilter.push(d.data.key);
                 if(focusFilter.length)
                     chart.dimension().filterFunction(function(k) {
-                        return focusFilter.indexOf(k) >= 0;
+                        return focusFilter.includes(k);
                     });
                 else chart.dimension().filter(null);
                 chart.redrawGroup();
@@ -141,14 +139,14 @@
             chart.xAxis().tickValues(d3.range(min, max+1));
         });
 
-        range = dc.barChart('#range');
+        range = new dc.BarChart('#range');
         range.filterHandler(function() {}); // disable built-in filtering
         range
             .margins({left: 74, top: 0, right: 20, bottom: 2})
             .width(1000).height(20)
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(function(kv) { return group.ord2int(kv.key); })
+            .keyAccessor(kv => group.ord2int(kv.key))
             .elasticY(true)
             .brushOn(true)
             .dimension(dimension)
@@ -164,7 +162,7 @@
         }, true);
         var letterGroup = letterDimension.group();
 
-        var row = dc.rowChart('#first-letters');
+        var row = new dc.RowChart('#first-letters');
         row
             .width(1000)
             .height(350)

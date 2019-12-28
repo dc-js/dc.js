@@ -16,8 +16,6 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
 <div id="bar"></div>
 <div id="first-letters"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
@@ -83,21 +81,21 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
             return d3.descending(a.value, b.value);
         }));
 
-        bar = dc.barChart('#bar');
+        bar = new dc.BarChart('#bar');
         var linear_domain = [-0.5, short.length - 0.5];
         bar
             .width(1000).height(300)
             .margins({left: 75, top: 0, right: 10, bottom: 140})
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
-            .keyAccessor(function(kv) { return  group.ord2int(kv.key); })
+            .keyAccessor(kv => group.ord2int(kv.key))
             .centerBar(true)
             .yAxisLabel('counts')
             .elasticY(true)
             .brushOn(true)
             .dimension(dimension)
             .group(group)
-            .title(function(kv) { return kv.key });
+            .title(kv => kv.key);
 
         bar.xAxis()
             .tickValues(d3.range(short.length))
@@ -115,7 +113,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
                 return filters[0][0] <= i && i < filters[0][1];
             }).map(function(kv) { return kv.key; });
             dimension.filterFunction(function(d) {
-                return inside.indexOf(d) >= 0;
+                return inside.includes(d);
             });
             return filters;
         });
@@ -125,7 +123,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
         }, true);
         var letterGroup = letterDimension.group();
 
-        var row = dc.rowChart('#first-letters');
+        var row = new dc.RowChart('#first-letters');
         row
             .width(1000)
             .height(350)

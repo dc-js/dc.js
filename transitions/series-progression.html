@@ -15,15 +15,13 @@
     <button class="btn" onclick="button1()">forward</button>
     <button class="btn" onclick="button2()">reverse</button>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript" src="transition-test.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.seriesChart("#test");
+      var chart = new dc.SeriesChart("#test");
       var progression = transitionTest.progression(5, 20, true);
       var noDimension = {};
       var progressGroup = {
@@ -43,7 +41,7 @@
           .width(768)
           .height(480)
           .chart(function(c) {
-              return dc.lineChart(c)
+              return new dc.LineChart(c)
                   .curve(d3.curveCardinal)
                   .renderDataPoints(doDots);
           })

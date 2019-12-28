@@ -16,15 +16,13 @@
     <button class="btn" onclick="button2()">right</button>
     <button class="btn" onclick="button3()">middle</button>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript" src="transition-test.js"></script>
     <script type="text/javascript">
 
-      var chart = dc.barChart("#test");
+      var chart = new dc.BarChart("#test");
       d3.csv("../examples/morley.csv").then(function(experiments) {
 
           experiments.forEach(function(x) {

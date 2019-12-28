@@ -10,8 +10,6 @@
     <div class="container">
     <script type="text/javascript" src="../examples/header.js"></script>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
@@ -106,7 +104,7 @@ var grp_all    = ndx.groupAll().reduce(funcAdd, funcRemove, funcInitial);
 // which turns to NaN% when deselecting "Not Rush". The number can be restored by pressing Redraw Charts.
 // [XA] somewhat amusingly, this is the exact same test case as last time despite the bug being
 //      different. Gads!
-var chart_band = dc.pieChart ("#dc-band")
+var chart_band = new dc.PieChart ("#dc-band")
 	.height(230)
 	.width (230)
 	.transitionDuration(1000)
@@ -116,7 +114,7 @@ var chart_band = dc.pieChart ("#dc-band")
 	.minAngleForLabel(0)
 	.title(function() { return ''; })
 ;
-var chart_band = dc.pieChart ("#dc-member")
+var chart_band = new dc.PieChart ("#dc-member")
 	.height(230)
 	.width (230)
 	.transitionDuration(1000)
@@ -126,7 +124,7 @@ var chart_band = dc.pieChart ("#dc-member")
 	.minAngleForLabel(0)
 	.title(function() { return ''; })
 ;
-var label_percent = dc.numberDisplay("#dc-percent")
+var label_percent = new dc.NumberDisplay("#dc-percent")
 	.transitionDuration(1000)
 	.group(grp_all)
 	.valueAccessor(function(d) { return d.number / d.othernumber; })
@@ -134,7 +132,7 @@ var label_percent = dc.numberDisplay("#dc-percent")
 		return d3.format('%')(d);
 	})
 ;
-var label_percent2 = dc.numberDisplay("#dc-percent2")
+var label_percent2 = new dc.NumberDisplay("#dc-percent2")
 	.transitionDuration(1000)
 	.group(grp_all)
 	.valueAccessor(function(d) { return d.othernumber ? (d.number / d.othernumber) : NaN; })

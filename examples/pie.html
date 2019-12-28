@@ -12,14 +12,12 @@
 <script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.pieChart("#test");
+var chart = new dc.PieChart("#test");
 d3.csv("morley.csv").then(function(experiments) {
 
   var ndx           = crossfilter(experiments),
@@ -33,7 +31,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .innerRadius(100)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .legend(dc.legend())
+    .legend(dc.legend().highlightSelected(true))
     // workaround for #703: not enough data is accessible through .label() to display percentages
     .on('pretransition', function(chart) {
         chart.selectAll('text.pie-slice').text(function(d) {

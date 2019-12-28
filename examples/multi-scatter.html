@@ -12,14 +12,12 @@
 <script type="text/javascript" src="header.js"></script>
 <div id="test"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.compositeChart("#test");
+var chart = new dc.CompositeChart("#test");
 d3.csv("morley.csv").then(function(experiments) {
 
   experiments.forEach(function(x) {
@@ -44,14 +42,14 @@ d3.csv("morley.csv").then(function(experiments) {
         .brushOn(false)
         .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
         .compose([
-            dc.scatterPlot(chart)
+            new dc.ScatterPlot(chart)
                 .group(scatterGroup, "Blue Group")
                 .colors("blue"),
-            dc.scatterPlot(chart)
+            new dc.ScatterPlot(chart)
                 .group(scatterGroup, "Red Group")
                 .colors("red")
                 .valueAccessor(function (d) { return d.key[1] + 5; }),
-            dc.lineChart(chart)
+            new dc.LineChart(chart)
                 .dimension(lineDimension)
                 .group(lineGroup, "Line Group")
         ]);

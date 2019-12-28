@@ -25,16 +25,14 @@
 <div id="test2"></div>
 <div id="test3"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart3 = dc.rowChart("#test3");
-var chart2 = dc.rowChart("#test2");
-var chart = dc.sunburstChart("#test");
+var chart3 = new dc.RowChart("#test3");
+var chart2 = new dc.RowChart("#test2");
+var chart = new dc.SunburstChart("#test");
 
 d3.csv("morley.csv").then(function(experiments) {
 

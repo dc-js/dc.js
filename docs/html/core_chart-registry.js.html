@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>dc.js Source: core/chart-registry.js</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.cosmo.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">dc.js</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="filters.html">filters</a></li><li><a href="printers.html">printers</a></li><li><a href="units.html">units</a></li><li><a href="units.fp.html">units.fp</a></li><li><a href="utils.html">utils</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="BarChart.html">BarChart</a></li><li><a href="BoxPlot.html">BoxPlot</a></li><li><a href="BubbleChart.html">BubbleChart</a></li><li><a href="BubbleOverlay.html">BubbleOverlay</a></li><li><a href="CboxMenu.html">CboxMenu</a></li><li><a href="ChartRegistry.html">ChartRegistry</a></li><li><a href="CompositeChart.html">CompositeChart</a></li><li><a href="Config.html">Config</a></li><li><a href="DataCount.html">DataCount</a></li><li><a href="DataGrid.html">DataGrid</a></li><li><a href="DataTable.html">DataTable</a></li><li><a href="filters.HierarchyFilter.html">filters.HierarchyFilter</a></li><li><a href="filters.RangedFilter.html">filters.RangedFilter</a></li><li><a href="filters.RangedTwoDimensionalFilter.html">filters.RangedTwoDimensionalFilter</a></li><li><a href="filters.TwoDimensionalFilter.html">filters.TwoDimensionalFilter</a></li><li><a href="GeoChoroplethChart.html">GeoChoroplethChart</a></li><li><a href="HeatMap.html">HeatMap</a></li><li><a href="HtmlLegend.html">HtmlLegend</a></li><li><a href="Legend.html">Legend</a></li><li><a href="LineChart.html">LineChart</a></li><li><a href="Logger.html">Logger</a></li><li><a href="NumberDisplay.html">NumberDisplay</a></li><li><a href="PieChart.html">PieChart</a></li><li><a href="RowChart.html">RowChart</a></li><li><a href="ScatterPlot.html">ScatterPlot</a></li><li><a href="SelectMenu.html">SelectMenu</a></li><li><a href="SeriesChart.html">SeriesChart</a></li><li><a href="SunburstChart.html">SunburstChart</a></li><li><a href="TextFilterWidget.html">TextFilterWidget</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="mixins.list.html" class="dropdown-toggle" data-toggle="dropdown">Mixins<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="BaseMixin.html">BaseMixin</a></li><li><a href="BubbleMixin.html">BubbleMixin</a></li><li><a href="CapMixin.html">CapMixin</a></li><li><a href="ColorMixin.html">ColorMixin</a></li><li><a href="CoordinateGridMixin.html">CoordinateGridMixin</a></li><li><a href="MarginMixin.html">MarginMixin</a></li><li><a href="StackMixin.html">StackMixin</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#chartRegistry">chartRegistry</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#deregisterAllCharts">deregisterAllCharts</a></li><li><a href="global.html#deregisterChart">deregisterChart</a></li><li><a href="global.html#elasticRadius">elasticRadius</a></li><li><a href="global.html#filterAll">filterAll</a></li><li><a href="global.html#hasChart">hasChart</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#redrawAll">redrawAll</a></li><li><a href="global.html#refocusAll">refocusAll</a></li><li><a href="global.html#registerChart">registerChart</a></li><li><a href="global.html#renderAll">renderAll</a></li><li><a href="global.html#transition">transition</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-12">
+	
+		<div id="main">
+			
+
+		<h1 class="page-title">Source: core/chart-registry.js</h1>
+    
+<section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">import {constants} from './constants';
+import {config} from './config';
+
+/**
+ * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
+ * and the default group. There is a single global ChartRegistry object named `chartRegistry`
+ *
+ * A chart group often corresponds to a crossfilter instance. It specifies
+ * the set of charts which should be updated when a filter changes on one of the charts or when the
+ * global functions {@link filterAll filterAll}, {@link refocusAll refocusAll},
+ * {@link renderAll renderAll}, {@link redrawAll redrawAll}, or chart functions
+ * {@link baseMixin#renderGroup baseMixin.renderGroup},
+ * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
+ */
+class ChartRegistry {
+    constructor () {
+        // chartGroup:string => charts:array
+        this._chartMap = {};
+    }
+
+    _initializeChartGroup (group) {
+        if (!group) {
+            group = constants.DEFAULT_CHART_GROUP;
+        }
+
+        if (!(this._chartMap)[group]) {
+            (this._chartMap)[group] = [];
+        }
+
+        return group;
+    }
+
+    /**
+     * Determine if a given chart instance resides in any group in the registry.
+     * @param {Object} chart dc.js chart instance
+     * @returns {Boolean}
+     */
+    has (chart) {
+        for (const e in this._chartMap) {
+            if ((this._chartMap)[e].indexOf(chart) >= 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Add given chart instance to the given group, creating the group if necessary.
+     * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+     * @param {Object} chart dc.js chart instance
+     * @param {String} [group] Group name
+     * @return {undefined}
+     */
+    register (chart, group) {
+        const _chartMap = this._chartMap;
+        group = this._initializeChartGroup(group);
+        _chartMap[group].push(chart);
+    }
+
+    /**
+     * Remove given chart instance from the given group, creating the group if necessary.
+     * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+     * @param {Object} chart dc.js chart instance
+     * @param {String} [group] Group name
+     * @return {undefined}
+     */
+    deregister (chart, group) {
+        group = this._initializeChartGroup(group);
+        for (let i = 0; i &lt; (this._chartMap)[group].length; i++) {
+            if ((this._chartMap)[group][i].anchorName() === chart.anchorName()) {
+                (this._chartMap)[group].splice(i, 1);
+                break;
+            }
+        }
+    }
+
+    /**
+     * Clear given group if one is provided, otherwise clears all groups.
+     * @param {String} group Group name
+     * @return {undefined}
+     */
+    clear (group) {
+        if (group) {
+            delete (this._chartMap)[group];
+        } else {
+            this._chartMap = {};
+        }
+    }
+
+    /**
+     * Get an array of each chart instance in the given group.
+     * If no group is provided, the charts in the default group are returned.
+     * @param {String} [group] Group name
+     * @returns {Array&lt;Object>}
+     */
+    list (group) {
+        group = this._initializeChartGroup(group);
+        return (this._chartMap)[group];
+    }
+}
+
+/**
+ * The chartRegistry object maintains sets of all instantiated dc.js charts under named groups
+ * and the default group. See {@link ChartRegistry ChartRegistry} for its methods.
+ */
+export const chartRegistry = new ChartRegistry();
+
+/**
+ * Add given chart instance to the given group, creating the group if necessary.
+ * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+ * @param {Object} chart dc.js chart instance
+ * @param {String} [group] Group name
+ * @return {undefined}
+ */
+export const registerChart = function (chart, group) {
+    chartRegistry.register(chart, group);
+};
+
+/**
+ * Remove given chart instance from the given group, creating the group if necessary.
+ * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+ * @param {Object} chart dc.js chart instance
+ * @param {String} [group] Group name
+ * @return {undefined}
+ */
+export const deregisterChart = function (chart, group) {
+    chartRegistry.deregister(chart, group);
+};
+
+/**
+ * Determine if a given chart instance resides in any group in the registry.
+ * @param {Object} chart dc.js chart instance
+ * @returns {Boolean}
+ */
+export const hasChart = function (chart) {
+    return chartRegistry.has(chart);
+};
+
+/**
+ * Clear given group if one is provided, otherwise clears all groups.
+ * @param {String} group Group name
+ * @return {undefined}
+ */
+export const deregisterAllCharts = function (group) {
+    chartRegistry.clear(group);
+};
+
+/**
+ * Clear all filters on all charts within the given chart group. If the chart group is not given then
+ * only charts that belong to the default chart group will be reset.
+ * @param {String} [group]
+ * @return {undefined}
+ */
+export const filterAll = function (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i &lt; charts.length; ++i) {
+        charts[i].filterAll();
+    }
+};
+
+/**
+ * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+ * not given then only charts that belong to the default chart group will be reset.
+ * @param {String} [group]
+ * @return {undefined}
+ */
+export const refocusAll = function (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i &lt; charts.length; ++i) {
+        if (charts[i].focus) {
+            charts[i].focus();
+        }
+    }
+};
+
+/**
+ * Re-render all charts belong to the given chart group. If the chart group is not given then only
+ * charts that belong to the default chart group will be re-rendered.
+ * @param {String} [group]
+ * @return {undefined}
+ */
+export const renderAll = function (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i &lt; charts.length; ++i) {
+        charts[i].render();
+    }
+
+    if (config._renderlet !== null) {
+        config._renderlet(group);
+    }
+};
+
+/**
+ * Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+ * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+ * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+ * from scratch.
+ * @param {String} [group]
+ * @return {undefined}
+ */
+export const redrawAll = function (group) {
+    const charts = chartRegistry.list(group);
+    for (let i = 0; i &lt; charts.length; ++i) {
+        charts[i].redraw();
+    }
+
+    if (config._renderlet !== null) {
+        config._renderlet(group);
+    }
+};
+</pre>
+    </article>
+</section>
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	dc.js Copyright © 2012-2018 Nick Zhu & the dc.js Developers
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
+	
+		on Sat Dec 28th 2019
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

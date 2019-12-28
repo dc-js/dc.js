@@ -25,8 +25,6 @@
 
 <div class="container">
   <script type="text/javascript" src="header.js"></script>
-  <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-  <script type="text/javascript" src="../js/fetch.umd.js"></script>
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
@@ -107,10 +105,10 @@
 
   dc.config.defaultColors(d3.schemeSet1);
 
-  var data_count = dc.dataCount('.dc-data-count');
+  var data_count = new dc.DataCount('.dc-data-count');
 
   function static_copy_group(group) {
-      var all = group.all().map(function(kv) { return {key: kv.key, value: kv.value}; });
+      var all = group.all().map(kv => ({key: kv.key, value: kv.value}));
       return {
           all: function() {
               return all;
@@ -167,7 +165,7 @@
           .groupAll(all);
 
       charts = chart_specs.map(function(spec) {
-          return dc.compositeChart(spec.selector);
+          return new dc.CompositeChart(spec.selector);
       });
 
       var breathing_room = 0.05;
@@ -184,12 +182,12 @@
 
           charts[i]
               .compose([
-                  dc.barChart(charts[i])
+                  new dc.BarChart(charts[i])
                       .dimension(dim)
                       .group(static_group)
                       .colors('#ccc') // same as .deselected
                       .controlsUseVisibility(true),
-                  dc.barChart(charts[i])
+                  new dc.BarChart(charts[i])
                       .dimension(dim)
                       .group(group)
                       .controlsUseVisibility(true)
@@ -202,7 +200,7 @@
           charts[i]
               .dimension(dim)
               .group(group)
-              .round(dc.round.floor)
+              .round(Math.floor)
               .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
               .xUnits(function(start, end, xDomain) { return (end - start) / spec.resolution; })
               .controlsUseVisibility(true);
@@ -214,13 +212,13 @@
       }
       // hide/unhide the unfiltered layer after any render/redraw
       charts.forEach(
-          function(chart) { return chart.on(
+          chart => chart.on(
               'pretransition.hide-unfiltered',
-              function(chart) { return chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')}
-          )});
+              chart => chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')
+          ));
       d3.select('#unfiltered').on('change', function() {
           show_unfiltered = this.checked;
-          charts.forEach(function(chart) {
+          charts.forEach(chart => {
               chart.elasticY(show_unfiltered);
               if(!show_unfiltered) {
                   ydomain_from_child1(chart);

@@ -125,8 +125,8 @@
           d.date = new Date(d.date);
           return d;
       }),
-      chart      = dc.lineChart('#chart'),
-      rangeChart = dc.barChart('#range-chart'),
+      chart      = new dc.LineChart('#chart'),
+      rangeChart = new dc.BarChart('#range-chart'),
       domain     = [ data[0].date, data.slice(-1)[0].date ],
       dimension  = crossfilter(data).dimension(function (d) { return d.date; }),
       group      = dimension.group().reduceSum(function(d) { return d.value; });

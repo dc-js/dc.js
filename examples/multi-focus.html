@@ -16,17 +16,15 @@
 <div id="test3"></div>
 <div id="test4"></div>
 
-    <script type="text/javascript" src="../js/promise-polyfill.js"></script>
-    <script type="text/javascript" src="../js/fetch.umd.js"></script>
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart1 = dc.barChart("#test1");
-var chart2 = dc.barChart("#test2");
-var chart3 = dc.barChart("#test3");
-var chart4 = dc.barChart("#test4");
+var chart1 = new dc.BarChart("#test1");
+var chart2 = new dc.BarChart("#test2");
+var chart3 = new dc.BarChart("#test3");
+var chart4 = new dc.BarChart("#test4");
 
 d3.csv("morley.csv").then(function(experiments) {
 
