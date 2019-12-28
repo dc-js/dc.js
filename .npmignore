@@ -1,0 +1,18 @@
+
+# Ignore everything
+*
+
+# selectively include
+!package.json
+!README.md
+!LICENSE
+!dist/**/*
+
+# ES6 modules
+!src/**/*
+
+# Exclude index-with-version from ES6 modules
+src/index-with-version.js
+
+# ignore the source map files, these have no use without source files
+dist/**/*.map

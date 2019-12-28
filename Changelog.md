@@ -1,5 +1,5 @@
 ## 3.1.9
-* `highlightSelected` implemented for SVG legend, by Tahirhan Yıldızoğlu ([#1625](https://github.com/dc-js/dc.js/pull/1625) /  ([#600](https://github.com/dc-js/dc.js/issues/600))
+* `highlightSelected` implemented for SVG legend, by Tahirhan Yıldızoğlu  ([#1625](https://github.com/dc-js/dc.js/pull/1625) /  ([#600](https://github.com/dc-js/dc.js/issues/600))
 * [Pareto chart example](http://dc-js.github.io/dc.js/examples/pareto-chart.html)
 
 ## 3.1.8

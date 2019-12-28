@@ -1,91 +1,85 @@
 /* global appendChartID, loadDateFixture, makeDate */
-describe('dc.rowChart', function () {
-    var id, chart;
-    var data, dimension, nvdimension;
-    var positiveGroupHolder = {groupType: 'positive signed'};
-    var negativeGroupHolder = {groupType: 'negative signed'};
-    var mixedGroupHolder = {groupType: 'mixed signed'};
-    var largerGroupHolder = {groupType: 'larger'};
-    var statusDimension, statusMultiGroup;
+describe('dc.rowChart', () => {
+    let id, chart;
+    let data, dimension, nvdimension;
+    const positiveGroupHolder = {groupType: 'positive signed'};
+    const negativeGroupHolder = {groupType: 'negative signed'};
+    const mixedGroupHolder = {groupType: 'mixed signed'};
+    const largerGroupHolder = {groupType: 'larger'};
+    let statusDimension, statusMultiGroup;
 
-    beforeEach(function () {
+    beforeEach(() => {
         data = crossfilter(loadDateFixture());
-        dimension = data.dimension(function (d) { return +d.value; });
+        dimension = data.dimension(d => +d.value);
 
-        positiveGroupHolder.group = dimension.group().reduceSum(function (d) {return Math.abs(+d.nvalue);});
+        positiveGroupHolder.group = dimension.group().reduceSum(d => Math.abs(+d.nvalue));
         positiveGroupHolder.dimension = dimension;
-        negativeGroupHolder.group = dimension.group().reduceSum(function (d) {return -Math.abs(+d.nvalue);});
+        negativeGroupHolder.group = dimension.group().reduceSum(d => -Math.abs(+d.nvalue));
         negativeGroupHolder.dimension = dimension;
-        mixedGroupHolder.group = dimension.group().reduceSum(function (d) {return +d.nvalue;});
+        mixedGroupHolder.group = dimension.group().reduceSum(d => +d.nvalue);
         mixedGroupHolder.dimension = dimension;
 
-        nvdimension = data.dimension(function (d) { return +d.nvalue; });
-        largerGroupHolder.group = nvdimension.group().reduceSum(function (d) {return +d.value;});
+        nvdimension = data.dimension(d => +d.nvalue);
+        largerGroupHolder.group = nvdimension.group().reduceSum(d => +d.value);
         largerGroupHolder.dimension = nvdimension;
 
-        statusDimension = data.dimension(function (d) {
-            return d.status;
-        });
+        statusDimension = data.dimension(d => d.status);
         statusMultiGroup = statusDimension.group().reduce(
             //add
-            function (p, v) {
+            (p, v) => {
                 ++p.count;
                 p.total += +v.value;
                 return p;
             },
             //remove
-            function (p, v) {
+            (p, v) => {
                 --p.count;
                 p.total -= +v.value;
                 return p;
             },
             //init
-            function () {
-                return {count: 0, total: 0, getTotal: function () { return this.total; }};
-            }
+            () => ({count: 0, total: 0, getTotal: function () { return this.total; }})
         );
 
         id = 'row-chart';
         appendChartID(id);
 
-        chart = dc.rowChart('#' + id);
+        chart = new dc.RowChart(`#${id}`);
         chart.dimension(dimension)
             .width(600).height(200).gap(10)
             .transitionDuration(0);
     });
 
-    describe('enabling the chart title and label with a value accessor', function () {
-        beforeEach(function () {
+    describe('enabling the chart title and label with a value accessor', () => {
+        beforeEach(() => {
             chart.group(mixedGroupHolder.group);
-            chart.valueAccessor(function (d) {
-                return d.value + 100;
-            }).renderLabel(true).renderTitle(true).render();
+            chart.valueAccessor(d => d.value + 100).renderLabel(true).renderTitle(true).render();
         });
 
-        it('should use the default function to dynamically generate the label', function () {
+        it('should use the default function to dynamically generate the label', () => {
             expect(chart.select('text.row').text()).toBe('22');
         });
 
-        it('should use the default function to dynamically generate the title', function () {
+        it('should use the default function to dynamically generate the title', () => {
             expect(chart.select('g.row title').text()).toBe('22: 108');
         });
     });
 
-    describe('with a logarithmic X axis and positive data', function () {
-        beforeEach(function () {
+    describe('with a logarithmic X axis and positive data', () => {
+        beforeEach(() => {
             chart.group(positiveGroupHolder.group);
             chart.elasticX(false);
             chart.x(d3.scaleLog());
             chart.render();
         });
 
-        it('should render valid rect widths', function () {
+        it('should render valid rect widths', () => {
             expect(chart.select('g.row rect').attr('width')).toBeWithinDelta(1, 0.5);
         });
     });
 
-    describe('with a fixedBarHeight', function () {
-        beforeEach(function () {
+    describe('with a fixedBarHeight', () => {
+        beforeEach(() => {
             chart.group(positiveGroupHolder.group);
             chart.elasticX(false);
             chart.x(d3.scaleLog());
@@ -93,86 +87,76 @@ describe('dc.rowChart', function () {
             chart.render();
         });
 
-        it('should render fixed rect height', function () {
+        it('should render fixed rect height', () => {
             expect(chart.select('g.row rect').attr('height')).toBeWithinDelta(10, 0.0);
         });
     });
 
-    describe('with renderTitleLabel', function () {
-        beforeEach(function () {
+    describe('with renderTitleLabel', () => {
+        beforeEach(() => {
             chart.group(positiveGroupHolder.group);
             chart.x(d3.scaleLinear());
-            chart.title(function () {
-                return 'test title';
-            });
+            chart.title(() => 'test title');
             chart.renderTitleLabel(true);
             chart.render();
         });
 
-        it('should render title label centered', function () {
+        it('should render title label centered', () => {
             expect(chart.select('g.row .titlerow').attr('dy')).toBeDefined();
         });
     });
 
-    describe('row chart cap', function () {
-        beforeEach(function () {
+    describe('row chart cap', () => {
+        beforeEach(() => {
             chart.dimension(statusDimension)
                 .group(statusMultiGroup)
                 .othersLabel('small');
             return chart;
         });
-        describe('with custom valueAccessor', function () {
+        describe('with custom valueAccessor', () => {
             // statusMultiGroup has
             // [{"key":"F","value":{"count":5,"total":220}},{"key":"T","value":{"count":5,"total":198}}]
-            beforeEach(function () {
+            beforeEach(() => {
                 chart.dimension(statusDimension).group(statusMultiGroup)
-                    .valueAccessor(function (d) {
-                        return d.value.total;
-                    })
-                    .ordering(function (d) {
-                        return -d.value.total;
-                    })
+                    .valueAccessor(d => d.value.total)
+                    .ordering(d => -d.value.total)
                     .render();
                 return chart;
             });
-            it('correct values, no others row', function () {
-                expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+            it('correct values, no others row', () => {
+                expect(chart.selectAll('title').nodes().map(t => d3.select(t).text()))
                     .toEqual(['F: 220', 'T: 198']);
             });
-            describe('with cap(1)', function () {
-                beforeEach(function () {
+            describe('with cap(1)', () => {
+                beforeEach(() => {
                     chart.cap(1).render();
                 });
-                it('correct values, others row', function () {
-                    expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+                it('correct values, others row', () => {
+                    expect(chart.selectAll('title').nodes().map(t => d3.select(t).text()))
                         .toEqual(['F: 220', 'small: 198']);
                 });
             });
         });
-        describe('with custom valueAccessor calling function', function () {
+        describe('with custom valueAccessor calling function', () => {
             // statusMultiGroup has
             // [{"key":"F","value":{"count":5,"total":220}},{"key":"T","value":{"count":5,"total":198}}]
-            beforeEach(function () {
+            beforeEach(() => {
                 chart.dimension(statusDimension).group(statusMultiGroup)
-                    .valueAccessor(function (d) {
-                        return d.value.getTotal();
-                    })
-                    .ordering(function (d) {
-                        return -d.value.getTotal();
-                    })
+                    .valueAccessor(d => d.value.getTotal())
+                    .ordering(d => -d.value.getTotal())
                     .render();
                 return chart;
             });
-            it('correct values, no others row', function () {
-                expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+            it('correct values, no others row', () => {
+                expect(chart.selectAll('title').nodes().map(t => d3.select(t).text()))
                     .toEqual(['F: 220', 'T: 198']);
             });
-            describe('with cap(1)', function () {
-                beforeEach(function () {
+            describe('with cap(1)', () => {
+                beforeEach(() => {
                     chart.cap(1).render();
                 });
-                it('correct values, others row', function () {
-                    expect(chart.selectAll('title').nodes().map(function (t) {return d3.select(t).text();}))
+                it('correct values, others row', () => {
+                    expect(chart.selectAll('title').nodes().map(t => d3.select(t).text()))
                         .toEqual(['F: 220', 'small: 198']);
                 });
             });
@@ -180,109 +164,109 @@ describe('dc.rowChart', function () {
     });
 
     function itShouldBehaveLikeARowChartWithGroup (groupHolder, N, xAxisTicks) {
-        describe('for ' + groupHolder.groupType + ' data', function () {
-            beforeEach(function () {
+        describe(`for ${groupHolder.groupType} data`, () => {
+            beforeEach(() => {
                 chart.group(groupHolder.group);
             });
 
-            describe('rendering the row chart', function () {
-                beforeEach(function () {
+            describe('rendering the row chart', () => {
+                beforeEach(() => {
                     chart.render();
                 });
 
-                it('should create a root svg node', function () {
+                it('should create a root svg node', () => {
                     expect(chart.select('svg').size()).toBe(1);
                 });
 
-                it('should create a row group for each datum', function () {
+                it('should create a row group for each datum', () => {
                     expect(chart.selectAll('svg g g.row').size()).toBe(N);
                 });
 
-                it('should number each row sequentially with classes', function () {
+                it('should number each row sequentially with classes', () => {
                     chart.selectAll('svg g g.row').each(function (r, i) {
-                        expect(d3.select(this).attr('class')).toBe('row _' + i);
+                        expect(d3.select(this).attr('class')).toBe(`row _${i}`);
                     });
                 });
 
-                it('should fill each row rect with pre-defined colors', function () {
-                    for (var i = 0; i < N; i++) {
+                it('should fill each row rect with pre-defined colors', () => {
+                    for (let i = 0; i < N; i++) {
                         expect(d3.select(chart.selectAll('g.row rect').nodes()[i]).attr('fill'))
                             .toMatchColor(dc.config.defaultColors()[i]);
                     }
                 });
 
-                it('should create a row label from the data for each row', function () {
+                it('should create a row label from the data for each row', () => {
                     expect(chart.selectAll('svg text.row').size()).toBe(N);
 
-                    chart.selectAll('svg g text.row').call(function (t) {
+                    chart.selectAll('svg g text.row').call(t => {
                         expect(+t.text()).toBe(t.datum().key);
                     });
                 });
 
-                describe('row label vertical position', function () {
-                    var labels, rows;
-                    beforeEach(function () {
+                describe('row label vertical position', () => {
+                    let labels, rows;
+                    beforeEach(() => {
                         labels = chart.selectAll('svg text.row');
                         rows = chart.selectAll('g.row rect');
                     });
 
                     function itShouldVerticallyCenterLabelWithinRow (i) {
-                        it('should place label ' + i + ' within row ' + i, function () {
-                            var rowpos = rows.nodes()[i].getBoundingClientRect(),
+                        it(`should place label ${i} within row ${i}`, () => {
+                            const rowpos = rows.nodes()[i].getBoundingClientRect(),
                                 textpos = labels.nodes()[i].getBoundingClientRect();
                             expect((textpos.top + textpos.bottom) / 2)
                                 .toBeWithinDelta((rowpos.top + rowpos.bottom) / 2, 2);
                         });
                     }
-                    for (var i = 0; i < N ; ++i) {
+                    for (let i = 0; i < N ; ++i) {
                         itShouldVerticallyCenterLabelWithinRow(i);
                     }
                 });
 
-                describe('re-rendering the chart', function () {
-                    beforeEach(function () {
+                describe('re-rendering the chart', () => {
+                    beforeEach(() => {
                         chart.render();
                     });
 
-                    it('should leave a single instance of the chart', function () {
+                    it('should leave a single instance of the chart', () => {
                         expect(d3.selectAll('#row-chart svg').size()).toBe(1);
                     });
                 });
             });
 
-            describe('chart filters', function () {
-                beforeEach(function () {
+            describe('chart filters', () => {
+                beforeEach(() => {
                     chart.render();
-                    d3.select('#' + id).append('span').classed('filter', true);
+                    d3.select(`#${id}`).append('span').classed('filter', true);
                 });
 
-                it('should not have filter by default', function () {
+                it('should not have filter by default', () => {
                     expect(chart.hasFilter()).toBeFalsy();
                 });
 
-                it('should not modify the underlying crossfilter group', function () {
-                    var oldGroupData = chart.group().all().slice(0);
+                it('should not modify the underlying crossfilter group', () => {
+                    const oldGroupData = chart.group().all().slice(0);
                     chart.ordering(dc.pluck('value'));
                     chart.filter('66').render();
 
                     expect(chart.group().all().length).toBe(oldGroupData.length);
-                    for (var i = 0; i < oldGroupData.length; i++) {
+                    for (let i = 0; i < oldGroupData.length; i++) {
                         expect(chart.group().all()[i]).toBe(oldGroupData[i]);
                     }
                 });
 
-                describe('filtering a row', function () {
-                    beforeEach(function () {
+                describe('filtering a row', () => {
+                    beforeEach(() => {
                         chart.filter('66');
                         chart.render();
                     });
 
-                    it('should apply a filter to the chart', function () {
+                    it('should apply a filter to the chart', () => {
                         expect(chart.filter()).toBe('66');
                         expect(chart.hasFilter()).toBeTruthy();
                     });
 
-                    it('should highlight any selected rows', function () {
+                    it('should highlight any selected rows', () => {
                         chart.filter('22');
                         chart.render();
                         chart.selectAll('g.row rect').each(function (d) {
@@ -296,18 +280,18 @@ describe('dc.rowChart', function () {
                         });
                     });
 
-                    it('should generate filter info in a filter-classed element', function () {
+                    it('should generate filter info in a filter-classed element', () => {
                         expect(chart.select('span.filter').style('display')).not.toBe('none');
                         expect(chart.select('span.filter').text()).toBe('66');
                     });
 
-                    describe('removing filters', function () {
-                        beforeEach(function () {
+                    describe('removing filters', () => {
+                        beforeEach(() => {
                             chart.filterAll();
                             chart.render();
                         });
 
-                        it('should remove highlighting', function () {
+                        it('should remove highlighting', () => {
                             chart.selectAll('g.row rect').each(function (d) {
                                 expect(d3.select(this).classed('deselected')).toBeFalsy();
                                 expect(d3.select(this).classed('selected')).toBeFalsy();
@@ -317,58 +301,58 @@ describe('dc.rowChart', function () {
                 });
             });
 
-            describe('filtering related dimensions', function () {
-                beforeEach(function () {
+            describe('filtering related dimensions', () => {
+                beforeEach(() => {
                     chart.render();
-                    data.dimension(function (d) { return d.status; }).filter('E');
+                    data.dimension(d => d.status).filter('E');
                 });
 
-                it('should preserve the labels', function () {
+                it('should preserve the labels', () => {
                     chart.selectAll('svg g text.row').each(function () {
                         expect(d3.select(this).text()).not.toBe('');
                     });
                 });
             });
 
-            describe('clicking on a row', function () {
-                beforeEach(function () {
+            describe('clicking on a row', () => {
+                beforeEach(() => {
                     chart.render();
                     chart.onClick(chart.group().all()[0]);
                 });
 
-                it('should filter the corresponding group', function () {
+                it('should filter the corresponding group', () => {
                     expect(chart.filter()).toBe(chart.group().all()[0].key);
                 });
 
-                describe('clicking again', function () {
-                    beforeEach(function () {
+                describe('clicking again', () => {
+                    beforeEach(() => {
                         chart.onClick(chart.group().all()[0]);
                     });
 
-                    it('should reset the filter', function () {
+                    it('should reset the filter', () => {
                         expect(chart.filter()).toBe(null);
                     });
                 });
             });
 
-            describe('specifying a group ordering', function () {
-                beforeEach(function () {
+            describe('specifying a group ordering', () => {
+                beforeEach(() => {
                     chart.render();
                 });
 
-                it('should order values when by value', function () {
+                it('should order values when by value', () => {
                     chart.ordering(dc.pluck('value'));
                     expect(chart.data().map(dc.pluck('value')).sort(d3.ascending)).toEqual(chart.data().map(dc.pluck('value')));
                 });
 
-                it('should order keys when by keys', function () {
+                it('should order keys when by keys', () => {
                     chart.ordering(dc.pluck('key'));
                     expect(chart.data().map(dc.pluck('key')).sort(d3.ascending)).toEqual(chart.data().map(dc.pluck('key')));
                 });
             });
 
-            describe('redrawing after an empty selection', function () {
-                beforeEach(function () {
+            describe('redrawing after an empty selection', () => {
+                beforeEach(() => {
                     chart.render();
                     // fixme: huh?  this isn't even the right data type
                     groupHolder.dimension.filter([makeDate(2010, 0, 1), makeDate(2010, 0, 3)]);
@@ -377,17 +361,17 @@ describe('dc.rowChart', function () {
                     chart.redraw();
                 });
 
-                it('should restore the row chart', function () {
+                it('should restore the row chart', () => {
                     chart.selectAll('g.row rect').each(function (p) {
                         expect(d3.select(this).attr('width').indexOf('NaN') < 0).toBeTruthy();
                     });
                 });
             });
 
-            describe('removing all the data and restoring the data', function () {
+            describe('removing all the data and restoring the data', () => {
                 // this test mainly exists to produce console errors for #1008;
                 // I can't seem to find any way to detect invalid setAttribute calls
-                beforeEach(function () {
+                beforeEach(() => {
                     chart.render();
                     chart.group({all: function () { return []; }});
                     chart.redraw();
@@ -395,82 +379,78 @@ describe('dc.rowChart', function () {
                     chart.redraw();
                 });
 
-                it('should restore the row chart', function () {
+                it('should restore the row chart', () => {
                     chart.selectAll('g.row rect').each(function (p) {
                         expect(d3.select(this).attr('width').indexOf('NaN') < 0).toBeTruthy();
                     });
                 });
             });
 
-            describe('custom labels', function () {
-                beforeEach(function () {
-                    chart.label(function () {
-                        return 'custom label';
-                    }).render();
+            describe('custom labels', () => {
+                beforeEach(() => {
+                    chart.label(() => 'custom label').render();
                 });
 
-                it('should render a label for each datum', function () {
+                it('should render a label for each datum', () => {
                     expect(chart.selectAll('text.row').size()).toBe(N);
                 });
 
-                it('should use the custom function for each label', function () {
+                it('should use the custom function for each label', () => {
                     chart.selectAll('text.row').each(function () {
                         expect(d3.select(this).text()).toBe('custom label');
                     });
                 });
 
-                describe('with labels disabled', function () {
-                    beforeEach(function () {
+                describe('with labels disabled', () => {
+                    beforeEach(() => {
                         chart.renderLabel(false).render();
                     });
 
-                    it('should not display labels', function () {
+                    it('should not display labels', () => {
                         expect(chart.selectAll('text.row').size()).toBe(0);
                     });
                 });
             });
 
-            describe('custom titles', function () {
-                beforeEach(function () {
-                    chart.title(function () {
-                        return 'custom title';
-                    }).render();
+            describe('custom titles', () => {
+                beforeEach(() => {
+                    chart.title(() => 'custom title').render();
                 });
 
-                it('should render a title for each datum', function () {
+                it('should render a title for each datum', () => {
                     expect(chart.selectAll('g.row title').size()).toBe(N);
                 });
 
-                it('should use the custom function for each title', function () {
+                it('should use the custom function for each title', () => {
                     chart.selectAll('g.row title').each(function () {
                         expect(d3.select(this).text()).toBe('custom title');
                     });
                 });
 
-                describe('with titles disabled', function () {
-                    beforeEach(function () {
+                describe('with titles disabled', () => {
+                    beforeEach(() => {
                         chart.renderTitle(false).render();
                     });
 
-                    it('should not display labels', function () {
+                    it('should not display labels', () => {
                         expect(chart.selectAll('g.row title').size()).toBe(0);
                     });
                 });
             });
 
             if (xAxisTicks) {
-                describe('with elasticX', function () {
-                    beforeEach(function () {
+                describe('with elasticX', () => {
+                    beforeEach(() => {
                         chart.elasticX(true)
                             .xAxis().ticks(3);
 
                         chart.render();
                     });
 
-                    it('should generate x axis domain dynamically', function () {
-                        var nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text').nodes()[n]); };
+                    it('should generate x axis domain dynamically', () => {
+                        const nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text').nodes()[n]); };
 
-                        for (var i = 0; i < xAxisTicks.length; i++) {
+                        for (let i = 0; i < xAxisTicks.length; i++) {
                             expect(nthText(i).text()).toBe(xAxisTicks[i]);
                         }
                     });

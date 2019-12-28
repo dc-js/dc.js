@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Number Transitions</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+
+    <p>This example demonstrates transitioning from Infinity to finite numbers.</p>
+
+    <h1>bands n' stuff</h1>
+    <div>
+      <span id="dc-band"></span>
+      <span id="dc-member"></span>
+      <div>
+	<div>
+	  <button onclick="resetFilters()">Reset Filters</button>
+	  <button onclick="redrawCharts()">Redraw Charts</button>
+	</div>
+      </div>
+      Borks: <span id="dc-percent"></span>
+    </div>
+    <div>
+      Works: <span id="dc-percent2"></span>
+    </div>
+
+<script type="text/javascript">
+
+// by Xaser Acheron
+// This is a quick example demonstrating a bug
+// in the latest dc.js (as of 2016-01-08).
+
+// To trigger: Click "Not Rush" in the leftmost chart, then deselect it.
+// dc.js throws an error in the tweenPie function when trying to tween the
+// right-hand "empty" pie segment to a segment with data.
+
+// Error details screenshot for reference: http://i.imgur.com/JTsAVyo.png
+
+// First, declare some data. Note the zero in the othernumber field;
+// we'll use this to ensure that selecting "Not Rush" in the Band chart
+// will cause the Member chart to become empty.
+var data = [
+{	band: "Rush"
+,	member: "Geddy Lee"
+,	number: "5"
+,	othernumber: "3"
+},
+{	band: "Rush"
+,	member: "Alex Lifeson"
+,	number: "5"
+,	othernumber: "3"
+},
+{	band: "Rush"
+,	member: "Neil Peart"
+,	number: "5"
+,	othernumber: "5"
+},
+{	band: "Not Rush"
+,	member: "Somebody Else"
+,	number: "5"
+,	othernumber: "0"
+}
+];
+
+// create crossfilter/dimensions/whatnot; basic stuff
+var ndx = crossfilter(data);
+var dim_band   = ndx.dimension(function (d) { return d.band  ; });
+var dim_member = ndx.dimension(function (d) { return d.member; });
+
+// define some complex-ish crossfilter reduction functions. Instead of
+// summing up a single value, we'll instead set the value to be an object
+// that contains two different values -- this is useful because we can
+// edit each chart's valueAccessor to change the metric shown in real time.
+var funcAdd = function(p, v) {
+	p.number      += (+v.number     );
+	p.othernumber += (+v.othernumber);
+	return p;
+};
+var funcRemove = function(p, v) {
+	p.number      -= (+v.number     );
+	p.othernumber -= (+v.othernumber);
+	return p;
+};
+var funcInitial = function() {
+	return {
+		number      : 0
+	,	othernumber : 0
+	};
+};
+var grp_band   = dim_band  .group().reduce(funcAdd, funcRemove, funcInitial);
+var grp_member = dim_member.group().reduce(funcAdd, funcRemove, funcInitial);
+var grp_all    = ndx.groupAll().reduce(funcAdd, funcRemove, funcInitial);
+
+// Create our charts and render them. The data is set up such that "otherNumber" contains
+// a zero for the "Not Rush" band; this results in a divide-by-zero (Infinity%) in the numberDisplay,
+// which turns to NaN% when deselecting "Not Rush". The number can be restored by pressing Redraw Charts.
+// [XA] somewhat amusingly, this is the exact same test case as last time despite the bug being
+//      different. Gads!
+var chart_band = new dc.PieChart ("#dc-band")
+	.height(230)
+	.width (230)
+	.transitionDuration(1000)
+	.dimension(dim_band)
+	.group    (grp_band)
+	.valueAccessor(function(d) { return d.value.number; })
+	.minAngleForLabel(0)
+	.title(function() { return ''; })
+;
+var chart_band = new dc.PieChart ("#dc-member")
+	.height(230)
+	.width (230)
+	.transitionDuration(1000)
+	.dimension(dim_member)
+	.group    (grp_member)
+	.valueAccessor(function(d) { return d.value.number * d.value.othernumber; })
+	.minAngleForLabel(0)
+	.title(function() { return ''; })
+;
+var label_percent = new dc.NumberDisplay("#dc-percent")
+	.transitionDuration(1000)
+	.group(grp_all)
+	.valueAccessor(function(d) { return d.number / d.othernumber; })
+	.formatNumber(function(d) {
+		return d3.format('%')(d);
+	})
+;
+var label_percent2 = new dc.NumberDisplay("#dc-percent2")
+	.transitionDuration(1000)
+	.group(grp_all)
+	.valueAccessor(function(d) { return d.othernumber ? (d.number / d.othernumber) : NaN; })
+	.formatNumber(function(d) {
+		return d3.format('%')(d);
+	})
+;
+
+// Render it.
+dc.renderAll();
+
+// Functions for buttons n' things.
+function resetFilters() {
+	dc.filterAll();
+	dc.redrawAll();
+}
+function redrawCharts() {
+	dc.redrawAll();
+}
+    </script>
+    </div>
+  </body>
+</html>

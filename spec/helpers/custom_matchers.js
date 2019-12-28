@@ -1,5 +1,5 @@
 function parseTranslate (actual) {
-    var parts = /translate\((-?[\d\.]*)(?:[, ](.*))?\)/.exec(actual);
+    const parts = /translate\((-?[\d\.]*)(?:[, ](.*))?\)/.exec(actual);
     if (!parts) {
         return null;
     }
@@ -11,7 +11,7 @@ function parseTranslate (actual) {
 }
 
 function parseTranslateRotate (actual) {
-    var parts = /translate\((-?[\d\.]*)(?:[, ](.*))?\)[, ]rotate\((-?[\d\.]*)\)/.exec(actual);
+    const parts = /translate\((-?[\d\.]*)(?:[, ](.*))?\)[, ]rotate\((-?[\d\.]*)\)/.exec(actual);
     if (!parts) {
         return null;
     }
@@ -25,12 +25,14 @@ function parseTranslateRotate (actual) {
 function parsePath (path) {
     // an svg path is a string of any number of letters
     // each followed by zero or more numbers separated by spaces or commas
-    var instrexp = /([a-z])[^a-z]*/gi,
+    const instrexp = /([a-z])[^a-z]*/gi,
         argexp = /(-?\d+(?:\.\d*)?)[, ]*/gi;
-    var match, result = [], die = 99;
+    let match;
+    const result = [];
+    let die = 99;
     while ((match = instrexp.exec(path))) {
-        var instr = match[0];
-        var cmd = {op: match[1], args: []};
+        const instr = match[0];
+        const cmd = {op: match[1], args: []};
         argexp.lastIndex = 0;
         while ((match = argexp.exec(instr))) {
             cmd.args.push(match[1]);
@@ -49,15 +51,15 @@ function compareWithinDelta (actual, expected, delta) {
         delta = 1e-6;
     }
 
-    var result = {};
+    const result = {};
 
     result.pass = actual >= (+expected - delta) && actual <= (+expected + delta);
 
-    var pre = 'Expected ' + actual + ' to ',
-        post = 'be within [' + (+expected - delta) + '/' + (+expected + delta) + ']';
+    const pre = `Expected ${actual} to `,
+        post = `be within [${+expected - delta}/${+expected + delta}]`;
 
     if (result.pass) {
-        result.message = pre + 'not ' + post;
+        result.message = `${pre}not ${post}`;
     } else {
         result.message = pre + post;
     }
@@ -69,26 +71,26 @@ function compareWithinDelta (actual, expected, delta) {
 // failure instead of using expect
 
 function compareSubPath (got, wanted, i, j, delta) {
-    for (var k = 0; k !== wanted.length; ++k) {
-        var commandNum = 'path command #' + i + k;
+    for (let k = 0; k !== wanted.length; ++k) {
+        const commandNum = `path command #${i}${k}`;
         if (got[i + k].op.toUpperCase() !== wanted[j + k].op.toUpperCase()) {
             return {
                 pass: false,
-                message: commandNum + ' actual \'' + got[i + k].op.toUpperCase() +
-                '\' != expected \'' + wanted[j + k].op.toUpperCase() + '\''
+                message: `${commandNum} actual '${got[i + k].op.toUpperCase() 
+                }' != expected '${wanted[j + k].op.toUpperCase()}'`
             };
         }
         if (got[i + k].args.length !== wanted[j + k].args.length) {
             return {
                 pass: false,
-                message: commandNum + ' number of arguments ' +
-                got[i + k].args.length + ' != expected ' + wanted[j + k].args.length
+                message: `${commandNum} number of arguments ${ 
+                    got[i + k].args.length} != expected ${wanted[j + k].args.length}`
             };
         }
-        for (var h = 0; h < got[i + k].args.length; ++h) {
-            var result = compareWithinDelta(got[i + k].args[h], wanted[j + k].args[h], delta);
+        for (let h = 0; h < got[i + k].args.length; ++h) {
+            const result = compareWithinDelta(got[i + k].args[h], wanted[j + k].args[h], delta);
             if (!result.pass) {
-                result.message = commandNum + ', element ' + h + ': ' + result.message;
+                result.message = `${commandNum}, element ${h}: ${result.message}`;
                 return result;
             }
         }
@@ -98,13 +100,13 @@ function compareSubPath (got, wanted, i, j, delta) {
 
 function comparePaths (actual, expected, delta) {
     delta = delta || 1; // default delta of 1px
-    var got = parsePath(actual),
+    const got = parsePath(actual),
         wanted = parsePath(expected);
     if (got.length !== wanted.length) {
         return {
             pass: false,
-            message: 'actual number of path cmds ' + actual.length +
-            ' did not match expected number ' + expected.length
+            message: `actual number of path cmds ${actual.length 
+            } did not match expected number ${expected.length}`
         };
     }
     return compareSubPath(got, wanted, 0, 0, delta);
@@ -112,38 +114,38 @@ function comparePaths (actual, expected, delta) {
 
 function findSubPath (actual, expected, delta) {
     delta = delta || 1; // default delta of 1px
-    var got = parsePath(actual),
+    const got = parsePath(actual),
         wanted = parsePath(expected),
         end = got.length - wanted.length;
-    for (var i = 0; i < end; ++i) {
-        var result = compareSubPath(got, wanted, i, 0, delta);
+    for (let i = 0; i < end; ++i) {
+        const result = compareSubPath(got, wanted, i, 0, delta);
         if (result.pass) {
             return result;
         }
     }
     return {
         pass: false,
-        message: 'did not find expected subpath \'' + expected + '\' in actual path \'' + actual + '\''
+        message: `did not find expected subpath '${expected}' in actual path '${actual}'`
     };
 }
 
 function compareIntListOptSuffix (actual, expected, suffix) {
-    var aparts = actual.split(/, */),
+    const aparts = actual.split(/, */),
         eparts = expected.split(/, */);
     if (aparts.length !== eparts.length) {
         return {
             pass: false,
-            message: 'actual number of list items ' + aparts.length +
-                ' did not match expected number ' + eparts.length
+            message: `actual number of list items ${aparts.length 
+            } did not match expected number ${eparts.length}`
         };
     }
-    var suffixRE = suffix ? new RegExp(suffix + '$') : '';
-    for (var i = 0; i < eparts.length; ++i) {
-        var apart = aparts[i].replace(suffixRE, '');
+    const suffixRE = suffix ? new RegExp(`${suffix}$`) : '';
+    for (let i = 0; i < eparts.length; ++i) {
+        const apart = aparts[i].replace(suffixRE, '');
         if (+apart !== +eparts[i]) {
             return {
                 pass: false,
-                message: 'list item[' + i + '] value ' + aparts[i] + ' did not equal expected value ' + eparts[i]
+                message: `list item[${i}] value ${aparts[i]} did not equal expected value ${eparts[i]}`
             };
         }
     }
@@ -164,7 +166,7 @@ function normalizeColor (c) {
     return d3.color(c).toString();
 }
 
-beforeEach(function () {
+beforeEach(() => {
     jasmine.addMatchers({
         toBeWithinDelta: function (_) {
             return {
@@ -176,9 +178,9 @@ beforeEach(function () {
         toMatchTranslate: function () {
             return {
                 compare: function (actual, x, y, prec) {
-                    var parts = parseTranslate(actual);
+                    const parts = parseTranslate(actual);
                     if (!parts) {
-                        return {pass: false, message: '\'' + actual + '\' did not match translate(x[,y]) regexp'};
+                        return {pass: false, message: `'${actual}' did not match translate(x[,y]) regexp`};
                     }
                     expect(+parts[1]).toBeCloseTo(x, prec);
                     expect(+parts[2]).toBeCloseTo(y, prec);
@@ -189,9 +191,9 @@ beforeEach(function () {
         toMatchTransRot: function () {
             return {
                 compare: function (actual, x, y, r, prec) {
-                    var parts = parseTranslateRotate(actual);
+                    const parts = parseTranslateRotate(actual);
                     if (!parts) {
-                        return {pass: false, message: '\'' + actual + '\' did not match translate(x[,y]),rotate(r) regexp'};
+                        return {pass: false, message: `'${actual}' did not match translate(x[,y]),rotate(r) regexp`};
                     }
                     expect(+parts[1]).toBeCloseTo(x, prec);
                     expect(+parts[2]).toBeCloseTo(y, prec);
@@ -210,8 +212,8 @@ beforeEach(function () {
                        http://localhost:8888/spec/?random=true#composite-chart-clip
                        http://localhost:8888/spec/##composite-chart-clip
                      */
-                    var cleanURL = function (u) {
-                        var matches = u.match(/url\((.*)\)/);
+                    const cleanURL = function (u) {
+                        const matches = u.match(/url\((.*)\)/);
                         if (matches) {
                             u = matches[1].replace(/"/g, '');
                         }

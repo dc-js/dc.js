@@ -1,115 +1,89 @@
-describe('dc.logger', function () {
-    var message = 'Watch out for the bears';
+describe('dc.logger', () => {
+    const message = 'Watch out for the bears';
 
-    describe('logging a warning', function () {
-        describe('when console.warn is defined', function () {
-            beforeEach(function () {
+    describe('logging a warning', () => {
+        describe('when console.warn is defined', () => {
+            beforeEach(() => {
                 console.warn = function (msg) {};
                 spyOn(console, 'warn');
                 dc.logger.warn(message);
             });
 
-            it('should log the message using console.warn', function () {
+            it('should log the message using console.warn', () => {
                 expect(console.warn).toHaveBeenCalledWith(message);
             });
         });
 
-        describe('when console.warn is not defined but console.log is', function () {
-            beforeEach(function () {
+        describe('when console.warn is not defined but console.log is', () => {
+            beforeEach(() => {
                 console.warn = undefined;
                 spyOn(console, 'log');
                 dc.logger.warn(message);
             });
 
-            it('should log the message using console.log', function () {
+            it('should log the message using console.log', () => {
                 expect(console.log).toHaveBeenCalledWith(message);
             });
         });
     });
 
-    describe('debug flag', function () {
-        it('is off by default', function () {
+    describe('debug flag', () => {
+        it('is off by default', () => {
             expect(dc.logger.enableDebugLog).toBeFalsy();
         });
     });
 
-    describe('debug logging', function () {
-        describe('when debugging is disabled', function () {
-            beforeEach(function () {
+    describe('debug logging', () => {
+        describe('when debugging is disabled', () => {
+            beforeEach(() => {
                 dc.logger.enableDebugLog = false;
                 console.debug = function (msg) {};
                 spyOn(console, 'debug');
                 dc.logger.debug(message);
             });
 
-            it('should log nothing', function () {
+            it('should log nothing', () => {
                 expect(console.debug).not.toHaveBeenCalled();
             });
         });
 
-        describe('when debugging is enabled', function () {
-            beforeEach(function () {
+        describe('when debugging is enabled', () => {
+            beforeEach(() => {
                 dc.logger.enableDebugLog = true;
             });
 
-            describe('when console.debug is defined', function () {
-                beforeEach(function () {
+            describe('when console.debug is defined', () => {
+                beforeEach(() => {
                     console.debug = function (msg) {};
                     spyOn(console, 'debug');
                     dc.logger.debug(message);
                 });
 
-                it('should log the message using console.debug', function () {
+                it('should log the message using console.debug', () => {
                     expect(console.debug).toHaveBeenCalledWith(message);
                 });
             });
 
-            describe('when console.debug is not defined', function () {
-                beforeEach(function () {
+            describe('when console.debug is not defined', () => {
+                beforeEach(() => {
                     console.debug = undefined;
                     spyOn(console, 'log');
                     dc.logger.debug(message);
                 });
 
-                it('should log the message using console.log', function () {
+                it('should log the message using console.log', () => {
                     expect(console.log).toHaveBeenCalledWith(message);
                 });
             });
         });
     });
 
-    describe('deprecate', function () {
-        var dummy, wrappedFn;
-
-        beforeEach(function () {
-            dummy = {
-                origFn: function () {
-                }
-            };
-            spyOn(dummy, 'origFn');
-            spyOn(dc.logger, 'warn');
-
-            wrappedFn = dc.logger.deprecate(dummy.origFn, 'origFn is deprecated');
-        });
-        it('should call deprecated function and issue a warning', function () {
-            wrappedFn('a');
-            expect(dummy.origFn).toHaveBeenCalledWith('a');
-            expect(dc.logger.warn).toHaveBeenCalled();
-        });
-        it('should warn for one deprecated function only once', function () {
-            wrappedFn();
-            wrappedFn();
-            expect(dummy.origFn.calls.count()).toBe(2);
-            expect(dc.logger.warn.calls.count()).toBe(1);
-        });
-    });
-
-    describe('warnOnce', function () {
-        beforeEach(function () {
+    describe('warnOnce', () => {
+        beforeEach(() => {
             spyOn(dc.logger, 'warn');
         });
 
-        it('should warn only once for the same message', function () {
+        it('should warn only once for the same message', () => {
             dc.logger.warnOnce('Message 01');
             dc.logger.warnOnce('Message 01');
 
@@ -118,7 +92,7 @@ describe('dc.logger', function () {
 
         // Please remember that during run of the entire test suite warnOnce remembers messages.
         // So, ensure to use distinct messages in different test cases.
-        it('should warn only once each for different messages', function () {
+        it('should warn only once each for different messages', () => {
             dc.logger.warnOnce('Message 02');
             dc.logger.warnOnce('Message 03');
             dc.logger.warnOnce('Message 02');

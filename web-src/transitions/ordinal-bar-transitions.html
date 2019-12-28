@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Ordinal Bar Transitions</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+  </head>
+  <body>
+
+    <div class="container">
+    <script type="text/javascript" src="../examples/header.js"></script>
+
+    <div id="test"></div>
+    <button class="btn" onclick="transitionTest.stop()">stop</button>
+    <button class="btn" onclick="button1()">left</button>
+    <button class="btn" onclick="button2()">right</button>
+    <button class="btn" onclick="button3()">middle</button>
+    <button class="btn" onclick="button4()">reverse</button>
+    <button class="btn" onclick="button5()">backward</button>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript" src="transition-test.js"></script>
+    <script type="text/javascript" src="ordinal-transition.js"></script>
+
+    <script type="text/javascript">
+      var chart = new dc.BarChart("#test");
+      startOrdinal(function(fruitDimension, fruitGroup) {
+          return chart
+              .width(768)
+              .height(380)
+              .x(d3.scaleBand())
+              .xUnits(dc.units.ordinal)
+              .elasticX(true)
+              .elasticY(true)
+              .brushOn(false)
+              .xAxisLabel('Fruit')
+              .yAxisLabel('Quantity Sold')
+              .dimension(fruitDimension)
+              .barPadding(0.1)
+              .outerPadding(0.05)
+              .group(fruitGroup);
+      });
+
+    </script>
+    </div>
+  </body>
+</html>

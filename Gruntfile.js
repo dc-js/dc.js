@@ -8,56 +8,35 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-karma');
 
-    var formatFileList = require('./grunt/format-file-list')(grunt);
+    const formatFileList = require('./grunt/format-file-list')(grunt);
 
-    var config = {
+    const config = {
         src: 'src',
         spec: 'spec',
         web: 'web',
+        dist: 'dist',
         pkg: require('./package.json'),
-        banner: grunt.file.read('./LICENSE_BANNER'),
-        jsFiles: module.exports.jsFiles
+        banner: grunt.file.read('./LICENSE_BANNER')
     };
 
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
-    var d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
+    const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    var sass = require('node-sass');
+    const lintableFiles = `'${config.src}' '${config.spec}' '*.js' 'grunt/*.js' 'web-src/stock.js'`;
+
+    const sass = require('node-sass');
 
     grunt.initConfig({
         conf: config,
 
-        concat: {
-            js: {
-                src: '<%= conf.jsFiles %>',
-                dest: '<%= conf.pkg.name %>.js',
-                options: {
-                    process: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
-                }
-            }
-        },
         sass: {
             options: {
                 implementation: sass
             },
             dist: {
                 files: {
-                    '<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
+                    '<%= conf.dist %>/style/<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
                 }
-            }
-        },
-        uglify: {
-            jsmin: {
-                options: {
-                    mangle: true,
-                    compress: true,
-                    sourceMap: true,
-                    banner: '<%= conf.banner %>'
-                },
-                src: '<%= conf.pkg.name %>.js',
-                dest: '<%= conf.pkg.name %>.min.js'
             }
         },
         cssmin: {
@@ -67,22 +46,8 @@ module.exports = function (grunt) {
             },
             main: {
                 files: {
-                    '<%= conf.pkg.name %>.min.css': ['<%= conf.pkg.name %>.css']
+                    '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css': ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css']
                 }
-            }
-        },
-        eslint: {
-            source: {
-                src: [
-                    '<%= conf.src %>/**/*.js',
-                    '!<%= conf.src %>/{banner,footer,d3v3-compat}.js',
-                    '<%= conf.spec %>/**/*.js',
-                    'Gruntfile.js',
-                    'grunt/*.js',
-                    '<%= conf.web %>/stock.js'],
-            },
-            options: {
-                configFile: '.eslintrc'
             }
         },
         watch: {
@@ -99,15 +64,15 @@ module.exports = function (grunt) {
                 tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             tests: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/**/*.js'],
+                files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/*.js', '<%= conf.spec %>/helpers/*.js', 'web-src/**/*', 'docs/**/*'],
                 tasks: ['test']
             },
             reload: {
-                files: ['<%= conf.pkg.name %>.js',
-                        '<%= conf.pkg.name %>.css',
+                files: ['<%= conf.dist %>/<%= conf.pkg.name %>.js',
+                        '<%= conf.dist %>/style/<%= conf.pkg.name %>.css',
                         '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
                         '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
-                        '<%= conf.pkg.name %>.min.js'],
+                        '<%= conf.dist %>/<%= conf.pkg.name %>.min.js'],
                 options: {
                     livereload: true
                 }
@@ -128,62 +93,23 @@ module.exports = function (grunt) {
                     summary: true,
                     specs:  '<%= conf.spec %>/*-spec.js',
                     helpers: [
-                        '<%= conf.web %>/js/jasmine-jsreporter.js',
-                        '<%= conf.web %>/js/compare-versions.js',
-                        '<%= conf.spec %>/helpers/*.js'
+                        '<%= conf.spec %>/helpers/*.js',
+                        '<%= conf.spec %>/3rd-party/*.js'
                     ],
                     styles: [
-                        '<%= conf.web %>/css/dc.css'
+                        '<%= conf.dist %>/style/dc.css'
                     ],
                     outfile: '<%= conf.spec %>/index.html',
                     keepRunner: true
                 },
                 src: [
-                    '<%= conf.web %>/js/d3.js',
-                    '<%= conf.web %>/js/crossfilter.js',
-                    '<%= conf.pkg.name %>.js'
+                    '<%= conf.dist %>/<%= conf.pkg.name %>.js'
                 ]
             }
         },
         karma: {
             options: {
-                basePath: '',
-                frameworks: ['jasmine'],
-                files: [
-                    // CSS files
-                    '<%= conf.web %>/css/dc.css',
-                    // Helpers
-                    '<%= conf.web %>/js/jasmine-jsreporter.js',
-                    '<%= conf.web %>/js/compare-versions.js',
-                    '<%= conf.spec %>/helpers/*.js',
-                    // JS code dependencies
-                    '<%= conf.web %>/js/d3.js',
-                    '<%= conf.web %>/js/crossfilter.js',
-                    // Code to be tested
-                    '<%= conf.pkg.name %>.js',
-                    // Jasmine spec files
-                    '<%= conf.spec %>/*spec.js'
-                ],
-                exclude: [],
-                preprocessors: {},
-                // possible values: 'dots', 'progress'
-                reporters: ['progress', 'summary'],
-                summaryReporter: {
-                    // 'failed', 'skipped' or 'all'
-                    show: 'failed',
-                    // Limit the spec label to this length
-                    specLength: 100,
-                    // Show an 'all' column as a summary
-                    overviewColumn: true
-                },
-                port: 9876,
-                colors: true,
-                logLevel: 'INFO',
-                autoWatch: false,
-                browsers: ['Firefox'],
-                browserConsoleLogOptions: {level: 'error'},
-                singleRun: true,
-                concurrency: Infinity
+                configFile: 'karma.conf.js'
             },
             unit: {},
             coverage: {
@@ -193,7 +119,7 @@ module.exports = function (grunt) {
                     // source files, that you wanna generate coverage for
                     // do not include tests or libraries
                     // (these files will be instrumented by Istanbul)
-                    '<%= conf.pkg.name %>.js': ['coverage']
+                    '<%= conf.dist %>/<%= conf.pkg.name %>.js': ['coverage']
                 },
 
                 // optionally, configure the reporter
@@ -204,24 +130,6 @@ module.exports = function (grunt) {
             },
             ci: {
                 browsers: ['ChromeNoSandboxHeadless', 'FirefoxHeadless'],
-                customLaunchers: {
-                    // See https://github.com/karma-runner/karma/issues/2603
-                    ChromeNoSandboxHeadless: {
-                        base: 'Chrome',
-                        flags: [
-                            '--no-sandbox',
-                            // See https://chromium.googlesource.com/chromium/src/+/lkgr/headless/README.md
-                            '--headless',
-                            '--disable-gpu',
-                            // Without a remote debugging port, Google Chrome exits immediately.
-                            ' --remote-debugging-port=9222'
-                        ]
-                    },
-                    FirefoxHeadless: {
-                        base: 'Firefox',
-                        flags: ['-headless']
-                    }
-                },
                 concurrency: 1,
                 reporters: ['dots', 'summary']
             },
@@ -231,40 +139,33 @@ module.exports = function (grunt) {
                     slFirefoxLinux: {
                         base: 'SauceLabs',
                         browserName: 'firefox',
-                        version: '45.0',
-                        platform: 'Linux'
+                        version: '68.0',
+                        platform: 'macOS 10.13'
                     },
                     slSafari: {
                         base: 'SauceLabs',
                         browserName: 'safari',
-                        version: '9.0',
-                        platform: 'OS X 10.11'
+                        version: '11.1',
+                        platform: 'macOS 10.13'
                     },
-                    slInternetExplorer11: {
+                    slChromeWindows: {
                         base: 'SauceLabs',
-                        browserName: 'internet explorer',
-                        platform: 'Windows 10',
-                        version: '11.0'
-                    },
-                    slInternetExplorer11win8: {
-                        base: 'SauceLabs',
-                        browserName: 'internet explorer',
-                        version: '11.0',
-                        platform: 'Windows 8.1'
+                        browserName: 'chrome',
+                        version: '76.0',
+                        platform: 'Windows 10'
                     },
                     slMicrosoftEdge: {
                         base: 'SauceLabs',
                         browserName: 'MicrosoftEdge',
-                        version: '14',
+                        version: '18.17763',
                         platform: 'Windows 10'
                     }
                 },
                 browsers: [
-                    'slInternetExplorer11',
-                    'slInternetExplorer11win8',
-                    'slMicrosoftEdge',
                     'slFirefoxLinux',
-                    'slSafari'
+                    'slSafari',
+                    'slChromeWindows',
+                    'slMicrosoftEdge'
                 ],
                 concurrency: 2,
                 browserNoActivityTimeout: 120000,
@@ -284,7 +185,7 @@ module.exports = function (grunt) {
         },
         jsdoc2md: {
             dist: {
-                src: 'dc.js',
+                src: '<%= conf.dist %>/<%= conf.pkg.name %>.js',
                 dest: 'web/docs/api-latest.md'
             }
         },
@@ -307,9 +208,22 @@ module.exports = function (grunt) {
                 files: [
                     {
                         expand: true,
+                        nonull: true,
+                        cwd: 'web-src',
+                        src: '**',
+                        dest: 'web/'
+                    },
+                    {
+                        expand: true,
+                        cwd: 'docs/old-api-docs',
+                        src: '**',
+                        dest: 'web/docs/'
+                    },
+                    {
+                        expand: true,
                         flatten: true,
                         nonull: true,
-                        src: ['<%= conf.pkg.name %>.css', '<%= conf.pkg.name %>.min.css'],
+                        src: ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css', '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css'],
                         dest: '<%= conf.web %>/css/'
                     },
                     {
@@ -317,27 +231,30 @@ module.exports = function (grunt) {
                         flatten: true,
                         nonull: true,
                         src: [
-                            '<%= conf.pkg.name %>.js',
-                            '<%= conf.pkg.name %>.js.map',
-                            '<%= conf.pkg.name %>.min.js',
-                            '<%= conf.pkg.name %>.min.js.map',
-                            'node_modules/d3/' + d3pkgSubDir + '/d3.js',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.js',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.js.map',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.min.js',
+                            '<%= conf.dist %>/<%= conf.pkg.name %>.min.js.map',
+                            `node_modules/d3/${d3pkgSubDir}/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
-                            'node_modules/reductio/reductio.js',
-                            'node_modules/whatwg-fetch/dist/fetch.umd.js'
+                            'node_modules/reductio/reductio.js'
                         ],
                         dest: '<%= conf.web %>/js/'
-                    },
+                    }
+                ]
+            },
+            'specs': {
+                files: [
                     {
+                        expand: true,
+                        flatten: true,
                         nonull: true,
-                        src: 'node_modules/promise-polyfill/dist/polyfill.js',
-                        dest: '<%= conf.web %>/js/promise-polyfill.js'
-                    },
-                    {
-                        nonull: true,
-                        src: 'node_modules/url-search-params-polyfill/index.js',
-                        dest: '<%= conf.web %>/js/url-search-params-polyfill.js'
+                        src: [
+                            `node_modules/d3/${d3pkgSubDir}/d3.js`,
+                            'node_modules/crossfilter2/crossfilter.js',
+                        ],
+                        dest: '<%= conf.spec %>/3rd-party/'
                     },
                     {
                         expand: true,
@@ -346,9 +263,9 @@ module.exports = function (grunt) {
                         src: [
                             'node_modules/compare-versions/index.js'
                         ],
-                        dest: '<%= conf.web %>/js/',
+                        dest: '<%= conf.spec %>/3rd-party/',
                         rename: function (dest, src) {
-                            return dest + 'compare-versions.js';
+                            return `${dest}compare-versions.js`;
                         }
                     }
                 ]
@@ -430,7 +347,7 @@ module.exports = function (grunt) {
                         'git checkout master',
                         'git reset --hard origin/master',
                         'git fetch origin',
-                        'git merge --no-ff origin/pr/' + pr + ' -m \'Merge pull request #' + pr + '\''
+                        `git merge --no-ff origin/pr/${pr} -m 'Merge pull request #${pr}'`
                     ].join('&&');
                 },
                 options: {
@@ -450,25 +367,23 @@ module.exports = function (grunt) {
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
             },
             hierarchy: {
-                command: 'dot -Tsvg -o web/img/class-hierarchy.svg class-hierarchy.dot'
-            }
-        },
-        browserify: {
-            dev: {
-                src: '<%= conf.pkg.name %>.js',
-                dest: 'bundle.js',
-                options: {
-                    browserifyOptions: {
-                        standalone: 'dc'
-                    }
-                }
+                command: 'dot -Tsvg -o web-src/img/class-hierarchy.svg class-hierarchy.dot'
+            },
+            rollup: {
+                command: 'rm -rf dist/; rollup --config'
+            },
+            eslint: {
+                command: `eslint ${lintableFiles}`
+            },
+            'eslint-fix': {
+                command: `eslint ${lintableFiles} --fix`
             }
         }
     });
 
-    grunt.registerTask('merge', 'Merge a github pull request.', function (pr) {
-        grunt.log.writeln('Merge Github Pull Request #' + pr);
-        grunt.task.run(['shell:merge:' + pr, 'test' , 'shell:amend']);
+    grunt.registerTask('merge', 'Merge a github pull request.', pr => {
+        grunt.log.writeln(`Merge Github Pull Request #${pr}`);
+        grunt.task.run([`shell:merge:${pr}`, 'test' , 'shell:amend']);
     });
     grunt.registerTask(
         'test-stock-example',
@@ -479,17 +394,14 @@ module.exports = function (grunt) {
     grunt.registerTask('update-stock-example', 'Update the baseline stock example web page.', function () {
         require('./regression/stock-regression-test.js').updateStockExample(this.async());
     });
-    grunt.registerTask('watch:scripts-sass-docs', function () {
+    grunt.registerTask('watch:scripts-sass-docs', () => {
         grunt.config('watch', {
-            options: {
-                interrupt: true
-            },
             scripts: grunt.config('watch').scripts,
             sass: grunt.config('watch').sass
         });
         grunt.task.run('watch');
     });
-    grunt.registerTask('safe-sauce-labs', function () {
+    grunt.registerTask('safe-sauce-labs', () => {
         if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
             grunt.log.writeln('Skipping Sauce Lab tests - SAUCE_USERNAME/SAUCE_ACCESS_KEY not set');
             return;
@@ -498,58 +410,19 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['concat', 'sass', 'uglify', 'cssmin']);
+    grunt.registerTask('build', ['shell:rollup', 'sass', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('server', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server', 'watch:scripts-sass-docs']);
+    grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
+    grunt.registerTask('server', ['server-only', 'watch:scripts-sass-docs']);
+    // This task will active server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
+    grunt.registerTask('test-n-serve', ['server-only', 'test', 'watch:tests']);
     grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
-    // grunt.registerTask('test-browserify', ['build', 'copy', 'browserify', 'jasmine:browserify']);
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
-    grunt.registerTask('lint', ['eslint']);
+    grunt.registerTask('lint', ['shell:eslint']);
+    grunt.registerTask('lint-fix', ['shell:eslint-fix']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };
-
-module.exports.jsFiles = [
-    'src/banner.js',   // NOTE: keep this first
-    'src/core.js',
-    'src/errors.js',
-    'src/utils.js',
-    'src/logger.js',
-    'src/config.js',
-    'src/events.js',
-    'src/filters.js',
-    'src/base-mixin.js',
-    'src/margin-mixin.js',
-    'src/color-mixin.js',
-    'src/coordinate-grid-mixin.js',
-    'src/stack-mixin.js',
-    'src/cap-mixin.js',
-    'src/bubble-mixin.js',
-    'src/pie-chart.js',
-    'src/sunburst-chart.js',
-    'src/bar-chart.js',
-    'src/line-chart.js',
-    'src/data-count.js',
-    'src/data-table.js',
-    'src/data-grid.js',
-    'src/bubble-chart.js',
-    'src/composite-chart.js',
-    'src/series-chart.js',
-    'src/geo-choropleth-chart.js',
-    'src/bubble-overlay.js',
-    'src/row-chart.js',
-    'src/legend.js',
-    'src/html-legend.js',
-    'src/scatter-plot.js',
-    'src/number-display.js',
-    'src/heatmap.js',
-    'src/d3.box.js',
-    'src/box-plot.js',
-    'src/select-menu.js',
-    'src/text-filter-widget.js',
-    'src/cbox-menu.js',
-    'src/footer.js'  // NOTE: keep this last
-];
