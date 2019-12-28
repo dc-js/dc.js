@@ -25,7 +25,7 @@ Support
 * [Example Site](http://dc-js.github.com/dc.js/)
 * [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
 * [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
-* [v3.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([last - v2.1](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-latest.md))</sup>
+* [v4.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md))</sup> <sup>([last - v3.1.9](https://github.com/dc-js/dc.js/blob/develop/web/docs/api-3.1.9.md))</sup>
 * [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - ask questions and get help
 * [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - discussion and longer topics
 * [GitHub Issues](https://github.com/dc-js/dc.js/issues) - bug reports and feature requests
@@ -36,13 +36,13 @@ Get help faster with a working example! Fork these to get started:<br>
 [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/0k5ygjqd/) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/0ymLxuc2/) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
 
 ## Versioning
-Version 3.* is compatible with d3 versions 4 and 5. Use dc.js 2.* if you still need compatibility with d3 version 3.
+Version 4.* is compatible with d3 versions 4 and 5. It is not compatible with IE. Use dc.js 3.* if you need IE support, or use dc.js 2.* if you need compatibility with d3 version 3.
 
 ## CDN location
 
 ```
-http://unpkg.com/dc@3/dc.js
-http://unpkg.com/dc@3/dc.css
+http://unpkg.com/dc@4/dc.js
+http://unpkg.com/dc@4/dc.css
 ```
 
 or copy the latest links from [CDNJS](https://cdnjs.com/libraries/dc)
@@ -61,7 +61,7 @@ Download
 * [d3.js](https://github.com/mbostock/d3)
 * [crossfilter.js](https://github.com/square/crossfilter)
 * [dc.js - stable](https://github.com/dc-js/dc.js/releases)
-* [dc.js - bleeding edge (master)](https://github.com/dc-js/dc.js)
+* [dc.js - bleeding edge (develop)](https://github.com/dc-js/dc.js)
 
 
 How to build dc.js locally
