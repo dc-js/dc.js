@@ -6,7 +6,7 @@
 !package.json
 !README.md
 !LICENSE
-!dist/**/*
+!dist/*
 
 # ES6 modules
 !src/**/*
