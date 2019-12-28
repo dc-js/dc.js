@@ -511,7 +511,7 @@ jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-f
               </div>
               <h3 id="define-chart-attributes">Define Chart Attributes</h3>
 <p>Define chart attributes using fluent methods. See the
-<a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md">dc.js API Reference</a> for more information</p>
+<a href="https://dc-js.github.io/dc.js/docs/html/">dc.js API Reference</a> for more information</p>
 
             </div>
             
@@ -541,7 +541,7 @@ jQuery.getJson(<span class="hljs-string">'data.json'</span>, <span class="hljs-f
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with the chart will only trigger redraws
 on charts within the same chart group.
-<br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-chart">Bubble Chart</a></p>
+<br>API: <a href="https://dc-js.github.io/dc.js/docs/html/BubbleChart.html">Bubble Chart</a></p>
 
             </div>
             
@@ -944,7 +944,7 @@ so any additional method chaining applies to the axis, not the chart.</p>
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
 on other charts within the same chart group.
-<br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#pie-chart">Pie Chart</a></p>
+<br>API: <a href="https://dc-js.github.io/dc.js/docs/html/PieChart.html">Pie Chart</a></p>
 
             </div>
             
@@ -1176,7 +1176,7 @@ on other charts within the same chart group.
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
 on other charts within the same chart group.
-<br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#row-chart">Row Chart</a></p>
+<br>API: <a href="https://dc-js.github.io/dc.js/docs/html/RowChart.html">Row Chart</a></p>
 
             </div>
             
@@ -1246,7 +1246,7 @@ on other charts within the same chart group.
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
 on other charts within the same chart group.
-<br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bar-chart">Bar Chart</a></p>
+<br>API: <a href="https://dc-js.github.io/dc.js/docs/html/BarChart.html">Bar Chart</a></p>
 
             </div>
             
@@ -1366,8 +1366,8 @@ on other charts within the same chart group.
                 <a class="pilcrow" href="#section-80">&#182;</a>
               </div>
               <p>Specify an area chart by using a line chart with <code>.renderArea(true)</code>.
-<br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#stack-mixin">Stack Mixin</a>,
-<a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#line-chart">Line Chart</a></p>
+<br>API: <a href="https://dc-js.github.io/dc.js/docs/html/StackMixin.html">Stack Mixin</a>,
+<a href="https://dc-js.github.io/dc.js/docs/html/LineChart.html">Line Chart</a></p>
 
             </div>
             
@@ -1549,7 +1549,7 @@ will always match the zoom of the area chart.</p>
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
 on other charts within the same chart group.
-<br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-count-widget">Data Count Widget</a></p>
+<br>API: <a href="https://dc-js.github.io/dc.js/docs/html/DataCount.html">Data Count Widget</a></p>
 <pre><code class="language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'dc-data-count'</span>&gt;</span>
  <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'filter-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span>
  selected out of <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">'total-count'</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span> records.
@@ -1609,7 +1609,7 @@ on other charts within the same chart group.
 an optional chart group for this chart to be scoped within. When a chart belongs
 to a specific group then any interaction with such chart will only trigger redraw
 on other charts within the same chart group.
-<br>API: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#data-table-widget">Data Table Widget</a></p>
+<br>API: <a href="https://dc-js.github.io/dc.js/docs/html/DataTable.html">Data Table Widget</a></p>
 <p>You can statically define the headers like in</p>
 <pre><code class="language-html">   <span class="hljs-comment">&lt;!-- anchor div for data table --&gt;</span>
    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">'data-table'</span>&gt;</span>
@@ -1792,10 +1792,7 @@ This code demonstrates generating the column header automatically based on the c
             
             <div class="content"><div class='highlight'><pre>        .on(<span class="hljs-string">'renderlet'</span>, table =&gt; {
             table.selectAll(<span class="hljs-string">'.dc-table-group'</span>).classed(<span class="hljs-string">'info'</span>, <span class="hljs-literal">true</span>);
-        });
-
-    <span class="hljs-comment">/*
-</span></pre></div></div>
+        });</pre></div></div>
             
         </li>
         
@@ -1806,7 +1803,7 @@ This code demonstrates generating the column header automatically based on the c
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-104">&#182;</a>
               </div>
-              <h4 id="geo-choropleth-chart">Geo Choropleth Chart</h4>
+              <h4 id="rendering">Rendering</h4>
 
             </div>
             
@@ -1819,529 +1816,6 @@ This code demonstrates generating the column header automatically based on the c
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-105">&#182;</a>
               </div>
-              <p>Create a choropleth chart and use the given css selector as anchor. You can also specify
-an optional chart group for this chart to be scoped within. When a chart belongs
-to a specific group then any interaction with such chart will only trigger redraw
-on other charts within the same chart group.
-<br>API: [Geo Chroropleth Chart][choro]
-[choro]: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#geo-choropleth-chart">https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#geo-choropleth-chart</a></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>    dc.geoChoroplethChart(<span class="hljs-string">'#us-chart'</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-106">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-106">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define chart width, default 200</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .width(<span class="hljs-number">990</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-107">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-107">&#182;</a>
-              </div>
-              <p>(optional) define chart height, default 200</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .height(<span class="hljs-number">500</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-108">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-108">&#182;</a>
-              </div>
-              <p>(optional) define chart transition duration, default 1000</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .transitionDuration(<span class="hljs-number">1000</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-109">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-109">&#182;</a>
-              </div>
-              <p>set crossfilter dimension, dimension key should match the name retrieved in geojson layer</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .dimension(states)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-110">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-110">&#182;</a>
-              </div>
-              <p>set crossfilter group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .group(stateRaisedSum)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-111">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-111">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define color function or array for bubbles</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .colors([<span class="hljs-string">'#ccc'</span>, <span class="hljs-string">'#E2F2FF'</span>,<span class="hljs-string">'#C4E4FF'</span>,<span class="hljs-string">'#9ED2FF'</span>,<span class="hljs-string">'#81C5FF'</span>,<span class="hljs-string">'#6BBAFF'</span>,<span class="hljs-string">'#51AEFF'</span>,<span class="hljs-string">'#36A2FF'</span>,<span class="hljs-string">'#1E96FF'</span>,<span class="hljs-string">'#0089FF'</span>,
-            <span class="hljs-string">'#0061B5'</span>])</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-112">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-112">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define color domain to match your data domain if you want to bind data or color</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .colorDomain([<span class="hljs-number">-5</span>, <span class="hljs-number">200</span>])</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-113">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-113">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define color value accessor</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .colorAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d, i</span>)</span>{<span class="hljs-keyword">return</span> d.value;})</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-114">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-114">&#182;</a>
-              </div>
-              <p>Project the given geojson. You can call this function multiple times with different geojson feed to generate
-multiple layers of geo paths.</p>
-<ul>
-<li>1st param - geojson data</li>
-<li>2nd param - name of the layer which will be used to generate css class</li>
-<li>3rd param - (<em>optional</em>) a function used to generate key for geo path, it should match the dimension key
-in order for the coloring to work properly</li>
-</ul>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .overlayGeoJson(statesJson.features, <span class="hljs-string">'state'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
-            <span class="hljs-keyword">return</span> d.properties.name;
-        })</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-115">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-115">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) closure to generate title for path, <code>default = d.key + &#39;: &#39; + d.value</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        .title(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
-            <span class="hljs-keyword">return</span> <span class="hljs-string">'State: '</span> + d.key + <span class="hljs-string">'\nTotal Amount Raised: '</span> + numberFormat(d.value ? d.value : <span class="hljs-number">0</span>) + <span class="hljs-string">'M'</span>;
-        });</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-116">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-116">&#182;</a>
-              </div>
-              <h4 id="bubble-overlay-chart">Bubble Overlay Chart</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-117">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-117">&#182;</a>
-              </div>
-              <p>Create a overlay bubble chart and use the given css selector as anchor. You can also specify
-an optional chart group for this chart to be scoped within. When a chart belongs
-to a specific group then any interaction with the chart will only trigger redraw
-on charts within the same chart group.
-<br>API: [Bubble Overlay Chart][bubble]
-[bubble]: <a href="https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-overlay-chart">https://github.com/dc-js/dc.js/blob/master/web/docs/api-latest.md#bubble-overlay-chart</a></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        dc.bubbleOverlay(<span class="hljs-string">'#bubble-overlay'</span>, <span class="hljs-string">'chartGroup'</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-118">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-118">&#182;</a>
-              </div>
-              <p>The bubble overlay chart does not generate its own svg element but rather reuses an existing
-svg to generate its overlay layer</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .svg(d3.select(<span class="hljs-string">'#bubble-overlay svg'</span>))</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-119">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-119">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define chart width, <code>default = 200</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .width(<span class="hljs-number">990</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-120">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-120">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define chart height, <code>default = 200</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .height(<span class="hljs-number">500</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-121">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-121">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define chart transition duration, <code>default = 1000</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .transitionDuration(<span class="hljs-number">1000</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-122">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-122">&#182;</a>
-              </div>
-              <p>Set crossfilter dimension, dimension key should match the name retrieved in geo json layer</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .dimension(states)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-123">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-123">&#182;</a>
-              </div>
-              <p>Set crossfilter group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .group(stateRaisedSum)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-124">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-124">&#182;</a>
-              </div>
-              <p>Closure used to retrieve x value from multi-value group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .keyAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p</span>) </span>{<span class="hljs-keyword">return</span> p.value.absGain;})</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-125">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-125">&#182;</a>
-              </div>
-              <p>Closure used to retrieve y value from multi-value group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .valueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p</span>) </span>{<span class="hljs-keyword">return</span> p.value.percentageGain;})</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-126">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-126">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define color function or array for bubbles</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .colors([<span class="hljs-string">'#ccc'</span>, <span class="hljs-string">'#E2F2FF'</span>,<span class="hljs-string">'#C4E4FF'</span>,<span class="hljs-string">'#9ED2FF'</span>,<span class="hljs-string">'#81C5FF'</span>,<span class="hljs-string">'#6BBAFF'</span>,<span class="hljs-string">'#51AEFF'</span>,<span class="hljs-string">'#36A2FF'</span>,<span class="hljs-string">'#1E96FF'</span>,<span class="hljs-string">'#0089FF'</span>,
-                <span class="hljs-string">'#0061B5'</span>])</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-127">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-127">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define color domain to match your data domain if you want to bind data or color</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .colorDomain([<span class="hljs-number">-5</span>, <span class="hljs-number">200</span>])</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-128">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-128">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) define color value accessor</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .colorAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d, i</span>)</span>{<span class="hljs-keyword">return</span> d.value;})</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-129">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-129">&#182;</a>
-              </div>
-              <p>Closure used to retrieve radius value from multi-value group</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .radiusValueAccessor(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p</span>) </span>{<span class="hljs-keyword">return</span> p.value.fluctuationPercentage;})</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-130">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-130">&#182;</a>
-              </div>
-              <p>set radius scale</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .r(d3.scaleLinear().domain([<span class="hljs-number">0</span>, <span class="hljs-number">3</span>]))</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-131">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-131">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) whether chart should render labels, <code>default = true</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .renderLabel(<span class="hljs-literal">true</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-132">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-132">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) closure to generate label per bubble, <code>default = group.key</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .label(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">p</span>) </span>{<span class="hljs-keyword">return</span> p.key.getFullYear();})</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-133">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-133">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) whether chart should render titles, <code>default = false</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .renderTitle(<span class="hljs-literal">true</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-134">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-134">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) closure to generate title per bubble, <code>default = d.key + &#39;: &#39; + d.value</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .title(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">d</span>) </span>{
-                <span class="hljs-keyword">return</span> <span class="hljs-string">'Title: '</span> + d.key;
-            })</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-135">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-135">&#182;</a>
-              </div>
-              <p>add data point to its layer dimension key that matches point name: it will be used to
-generate a bubble. Multiple data points can be added to the bubble overlay to generate
-multiple bubbles.</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .point(<span class="hljs-string">'California'</span>, <span class="hljs-number">100</span>, <span class="hljs-number">120</span>)
-            .point(<span class="hljs-string">'Colorado'</span>, <span class="hljs-number">300</span>, <span class="hljs-number">120</span>)</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-136">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-136">&#182;</a>
-              </div>
-              <p>(<em>optional</em>) setting debug flag to true will generate a transparent layer on top of
-bubble overlay which can be used to obtain relative <code>x</code>,<code>y</code> coordinate for specific
-data point, <code>default = false</code></p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>            .debug(true);
-    */</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-137">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-137">&#182;</a>
-              </div>
-              <h4 id="rendering">Rendering</h4>
-
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-138">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-138">&#182;</a>
-              </div>
               <p>simply call <code>.renderAll()</code> to render all charts on the page</p>
 
             </div>
@@ -2353,11 +1827,11 @@ data point, <code>default = false</code></p>
         </li>
         
         
-        <li id="section-139">
+        <li id="section-106">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-139">&#182;</a>
+                <a class="pilcrow" href="#section-106">&#182;</a>
               </div>
               <p>Or you can render charts belonging to a specific chart group</p>
 
@@ -2368,11 +1842,11 @@ data point, <code>default = false</code></p>
         </li>
         
         
-        <li id="section-140">
+        <li id="section-107">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-140">&#182;</a>
+                <a class="pilcrow" href="#section-107">&#182;</a>
               </div>
               <p>Once rendered you can call <code>.redrawAll()</code> to update charts incrementally when the data
 changes, without re-rendering everything</p>
@@ -2384,11 +1858,11 @@ changes, without re-rendering everything</p>
         </li>
         
         
-        <li id="section-141">
+        <li id="section-108">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-141">&#182;</a>
+                <a class="pilcrow" href="#section-108">&#182;</a>
               </div>
               <p>Or you can choose to redraw only those charts associated with a specific chart group</p>
 
@@ -2402,11 +1876,11 @@ changes, without re-rendering everything</p>
         </li>
         
         
-        <li id="section-142">
+        <li id="section-109">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-142">&#182;</a>
+                <a class="pilcrow" href="#section-109">&#182;</a>
               </div>
               <h4 id="versions">Versions</h4>
 
@@ -2415,11 +1889,11 @@ changes, without re-rendering everything</p>
         </li>
         
         
-        <li id="section-143">
+        <li id="section-110">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-143">&#182;</a>
+                <a class="pilcrow" href="#section-110">&#182;</a>
               </div>
               <p>Determine the current version of dc with <code>dc.version</code></p>
 
@@ -2430,11 +1904,11 @@ changes, without re-rendering everything</p>
         </li>
         
         
-        <li id="section-144">
+        <li id="section-111">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-144">&#182;</a>
+                <a class="pilcrow" href="#section-111">&#182;</a>
               </div>
               <p>Determine latest stable version in the repo via Github API</p>
 
