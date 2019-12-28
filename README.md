@@ -41,8 +41,8 @@ Version 4.* is compatible with d3 versions 4 and 5. It is not compatible with IE
 ## CDN location
 
 ```
-http://unpkg.com/dc@4/dc.js
-http://unpkg.com/dc@4/dc.css
+https://unpkg.com/dc@%5E4.0.0-beta.1/dist/dc.js
+https://unpkg.com/dc@%5E4.0.0-beta.1/dist/style/dc.css
 ```
 
 or copy the latest links from [CDNJS](https://cdnjs.com/libraries/dc)
