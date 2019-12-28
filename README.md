@@ -33,7 +33,7 @@ Support
 *Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
 
 Get help faster with a working example! Fork these to get started:<br>
-[example jsFiddle](https://jsfiddle.net/gordonwoodhull/raxxxmk1/) - [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/ckf3d2cv/) - [example bl.ock](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5) - [blank bl.ock](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
+[blank jsFiddle](https://jsfiddle.net/gordonwoodhull/0k5ygjqd/) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/0ymLxuc2/) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
 
 ## Versioning
 Version 3.* is compatible with d3 versions 4 and 5. Use dc.js 2.* if you still need compatibility with d3 version 3.

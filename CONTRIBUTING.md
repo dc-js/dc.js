@@ -4,13 +4,8 @@
 
 If you are trying to get a particular effect or you have a problem with your code, please ask your question [on stackoverflow.com](http://stackoverflow.com/questions/tagged/dc.js) or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group). We use the issue tracker for bug reports and feature requests only.
 
-Get help faster with a working example! Use [jsfiddle.net](http://jsfiddle.net) or [bl.ocks.org](http://bl.ocks.org) - [blockbuilder.org](http://blockbuilder.org/) is a great way to edit bl.ocks.
-
-Here are some examples you can fork to get started:
-  * [example jsFiddle](https://jsfiddle.net/gordonwoodhull/raxxxmk1/) with some data and a chart.
-  * [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/ckf3d2cv/) using the latest dc.js from unpkg.com
-  * the same example [as a bl.ock](http://bl.ocks.org/gordonwoodhull/ecce8e32d64c662cffd5); [on blockbuilder.org](http://blockbuilder.org/gordonwoodhull/ecce8e32d64c662cffd5)
-  * a blank template bl.ock [on blockbuilder.org](http://blockbuilder.org/gordonwoodhull/9ab997c9a8d7d3380364)
+Get help faster with a working example! Fork these to get started:<br>
+[blank jsFiddle](https://jsfiddle.net/gordonwoodhull/0k5ygjqd/) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/0ymLxuc2/) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
 
 For bug reports and feature requests submit a [github issue](http://github.com/dc-js/dc.js/issues)
   * Please include the version of DC you are using
