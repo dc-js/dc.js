@@ -6,7 +6,7 @@
 !package.json
 !README.md
 !LICENSE
-!dist/*
+!dist/**/*
 
 # ES6 modules
 !src/**/*
@@ -15,4 +15,5 @@
 src/index-with-version.js
 
 # ignore the source map files, these have no use without source files
-dist/**/*.map
+# gw: these may still help
+# dist/**/*.map
