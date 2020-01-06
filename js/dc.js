@@ -1,7 +1,7 @@
 /*!
  *  dc 4.0.0-beta.5
  *  http://dc-js.github.io/dc.js/
- *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
+ *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");

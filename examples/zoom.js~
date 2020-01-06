@@ -1,0 +1,64 @@
+var data = [];
+var items = 50000; // way too much
+
+for (i = 0; i < items; i++) {
+  var d = new Date();
+  d.setSeconds(d.getSeconds() + i);
+  data.push({
+    value: 10 * Math.sin(2 * Math.PI * i / (items / 2)),
+    date: d
+  });
+}
+
+var chart = dc.lineChart("#chart");
+var rangeChart = dc.lineChart("#range-chart");
+var domain = [data[0].date, data.slice(-1)[0].date];
+var dimension = crossfilter(data).dimension(function(d) {
+  return d.date;
+});
+var group = dimension.group().reduceSum(function(d) {
+  return d.value;
+});
+
+rangeChart
+  .height(80)
+  .dimension(dimension)
+  .group(group)
+  .x(d3.scaleTime().domain(domain))
+  .xUnits(d3.timeDay);
+
+chart
+  .height(220)
+  .dimension(dimension)
+  .group(group)
+  .rangeChart(rangeChart)
+  .x(d3.scaleTime().domain(domain))
+  .xUnits(d3.timeDay)
+  .brushOn(false)
+  .mouseZoomable(true)
+  .zoomScale([1, 100])
+  .zoomOutRestrict(true)
+  .renderVerticalGridLines(true)
+  .elasticY(true)
+  .transitionDuration(100);
+
+function nonzero_min(chart) {
+  dc.override(chart, "yAxisMin", function() {
+    var min = d3.min(chart.data(), function(layer) {
+      return d3.min(layer.values, function(p) {
+        return p.y + p.y0;
+      });
+    });
+    return dc.utils.subtract(min, chart.yAxisPadding());
+  });
+  return chart;
+}
+nonzero_min(chart);
+chart.yAxis().tickFormat(function(t) {
+  return (t * 1000).toFixed(0);
+});
+rangeChart.yAxis().tickFormat(function(t) {
+  return "";
+});
+rangeChart.yAxis().ticks(0);
+dc.renderAll();
