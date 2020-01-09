@@ -1,7 +1,7 @@
-## 4.0.0 beta 5
+## 4.0.0
 * Thanks to the diligent and careful effort of Deepak Kumar, dc.js has been ported to ES6 modules, classes and syntax.
 
-IE is no longer supported. dc.js will not support transpilation - stick with dc@3 for IE support.
+IE is no longer supported. dc.js will not support transpilation. Stick with dc@3 for IE support.
 
 The API is mostly compatible, but there are a few breaking changes - see the [v4 upgrade guide](https://github.com/dc-js/dc.js/blob/develop/docs/dc-v4-upgrade-guide.md) for details.
 
