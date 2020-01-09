@@ -65,7 +65,12 @@ module.exports = function (grunt) {
                 tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             tests: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/*.js', '<%= conf.spec %>/helpers/*.js', '<%= conf.websrc %>/**/*', 'docs/**/*'],
+                files: [
+                    '<%= conf.src %>/**/*.js',
+                    '<%= conf.spec %>/*.js',
+                    '<%= conf.spec %>/helpers/*.js',
+                    '<%= conf.websrc %>/**/*',
+                    'docs/**/*'],
                 tasks: ['test']
             },
             reload: {
