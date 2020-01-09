@@ -18,7 +18,7 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
  *
  * Examples:
- * - {@link http://europarl.me/dc.js/web/ep/index.html List of members of the european parliament}
+ * - {@link https://dc-js.github.io/dc.js/ep/ List of members of the european parliament}
  * @mixes BaseMixin
  */
 export class DataGrid extends BaseMixin {

@@ -13,13 +13,13 @@
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
 
-<script type="text/javascript" src="http://underscorejs.org/underscore-min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="https://underscorejs.org/underscore-min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.min.js"></script>
 
 <script>
 
-var tpl = _.template("<h2 title='MEP from <%= country %> in <%= eugroup %>'> <%= first_name %> <%= last_name %></h2><img class='lazy-load' dsrc='blank.gif' data-original='http://www.europarl.europa.eu/mepphoto/<%= epid %>.jpg' alt='<%= last_name %>, <%= first_name %> member of <%= eugroup %>' title='MEP from <%= country %> in <%= eugroup %>' width=170 height=216 />");
+var tpl = _.template("<h2 title='MEP from <%= country %> in <%= eugroup %>'> <%= first_name %> <%= last_name %></h2><img class='lazy-load' dsrc='blank.gif' data-original='https://www.europarl.europa.eu/mepphoto/<%= epid %>.jpg' alt='<%= last_name %>, <%= first_name %> member of <%= eugroup %>' title='MEP from <%= country %> in <%= eugroup %>' width=170 height=216 />");
 
 function grid (selector,data) {
   var ndx = crossfilter(data),

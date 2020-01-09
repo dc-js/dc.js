@@ -14,6 +14,7 @@ module.exports = function (grunt) {
         src: 'src',
         spec: 'spec',
         web: 'web',
+        websrc: 'web-src',
         dist: 'dist',
         pkg: require('./package.json'),
         banner: grunt.file.read('./LICENSE_BANNER')
@@ -22,7 +23,7 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    const lintableFiles = `'${config.src}' '${config.spec}' '*.js' 'grunt/*.js' 'web-src/stock.js'`;
+    const lintableFiles = `'${config.src}' '${config.spec}' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
 
     const sass = require('node-sass');
 
@@ -64,7 +65,12 @@ module.exports = function (grunt) {
                 tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             tests: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.spec %>/*.js', '<%= conf.spec %>/helpers/*.js', 'web-src/**/*', 'docs/**/*'],
+                files: [
+                    '<%= conf.src %>/**/*.js',
+                    '<%= conf.spec %>/*.js',
+                    '<%= conf.spec %>/helpers/*.js',
+                    '<%= conf.websrc %>/**/*',
+                    'docs/**/*'],
                 tasks: ['test']
             },
             reload: {
@@ -177,7 +183,7 @@ module.exports = function (grunt) {
             dist: {
                 src: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
                 options: {
-                    destination: 'web/docs/html',
+                    destination: '<%= conf.web %>/docs/html',
                     template: 'node_modules/ink-docstrap/template',
                     configure: 'jsdoc.conf.json'
                 }
@@ -209,15 +215,15 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         nonull: true,
-                        cwd: 'web-src',
+                        cwd: '<%= conf.websrc %>',
                         src: '**',
-                        dest: 'web/'
+                        dest: '<%= conf.web %>/'
                     },
                     {
                         expand: true,
                         cwd: 'docs/old-api-docs',
                         src: '**',
-                        dest: 'web/docs/'
+                        dest: '<%= conf.web %>/docs/'
                     },
                     {
                         expand: true,
@@ -279,10 +285,10 @@ module.exports = function (grunt) {
                     title: 'Index of dc.js examples',
                     heading: 'Examples of using dc.js',
                     description: 'An attempt to present a simple example of each chart type.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/examples'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/examples'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.web %>/examples/*.html']}
+                    {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.websrc %>/examples/*.html']}
                 ]
             },
             'transitions-listing': {
@@ -293,10 +299,10 @@ module.exports = function (grunt) {
                     heading: 'Eyeball tests for dc.js transitions',
                     description: 'Transitions can only be tested by eye. ' +
                         'These pages automate the transitions so they can be visually verified.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/transitions'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/transitions'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.web %>/transitions/*.html']}
+                    {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.websrc %>/transitions/*.html']}
                 ]
             },
             'resizing-listing': {
@@ -310,10 +316,10 @@ module.exports = function (grunt) {
                         'For the examples with a single chart taking up the entire window, you can add <code>?resize=viewbox</code> ' +
                         'to the URL to test resizing the chart using the ' +
           '<a href="http://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#useViewBoxResizing__anchor">useViewBoxResizing</a> strategy.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/resizing'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/resizing'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.web %>/resizing/*.html']}
+                    {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.websrc %>/resizing/*.html']}
                 ]
             },
             'zoom-listing': {
@@ -324,10 +330,10 @@ module.exports = function (grunt) {
                     heading: 'Interactive test for dc.js chart zoom',
                     description: 'It\'s hard to conceive of a way to test zoom except by trying it. ' +
                         'So this is a substitute for automated tests in this area',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.web %>/zoom'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/zoom'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/zoom/index.html', src: ['<%= conf.web %>/zoom/*.html']}
+                    {dest: '<%= conf.web %>/zoom/index.html', src: ['<%= conf.websrc %>/zoom/*.html']}
                 ]
             }
         },
@@ -367,7 +373,7 @@ module.exports = function (grunt) {
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
             },
             hierarchy: {
-                command: 'dot -Tsvg -o web-src/img/class-hierarchy.svg class-hierarchy.dot'
+                command: 'dot -Tsvg -o <%= conf.websrc %>/img/class-hierarchy.svg class-hierarchy.dot'
             },
             rollup: {
                 command: 'rm -rf dist/; rollup --config'
