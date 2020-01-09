@@ -1,5 +1,5 @@
 /*!
- *  dc 4.0.0-beta.5
+ *  dc 4.0.0
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -23,7 +23,7 @@
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
 }(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Dispatch, d3Array, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Collection, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.0.0-beta.5";
+  const version = "4.0.0";
 
   class BadArgumentException extends Error { }
 
@@ -7536,7 +7536,7 @@
    * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
    *
    * Examples:
-   * - {@link http://europarl.me/dc.js/web/ep/index.html List of members of the european parliament}
+   * - {@link https://dc-js.github.io/dc.js/ep/ List of members of the european parliament}
    * @mixes BaseMixin
    */
   class DataGrid extends BaseMixin {
@@ -7816,7 +7816,7 @@
    * Examples:
    * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
    * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
-   * ({@link https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html source})
+   * ({@link https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html source})
    *
    * @mixes BaseMixin
    */
