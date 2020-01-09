@@ -5,7 +5,7 @@
 If you are trying to get a particular effect or you have a problem with your code, please ask your question [on stackoverflow.com](http://stackoverflow.com/questions/tagged/dc.js) or the [user group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group). We use the issue tracker for bug reports and feature requests only.
 
 Get help faster with a working example! Fork these to get started:<br>
-[blank jsFiddle](https://jsfiddle.net/gordonwoodhull/rL82bguk/) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/5ztavmjy/) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
+[blank jsFiddle](https://jsfiddle.net/gordonwoodhull/rL82bguk/1) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/5ztavmjy/2) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
 
 For bug reports and feature requests submit a [github issue](http://github.com/dc-js/dc.js/issues)
   * Please include the version of DC you are using
