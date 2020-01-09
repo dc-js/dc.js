@@ -33,7 +33,7 @@ Support
 *Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
 
 Get help faster with a working example! Fork these to get started:<br>
-[blank jsFiddle](https://jsfiddle.net/gordonwoodhull/rL82bguk/) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/5ztavmjy/) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
+[blank jsFiddle](https://jsfiddle.net/gordonwoodhull/rL82bguk/1) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/5ztavmjy/2) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
 
 ## Versioning
 Version 4.* is compatible with d3 versions 4 and 5. It is not compatible with IE. Use dc.js 3.* if you need IE support, or use dc.js 2.* if you need compatibility with d3 version 3.
@@ -41,8 +41,8 @@ Version 4.* is compatible with d3 versions 4 and 5. It is not compatible with IE
 ## CDN location
 
 ```
-https://unpkg.com/dc@%5E4.0.0-beta.1/dist/dc.js
-https://unpkg.com/dc@%5E4.0.0-beta.1/dist/style/dc.css
+https://unpkg.com/dc@4/dist/dc.js
+https://unpkg.com/dc@4/dist/style/dc.css
 ```
 
 or copy the latest links from [CDNJS](https://cdnjs.com/libraries/dc)
