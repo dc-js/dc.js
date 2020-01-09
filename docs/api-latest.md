@@ -94,7 +94,7 @@ keying function for <a href="https://github.com/d3/d3-collection/blob/master/REA
 together in sections.  This was confusing so it has been renamed to <code>section</code>, although <code>group</code> still works.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://europarl.me/dc.js/web/ep/index.html">List of members of the european parliament</a></li>
+<li><a href="https://dc-js.github.io/dc.js/ep/">List of members of the european parliament</a></li>
 </ul>
 </dd>
 <dt><a href="#DataTable">DataTable</a></dt>
@@ -115,7 +115,7 @@ Examples:</p>
 <ul>
 <li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
 <li><a href="http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html">dataTable on a crossfilter group</a>
-(<a href="https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html">source</a>)</li>
+(<a href="https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html">source</a>)</li>
 </ul>
 </dd>
 <dt><a href="#GeoChoroplethChart">GeoChoroplethChart</a></dt>
@@ -1339,7 +1339,7 @@ keying function for [nesting](https://github.com/d3/d3-collection/blob/master/RE
 together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
 
 Examples:
-- [List of members of the european parliament](http://europarl.me/dc.js/web/ep/index.html)
+- [List of members of the european parliament](https://dc-js.github.io/dc.js/ep/)
 
 **Kind**: global class  
 **Mixes**: [<code>BaseMixin</code>](#BaseMixin)  
@@ -1538,7 +1538,7 @@ together in sections.  This was confusing so it has been renamed to `section`, a
 Examples:
 - [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
 - [dataTable on a crossfilter group](http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html)
-([source](https://github.com/dc-js/dc.js/blob/develop/web/examples/table-on-aggregated-data.html))
+([source](https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html))
 
 **Kind**: global class  
 **Mixes**: [<code>BaseMixin</code>](#BaseMixin)  
