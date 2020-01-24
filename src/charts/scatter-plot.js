@@ -2,7 +2,7 @@ import {symbol} from 'd3-shape';
 import {event, select} from 'd3-selection';
 import {brush} from 'd3-brush';
 
-import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
+import {CoordinateGridMixinForScatter} from '../base/coordinate-grid-mixin-for-scatter';
 import {optionalTransition, transition} from '../core/core';
 import {filters} from '../core/filters';
 import {constants} from '../core/constants';
@@ -16,7 +16,7 @@ import {events} from '../core/events';
  * - {@link http://dc-js.github.io/dc.js/examples/multi-scatter.html Multi-Scatter Chart}
  * @mixes CoordinateGridMixin
  */
-export class ScatterPlot extends CoordinateGridMixin {
+export class ScatterPlot extends CoordinateGridMixinForScatter {
     /**
      * Create a Scatter Plot.
      * @example
