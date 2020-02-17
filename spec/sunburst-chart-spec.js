@@ -303,4 +303,124 @@ describe('dc.sunburstChart', function () {
         });
     });
 
+    describe('sunburst.relativeRingSizes', function () {
+
+        function buildSunburstChart3CompleteRings(id) {
+            data = crossfilter(loadSunburstData3CompleteRings());
+            var valueDimension = data.dimension(function (d) {
+                return [d.x1, d.x2, d.x3];
+            });
+            valueGroup = valueDimension.group().reduceSum(function (d) {
+                return +d.y;
+            });
+            var div = appendChartID(id);
+            var chart = dc.sunburstChart('#' + id);
+            chart
+                .dimension(valueDimension)
+                .group(valueGroup)
+                .width(width)
+                .height(height)
+                .transitionDuration(0);
+            return chart;
+        }
+
+        function getPieSliceBBoxY(chart, sliceNumber) {
+            return chart.select('.pie-slice._' + sliceNumber).node().getBBox().y;
+        }
+
+        function getRingThicknessRounded(chart, ringNumber) {
+            if (ringNumber === 0) {
+                throw new Error("root ring 0 can not be checked this way.")
+            }
+            var yInner = getPieSliceBBoxY(chart, ringNumber - 1);
+            var yOuter = getPieSliceBBoxY(chart, ringNumber);
+            return Math.round(Math.abs(yOuter - yInner));
+        }
+
+        describe('sunburst.relativeRingSizes regression', function () {
+            var chart;
+            beforeEach(function () {
+                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_regression");
+                chart.render();
+            });
+
+            it('rings should get narrower, farther away from the center', function () {
+                expect(getRingThicknessRounded(chart, 1)).toBeGreaterThan(getRingThicknessRounded(chart, 2));
+            });
+        });
+
+        describe('sunburst.relativeRingSizes: equal distribution', function () {
+            var chart;
+            var equallyThickRingsFn = function (ringCount) {
+                var i;
+                var result = [];
+                for (i = 0; i < ringCount; i++) {
+                    result.push(1 / ringCount);
+                }
+                return result;
+            };
+            beforeEach(function () {
+                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_equal_distribution");
+                chart.relativeRingSizes(equallyThickRingsFn);
+                chart.render();
+            });
+            it('rings should be equally wide', function () {
+                expect(getRingThicknessRounded(chart, 1)).toEqual(getRingThicknessRounded(chart, 2));
+            });
+        });
+
+        describe('sunburst.relativeRingSizes: specific percentages', function () {
+            var chart;
+            var specificPercentages = function (ringCount) {
+                return [.1, .3, .6];
+            };
+            beforeEach(function () {
+                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_specific_percentages");
+                chart.relativeRingSizes(specificPercentages);
+                chart.render();
+            });
+            it('2nd ring should be half as wide as the 3rd ', function () {
+                expect(2 * getRingThicknessRounded(chart, 1)).toEqual(getRingThicknessRounded(chart, 2));
+            });
+        });
+
+        describe('sunburst.relativeRingSizes: invalid arguments', function () {
+            var chart;
+
+            var functionReturnsNonArray = function (ringCount) {
+                return {};
+            };
+
+            var tooManyPercentageValues = function (ringCount) {
+                return [.1, .1, .1, .1];
+            };
+
+            var percentagesSumNot1 = function (ringCount) {
+                return [.5, .5, .5];
+            };
+
+            beforeEach(function () {
+                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_invalid_arguments");
+            });
+
+            it('invalid arguments cause dc.errors.BadArgumentException, default function does not', function () {
+                chart.render();
+                var defaultFn = chart.relativeRingSizes();
+
+                chart.relativeRingSizes(functionReturnsNonArray);
+                expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
+
+                chart.relativeRingSizes(tooManyPercentageValues);
+                expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
+
+                chart.relativeRingSizes(percentagesSumNot1);
+                expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
+
+                chart.relativeRingSizes(defaultFn);
+                chart.render();
+            });
+        });
+
+    });
+
 });

@@ -35,7 +35,22 @@ dc.sunburstChart = function (parent, chartGroup) {
 
     var _radius,
         _givenRadius, // given radius, if any
-        _innerRadius = 0;
+        _innerRadius = 0,
+        _defaultRelativeRingSizesFunction = function () { return []; },
+        _ringSizes = {
+            partitionDy: function () {
+                return _radius * _radius;
+            },
+            scaleInnerRadius: function (d) {
+                return d.data.path && d.data.path.length === 1 ? _innerRadius : Math.sqrt(d.y0);
+            },
+            scaleOuterRadius: function (d) {
+                return Math.sqrt(d.y1);
+            },
+            rootOffset: 0,
+            relativeRingSizes: [],
+            relativeRingSizesFunction: _defaultRelativeRingSizesFunction
+        };
 
     var _g;
     var _cx;
@@ -52,6 +67,17 @@ dc.sunburstChart = function (parent, chartGroup) {
             return d.value;
         }
         return _chart.cappedValueAccessor(d);
+    }
+
+    function scaleRadius (ringIndex, y) {
+        if (ringIndex === 0) {
+            return _innerRadius;
+        } else {
+            var customRelativeRadius = d3.sum(_ringSizes.relativeRingSizes.slice(0, ringIndex));
+            var scaleFactor = (ringIndex * (1 / _ringSizes.relativeRingSizes.length)) / customRelativeRadius;
+            var standardRadius = (y - _ringSizes.rootOffset) / (1 - _ringSizes.rootOffset) * (_radius - _innerRadius);
+            return _innerRadius + standardRadius / scaleFactor;
+        }
     }
 
     _chart.title(function (d) {
@@ -99,13 +125,13 @@ dc.sunburstChart = function (parent, chartGroup) {
 
         var arc = buildArcs();
 
-        var sunburstData, cdata;
+        var partitionedNodes, cdata;
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
             cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
-            sunburstData = partitionNodes(cdata);
+            partitionedNodes = partitionNodes(cdata);
             // First one is the root, which is not needed
-            sunburstData.shift();
+            partitionedNodes.nodes.shift();
             _g.classed(_emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
@@ -113,16 +139,18 @@ dc.sunburstChart = function (parent, chartGroup) {
             cdata = dc.utils.toHierarchy([], function (d) {
                 return d.value;
             });
-            sunburstData = partitionNodes(cdata);
+            partitionedNodes = partitionNodes(cdata);
             _g.classed(_emptyCssClass, true);
         }
+        _ringSizes.rootOffset = partitionedNodes.rootOffset;
+        _ringSizes.relativeRingSizes = partitionedNodes.relativeRingSizes;
 
         if (_g) {
             var slices = _g.selectAll('g.' + _sliceCssClass)
-                .data(sunburstData);
-            createElements(slices, arc, sunburstData);
+                .data(partitionedNodes.nodes);
+            createElements(slices, arc, partitionedNodes.nodes);
 
-            updateElements(sunburstData, arc);
+            updateElements(partitionedNodes.nodes, arc);
 
             removeElements(slices);
 
@@ -392,6 +420,53 @@ dc.sunburstChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     * Get or set the function that provides the relative thickness of each ring of the sunburst chart.
+     * The provided function needs to return an array containing a percentage value for each ring/level of the chart.
+     * The length of the array must match the number of rings of the chart (at runtime), te number of rings is provided as the only argument.
+     * The sum of all percentage values from the array must be 1 (100%).
+     *
+     * If not set, each ring of the chart will be narrower the farther it is from the charts center.
+     *
+     *
+     * @method relativeRingSizes
+     * @memberof dc.sunburstChart
+     * @instance
+     * @example
+     * // evenly wide rings
+     * chart.relativeRingSizes(function (ringCount) {
+     *           var i;
+     *           var result = [];
+     *           for (i = 0; i < ringCount; i++) {
+     *               result.push(1 / ringCount);
+     *           }
+     *           return result;
+     *       });
+     * @example
+     * // specific relative percentages (the number of rings (3) is known in this case)
+     * chart.relativeRingSizes(function (ringCount) {
+     *           return [.1, .3, .6];
+     *       });
+     * @param {Function} [relativeRingSizesFunction]
+     * @returns {Function|dc.sunburstChart}
+     */
+    _chart.relativeRingSizes = function (relativeRingSizesFunction) {
+        if (!arguments.length) {
+            return _ringSizes.relativeRingSizesFunction;
+        }
+        _ringSizes.relativeRingSizesFunction = relativeRingSizesFunction;
+        _ringSizes.partitionDy = function () {
+            return 1;
+        };
+        _ringSizes.scaleInnerRadius = function (d) {
+            return scaleRadius(d.data.path.length - 1, d.y0);
+        };
+        _ringSizes.scaleOuterRadius = function (d) {
+            return scaleRadius(d.data.path.length, d.y1);
+        };
+        return _chart;
+    };
+
     function buildArcs () {
         return d3.arc()
             .startAngle(function (d) {
@@ -401,10 +476,10 @@ dc.sunburstChart = function (parent, chartGroup) {
                 return d.x1;
             })
             .innerRadius(function (d) {
-                return d.data.path && d.data.path.length === 1 ? _innerRadius : Math.sqrt(d.y0);
+                return _ringSizes.scaleInnerRadius(d);
             })
             .outerRadius(function (d) {
-                return Math.sqrt(d.y1);
+                return _ringSizes.scaleOuterRadius(d);
             });
     }
 
@@ -450,8 +525,7 @@ dc.sunburstChart = function (parent, chartGroup) {
                 return d3.ascending(a.data.path, b.data.path);
             });
 
-        var partition = d3.partition()
-            .size([2 * Math.PI, _radius * _radius]);
+        var partition = d3.partition().size([2 * Math.PI, _ringSizes.partitionDy()]);
 
         partition(hierarchy);
 
@@ -462,7 +536,31 @@ dc.sunburstChart = function (parent, chartGroup) {
             return d;
         });
 
-        return nodes;
+        var relativeSizes = _chart.relativeRingSizes()(hierarchy.height);
+        if (_chart.relativeRingSizes() !== _defaultRelativeRingSizesFunction) {
+            assertPercentagesArray(relativeSizes, hierarchy.height);
+        }
+
+        return {
+            nodes: nodes,
+            rootOffset: hierarchy.y1,
+            relativeRingSizes: relativeSizes
+        };
+    }
+
+    function assertPercentagesArray(relativeSizes, numberOfRings) {
+        if (!Array.isArray(relativeSizes)) {
+            throw new dc.errors.BadArgumentException('relativeRingSizes function must return an array');
+        }
+
+        var percentagesSum = d3.sum(relativeSizes);
+        if (percentagesSum !== 1) {
+            throw new dc.errors.BadArgumentException('relativeRingSizes : percentages must add up to 1, but sum was ' + percentagesSum);
+        }
+
+        if (relativeSizes.length !== numberOfRings) {
+            throw new dc.errors.BadArgumentException('relativeRingSizes : number of values must match number of rings (' + numberOfRings + ') but was ' + relativeSizes.length);
+        }
     }
 
     function sliceTooSmall (d) {
