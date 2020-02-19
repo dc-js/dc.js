@@ -351,17 +351,9 @@ describe('dc.sunburstChart', function () {
 
         describe('sunburst.relativeRingSizes: equal distribution', function () {
             var chart;
-            var equallyThickRingsFn = function (ringCount) {
-                var i;
-                var result = [];
-                for (i = 0; i < ringCount; i++) {
-                    result.push(1 / ringCount);
-                }
-                return result;
-            };
             beforeEach(function () {
                 chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_equal_distribution");
-                chart.relativeRingSizes(equallyThickRingsFn);
+                chart.ringSizes(chart._relativeRingSizes());
                 chart.render();
             });
             it('rings should be equally wide', function () {
@@ -376,7 +368,7 @@ describe('dc.sunburstChart', function () {
             };
             beforeEach(function () {
                 chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_specific_percentages");
-                chart.relativeRingSizes(specificPercentages);
+                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(specificPercentages));
                 chart.render();
             });
             it('2nd ring should be half as wide as the 3rd ', function () {
@@ -404,19 +396,16 @@ describe('dc.sunburstChart', function () {
             });
 
             it('invalid arguments cause dc.errors.BadArgumentException, default function does not', function () {
-                chart.render();
-                var defaultFn = chart.relativeRingSizes();
-
-                chart.relativeRingSizes(functionReturnsNonArray);
+                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(functionReturnsNonArray));
                 expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
-                chart.relativeRingSizes(tooManyPercentageValues);
+                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(tooManyPercentageValues));
                 expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
-                chart.relativeRingSizes(percentagesSumNot1);
+                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(percentagesSumNot1));
                 expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
-                chart.relativeRingSizes(defaultFn);
+                chart.ringSizes(chart._defaultRingSizes());
                 chart.render();
             });
         });
