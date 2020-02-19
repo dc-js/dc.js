@@ -437,15 +437,15 @@ dc.sunburstChart = function (parent, chartGroup) {
     /**
      * Constructs a RelativeRingSizes function that can be used as a parameter to ringSizes(). Using this will make the charts rings equally wide.
      *
-     * @name _relativeRingSizes
+     * @name _equalRingSizes
      * @memberof dc.sunburstChart
      * @instance
      * @example
      *   var chart = new dc.sunburstChart(...);
-     *   chart.ringSizes(chart._relativeRingSizes())
+     *   chart.ringSizes(chart._equalRingSizes())
      * @returns {dc.sunburstChart.RelativeRingSizes}
      */
-    _chart._relativeRingSizes = function () {
+    _chart._equalRingSizes = function () {
         return dc.sunburstChart.RelativeRingSizes(
             function (ringCount) {
                 var i;
@@ -511,7 +511,7 @@ dc.sunburstChart = function (parent, chartGroup) {
     /**
      * Get or set the strategy to use for sizing the charts rings. There are two predefined strategies available:
      * <li> default behavior: the rings get narrower farther away from the center (the default can be reset by calling chart.ringSizes(chart._defaultRingSizes()))
-     * <li> relative sizing: the rings are equally wide: call chart.ringSizes(chart._relativeRingSizes())
+     * <li> relative sizing: the rings are equally wide: call chart.ringSizes(chart._equalRingSizes())
      * @see dc.sunburstChart.RelativeRingSizes
      *
      * @method ringSizes

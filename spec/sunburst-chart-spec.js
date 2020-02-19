@@ -353,7 +353,7 @@ describe('dc.sunburstChart', function () {
             var chart;
             beforeEach(function () {
                 chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_equal_distribution");
-                chart.ringSizes(chart._relativeRingSizes());
+                chart.ringSizes(chart._equalRingSizes());
                 chart.render();
             });
             it('rings should be equally wide', function () {

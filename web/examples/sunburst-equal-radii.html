@@ -48,7 +48,7 @@ d3.csv("morley.csv").then(function(experiments) {
         .dimension(runDimension)
         .group(speedSumGroup)
         .legend(dc.legend())
-        .ringSizes(chart._relativeRingSizes())
+        .ringSizes(chart._equalRingSizes())
         // example for using concrete percentage values of the radius when knowing the number of rings beforehand
         // .ringSizes(dc.sunburstChart.RelativeRingSizes(
         //     function(){return [.3,.7]}
