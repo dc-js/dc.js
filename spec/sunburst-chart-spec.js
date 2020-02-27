@@ -303,4 +303,52 @@ describe('dc.sunburstChart', function () {
         });
     });
 
+    describe('sunburst use baseMixin.ordering', function () {
+        function buildSunburstChartOneRingThreeSlices(id) {
+            data = crossfilter(getSunburstDataOneRing3Segments());
+            var valueDimension = data.dimension(function (d) {
+                return [d.x];
+            });
+            valueGroup = valueDimension.group().reduceSum(function (d) {
+                return +d.y;
+            });
+            appendChartID(id);
+            var chart = dc.sunburstChart('#' + id);
+            chart
+                .dimension(valueDimension)
+                .group(valueGroup)
+                .width(width)
+                .height(height)
+                .transitionDuration(0);
+            return chart;
+        }
+
+        function expectTextLabels(strings) {
+            strings.forEach(function(str,i){
+                expect(d3.select("text.pie-slice._" + i).text()).toEqual(str);
+            });
+        };
+
+        var chart;
+        beforeEach(function () {
+            chart = buildSunburstChartOneRingThreeSlices("sunburst_ordering_default_ordering");
+            chart.render();
+        });
+
+        describe('sunburst using default ordering', function () {
+            it('slices ordered by key', function () {
+                expectTextLabels(["a", "b", "c"]);
+            });
+        });
+
+        describe('sunburst using ordering by value ascending', function () {
+            it('slices ordered by value', function () {
+                chart.ordering(function(d){return -d.value;});
+                chart.render();
+                expectTextLabels(["c", "b", "a"]);
+            });
+        });
+
+    });
+
 });
