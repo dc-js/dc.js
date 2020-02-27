@@ -232,3 +232,11 @@ function loadIrisFixture () {
             "5.9,3,5.1,1.8,virginica"
     );
 }
+
+function getSunburstDataOneRing3Segments () {
+    return [
+        {"x":"a","y":1},
+        {"x":"b","y":2},
+        {"x":"c","y":3}
+    ];
+}

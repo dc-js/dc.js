@@ -43,8 +43,10 @@ dc.sunburstChart = function (parent, chartGroup) {
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
-
     _chart.colorAccessor(_chart.cappedKeyAccessor);
+
+    // override cap mixin
+    _chart.ordering(dc.pluck('key'));
 
     // Handle cases if value corresponds to generated parent nodes
     function extendedValueAccessor (d) {
@@ -441,13 +443,16 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     function partitionNodes (data) {
+        var getSortable = function (d) {
+            return {'key': d.data.key, 'value': d.value};
+        };
         // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
         var hierarchy = d3.hierarchy(data)
             .sum(function (d) {
                 return d.children ? 0 : extendedValueAccessor(d);
             })
             .sort(function (a, b) {
-                return d3.ascending(a.data.path, b.data.path);
+                return d3.ascending(_chart.ordering()(getSortable(a)), _chart.ordering()(getSortable(b)));
             });
 
         var partition = d3.partition()
