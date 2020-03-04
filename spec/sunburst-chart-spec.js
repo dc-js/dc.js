@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate */
+/* global appendChartID, loadDateFixture, makeDate, getSunburstDataOneRing3Segments, loadSunburstData3CompleteRings */
 describe('dc.sunburstChart', function () {
     var width = 200;
     var height = 200;
@@ -304,7 +304,7 @@ describe('dc.sunburstChart', function () {
     });
 
     describe('sunburst use baseMixin.ordering', function () {
-        function buildSunburstChartOneRingThreeSlices(id) {
+        function buildSunburstChartOneRingThreeSlices (id) {
             data = crossfilter(getSunburstDataOneRing3Segments());
             var valueDimension = data.dimension(function (d) {
                 return [d.x];
@@ -323,29 +323,29 @@ describe('dc.sunburstChart', function () {
             return chart;
         }
 
-        function expectTextLabels(strings) {
-            strings.forEach(function(str,i){
-                expect(d3.select("text.pie-slice._" + i).text()).toEqual(str);
+        function expectTextLabels (strings) {
+            strings.forEach(function (str,i){
+                expect(d3.select('text.pie-slice._' + i).text()).toEqual(str);
             });
         };
 
         var chart;
         beforeEach(function () {
-            chart = buildSunburstChartOneRingThreeSlices("sunburst_ordering_default_ordering");
+            chart = buildSunburstChartOneRingThreeSlices('sunburst_ordering_default_ordering');
             chart.render();
         });
 
         describe('sunburst using default ordering', function () {
             it('slices ordered by key', function () {
-                expectTextLabels(["a", "b", "c"]);
+                expectTextLabels(['a', 'b', 'c']);
             });
         });
 
         describe('sunburst using ordering by value ascending', function () {
             it('slices ordered by value', function () {
-                chart.ordering(function(d){return -d.value;});
+                chart.ordering(function (d) {return -d.value;});
                 chart.render();
-                expectTextLabels(["c", "b", "a"]);
+                expectTextLabels(['c', 'b', 'a']);
             });
         });
 
@@ -353,7 +353,7 @@ describe('dc.sunburstChart', function () {
 
     describe('sunburst.relativeRingSizes', function () {
 
-        function buildSunburstChart3CompleteRings(id) {
+        function buildSunburstChart3CompleteRings (id) {
             data = crossfilter(loadSunburstData3CompleteRings());
             var valueDimension = data.dimension(function (d) {
                 return [d.x1, d.x2, d.x3];
@@ -361,7 +361,7 @@ describe('dc.sunburstChart', function () {
             valueGroup = valueDimension.group().reduceSum(function (d) {
                 return +d.y;
             });
-            var div = appendChartID(id);
+            appendChartID(id);
             var chart = dc.sunburstChart('#' + id);
             chart
                 .dimension(valueDimension)
@@ -372,13 +372,13 @@ describe('dc.sunburstChart', function () {
             return chart;
         }
 
-        function getPieSliceBBoxY(chart, sliceNumber) {
+        function getPieSliceBBoxY (chart, sliceNumber) {
             return chart.select('.pie-slice._' + sliceNumber).node().getBBox().y;
         }
 
-        function getRingThicknessRounded(chart, ringNumber) {
+        function getRingThicknessRounded (chart, ringNumber) {
             if (ringNumber === 0) {
-                throw new Error("root ring 0 can not be checked this way.")
+                throw new Error('root ring 0 can not be checked this way.');
             }
             var yInner = getPieSliceBBoxY(chart, ringNumber - 1);
             var yOuter = getPieSliceBBoxY(chart, ringNumber);
@@ -388,7 +388,7 @@ describe('dc.sunburstChart', function () {
         describe('sunburst.relativeRingSizes regression', function () {
             var chart;
             beforeEach(function () {
-                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_regression");
+                chart = buildSunburstChart3CompleteRings('sunburst_relativeRingSizes_regression');
                 chart.render();
             });
 
@@ -400,7 +400,7 @@ describe('dc.sunburstChart', function () {
         describe('sunburst.relativeRingSizes: equal distribution', function () {
             var chart;
             beforeEach(function () {
-                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_equal_distribution");
+                chart = buildSunburstChart3CompleteRings('sunburst_relativeRingSizes_equal_distribution');
                 chart.ringSizes(chart.equalRingSizes());
                 chart.render();
             });
@@ -415,7 +415,7 @@ describe('dc.sunburstChart', function () {
                 return [.1, .3, .6];
             };
             beforeEach(function () {
-                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_specific_percentages");
+                chart = buildSunburstChart3CompleteRings('sunburst_relativeRingSizes_specific_percentages');
                 chart.ringSizes(chart.relativeRingSizes(specificPercentages));
                 chart.render();
             });
@@ -440,18 +440,18 @@ describe('dc.sunburstChart', function () {
             };
 
             beforeEach(function () {
-                chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_invalid_arguments");
+                chart = buildSunburstChart3CompleteRings('sunburst_relativeRingSizes_invalid_arguments');
             });
 
             it('invalid arguments cause dc.errors.BadArgumentException, default function does not', function () {
                 chart.ringSizes(chart.relativeRingSizes(functionReturnsNonArray));
-                expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
+                expect(function (){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
                 chart.ringSizes(chart.relativeRingSizes(tooManyPercentageValues));
-                expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
+                expect(function (){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
                 chart.ringSizes(chart.relativeRingSizes(percentagesSumNot1));
-                expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
+                expect(function (){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
                 chart.ringSizes(chart.defaultRingSizes());
                 chart.render();

@@ -420,7 +420,7 @@ dc.sunburstChart = function (parent, chartGroup) {
      * @example
      *   var chart = new dc.sunburstChart(...);
      *   chart.ringSizes(chart.defaultRingSizes())
-     * @returns {{partitionDy: Function, scaleInnerRadius: Function, scaleOuterRadius: Function, relativeRingSizesFunction: Function, rootOffset: Number, relativeRingSizes: Array<Number>}}
+     * @returns {RingSizes}
      */
     _chart.defaultRingSizes = function () {
         return {
@@ -433,7 +433,7 @@ dc.sunburstChart = function (parent, chartGroup) {
             scaleOuterRadius: function (d) {
                 return Math.sqrt(d.y1);
             },
-            relativeRingSizesFunction: function(){return [];}
+            relativeRingSizesFunction: function () {return [];}
         };
     };
 
@@ -463,10 +463,12 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     /**
-     * Constructs a RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()} using the given function to determine each rings width.
+     * Constructs a RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()} using the given function
+     * to determine each rings width.
      *
      * * The function must return an array containing portion values for each ring/level of the chart.
-     * * The length of the array must match the number of rings of the chart at runtime, which is provided as the only argument.
+     * * The length of the array must match the number of rings of the chart at runtime, which is provided as the only
+     *   argument.
      * * The sum of all portions from the array must be 1 (100%).
      *
      * @example
@@ -478,21 +480,24 @@ dc.sunburstChart = function (parent, chartGroup) {
      * @memberof dc.sunburstChart
      * @instance
      * @param {Function} [relativeRingSizesFunction]
-     * @returns {{partitionDy: Function, scaleInnerRadius: Function, scaleOuterRadius: Function, relativeRingSizesFunction: Function}}
+     * @returns {RingSizes}
      */
-    _chart.relativeRingSizes = function(relativeRingSizesFunction) {
-        function assertPortionsArray(relativeSizes, numberOfRings) {
+    _chart.relativeRingSizes = function (relativeRingSizesFunction) {
+        function assertPortionsArray (relativeSizes, numberOfRings) {
             if (!Array.isArray(relativeSizes)) {
                 throw new dc.errors.BadArgumentException('relativeRingSizes function must return an array');
             }
 
             var portionsSum = d3.sum(relativeSizes);
             if (portionsSum !== 1) {
-                throw new dc.errors.BadArgumentException('relativeRingSizes : portions must add up to 1, but sum was ' + portionsSum);
+                throw new dc.errors.BadArgumentException(
+                    'relativeRingSizes : portions must add up to 1, but sum was ' + portionsSum);
             }
 
             if (relativeSizes.length !== numberOfRings) {
-                throw new dc.errors.BadArgumentException('relativeRingSizes : number of values must match number of rings (' + numberOfRings + ') but was ' + relativeSizes.length);
+                throw new dc.errors.BadArgumentException(
+                    'relativeRingSizes : number of values must match number of rings (' +
+                        numberOfRings + ') but was ' + relativeSizes.length);
             }
         }
         return {
@@ -505,7 +510,7 @@ dc.sunburstChart = function (parent, chartGroup) {
             scaleOuterRadius: function (d) {
                 return scaleRadius(d.data.path.length, d.y1);
             },
-            relativeRingSizesFunction: function(ringCount){
+            relativeRingSizesFunction: function (ringCount) {
                 var result = relativeRingSizesFunction(ringCount);
                 assertPortionsArray(result, ringCount);
                 return result;
@@ -541,7 +546,7 @@ dc.sunburstChart = function (parent, chartGroup) {
      * @method ringSizes
      * @memberof dc.sunburstChart
      * @instance
-     * @param {RingSizes}
+     * @param {RingSizes} ringSizes
      * @returns {Object|dc.sunburstChart}
      */
     _chart.ringSizes = function (ringSizes) {
