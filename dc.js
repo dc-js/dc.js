@@ -1,5 +1,5 @@
 /*!
- *  dc 3.1.9
+ *  dc 3.2.0
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2019 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -29,7 +29,7 @@
  * such as {@link dc.baseMixin#svg .svg} and {@link dc.coordinateGridMixin#xAxis .xAxis},
  * return values that are themselves chainable d3 objects.
  * @namespace dc
- * @version 3.1.9
+ * @version 3.2.0
  * @example
  * // Example chaining
  * chart.width(300)
@@ -37,7 +37,7 @@
  *      .filter('sunday');
  */
 var dc = {
-    version: '3.1.9',
+    version: '3.2.0',
     constants: {
         CHART_CLASS: 'dc-chart',
         DEBUG_GROUP_CLASS: 'debug',
@@ -6153,7 +6153,8 @@ dc.sunburstChart = function (parent, chartGroup) {
 
     var _radius,
         _givenRadius, // given radius, if any
-        _innerRadius = 0;
+        _innerRadius = 0,
+        _ringSizes;
 
     var _g;
     var _cx;
@@ -6161,8 +6162,10 @@ dc.sunburstChart = function (parent, chartGroup) {
     var _minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
     var _externalLabelRadius;
     var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));
-
     _chart.colorAccessor(_chart.cappedKeyAccessor);
+
+    // override cap mixin
+    _chart.ordering(dc.pluck('key'));
 
     // Handle cases if value corresponds to generated parent nodes
     function extendedValueAccessor (d) {
@@ -6170,6 +6173,17 @@ dc.sunburstChart = function (parent, chartGroup) {
             return d.value;
         }
         return _chart.cappedValueAccessor(d);
+    }
+
+    function scaleRadius (ringIndex, y) {
+        if (ringIndex === 0) {
+            return _innerRadius;
+        } else {
+            var customRelativeRadius = d3.sum(_chart.ringSizes().relativeRingSizes.slice(0, ringIndex));
+            var scaleFactor = (ringIndex * (1 / _chart.ringSizes().relativeRingSizes.length)) / customRelativeRadius;
+            var standardRadius = (y - _chart.ringSizes().rootOffset) / (1 - _chart.ringSizes().rootOffset) * (_radius - _innerRadius);
+            return _innerRadius + standardRadius / scaleFactor;
+        }
     }
 
     _chart.title(function (d) {
@@ -6217,13 +6231,13 @@ dc.sunburstChart = function (parent, chartGroup) {
 
         var arc = buildArcs();
 
-        var sunburstData, cdata;
+        var partitionedNodes, cdata;
         // if we have data...
         if (d3.sum(_chart.data(), _chart.valueAccessor())) {
             cdata = dc.utils.toHierarchy(_chart.data(), _chart.valueAccessor());
-            sunburstData = partitionNodes(cdata);
+            partitionedNodes = partitionNodes(cdata);
             // First one is the root, which is not needed
-            sunburstData.shift();
+            partitionedNodes.nodes.shift();
             _g.classed(_emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
@@ -6231,16 +6245,18 @@ dc.sunburstChart = function (parent, chartGroup) {
             cdata = dc.utils.toHierarchy([], function (d) {
                 return d.value;
             });
-            sunburstData = partitionNodes(cdata);
+            partitionedNodes = partitionNodes(cdata);
             _g.classed(_emptyCssClass, true);
         }
+        _chart.ringSizes().rootOffset = partitionedNodes.rootOffset;
+        _chart.ringSizes().relativeRingSizes = partitionedNodes.relativeRingSizes;
 
         if (_g) {
             var slices = _g.selectAll('g.' + _sliceCssClass)
-                .data(sunburstData);
-            createElements(slices, arc, sunburstData);
+                .data(partitionedNodes.nodes);
+            createElements(slices, arc, partitionedNodes.nodes);
 
-            updateElements(sunburstData, arc);
+            updateElements(partitionedNodes.nodes, arc);
 
             removeElements(slices);
 
@@ -6510,6 +6526,153 @@ dc.sunburstChart = function (parent, chartGroup) {
         return _chart;
     };
 
+    /**
+     * Constructs the default RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()},
+     * which makes the rings narrower as they get farther away from the center.
+     *
+     * Can be used as a parameter to ringSizes() to reset the default behavior, or modified for custom ring sizes.
+     *
+     * @method defaultRingSizes
+     * @memberof dc.sunburstChart
+     * @instance
+     * @example
+     *   var chart = new dc.sunburstChart(...);
+     *   chart.ringSizes(chart.defaultRingSizes())
+     * @returns {{partitionDy: Function, scaleInnerRadius: Function, scaleOuterRadius: Function, relativeRingSizesFunction: Function, rootOffset: Number, relativeRingSizes: Array<Number>}}
+     */
+    _chart.defaultRingSizes = function () {
+        return {
+            partitionDy: function () {
+                return _radius * _radius;
+            },
+            scaleInnerRadius: function (d) {
+                return d.data.path && d.data.path.length === 1 ? _innerRadius : Math.sqrt(d.y0);
+            },
+            scaleOuterRadius: function (d) {
+                return Math.sqrt(d.y1);
+            },
+            relativeRingSizesFunction: function(){return [];}
+        };
+    };
+
+    /**
+     * Constructs a RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()}
+     * that will make the chart rings equally wide.
+     *
+     * @method equalRingSizes
+     * @memberof dc.sunburstChart
+     * @instance
+     * @example
+     *   var chart = new dc.sunburstChart(...);
+     *   chart.ringSizes(chart.equalRingSizes())
+     * @returns {RingSizes}
+     */
+    _chart.equalRingSizes = function () {
+        return _chart.relativeRingSizes(
+            function (ringCount) {
+                var i;
+                var result = [];
+                for (i = 0; i < ringCount; i++) {
+                    result.push(1 / ringCount);
+                }
+                return result;
+            }
+        );
+    };
+
+    /**
+     * Constructs a RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()} using the given function to determine each rings width.
+     *
+     * * The function must return an array containing portion values for each ring/level of the chart.
+     * * The length of the array must match the number of rings of the chart at runtime, which is provided as the only argument.
+     * * The sum of all portions from the array must be 1 (100%).
+     *
+     * @example
+     * // specific relative portions (the number of rings (3) is known in this case)
+     * chart.ringSizes(chart.relativeRingSizes(function (ringCount) {
+     *     return [.1, .3, .6];
+     * });
+     * @method relativeRingSizes
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {Function} [relativeRingSizesFunction]
+     * @returns {{partitionDy: Function, scaleInnerRadius: Function, scaleOuterRadius: Function, relativeRingSizesFunction: Function}}
+     */
+    _chart.relativeRingSizes = function(relativeRingSizesFunction) {
+        function assertPortionsArray(relativeSizes, numberOfRings) {
+            if (!Array.isArray(relativeSizes)) {
+                throw new dc.errors.BadArgumentException('relativeRingSizes function must return an array');
+            }
+
+            var portionsSum = d3.sum(relativeSizes);
+            if (portionsSum !== 1) {
+                throw new dc.errors.BadArgumentException('relativeRingSizes : portions must add up to 1, but sum was ' + portionsSum);
+            }
+
+            if (relativeSizes.length !== numberOfRings) {
+                throw new dc.errors.BadArgumentException('relativeRingSizes : number of values must match number of rings (' + numberOfRings + ') but was ' + relativeSizes.length);
+            }
+        }
+        return {
+            partitionDy: function () {
+                return 1;
+            },
+            scaleInnerRadius: function (d) {
+                return scaleRadius(d.data.path.length - 1, d.y0);
+            },
+            scaleOuterRadius: function (d) {
+                return scaleRadius(d.data.path.length, d.y1);
+            },
+            relativeRingSizesFunction: function(ringCount){
+                var result = relativeRingSizesFunction(ringCount);
+                assertPortionsArray(result, ringCount);
+                return result;
+            }
+        };
+    };
+
+    /**
+     * Get or set the strategy to use for sizing the charts rings.
+     *
+     * There are three strategies available
+     * * {@link dc.sunburstChart#defaultRingSizes `defaultRingSizes`}: the rings get narrower farther away from the center
+     * * {@link dc.sunburstChart#relativeRingSizes `relativeRingSizes`}: set the ring sizes as portions of 1
+     * * {@link dc.sunburstChart#equalRingSizes `equalRingSizes`}: the rings are equally wide
+     *
+     * You can modify the returned strategy, or create your own, for custom ring sizing.
+     *
+     * RingSizes is a duck-typed interface that must support the following methods:
+     * * `partitionDy()`: used for
+     *   {@link https://github.com/d3/d3-hierarchy/blob/v1.1.9/README.md#partition_size `d3.partition.size`}
+     * * `scaleInnerRadius(d)`: takes datum and returns radius for
+     *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_innerRadius `d3.arc.innerRadius`}
+     * * `scaleOuterRadius(d)`: takes datum and returns radius for
+     *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_outerRadius `d3.arc.outerRadius`}
+     * * `relativeRingSizesFunction(ringCount)`: takes ring count and returns an array of portions that
+     *   must add up to 1
+     *
+     * @example
+     * // make rings equally wide
+     * chart.ringSizes(chart.equalRingSizes())
+     * // reset to default behavior
+     * chart.ringSizes(chart.defaultRingSizes()))
+     * @method ringSizes
+     * @memberof dc.sunburstChart
+     * @instance
+     * @param {RingSizes}
+     * @returns {Object|dc.sunburstChart}
+     */
+    _chart.ringSizes = function (ringSizes) {
+        if (!arguments.length) {
+            if (!_ringSizes) {
+                _ringSizes = this.defaultRingSizes();
+            }
+            return _ringSizes;
+        }
+        _ringSizes = ringSizes;
+        return _chart;
+    };
+
     function buildArcs () {
         return d3.arc()
             .startAngle(function (d) {
@@ -6519,10 +6682,10 @@ dc.sunburstChart = function (parent, chartGroup) {
                 return d.x1;
             })
             .innerRadius(function (d) {
-                return d.data.path && d.data.path.length === 1 ? _innerRadius : Math.sqrt(d.y0);
+                return _chart.ringSizes().scaleInnerRadius(d);
             })
             .outerRadius(function (d) {
-                return Math.sqrt(d.y1);
+                return _chart.ringSizes().scaleOuterRadius(d);
             });
     }
 
@@ -6559,17 +6722,19 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     function partitionNodes (data) {
+        var getSortable = function (d) {
+            return {'key': d.data.key, 'value': d.value};
+        };
         // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
         var hierarchy = d3.hierarchy(data)
             .sum(function (d) {
                 return d.children ? 0 : extendedValueAccessor(d);
             })
             .sort(function (a, b) {
-                return d3.ascending(a.data.path, b.data.path);
+                return d3.ascending(_chart.ordering()(getSortable(a)), _chart.ordering()(getSortable(b)));
             });
 
-        var partition = d3.partition()
-            .size([2 * Math.PI, _radius * _radius]);
+        var partition = d3.partition().size([2 * Math.PI, _chart.ringSizes().partitionDy()]);
 
         partition(hierarchy);
 
@@ -6580,7 +6745,13 @@ dc.sunburstChart = function (parent, chartGroup) {
             return d;
         });
 
-        return nodes;
+        var relativeSizes = _chart.ringSizes().relativeRingSizesFunction(hierarchy.height);
+
+        return {
+            nodes: nodes,
+            rootOffset: hierarchy.y1,
+            relativeRingSizes: relativeSizes
+        };
     }
 
     function sliceTooSmall (d) {
