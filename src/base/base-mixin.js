@@ -10,6 +10,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
+import {DataProvider} from './data-provider';
 
 const _defaultFilterHandler = (dimension, filters) => {
     if (filters.length === 0) {
@@ -72,8 +73,7 @@ export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
 
-        this._dimension = undefined;
-        this._group = undefined;
+        this._dataProvider = new DataProvider(undefined, undefined);
 
         this._anchor = undefined;
         this._root = undefined;
@@ -284,9 +284,9 @@ export class BaseMixin {
      */
     dimension (dimension) {
         if (!arguments.length) {
-            return this._dimension;
+            return this._dataProvider.dimension;
         }
-        this._dimension = dimension;
+        this._dataProvider.dimension = dimension;
         this.expireCache();
         return this;
     }
@@ -306,7 +306,7 @@ export class BaseMixin {
      */
     data (callback) {
         if (!arguments.length) {
-            return this._data(this._group);
+            return this._data(this.group());
         }
         this._data = typeof callback === 'function' ? callback : utils.constant(callback);
         this.expireCache();
@@ -335,9 +335,9 @@ export class BaseMixin {
      */
     group (group, name) {
         if (!arguments.length) {
-            return this._group;
+            return this._dataProvider.group;
         }
-        this._group = group;
+        this._dataProvider.group = group;
         this._groupName = name;
         this.expireCache();
         return this;
