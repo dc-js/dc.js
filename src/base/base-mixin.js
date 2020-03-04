@@ -10,58 +10,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {DataProvider} from './data-provider';
-
-const _defaultFilterHandler = (dimension, filters) => {
-    if (filters.length === 0) {
-        dimension.filter(null);
-    } else if (filters.length === 1 && !filters[0].isFiltered) {
-        // single value and not a function-based filter
-        dimension.filterExact(filters[0]);
-    } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-        // single range-based filter
-        dimension.filterRange(filters[0]);
-    } else {
-        dimension.filterFunction(d => {
-            for (let i = 0; i < filters.length; i++) {
-                const filter = filters[i];
-                if (filter.isFiltered) {
-                    if(filter.isFiltered(d)) {
-                        return true;
-                    }
-                } else if (filter <= d && filter >= d) {
-                    return true;
-                }
-            }
-            return false;
-        });
-    }
-    return filters;
-};
-
-const _defaultHasFilterHandler = (filters, filter) => {
-    if (filter === null || typeof (filter) === 'undefined') {
-        return filters.length > 0;
-    }
-    return filters.some(f => filter <= f && filter >= f);
-};
-
-const _defaultRemoveFilterHandler = (filters, filter) => {
-    for (let i = 0; i < filters.length; i++) {
-        if (filters[i] <= filter && filters[i] >= filter) {
-            filters.splice(i, 1);
-            break;
-        }
-    }
-    return filters;
-};
-
-const _defaultAddFilterHandler = (filters, filter) => {
-    filters.push(filter);
-    return filters;
-};
-
-const _defaultResetFilterHandler = filters => [];
+import {FilterMixin} from '../data/filter-mixin';
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
@@ -73,7 +22,7 @@ export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
 
-        this._dataProvider = new DataProvider(undefined, undefined);
+        this._dataProvider = new FilterMixin(undefined, undefined);
 
         this._anchor = undefined;
         this._root = undefined;
@@ -134,14 +83,6 @@ export class BaseMixin {
 
         this._defaultData = group => group.all();
         this._data = this._defaultData;
-
-        this._filters = [];
-
-        this._filterHandler = _defaultFilterHandler;
-        this._hasFilterHandler = _defaultHasFilterHandler;
-        this._removeFilterHandler = _defaultRemoveFilterHandler;
-        this._addFilterHandler = _defaultAddFilterHandler;
-        this._resetFilterHandler = _defaultResetFilterHandler;
     }
 
     /**
@@ -804,9 +745,9 @@ export class BaseMixin {
      */
     hasFilterHandler (hasFilterHandler) {
         if (!arguments.length) {
-            return this._hasFilterHandler;
+            return this._dataProvider._hasFilterHandler;
         }
-        this._hasFilterHandler = hasFilterHandler;
+        this._dataProvider._hasFilterHandler = hasFilterHandler;
         return this;
     }
 
@@ -818,7 +759,7 @@ export class BaseMixin {
      * @returns {Boolean}
      */
     hasFilter (filter) {
-        return this._hasFilterHandler(this._filters, filter);
+        return this._dataProvider.hasFilter(filter);
     }
 
     /**
@@ -849,9 +790,9 @@ export class BaseMixin {
      */
     removeFilterHandler (removeFilterHandler) {
         if (!arguments.length) {
-            return this._removeFilterHandler;
+            return this._dataProvider._removeFilterHandler;
         }
-        this._removeFilterHandler = removeFilterHandler;
+        this._dataProvider._removeFilterHandler = removeFilterHandler;
         return this;
     }
 
@@ -878,9 +819,9 @@ export class BaseMixin {
      */
     addFilterHandler (addFilterHandler) {
         if (!arguments.length) {
-            return this._addFilterHandler;
+            return this._dataProvider._addFilterHandler;
         }
-        this._addFilterHandler = addFilterHandler;
+        this._dataProvider._addFilterHandler = addFilterHandler;
         return this;
     }
 
@@ -906,20 +847,10 @@ export class BaseMixin {
      */
     resetFilterHandler (resetFilterHandler) {
         if (!arguments.length) {
-            return this._resetFilterHandler;
+            return this._dataProvider._resetFilterHandler;
         }
-        this._resetFilterHandler = resetFilterHandler;
+        this._dataProvider._resetFilterHandler = resetFilterHandler;
         return this;
-    }
-
-    applyFilters (filters) {
-        if (this.dimension() && this.dimension().filter) {
-            const fs = this._filterHandler(this.dimension(), filters);
-            if (fs) {
-                filters = fs;
-            }
-        }
-        return filters;
     }
 
     /**
@@ -930,7 +861,7 @@ export class BaseMixin {
      * @returns {BaseMixin}
      */
     replaceFilter (filter) {
-        this._filters = this._resetFilterHandler(this._filters);
+        this._dataProvider.clearFilters();
         this.filter(filter);
         return this;
     }
@@ -987,28 +918,10 @@ export class BaseMixin {
      */
     filter (filter) {
         if (!arguments.length) {
-            return this._filters.length > 0 ? this._filters[0] : null;
+            return this._dataProvider.filter();
         }
-        let filters = this._filters;
-        if (filter instanceof Array && filter[0] instanceof Array && !filter.isFiltered) {
-            // toggle each filter
-            filter[0].forEach(f => {
-                if (this._hasFilterHandler(filters, f)) {
-                    filters = this._removeFilterHandler(filters, f);
-                } else {
-                    filters = this._addFilterHandler(filters, f);
-                }
-            });
-        } else if (filter === null) {
-            filters = this._resetFilterHandler(filters);
-        } else {
-            if (this._hasFilterHandler(filters, filter)) {
-                filters = this._removeFilterHandler(filters, filter);
-            } else {
-                filters = this._addFilterHandler(filters, filter);
-            }
-        }
-        this._filters = this.applyFilters(filters);
+
+        filter = this._dataProvider.filter(filter);
         this._invokeFilteredListener(filter);
 
         if (this._root !== null && this.hasFilter()) {
@@ -1027,7 +940,7 @@ export class BaseMixin {
      * @returns {Array<*>}
      */
     filters () {
-        return this._filters;
+        return this._dataProvider._filters;
     }
 
     highlightSelected (e) {
@@ -1111,9 +1024,9 @@ export class BaseMixin {
      */
     filterHandler (filterHandler) {
         if (!arguments.length) {
-            return this._filterHandler;
+            return this._dataProvider._filterHandler;
         }
-        this._filterHandler = filterHandler;
+        this._dataProvider._filterHandler = filterHandler;
         return this;
     }
 
