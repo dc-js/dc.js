@@ -407,17 +407,20 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     /**
-     * Returns the default function used by ringSizes(). Can be used as a parameter to ringSizes() to reset the default behavior.
+     * Constructs the default RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()},
+     * which makes the rings narrower as they get farther away from the center.
      *
-     * @name _defaultRingSizes
+     * Can be used as a parameter to ringSizes() to reset the default behavior, or modified for custom ring sizes.
+     *
+     * @method defaultRingSizes
      * @memberof dc.sunburstChart
      * @instance
      * @example
      *   var chart = new dc.sunburstChart(...);
-     *   chart.ringSizes(chart._defaultRingSizes())
+     *   chart.ringSizes(chart.defaultRingSizes())
      * @returns {{partitionDy: Function, scaleInnerRadius: Function, scaleOuterRadius: Function, relativeRingSizesFunction: Function, rootOffset: Number, relativeRingSizes: Array<Number>}}
      */
-    _chart._defaultRingSizes = function () {
+    _chart.defaultRingSizes = function () {
         return {
             partitionDy: function () {
                 return _radius * _radius;
@@ -428,25 +431,24 @@ dc.sunburstChart = function (parent, chartGroup) {
             scaleOuterRadius: function (d) {
                 return Math.sqrt(d.y1);
             },
-            relativeRingSizesFunction: function(){return [];},
-            rootOffset: 0,
-            relativeRingSizes: []
+            relativeRingSizesFunction: function(){return [];}
         };
     };
 
     /**
-     * Constructs a RelativeRingSizes function that can be used as a parameter to ringSizes(). Using this will make the charts rings equally wide.
+     * Constructs a RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()}
+     * that will make the chart rings equally wide.
      *
-     * @name _equalRingSizes
+     * @method equalRingSizes
      * @memberof dc.sunburstChart
      * @instance
      * @example
      *   var chart = new dc.sunburstChart(...);
-     *   chart.ringSizes(chart._equalRingSizes())
-     * @returns {dc.sunburstChart.RelativeRingSizes}
+     *   chart.ringSizes(chart.equalRingSizes())
+     * @returns {RingSizes}
      */
-    _chart._equalRingSizes = function () {
-        return dc.sunburstChart.RelativeRingSizes(
+    _chart.equalRingSizes = function () {
+        return _chart.relativeRingSizes(
             function (ringCount) {
                 var i;
                 var result = [];
@@ -459,31 +461,32 @@ dc.sunburstChart = function (parent, chartGroup) {
     };
 
     /**
-     * Constructs a RelativeRingSizes function that can be used as a parameter to ringSizes() using the given function to determine each rings width.
-     * The provided function needs to return an array containing a percentage value for each ring/level of the chart.
-     * The length of the array must match the number of rings of the chart (at runtime), the number of rings is provided as the only argument.
-     * The sum of all percentage values from the array must be 1 (100%).
+     * Constructs a RingSizes parameter for {@link dc.sunburstChart#ringSizes ringSizes()} using the given function to determine each rings width.
      *
-     * @name RelativeRingSizes
-     * @memberof dc.sunburstChart
-     * @constructor
+     * * The function must return an array containing portion values for each ring/level of the chart.
+     * * The length of the array must match the number of rings of the chart at runtime, which is provided as the only argument.
+     * * The sum of all portions from the array must be 1 (100%).
+     *
      * @example
-     * // specific relative percentages (the number of rings (3) is known in this case)
-     * dc.sunburstChart.RelativeRingSizes(function (ringCount) {
-     *           return [.1, .3, .6];
-     *       });
+     * // specific relative portions (the number of rings (3) is known in this case)
+     * chart.ringSizes(chart.relativeRingSizes(function (ringCount) {
+     *     return [.1, .3, .6];
+     * });
+     * @method relativeRingSizes
+     * @memberof dc.sunburstChart
+     * @instance
      * @param {Function} [relativeRingSizesFunction]
      * @returns {{partitionDy: Function, scaleInnerRadius: Function, scaleOuterRadius: Function, relativeRingSizesFunction: Function}}
      */
-    dc.sunburstChart.RelativeRingSizes = function(relativeRingSizesFunction) {
-        function assertPercentagesArray(relativeSizes, numberOfRings) {
+    _chart.relativeRingSizes = function(relativeRingSizesFunction) {
+        function assertPortionsArray(relativeSizes, numberOfRings) {
             if (!Array.isArray(relativeSizes)) {
                 throw new dc.errors.BadArgumentException('relativeRingSizes function must return an array');
             }
 
-            var percentagesSum = d3.sum(relativeSizes);
-            if (percentagesSum !== 1) {
-                throw new dc.errors.BadArgumentException('relativeRingSizes : percentages must add up to 1, but sum was ' + percentagesSum);
+            var portionsSum = d3.sum(relativeSizes);
+            if (portionsSum !== 1) {
+                throw new dc.errors.BadArgumentException('relativeRingSizes : portions must add up to 1, but sum was ' + portionsSum);
             }
 
             if (relativeSizes.length !== numberOfRings) {
@@ -502,28 +505,47 @@ dc.sunburstChart = function (parent, chartGroup) {
             },
             relativeRingSizesFunction: function(ringCount){
                 var result = relativeRingSizesFunction(ringCount);
-                assertPercentagesArray(result, ringCount);
+                assertPortionsArray(result, ringCount);
                 return result;
             }
         };
     };
 
     /**
-     * Get or set the strategy to use for sizing the charts rings. There are two predefined strategies available:
-     * <li> default behavior: the rings get narrower farther away from the center (the default can be reset by calling chart.ringSizes(chart._defaultRingSizes()))
-     * <li> relative sizing: the rings are equally wide: call chart.ringSizes(chart._equalRingSizes())
-     * @see dc.sunburstChart.RelativeRingSizes
+     * Get or set the strategy to use for sizing the charts rings.
      *
+     * There are three strategies available
+     * * {@link dc.sunburstChart#defaultRingSizes `defaultRingSizes`}: the rings get narrower farther away from the center
+     * * {@link dc.sunburstChart#relativeRingSizes `relativeRingSizes`}: set the ring sizes as portions of 1
+     * * {@link dc.sunburstChart#equalRingSizes `equalRingSizes`}: the rings are equally wide
+     *
+     * You can modify the returned strategy, or create your own, for custom ring sizing.
+     *
+     * RingSizes is a duck-typed interface that must support the following methods:
+     * * `partitionDy()`: used for
+     *   {@link https://github.com/d3/d3-hierarchy/blob/v1.1.9/README.md#partition_size `d3.partition.size`}
+     * * `scaleInnerRadius(d)`: takes datum and returns radius for
+     *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_innerRadius `d3.arc.innerRadius`}
+     * * `scaleOuterRadius(d)`: takes datum and returns radius for
+     *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_outerRadius `d3.arc.outerRadius`}
+     * * `relativeRingSizesFunction(ringCount)`: takes ring count and returns an array of portions that
+     *   must add up to 1
+     *
+     * @example
+     * // make rings equally wide
+     * chart.ringSizes(chart.equalRingSizes())
+     * // reset to default behavior
+     * chart.ringSizes(chart.defaultRingSizes()))
      * @method ringSizes
      * @memberof dc.sunburstChart
      * @instance
-     * @param {Object|dc.sunburstChart.RelativeRingSizes}
+     * @param {RingSizes}
      * @returns {Object|dc.sunburstChart}
      */
     _chart.ringSizes = function (ringSizes) {
         if (!arguments.length) {
             if (!_ringSizes) {
-                _ringSizes = this._defaultRingSizes();
+                _ringSizes = this.defaultRingSizes();
             }
             return _ringSizes;
         }

@@ -353,7 +353,7 @@ describe('dc.sunburstChart', function () {
             var chart;
             beforeEach(function () {
                 chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_equal_distribution");
-                chart.ringSizes(chart._equalRingSizes());
+                chart.ringSizes(chart.equalRingSizes());
                 chart.render();
             });
             it('rings should be equally wide', function () {
@@ -368,7 +368,7 @@ describe('dc.sunburstChart', function () {
             };
             beforeEach(function () {
                 chart = buildSunburstChart3CompleteRings("sunburst_relativeRingSizes_specific_percentages");
-                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(specificPercentages));
+                chart.ringSizes(chart.relativeRingSizes(specificPercentages));
                 chart.render();
             });
             it('2nd ring should be half as wide as the 3rd ', function () {
@@ -396,16 +396,16 @@ describe('dc.sunburstChart', function () {
             });
 
             it('invalid arguments cause dc.errors.BadArgumentException, default function does not', function () {
-                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(functionReturnsNonArray));
+                chart.ringSizes(chart.relativeRingSizes(functionReturnsNonArray));
                 expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
-                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(tooManyPercentageValues));
+                chart.ringSizes(chart.relativeRingSizes(tooManyPercentageValues));
                 expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
-                chart.ringSizes(dc.sunburstChart.RelativeRingSizes(percentagesSumNot1));
+                chart.ringSizes(chart.relativeRingSizes(percentagesSumNot1));
                 expect(function(){chart.render()}).toThrowError(dc.errors.BadArgumentException);
 
-                chart.ringSizes(chart._defaultRingSizes());
+                chart.ringSizes(chart.defaultRingSizes());
                 chart.render();
             });
         });
