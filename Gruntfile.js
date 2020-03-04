@@ -185,7 +185,7 @@ module.exports = function (grunt) {
         },
         jsdoc: {
             dist: {
-                source: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
+                src: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
                 options: {
                     destination: '<%= conf.web %>/docs/html',
                     template: 'node_modules/ink-docstrap/template',
