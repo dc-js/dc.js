@@ -1,9 +1,16 @@
+## 4.0.1
+Merges sunburst charts from 3.2.0
+
 ## 4.0.0
 * Thanks to the diligent and careful effort of Deepak Kumar, dc.js has been ported to ES6 modules, classes and syntax.
 
 IE is no longer supported. dc.js will not support transpilation. Stick with dc@3 for IE support.
 
 The API is mostly compatible, but there are a few breaking changes - see the [v4 upgrade guide](https://github.com/dc-js/dc.js/blob/develop/docs/dc-v4-upgrade-guide.md) for details.
+
+## 3.2.0
+* Support for general customizable ring sizes on the sunburst chart, by hofmeister ([#1625](https://github.com/dc-js/dc.js/pull/1655) /  ([#1511](https://github.com/dc-js/dc.js/issues/1511))
+* Sort sunburst wedges according to `baseMixin.ordering()`, by hofmeister ([#1625](https://github.com/dc-js/dc.js/pull/1655) /  ([#1511](https://github.com/dc-js/dc.js/issues/1511))
 
 ## 3.1.9
 * `highlightSelected` implemented for SVG legend, by Tahirhan Yıldızoğlu  ([#1625](https://github.com/dc-js/dc.js/pull/1625) /  ([#600](https://github.com/dc-js/dc.js/issues/600))
