@@ -73,23 +73,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this.transitionDuration(350);
 
-        this.filterHandler((dimension, _filters) => {
-            if (_filters.length === 0) {
-                dimension.filter(null);
-            } else {
-                dimension.filterFunction(d => {
-                    for (let i = 0; i < _filters.length; i++) {
-                        const filter = _filters[i];
-                        if (filter.isFiltered && filter.isFiltered(d)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-            }
-            return _filters;
-        });
-
         this.anchor(parent, chartGroup);
     }
 
