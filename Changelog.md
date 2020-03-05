@@ -1,3 +1,6 @@
+## 4.0.3
+* Remove a `filterHandler` special case, and improve the performance of the default filter handler, by Deepak Kumar ([#1660](https://github.com/dc-js/dc.js/pull/1660))
+
 ## 4.0.2
 Fix bugs in previous version
 
