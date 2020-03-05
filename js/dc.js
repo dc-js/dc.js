@@ -1,5 +1,5 @@
 /*!
- *  dc 4.0.0
+ *  dc 4.0.1
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -23,7 +23,7 @@
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
 }(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Dispatch, d3Array, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Collection, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.0.0";
+  const version = "4.0.1";
 
   class BadArgumentException extends Error { }
 
@@ -12185,6 +12185,7 @@
           this._radius = undefined;
           this._givenRadius = undefined; // given radius, if any
           this._innerRadius = 0;
+          this._ringSizes = null;
 
           this._g = undefined;
           this._cx = undefined;
@@ -12193,6 +12194,9 @@
           this._externalLabelRadius = undefined;
 
           this.colorAccessor(d => this.keyAccessor()(d));
+
+          // override cap mixin
+          this.ordering(pluck('key'));
 
           this.title(d => `${this.keyAccessor()(d)}: ${this._extendedValueAccessor(d)}`);
 
@@ -12229,6 +12233,19 @@
           return this.valueAccessor()(d);
       }
 
+      _scaleRadius (ringIndex, y) {
+          if (ringIndex === 0) {
+              return this._innerRadius;
+          } else {
+              const customRelativeRadius = d3Array.sum(this.ringSizes().relativeRingSizes.slice(0, ringIndex));
+              const scaleFactor = (ringIndex * (1 / this.ringSizes().relativeRingSizes.length)) /
+                    customRelativeRadius;
+              const standardRadius = (y - this.ringSizes().rootOffset) /
+                    (1 - this.ringSizes().rootOffset) * (this._radius - this._innerRadius);
+              return this._innerRadius + standardRadius / scaleFactor;
+          }
+      }
+
       _doRender () {
           this.resetSvg();
 
@@ -12248,28 +12265,30 @@
 
           const arcs = this._buildArcs();
 
-          let sunburstData, cdata;
+          let partitionedNodes, cdata;
           // if we have data...
           if (d3Array.sum(this.data(), this.valueAccessor())) {
               cdata = utils.toHierarchy(this.data(), this.valueAccessor());
-              sunburstData = this._partitionNodes(cdata);
+              partitionedNodes = this._partitionNodes(cdata);
               // First one is the root, which is not needed
-              sunburstData.shift();
+              partitionedNodes.nodes.shift();
               this._g.classed(this._emptyCssClass, false);
           } else {
               // otherwise we'd be getting NaNs, so override
               // note: abuse others for its ignoring the value accessor
               cdata = utils.toHierarchy([], d => d.value);
-              sunburstData = this._partitionNodes(cdata);
+              partitionedNodes = this._partitionNodes(cdata);
               this._g.classed(this._emptyCssClass, true);
           }
+          this.ringSizes().rootOffset = partitionedNodes.rootOffset;
+          this.ringSizes().relativeRingSizes = partitionedNodes.relativeRingSizes;
 
           if (this._g) {
               const slices = this._g.selectAll(`g.${this._sliceCssClass}`)
-                  .data(sunburstData);
-              this._createElements(slices, arcs, sunburstData);
+                  .data(partitionedNodes.nodes);
+              this._createElements(slices, arcs, partitionedNodes.nodes);
 
-              this._updateElements(sunburstData, arcs);
+              this._updateElements(partitionedNodes.nodes, arcs);
 
               this._removeElements(slices);
 
@@ -12292,8 +12311,8 @@
           return slices
               .enter()
               .append('g')
-              .attr('class', (d, i) => `${this._sliceCssClass 
-            } _${i} ${ 
+              .attr('class', (d, i) => `${this._sliceCssClass
+            } _${i} ${
                 this._sliceCssClass}-level-${d.depth}`);
       }
 
@@ -12512,12 +12531,141 @@
           return this;
       }
 
+      /**
+       * Constructs the default RingSizes parameter for {@link SunburstChart#ringSizes ringSizes()},
+       * which makes the rings narrower as they get farther away from the center.
+       *
+       * Can be used as a parameter to ringSizes() to reset the default behavior, or modified for custom ring sizes.
+       *
+       * @example
+       *   var chart = new dc.SunburstChart(...);
+       *   chart.ringSizes(chart.defaultRingSizes())
+       * @returns {RingSizes}
+       */
+      defaultRingSizes () {
+          return {
+              partitionDy: () => this._radius * this._radius,
+              scaleInnerRadius: d => d.data.path && d.data.path.length === 1 ?
+                  this._innerRadius :
+                  Math.sqrt(d.y0),
+              scaleOuterRadius: d => Math.sqrt(d.y1),
+              relativeRingSizesFunction: () => []
+          };
+      }
+
+      /**
+       * Constructs a RingSizes parameter for {@link SunburstChart#ringSizes ringSizes()}
+       * that will make the chart rings equally wide.
+       *
+       * @example
+       *   var chart = new dc.SunburstChart(...);
+       *   chart.ringSizes(chart.equalRingSizes())
+       * @returns {RingSizes}
+       */
+      equalRingSizes () {
+          return this.relativeRingSizes(
+              ringCount => {
+                  const result = [];
+                  for (let i = 0; i < ringCount; i++) {
+                      result.push(1 / ringCount);
+                  }
+                  return result;
+              }
+          );
+      }
+
+      /**
+       * Constructs a RingSizes parameter for {@link SunburstChart#ringSizes ringSizes()} using the given function
+       * to determine each rings width.
+       *
+       * * The function must return an array containing portion values for each ring/level of the chart.
+       * * The length of the array must match the number of rings of the chart at runtime, which is provided as the only
+       *   argument.
+       * * The sum of all portions from the array must be 1 (100%).
+       *
+       * @example
+       * // specific relative portions (the number of rings (3) is known in this case)
+       * chart.ringSizes(chart.relativeRingSizes(function (ringCount) {
+       *     return [.1, .3, .6];
+       * });
+       * @param {Function} [relativeRingSizesFunction]
+       * @returns {RingSizes}
+       */
+      relativeRingSizes (relativeRingSizesFunction) {
+          function assertPortionsArray (relativeSizes, numberOfRings) {
+              if (!Array.isArray(relativeSizes)) {
+                  throw new BadArgumentException('relativeRingSizes function must return an array');
+              }
+
+              const portionsSum = d3.sum(relativeSizes);
+              if (portionsSum !== 1) {
+                  throw new BadArgumentException(
+                      `relativeRingSizes : portions must add up to 1, but sum was ${portionsSum}`);
+              }
+
+              if (relativeSizes.length !== numberOfRings) {
+                  throw new BadArgumentException(
+                      `relativeRingSizes : number of values must match number of rings (${
+                        numberOfRings}) but was ${relativeSizes.length}`);
+              }
+          }
+          return {
+              partitionDy: () => 1,
+              scaleInnerRadius: d => this._scaleRadius(d.data.path.length - 1, d.y0),
+              scaleOuterRadius: d => this._scaleRadius(d.data.path.length, d.y1),
+              relativeRingSizesFunction: ringCount => {
+                  const result = relativeRingSizesFunction(ringCount);
+                  assertPortionsArray(result, ringCount);
+                  return result;
+              }
+          };
+      }
+
+      /**
+       * Get or set the strategy to use for sizing the charts rings.
+       *
+       * There are three strategies available
+       * * {@link SunburstChart#defaultRingSizes `defaultRingSizes`}: the rings get narrower farther away from the center
+       * * {@link SunburstChart#relativeRingSizes `relativeRingSizes`}: set the ring sizes as portions of 1
+       * * {@link SunburstChart#equalRingSizes `equalRingSizes`}: the rings are equally wide
+       *
+       * You can modify the returned strategy, or create your own, for custom ring sizing.
+       *
+       * RingSizes is a duck-typed interface that must support the following methods:
+       * * `partitionDy()`: used for
+       *   {@link https://github.com/d3/d3-hierarchy/blob/v1.1.9/README.md#partition_size `d3.partition.size`}
+       * * `scaleInnerRadius(d)`: takes datum and returns radius for
+       *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_innerRadius `d3.arc.innerRadius`}
+       * * `scaleOuterRadius(d)`: takes datum and returns radius for
+       *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_outerRadius `d3.arc.outerRadius`}
+       * * `relativeRingSizesFunction(ringCount)`: takes ring count and returns an array of portions that
+       *   must add up to 1
+       *
+       * @example
+       * // make rings equally wide
+       * chart.ringSizes(chart.equalRingSizes())
+       * // reset to default behavior
+       * chart.ringSizes(chart.defaultRingSizes()))
+       * @param {RingSizes} ringSizes
+       * @returns {Object|SunburstChart}
+       */
+      ringSizes (ringSizes) {
+          if (!arguments.length) {
+              if (!this._ringSizes) {
+                  this._ringSizes = this.defaultRingSizes();
+              }
+              return this._ringSizes;
+          }
+          this._ringSizes = ringSizes;
+          return this;
+      }
+
       _buildArcs () {
           return d3Shape.arc()
               .startAngle(d => d.x0)
               .endAngle(d => d.x1)
-              .innerRadius(d => d.data.path && d.data.path.length === 1 ? this._innerRadius : Math.sqrt(d.y0))
-              .outerRadius(d => Math.sqrt(d.y1));
+              .innerRadius(d => this.ringSizes().scaleInnerRadius(d))
+              .outerRadius(d => this.ringSizes().scaleOuterRadius(d));
       }
 
       _isSelectedSlice (d) {
@@ -12553,22 +12701,32 @@
       }
 
       _partitionNodes (data) {
-          // The changes picked up from https://github.com/d3/d3-hierarchy/issues/50
+          const getSortable = function (d) {
+              return {'key': d.data.key, 'value': d.value};
+          };
           const _hierarchy = d3Hierarchy.hierarchy(data)
               .sum(d => d.children ? 0 : this._extendedValueAccessor(d))
-              .sort((a, b) => d3Array.ascending(a.data.path, b.data.path));
+              .sort((a, b) => d3Array.ascending(this.ordering()(getSortable(a)), this.ordering()(getSortable(b))));
 
           const _partition = d3Hierarchy.partition()
-              .size([2 * Math.PI, this._radius * this._radius]);
+                .size([2 * Math.PI, this.ringSizes().partitionDy()]);
 
           _partition(_hierarchy);
 
           // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
-          return _hierarchy.descendants().map(d => {
+          const nodes = _hierarchy.descendants().map(d => {
               d.key = d.data.key;
               d.path = d.data.path;
               return d;
           });
+
+          const relativeSizes = this.ringSizes().relativeRingSizesFunction(_hierarchy.height);
+
+          return {
+              nodes,
+              rootOffset: d3Hierarchy.hierarchy.y1,
+              relativeRingSizes: relativeSizes
+          };
       }
 
       _sliceTooSmall (d) {
