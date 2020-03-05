@@ -249,3 +249,11 @@ function loadSunburstData3CompleteRings () {
     ];
 }
 
+function loadSunburstData10CompleteRings () {
+    return [
+        {"x0": "a", "x1": "a", "x2": "a", "x3": "a", "x4": "a", "x5": "a", "x6": "a", "x7": "a", "x8": "a", "x9": "a", "y": 1},
+        {"x0": "a", "x1": "a", "x2": "a", "x3": "a", "x4": "a", "x5": "a", "x6": "a", "x7": "a", "x8": "a", "x9": "a", "y": 1},
+        {"x0": "a", "x1": "a", "x2": "a", "x3": "a", "x4": "a", "x5": "a", "x6": "a", "x7": "a", "x8": "a", "x9": "a", "y": 1},
+        {"x0": "a", "x1": "a", "x2": "a", "x3": "a", "x4": "a", "x5": "a", "x6": "a", "x7": "a", "x8": "a", "x9": "a", "y": 1},
+    ];
+}
