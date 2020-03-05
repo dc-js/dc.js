@@ -361,10 +361,11 @@ describe('dc.sunburstChart', function () {
             return buildSunburst(valueDimension, id);
         }
 
-        function buildSunburstChart10CompleteRings (id) {
-            data = crossfilter(loadSunburstData10CompleteRings());
+        function buildSunburstChartNCompleteRings (N, id) {
+            data = crossfilter(loadSunburstData10CompleteRings(N));
             var valueDimension = data.dimension(function (d) {
-                return [d.x0, d.x1, d.x2, d.x3, d.x4, d.x5, d.x6 , d.x7, d.x8, d.x9 ];
+                return [d.x0, d.x1, d.x2, d.x3, d.x4, d.x5, d.x6 , d.x7, d.x8, d.x9 ]
+                    .slice(0, N);
             });
             return buildSunburst(valueDimension, id);
         }
@@ -421,16 +422,20 @@ describe('dc.sunburstChart', function () {
             });
         });
 
-        describe('sunburst.relativeRingSizes: equal distribution - no rounding errors with 10 rings', function () {
-            var chart;
-            beforeEach(function () {
-                chart = buildSunburstChart10CompleteRings('sunburst_relativeRingSizes_equal_distribution_10rings');
-                chart.ringSizes(chart.equalRingSizes());
+        function test_equal_rings(N) {
+            describe(`sunburst.relativeRingSizes: equal distribution - no rounding errors with ${N} rings`, function () {
+                var chart;
+                beforeEach(function () {
+                    chart = buildSunburstChartNCompleteRings(N, 'sunburst_relativeRingSizes_equal_distribution_10rings');
+                    chart.ringSizes(chart.equalRingSizes());
+                });
+                it('chart renders without BadArgumentError caused by rounding issue in chart.relativeRingSizes() ' , function () {
+                    expect(() => chart.render()).not.toThrow();
+                });
             });
-            it('chart renders without BadArgumentError caused by rounding issue in chart.relativeRingSizes() ' , function () {
-                chart.render();
-            });
-        });
+        }
+        for(let i=2; i<=10; ++i)
+            test_equal_rings(i);
 
         describe('sunburst.relativeRingSizes: specific percentages', function () {
             var chart;
@@ -440,7 +445,7 @@ describe('dc.sunburstChart', function () {
             beforeEach(function () {
                 chart = buildSunburstChart3CompleteRings('sunburst_relativeRingSizes_specific_percentages');
                 chart.ringSizes(chart.relativeRingSizes(specificPercentages));
-                chart.render();
+                expect(() => chart.render()).not.toThrow();
             });
             it('2nd ring should be half as wide as the 3rd ', function () {
                 expect(2 * getRingThicknessRounded(chart, 1)).toEqual(getRingThicknessRounded(chart, 2));
