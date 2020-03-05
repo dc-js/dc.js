@@ -455,7 +455,11 @@ dc.sunburstChart = function (parent, chartGroup) {
                 var i;
                 var result = [];
                 for (i = 0; i < ringCount; i++) {
-                    result.push(1 / ringCount);
+                    if (i === ringCount - 1) {
+                        result.push(1 - d3.sum(result));
+                    } else {
+                        result.push(1 / ringCount);
+                    }
                 }
                 return result;
             }

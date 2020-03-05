@@ -358,7 +358,19 @@ describe('dc.sunburstChart', function () {
             var valueDimension = data.dimension(function (d) {
                 return [d.x1, d.x2, d.x3];
             });
-            valueGroup = valueDimension.group().reduceSum(function (d) {
+            return buildSunburst(valueDimension, id);
+        }
+
+        function buildSunburstChart10CompleteRings (id) {
+            data = crossfilter(loadSunburstData10CompleteRings());
+            var valueDimension = data.dimension(function (d) {
+                return [d.x0, d.x1, d.x2, d.x3, d.x4, d.x5, d.x6 , d.x7, d.x8, d.x9 ];
+            });
+            return buildSunburst(valueDimension, id);
+        }
+
+        var buildSunburst = function (valueDimension, id) {
+            var valueGroup = valueDimension.group().reduceSum(function (d) {
                 return +d.y;
             });
             appendChartID(id);
@@ -370,7 +382,7 @@ describe('dc.sunburstChart', function () {
                 .height(height)
                 .transitionDuration(0);
             return chart;
-        }
+        };
 
         function getPieSliceBBoxY (chart, sliceNumber) {
             return chart.select('.pie-slice._' + sliceNumber).node().getBBox().y;
@@ -406,6 +418,17 @@ describe('dc.sunburstChart', function () {
             });
             it('rings should be equally wide', function () {
                 expect(getRingThicknessRounded(chart, 1)).toEqual(getRingThicknessRounded(chart, 2));
+            });
+        });
+
+        describe('sunburst.relativeRingSizes: equal distribution - no rounding errors with 10 rings', function () {
+            var chart;
+            beforeEach(function () {
+                chart = buildSunburstChart10CompleteRings('sunburst_relativeRingSizes_equal_distribution_10rings');
+                chart.ringSizes(chart.equalRingSizes());
+            });
+            it('chart renders without BadArgumentError caused by rounding issue in chart.relativeRingSizes() ' , function () {
+                chart.render();
             });
         });
 
@@ -457,6 +480,10 @@ describe('dc.sunburstChart', function () {
                 chart.render();
             });
         });
+
+
+
+
 
     });
 
