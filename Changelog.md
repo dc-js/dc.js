@@ -1,3 +1,6 @@
+## 4.0.2
+Fix bugs in previous version
+
 ## 4.0.1
 Merges sunburst charts from 3.2.0
 
