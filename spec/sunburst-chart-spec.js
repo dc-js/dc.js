@@ -364,8 +364,10 @@ describe('dc.sunburstChart', function () {
         function buildSunburstChartNCompleteRings (N, id) {
             data = crossfilter(loadSunburstData10CompleteRings(N));
             var valueDimension = data.dimension(function (d) {
-                return [d.x0, d.x1, d.x2, d.x3, d.x4, d.x5, d.x6 , d.x7, d.x8, d.x9 ]
-                    .slice(0, N);
+                const ten = [d.x0, d.x1, d.x2, d.x3, d.x4, d.x5, d.x6 , d.x7, d.x8, d.x9 ];
+                const key = Array.prototype.concat.apply(ten.slice(0, N%10), new Array(Math.floor(N/10)).fill(ten));
+                expect(key.length).toEqual(N);
+                return key;
             });
             return buildSunburst(valueDimension, id);
         }
@@ -434,7 +436,7 @@ describe('dc.sunburstChart', function () {
                 });
             });
         }
-        for(let i=2; i<=10; ++i)
+        for(let i=2; i<=27; ++i)
             test_equal_rings(i);
 
         describe('sunburst.relativeRingSizes: specific percentages', function () {
@@ -485,10 +487,6 @@ describe('dc.sunburstChart', function () {
                 chart.render();
             });
         });
-
-
-
-
 
     });
 
