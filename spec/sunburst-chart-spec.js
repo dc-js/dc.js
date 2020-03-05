@@ -369,7 +369,7 @@ describe('dc.sunburstChart', () => {
             return Math.round(Math.abs(yOuter - yInner));
         }
 
-        describe('sunburst.relativeRingSizes regression', () => {
+        describe('sunburst.defaultRingSizes: shrinking', () => {
             let chart;
             beforeEach(() => {
                 chart = buildSunburstChart3CompleteRings('sunburst_relativeRingSizes_regression');
@@ -377,6 +377,7 @@ describe('dc.sunburstChart', () => {
             });
 
             it('rings should get narrower, farther away from the center', () => {
+                expect(getRingThicknessRounded(chart, 2)).toBeGreaterThan(0);
                 expect(getRingThicknessRounded(chart, 1)).toBeGreaterThan(getRingThicknessRounded(chart, 2));
             });
         });
@@ -389,6 +390,7 @@ describe('dc.sunburstChart', () => {
                 chart.render();
             });
             it('rings should be equally wide', () => {
+                expect(getRingThicknessRounded(chart, 1)).toBeGreaterThan(0);
                 expect(getRingThicknessRounded(chart, 1)).toEqual(getRingThicknessRounded(chart, 2));
             });
         });
@@ -404,6 +406,7 @@ describe('dc.sunburstChart', () => {
                 chart.render();
             });
             it('2nd ring should be half as wide as the 3rd ', () => {
+                expect(getRingThicknessRounded(chart, 1)).toBeGreaterThan(0);
                 expect(2 * getRingThicknessRounded(chart, 1)).toEqual(getRingThicknessRounded(chart, 2));
             });
         });

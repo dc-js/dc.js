@@ -592,7 +592,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         return {
             nodes,
-            rootOffset: hierarchy.y1,
+            rootOffset: _hierarchy.y1,
             relativeRingSizes: relativeSizes
         };
     }
