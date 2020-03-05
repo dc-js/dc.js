@@ -73,23 +73,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this.transitionDuration(350);
 
-        this.filterHandler((dimension, _filters) => {
-            if (_filters.length === 0) {
-                dimension.filter(null);
-            } else {
-                dimension.filterFunction(d => {
-                    for (let i = 0; i < _filters.length; i++) {
-                        const filter = _filters[i];
-                        if (filter.isFiltered && filter.isFiltered(d)) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
-            }
-            return _filters;
-        });
-
         this.anchor(parent, chartGroup);
     }
 
@@ -466,7 +449,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             }
 
             const portionsSum = d3.sum(relativeSizes);
-            if (portionsSum !== 1) {
+            if (Math.abs(portionsSum - 1) > dc.constants.NEGLIGIBLE_NUMBER) {
                 throw new BadArgumentException(
                     `relativeRingSizes : portions must add up to 1, but sum was ${portionsSum}`);
             }
