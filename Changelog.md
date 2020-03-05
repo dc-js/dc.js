@@ -14,6 +14,10 @@ IE is no longer supported. dc.js will not support transpilation. Stick with dc@3
 
 The API is mostly compatible, but there are a few breaking changes - see the [v4 upgrade guide](https://github.com/dc-js/dc.js/blob/develop/docs/dc-v4-upgrade-guide.md) for details.
 
+## 3.2.1
+* Fix rounding issue with equal ring sizes, by hofmeister ([#1662](https://github.com/dc-js/dc.js/pull/1662) /  ([#1661](https://github.com/dc-js/dc.js/issues/1661))
+
+
 ## 3.2.0
 * Support for general customizable ring sizes on the sunburst chart, by hofmeister ([#1625](https://github.com/dc-js/dc.js/pull/1655) /  ([#1511](https://github.com/dc-js/dc.js/issues/1511))
 * Sort sunburst wedges according to `baseMixin.ordering()`, by hofmeister ([#1625](https://github.com/dc-js/dc.js/pull/1655) /  ([#1511](https://github.com/dc-js/dc.js/issues/1511))
