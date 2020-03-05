@@ -20,6 +20,9 @@ Please raise an issue on GitHub if you run into problems not covered here!
   to classes and functions.
 - When using in the web-browser via the script tag, the entire library is exposed
   within the `dc` namespace.
+- `dc` no longer lists `crossfilter2` as npm dependency.
+  As a side effect `dc` no longer exports `dc.crossfilter`.
+  If your code relied on `dc.crossfilter`, please update your code to use `crossfilter` directly.
 
 ## Steps to upgrade
 

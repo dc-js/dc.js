@@ -1,6 +1,6 @@
 {
   "name": "dc",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "license": "Apache-2.0",
   "copyright": "2019",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
@@ -78,7 +78,7 @@
     "karma-sauce-launcher": "^1.2.0",
     "karma-summary-reporter": "^1.7.1",
     "load-grunt-tasks": "~4",
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "reductio": "0.6.x",
     "rollup": "^1.29.0",
     "rollup-plugin-json": "^4.0.0",

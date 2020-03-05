@@ -3540,6 +3540,10 @@ When filtering, the sunburst chart creates instances of [HierarchyFilter](Filter
     * [.minAngleForLabel([minAngleForLabel])](#SunburstChart+minAngleForLabel) ⇒ <code>Number</code> \| [<code>SunburstChart</code>](#SunburstChart)
     * [.emptyTitle([title])](#SunburstChart+emptyTitle) ⇒ <code>String</code> \| [<code>SunburstChart</code>](#SunburstChart)
     * [.externalLabels([externalLabelRadius])](#SunburstChart+externalLabels) ⇒ <code>Number</code> \| [<code>SunburstChart</code>](#SunburstChart)
+    * [.defaultRingSizes()](#SunburstChart+defaultRingSizes) ⇒ <code>RingSizes</code>
+    * [.equalRingSizes()](#SunburstChart+equalRingSizes) ⇒ <code>RingSizes</code>
+    * [.relativeRingSizes([relativeRingSizesFunction])](#SunburstChart+relativeRingSizes) ⇒ <code>RingSizes</code>
+    * [.ringSizes(ringSizes)](#SunburstChart+ringSizes) ⇒ <code>Object</code> \| [<code>SunburstChart</code>](#SunburstChart)
 
 <a name="new_SunburstChart_new"></a>
 
@@ -3641,6 +3645,91 @@ The argument specifies the extra radius to be added for slice labels.
 | --- | --- |
 | [externalLabelRadius] | <code>Number</code> | 
 
+<a name="SunburstChart+defaultRingSizes"></a>
+
+### sunburstChart.defaultRingSizes() ⇒ <code>RingSizes</code>
+Constructs the default RingSizes parameter for [ringSizes()](#SunburstChart+ringSizes),
+which makes the rings narrower as they get farther away from the center.
+
+Can be used as a parameter to ringSizes() to reset the default behavior, or modified for custom ring sizes.
+
+**Kind**: instance method of [<code>SunburstChart</code>](#SunburstChart)  
+**Example**  
+```js
+var chart = new dc.SunburstChart(...);
+  chart.ringSizes(chart.defaultRingSizes())
+```
+<a name="SunburstChart+equalRingSizes"></a>
+
+### sunburstChart.equalRingSizes() ⇒ <code>RingSizes</code>
+Constructs a RingSizes parameter for [ringSizes()](#SunburstChart+ringSizes)
+that will make the chart rings equally wide.
+
+**Kind**: instance method of [<code>SunburstChart</code>](#SunburstChart)  
+**Example**  
+```js
+var chart = new dc.SunburstChart(...);
+  chart.ringSizes(chart.equalRingSizes())
+```
+<a name="SunburstChart+relativeRingSizes"></a>
+
+### sunburstChart.relativeRingSizes([relativeRingSizesFunction]) ⇒ <code>RingSizes</code>
+Constructs a RingSizes parameter for [ringSizes()](#SunburstChart+ringSizes) using the given function
+to determine each rings width.
+
+* The function must return an array containing portion values for each ring/level of the chart.
+* The length of the array must match the number of rings of the chart at runtime, which is provided as the only
+  argument.
+* The sum of all portions from the array must be 1 (100%).
+
+**Kind**: instance method of [<code>SunburstChart</code>](#SunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| [relativeRingSizesFunction] | <code>function</code> | 
+
+**Example**  
+```js
+// specific relative portions (the number of rings (3) is known in this case)
+chart.ringSizes(chart.relativeRingSizes(function (ringCount) {
+    return [.1, .3, .6];
+});
+```
+<a name="SunburstChart+ringSizes"></a>
+
+### sunburstChart.ringSizes(ringSizes) ⇒ <code>Object</code> \| [<code>SunburstChart</code>](#SunburstChart)
+Get or set the strategy to use for sizing the charts rings.
+
+There are three strategies available
+* [`defaultRingSizes`](#SunburstChart+defaultRingSizes): the rings get narrower farther away from the center
+* [`relativeRingSizes`](#SunburstChart+relativeRingSizes): set the ring sizes as portions of 1
+* [`equalRingSizes`](#SunburstChart+equalRingSizes): the rings are equally wide
+
+You can modify the returned strategy, or create your own, for custom ring sizing.
+
+RingSizes is a duck-typed interface that must support the following methods:
+* `partitionDy()`: used for
+  [`d3.partition.size`](https://github.com/d3/d3-hierarchy/blob/v1.1.9/README.md#partition_size)
+* `scaleInnerRadius(d)`: takes datum and returns radius for
+   [`d3.arc.innerRadius`](https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_innerRadius)
+* `scaleOuterRadius(d)`: takes datum and returns radius for
+   [`d3.arc.outerRadius`](https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_outerRadius)
+* `relativeRingSizesFunction(ringCount)`: takes ring count and returns an array of portions that
+  must add up to 1
+
+**Kind**: instance method of [<code>SunburstChart</code>](#SunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| ringSizes | <code>RingSizes</code> | 
+
+**Example**  
+```js
+// make rings equally wide
+chart.ringSizes(chart.equalRingSizes())
+// reset to default behavior
+chart.ringSizes(chart.defaultRingSizes()))
+```
 <a name="TextFilterWidget"></a>
 
 ## TextFilterWidget

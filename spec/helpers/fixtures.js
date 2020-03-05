@@ -232,3 +232,20 @@ function loadIrisFixture () {
             "5.9,3,5.1,1.8,virginica"
     );
 }
+
+function getSunburstDataOneRing3Segments () {
+    return [
+        {"x":"a","y":1},
+        {"x":"b","y":2},
+        {"x":"c","y":3}
+    ];
+}
+
+function loadSunburstData3CompleteRings () {
+    return [
+        {"x1":"a","x2":"aa","x3":"aaa","y":1},
+        {"x1":"a","x2":"aa","x3":"aaa","y":2},
+        {"x1":"a","x2":"aa","x3":"aaa","y":3}
+    ];
+}
+

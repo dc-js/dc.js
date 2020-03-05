@@ -60,6 +60,10 @@ module.exports = function (grunt) {
                 files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
                 tasks: ['docs']
             },
+            websrc: {
+                files: ['<%= conf.websrc %>/**/*.html'],
+                tasks: ['docs']
+            },
             sass: {
                 files: ['style/<%= conf.pkg.name %>.scss'],
                 tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
@@ -403,6 +407,7 @@ module.exports = function (grunt) {
     grunt.registerTask('watch:scripts-sass-docs', () => {
         grunt.config('watch', {
             scripts: grunt.config('watch').scripts,
+            websrc: grunt.config('watch').websrc,
             sass: grunt.config('watch').sass
         });
         grunt.task.run('watch');
