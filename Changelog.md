@@ -1,3 +1,6 @@
+## 3.2.1
+* Fix rounding issue with equal ring sizes, by hofmeister ([#1662](https://github.com/dc-js/dc.js/pull/1662) /  ([#1661](https://github.com/dc-js/dc.js/issues/1661))
+
 ## 3.2.0
 * Support for general customizable ring sizes on the sunburst chart, by hofmeister ([#1625](https://github.com/dc-js/dc.js/pull/1655) /  ([#1511](https://github.com/dc-js/dc.js/issues/1511))
 * Sort sunburst wedges according to `baseMixin.ordering()`, by hofmeister ([#1625](https://github.com/dc-js/dc.js/pull/1655) /  ([#1511](https://github.com/dc-js/dc.js/issues/1511))
