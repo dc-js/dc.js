@@ -11,7 +11,7 @@ such as [.svg](#dc.baseMixin+svg) and [.xAxis](#dc.coordinateGridMixin+xAxis),
 return values that are themselves chainable d3 objects.
 
 **Kind**: global namespace  
-**Version**: 3.1.9  
+**Version**: 3.2.1  
 **Example**  
 ```js
 // Example chaining
@@ -53,6 +53,10 @@ chart.width(300)
         * [.minAngleForLabel([minAngleForLabel])](#dc.sunburstChart+minAngleForLabel) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
         * [.emptyTitle([title])](#dc.sunburstChart+emptyTitle) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
         * [.externalLabels([externalLabelRadius])](#dc.sunburstChart+externalLabels) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+        * [.defaultRingSizes()](#dc.sunburstChart+defaultRingSizes) ⇒ <code>RingSizes</code>
+        * [.equalRingSizes()](#dc.sunburstChart+equalRingSizes) ⇒ <code>RingSizes</code>
+        * [.relativeRingSizes([relativeRingSizesFunction])](#dc.sunburstChart+relativeRingSizes) ⇒ <code>RingSizes</code>
+        * [.ringSizes(ringSizes)](#dc.sunburstChart+ringSizes) ⇒ <code>Object</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
     * [.barChart](#dc.barChart)
         * [new barChart(parent, [chartGroup])](#new_dc.barChart_new)
         * [.centerBar([centerBar])](#dc.barChart+centerBar) ⇒ <code>Boolean</code> \| [<code>barChart</code>](#dc.barChart)
@@ -726,6 +730,10 @@ Get or set whether to draw lines from pie slices to their labels.
     * [.minAngleForLabel([minAngleForLabel])](#dc.sunburstChart+minAngleForLabel) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
     * [.emptyTitle([title])](#dc.sunburstChart+emptyTitle) ⇒ <code>String</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
     * [.externalLabels([externalLabelRadius])](#dc.sunburstChart+externalLabels) ⇒ <code>Number</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+    * [.defaultRingSizes()](#dc.sunburstChart+defaultRingSizes) ⇒ <code>RingSizes</code>
+    * [.equalRingSizes()](#dc.sunburstChart+equalRingSizes) ⇒ <code>RingSizes</code>
+    * [.relativeRingSizes([relativeRingSizesFunction])](#dc.sunburstChart+relativeRingSizes) ⇒ <code>RingSizes</code>
+    * [.ringSizes(ringSizes)](#dc.sunburstChart+ringSizes) ⇒ <code>Object</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
 
 <a name="new_dc.sunburstChart_new"></a>
 
@@ -834,6 +842,91 @@ The argument specifies the extra radius to be added for slice labels.
 | --- | --- |
 | [externalLabelRadius] | <code>Number</code> | 
 
+<a name="dc.sunburstChart+defaultRingSizes"></a>
+
+#### sunburstChart.defaultRingSizes() ⇒ <code>RingSizes</code>
+Constructs the default RingSizes parameter for [ringSizes()](#dc.sunburstChart+ringSizes),
+which makes the rings narrower as they get farther away from the center.
+
+Can be used as a parameter to ringSizes() to reset the default behavior, or modified for custom ring sizes.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+**Example**  
+```js
+var chart = new dc.sunburstChart(...);
+  chart.ringSizes(chart.defaultRingSizes())
+```
+<a name="dc.sunburstChart+equalRingSizes"></a>
+
+#### sunburstChart.equalRingSizes() ⇒ <code>RingSizes</code>
+Constructs a RingSizes parameter for [ringSizes()](#dc.sunburstChart+ringSizes)
+that will make the chart rings equally wide.
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+**Example**  
+```js
+var chart = new dc.sunburstChart(...);
+  chart.ringSizes(chart.equalRingSizes())
+```
+<a name="dc.sunburstChart+relativeRingSizes"></a>
+
+#### sunburstChart.relativeRingSizes([relativeRingSizesFunction]) ⇒ <code>RingSizes</code>
+Constructs a RingSizes parameter for [ringSizes()](#dc.sunburstChart+ringSizes) using the given function
+to determine each rings width.
+
+* The function must return an array containing portion values for each ring/level of the chart.
+* The length of the array must match the number of rings of the chart at runtime, which is provided as the only
+  argument.
+* The sum of all portions from the array must be 1 (100%).
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| [relativeRingSizesFunction] | <code>function</code> | 
+
+**Example**  
+```js
+// specific relative portions (the number of rings (3) is known in this case)
+chart.ringSizes(chart.relativeRingSizes(function (ringCount) {
+    return [.1, .3, .6];
+});
+```
+<a name="dc.sunburstChart+ringSizes"></a>
+
+#### sunburstChart.ringSizes(ringSizes) ⇒ <code>Object</code> \| [<code>sunburstChart</code>](#dc.sunburstChart)
+Get or set the strategy to use for sizing the charts rings.
+
+There are three strategies available
+* [`defaultRingSizes`](#dc.sunburstChart+defaultRingSizes): the rings get narrower farther away from the center
+* [`relativeRingSizes`](#dc.sunburstChart+relativeRingSizes): set the ring sizes as portions of 1
+* [`equalRingSizes`](#dc.sunburstChart+equalRingSizes): the rings are equally wide
+
+You can modify the returned strategy, or create your own, for custom ring sizing.
+
+RingSizes is a duck-typed interface that must support the following methods:
+* `partitionDy()`: used for
+  [`d3.partition.size`](https://github.com/d3/d3-hierarchy/blob/v1.1.9/README.md#partition_size)
+* `scaleInnerRadius(d)`: takes datum and returns radius for
+   [`d3.arc.innerRadius`](https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_innerRadius)
+* `scaleOuterRadius(d)`: takes datum and returns radius for
+   [`d3.arc.outerRadius`](https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_outerRadius)
+* `relativeRingSizesFunction(ringCount)`: takes ring count and returns an array of portions that
+  must add up to 1
+
+**Kind**: instance method of [<code>sunburstChart</code>](#dc.sunburstChart)  
+
+| Param | Type |
+| --- | --- |
+| ringSizes | <code>RingSizes</code> | 
+
+**Example**  
+```js
+// make rings equally wide
+chart.ringSizes(chart.equalRingSizes())
+// reset to default behavior
+chart.ringSizes(chart.defaultRingSizes()))
+```
 <a name="dc.barChart"></a>
 
 ### dc.barChart
@@ -1938,8 +2031,7 @@ d3 axis manipulation.
 **Caution**: The right y axis is usually generated internally by dc; resetting it may cause
 unexpected results.  Note also that when used as a getter, this function is not chainable: it
 returns the axis, not the chart,
-{@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
-so attempting to call chart functions after calling `.yAxis()` will fail}.
+[so attempting to call chart functions after calling `.yAxis()` will fail](https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis).
 
 **Kind**: instance method of [<code>compositeChart</code>](#dc.compositeChart)  
 **See**: [https://github.com/d3/d3-axis/blob/master/README.md#axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)  
@@ -2148,8 +2240,7 @@ Gets or sets a custom geo projection function. See the available
 
 Starting version 3.0 it has been deprecated to rely on the default projection being
 [d3.geoAlbersUsa()](https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa). Please
-set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
-Considering that `null` is also a valid value for projection}, if you need
+set it explicitly. [Considering that `null` is also a valid value for projection](https://bl.ocks.org/mbostock/5557726), if you need
 projection to be `null` please set it explicitly to `null`.
 
 **Kind**: instance method of [<code>geoChoroplethChart</code>](#dc.geoChoroplethChart)  
@@ -5226,8 +5317,7 @@ therefore it supports any valid d3 axisBottom manipulation.
 **Caution**: The x axis is usually generated internally by dc; resetting it may cause
 unexpected results. Note also that when used as a getter, this function is not chainable:
 it returns the axis, not the chart,
-{@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
-so attempting to call chart functions after calling `.xAxis()` will fail}.
+[so attempting to call chart functions after calling `.xAxis()` will fail](https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis).
 
 **Kind**: instance method of [<code>coordinateGridMixin</code>](#dc.coordinateGridMixin)  
 **See**: [d3.axisBottom](https://github.com/d3/d3-axis/blob/master/README.md#axisBottom)  
@@ -5371,8 +5461,7 @@ valid d3 axis manipulation.
 **Caution**: The y axis is usually generated internally by dc; resetting it may cause
 unexpected results.  Note also that when used as a getter, this function is not chainable: it
 returns the axis, not the chart,
-{@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
-so attempting to call chart functions after calling `.yAxis()` will fail}.
+[so attempting to call chart functions after calling `.yAxis()` will fail](https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis).
 In addition, depending on whether you are going to use the axis on left or right
 you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
 or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
