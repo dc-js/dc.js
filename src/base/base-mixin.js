@@ -24,8 +24,10 @@ const _defaultFilterHandler = (dimension, filters) => {
         dimension.filterFunction(d => {
             for (let i = 0; i < filters.length; i++) {
                 const filter = filters[i];
-                if (filter.isFiltered && filter.isFiltered(d)) {
-                    return true;
+                if (filter.isFiltered) {
+                    if(filter.isFiltered(d)) {
+                        return true;
+                    }
                 } else if (filter <= d && filter >= d) {
                     return true;
                 }
