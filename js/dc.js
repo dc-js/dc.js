@@ -1,5 +1,5 @@
 /*!
- *  dc 4.0.2
+ *  dc 4.0.3
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -23,7 +23,7 @@
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
 }(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Dispatch, d3Array, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Collection, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.0.2";
+  const version = "4.0.3";
 
   class BadArgumentException extends Error { }
 
@@ -1195,8 +1195,10 @@
           dimension.filterFunction(d => {
               for (let i = 0; i < filters.length; i++) {
                   const filter = filters[i];
-                  if (filter.isFiltered && filter.isFiltered(d)) {
-                      return true;
+                  if (filter.isFiltered) {
+                      if(filter.isFiltered(d)) {
+                          return true;
+                      }
                   } else if (filter <= d && filter >= d) {
                       return true;
                   }
@@ -12205,23 +12207,6 @@
 
           this.transitionDuration(350);
 
-          this.filterHandler((dimension, _filters) => {
-              if (_filters.length === 0) {
-                  dimension.filter(null);
-              } else {
-                  dimension.filterFunction(d => {
-                      for (let i = 0; i < _filters.length; i++) {
-                          const filter = _filters[i];
-                          if (filter.isFiltered && filter.isFiltered(d)) {
-                              return true;
-                          }
-                      }
-                      return false;
-                  });
-              }
-              return _filters;
-          });
-
           this.anchor(parent, chartGroup);
       }
 
@@ -12598,7 +12583,7 @@
               }
 
               const portionsSum = d3.sum(relativeSizes);
-              if (portionsSum !== 1) {
+              if (Math.abs(portionsSum - 1) > dc.constants.NEGLIGIBLE_NUMBER) {
                   throw new BadArgumentException(
                       `relativeRingSizes : portions must add up to 1, but sum was ${portionsSum}`);
               }
