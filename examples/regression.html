@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Scatter Plot Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      line.regression {
+        stroke: red;
+        stroke-width: 5;
+        opacity: 0.5;
+      }
+    </style>
+</head>
+<body>
+
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+<p>This example demonstrates using <a href="https://github.com/Tom-Alexander/regression-js">regression.js</a>
+  to calculate a linear regression on the points in a scatter plot.</p>
+<select id="metric">
+  <option value="flat" selected>Flat</option>
+  <option value="rising">Rising</option>
+  <option value="falling">Falling</option>
+</select>
+<div id="test"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="../js/regression.js"></script>
+<script type="text/javascript">
+
+var chart = new dc.ScatterPlot("#test");
+d3.csv("morley.csv").then(function(experiments) {
+
+    experiments.forEach(function(x) {
+        x.Speed = +x.Speed;
+        x.Run = +x.Run;
+    });
+    const cf = crossfilter(experiments);
+    let rendered = false;
+
+    chart
+        .width(768)
+        .height(480)
+        .margins({top: 0, right: 10, bottom: 20, left: 50})
+        .x(d3.scaleLinear()).elasticX(true)
+        .elasticY(true)
+        .brushOn(false)
+        .symbolSize(8)
+        .clipPadding(10);
+
+    chart
+        .on('pretransition', function() {
+            var xext = d3.extent(chart.group().all(), kv => kv.key[0]);
+            var r = regression.linear(chart.group().all().map(kv => [kv.key[0], kv.key[1]])),
+                m = r.equation[0], b = r.equation[1],
+                [x1, x2] = chart.x().domain();
+            var points = [[
+                x1,
+                m * x1 + b
+            ], [
+                x2,
+                m * x2 + b
+            ]];
+            var xScale = chart.x(), yScale = chart.y(), margins = chart.margins();
+            var line = chart.g().selectAll('line.regression').data([points]);
+            function do_points(line) {
+                line
+                    .attr('x1', d => xScale(d[0][0]) + margins.left)
+                    .attr('y1', d => yScale(d[0][1]) + margins.top)
+                    .attr('x2', d => xScale(d[1][0]) + margins.left)
+                    .attr('y2', d => yScale(d[1][1]) + margins.top);
+            }
+            line = line.enter().append('line')
+                .attr('class', 'regression')
+                .call(do_points)
+                .merge(line);
+            line.transition().duration(chart.transitionDuration()).call(do_points);
+        });
+
+    function key_function(metric) {
+        switch(metric) {
+        default:
+        case 'flat':
+            return d => [d.Run, d.Speed];
+        case 'rising':
+            return d => [d.Run, d.Speed * (20 + d.Run) / 20];
+        case 'falling':
+            return d => [d.Run, d.Speed * (30 - d.Run) / 20];
+        }
+    }
+    function display(metric) {
+        let runDimension = cf.dimension(key_function(metric)),
+            speedSumGroup = runDimension.group();
+
+        chart
+            .dimension(runDimension)
+            .group(speedSumGroup);
+
+        if(!rendered) {
+            chart.render();
+            rendered = true;
+        }
+        else
+            chart.redraw();
+    }
+    display('flat');
+
+    d3.select('select#metric').on('change', function() {
+        display(this.value);
+    });
+
+});
+
+</script>
+
+</div>
+</body>
+</html>
