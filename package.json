@@ -1,8 +1,8 @@
 {
   "name": "dc",
-  "version": "4.0.3",
+  "version": "4.0.4",
   "license": "Apache-2.0",
-  "copyright": "2019",
+  "copyright": "2020",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
   "keywords": [
     "visualization",
@@ -80,6 +80,7 @@
     "load-grunt-tasks": "~4",
     "node-sass": "^4.13.1",
     "reductio": "0.6.x",
+    "regression": "^2.0.1",
     "rollup": "^1.29.0",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-license": "^0.12.1",

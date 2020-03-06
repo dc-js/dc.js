@@ -248,7 +248,8 @@ module.exports = function (grunt) {
                             `node_modules/d3/${d3pkgSubDir}/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
-                            'node_modules/reductio/reductio.js'
+                            'node_modules/reductio/reductio.js',
+                            'node_modules/regression/dist/regression.js'
                         ],
                         dest: '<%= conf.web %>/js/'
                     }

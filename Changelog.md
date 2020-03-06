@@ -1,3 +1,6 @@
+## 4.0.4
+* Add a simple [linear regression example](http://dc-js.github.io/dc.js/examples/regression.html).
+
 ## 4.0.3
 * Remove a `filterHandler` special case, and improve the performance of the default filter handler, by Deepak Kumar ([#1660](https://github.com/dc-js/dc.js/pull/1660))
 * Merge sunburst rounding error fixes from 3.2.1
