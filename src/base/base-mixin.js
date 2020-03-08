@@ -22,7 +22,7 @@ export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
 
-        this._dataProvider = new FilterMixin(undefined, undefined);
+        this._dataProvider = new FilterMixin();
 
         this._anchor = undefined;
         this._root = undefined;

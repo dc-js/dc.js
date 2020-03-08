@@ -52,8 +52,8 @@ const _defaultAddFilterHandler = (filters, filter) => {
 const _defaultResetFilterHandler = filters => [];
 
 export class FilterMixin extends DataProvider {
-    constructor (group, dimension) {
-        super(group, dimension);
+    constructor () {
+        super();
 
         this._filters = [];
 

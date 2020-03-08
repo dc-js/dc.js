@@ -1,9 +1,9 @@
 
 export class DataProvider {
-    constructor (group, dimension) {
-        this.group = group;
-        this.dimension = dimension;
-        this.cf = null;
+    constructor () {
+        this.group = undefined;
+        this.dimension = undefined;
+        this.cf = undefined;
     }
 
     clone () {
