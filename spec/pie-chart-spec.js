@@ -359,6 +359,15 @@ describe('dc.pieChart', () => {
         describe('comparing crossfilter and chart ordering', () => {
             let crossfilterOrder,
                 crossfilterTop2;
+
+            const compareKeyValues = (chartData = [], cfData=[]) => {
+                expect(chartData.length).toEqual(cfData.length);
+                for (let i=0; i < chartData.length; i++) {
+                    expect(chartData._key).toEqual(cfData.key);
+                    expect(chartData._value).toEqual(cfData.value);
+                }
+            };
+
             beforeEach(() => {
                 countryChart = buildCountryChart('country-chart');
                 countryChart.innerRadius(innerRadius);
@@ -373,7 +382,7 @@ describe('dc.pieChart', () => {
             });
             describe('with ordering and capping not set', () => {
                 it('should match the crossfilter top 2', () => {
-                    expect(countryChart.data()).toEqual(crossfilterTop2);
+                    compareKeyValues(countryChart.data(), crossfilterTop2);
                 });
             });
             describe('with ordering by key', () => {
@@ -381,7 +390,7 @@ describe('dc.pieChart', () => {
                     countryChart.ordering(kv => kv.key).redraw();
                 });
                 it('should should match crossfilter top(2)', () => {
-                    expect(countryChart.data()).toEqual(crossfilterOrder);
+                    compareKeyValues(countryChart.data(), crossfilterOrder);
                 });
                 describe('with cap(1)', () => {
                     beforeEach(() => {

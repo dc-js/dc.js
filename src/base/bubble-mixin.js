@@ -1,5 +1,5 @@
-import { descending, min, max } from 'd3-array';
-import { scaleLinear } from 'd3-scale';
+import {descending, max, min} from 'd3-array';
+import {scaleLinear} from 'd3-scale';
 
 import {ColorMixin} from './color-mixin';
 import {transition} from '../core/core';
@@ -28,17 +28,17 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
 
         this.renderLabel(true);
 
-        this.data(group => {
-            const data = group.all();
-            if (this._sortBubbleSize) {
-                // sort descending so smaller bubbles are on top
-                const radiusAccessor = this.radiusValueAccessor();
-                data.sort((a, b) => descending(radiusAccessor(a), radiusAccessor(b)));
-            }
-            return data;
-        });
-
         this._r = scaleLinear().domain([0, 100]);
+    }
+
+    data () {
+        const data = super.data();
+        if (this._sortBubbleSize) {
+            // sort descending so smaller bubbles are on top
+            const radiusAccessor = this.radiusValueAccessor();
+            data.sort((a, b) => descending(radiusAccessor(a), radiusAccessor(b)));
+        }
+        return data;
     }
 
     _rValueAccessor (d) {

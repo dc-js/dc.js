@@ -10,7 +10,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {FilterMixin} from '../data/filter-mixin';
+import {BasicTransformMixin} from '../data/basic-transform-mixin';
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
@@ -22,7 +22,7 @@ export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
 
-        this._dataProvider = new FilterMixin();
+        this._dataProvider = new BasicTransformMixin();
 
         this._anchor = undefined;
         this._root = undefined;
@@ -46,8 +46,8 @@ export class BaseMixin {
         this._height = undefined;
         this._useViewBoxResizing = false;
 
-        this._keyAccessor = pluck('key');
-        this._valueAccessor = pluck('value');
+        this._keyAccessor = pluck('_key');
+        this._valueAccessor = pluck('_value');
         this._label = pluck('key');
 
         this._ordering = pluck('key');
@@ -247,7 +247,7 @@ export class BaseMixin {
      */
     data (callback) {
         if (!arguments.length) {
-            return this._data(this.group());
+            return this._dataProvider.data();
         }
         this._data = typeof callback === 'function' ? callback : utils.constant(callback);
         this.expireCache();
@@ -971,7 +971,7 @@ export class BaseMixin {
      * @return {undefined}
      */
     onClick (datum) {
-        const filter = this.keyAccessor()(datum);
+        const filter = datum.key;
         events.trigger(() => {
             this.filter(filter);
             this.redrawGroup();
@@ -1079,7 +1079,7 @@ export class BaseMixin {
         if (!arguments.length) {
             return this._keyAccessor;
         }
-        this._keyAccessor = keyAccessor;
+        this._dataProvider.keyAccessor(keyAccessor);
         return this;
     }
 
@@ -1100,7 +1100,7 @@ export class BaseMixin {
         if (!arguments.length) {
             return this._valueAccessor;
         }
-        this._valueAccessor = valueAccessor;
+        this._dataProvider.valueAccessor(valueAccessor);
         return this;
     }
 
