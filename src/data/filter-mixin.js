@@ -1,4 +1,3 @@
-import {DataProvider} from './data-provider';
 
 const _defaultFilterHandler = (dimension, filters) => {
     if (filters.length === 0) {
@@ -51,7 +50,7 @@ const _defaultAddFilterHandler = (filters, filter) => {
 
 const _defaultResetFilterHandler = filters => [];
 
-export class FilterMixin extends DataProvider {
+export const FilterMixin = Base => class extends Base {
     constructor () {
         super();
 
@@ -108,4 +107,4 @@ export class FilterMixin extends DataProvider {
         this._filters = this._applyFilters(filters);
         return filter;
     }
-}
+};

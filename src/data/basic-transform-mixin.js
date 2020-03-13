@@ -1,6 +1,5 @@
-import {FilterMixin} from './filter-mixin';
 
-export class BasicTransformMixin extends FilterMixin {
+export const BasicTransformMixin =  Base => class extends Base {
     constructor () {
         super();
 
@@ -35,4 +34,4 @@ export class BasicTransformMixin extends FilterMixin {
         return this;
     }
 
-}
+};
