@@ -113,8 +113,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             this._g.classed(this._emptyCssClass, false);
         } else {
             // otherwise we'd be getting NaNs, so override
-            // note: abuse others for its ignoring the value accessor
-            pieData = pieLayout([{key: this._emptyTitle, value: 1, others: [this._emptyTitle]}]);
+            pieData = pieLayout([{key: this._emptyTitle, _key: this._emptyTitle, _value: 1}]);
             this._g.classed(this._emptyCssClass, true);
         }
 

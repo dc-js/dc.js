@@ -1,4 +1,4 @@
-import {sum} from 'd3-array';
+import {CappedDataProvider} from '../data/helpers';
 
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
@@ -16,69 +16,18 @@ export const CapMixin = Base => class extends Base {
     constructor () {
         super();
 
-        this._cap = Infinity;
-        this._takeFront = true;
-        this._othersLabel = 'Others';
-
-        this._othersGrouper = (topItems, restItems) => {
-            const restItemsSum = sum(restItems, this.valueAccessor()),
-                restKeys = restItems.map(this.keyAccessor());
-            if (restItemsSum > 0) {
-                return topItems.concat([{
-                    others: restKeys,
-                    key: this.othersLabel(),
-                    value: restItemsSum
-                }]);
-            }
-            return topItems;
-        };
-
-        // emulate old group.top(N) ordering
-        this.ordering(kv => -kv.value);
+        this._dataProvider = new CappedDataProvider();
     }
 
     // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
     // whether top means front or back depends on takeFront
-    data () {
-        let items = super.data();
-
-        if (this._cap === Infinity) {
-            return this._computeOrderedGroups(items);
-        } else {
-            let rest;
-            items = this._computeOrderedGroups(items); // sort by baseMixin.ordering
-
-            if (this._cap) {
-                if (this._takeFront) {
-                    rest = items.slice(this._cap);
-                    items = items.slice(0, this._cap);
-                } else {
-                    const start = Math.max(0, items.length - this._cap);
-                    rest = items.slice(0, start);
-                    items = items.slice(start);
-                }
-            }
-
-            if (this._othersGrouper) {
-                return this._othersGrouper(items, rest);
-            }
-            return items;
-        }
-    }
-
 
     cappedKeyAccessor (d, i) {
-        if (d.others) {
-            return d.key;
-        }
-        return this.keyAccessor()(d, i);
+        return d._key;
     }
 
     cappedValueAccessor (d, i) {
-        if (d.others) {
-            return d.value;
-        }
-        return this.valueAccessor()(d, i);
+        return d._value;
     }
 
     /**
@@ -113,9 +62,9 @@ export const CapMixin = Base => class extends Base {
      */
     cap (count) {
         if (!arguments.length) {
-            return this._cap;
+            return this._dataProvider.cap();
         }
-        this._cap = count;
+        this._dataProvider.cap(count);
         return this;
     }
 
@@ -130,9 +79,9 @@ export const CapMixin = Base => class extends Base {
      */
     takeFront (takeFront) {
         if (!arguments.length) {
-            return this._takeFront;
+            return this._dataProvider.takeFront();
         }
-        this._takeFront = takeFront;
+        this._dataProvider.takeFront(takeFront);
         return this;
     }
 
@@ -145,9 +94,9 @@ export const CapMixin = Base => class extends Base {
      */
     othersLabel (label) {
         if (!arguments.length) {
-            return this._othersLabel;
+            return this._dataProvider.othersLabel();
         }
-        this._othersLabel = label;
+        this._dataProvider.othersLabel(label);
         return this;
     }
 
@@ -180,16 +129,9 @@ export const CapMixin = Base => class extends Base {
      */
     othersGrouper (grouperFunction) {
         if (!arguments.length) {
-            return this._othersGrouper;
+            return this._dataProvider.othersGrouper();
         }
-        this._othersGrouper = grouperFunction;
+        this._dataProvider.othersGrouper(grouperFunction);
         return this;
-    }
-
-    onClick (d) {
-        if (d.others) {
-            this.filter([d.others]);
-        }
-        super.onClick(d);
     }
 };

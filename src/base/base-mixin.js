@@ -299,6 +299,11 @@ export class BaseMixin {
             return this._ordering;
         }
         this._ordering = orderFunction;
+        // cleanup in v5
+        if (this._dataProvider.preCapOrderBy) {
+            this._dataProvider.preCapOrderBy(orderFunction);
+        }
+
         this.expireCache();
         return this;
     }
