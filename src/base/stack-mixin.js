@@ -19,10 +19,11 @@ export class StackMixin extends CoordinateGridMixin {
         this._titles = {};
 
         this._hidableStacks = false;
+        this._hiddenStacks = {};
         this._evadeDomainFilter = false;
 
         this.data(() => {
-            const layers = this._stack.filter(this._visibility);
+            const layers = this._stack.filter(l => this._visibility(l));
             if (!layers.length) {
                 return [];
             }
@@ -53,12 +54,13 @@ export class StackMixin extends CoordinateGridMixin {
     _prepareValues (layer, layerIdx) {
         const valAccessor = layer.accessor || this.valueAccessor();
         layer.name = String(layer.name || layerIdx);
+        const isLayerHidden = !this._visibility(layer);
         const allValues = layer.group.all().map((d, i) => ({
             x: this.keyAccessor()(d, i),
-            y: layer.hidden ? null : valAccessor(d, i),
+            y: isLayerHidden ? null : valAccessor(d, i),
             data: d,
             layer: layer.name,
-            hidden: layer.hidden
+            hidden: isLayerHidden
         }));
 
         layer.domainValues = allValues.filter(l => this._domainFilter()(l));
@@ -160,10 +162,7 @@ export class StackMixin extends CoordinateGridMixin {
      * @returns {StackMixin}
      */
     hideStack (stackName) {
-        const layer = this._findLayerByName(stackName);
-        if (layer) {
-            layer.hidden = true;
-        }
+        this._hiddenStacks[stackName] = true;
         return this;
     }
 
@@ -174,10 +173,7 @@ export class StackMixin extends CoordinateGridMixin {
      * @returns {StackMixin}
      */
     showStack (stackName) {
-        const layer = this._findLayerByName(stackName);
-        if (layer) {
-            layer.hidden = false;
-        }
+        this._hiddenStacks[stackName] = false;
         return this;
     }
 
@@ -287,7 +283,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     _visibility (l) {
-        return !l.hidden;
+        return !this._hiddenStacks[l.name];
     }
 
     _ordinalXDomain () {
@@ -300,14 +296,14 @@ export class StackMixin extends CoordinateGridMixin {
         return this._stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
-            hidden: layer.hidden || false,
+            hidden: !this._visibility(layer),
             color: this.getColor.call(layer, layer.values, i)
         }));
     }
 
     isLegendableHidden (d) {
         const layer = this._findLayerByName(d.name);
-        return layer ? layer.hidden : false;
+        return layer ? !this._visibility(layer) : false;
     }
 
     legendToggle (d) {
