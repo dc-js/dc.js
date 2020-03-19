@@ -114,6 +114,8 @@ export class StackMixin extends CoordinateGridMixin {
         const layer = {group: group};
         if (typeof name === 'string') {
             layer.name = name;
+        } else {
+            layer.name = String(this._stack.length);
         }
         if (typeof accessor === 'function') {
             layer.accessor = accessor;
