@@ -53,14 +53,11 @@ export class StackMixin extends CoordinateGridMixin {
 
     _prepareValues (layer, layerIdx) {
         const valAccessor = layer.accessor || this.valueAccessor();
-        layer.name = String(layer.name || layerIdx);
-        const isLayerHidden = !this._visibility(layer);
         const allValues = layer.group.all().map((d, i) => ({
             x: this.keyAccessor()(d, i),
-            y: isLayerHidden ? null : valAccessor(d, i),
+            y: valAccessor(d, i),
             data: d,
-            layer: layer.name,
-            hidden: isLayerHidden
+            layer: layer.name
         }));
 
         layer.domainValues = allValues.filter(l => this._domainFilter()(l));
