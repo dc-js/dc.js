@@ -176,7 +176,7 @@ export class BarChart extends StackMixin {
         const enter = bars.enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', pluck('data', this.getColor))
+            .attr('fill', (d, i) => this.getColor(d, i))
             .attr('x', d => this._barXPos(d))
             .attr('y', this.yAxisHeight())
             .attr('height', 0);
@@ -204,7 +204,7 @@ export class BarChart extends StackMixin {
             })
             .attr('width', this._barWidth)
             .attr('height', d => this._barHeight(d))
-            .attr('fill', pluck('data', this.getColor))
+            .attr('fill', (d, i) => this.getColor(d, i))
             .select('title').text(pluck('data', this.title(data.name)));
 
         transition(bars.exit(), this.transitionDuration(), this.transitionDelay())

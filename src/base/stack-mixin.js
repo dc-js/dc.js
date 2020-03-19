@@ -46,9 +46,7 @@ export class StackMixin extends CoordinateGridMixin {
             return layers;
         });
 
-        this.colorAccessor(function (d) {
-            return this.name || d.name;
-        });
+        this.colorAccessor(d => d.name);
     }
 
     _prepareValues (layer, layerIdx) {
@@ -296,7 +294,7 @@ export class StackMixin extends CoordinateGridMixin {
             chart: this,
             name: layer.name,
             hidden: !this._visibility(layer),
-            color: this.getColor.call(layer, layer.values, i)
+            color: this.getColor(layer, i)
         }));
     }
 

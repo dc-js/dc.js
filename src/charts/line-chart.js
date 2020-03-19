@@ -248,7 +248,7 @@ export class LineChart extends StackMixin {
     }
 
     _getColor (d, i) {
-        return this.getColor.call(d, d.values, i);
+        return this.getColor(d, i);
     }
 
     // To keep it backward compatible, this covers multiple cases
@@ -384,8 +384,8 @@ export class LineChart extends StackMixin {
                     .attr('r', this._getDotRadius())
                     .style('fill-opacity', this._dataPointFillOpacity)
                     .style('stroke-opacity', this._dataPointStrokeOpacity)
-                    .attr('fill', this.getColor)
-                    .attr('stroke', this.getColor)
+                    .attr('fill', (d, i) => this.getColor(d, i))
+                    .attr('stroke', (d, i) => this.getColor(d, i))
                     .on('mousemove', function () {
                         const dot = select(this);
                         chart._showDot(dot);
@@ -403,7 +403,7 @@ export class LineChart extends StackMixin {
                 transition(dotsEnterModify, this.transitionDuration())
                     .attr('cx', d => utils.safeNumber(this.x()(d.x)))
                     .attr('cy', d => utils.safeNumber(this.y()(d.y + d.y0)))
-                    .attr('fill', this.getColor);
+                    .attr('fill', (d, i) => this.getColor(d, i));
 
                 dots.exit().remove();
             });
