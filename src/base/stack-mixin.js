@@ -47,7 +47,7 @@ export class StackMixin extends CoordinateGridMixin {
         });
 
         this.colorAccessor(function (d) {
-            return this.layer || this.name || d.name || d.layer;
+            return this.name || d.name;
         });
     }
 
@@ -57,7 +57,7 @@ export class StackMixin extends CoordinateGridMixin {
             x: this.keyAccessor()(d, i),
             y: valAccessor(d, i),
             data: d,
-            layer: layer.name
+            name: layer.name
         }));
 
         layer.domainValues = allValues.filter(l => this._domainFilter()(l));
