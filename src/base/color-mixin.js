@@ -20,27 +20,21 @@ export const ColorMixin = Base => class extends Base {
 
         this._colorAccessor = d => this.keyAccessor()(d);
         this._colorCalculator = undefined;
+    }
 
-        {
-            const chart = this;
-            // ES6: this method is called very differently from stack-mixin and derived charts
-            // Removing and placing it as a member method is tricky
-
-            /**
-                 * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
-                 * @method getColor
-                 * @memberof ColorMixin
-                 * @instance
-                 * @param {*} d
-                 * @param {Number} [i]
-                 * @returns {String}
-                 */
-            chart.getColor = function (d, i) {
-                return chart._colorCalculator ?
-                    chart._colorCalculator.call(this, d, i) :
-                    chart._colors(chart._colorAccessor.call(this, d, i));
-            };
-        }
+    /**
+     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+     * @method getColor
+     * @memberof ColorMixin
+     * @instance
+     * @param {*} d
+     * @param {Number} [i]
+     * @returns {String}
+     */
+    getColor (d, i) {
+        return this._colorCalculator ?
+            this._colorCalculator(d, i) :
+            this._colors(this._colorAccessor(d, i));
     }
 
     /**
