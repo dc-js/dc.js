@@ -247,10 +247,6 @@ export class LineChart extends StackMixin {
         return this;
     }
 
-    _getColor (d, i) {
-        return this.getColor(d, i);
-    }
-
     // To keep it backward compatible, this covers multiple cases
     // See https://github.com/dc-js/dc.js/issues/1376
     // It will be removed when interpolate and tension are removed.
@@ -311,14 +307,14 @@ export class LineChart extends StackMixin {
 
         const path = layersEnter.append('path')
             .attr('class', 'line')
-            .attr('stroke', (d, i) => this._getColor(d, i));
+            .attr('stroke', (d, i) => this.getColor(d, i));
         if (this._dashStyle) {
             path.attr('stroke-dasharray', this._dashStyle);
         }
 
         transition(layers.select('path.line'), this.transitionDuration(), this.transitionDelay())
         //.ease('linear')
-            .attr('stroke', (d, i) => this._getColor(d, i))
+            .attr('stroke', (d, i) => this.getColor(d, i))
             .attr('d', d => this._safeD(_line(d.values)));
     }
 
@@ -335,12 +331,12 @@ export class LineChart extends StackMixin {
 
             layersEnter.append('path')
                 .attr('class', 'area')
-                .attr('fill', (d, i) => this._getColor(d, i))
+                .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
 
             transition(layers.select('path.area'), this.transitionDuration(), this.transitionDelay())
             //.ease('linear')
-                .attr('fill', (d, i) => this._getColor(d, i))
+                .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
         }
     }
