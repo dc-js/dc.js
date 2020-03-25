@@ -99,18 +99,20 @@ chart.on('renderlet', function (_chart) {
         // Using inheritance
         class MyLineChart extends dc.LineChart {
             yAxisMin () {
-                // you can access super.yAxisMin() in this approach
-                const min = d3.min(this.data(), layer => d3.min(layer.values, p => p.y + p.y0));
-                return dc.utils.subtract(min, this.yAxisPadding());
+                const ymin = super.yAxisMin();
+                if(ymin < 0) ymin = 0;
+                return ymin;
             }
         }
         const chart01 = new MyLineChart('#chart01');
 
         // Or, using direct assignment
         const chart02 = new dc.BarChart('#chart02');
+        const super_yAxisMin = chart02.yAxisMin;
         chart02.yAxisMin = function() {
-            const min = d3.min(this.data(), layer => d3.min(layer.values, p => p.y + p.y0));
-            return dc.utils.subtract(min, this.yAxisPadding());
+            const ymin = super_yAxisMin.call(this);
+            if(ymin < 0) ymin = 0;
+            return ymin;
         };
 ```
    Please see:
