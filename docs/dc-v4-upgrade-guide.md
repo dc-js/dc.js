@@ -94,7 +94,7 @@ chart.on('renderlet', function (_chart) {
    It was used to override a method in an object (typically a chart).
    You can either create a derived class extending the chart class,
    or you can override specific methods on your instance of a chart, e.g.:
-   
+
 ```javascript
         // Using inheritance
         class MyLineChart extends dc.LineChart {
@@ -105,7 +105,7 @@ chart.on('renderlet', function (_chart) {
             }
         }
         const chart01 = new MyLineChart('#chart01');
-    
+
         // Or, using direct assignment
         const chart02 = new dc.BarChart('#chart02');
         chart02.yAxisMin = function() {
@@ -113,7 +113,7 @@ chart.on('renderlet', function (_chart) {
             return dc.utils.subtract(min, this.yAxisPadding());
         };
 ```
-   Please see: 
+   Please see:
    http://dc-js.github.io/dc.js/examples/focus-dynamic-interval.html
    and http://dc-js.github.io/dc.js/examples/stacked-bar.html
    for example.
