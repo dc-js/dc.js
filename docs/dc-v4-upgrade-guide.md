@@ -87,6 +87,9 @@ chart.on('renderlet', function (_chart) {
     - `var _chart = dc.stackMixin(dc.coordinateGridMixin({}))` (or `dc.stackableChart`)\
     &#10137; `class ___ extends StackMixin`
 
+  See [this commit in dc.leaflet.js](https://github.com/dc-js/dc.leaflet.js/commit/c086a04c1dbf879fca70195c0a2fdafbf191355c)
+  (v0.5.0) for an example of using ES5 closure "classes" with dc@4.
+
 - `dc.override` has been removed.
    It was used to override a method in an object (typically a chart).
    You can either create a derived class extending the chart class,
