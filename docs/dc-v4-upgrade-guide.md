@@ -40,7 +40,7 @@ Please raise an issue on GitHub if you run into problems not covered here!
     - `dc.round.round` --> `Math.round`
     - `dc.round.ceil` --> `Math.ceil`
 
-- The previous way of instantiating a chart is still supported.
+- The previous functions for instantiating charts are still supported.
   However, it is recommended to use the `new` operator instead. For example:
 
     - `dc.pieChart(parent, chartGroup)` --> `new dc.PieChart(parent, chartGroup)`
@@ -52,27 +52,31 @@ Please raise an issue on GitHub if you run into problems not covered here!
 
 ```javascript
 chart.on('renderlet', function (_chart) {
-                          _chart.selectAll('rect.bar').on('click', _chart.onClick);
-                      });
+    _chart.selectAll('rect.bar').on('click', _chart.onClick);
+});
 ```
 
 Change it to:
 
 ```javascript
 chart.on('renderlet', function (_chart) {
-                          _chart.selectAll('rect.bar').on('click', d => _chart.onClick(d));
-                      });
+    _chart.selectAll('rect.bar').on('click', d => _chart.onClick(d));
+});
 ```
 
-- The following synonyms (from the 2.0 migration) have been removed:
+- The mixins no longer have instantiation functions, and old synonyms for the mixins have been
+  removed. The mixin classes must be instantiated with `new`, and instead of passing a chart
+  *instance* to be initialized, three of the mixins (Bubble, Cap, and Color) take a base mixin
+  *class* to derive from.
 
-    - `dc.abstractBubbleChart` --> `dc.bubbleMixin`
-    - `dc.baseChart` --> `dc.baseMixin`
-    - `dc.capped` --> `dc.capMixin`
-    - `dc.colorChart` --> `dc.colorMixin`
-    - `dc.coordinateGridChart` --> `dc.coordinateGridMixin`
-    - `dc.marginable` --> `dc.marginMixin`
-    - `dc.stackableChart` --> `dc.stackMixin`
+  For example,
+
+    - `var _chart = dc.bubbleMixin(dc.coordinateGridMixin({})` (or `dc.abstractBubbleChart`) &xarr; `class ___ extends BubbleMixin(CoordinateGridMixin)`
+    - `dc.baseMixin` (or `dc.baseChart`) &xarr; `new dc.BaseMixin`
+    - `var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));` (or `dc.capped`, `dc.colorChart`)) &xarr; `class ___ extends CapMixin(ColorMixin(BaseMixin))`
+    - `dc.coordinateGridChart`, `dc.coordinateGridMixin`
+    - `dc.marginable`, `dc.marginMixin`
+    - `dc.stackableChart`, `dc.stackMixin`
 
 - `dc.override` has been removed.
    It was used to override a method in an object (typically a chart).
