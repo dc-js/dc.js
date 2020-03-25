@@ -64,19 +64,27 @@ chart.on('renderlet', function (_chart) {
 });
 ```
 
-- The mixins no longer have instantiation functions, and old synonyms for the mixins have been
-  removed. The mixin classes must be instantiated with `new`, and instead of passing a chart
-  *instance* to be initialized, three of the mixins (Bubble, Cap, and Color) take a base mixin
-  *class* to derive from.
+- The mixins no longer have instantiation functions:
+    - the mixin classes must be instantiated with `new`
+    - instead of passing a chart *instance* to be initialized, new classes extend mixins
+    - the Bubble, Cap, and Color mixins take a base mixin *class* to extend
+    - the CoordinateGrid, Margin, and Stack mixins extend the mixins they were used with in v3
+
+  Old synonyms for the mixins from v1.0 have been removed.
 
   For example,
 
-    - `var _chart = dc.bubbleMixin(dc.coordinateGridMixin({})` (or `dc.abstractBubbleChart`) &#10137; `class ___ extends BubbleMixin(CoordinateGridMixin)`
+    - `var _chart = dc.bubbleMixin(dc.coordinateGridMixin({})` (or `dc.abstractBubbleChart`)
+    &#10137; `class ___ extends dc.BubbleMixin(dc.CoordinateGridMixin)`
     - `dc.baseMixin` (or `dc.baseChart`) &#10137; `new dc.BaseMixin`
-    - `var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));` (or `dc.capped`, `dc.colorChart`)) &#10137; `class ___ extends CapMixin(ColorMixin(BaseMixin))`
-    - `dc.coordinateGridChart`, `dc.coordinateGridMixin`
-    - `dc.marginable`, `dc.marginMixin`
-    - `dc.stackableChart`, `dc.stackMixin`
+    - `var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));` (or `dc.capped`, `dc.colorChart`))
+    &#10137; `class ___ extends dc.CapMixin(dc.ColorMixin(dc.BaseMixin))`
+    - `var _chart = dc.coordinateGridMixin({})` (or `dc.coordinateGridChart`)
+    &#10137; `class ___ extends dc.CoordinateGridChart`
+    - `var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)))` (or `dc.marginable`)
+    &#10137; `class ___ extends dc.ColorMixin(dc.MarginMixin)`
+    - `var _chart = dc.stackMixin(dc.coordinateGridMixin({}))` (or `dc.stackableChart`)
+    &#10137; `class ___ extends StackMixin`
 
 - `dc.override` has been removed.
    It was used to override a method in an object (typically a chart).
