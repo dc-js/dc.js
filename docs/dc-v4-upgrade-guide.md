@@ -77,13 +77,13 @@ chart.on('renderlet', function (_chart) {
     - `var _chart = dc.bubbleMixin(dc.coordinateGridMixin({})` (or `dc.abstractBubbleChart`)\
     &#10137; `class ___ extends dc.BubbleMixin(dc.CoordinateGridMixin)`
     - `dc.baseMixin` (or `dc.baseChart`) &#10137; `new dc.BaseMixin`
-    - `var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));` (or `dc.capped`, `dc.colorChart`))
+    - `var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));` (or `dc.capped`, `dc.colorChart`))\
     &#10137; `class ___ extends dc.CapMixin(dc.ColorMixin(dc.BaseMixin))`
-    - `var _chart = dc.coordinateGridMixin({})` (or `dc.coordinateGridChart`)
+    - `var _chart = dc.coordinateGridMixin({})` (or `dc.coordinateGridChart`)\
     &#10137; `class ___ extends dc.CoordinateGridChart`
-    - `var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)))` (or `dc.marginable`)
+    - `var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)))` (or `dc.marginable`)\
     &#10137; `class ___ extends dc.ColorMixin(dc.MarginMixin)`
-    - `var _chart = dc.stackMixin(dc.coordinateGridMixin({}))` (or `dc.stackableChart`)
+    - `var _chart = dc.stackMixin(dc.coordinateGridMixin({}))` (or `dc.stackableChart`)\
     &#10137; `class ___ extends StackMixin`
 
 - `dc.override` has been removed.
