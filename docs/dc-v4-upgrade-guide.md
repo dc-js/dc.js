@@ -28,22 +28,22 @@ Please raise an issue on GitHub if you run into problems not covered here!
 
 - Packages for some variables/classes have changed:
 
-    - `dc.dateFormat` --> `dc.config.dateFormat`
-    - `dc.disableTransitions` --> `dc.config.disableTransitions`
-    - `dc.errors.InvalidStateException` --> `dc.InvalidStateException`
-    - `dc.errors.BadArgumentException` --> `dc.BadArgumentException`
+    - `dc.dateFormat` &#10137; `dc.config.dateFormat`
+    - `dc.disableTransitions` &#10137; `dc.config.disableTransitions`
+    - `dc.errors.InvalidStateException` &#10137; `dc.InvalidStateException`
+    - `dc.errors.BadArgumentException` &#10137; `dc.BadArgumentException`
 
 - Functions from `dc.round` have been removed.
   Please change as follows:
 
-    - `dc.round.floor` --> `Math.floor`
-    - `dc.round.round` --> `Math.round`
-    - `dc.round.ceil` --> `Math.ceil`
+    - `dc.round.floor` &#10137; `Math.floor`
+    - `dc.round.round` &#10137; `Math.round`
+    - `dc.round.ceil` &#10137; `Math.ceil`
 
 - The previous functions for instantiating charts are still supported.
   However, it is recommended to use the `new` operator instead. For example:
 
-    - `dc.pieChart(parent, chartGroup)` --> `new dc.PieChart(parent, chartGroup)`
+    - `dc.pieChart(parent, chartGroup)` &#10137; `new dc.PieChart(parent, chartGroup)`
 
 - In dcv4, inside a `dc` chart functions expect `this` to be the chart
   instance. However `d3` sets it to the d3 element.
