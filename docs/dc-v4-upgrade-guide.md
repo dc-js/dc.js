@@ -74,7 +74,7 @@ chart.on('renderlet', function (_chart) {
 
   For example,
 
-    - `var _chart = dc.bubbleMixin(dc.coordinateGridMixin({})` (or `dc.abstractBubbleChart`)
+    - `var _chart = dc.bubbleMixin(dc.coordinateGridMixin({})` (or `dc.abstractBubbleChart`)\
     &#10137; `class ___ extends dc.BubbleMixin(dc.CoordinateGridMixin)`
     - `dc.baseMixin` (or `dc.baseChart`) &#10137; `new dc.BaseMixin`
     - `var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));` (or `dc.capped`, `dc.colorChart`))
