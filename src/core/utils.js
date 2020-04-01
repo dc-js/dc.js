@@ -21,6 +21,7 @@ import {config} from './config';
  *     return this.radius + x;
  * });
  * selectAll('.circle').data(...).x(xPosition);
+ * @function pluck
  * @param {String} n
  * @param {Function} [f]
  * @returns {Function}

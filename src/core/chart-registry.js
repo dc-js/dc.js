@@ -108,6 +108,7 @@ export const chartRegistry = new ChartRegistry();
 /**
  * Add given chart instance to the given group, creating the group if necessary.
  * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+ * @function registerChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  * @return {undefined}
@@ -119,6 +120,7 @@ export const registerChart = function (chart, group) {
 /**
  * Remove given chart instance from the given group, creating the group if necessary.
  * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+ * @function deregisterChart
  * @param {Object} chart dc.js chart instance
  * @param {String} [group] Group name
  * @return {undefined}
@@ -129,6 +131,7 @@ export const deregisterChart = function (chart, group) {
 
 /**
  * Determine if a given chart instance resides in any group in the registry.
+ * @function hasChart
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
@@ -138,6 +141,7 @@ export const hasChart = function (chart) {
 
 /**
  * Clear given group if one is provided, otherwise clears all groups.
+ * @function deregisterAllCharts
  * @param {String} group Group name
  * @return {undefined}
  */
@@ -148,6 +152,7 @@ export const deregisterAllCharts = function (group) {
 /**
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
  * only charts that belong to the default chart group will be reset.
+ * @function filterAll
  * @param {String} [group]
  * @return {undefined}
  */
@@ -161,6 +166,7 @@ export const filterAll = function (group) {
 /**
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
  * not given then only charts that belong to the default chart group will be reset.
+ * @function refocusAll
  * @param {String} [group]
  * @return {undefined}
  */
@@ -176,6 +182,7 @@ export const refocusAll = function (group) {
 /**
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
  * charts that belong to the default chart group will be re-rendered.
+ * @function renderAll
  * @param {String} [group]
  * @return {undefined}
  */
@@ -195,6 +202,7 @@ export const renderAll = function (group) {
  * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
  * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
  * from scratch.
+ * @function redrawAll
  * @param {String} [group]
  * @return {undefined}
  */
