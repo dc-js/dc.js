@@ -17,8 +17,8 @@
 
 <div id="horizon"></div>
 <div id="series"></div>
-<div id="speed-pie"></div>
 <div id="expt-pie"></div>
+<div id="speed-pie"></div>
 <div id="run-pie"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
@@ -122,8 +122,8 @@
 
   var horizonChart = new HorizonChart("#horizon"),
       seriesChart = new dc.SeriesChart('#series'),
-      speedPie = new dc.PieChart('#speed-pie'),
       exptPie = new dc.PieChart('#expt-pie'),
+      speedPie = new dc.PieChart('#speed-pie'),
       runPie = new dc.PieChart('#run-pie');
 
   d3.csv("morley.csv").then(function(experiments) {
@@ -170,6 +170,15 @@
           .valueAccessor(d => d.value - 500)
           .legend(dc.legend().x(350).y(180).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
 
+      const exptDim = cf.dimension(d => d.Expt), exptGroup = exptDim.group();
+
+      exptPie
+          .width(250)
+          .height(250)
+          .colors(d3.scaleOrdinal().domain(1,6).range(d3.schemeCategory10))
+          .dimension(exptDim)
+          .group(exptGroup);
+
       const speeds = ['low', 'medium low', 'medium', 'medium high', 'high'];
       const quantizeSpeed = d3.scaleQuantize()
           .domain(d3.extent(experiments2, d => d.Speed))
@@ -191,22 +200,22 @@
           c.select('.pie-label._2').style('fill', '#422518');
       });
 
-      const exptDim = cf.dimension(d => d.Expt), exptGroup = exptDim.group();
-
-      exptPie
-          .width(250)
-          .height(250)
-          .colors(d3.scaleOrdinal().domain(1,6).range(d3.schemeCategory10))
-          .dimension(exptDim)
-          .group(exptGroup);
-
       const runDim = cf.dimension(d => Math.floor(d.Run)), runGroup = runDim.group();
 
       runPie
           .width(250)
           .height(250)
+          .colors(d3.scaleOrdinal().domain(d3.range(1,21)).range(d3.range(0,29).map(d => {
+              const x = (d+10)*255/29;
+              return `rgb(${x},${x},${x})`;
+          })))
+          .minAngleForLabel(0)
           .dimension(runDim)
           .group(runGroup);
+      runPie.on('pretransition', c => {
+          for(let i of d3.range(15,20))
+              c.select(`.pie-label._${i}`).style('fill', 'darkgrey');
+      });
 
       dc.renderAll();
 
