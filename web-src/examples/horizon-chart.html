@@ -210,6 +210,7 @@
               const x = (d+10)*255/29;
               return `rgb(${x},${x},${x})`;
           })))
+          .ordering(d => d.key)
           .minAngleForLabel(0)
           .dimension(runDim)
           .group(runGroup);
