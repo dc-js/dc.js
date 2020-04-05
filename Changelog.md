@@ -1,5 +1,6 @@
 ## 4.0.4
 * Add a simple [linear regression example](http://dc-js.github.io/dc.js/examples/regression.html).
+* Add a [horizon chart example](http://dc-js.github.io/dc.js/examples/horizon-chart.html) which shows how to add a custom chart with group data. Rename the old custom chart example which displays a groupAll to [color swatch](http://dc-js.github.io/dc.js/examples/color-swatch.html).
 
 ## 4.0.3
 * Remove a `filterHandler` special case, and improve the performance of the default filter handler, by Deepak Kumar ([#1660](https://github.com/dc-js/dc.js/pull/1660))
