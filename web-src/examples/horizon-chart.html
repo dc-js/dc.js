@@ -60,14 +60,6 @@
           return this;
       }
 
-      // unused
-      keyAccessor(keyAccessor) {
-          if(!arguments.length)
-              return this._keyAccessor;
-          this._keyAccessor = keyAccessor;
-          return this;
-      }
-
       valueAccessor(valueAccessor) {
           if(!arguments.length)
               return this._valueAccessor;
@@ -151,7 +143,6 @@
           .group(sort_multikey_group(exptRunGroup))
           .colors(n => [d3.schemeBlues, d3.schemeOranges, d3.schemeGreens, d3.schemeReds, d3.schemePurples][n-1][6]) // levels * 2
           .seriesAccessor(d => d.key[0])
-          .keyAccessor(d => d.key[1])
           .valueAccessor(d => d.value - 500)
 
       seriesChart
