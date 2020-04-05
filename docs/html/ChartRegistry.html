@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>dc.js Class: Logger</title>
+	<title>dc.js Class: ChartRegistry</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,16 +86,23 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Logger</h1>
+	<h1 class="page-title">Class: ChartRegistry</h1>
 <section>
 
 <header>
     
         <h2>
-        Logger
+        ChartRegistry
         </h2>
         
-            <div class="class-description"><p>Provides basis logging and deprecation utilities</p></div>
+            <div class="class-description"><p>The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
+and the default group. There is a single global ChartRegistry object named <code>chartRegistry</code></p>
+<p>A chart group often corresponds to a crossfilter instance. It specifies
+the set of charts which should be updated when a filter changes on one of the charts or when the
+global functions <a href="global.html#filterAll">filterAll</a>, <a href="global.html#refocusAll">refocusAll</a>,
+<a href="global.html#renderAll">renderAll</a>, <a href="global.html#redrawAll">redrawAll</a>, or chart functions
+baseMixin.renderGroup,
+baseMixin.redrawGroup are called.</p></div>
         
     
 </header>
@@ -107,7 +114,7 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Logger"><span class="type-signature"></span>new Logger()</h4>
+    <h4 class="name" id="ChartRegistry"><span class="type-signature"></span>new ChartRegistry()</h4>
     
     
 </dt>
@@ -157,8 +164,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="core_logger.js.html">core/logger.js</a>,
-				 <a href="core_logger.js.html#sunlight-1-line-6">line 6</a>
+				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
+				 <a href="core_chart-registry.js.html#sunlight-1-line-16">line 16</a>
 			</li>
 		</ul>
 	</dd>
@@ -195,92 +202,11 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="Logger.html">Logger</a></dt>
-            <dd></dd>
-        </dl>
-    
 
     
 
     
 
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<hr>
-<dt class="name" id="enableDebugLog">
-    <h4 id="enableDebugLog"><span class="type-signature"></span>enableDebugLog<span class="type-signature"></span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Enable debug level logging. Set to <code>false</code> by default.</p>
-    </div>
-    
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="core_logger.js.html">core/logger.js</a>,
-				 <a href="core_logger.js.html#sunlight-1-line-7">line 7</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        </dl>
     
 
     
@@ -290,7 +216,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="debug"><span class="type-signature"></span>debug( [msg])</h4>
+    <h4 class="name" id="clear"><span class="type-signature"></span>clear(group)</h4>
     
     
 </dt>
@@ -298,7 +224,7 @@
 
     
     <div class="description">
-        <p>Put a debug message to console. It is controlled by <code>logger.enableDebugLog</code></p>
+        <p>Clear given group if one is provided, otherwise clears all groups.</p>
     </div>
     
 
@@ -321,8 +247,6 @@
         <th>Type</th>
 
         
-        <th>Argument</th>
-        
 
         
 
@@ -335,7 +259,7 @@
 
         <tr>
             
-                <td class="name"><code>msg</code></td>
+                <td class="name"><code>group</code></td>
             
 
             <td class="type">
@@ -349,20 +273,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Group name</p></td>
         </tr>
 
     
@@ -406,8 +320,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="core_logger.js.html">core/logger.js</a>,
-				 <a href="core_logger.js.html#sunlight-1-line-61">line 61</a>
+				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
+				 <a href="core_chart-registry.js.html#sunlight-1-line-82">line 82</a>
 			</li>
 		</ul>
 	</dd>
@@ -443,7 +357,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Logger.html">Logger</a></span>
+<span class="param-type">undefined</span>
 
 
 
@@ -452,12 +366,6 @@
 
 
         
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">logger.debug(&#x27;Total number of slices: &#x27; + numSlices);</pre>
-
 
     
 </dd>
@@ -466,7 +374,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="warn"><span class="type-signature"></span>warn( [msg])</h4>
+    <h4 class="name" id="deregister"><span class="type-signature"></span>deregister(chart [, group])</h4>
     
     
 </dt>
@@ -474,7 +382,8 @@
 
     
     <div class="description">
-        <p>Put a warning message to console</p>
+        <p>Remove given chart instance from the given group, creating the group if necessary.
+If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</code> will be used.</p>
     </div>
     
 
@@ -511,7 +420,39 @@
 
         <tr>
             
-                <td class="name"><code>msg</code></td>
+                <td class="name"><code>chart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>dc.js chart instance</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
             
 
             <td class="type">
@@ -538,7 +479,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Group name</p></td>
         </tr>
 
     
@@ -582,8 +523,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="core_logger.js.html">core/logger.js</a>,
-				 <a href="core_logger.js.html#sunlight-1-line-25">line 25</a>
+				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
+				 <a href="core_chart-registry.js.html#sunlight-1-line-67">line 67</a>
 			</li>
 		</ul>
 	</dd>
@@ -619,7 +560,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Logger.html">Logger</a></span>
+<span class="param-type">undefined</span>
 
 
 
@@ -628,12 +569,6 @@
 
 
         
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">logger.warn(&#x27;Invalid use of .tension on CurveLinear&#x27;);</pre>
-
 
     
 </dd>
@@ -642,7 +577,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="warnOnce"><span class="type-signature"></span>warnOnce( [msg])</h4>
+    <h4 class="name" id="has"><span class="type-signature"></span>has(chart)</h4>
     
     
 </dt>
@@ -650,7 +585,7 @@
 
     
     <div class="description">
-        <p>Put a warning message to console. It will warn only on unique messages.</p>
+        <p>Determine if a given chart instance resides in any group in the registry.</p>
     </div>
     
 
@@ -673,8 +608,6 @@
         <th>Type</th>
 
         
-        <th>Argument</th>
-        
 
         
 
@@ -687,13 +620,13 @@
 
         <tr>
             
-                <td class="name"><code>msg</code></td>
+                <td class="name"><code>chart</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">String</span>
+<span class="param-type">Object</span>
 
 
 
@@ -701,20 +634,10 @@
             </td>
 
             
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
-            
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>dc.js chart instance</p></td>
         </tr>
 
     
@@ -758,8 +681,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="core_logger.js.html">core/logger.js</a>,
-				 <a href="core_logger.js.html#sunlight-1-line-44">line 44</a>
+				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
+				 <a href="core_chart-registry.js.html#sunlight-1-line-38">line 38</a>
 			</li>
 		</ul>
 	</dd>
@@ -795,7 +718,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="Logger.html">Logger</a></span>
+<span class="param-type">Boolean</span>
 
 
 
@@ -806,10 +729,378 @@
         
 
     
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">logger.warnOnce(&#x27;Invalid use of .tension on CurveLinear&#x27;);</pre>
+</dd>
 
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="list"><span class="type-signature"></span>list( [group])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Get an array of each chart instance in the given group.
+If no group is provided, the charts in the default group are returned.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Group name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
+				 <a href="core_chart-registry.js.html#sunlight-1-line-96">line 96</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Array.&lt;Object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="register"><span class="type-signature"></span>register(chart [, group])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Add given chart instance to the given group, creating the group if necessary.
+If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</code> will be used.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>dc.js chart instance</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Group name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
+				 <a href="core_chart-registry.js.html#sunlight-1-line-54">line 54</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -868,7 +1159,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Fri Mar 6th 2020
+		on Sun Apr 5th 2020
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
