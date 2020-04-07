@@ -54,7 +54,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#chartRegistry">chartRegistry</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#deregisterAllCharts">deregisterAllCharts</a></li><li><a href="global.html#deregisterChart">deregisterChart</a></li><li><a href="global.html#elasticRadius">elasticRadius</a></li><li><a href="global.html#filterAll">filterAll</a></li><li><a href="global.html#hasChart">hasChart</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#redrawAll">redrawAll</a></li><li><a href="global.html#refocusAll">refocusAll</a></li><li><a href="global.html#registerChart">registerChart</a></li><li><a href="global.html#renderAll">renderAll</a></li><li><a href="global.html#transition">transition</a></li>
+					<li><a href="global.html#chartRegistry">chartRegistry</a></li><li><a href="global.html#config">config</a></li><li><a href="global.html#deregisterAllCharts">deregisterAllCharts</a></li><li><a href="global.html#deregisterChart">deregisterChart</a></li><li><a href="global.html#filterAll">filterAll</a></li><li><a href="global.html#hasChart">hasChart</a></li><li><a href="global.html#pluck">pluck</a></li><li><a href="global.html#redrawAll">redrawAll</a></li><li><a href="global.html#refocusAll">refocusAll</a></li><li><a href="global.html#registerChart">registerChart</a></li><li><a href="global.html#renderAll">renderAll</a></li><li><a href="global.html#transition">transition</a></li>
 				</ul>
 			</li>
 			
@@ -302,20 +302,82 @@ and the default group. See <a href="ChartRegistry.html">ChartRegistry</a> for it
     
 </dd>
 
-        
+        </dl>
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
             
 <hr>
-<dt class="name" id="deregisterAllCharts">
-    <h4 id="deregisterAllCharts"><span class="type-signature">&lt;constant> </span>deregisterAllCharts<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="deregisterAllCharts"><span class="type-signature"></span>deregisterAllCharts(group)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Clear given group if one is provided, otherwise clears all groups.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Group name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -355,7 +417,7 @@ and the default group. See <a href="ChartRegistry.html">ChartRegistry</a> for it
 		<ul class="dummy">
 			<li>
 				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
-				 <a href="core_chart-registry.js.html#sunlight-1-line-144">line 144</a>
+				 <a href="core_chart-registry.js.html#sunlight-1-line-142">line 142</a>
 			</li>
 		</ul>
 	</dd>
@@ -370,17 +432,50 @@ and the default group. See <a href="ChartRegistry.html">ChartRegistry</a> for it
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="deregisterChart">
-    <h4 id="deregisterChart"><span class="type-signature">&lt;constant> </span>deregisterChart<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="deregisterChart"><span class="type-signature"></span>deregisterChart(chart [, group])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Remove given chart instance from the given group, creating the group if necessary.
@@ -391,6 +486,105 @@ If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</
     
 
     
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>dc.js chart instance</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Group name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -426,7 +620,7 @@ If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</
 		<ul class="dummy">
 			<li>
 				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
-				 <a href="core_chart-registry.js.html#sunlight-1-line-126">line 126</a>
+				 <a href="core_chart-registry.js.html#sunlight-1-line-120">line 120</a>
 			</li>
 		</ul>
 	</dd>
@@ -441,17 +635,50 @@ If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="filterAll">
-    <h4 id="filterAll"><span class="type-signature">&lt;constant> </span>filterAll<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="filterAll"><span class="type-signature"></span>filterAll( [group])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Clear all filters on all charts within the given chart group. If the chart group is not given then
@@ -462,6 +689,73 @@ only charts that belong to the default chart group will be reset.</p>
     
 
     
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -497,7 +791,7 @@ only charts that belong to the default chart group will be reset.</p>
 		<ul class="dummy">
 			<li>
 				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
-				 <a href="core_chart-registry.js.html#sunlight-1-line-154">line 154</a>
+				 <a href="core_chart-registry.js.html#sunlight-1-line-152">line 152</a>
 			</li>
 		</ul>
 	</dd>
@@ -512,17 +806,50 @@ only charts that belong to the default chart group will be reset.</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="hasChart">
-    <h4 id="hasChart"><span class="type-signature">&lt;constant> </span>hasChart<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="hasChart"><span class="type-signature"></span>hasChart(chart)</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Determine if a given chart instance resides in any group in the registry.</p>
@@ -532,6 +859,61 @@ only charts that belong to the default chart group will be reset.</p>
     
 
     
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>dc.js chart instance</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -567,7 +949,7 @@ only charts that belong to the default chart group will be reset.</p>
 		<ul class="dummy">
 			<li>
 				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
-				 <a href="core_chart-registry.js.html#sunlight-1-line-135">line 135</a>
+				 <a href="core_chart-registry.js.html#sunlight-1-line-132">line 132</a>
 			</li>
 		</ul>
 	</dd>
@@ -582,17 +964,50 @@ only charts that belong to the default chart group will be reset.</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Boolean</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="pluck">
-    <h4 id="pluck"><span class="type-signature">&lt;constant> </span>pluck<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="pluck"><span class="type-signature"></span>pluck(n [, f])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Returns a function that given a string property name, can be used to pluck the property off an object.  A function
@@ -600,6 +1015,105 @@ can be passed as the second argument to also alter the data being returned.</p>
 <p>This can be a useful shorthand method to create accessor functions.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>n</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>f</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -639,7 +1153,7 @@ can be passed as the second argument to also alter the data being returned.</p>
 		<ul class="dummy">
 			<li>
 				<a href="core_utils.js.html">core/utils.js</a>,
-				 <a href="core_utils.js.html#sunlight-1-line-28">line 28</a>
+				 <a href="core_utils.js.html#sunlight-1-line-7">line 7</a>
 			</li>
 		</ul>
 	</dd>
@@ -652,6 +1166,38 @@ can be passed as the second argument to also alter the data being returned.</p>
 	
 </dl>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">function</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Examples</h5>
@@ -675,12 +1221,13 @@ selectAll(&#x27;.circle&#x27;).data(...).x(xPosition);</pre>
         
             
 <hr>
-<dt class="name" id="redrawAll">
-    <h4 id="redrawAll"><span class="type-signature">&lt;constant> </span>redrawAll<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="redrawAll"><span class="type-signature"></span>redrawAll( [group])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Redraw all charts belong to the given chart group. If the chart group is not given then only charts
@@ -693,6 +1240,73 @@ from scratch.</p>
     
 
     
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -728,7 +1342,7 @@ from scratch.</p>
 		<ul class="dummy">
 			<li>
 				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
-				 <a href="core_chart-registry.js.html#sunlight-1-line-201">line 201</a>
+				 <a href="core_chart-registry.js.html#sunlight-1-line-200">line 200</a>
 			</li>
 		</ul>
 	</dd>
@@ -743,17 +1357,50 @@ from scratch.</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="refocusAll">
-    <h4 id="refocusAll"><span class="type-signature">&lt;constant> </span>refocusAll<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="refocusAll"><span class="type-signature"></span>refocusAll( [group])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
@@ -764,6 +1411,73 @@ not given then only charts that belong to the default chart group will be reset.
     
 
     
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -799,7 +1513,7 @@ not given then only charts that belong to the default chart group will be reset.
 		<ul class="dummy">
 			<li>
 				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
-				 <a href="core_chart-registry.js.html#sunlight-1-line-167">line 167</a>
+				 <a href="core_chart-registry.js.html#sunlight-1-line-166">line 166</a>
 			</li>
 		</ul>
 	</dd>
@@ -814,17 +1528,50 @@ not given then only charts that belong to the default chart group will be reset.
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="registerChart">
-    <h4 id="registerChart"><span class="type-signature">&lt;constant> </span>registerChart<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="registerChart"><span class="type-signature"></span>registerChart(chart [, group])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Add given chart instance to the given group, creating the group if necessary.
@@ -835,6 +1582,105 @@ If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</
     
 
     
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chart</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>dc.js chart instance</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>Group name</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -870,7 +1716,7 @@ If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</
 		<ul class="dummy">
 			<li>
 				<a href="core_chart-registry.js.html">core/chart-registry.js</a>,
-				 <a href="core_chart-registry.js.html#sunlight-1-line-115">line 115</a>
+				 <a href="core_chart-registry.js.html#sunlight-1-line-108">line 108</a>
 			</li>
 		</ul>
 	</dd>
@@ -885,23 +1731,123 @@ If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="renderAll">
-    <h4 id="renderAll"><span class="type-signature">&lt;constant> </span>renderAll<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="renderAll"><span class="type-signature"></span>renderAll( [group])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Re-render all charts belong to the given chart group. If the chart group is not given then only
 charts that belong to the default chart group will be re-rendered.</p>
     </div>
     
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>group</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
 
     
 
@@ -956,101 +1902,56 @@ charts that belong to the default chart group will be re-rendered.</p>
 
 
     
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">undefined</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
 </dd>
 
         
             
 <hr>
-<dt class="name" id="transition">
-    <h4 id="transition"><span class="type-signature">&lt;constant> </span>transition<span class="type-signature"></span></h4>
-
+<dt>
+    <h4 class="name" id="transition"><span class="type-signature"></span>transition(selection [, duration] [, delay] [, name])</h4>
+    
     
 </dt>
 <dd>
+
     
     <div class="description">
         <p>Start a transition on a selection if transitions are globally enabled
 (disableTransitions is false) and the duration is greater than zero; otherwise return
 the selection. Since most operations are the same on a d3 selection and a d3 transition, this
 allows a common code path for both cases.</p>
-    </div>
-    
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="core_core.js.html">core/core.js</a>,
-				 <a href="core_core.js.html#sunlight-1-line-17">line 17</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
-            
-<hr>
-<dt>
-    <h4 class="name" id="elasticRadius"><span class="type-signature"></span>elasticRadius( [elasticRadius])</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        <p>Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.</p>
     </div>
     
 
@@ -1089,13 +1990,52 @@ feature is turned on, then bubble radii will be automatically rescaled to fit th
 
         <tr>
             
-                <td class="name"><code>elasticRadius</code></td>
+                <td class="name"><code>selection</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Boolean</span>
+<span class="param-type">d3.selection</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>the selection to be transitioned</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>duration</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+|
+
+<span class="param-type">function</span>
 
 
 
@@ -1117,12 +2057,94 @@ feature is turned on, then bubble radii will be automatically rescaled to fit th
             
                 <td class="default">
                 
-                    false
+                    250
                 
                 </td>
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>the duration of the transition in milliseconds, a
+function returning the duration, or 0 for no transition</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>delay</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+|
+
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>the delay of the transition in milliseconds, or a function
+returning the delay, or 0 for no delay</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>name</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">String</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+                <td class="default">
+                
+                </td>
+            
+
+            <td class="description last"><p>the name of the transition (if concurrent transitions on the same
+elements are needed)</p></td>
         </tr>
 
     
@@ -1166,8 +2188,8 @@ feature is turned on, then bubble radii will be automatically rescaled to fit th
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="base_bubble-mixin.js.html">base/bubble-mixin.js</a>,
-				 <a href="base_bubble-mixin.js.html#sunlight-1-line-72">line 72</a>
+				<a href="core_core.js.html">core/core.js</a>,
+				 <a href="core_core.js.html#sunlight-1-line-3">line 3</a>
 			</li>
 		</ul>
 	</dd>
@@ -1203,10 +2225,10 @@ feature is turned on, then bubble radii will be automatically rescaled to fit th
     </dt>
     <dd>
         
-<span class="param-type">Boolean</span>
+<span class="param-type">d3.transition</span>
 |
 
-<span class="param-type"><a href="BubbleChart.html">BubbleChart</a></span>
+<span class="param-type">d3.selection</span>
 
 
 
@@ -1273,7 +2295,7 @@ feature is turned on, then bubble radii will be automatically rescaled to fit th
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
 	
-		on Sun Apr 5th 2020
+		on Tue Apr 7th 2020
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

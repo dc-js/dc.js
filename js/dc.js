@@ -290,6 +290,7 @@
   /**
    * Add given chart instance to the given group, creating the group if necessary.
    * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+   * @function registerChart
    * @param {Object} chart dc.js chart instance
    * @param {String} [group] Group name
    * @return {undefined}
@@ -301,6 +302,7 @@
   /**
    * Remove given chart instance from the given group, creating the group if necessary.
    * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+   * @function deregisterChart
    * @param {Object} chart dc.js chart instance
    * @param {String} [group] Group name
    * @return {undefined}
@@ -311,6 +313,7 @@
 
   /**
    * Determine if a given chart instance resides in any group in the registry.
+   * @function hasChart
    * @param {Object} chart dc.js chart instance
    * @returns {Boolean}
    */
@@ -320,6 +323,7 @@
 
   /**
    * Clear given group if one is provided, otherwise clears all groups.
+   * @function deregisterAllCharts
    * @param {String} group Group name
    * @return {undefined}
    */
@@ -330,6 +334,7 @@
   /**
    * Clear all filters on all charts within the given chart group. If the chart group is not given then
    * only charts that belong to the default chart group will be reset.
+   * @function filterAll
    * @param {String} [group]
    * @return {undefined}
    */
@@ -343,6 +348,7 @@
   /**
    * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
    * not given then only charts that belong to the default chart group will be reset.
+   * @function refocusAll
    * @param {String} [group]
    * @return {undefined}
    */
@@ -358,6 +364,7 @@
   /**
    * Re-render all charts belong to the given chart group. If the chart group is not given then only
    * charts that belong to the default chart group will be re-rendered.
+   * @function renderAll
    * @param {String} [group]
    * @return {undefined}
    */
@@ -377,6 +384,7 @@
    * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
    * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
    * from scratch.
+   * @function redrawAll
    * @param {String} [group]
    * @return {undefined}
    */
@@ -396,6 +404,7 @@
    * ({@link disableTransitions} is false) and the duration is greater than zero; otherwise return
    * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
    * allows a common code path for both cases.
+   * @function transition
    * @param {d3.selection} selection - the selection to be transitioned
    * @param {Number|Function} [duration=250] - the duration of the transition in milliseconds, a
    * function returning the duration, or 0 for no transition
@@ -676,6 +685,7 @@
    *     return this.radius + x;
    * });
    * selectAll('.circle').data(...).x(xPosition);
+   * @function pluck
    * @param {String} n
    * @param {Function} [f]
    * @returns {Function}
@@ -2831,6 +2841,8 @@
       /**
            * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
            * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+           * @memberof BubbleMixin
+           * @instance
            * @param {Boolean} [elasticRadius=false]
            * @returns {Boolean|BubbleChart}
            */
