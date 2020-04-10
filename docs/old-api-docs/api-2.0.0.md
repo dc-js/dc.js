@@ -371,7 +371,7 @@ var chart2 = dc.pieChart('#chart-container2', 'chartGroupA');
 
 #### pieChart.slicesCap([cap]) ⇒ <code>Number</code> &#124; <code>[pieChart](#dc.pieChart)</code>
 Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
-value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+value from high to low. Other slices exceeding the cap will be rolled up into one single *Others* slice.
 
 **Kind**: instance method of <code>[pieChart](#dc.pieChart)</code>  
 

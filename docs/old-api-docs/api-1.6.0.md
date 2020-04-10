@@ -594,7 +594,7 @@ var chart2 = dc.pieChart("#chart-container2", "chartGroupA");
 
 #### .slicesCap([cap])
 Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
- Other slices exeeding the cap will be rolled up into one single *Others* slice.
+ Other slices exceeding the cap will be rolled up into one single *Others* slice.
 
 #### .innerRadius([innerRadius])
 Get or set the inner radius on a particular pie chart instance. If inner radius is greater than 0px then the pie chart

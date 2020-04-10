@@ -488,7 +488,7 @@ Default min angle is 0.5.
 
 #### .slicesCap([cap])
 Get or set the maximum number of slices the pie chart will generate. Slices are ordered by its value from high to low.
- Other slices exeeding the cap will be rolled up into one single *Others* slice.
+ Other slices exceeding the cap will be rolled up into one single *Others* slice.
 
 #### .othersGrouper([grouperFunction])
 Get or set the grouper funciton that will perform the insersion of data for the *Others* slice if the slices cap is
