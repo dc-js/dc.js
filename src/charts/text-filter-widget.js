@@ -65,7 +65,7 @@ export class TextFilterWidget extends BaseMixin {
         this._input.on('input', function () {
             chart.dimension().filterFunction(chart._filterFunctionFactory(this.value));
             events.trigger(() => {
-                redrawAll();
+                redrawAll(chartGroup);
             }, constants.EVENT_DELAY);
         });
 
