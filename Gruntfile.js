@@ -290,7 +290,7 @@ module.exports = function (grunt) {
                     title: 'Index of dc.js examples',
                     heading: 'Examples of using dc.js',
                     description: 'An attempt to present a simple example of each chart type.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/examples'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/examples'
                 },
                 files: [
                     {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.websrc %>/examples/*.html']}
@@ -304,7 +304,7 @@ module.exports = function (grunt) {
                     heading: 'Eyeball tests for dc.js transitions',
                     description: 'Transitions can only be tested by eye. ' +
                         'These pages automate the transitions so they can be visually verified.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/transitions'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/transitions'
                 },
                 files: [
                     {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.websrc %>/transitions/*.html']}
@@ -321,7 +321,7 @@ module.exports = function (grunt) {
                         'For the examples with a single chart taking up the entire window, you can add <code>?resize=viewbox</code> ' +
                         'to the URL to test resizing the chart using the ' +
           '<a href="http://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#useViewBoxResizing__anchor">useViewBoxResizing</a> strategy.',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/resizing'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/resizing'
                 },
                 files: [
                     {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.websrc %>/resizing/*.html']}
@@ -335,7 +335,7 @@ module.exports = function (grunt) {
                     heading: 'Interactive test for dc.js chart zoom',
                     description: 'It\'s hard to conceive of a way to test zoom except by trying it. ' +
                         'So this is a substitute for automated tests in this area',
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/master/<%= conf.websrc %>/zoom'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/zoom'
                 },
                 files: [
                     {dest: '<%= conf.web %>/zoom/index.html', src: ['<%= conf.websrc %>/zoom/*.html']}
