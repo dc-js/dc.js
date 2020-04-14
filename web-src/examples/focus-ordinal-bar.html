@@ -17,7 +17,9 @@
   the ordinal values to integers, and then maps the integers back to the values for the
   axis ticks.</p>
 <div id="range"></div>
-<div id="focus"></div>
+<div id="focus">
+  <a class="reset" style="visibility: hidden" href="javascript:focus.filterAll(); dc.redrawAll()">reset</a>
+</div>
 <div id="first-letters"></div>
 
 <script type="text/javascript" src="../js/d3.js"></script>
@@ -84,6 +86,7 @@
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
             .keyAccessor(kv => group.ord2int(kv.key))
+            .controlsUseVisibility(true)
             .centerBar(true)
             .yAxisLabel('counts')
             .elasticY(true)
@@ -102,6 +105,17 @@
         // ordinarily filters to the visible area (and we don't want a brush either)
         var focusFilter = [];
         focus.filterHandler(function() {}); // disable built-in filtering
+        focus.applyFilter = function() { // non-standard method
+            if(focusFilter.length)
+                this.dimension().filterFunction(function(k) {
+                    return focusFilter.includes(k);
+                });
+            else this.dimension().filter(null);
+        };
+        focus.filterAll = function() {
+            focusFilter = [];
+            this.applyFilter();
+        };
         focus.fadeDeselectedArea = function (brushSelection) {
             var _chart = this;
             var bars = _chart.chartBodyG().selectAll('rect.bar');
@@ -124,11 +138,7 @@
                     focusFilter.splice(i, 1);
                 else
                     focusFilter.push(d.data.key);
-                if(focusFilter.length)
-                    chart.dimension().filterFunction(function(k) {
-                        return focusFilter.includes(k);
-                    });
-                else chart.dimension().filter(null);
+                chart.applyFilter();
                 chart.redrawGroup();
             });
         });
