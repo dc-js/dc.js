@@ -38,7 +38,7 @@ function apply_resizing(chart, adjustX, adjustY, onresize) {
             if (chart.rescale) {
                 chart.rescale();
             }
-            chart.redraw();
+            redraw_chart_no_transitions(chart);
         };
     }
 }

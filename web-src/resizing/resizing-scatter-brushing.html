@@ -15,6 +15,7 @@
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
+  <script type="text/javascript" src="dc-restore-transition-duration.js"></script>
   <script type="text/javascript">
 
 const urlParams = new URLSearchParams(window.location.search),
@@ -100,7 +101,7 @@ window.onresize = function() {
         .height(window.innerHeight - fudge)
         .rescale();
 
-    dc.redrawAll();
+    redraw_chart_no_transitions([chart1,chart2]);
 };
 
   </script>

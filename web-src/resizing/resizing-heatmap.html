@@ -15,6 +15,7 @@
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="dc-restore-transition-duration.js"></script>
 <script type="text/javascript">
 
     var chartGroup = "chartGroup";
@@ -136,7 +137,7 @@
                 .height(window.innerHeight/2-fudge)
                 .rescale();
 
-            dc.redrawAll(chartGroup);
+            redraw_chart_no_transitions([heatmapChart, barChart]);
         };
 });
 

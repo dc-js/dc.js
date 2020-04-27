@@ -41,6 +41,7 @@
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
+  <script type="text/javascript" src="dc-restore-transition-duration.js"></script>
   <script type="text/javascript">
 
 const urlParams = new URLSearchParams(window.location.search),
@@ -117,12 +118,13 @@ if(useCanvas) {
     let n=0;
 
 const callback = chart => entries => {
-    chart
-        .width(null)
-        .height(null)
-        .rescale()
-        .redraw();
-};
+    redraw_chart_no_transitions(
+        chart
+            .width(null)
+            .height(null)
+            .rescale());
+    };
+
 new ResizeObserver(callback(chart1)).observe(d3.select('#test1').node());
 new ResizeObserver(callback(chart2)).observe(d3.select('#test2').node());
   </script>
