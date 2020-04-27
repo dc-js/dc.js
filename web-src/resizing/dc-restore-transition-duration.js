@@ -1,14 +1,12 @@
 const restore_getset = (property, value) => f => c => {
-    const self = restore_getset(property, value)(f);
     if(Array.isArray(c))
-        c.forEach(self);
+        c.forEach(restore_getset(property, value)(f));
     else {
-        if(c.children)
-            c.children().forEach(self);
-        const last = c[property]();
-        c[property](value);
+        const cs = c.children ? [c].concat(c.children()) : [c],
+              last = cs.map(c => c[property]());
+        cs.forEach(ch => ch[property](value));
         f(c);
-        c[property](last);
+        cs.forEach(ch => ch[property](last));
     }
     return c;
 };
