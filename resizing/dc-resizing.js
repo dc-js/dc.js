@@ -14,6 +14,11 @@ var find_query = function () {
 }();
 var resizeMode = (find_query('resize') || 'widhei').toLowerCase();
 
+// apply resizing to a chart or charts
+// if resizeMode is on, use viewbox resizing, which stretches the SVG instead of redrawing it
+// otherwise, add a window.onresize handler to set the chart sizes based on the size of the window
+// adjustX and adjustY are either adjustment functions
+// or numbers to subtract from window.innerWidth and window.innerHeight
 function apply_resizing(chart, adjustX, adjustY, onresize) {
     if (resizeMode === 'viewbox') {
         if(Array.isArray(chart))
