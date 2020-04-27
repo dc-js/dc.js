@@ -61,7 +61,7 @@ module.exports = function (grunt) {
                 tasks: ['docs']
             },
             websrc: {
-                files: ['<%= conf.websrc %>/**/*.html'],
+                files: ['<%= conf.websrc %>/**/*.html', '<%= conf.websrc %>/**/*.js'],
                 tasks: ['docs']
             },
             sass: {
