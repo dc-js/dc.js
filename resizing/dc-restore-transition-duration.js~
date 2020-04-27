@@ -1,0 +1,10 @@
+const restore_getset = (property, value) => f => c => {
+    const last = c[property]();
+    c[property](value);
+    f(c);
+    c[property](last);
+    return c;
+};
+
+const no_transitions = (c, f) => restore_getset('transitionDuration', 0);
+const redraw_no_transitions = no_transitions(c => c.redraw());

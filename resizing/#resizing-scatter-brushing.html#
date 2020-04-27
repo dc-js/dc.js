@@ -1,42 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>dc.js - Resizing Scatter Plot using ResizeObserver</title>
+  <title>dc.js - Resizing Scatter Plot Brushing Example</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <style>
-      body,.container {
-          position: absolute;
-          left: 0; top: 0; right: 0; bottom: 0;
-      }
-      .container {
-          display: flex;
-          flex-direction: column;
-      }
-      .controls {
-          flex: 0;
-      }
-      .chart-holder {
-          flex: 1;
-          display: flex;
-          flex-direction: row;
-          min-height: 0;
-      }
-      #test1,#test2 {
-          min-width: 0;
-          flex: 1;
-      }
-    </style>
+    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
 </head>
 <body>
+  <label style="display: inline-block"><input type="checkbox" id="canvas">Use Canvas</label>
   <div class="container">
-    <div class=".controls">
-      <label style="display: inline-block"><input type="checkbox" id="canvas">Use Canvas</label>
-    </div>
-    <div class="chart-holder">
-      <div id="test1"></div>
-      <div id="test2"></div>
-    </div>
+  <div id="test1"></div>
+  <div id="test2"></div>
 
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
@@ -47,9 +21,9 @@
 const urlParams = new URLSearchParams(window.location.search),
     useCanvas = !!urlParams.get('canvas');
 
-d3.select('#canvas').property('checked', useCanvas).on('change', function() {
-    window.location.href = window.location.href.split('?')[0] + (this.checked ? '?canvas=t' : '');
-})
+    d3.select('#canvas').property('checked', useCanvas).on('change', function() {
+        window.location.href = window.location.href.split('?')[0] + (this.checked ? '?canvas=t' : '');
+    })
 
     dc.constants.EVENT_DELAY = 0;
 
@@ -86,8 +60,8 @@ var ndx = crossfilter(data),
 
 var fudge = 40;
 
-chart1.width(null)
-    .height(null)
+chart1.width(window.innerWidth/2 - fudge)
+    .height(window.innerHeight - fudge)
     .useCanvas(useCanvas)
     .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("y")
@@ -97,8 +71,8 @@ chart1.width(null)
     .excludedOpacity(0.5)
     .group(group1);
 
-chart2.width(null)
-    .height(null)
+chart2.width(window.innerWidth/2 - fudge)
+    .height(window.innerHeight - fudge)
     .useCanvas(useCanvas)
     .x(d3.scaleLinear().domain([0, 20]))
     .yAxisLabel("z")
@@ -113,20 +87,10 @@ if(useCanvas) {
     chart2.transitionDuration(0);
 }
 
-    dc.renderAll();
+dc.renderAll();
 
-    let n=0;
+apply_resizing([chart1, chart2], x => x/2 - fudge, fudge);
 
-const callback = chart => entries => {
-    redraw_chart_no_transitions(
-        chart
-            .width(null)
-            .height(null)
-            .rescale());
-    };
-
-new ResizeObserver(callback(chart1)).observe(d3.select('#test1').node());
-new ResizeObserver(callback(chart2)).observe(d3.select('#test2').node());
   </script>
 
 </div>

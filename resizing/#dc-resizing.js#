@@ -34,20 +34,21 @@ function apply_resizing(chart, adjustX, adjustY, onresize) {
         if(!isNaN(adjustY))
             adjustY = (dy => y => y-dy)(adjustY);
         adjustY = adjustY || adjustX || (y => y);
-        chart.forEach(c => c.width(adjustX(window.innerWidth))
-                      .height(adjustY(window.innerHeight)));
+        chart.forEach(c => c.width(window.innerWidth - adjustX)
+                      .height(window.innerHeight - adjustY));
         window.onresize = function () {
             if (onresize) {
-                chart.forEach(onresize);
+                onresize(chart);
             }
             chart.forEach(c => {
-                c.width(adjustX(window.innerWidth))
-                    .height(adjustY(window.innerHeight));
+                c.width(window.innerWidth - adjustX)
+                    .height(window.innerHeight - adjustY);
                 if (c.rescale) {
                     c.rescale();
                 }
-            });
+            }
             redraw_chart_no_transitions(chart);
         };
+        }
     }
 }

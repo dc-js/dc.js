@@ -15,6 +15,8 @@
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
   <script type="text/javascript" src="../js/dc.js"></script>
+  <script type="text/javascript" src="dc-restore-transition-duration.js"></script>
+  <script type="text/javascript" src="dc-resizing.js"></script>
   <script type="text/javascript">
 
 const urlParams = new URLSearchParams(window.location.search),
@@ -88,20 +90,7 @@ if(useCanvas) {
 
 dc.renderAll();
 
-// respond to browser resize (not necessary if width/height is static)
-window.onresize = function() {
-    chart1
-        .width(window.innerWidth/2 - fudge)
-        .height(window.innerHeight - fudge)
-        .rescale();
-
-    chart2
-        .width(window.innerWidth/2 - fudge)
-        .height(window.innerHeight - fudge)
-        .rescale();
-
-    dc.redrawAll();
-};
+apply_resizing([chart1, chart2], x => x/2 - fudge, fudge);
 
   </script>
 
