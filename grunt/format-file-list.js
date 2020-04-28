@@ -17,6 +17,7 @@ module.exports = function (grunt) {
             }
             rows.push(`  <tr>\n${cols.join('\n')}\n  </tr>`);
         }
+        const alsoSee = opts.also ? `<p>Also see ${opts.also.map(cat => `<a href="../${cat}/">${cat}</a>`).join(' &ndash; ')}.</p>`: '';
         const body = `<table class="table">\n${rows.join('\n')}\n</table>`;
         return [
             `<html><head><title>${opts.title}</title>`,
@@ -24,6 +25,7 @@ module.exports = function (grunt) {
             '<body><div class="container">',
             `<h2>${opts.heading}</h2>`,
             `<p>${opts.description}</p>`,
+            alsoSee,
             '<p>Contributions <a href="https://github.com/dc-js/dc.js/blob/master/CONTRIBUTING.md">welcome</a>.',
             `Source <a href="${opts.sourceLink}">`,
             'here</a>.</p>',

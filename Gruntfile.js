@@ -290,6 +290,7 @@ module.exports = function (grunt) {
                     title: 'Index of dc.js examples',
                     heading: 'Examples of using dc.js',
                     description: 'An attempt to present a simple example of each chart type.',
+                    also: ['transitions', 'resizing', 'zoom'],
                     sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/examples'
                 },
                 files: [
@@ -304,6 +305,7 @@ module.exports = function (grunt) {
                     heading: 'Eyeball tests for dc.js transitions',
                     description: 'Transitions can only be tested by eye. ' +
                         'These pages automate the transitions so they can be visually verified.',
+                    also: ['examples', 'resizing', 'zoom'],
                     sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/transitions'
                 },
                 files: [
@@ -321,6 +323,7 @@ module.exports = function (grunt) {
                         'For the examples with a single chart taking up the entire window, you can add <code>?resize=viewbox</code> ' +
                         'to the URL to test resizing the chart using the ' +
           '<a href="http://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#useViewBoxResizing__anchor">useViewBoxResizing</a> strategy.',
+                    also: ['examples', 'transitions', 'zoom'],
                     sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/resizing'
                 },
                 files: [
@@ -335,6 +338,7 @@ module.exports = function (grunt) {
                     heading: 'Interactive test for dc.js chart zoom',
                     description: 'It\'s hard to conceive of a way to test zoom except by trying it. ' +
                         'So this is a substitute for automated tests in this area',
+                    also: ['examples', 'transitions', 'resizing'],
                     sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/zoom'
                 },
                 files: [
