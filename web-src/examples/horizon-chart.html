@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Horizon Chart Example</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <style>
+      #series .axis { display: none; }
+      .dc-chart {float: left}
+    </style>
+</head>
+<body>
+
+<div class="container">
+  <script type="text/javascript" src="header.js"></script>
+
+<div id="horizon"></div>
+<div id="series"></div>
+<div id="expt-pie"></div>
+<div id="speed-pie"></div>
+<div id="run-pie"></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script src="https://unpkg.com/d3-horizon-chart"></script>
+<script type="text/javascript">
+
+  class HorizonChart {
+      constructor(parent, group) {
+          this._group = null;
+          this._colors = null;
+          this._seriesAccessor = null;
+          this._root = d3.select(parent);
+          dc.registerChart(this, group);
+      }
+
+      // initialization functions for user
+
+      group(group) {
+          if(!arguments.length)
+              return this._group;
+          this._group = group;
+          return this;
+      }
+
+      // takes array of colors (not scale)
+      colors(colors) {
+          if(!arguments.length)
+              return this._colors;
+          this._colors = colors;
+          return this;
+      }
+
+      seriesAccessor(seriesAccessor) {
+          if(!arguments.length)
+              return this._seriesAccessor;
+          this._seriesAccessor = seriesAccessor;
+          return this;
+      }
+
+      valueAccessor(valueAccessor) {
+          if(!arguments.length)
+              return this._valueAccessor;
+          this._valueAccessor = valueAccessor;
+          return this;
+      }
+
+      // interface for dc.js chart registry
+
+      render() {
+          this.redraw();
+      }
+
+      redraw() {
+          const nester = d3.nest().key(this._seriesAccessor),
+                nesting = nester.entries(this._group.all());
+          let horizon = this._root.selectAll('.horizon')
+              .data(nesting);
+          horizon.exit().remove();
+          horizon = horizon.enter()
+              .append('div')
+              .attr('class', 'horizon')
+              .merge(horizon);
+          const colors = this._colors,
+                valueAccessor = this._valueAccessor;
+          horizon
+              .each(function(series) {
+                  d3.select(this).selectAll('*').remove();
+                  d3.horizonChart()
+                      .colors(typeof colors === 'function' ? colors(series.key) : colors)
+                      .title(series.key)
+                      .call(this, series.values.map(valueAccessor));
+            });
+      }
+  }
+
+  function sort_multikey_group(group) {
+      return {
+          all: () => {
+              return group.all().slice().sort(
+                  ({key: keyA}, {key: keyB}) => d3.ascending(keyA[0],keyB[0]) || d3.ascending(keyA[1],keyB[1]));
+              // equivalent to
+                  // {
+                  //     if(keyA[0] < keyB[0])
+                  //         return -1;
+                  //     else if(keyA[0] > keyB[0])
+                  //         return 1;
+                  //     return keyA[1] - keyB[1];
+                  // });
+          }
+      };
+  }
+
+  var horizonChart = new HorizonChart("#horizon"),
+      seriesChart = new dc.SeriesChart('#series'),
+      exptPie = new dc.PieChart('#expt-pie'),
+      speedPie = new dc.PieChart('#speed-pie'),
+      runPie = new dc.PieChart('#run-pie');
+
+  d3.csv("morley.csv").then(function(experiments) {
+
+      // stretch out the data by a factor of mult
+      const mult = 40;
+      const experiments2 = d3.range(experiments.length-1).flatMap(i => {
+          if(experiments[i].Expt !== experiments[i+1].Expt)
+              return [];
+          let {Expt, Run, Speed: Speed0} = experiments[i],
+                {Speed: Speed1} = experiments[i+1];
+          Expt = +Expt; Run = +Run; Speed0 = +Speed0; Speed1 = +Speed1;
+          const terp = d3.scaleLinear().range([Speed0, Speed1]);
+          return d3.range(mult).map(j => ({Expt, Run: Run + j/mult, Speed: terp(j/mult)}));
+      });
+      const cf = crossfilter(experiments2);
+      const exptRunDim = cf.dimension(d => [d.Expt, d.Run]);
+      const exptRunGroup = exptRunDim.group().reduceSum(d => d.Speed);
+      const seriesRunDimension = cf.dimension(d => [d.Expt, d.Run]);
+      const seriesRunGroup = seriesRunDimension.group().reduceSum(d => d.Speed);
+      const runFilterDim = cf.dimension(d => d.Run);
+
+      horizonChart
+          .group(sort_multikey_group(exptRunGroup))
+          .colors(n => [d3.schemeBlues, d3.schemeOranges, d3.schemeGreens, d3.schemeReds, d3.schemePurples][n-1][6]) // levels * 2
+          .seriesAccessor(d => d.key[0])
+          .valueAccessor(d => d.value - 500)
+
+      seriesChart
+          .width(760)
+          .height(250)
+          .transitionDuration(0)
+          .margins({left: 0, right: 0, top: 0, bottom: 0})
+          .chart(c => new dc.LineChart(c).curve(d3.curveCardinal).defined(d => d.data.value))
+          .x(d3.scaleLinear().domain([1,20]))
+          .y(d3.scaleLinear().domain(d3.extent(seriesRunGroup.all(), d => d.value-500)))
+          .brushOn(true)
+          .clipPadding(10)
+          .dimension(runFilterDim)
+          .group(seriesRunGroup)
+          .seriesAccessor(d => d.key[0])
+          .keyAccessor(d => d.key[1])
+          .valueAccessor(d => d.value - 500)
+          .legend(dc.legend().x(350).y(180).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
+
+      const exptDim = cf.dimension(d => d.Expt), exptGroup = exptDim.group();
+
+      exptPie
+          .width(250)
+          .height(250)
+          .colors(d3.scaleOrdinal().domain(1,6).range(d3.schemeCategory10))
+          .dimension(exptDim)
+          .group(exptGroup);
+
+      const speeds = ['low', 'medium low', 'medium', 'medium high', 'high'];
+      const quantizeSpeed = d3.scaleQuantize()
+          .domain(d3.extent(experiments2, d => d.Speed))
+          .range(speeds);
+      const quantizeSpeedDim = cf.dimension(d => quantizeSpeed(d.Speed)),
+          quantizeSpeedGroup = quantizeSpeedDim.group();
+
+      speedPie
+          .width(250)
+          .height(250)
+          .ordering(d => speeds.indexOf(d.key))
+          .colors(d3.scaleOrdinal().domain(speeds).range(d3.schemeRdYlGn[speeds.length].slice().reverse()))
+                 // range(d3.range(0, 1, 1/speeds.length).map(d3.interpolateTurbo)))
+          .minAngleForLabel(0)
+          .dimension(quantizeSpeedDim)
+          .group(quantizeSpeedGroup);
+
+      speedPie.on('pretransition', c => {
+          c.select('.pie-label._2').style('fill', '#422518');
+      });
+
+      const runDim = cf.dimension(d => Math.floor(d.Run)), runGroup = runDim.group();
+
+      runPie
+          .width(250)
+          .height(250)
+          .colors(d3.scaleOrdinal().domain(d3.range(1,21)).range(d3.range(0,29).map(d => {
+              const x = (d+10)*255/29;
+              return `rgb(${x},${x},${x})`;
+          })))
+          .ordering(d => d.key)
+          .minAngleForLabel(0)
+          .dimension(runDim)
+          .group(runGroup);
+      runPie.on('pretransition', c => {
+          for(let i of d3.range(15,20))
+              c.select(`.pie-label._${i}`).style('fill', 'darkgrey');
+      });
+
+      dc.renderAll();
+
+  });
+</script>
+
+</div>
+</body>
+</html>

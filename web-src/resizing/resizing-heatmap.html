@@ -15,6 +15,8 @@
 <script type="text/javascript" src="../js/d3.js"></script>
 <script type="text/javascript" src="../js/crossfilter.js"></script>
 <script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript" src="dc-restore-transition-duration.js"></script>
+<script type="text/javascript" src="dc-resizing.js"></script>
 <script type="text/javascript">
 
     var chartGroup = "chartGroup";
@@ -126,18 +128,7 @@
                 .centerBar(true);
         barChart.render();
 
-        // respond to browser resize (not necessary if width/height is static)
-        window.onresize = function() {
-            heatmapChart
-                .width(window.innerWidth-20)
-                .height(window.innerHeight/2-fudge);
-            barChart
-                .width(window.innerWidth-20)
-                .height(window.innerHeight/2-fudge)
-                .rescale();
-
-            dc.redrawAll(chartGroup);
-        };
+        apply_resizing([heatmapChart, barChart], 20, y => y/2-fudge);
 });
 
 </script>

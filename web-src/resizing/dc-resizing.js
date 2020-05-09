@@ -12,33 +12,47 @@ var find_query = function () {
         return _map[field] || null;
     };
 }();
-var resizeMode = find_query('resize') || 'widhei';
+var resizeMode = (find_query('resize') || 'widhei').toLowerCase();
 
+// apply resizing to a chart or charts
+// if resizeMode is on, use viewbox resizing, which stretches the SVG instead of redrawing it
+// otherwise, add a window.onresize handler to set the chart sizes based on the size of the window
+// adjustX and adjustY are either adjustment functions
+// or numbers to subtract from window.innerWidth and window.innerHeight
 function apply_resizing(chart, adjustX, adjustY, onresize) {
-    if (resizeMode.toLowerCase() === 'viewbox') {
-        chart
-            .width(600)
-            .height(400)
-            .useViewBoxResizing(true);
-        d3.select(chart.anchor()).classed('fullsize', true);
+    if (resizeMode === 'viewbox') {
+        if(Array.isArray(chart))
+            chart.forEach(c => apply_resizing(c, adjustX, adjustY, onresize));
+        else {
+            chart
+                .width(600)
+                .height(400)
+                .useViewBoxResizing(true);
+                d3.select(chart.anchor()).classed('fullsize', true);
+        }
     } else {
-        adjustX = adjustX || 0;
-        adjustY = adjustY || adjustX || 0;
-        chart
-            .width(window.innerWidth - adjustX)
-            .height(window.innerHeight - adjustY);
+        if(!Array.isArray(chart))
+            chart = [chart];
+        if(!isNaN(adjustX))
+            adjustX = (dx => x => x-dx)(adjustX);
+        adjustX = adjustX || (x => x);
+        if(!isNaN(adjustY))
+            adjustY = (dy => y => y-dy)(adjustY);
+        adjustY = adjustY || adjustX || (y => y);
+        chart.forEach(c => c.width(adjustX(window.innerWidth))
+                      .height(adjustY(window.innerHeight)));
         window.onresize = function () {
             if (onresize) {
-                onresize(chart);
+                chart.forEach(onresize);
             }
-            chart
-                .width(window.innerWidth - adjustX)
-                .height(window.innerHeight - adjustY);
-
-            if (chart.rescale) {
-                chart.rescale();
-            }
-            chart.redraw();
+            chart.forEach(c => {
+                c.width(adjustX(window.innerWidth))
+                    .height(adjustY(window.innerHeight));
+                if (c.rescale) {
+                    c.rescale();
+                }
+            });
+            redraw_chart_no_transitions(chart);
         };
     }
 }
