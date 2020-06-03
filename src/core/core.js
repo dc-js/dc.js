@@ -5,6 +5,7 @@ import {config} from './config';
  * ({@link disableTransitions} is false) and the duration is greater than zero; otherwise return
  * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
  * allows a common code path for both cases.
+ * @function transition
  * @param {d3.selection} selection - the selection to be transitioned
  * @param {Number|Function} [duration=250] - the duration of the transition in milliseconds, a
  * function returning the duration, or 0 for no transition

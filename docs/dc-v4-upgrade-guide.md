@@ -28,22 +28,22 @@ Please raise an issue on GitHub if you run into problems not covered here!
 
 - Packages for some variables/classes have changed:
 
-    - `dc.dateFormat` --> `dc.config.dateFormat`
-    - `dc.disableTransitions` --> `dc.config.disableTransitions`
-    - `dc.errors.InvalidStateException` --> `dc.InvalidStateException`
-    - `dc.errors.BadArgumentException` --> `dc.BadArgumentException`
+    - `dc.dateFormat` &#10137; `dc.config.dateFormat`
+    - `dc.disableTransitions` &#10137; `dc.config.disableTransitions`
+    - `dc.errors.InvalidStateException` &#10137; `dc.InvalidStateException`
+    - `dc.errors.BadArgumentException` &#10137; `dc.BadArgumentException`
 
 - Functions from `dc.round` have been removed.
   Please change as follows:
 
-    - `dc.round.floor` --> `Math.floor`
-    - `dc.round.round` --> `Math.round`
-    - `dc.round.ceil` --> `Math.ceil`
+    - `dc.round.floor` &#10137; `Math.floor`
+    - `dc.round.round` &#10137; `Math.round`
+    - `dc.round.ceil` &#10137; `Math.ceil`
 
-- The previous way of instantiating a chart is still supported.
+- The previous functions for instantiating charts are still supported.
   However, it is recommended to use the `new` operator instead. For example:
 
-    - `dc.pieChart(parent, chartGroup)` --> `new dc.PieChart(parent, chartGroup)`
+    - `dc.pieChart(parent, chartGroup)` &#10137; `new dc.PieChart(parent, chartGroup)`
 
 - In dcv4, inside a `dc` chart functions expect `this` to be the chart
   instance. However `d3` sets it to the d3 element.
@@ -52,52 +52,70 @@ Please raise an issue on GitHub if you run into problems not covered here!
 
 ```javascript
 chart.on('renderlet', function (_chart) {
-                          _chart.selectAll('rect.bar').on('click', _chart.onClick);
-                      });
+    _chart.selectAll('rect.bar').on('click', _chart.onClick);
+});
 ```
 
 Change it to:
 
 ```javascript
 chart.on('renderlet', function (_chart) {
-                          _chart.selectAll('rect.bar').on('click', d => _chart.onClick(d));
-                      });
+    _chart.selectAll('rect.bar').on('click', d => _chart.onClick(d));
+});
 ```
 
-- The following synonyms (from the 2.0 migration) have been removed:
+- The mixins no longer have instantiation functions:
 
-    - `dc.abstractBubbleChart` --> `dc.bubbleMixin`
-    - `dc.baseChart` --> `dc.baseMixin`
-    - `dc.capped` --> `dc.capMixin`
-    - `dc.colorChart` --> `dc.colorMixin`
-    - `dc.coordinateGridChart` --> `dc.coordinateGridMixin`
-    - `dc.marginable` --> `dc.marginMixin`
-    - `dc.stackableChart` --> `dc.stackMixin`
+    - the mixin classes must be instantiated with `new`
+    - instead of passing a chart *instance* to be initialized, new classes extend mixins
+    - the Bubble, Cap, and Color mixins take a base mixin *class* to extend
+    - the CoordinateGrid, Margin, and Stack mixins extend the mixins they were used with in v3
+
+  Old synonyms for the mixins from v1.0 have been removed.
+
+  For example,
+
+    - `var _chart = dc.bubbleMixin(dc.coordinateGridMixin({})` (or `dc.abstractBubbleChart`)\
+    &#10137; `class ___ extends dc.BubbleMixin(dc.CoordinateGridMixin)`
+    - `dc.baseMixin` (or `dc.baseChart`) &#10137; `new dc.BaseMixin`
+    - `var _chart = dc.capMixin(dc.colorMixin(dc.baseMixin({})));` (or `dc.capped`, `dc.colorChart`))\
+    &#10137; `class ___ extends dc.CapMixin(dc.ColorMixin(dc.BaseMixin))`
+    - `var _chart = dc.coordinateGridMixin({})` (or `dc.coordinateGridChart`)\
+    &#10137; `class ___ extends dc.CoordinateGridChart`
+    - `var _chart = dc.colorMixin(dc.marginMixin(dc.baseMixin(_chart)))` (or `dc.marginable`)\
+    &#10137; `class ___ extends dc.ColorMixin(dc.MarginMixin)`
+    - `var _chart = dc.stackMixin(dc.coordinateGridMixin({}))` (or `dc.stackableChart`)\
+    &#10137; `class ___ extends StackMixin`
+
+  See [this commit in dc.leaflet.js](https://github.com/dc-js/dc.leaflet.js/commit/c086a04c1dbf879fca70195c0a2fdafbf191355c)
+  (v0.5.0) for an example of using ES5 closure "classes" with dc@4.
 
 - `dc.override` has been removed.
    It was used to override a method in an object (typically a chart).
    You can either create a derived class extending the chart class,
    or you can override specific methods on your instance of a chart, e.g.:
-   
+
 ```javascript
         // Using inheritance
         class MyLineChart extends dc.LineChart {
             yAxisMin () {
-                // you can access super.yAxisMin() in this approach
-                const min = d3.min(this.data(), layer => d3.min(layer.values, p => p.y + p.y0));
-                return dc.utils.subtract(min, this.yAxisPadding());
+                const ymin = super.yAxisMin();
+                if(ymin < 0) ymin = 0;
+                return ymin;
             }
         }
         const chart01 = new MyLineChart('#chart01');
-    
+
         // Or, using direct assignment
         const chart02 = new dc.BarChart('#chart02');
+        const super_yAxisMin = chart02.yAxisMin;
         chart02.yAxisMin = function() {
-            const min = d3.min(this.data(), layer => d3.min(layer.values, p => p.y + p.y0));
-            return dc.utils.subtract(min, this.yAxisPadding());
+            const ymin = super_yAxisMin.call(this);
+            if(ymin < 0) ymin = 0;
+            return ymin;
         };
 ```
-   Please see: 
+   Please see:
    http://dc-js.github.io/dc.js/examples/focus-dynamic-interval.html
    and http://dc-js.github.io/dc.js/examples/stacked-bar.html
    for example.

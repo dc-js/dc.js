@@ -1,3 +1,11 @@
+## 4.0.4
+* Add a simple [linear regression example](http://dc-js.github.io/dc.js/examples/regression.html).
+* Add a [horizon chart example](http://dc-js.github.io/dc.js/examples/horizon-chart.html) which shows how to add a custom chart with group data. Rename the old custom chart example which displays a groupAll to [color swatch](http://dc-js.github.io/dc.js/examples/color-swatch.html).
+
+## 4.0.3
+* Remove a `filterHandler` special case, and improve the performance of the default filter handler, by Deepak Kumar ([#1660](https://github.com/dc-js/dc.js/pull/1660))
+* Merge sunburst rounding error fixes from 3.2.1
+
 ## 4.0.2
 Fix bugs in previous version
 
@@ -10,6 +18,10 @@ Merges sunburst charts from 3.2.0
 IE is no longer supported. dc.js will not support transpilation. Stick with dc@3 for IE support.
 
 The API is mostly compatible, but there are a few breaking changes - see the [v4 upgrade guide](https://github.com/dc-js/dc.js/blob/develop/docs/dc-v4-upgrade-guide.md) for details.
+
+## 3.2.1
+* Fix rounding issue with equal ring sizes, by hofmeister ([#1662](https://github.com/dc-js/dc.js/pull/1662) /  ([#1661](https://github.com/dc-js/dc.js/issues/1661))
+
 
 ## 3.2.0
 * Support for general customizable ring sizes on the sunburst chart, by hofmeister ([#1625](https://github.com/dc-js/dc.js/pull/1655) /  ([#1511](https://github.com/dc-js/dc.js/issues/1511))

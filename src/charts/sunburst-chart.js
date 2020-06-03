@@ -449,7 +449,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             }
 
             const portionsSum = d3.sum(relativeSizes);
-            if (portionsSum !== 1) {
+            if (Math.abs(portionsSum - 1) > dc.constants.NEGLIGIBLE_NUMBER) {
                 throw new BadArgumentException(
                     `relativeRingSizes : portions must add up to 1, but sum was ${portionsSum}`);
             }

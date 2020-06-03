@@ -12,8 +12,8 @@
 and the default group. There is a single global ChartRegistry object named <code>chartRegistry</code></p>
 <p>A chart group often corresponds to a crossfilter instance. It specifies
 the set of charts which should be updated when a filter changes on one of the charts or when the
-global functions <a href="filterAll">filterAll</a>, <a href="refocusAll">refocusAll</a>,
-<a href="renderAll">renderAll</a>, <a href="redrawAll">redrawAll</a>, or chart functions
+global functions <a href="#filterAll">filterAll</a>, <a href="#refocusAll">refocusAll</a>,
+<a href="#renderAll">renderAll</a>, <a href="#redrawAll">redrawAll</a>, or chart functions
 <a href="baseMixin#renderGroup">baseMixin.renderGroup</a>,
 <a href="baseMixin#redrawGroup">baseMixin.redrawGroup</a> are called.</p>
 </dd>
@@ -283,9 +283,48 @@ can be used as long as they have the properties above.</p>
 ## Functions
 
 <dl>
-<dt><a href="#elasticRadius">elasticRadius([elasticRadius])</a> ⇒ <code>Boolean</code> | <code><a href="#BubbleChart">BubbleChart</a></code></dt>
-<dd><p>Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.</p>
+<dt><a href="#registerChart">registerChart(chart, [group])</a> ⇒ <code>undefined</code></dt>
+<dd><p>Add given chart instance to the given group, creating the group if necessary.
+If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</code> will be used.</p>
+</dd>
+<dt><a href="#deregisterChart">deregisterChart(chart, [group])</a> ⇒ <code>undefined</code></dt>
+<dd><p>Remove given chart instance from the given group, creating the group if necessary.
+If no group is provided, the default group <code>constants.DEFAULT_CHART_GROUP</code> will be used.</p>
+</dd>
+<dt><a href="#hasChart">hasChart(chart)</a> ⇒ <code>Boolean</code></dt>
+<dd><p>Determine if a given chart instance resides in any group in the registry.</p>
+</dd>
+<dt><a href="#deregisterAllCharts">deregisterAllCharts(group)</a> ⇒ <code>undefined</code></dt>
+<dd><p>Clear given group if one is provided, otherwise clears all groups.</p>
+</dd>
+<dt><a href="#filterAll">filterAll([group])</a> ⇒ <code>undefined</code></dt>
+<dd><p>Clear all filters on all charts within the given chart group. If the chart group is not given then
+only charts that belong to the default chart group will be reset.</p>
+</dd>
+<dt><a href="#refocusAll">refocusAll([group])</a> ⇒ <code>undefined</code></dt>
+<dd><p>Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+not given then only charts that belong to the default chart group will be reset.</p>
+</dd>
+<dt><a href="#renderAll">renderAll([group])</a> ⇒ <code>undefined</code></dt>
+<dd><p>Re-render all charts belong to the given chart group. If the chart group is not given then only
+charts that belong to the default chart group will be re-rendered.</p>
+</dd>
+<dt><a href="#redrawAll">redrawAll([group])</a> ⇒ <code>undefined</code></dt>
+<dd><p>Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+from scratch.</p>
+</dd>
+<dt><a href="#transition">transition(selection, [duration], [delay], [name])</a> ⇒ <code>d3.transition</code> | <code>d3.selection</code></dt>
+<dd><p>Start a transition on a selection if transitions are globally enabled
+(<a href="disableTransitions">disableTransitions</a> is false) and the duration is greater than zero; otherwise return
+the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+allows a common code path for both cases.</p>
+</dd>
+<dt><a href="#pluck">pluck(n, [f])</a> ⇒ <code>function</code></dt>
+<dd><p>Returns a function that given a string property name, can be used to pluck the property off an object.  A function
+can be passed as the second argument to also alter the data being returned.</p>
+<p>This can be a useful shorthand method to create accessor functions.</p>
 </dd>
 </dl>
 
@@ -408,8 +447,8 @@ and the default group. There is a single global ChartRegistry object named `char
 
 A chart group often corresponds to a crossfilter instance. It specifies
 the set of charts which should be updated when a filter changes on one of the charts or when the
-global functions [filterAll](filterAll), [refocusAll](refocusAll),
-[renderAll](renderAll), [redrawAll](redrawAll), or chart functions
+global functions [filterAll](#filterAll), [refocusAll](#refocusAll),
+[renderAll](#renderAll), [redrawAll](#redrawAll), or chart functions
 [baseMixin.renderGroup](baseMixin#renderGroup),
 [baseMixin.redrawGroup](baseMixin#redrawGroup) are called.
 
@@ -2710,7 +2749,7 @@ var chart2 = new PieChart('#chart-container2', 'chartGroupA');
 
 ### pieChart.slicesCap([cap]) ⇒ <code>Number</code> \| [<code>PieChart</code>](#PieChart)
 Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
-value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+value from high to low. Other slices exceeding the cap will be rolled up into one single *Others* slice.
 
 **Kind**: instance method of [<code>PieChart</code>](#PieChart)  
 
@@ -4293,7 +4332,7 @@ behaviour.
 Calling redraw will cause the chart to re-render data changes incrementally. If there is no
 change in the underlying data dimension then calling this method will have no effect on the
 chart. Most chart interaction in dc will automatically trigger this method through internal
-events (in particular [redrawAll](redrawAll)); therefore, you only need to
+events (in particular [redrawAll](#redrawAll)); therefore, you only need to
 manually invoke this function if data is manipulated outside of dc's control (for example if
 data is loaded in the background using
 [crossfilter.add](https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add)).
@@ -4511,7 +4550,7 @@ Once the filters array has been updated, the filters are applied to the
 crossfilter dimension, using the [filterHandler](#BaseMixin+filterHandler).
 
 Once you have set the filters, call [`chart.redrawGroup()`](#BaseMixin+redrawGroup)
-(or [`redrawAll()`](redrawAll)) to redraw the chart's group.
+(or [`redrawAll()`](#redrawAll)) to redraw the chart's group.
 
 **Kind**: instance method of [<code>BaseMixin</code>](#BaseMixin)  
 **See**
@@ -5016,6 +5055,7 @@ This Mixin provides reusable functionalities for any chart that needs to visuali
 
 * [BubbleMixin](#BubbleMixin) ⇒ [<code>BubbleMixin</code>](#BubbleMixin)
     * [.r([bubbleRadiusScale])](#BubbleMixin+r) ⇒ <code>d3.scale</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
+    * [.elasticRadius([elasticRadius])](#BubbleMixin+elasticRadius) ⇒ <code>Boolean</code> \| [<code>BubbleChart</code>](#BubbleChart)
     * [.radiusValueAccessor([radiusValueAccessor])](#BubbleMixin+radiusValueAccessor) ⇒ <code>function</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
     * [.minRadius([radius])](#BubbleMixin+minRadius) ⇒ <code>Number</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
     * [.minRadiusWithLabel([radius])](#BubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
@@ -5034,6 +5074,18 @@ as its radius scale.
 | Param | Type | Default |
 | --- | --- | --- |
 | [bubbleRadiusScale] | <code>d3.scale</code> | <code>d3.scaleLinear().domain([0, 100])</code> | 
+
+<a name="BubbleMixin+elasticRadius"></a>
+
+### bubbleMixin.elasticRadius([elasticRadius]) ⇒ <code>Boolean</code> \| [<code>BubbleChart</code>](#BubbleChart)
+Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+
+**Kind**: instance method of [<code>BubbleMixin</code>](#BubbleMixin)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [elasticRadius] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="BubbleMixin+radiusValueAccessor"></a>
 
@@ -6361,15 +6413,149 @@ function is not called.
 chart.xUnits(units.ordinal)
      .x(d3.scaleOrdinal())
 ```
-<a name="elasticRadius"></a>
+<a name="registerChart"></a>
 
-## elasticRadius([elasticRadius]) ⇒ <code>Boolean</code> \| [<code>BubbleChart</code>](#BubbleChart)
-Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+## registerChart(chart, [group]) ⇒ <code>undefined</code>
+Add given chart instance to the given group, creating the group if necessary.
+If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
 
 **Kind**: global function  
 
-| Param | Type | Default |
+| Param | Type | Description |
 | --- | --- | --- |
-| [elasticRadius] | <code>Boolean</code> | <code>false</code> | 
+| chart | <code>Object</code> | dc.js chart instance |
+| [group] | <code>String</code> | Group name |
 
+<a name="deregisterChart"></a>
+
+## deregisterChart(chart, [group]) ⇒ <code>undefined</code>
+Remove given chart instance from the given group, creating the group if necessary.
+If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| chart | <code>Object</code> | dc.js chart instance |
+| [group] | <code>String</code> | Group name |
+
+<a name="hasChart"></a>
+
+## hasChart(chart) ⇒ <code>Boolean</code>
+Determine if a given chart instance resides in any group in the registry.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| chart | <code>Object</code> | dc.js chart instance |
+
+<a name="deregisterAllCharts"></a>
+
+## deregisterAllCharts(group) ⇒ <code>undefined</code>
+Clear given group if one is provided, otherwise clears all groups.
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| group | <code>String</code> | Group name |
+
+<a name="filterAll"></a>
+
+## filterAll([group]) ⇒ <code>undefined</code>
+Clear all filters on all charts within the given chart group. If the chart group is not given then
+only charts that belong to the default chart group will be reset.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="refocusAll"></a>
+
+## refocusAll([group]) ⇒ <code>undefined</code>
+Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
+not given then only charts that belong to the default chart group will be reset.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="renderAll"></a>
+
+## renderAll([group]) ⇒ <code>undefined</code>
+Re-render all charts belong to the given chart group. If the chart group is not given then only
+charts that belong to the default chart group will be re-rendered.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="redrawAll"></a>
+
+## redrawAll([group]) ⇒ <code>undefined</code>
+Redraw all charts belong to the given chart group. If the chart group is not given then only charts
+that belong to the default chart group will be re-drawn. Redraw is different from re-render since
+when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
+from scratch.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| [group] | <code>String</code> | 
+
+<a name="transition"></a>
+
+## transition(selection, [duration], [delay], [name]) ⇒ <code>d3.transition</code> \| <code>d3.selection</code>
+Start a transition on a selection if transitions are globally enabled
+([disableTransitions](disableTransitions) is false) and the duration is greater than zero; otherwise return
+the selection. Since most operations are the same on a d3 selection and a d3 transition, this
+allows a common code path for both cases.
+
+**Kind**: global function  
+
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| selection | <code>d3.selection</code> |  | the selection to be transitioned |
+| [duration] | <code>Number</code> \| <code>function</code> | <code>250</code> | the duration of the transition in milliseconds, a function returning the duration, or 0 for no transition |
+| [delay] | <code>Number</code> \| <code>function</code> |  | the delay of the transition in milliseconds, or a function returning the delay, or 0 for no delay |
+| [name] | <code>String</code> |  | the name of the transition (if concurrent transitions on the same elements are needed) |
+
+<a name="pluck"></a>
+
+## pluck(n, [f]) ⇒ <code>function</code>
+Returns a function that given a string property name, can be used to pluck the property off an object.  A function
+can be passed as the second argument to also alter the data being returned.
+
+This can be a useful shorthand method to create accessor functions.
+
+**Kind**: global function  
+
+| Param | Type |
+| --- | --- |
+| n | <code>String</code> | 
+| [f] | <code>function</code> | 
+
+**Example**  
+```js
+var xPluck = pluck('x');
+var objA = {x: 1};
+xPluck(objA) // 1
+```
+**Example**  
+```js
+var xPosition = pluck('x', function (x, i) {
+    // `this` is the original datum,
+    // `x` is the x property of the datum,
+    // `i` is the position in the array
+    return this.radius + x;
+});
+selectAll('.circle').data(...).x(xPosition);
+```

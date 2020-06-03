@@ -66,6 +66,8 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     /**
          * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
          * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+         * @memberof BubbleMixin
+         * @instance
          * @param {Boolean} [elasticRadius=false]
          * @returns {Boolean|BubbleChart}
          */

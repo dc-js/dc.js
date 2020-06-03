@@ -75,7 +75,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     /**
      * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
-     * value from high to low. Other slices exeeding the cap will be rolled up into one single *Others* slice.
+     * value from high to low. Other slices exceeding the cap will be rolled up into one single *Others* slice.
      * @param {Number} [cap]
      * @returns {Number|PieChart}
      */

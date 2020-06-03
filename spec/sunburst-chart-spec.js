@@ -1,4 +1,5 @@
-/* global appendChartID, loadDateFixture, makeDate, getSunburstDataOneRing3Segments, loadSunburstData3CompleteRings */
+/* global appendChartID, loadDateFixture, makeDate, getSunburstDataOneRing3Segments,
+   loadSunburstData3CompleteRings, loadSunburstData10CompleteRings */
 describe('dc.sunburstChart', () => {
     const width = 200;
     const height = 200;
@@ -344,17 +345,32 @@ describe('dc.sunburstChart', () => {
         function buildSunburstChart3CompleteRings (id) {
             data = crossfilter(loadSunburstData3CompleteRings());
             const _valueDimension = data.dimension(d => [d.x1, d.x2, d.x3]);
-            valueGroup = _valueDimension.group().reduceSum(d => +d.y);
+            return buildSunburst(_valueDimension, id);
+        }
+
+        function buildSunburstChartNCompleteRings (N, id) {
+            data = crossfilter(loadSunburstData10CompleteRings());
+            const _valueDimension = data.dimension(d => {
+                const ten = [d.x0, d.x1, d.x2, d.x3, d.x4, d.x5, d.x6 , d.x7, d.x8, d.x9 ];
+                const key = Array.prototype.concat.apply(ten.slice(0, N%10), new Array(Math.floor(N/10)).fill(ten));
+                expect(key.length).toEqual(N);
+                return key;
+            });
+            return buildSunburst(_valueDimension, id);
+        }
+
+        const buildSunburst = function (_valueDimension, id) {
+            const _valueGroup = _valueDimension.group().reduceSum(d => +d.y);
             appendChartID(id);
             const chart = dc.sunburstChart(`#${id}`);
             chart
                 .dimension(_valueDimension)
-                .group(valueGroup)
+                .group(_valueGroup)
                 .width(width)
                 .height(height)
                 .transitionDuration(0);
             return chart;
-        }
+        };
 
         function getPieSliceBBoxY (chart, sliceNumber) {
             return chart.select(`.pie-slice._${sliceNumber}`).node().getBBox().y;
@@ -395,6 +411,20 @@ describe('dc.sunburstChart', () => {
             });
         });
 
+        function testEqualRings (N) {
+            describe(`sunburst.relativeRingSizes: equal distribution - no rounding errors with ${N} rings`, () => {
+                let chart;
+                beforeEach(() => {
+                    chart = buildSunburstChartNCompleteRings(N, 'sunburst_relativeRingSizes_equal_distribution_10rings');
+                    chart.ringSizes(chart.equalRingSizes());
+                });
+                it('chart renders without BadArgumentError caused by rounding issue in chart.relativeRingSizes() ' , () => {
+                    expect(() => chart.render()).not.toThrow();
+                });
+            });
+        }
+        for(let i=2; i<=27; ++i) {testEqualRings(i);}
+
         describe('sunburst.relativeRingSizes: specific percentages', () => {
             let chart;
             const specificPercentages = function (ringCount) {
@@ -403,7 +433,7 @@ describe('dc.sunburstChart', () => {
             beforeEach(() => {
                 chart = buildSunburstChart3CompleteRings('sunburst_relativeRingSizes_specific_percentages');
                 chart.ringSizes(chart.relativeRingSizes(specificPercentages));
-                chart.render();
+                expect(() => chart.render()).not.toThrow();
             });
             it('2nd ring should be half as wide as the 3rd ', () => {
                 expect(getRingThicknessRounded(chart, 1)).toBeGreaterThan(0);
