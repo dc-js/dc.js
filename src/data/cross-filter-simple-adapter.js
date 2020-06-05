@@ -3,7 +3,6 @@ export class CrossFilterSimpleAdapter {
     constructor () {
         this._group = undefined;
         this._dimension = undefined;
-        this.cf = undefined;
     }
 
     dimension (dimension) {
@@ -20,10 +19,6 @@ export class CrossFilterSimpleAdapter {
         }
         this._group = group;
         return this;
-    }
-
-    clone () {
-        return new CrossFilterSimpleAdapter(this.group(), this.dimension(), this.cf);
     }
 
     data () {
