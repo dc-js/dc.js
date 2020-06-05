@@ -1,5 +1,5 @@
 
-export class CrossFilterAdapter {
+export class CrossFilterSimpleAdapter {
     constructor () {
         this._group = undefined;
         this._dimension = undefined;
@@ -23,7 +23,7 @@ export class CrossFilterAdapter {
     }
 
     clone () {
-        return new CrossFilterAdapter(this.group(), this.dimension(), this.cf);
+        return new CrossFilterSimpleAdapter(this.group(), this.dimension(), this.cf);
     }
 
     data () {

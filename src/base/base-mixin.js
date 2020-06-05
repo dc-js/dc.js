@@ -10,7 +10,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {DefaultDataProvider} from '../data/helpers';
+import {SimpleDataProvider} from '../data/helpers';
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
@@ -22,7 +22,7 @@ export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
 
-        this._dataProvider = new DefaultDataProvider();
+        this._dataProvider = new SimpleDataProvider();
 
         this._anchor = undefined;
         this._root = undefined;
