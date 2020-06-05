@@ -64,7 +64,7 @@ describe('dc.capMixin', () => {
                 expect(mixin.data().map(dc.pluck('key'))).toEqual([22, 44, 55, 'Others']);
             });
             it('should sum to total', () => {
-                expect(d3.sum(mixin.data().map(dc.pluck('value')))).toEqual(total);
+                expect(d3.sum(mixin.data().map(dc.pluck('_value')))).toEqual(total);
             });
 
             describe('and taking from back', () => {
@@ -76,7 +76,7 @@ describe('dc.capMixin', () => {
                     expect(mixin.data().map(dc.pluck('key'))).toEqual([55, 66, 33, 'Others']);
                 });
                 it('should sum to total', () => {
-                    expect(d3.sum(mixin.data().map(dc.pluck('value')))).toEqual(total);
+                    expect(d3.sum(mixin.data().map(dc.pluck('_value')))).toEqual(total);
                 });
             });
 
@@ -119,7 +119,7 @@ describe('dc.capMixin', () => {
                 expect(mixin.data().map(dc.pluck('key'))).toEqual([33, 66, 55, 'Others']);
             });
             it('should sum to total', () => {
-                expect(d3.sum(mixin.data().map(dc.pluck('value')))).toEqual(total);
+                expect(d3.sum(mixin.data().map(dc.pluck('_value')))).toEqual(total);
             });
 
             describe('and taking from back', () => {
@@ -131,7 +131,7 @@ describe('dc.capMixin', () => {
                     expect(mixin.data().map(dc.pluck('key'))).toEqual([55, 44, 22, 'Others']);
                 });
                 it('should sum to total', () => {
-                    expect(d3.sum(mixin.data().map(dc.pluck('value')))).toEqual(total);
+                    expect(d3.sum(mixin.data().map(dc.pluck('_value')))).toEqual(total);
                 });
             });
 
