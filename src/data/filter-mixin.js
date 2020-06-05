@@ -68,8 +68,8 @@ export const FilterMixin = Base => class extends Base {
     }
 
     _applyFilters (filters) {
-        if (this.dimension && this.dimension.filter) {
-            const fs = this._filterHandler(this.dimension, filters);
+        if (this.dimension() && this.dimension().filter) {
+            const fs = this._filterHandler(this.dimension(), filters);
             if (fs) {
                 filters = fs;
             }

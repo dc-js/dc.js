@@ -225,9 +225,9 @@ export class BaseMixin {
      */
     dimension (dimension) {
         if (!arguments.length) {
-            return this._dataProvider.dimension;
+            return this._dataProvider.dimension();
         }
-        this._dataProvider.dimension = dimension;
+        this._dataProvider.dimension(dimension);
         this.expireCache();
         return this;
     }
@@ -276,9 +276,9 @@ export class BaseMixin {
      */
     group (group, name) {
         if (!arguments.length) {
-            return this._dataProvider.group;
+            return this._dataProvider.group();
         }
-        this._dataProvider.group = group;
+        this._dataProvider.group(group);
         this._groupName = name;
         this.expireCache();
         return this;
