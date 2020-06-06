@@ -3,56 +3,7 @@ import {max, min} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
-
-class StackedDataAdaptor {
-    constructor () {
-        this._dimension = undefined;
-        this._stack = [];
-    }
-
-    data () {
-        // return this.stack().map(layer => Object.assign({}, layer));
-        return this._stack.map((layer, index) => {
-            // Defensively clone
-            const rawData = layer.group.all().map(d=> Object.assign({}, d));
-            return {
-                name: layer.name,
-                accessor: layer.accessor,
-                rawData: rawData
-            }
-        });
-    }
-
-    stack (group, name, accessor) {
-        if (!arguments.length) {
-            return this._stack;
-        }
-
-        if (arguments.length <= 2) {
-            accessor = name;
-        }
-
-        const layer = {group: group};
-        if (typeof name === 'string') {
-            layer.name = name;
-        } else {
-            // Name is quite critical, it is used to uniquely identify the layer
-            layer.name = String(this._stack.length);
-        }
-        if (typeof accessor === 'function') {
-            layer.accessor = accessor;
-        }
-        this._stack.push(layer);
-
-        return this;
-    }
-
-    clearStack () {
-        this._stack = [];
-    }
-}
-
-const StackedDataProvider = StackedDataAdaptor;
+import {StackedDataProvider} from '../data/helpers';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -72,31 +23,31 @@ export class StackMixin extends CoordinateGridMixin {
         this._hiddenStacks = {};
         this._evadeDomainFilter = false;
 
-        this.data(() => {
-            const layers = this._dataProvider.data().filter(l => this._visibility(l));
-            if (!layers.length) {
-                return [];
-            }
-            layers.forEach((l, i) => this._prepareValues(l, i));
-            const v4data = layers[0].values.map((v, i) => {
-                const col = {x: v.x};
-                layers.forEach(layer => {
-                    col[layer.name] = layer.values[i].y;
-                });
-                return col;
-            });
-            const keys = layers.map(layer => layer.name);
-            const v4result = this.stackLayout().keys(keys)(v4data);
-            v4result.forEach((series, i) => {
-                series.forEach((ys, j) => {
-                    layers[i].values[j].y0 = ys[0];
-                    layers[i].values[j].y1 = ys[1];
-                });
-            });
-            return layers;
-        });
-
         this.colorAccessor(d => d.name);
+    }
+
+    data (fn) {
+        const layers = this._dataProvider.data().filter(l => this._visibility(l));
+        if (!layers.length) {
+            return [];
+        }
+        layers.forEach((l, i) => this._prepareValues(l, i));
+        const v4data = layers[0].values.map((v, i) => {
+            const col = {x: v.x};
+            layers.forEach(layer => {
+                col[layer.name] = layer.values[i].y;
+            });
+            return col;
+        });
+        const keys = layers.map(layer => layer.name);
+        const v4result = this.stackLayout().keys(keys)(v4data);
+        v4result.forEach((series, i) => {
+            series.forEach((ys, j) => {
+                layers[i].values[j].y0 = ys[0];
+                layers[i].values[j].y1 = ys[1];
+            });
+        });
+        return layers;
     }
 
     _prepareValues (layer, layerIdx) {
