@@ -289,7 +289,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
-            .attr('fill', this.getColor)
+            .attr('fill', (d, i) => this.getColor(d, i))
             .attr('transform', d => this._locator(d))
             .merge(symbols);
 
