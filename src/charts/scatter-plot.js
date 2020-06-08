@@ -39,7 +39,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this._existenceAccessor = d => d.value;
 
-        const originalKeyAccessor = this.keyAccessor();
+        const originalKeyAccessor = d => d.key;
         this.keyAccessor(d => originalKeyAccessor(d)[0]);
         this.valueAccessor(d => originalKeyAccessor(d)[1]);
         this.colorAccessor(() => this._groupName);
