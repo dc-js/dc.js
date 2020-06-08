@@ -40,8 +40,6 @@ export class SelectMenu extends BaseMixin {
         this._promptValue = null;
         this._numberVisible = null;
 
-        this.data(group => group.all().filter(this._filterDisplayed));
-
         this._filterDisplayed = d => this.valueAccessor()(d) > 0;
 
         this._order = (a, b) => {
@@ -55,6 +53,10 @@ export class SelectMenu extends BaseMixin {
         };
 
         this.anchor(parent, chartGroup);
+    }
+
+    data (fn) {
+        return super.data().filter(this._filterDisplayed)
     }
 
     _doRender () {

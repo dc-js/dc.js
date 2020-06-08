@@ -44,8 +44,6 @@ export class CboxMenu extends BaseMixin {
 
         this._uniqueId = utils.uniqueId();
 
-        this.data(group => group.all().filter(this._filterDisplayed));
-
         // There is an accessor for this attribute, initialized with default value
         this._filterDisplayed = d => this.valueAccessor()(d) > 0;
 
@@ -60,6 +58,10 @@ export class CboxMenu extends BaseMixin {
         };
 
         this.anchor(parent, chartGroup);
+    }
+
+    data (fn) {
+        return super.data().filter(this._filterDisplayed)
     }
 
     _doRender () {
