@@ -86,21 +86,23 @@ export class BoxPlot extends CoordinateGridMixin {
         this.x(scaleBand());
         this.xUnits(units.ordinal);
 
-        // valueAccessor should return an array of values that can be coerced into numbers
-        // or if data is overloaded for a static array of arrays, it should be `Number`.
-        // Empty arrays are not included.
-        this.data(group => group.all().map(d => {
+        this.boxPadding(0.8);
+        this.outerPadding(0.5);
+
+        this.anchor(parent, chartGroup);
+    }
+
+    // valueAccessor should return an array of values that can be coerced into numbers
+    // or if data is overloaded for a static array of arrays, it should be `Number`.
+    // Empty arrays are not included.
+    data (fn) {
+        return this._dataProvider.data().map(d => {
             d.map = accessor => accessor.call(d, d);
             return d;
         }).filter(d => {
             const values = this.valueAccessor()(d);
             return values.length !== 0;
-        }));
-
-        this.boxPadding(0.8);
-        this.outerPadding(0.5);
-
-        this.anchor(parent, chartGroup);
+        });
     }
 
     /**
