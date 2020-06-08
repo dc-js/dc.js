@@ -47,15 +47,17 @@ export class NumberDisplay extends BaseMixin {
         // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
         this.ordering(kv => kv.value);
 
-        this.data(group => {
-            const valObj = group.value ? group.value() : this._maxBin(group.all());
-            return this.valueAccessor()(valObj);
-        });
-
         this.transitionDuration(250); // good default
         this.transitionDelay(0);
 
         this.anchor(parent, chartGroup);
+    }
+
+    // TODO: hacky, implement as a data provider
+    data (fn) {
+        const group = this.group();
+        const valObj = group.value ? group.value() : this._maxBin(group.all());
+        return this._dataProvider.valueAccessor()(valObj);
     }
 
     /**
