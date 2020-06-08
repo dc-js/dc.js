@@ -51,10 +51,9 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     _prepareValues (layer, layerIdx) {
-        const valAccessor = layer.accessor || this.valueAccessor();
-        const allValues = layer.rawData.map((d, i) => ({
-            x: this.keyAccessor()(d, i),
-            y: valAccessor(d, i),
+        const allValues = layer.rawData.map(d => ({
+            x: this.keyAccessor()(d),
+            y: this.valueAccessor()(d),
             data: d,
             name: layer.name
         }));
