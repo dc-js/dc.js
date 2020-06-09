@@ -145,7 +145,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
                 .attr('transform', `translate(${point.x},${point.y})`);
         }
 
-        nodeG.datum(data[point.name]);
+        nodeG.datum(data[point.name] || {});
 
         return nodeG;
     }
