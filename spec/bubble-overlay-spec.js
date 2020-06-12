@@ -103,17 +103,9 @@ describe('dc.bubbleOverlay', () => {
         });
     });
 
-    function removeEmptyBins (grp) {
-        return {
-            all: function () {
-                return grp.all().filter(d => d.value !== 0);
-            }
-        };
-    }
     describe('filtering another dimension', () => {
         let regionDim;
         beforeEach(() => {
-            chart.group(removeEmptyBins(group)).render();
             regionDim = data.dimension(d => d.region);
         });
         function expectRadii (expected) {
@@ -142,7 +134,7 @@ describe('dc.bubbleOverlay', () => {
             it('filtering should lock the remaining bubbles to min and max radius sizes', () => {
                 regionDim.filter('Central');
                 dc.redrawAll();
-                expectRadii([0, 0, 0, 10, 60, 0]);
+                expectRadii([0, 0, 0, 45.7, 60, 0]);
             });
         });
     });
