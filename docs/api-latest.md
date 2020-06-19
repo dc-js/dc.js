@@ -5060,6 +5060,7 @@ This Mixin provides reusable functionalities for any chart that needs to visuali
     * [.minRadius([radius])](#BubbleMixin+minRadius) ⇒ <code>Number</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
     * [.minRadiusWithLabel([radius])](#BubbleMixin+minRadiusWithLabel) ⇒ <code>Number</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
     * [.maxBubbleRelativeSize([relativeSize])](#BubbleMixin+maxBubbleRelativeSize) ⇒ <code>Number</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
+    * [.excludeElasticZero([excludeZero])](#BubbleMixin+excludeElasticZero) ⇒ <code>Boolean</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
 
 <a name="BubbleMixin+r"></a>
 
@@ -5135,6 +5136,17 @@ when the difference in radius between bubbles is too great.
 | Param | Type | Default |
 | --- | --- | --- |
 | [relativeSize] | <code>Number</code> | <code>0.3</code> | 
+
+<a name="BubbleMixin+excludeElasticZero"></a>
+
+### bubbleMixin.excludeElasticZero([excludeZero]) ⇒ <code>Boolean</code> \| [<code>BubbleMixin</code>](#BubbleMixin)
+Should the chart exclude zero when calculating elastic bubble radius?
+
+**Kind**: instance method of [<code>BubbleMixin</code>](#BubbleMixin)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [excludeZero] | <code>Boolean</code> | <code>true</code> | 
 
 <a name="CapMixin"></a>
 
