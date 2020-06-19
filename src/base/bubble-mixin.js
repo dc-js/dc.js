@@ -104,7 +104,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     rMin () {
-        return min(this.data(), e => this.radiusValueAccessor()(e));
+        return min(this.data().map(this.radiusValueAccessor()).filter(value => value > 0));
     }
 
     rMax () {
