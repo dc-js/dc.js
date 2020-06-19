@@ -586,6 +586,7 @@ describe('dc.bubbleChart', () => {
                     .valueAccessor(key_part(1))
                     .radiusValueAccessor(kv => kv.value.total)
                     .elasticRadius(true)
+                    .excludeElasticZero(false)
                     .colors(d3.scaleOrdinal()
                             .domain(species.concat('none'))
                             .range(['#e41a1c','#377eb8','#4daf4a', '#f8f8f8']))
