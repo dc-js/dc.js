@@ -1204,6 +1204,12 @@ describe('dc.BarChart', () => {
         });
 
         it('should be ordered by alphabetical order', () => {
+            function reverseGroup (_group) {
+                return {
+                    all: () => Array.from(_group.all()).reverse()
+                };
+            }
+            chart.group(reverseGroup(group));
             chart.ordering(d => d.key);
             chart.redraw();
             expect(xAxisText()).toEqual(['a', 'b', 'c', 'd']);
