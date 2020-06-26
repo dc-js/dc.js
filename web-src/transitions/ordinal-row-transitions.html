@@ -13,8 +13,8 @@
 
     <div id="test"></div>
     <button class="btn" onclick="transitionTest.stop()">stop</button>
-    <button class="btn" onclick="button1()">left</button>
-    <button class="btn" onclick="button2()">right</button>
+    <button class="btn" onclick="button1()">top</button>
+    <button class="btn" onclick="button2()">bottom</button>
     <button class="btn" onclick="button3()">middle</button>
     <button class="btn" onclick="button4()">reverse</button>
     <button class="btn" onclick="button5()">backward</button>
@@ -32,7 +32,8 @@
               .width(768)
               .height(380)
               .dimension(fruitDimension)
-              .group(fruitGroup);
+              .group(fruitGroup)
+              .ordering(kv => kv.key)
       });
     </script>
     </div>

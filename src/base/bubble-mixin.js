@@ -20,6 +20,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         this._minRadiusWithLabel = 10;
         this._sortBubbleSize = false;
         this._elasticRadius = false;
+        this._excludeElasticZero = true;
 
         // These cane be used by derived classes as well, so member status
         this.BUBBLE_NODE_CLASS = 'node';
@@ -66,6 +67,8 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     /**
          * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
          * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+         * @memberof BubbleMixin
+         * @instance
          * @param {Boolean} [elasticRadius=false]
          * @returns {Boolean|BubbleChart}
          */
@@ -102,7 +105,11 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     rMin () {
-        return min(this.data(), e => this.radiusValueAccessor()(e));
+        let values = this.data().map(this.radiusValueAccessor());
+        if(this._excludeElasticZero) {
+            values = values.filter(value => value > 0);
+        }
+        return min(values);
     }
 
     rMax () {
@@ -245,6 +252,21 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
             return this._maxBubbleRelativeSize;
         }
         this._maxBubbleRelativeSize = relativeSize;
+        return this;
+    }
+
+    /**
+     * Should the chart exclude zero when calculating elastic bubble radius?
+     * @memberof BubbleMixin
+     * @instance
+     * @param  {Boolean} [excludeZero=true]
+     * @returns {Boolean|BubbleMixin}
+     */
+    excludeElasticZero (excludeZero) {
+        if (!arguments.length) {
+            return this._excludeElasticZero;
+        }
+        this._excludeElasticZero = excludeZero;
         return this;
     }
 

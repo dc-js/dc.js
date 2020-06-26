@@ -103,17 +103,9 @@ describe('dc.bubbleOverlay', () => {
         });
     });
 
-    function removeEmptyBins (grp) {
-        return {
-            all: function () {
-                return grp.all().filter(d => d.value !== 0);
-            }
-        };
-    }
     describe('filtering another dimension', () => {
         let regionDim;
         beforeEach(() => {
-            chart.group(removeEmptyBins(group)).render();
             regionDim = data.dimension(d => d.region);
         });
         function expectRadii (expected) {

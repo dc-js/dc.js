@@ -364,7 +364,7 @@ export class BaseMixin {
 
     _computeOrderedGroups (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort((a, b) => this._ordering(a) - this._ordering(b));
+        return Array.from(data).sort((a, b) => d3.ascending(this._ordering(a), this._ordering(b)));
     }
 
     /**
