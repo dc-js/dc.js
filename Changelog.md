@@ -1,5 +1,6 @@
 ## 4.0.4
 * Fix ordinal (string) ordering ([#1690](https://github.com/dc-js/dc.js/issues/1690))
+* Bubble mixin should exclude zeros when calculating elastic radius; [excludeElasticZero](https://dc-js.github.io/dc.js/docs/html/BubbleMixin.html#excludeElasticZero) can be set false if old behavior is desired ([#1688](https://github.com/dc-js/dc.js/pull/1688))
 * Add a simple [linear regression example](http://dc-js.github.io/dc.js/examples/regression.html).
 * Add a [horizon chart example](http://dc-js.github.io/dc.js/examples/horizon-chart.html) which shows how to add a custom chart with group data. Rename the old custom chart example which displays a groupAll to [color swatch](http://dc-js.github.io/dc.js/examples/color-swatch.html).
 
