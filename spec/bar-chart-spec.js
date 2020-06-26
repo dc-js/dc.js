@@ -1228,6 +1228,12 @@ describe('dc.barChart', function () {
         });
 
         it('should be ordered by alphabetical order', function () {
+            function reverseGroup (_group) {
+                return {
+                    all: function () { return Array.from(_group.all()).reverse(); }
+                };
+            }
+            chart.group(reverseGroup(group));
             chart.ordering(function (d) { return d.key; });
             chart.redraw();
             expect(xAxisText()).toEqual(['a', 'b', 'c', 'd']);
