@@ -1,3 +1,6 @@
+## 3.2.2
+* Fix ordinal (string) ordering ([#1690](https://github.com/dc-js/dc.js/issues/1690))
+
 ## 3.2.1
 * Fix rounding issue with equal ring sizes, by hofmeister ([#1662](https://github.com/dc-js/dc.js/pull/1662) /  ([#1661](https://github.com/dc-js/dc.js/issues/1661))
 
