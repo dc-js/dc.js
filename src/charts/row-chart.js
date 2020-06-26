@@ -143,7 +143,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._drawGridLines();
 
         let rows = this._g.selectAll(`g.${this._rowCssClass}`)
-            .data(this._rowData);
+            .data(this._rowData, ({key}) => key);
 
         this._removeElements(rows);
         rows = this._createElements(rows)
@@ -151,12 +151,22 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._updateElements(rows);
     }
 
+    _barHeight (n) {
+        if (!this._fixedBarHeight) {
+            return (this.effectiveHeight() - (n + 1) * this._gap) / n;
+        } else {
+            return this._fixedBarHeight;
+        }
+    }
+
     _createElements (rows) {
+        const height = this._barHeight(this._rowData.length);
         const rowEnter = rows.enter()
             .append('g')
             .attr('class', (d, i) => `${this._rowCssClass} _${i}`);
 
-        rowEnter.append('rect').attr('width', 0);
+        rowEnter.attr('transform', (d, i) => `translate(0,${(i + 1) * this._gap + i * height})`)
+            .append('rect').attr('width', 0);
 
         this._createLabels(rowEnter);
 
@@ -173,26 +183,22 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     _updateElements (rows) {
-        const n = this._rowData.length;
-
-        let height;
-        if (!this._fixedBarHeight) {
-            height = (this.effectiveHeight() - (n + 1) * this._gap) / n;
-        } else {
-            height = this._fixedBarHeight;
-        }
+        const height = this._barHeight(this._rowData.length);
 
         // vertically align label in center unless they override the value via property setter
         if (!this._hasLabelOffsetY) {
             this._labelOffsetY = height / 2;
         }
 
-        const rect = rows.attr('transform', (d, i) => `translate(0,${(i + 1) * this._gap + i * height})`).select('rect')
+        const rect = rows.select('rect')
             .attr('height', height)
             .attr('fill', this.getColor)
             .on('click', d => this._onClick(d))
             .classed('deselected', d => (this.hasFilter()) ? !this._isSelectedRow(d) : false)
             .classed('selected', d => (this.hasFilter()) ? this._isSelectedRow(d) : false);
+
+        transition(rows, this.transitionDuration(), this.transitionDelay())
+            .attr('transform', (d, i) => `translate(0,${(i + 1) * this._gap + i * height})`);
 
         transition(rect, this.transitionDuration(), this.transitionDelay())
             .attr('width', d => Math.abs(this._rootValue() - this._x(this.cappedValueAccessor(d))))
