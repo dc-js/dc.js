@@ -1,3 +1,6 @@
+## 4.0.5
+* Remove accidental references to global `d3`, `dc` in sources (discussion [here](https://github.com/dc-js/dc.js/commit/902736ad4436dbcad1d57badce14a5e485c59d7a#commitcomment-40208686))
+
 ## 4.0.4
 * Fix ordinal (string) ordering ([#1690](https://github.com/dc-js/dc.js/issues/1690))
 * Add a simple [linear regression example](http://dc-js.github.io/dc.js/examples/regression.html).
