@@ -1,4 +1,5 @@
 import {pluck, utils} from '../core/utils';
+import {constants} from '../core/constants';
 
 const LABEL_GAP = 2;
 
@@ -229,7 +230,7 @@ export class Legend {
             });
 
         if (this._highlightSelected) {
-            itemEnter.classed(dc.constants.SELECTED_CLASS,
+            itemEnter.classed(constants.SELECTED_CLASS,
                               d => filters.indexOf(d.name) !== -1);
         }
 

@@ -10,6 +10,7 @@ import {utils, pluck} from '../core/utils';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
+import {constants} from '../core/constants';
 import {BadArgumentException} from '../core/bad-argument-exception';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
@@ -448,8 +449,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 throw new BadArgumentException('relativeRingSizes function must return an array');
             }
 
-            const portionsSum = d3.sum(relativeSizes);
-            if (Math.abs(portionsSum - 1) > dc.constants.NEGLIGIBLE_NUMBER) {
+            const portionsSum = sum(relativeSizes);
+            if (Math.abs(portionsSum - 1) > constants.NEGLIGIBLE_NUMBER) {
                 throw new BadArgumentException(
                     `relativeRingSizes : portions must add up to 1, but sum was ${portionsSum}`);
             }
