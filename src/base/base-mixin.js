@@ -1,5 +1,6 @@
 import {select} from 'd3-selection';
 import {dispatch} from 'd3-dispatch';
+import {ascending} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
 import {instanceOfChart} from '../core/core';
@@ -364,7 +365,7 @@ export class BaseMixin {
 
     _computeOrderedGroups (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort((a, b) => d3.ascending(this._ordering(a), this._ordering(b)));
+        return Array.from(data).sort((a, b) => ascending(this._ordering(a), this._ordering(b)));
     }
 
     /**
