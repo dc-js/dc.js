@@ -384,14 +384,20 @@ module.exports = function (grunt) {
             hierarchy: {
                 command: 'dot -Tsvg -o <%= conf.websrc %>/img/class-hierarchy.svg class-hierarchy.dot'
             },
+            clean: {
+                command: 'rm -rf dist/'
+            },
             rollup: {
-                command: 'rm -rf dist/; rollup --config'
+                command: 'rollup --config'
             },
             eslint: {
                 command: `eslint ${lintableFiles}`
             },
             'eslint-fix': {
                 command: `eslint ${lintableFiles} --fix`
+            },
+            tsc: {
+                command: 'tsc'
             }
         }
     });
@@ -426,7 +432,7 @@ module.exports = function (grunt) {
     });
 
     // task aliases
-    grunt.registerTask('build', ['shell:rollup', 'sass', 'cssmin']);
+    grunt.registerTask('build', ['shell:clean', 'shell:tsc', 'shell:rollup', 'sass', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);

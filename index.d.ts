@@ -1,1 +1,1 @@
-export * from './bundles/esm6/index';
+export * from './dist/esm6/index';
