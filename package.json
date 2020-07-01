@@ -1,6 +1,6 @@
 {
   "name": "dc",
-  "version": "4.0.5",
+  "version": "5.0.0-alpha0",
   "license": "Apache-2.0",
   "copyright": "2020",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",
@@ -93,5 +93,6 @@
   },
   "browser": "dist/dc.js",
   "main": "dist/dc.js",
-  "module": "src/index.js"
+  "module": "src/index.js",
+  "typings": "index.d.ts"
 }
