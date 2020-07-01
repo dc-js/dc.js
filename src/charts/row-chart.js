@@ -189,7 +189,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         const rect = rows.attr('transform', (d, i) => `translate(0,${(i + 1) * this._gap + i * height})`).select('rect')
             .attr('height', height)
-            .attr('fill', this.getColor)
+            .attr('fill', (d, i) => this.getColor(d, i))
             .on('click', d => this._onClick(d))
             .classed('deselected', d => (this.hasFilter()) ? !this._isSelectedRow(d) : false)
             .classed('selected', d => (this.hasFilter()) ? this._isSelectedRow(d) : false);
