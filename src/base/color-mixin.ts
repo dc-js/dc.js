@@ -4,6 +4,7 @@ import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
 import {utils} from '../core/utils';
+import {ColorCommonInstance} from "d3-color";
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
@@ -13,12 +14,16 @@ import {utils} from '../core/utils';
  * @returns {ColorMixin}
  */
 export const ColorMixin = Base => class extends Base {
+    public _colors;
+    public _colorAccessor: (d, i) => any;
+    public _colorCalculator;
+
     constructor () {
         super();
 
         this._colors = scaleOrdinal(config.defaultColors());
 
-        this._colorAccessor = d => this.keyAccessor()(d);
+        this._colorAccessor = (d, i) => this.keyAccessor()(d);
         this._colorCalculator = undefined;
     }
 
@@ -44,7 +49,7 @@ export const ColorMixin = Base => class extends Base {
          * @instance
          * @returns {ColorMixin}
          */
-    calculateColorDomain () {
+    calculateColorDomain (): this {
         const newDomain = [min(this.data(), this.colorAccessor()),
                            max(this.data(), this.colorAccessor())];
         this._colors.domain(newDomain);
@@ -69,7 +74,9 @@ export const ColorMixin = Base => class extends Base {
          * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
          * @returns {d3.scale|ColorMixin}
          */
-    colors (colorScale) {
+    public colors ();
+    public colors (colorScale): this;
+    public colors (colorScale?) {
         if (!arguments.length) {
             return this._colors;
         }
@@ -102,7 +109,9 @@ export const ColorMixin = Base => class extends Base {
          * @returns {ColorMixin}
          */
     linearColors (r) {
-        return this.colors(scaleLinear()
+        // We have to hint Typescript that the scale will map colors to colors.
+        // Picked up the signature from type definition of interpolateHcl.
+        return this.colors(scaleLinear<string | ColorCommonInstance>()
                 .range(r)
                 .interpolate(interpolateHcl));
     }
@@ -121,7 +130,9 @@ export const ColorMixin = Base => class extends Base {
          * @param {Function} [colorAccessor]
          * @returns {Function|ColorMixin}
          */
-    colorAccessor (colorAccessor) {
+    public colorAccessor ();
+    public colorAccessor (colorAccessor): this;
+    public colorAccessor (colorAccessor?) {
         if (!arguments.length) {
             return this._colorAccessor;
         }
@@ -140,7 +151,9 @@ export const ColorMixin = Base => class extends Base {
          * @param {Array<String>} [domain]
          * @returns {Array<String>|ColorMixin}
          */
-    colorDomain (domain) {
+    public colorDomain ();
+    public colorDomain (domain): this;
+    public colorDomain (domain?) {
         if (!arguments.length) {
             return this._colors.domain();
         }
@@ -161,7 +174,9 @@ export const ColorMixin = Base => class extends Base {
          * @param {*} [colorCalculator]
          * @returns {Function|ColorMixin}
          */
-    colorCalculator (colorCalculator) {
+    public colorCalculator ();
+    public colorCalculator (colorCalculator): this;
+    public colorCalculator (colorCalculator?) {
         if (!arguments.length) {
             return this._colorCalculator || this.getColor;
         }

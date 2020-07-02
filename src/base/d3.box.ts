@@ -245,6 +245,8 @@ export const d3Box = function () {
                         return width / 2;
                     };
 
+                // TODO: typing seems to be incorrect, value function might return a number
+                // @ts-ignore
                 const outlier = _g.selectAll(`circle.${outlierClass}`)
                     .data(outlierIndices, Number);
 

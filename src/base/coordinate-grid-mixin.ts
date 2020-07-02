@@ -45,7 +45,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._x = undefined;
         this._origX = undefined; // Will hold original scale in case of zoom
         this._xOriginalDomain = undefined;
-        this._xAxis = axisBottom();
+        this._xAxis = axisBottom(undefined);
         this._xUnits = units.integers;
         this._xAxisPadding = 0;
         this._xAxisPaddingUnit = timeDay;
@@ -100,13 +100,15 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * no effect on elastic scales.)
      * @returns {CoordinateGridMixin}
      */
-    rescale () {
+    public rescale () {
         this._unitCount = undefined;
         this._resizing = true;
         return this;
     }
 
-    resizing (resizing) {
+    public resizing ();
+    public resizing (resizing): this;
+    public resizing (resizing?) {
         if (!arguments.length) {
             return this._resizing;
         }
@@ -142,7 +144,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Array<Number|Date>} [extent=[1, Infinity]]
      * @returns {Array<Number|Date>|CoordinateGridMixin}
      */
-    zoomScale (extent) {
+    public zoomScale ();
+    public zoomScale (extent);
+    public zoomScale (extent?) {
         if (!arguments.length) {
             return this._zoomScale;
         }
@@ -155,7 +159,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [zoomOutRestrict=true]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    zoomOutRestrict (zoomOutRestrict) {
+    public zoomOutRestrict ();
+    public zoomOutRestrict (zoomOutRestrict);
+    public zoomOutRestrict (zoomOutRestrict?) {
         if (!arguments.length) {
             return this._zoomOutRestrict;
         }
@@ -163,7 +169,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    _generateG (parent) {
+    _generateG (parent?) {
         if (parent === undefined) {
             this._parent = this.svg();
         } else {
@@ -188,7 +194,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {SVGElement} [gElement]
      * @returns {SVGElement|CoordinateGridMixin}
      */
-    g (gElement) {
+    public g ();
+    public g (gElement);
+    public g (gElement?) {
         if (!arguments.length) {
             return this._g;
         }
@@ -203,7 +211,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [mouseZoomable=false]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    mouseZoomable (mouseZoomable) {
+    public mouseZoomable ();
+    public mouseZoomable (mouseZoomable);
+    public mouseZoomable (mouseZoomable?) {
         if (!arguments.length) {
             return this._mouseZoomable;
         }
@@ -216,7 +226,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {SVGElement} [chartBodyG]
      * @returns {SVGElement}
      */
-    chartBodyG (chartBodyG) {
+    public chartBodyG ();
+    public chartBodyG (chartBodyG);
+    public chartBodyG (chartBodyG?) {
         if (!arguments.length) {
             return this._chartBodyG;
         }
@@ -239,7 +251,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {d3.scale} [xScale]
      * @returns {d3.scale|CoordinateGridMixin}
      */
-    x (xScale) {
+    public x ();
+    public x (xScale);
+    public x (xScale?) {
         if (!arguments.length) {
             return this._x;
         }
@@ -290,7 +304,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Function} [xUnits=units.integers]
      * @returns {Function|CoordinateGridMixin}
      */
-    xUnits (xUnits) {
+    public xUnits ();
+    public xUnits (xUnits);
+    public xUnits (xUnits?) {
         if (!arguments.length) {
             return this._xUnits;
         }
@@ -318,7 +334,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {d3.axis} [xAxis=d3.axisBottom()]
      * @returns {d3.axis|CoordinateGridMixin}
      */
-    xAxis (xAxis) {
+    public xAxis ();
+    public xAxis (xAxis);
+    public xAxis (xAxis?) {
         if (!arguments.length) {
             return this._xAxis;
         }
@@ -332,7 +350,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [elasticX=false]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    elasticX (elasticX) {
+    public elasticX ();
+    public elasticX (elasticX);
+    public elasticX (elasticX?) {
         if (!arguments.length) {
             return this._xElasticity;
         }
@@ -351,7 +371,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Number|String} [padding=0]
      * @returns {Number|String|CoordinateGridMixin}
      */
-    xAxisPadding (padding) {
+    public xAxisPadding ();
+    public xAxisPadding (padding);
+    public xAxisPadding (padding?) {
         if (!arguments.length) {
             return this._xAxisPadding;
         }
@@ -372,7 +394,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {String} [unit=d3.timeDay]
      * @returns {String|CoordinateGridMixin}
      */
-    xAxisPaddingUnit (unit) {
+    public xAxisPaddingUnit ();
+    public xAxisPaddingUnit (unit);
+    public xAxisPaddingUnit (unit?) {
         if (!arguments.length) {
             return this._xAxisPaddingUnit;
         }
@@ -411,7 +435,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [useRightYAxis=false]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    useRightYAxis (useRightYAxis) {
+    public useRightYAxis ();
+    public useRightYAxis (useRightYAxis);
+    public useRightYAxis (useRightYAxis?) {
         if (!arguments.length) {
             return this._useRightYAxis;
         }
@@ -576,7 +602,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Number} [padding=12]
      * @returns {String}
      */
-    xAxisLabel (labelText, padding) {
+    public xAxisLabel ();
+    public xAxisLabel (labelText, padding?): this;
+    public xAxisLabel (labelText?, padding?) {
         if (!arguments.length) {
             return this._xAxisLabel;
         }
@@ -588,7 +616,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     _createYAxis () {
-        return this._useRightYAxis ? axisRight() : axisLeft();
+        return this._useRightYAxis ? axisRight(undefined) : axisLeft(undefined);
     }
 
     _prepareYAxis (g) {
@@ -706,7 +734,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Number} [padding=12]
      * @returns {String|CoordinateGridMixin}
      */
-    yAxisLabel (labelText, padding) {
+    public yAxisLabel ();
+    public yAxisLabel (labelText, padding?): this;
+    public yAxisLabel (labelText?, padding?) {
         if (!arguments.length) {
             return this._yAxisLabel;
         }
@@ -723,7 +753,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|CoordinateGridMixin}
      */
-    y (yScale) {
+    public y ();
+    public y (yScale);
+    public y (yScale?) {
         if (!arguments.length) {
             return this._y;
         }
@@ -756,7 +788,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {d3.axisLeft|d3.axisRight} [yAxis]
      * @returns {d3.axisLeft|d3.axisRight|CoordinateGridMixin}
      */
-    yAxis (yAxis) {
+    public yAxis ();
+    public yAxis (yAxis);
+    public yAxis (yAxis?) {
         if (!arguments.length) {
             if (!this._yAxis) {
                 this._yAxis = this._createYAxis();
@@ -773,7 +807,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [elasticY=false]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    elasticY (elasticY) {
+    public elasticY ();
+    public elasticY (elasticY);
+    public elasticY (elasticY?) {
         if (!arguments.length) {
             return this._yElasticity;
         }
@@ -786,7 +822,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [renderHorizontalGridLines=false]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    renderHorizontalGridLines (renderHorizontalGridLines) {
+    public renderHorizontalGridLines ();
+    public renderHorizontalGridLines (renderHorizontalGridLines);
+    public renderHorizontalGridLines (renderHorizontalGridLines?) {
         if (!arguments.length) {
             return this._renderHorizontalGridLine;
         }
@@ -799,7 +837,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [renderVerticalGridLines=false]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    renderVerticalGridLines (renderVerticalGridLines) {
+    public renderVerticalGridLines ();
+    public renderVerticalGridLines (renderVerticalGridLines);
+    public renderVerticalGridLines (renderVerticalGridLines?) {
         if (!arguments.length) {
             return this._renderVerticalGridLine;
         }
@@ -853,7 +893,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Number|String} [padding=0]
      * @returns {Number|CoordinateGridMixin}
      */
-    yAxisPadding (padding) {
+    public yAxisPadding ();
+    public yAxisPadding (padding);
+    public yAxisPadding (padding?) {
         if (!arguments.length) {
             return this._yAxisPadding;
         }
@@ -874,7 +916,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Function} [round]
      * @returns {Function|CoordinateGridMixin}
      */
-    round (round) {
+    public round ();
+    public round (round);
+    public round (round?) {
         if (!arguments.length) {
             return this._round;
         }
@@ -882,7 +926,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    _rangeBandPadding (_) {
+    public _rangeBandPadding ();
+    public _rangeBandPadding (_);
+    public _rangeBandPadding (_?) {
         if (!arguments.length) {
             return this._fRangeBandPadding;
         }
@@ -890,7 +936,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    _outerRangeBandPadding (_) {
+    public _outerRangeBandPadding ();
+    public _outerRangeBandPadding (_);
+    public _outerRangeBandPadding (_?) {
         if (!arguments.length) {
             return this._fOuterRangeBandPadding;
         }
@@ -898,7 +946,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    filter (_) {
+    public filter ();
+    public filter (_);
+    public filter (_?) {
         if (!arguments.length) {
             return super.filter();
         }
@@ -922,7 +972,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {d3.brush} [_]
      * @returns {d3.brush|CoordinateGridMixin}
      */
-    brush (_) {
+    public brush ();
+    public brush (_);
+    public brush (_?) {
         if (!arguments.length) {
             return this._brush;
         }
@@ -939,7 +991,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('class', 'brush')
                 .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
 
-            this.setBrushExtents();
+            this.setBrushExtents(doTransition);
 
             this.createBrushHandlePaths(this._gBrush, doTransition);
 
@@ -947,7 +999,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
     }
 
-    createBrushHandlePaths (gBrush) {
+    createBrushHandlePaths (gBrush, doTransition) {
         let brushHandles = gBrush.selectAll(`path.${CUSTOM_BRUSH_HANDLE_CLASS}`).data([{type: 'w'}, {type: 'e'}]);
 
         brushHandles = brushHandles
@@ -1077,7 +1129,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Number} [padding=5]
      * @returns {Number|CoordinateGridMixin}
      */
-    clipPadding (padding) {
+    public clipPadding ();
+    public clipPadding (padding);
+    public clipPadding (padding?) {
         if (!arguments.length) {
             return this._clipPadding;
         }
@@ -1142,7 +1196,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
 
         if (this.elasticY() || this._resizing || render) {
-            this.renderYAxis(this.g());
+            this.renderYAxis();
         }
 
         if (render) {
@@ -1312,7 +1366,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return !utils.arraysEqual(this.x().domain(), this._xOriginalDomain);
     }
 
-    focusChart (c) {
+    public focusChart ();
+    public focusChart (c);
+    public focusChart (c?) {
         if (!arguments.length) {
             return this._focusChart;
         }
@@ -1341,7 +1397,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [brushOn=true]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    brushOn (brushOn) {
+    public brushOn ();
+    public brushOn (brushOn);
+    public brushOn (brushOn?) {
         if (!arguments.length) {
             return this._brushOn;
         }
@@ -1356,7 +1414,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @param {Boolean} [brushOn=false]
      * @returns {Boolean|CoordinateGridMixin}
      */
-    parentBrushOn (brushOn) {
+    public parentBrushOn ();
+    public parentBrushOn (brushOn);
+    public parentBrushOn (brushOn?) {
         if (!arguments.length) {
             return this._parentBrushOn;
         }

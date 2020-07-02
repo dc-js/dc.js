@@ -108,7 +108,9 @@ export const CapMixin = Base => class extends Base {
          * @param {Number} [count=Infinity]
          * @returns {Number|CapMixin}
          */
-    cap (count) {
+    public cap ();
+    public cap (count): this;
+    public cap (count?) {
         if (!arguments.length) {
             return this._cap;
         }
@@ -125,7 +127,9 @@ export const CapMixin = Base => class extends Base {
          * @param {Boolean} [takeFront=true]
          * @returns {Boolean|CapMixin}
          */
-    takeFront (takeFront) {
+    public takeFront ();
+    public takeFront (takeFront): this;
+    public takeFront (takeFront?) {
         if (!arguments.length) {
             return this._takeFront;
         }
@@ -140,7 +144,9 @@ export const CapMixin = Base => class extends Base {
          * @param {String} [label="Others"]
          * @returns {String|CapMixin}
          */
-    othersLabel (label) {
+    public othersLabel ();
+    public othersLabel (label): this;
+    public othersLabel (label?) {
         if (!arguments.length) {
             return this._othersLabel;
         }
@@ -175,7 +181,9 @@ export const CapMixin = Base => class extends Base {
          * @param {Function} [grouperFunction]
          * @returns {Function|CapMixin}
          */
-    othersGrouper (grouperFunction) {
+    public othersGrouper ();
+    public othersGrouper (grouperFunction): this;
+    public othersGrouper (grouperFunction?) {
         if (!arguments.length) {
             return this._othersGrouper;
         }
@@ -183,7 +191,7 @@ export const CapMixin = Base => class extends Base {
         return this;
     }
 
-    onClick (d) {
+    public onClick (d) {
         if (d.others) {
             this.filter([d.others]);
         }

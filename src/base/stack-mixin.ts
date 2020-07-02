@@ -97,7 +97,9 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Function} [accessor]
      * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|StackMixin}
      */
-    stack (group, name, accessor) {
+    public stack ();
+    public stack (group, name?, accessor?): this;
+    public stack (group?, name?, accessor?) {
         if (!arguments.length) {
             return this._stack;
         }
@@ -106,7 +108,7 @@ export class StackMixin extends CoordinateGridMixin {
             accessor = name;
         }
 
-        const layer = {group: group};
+        const layer: {[key: string]: any} = {group: group};
         if (typeof name === 'string') {
             layer.name = name;
         } else {
@@ -222,7 +224,9 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Function} [titleAccessor]
      * @returns {String|StackMixin}
      */
-    title (stackName, titleAccessor) {
+    public title ();
+    public title (stackName, titleAccessor?): this;
+    public title (stackName?, titleAccessor?) {
         if (!stackName) {
             return super.title();
         }
@@ -250,7 +254,9 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Function} [_stack=d3.stackD3v3]
      * @returns {Function|StackMixin}
      */
-    stackLayout (_stack) {
+    public stackLayout ();
+    public stackLayout (_stack): this;
+    public stackLayout (_stack?) {
         if (!arguments.length) {
             return this._stackLayout;
         }
@@ -271,7 +277,9 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Boolean} [evadeDomainFilter=false]
      * @returns {Boolean|StackMixin}
      */
-    evadeDomainFilter (evadeDomainFilter) {
+    public evadeDomainFilter ();
+    public evadeDomainFilter (evadeDomainFilter): this;
+    public evadeDomainFilter (evadeDomainFilter?) {
         if (!arguments.length) {
             return this._evadeDomainFilter;
         }

@@ -56,7 +56,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
          * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
          * @returns {d3.scale|BubbleMixin}
          */
-    r (bubbleRadiusScale) {
+    public r ();
+    public r (bubbleRadiusScale);
+    public r (bubbleRadiusScale?) {
         if (!arguments.length) {
             return this._r;
         }
@@ -72,7 +74,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
          * @param {Boolean} [elasticRadius=false]
          * @returns {Boolean|BubbleChart}
          */
-    elasticRadius (elasticRadius) {
+    public elasticRadius ();
+    public elasticRadius (elasticRadius);
+    public elasticRadius (elasticRadius?) {
         if (!arguments.length) {
             return this._elasticRadius;
         }
@@ -96,7 +100,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
          * @param {Function} [radiusValueAccessor]
          * @returns {Function|BubbleMixin}
          */
-    radiusValueAccessor (radiusValueAccessor) {
+    public radiusValueAccessor ();
+    public radiusValueAccessor (radiusValueAccessor);
+    public radiusValueAccessor (radiusValueAccessor?) {
         if (!arguments.length) {
             return this._rValueAccessor;
         }
@@ -199,7 +205,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
          * @param {Boolean} [sortBubbleSize=false]
          * @returns {Boolean|BubbleChart}
          */
-    sortBubbleSize (sortBubbleSize) {
+    public sortBubbleSize ();
+    public sortBubbleSize (sortBubbleSize);
+    public sortBubbleSize (sortBubbleSize?) {
         if (!arguments.length) {
             return this._sortBubbleSize;
         }
@@ -214,7 +222,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
          * @param {Number} [radius=10]
          * @returns {Number|BubbleMixin}
          */
-    minRadius (radius) {
+    public minRadius ();
+    public minRadius (radius);
+    public minRadius (radius?) {
         if (!arguments.length) {
             return this.MIN_RADIUS;
         }
@@ -231,7 +241,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
          * @returns {Number|BubbleMixin}
          */
 
-    minRadiusWithLabel (radius) {
+    public minRadiusWithLabel ();
+    public minRadiusWithLabel (radius);
+    public minRadiusWithLabel (radius?) {
         if (!arguments.length) {
             return this._minRadiusWithLabel;
         }
@@ -247,7 +259,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
          * @param {Number} [relativeSize=0.3]
          * @returns {Number|BubbleMixin}
          */
-    maxBubbleRelativeSize (relativeSize) {
+    public maxBubbleRelativeSize ();
+    public maxBubbleRelativeSize (relativeSize);
+    public maxBubbleRelativeSize (relativeSize?) {
         if (!arguments.length) {
             return this._maxBubbleRelativeSize;
         }
@@ -262,7 +276,9 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
      * @param  {Boolean} [excludeZero=true]
      * @returns {Boolean|BubbleMixin}
      */
-    excludeElasticZero (excludeZero) {
+    public excludeElasticZero ();
+    public excludeElasticZero (excludeZero);
+    public excludeElasticZero (excludeZero?) {
         if (!arguments.length) {
             return this._excludeElasticZero;
         }

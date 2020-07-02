@@ -50,7 +50,9 @@ export class Config {
      * @param {Array} [colors]
      * @returns {Array|config}
      */
-    defaultColors (colors): typeColorsList|Config {
+    public defaultColors (): typeColorsList;
+    public defaultColors (colors): this;
+    public defaultColors (colors?): typeColorsList|Config {
         if (!arguments.length) {
             // Issue warning if it uses _schemeCategory20c
             if (this._defaultColors === Config._schemeCategory20c) {

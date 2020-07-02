@@ -8,6 +8,8 @@ import {BaseMixin} from './base-mixin';
  * @returns {MarginMixin}
  */
 export class MarginMixin extends BaseMixin {
+    private _margin: { top: number; left: number; bottom: number; right: number };
+
     constructor () {
         super();
 
@@ -26,7 +28,9 @@ export class MarginMixin extends BaseMixin {
      * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
      * @returns {{top: Number, right: Number, left: Number, bottom: Number}|MarginMixin}
      */
-    margins (margins) {
+    public margins ();
+    public margins (margins): this;
+    public margins (margins?) {
         if (!arguments.length) {
             return this._margin;
         }
@@ -39,7 +43,7 @@ export class MarginMixin extends BaseMixin {
      *
      * @returns {number}
      */
-    effectiveWidth () {
+    public effectiveWidth (): number {
         return this.width() - this.margins().left - this.margins().right;
     }
 
@@ -48,7 +52,7 @@ export class MarginMixin extends BaseMixin {
      *
      * @returns {number}
      */
-    effectiveHeight () {
+    public effectiveHeight (): number {
         return this.height() - this.margins().top - this.margins().bottom;
     }
 }

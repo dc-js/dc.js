@@ -8,8 +8,8 @@ import {config} from './config';
 
 interface IUtils {
     printSingleValue: any;
-    add: (l, r, t) => (Date|number);
-    subtract: (l, r, t) => (Date|number);
+    add: (l, r, t?) => (Date|number);
+    subtract: (l, r, t?) => (Date|number);
     isNumber: (n) => boolean;
     isFloat: (n) => boolean;
     isInteger: (n) => boolean;
@@ -18,7 +18,7 @@ interface IUtils {
     clamp: (val, min, max) => any;
     uniqueId: () => number;
     nameToId: (name) => string;
-    appendOrSelect: (parent, selector, tag) => any;
+    appendOrSelect: (parent, selector, tag?) => any;
     _toTimeFunc: (t) => any;
     safeNumber: (n) => number;
     arraysEqual: (a1, a2) => (boolean | any);
@@ -63,11 +63,11 @@ export const pluck = function (n, f?) {
  */
 export const utils: IUtils = {
     _toTimeFunc(t): any {
-    }, add(l, r, t): Date {
+    }, add(l, r, t?): Date {
         return undefined;
     }, allChildren(node): any[] {
         return [];
-    }, appendOrSelect(parent, selector, tag): any {
+    }, appendOrSelect(parent, selector, tag?): any {
     }, arraysEqual(a1, a2): any {
     }, arraysIdentical(a, b): boolean {
         return false;
@@ -89,7 +89,7 @@ export const utils: IUtils = {
         return "";
     }, printSingleValue: undefined, safeNumber(n): number {
         return 0;
-    }, subtract(l, r, t): Date {
+    }, subtract(l, r, t?): Date {
         return undefined;
     }, toHierarchy(list, accessor): { children: any[]; key: string } {
         return {children: [], key: ""};
@@ -157,7 +157,7 @@ utils._toTimeFunc = function (t) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-utils.add = function (l, r, t) {
+utils.add = function (l, r, t?) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -203,7 +203,7 @@ utils.add = function (l, r, t) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-utils.subtract = function (l, r, t) {
+utils.subtract = function (l, r, t?) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -333,7 +333,7 @@ utils.nameToId = function (name) {
  * @param {String} tag
  * @returns {d3.selection}
  */
-utils.appendOrSelect = function (parent, selector, tag) {
+utils.appendOrSelect = function (parent, selector, tag?) {
     tag = tag || selector;
     let element = parent.select(selector);
     if (element.empty()) {
