@@ -1,6 +1,7 @@
 import {terser} from 'rollup-plugin-terser';
 import json from 'rollup-plugin-json';
 import license from 'rollup-plugin-license';
+import typescript from 'rollup-plugin-typescript2';
 
 const jsonPlugin = json({include: 'package.json', preferConst: true});
 const licensePlugin = license({
@@ -51,7 +52,11 @@ export default [
         plugins: [
             terser({include: [/^.+\.min\.js$/]}),
             jsonPlugin,
-            licensePlugin
+            licensePlugin,
+            typescript({
+                tsconfig: 'tsconfig.json',
+                tsconfigOverride: { compilerOptions: { declaration: false } } // Type definitions are generated as part of ESM6 by `tsc`
+            })
         ],
         output: [
             umdConf,
