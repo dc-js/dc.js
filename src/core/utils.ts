@@ -50,7 +50,7 @@ interface IUtils {
  * @param {Function} [f]
  * @returns {Function}
  */
-export const pluck = function (n, f) {
+export const pluck = function (n, f?) {
     if (!f) {
         return function (d) { return d[n]; };
     }
