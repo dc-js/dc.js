@@ -53,11 +53,11 @@ module.exports = function (grunt) {
         },
         watch: {
             jsdoc2md: {
-                files: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js'],
+                files: ['docs/welcome.base.md', '<%= conf.src %>/**/*.ts', '<%= conf.src %>/**/*.js'],
                 tasks: ['build', 'jsdoc', 'jsdoc2md']
             },
             scripts: {
-                files: ['<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
+                files: ['<%= conf.src %>/**/*.ts', '<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
                 tasks: ['docs']
             },
             websrc: {
@@ -70,6 +70,7 @@ module.exports = function (grunt) {
             },
             tests: {
                 files: [
+                    '<%= conf.src %>/**/*.ts',
                     '<%= conf.src %>/**/*.js',
                     '<%= conf.spec %>/*.js',
                     '<%= conf.spec %>/helpers/*.js',
