@@ -13,6 +13,8 @@ import {config} from './config';
  * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  */
 class ChartRegistry {
+    private _chartMap: {};
+
     constructor () {
         // chartGroup:string => charts:array
         this._chartMap = {};

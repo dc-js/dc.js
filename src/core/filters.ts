@@ -1,3 +1,10 @@
+interface IFilters {
+    RangedFilter: (low, high) => any[];
+    TwoDimensionalFilter: (filter) => (null | any);
+    RangedTwoDimensionalFilter: (filter) => (null | any);
+    HierarchyFilter: (path) => (null | any);
+}
+
 /**
  * The dc.js filters are functions which are passed into crossfilter to chose which records will be
  * accumulated to produce values for the charts.  In the crossfilter model, any filters applied on one
@@ -17,7 +24,14 @@
  * @namespace filters
  * @type {{}}
  */
-export const filters = {};
+export const filters: IFilters = {
+    HierarchyFilter(path): any {
+    }, RangedFilter(low, high): any[] {
+        return [];
+    }, RangedTwoDimensionalFilter(filter): any {
+    }, TwoDimensionalFilter(filter): any {
+    }
+};
 
 /**
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
@@ -32,7 +46,7 @@ export const filters = {};
  * @constructor
  */
 filters.RangedFilter = function (low, high) {
-    const range = new Array(low, high);
+    const range: any = new Array(low, high);
     range.isFiltered = function (value) {
         return value >= this[0] && value < this[1];
     };

@@ -15,7 +15,7 @@ import {config} from './config';
  * elements are needed)
  * @returns {d3.transition|d3.selection}
  */
-export const transition = function (selection, duration, delay, name) {
+export const transition = function (selection, duration?: number, delay?: number, name?: string) {
     if (config.disableTransitions || duration <= 0) {
         return selection;
     }
@@ -33,7 +33,7 @@ export const transition = function (selection, duration, delay, name) {
 };
 
 /* somewhat silly, but to avoid duplicating logic */
-export const optionalTransition = function (enable, duration, delay, name) {
+export const optionalTransition = function (enable: boolean, duration?: number, delay?: number, name?: string) {
     if (enable) {
         return function (selection) {
             return transition(selection, duration, delay, name);
@@ -61,7 +61,7 @@ export const afterTransition = function (_transition, callback) {
     }
 };
 
-export const renderlet = function (_) {
+export const renderlet = function (_?: Function): Function {
     if (!arguments.length) {
         return config._renderlet;
     }
@@ -69,6 +69,6 @@ export const renderlet = function (_) {
     return null;
 };
 
-export const instanceOfChart = function (o) {
+export const instanceOfChart: ((any) => boolean) = function (o) {
     return o instanceof Object && o.__dcFlag__ && true;
 };

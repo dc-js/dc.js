@@ -4,6 +4,30 @@ import {format} from 'd3-format';
 import {constants} from './constants';
 import {config} from './config';
 
+// TODO: revisit all types after refactoring
+
+interface IUtils {
+    printSingleValue: any;
+    add: (l, r, t) => (Date|number);
+    subtract: (l, r, t) => (Date|number);
+    isNumber: (n) => boolean;
+    isFloat: (n) => boolean;
+    isInteger: (n) => boolean;
+    isNegligible: (n) => boolean;
+    constant: (x) => () => any;
+    clamp: (val, min, max) => any;
+    uniqueId: () => number;
+    nameToId: (name) => string;
+    appendOrSelect: (parent, selector, tag) => any;
+    _toTimeFunc: (t) => any;
+    safeNumber: (n) => number;
+    arraysEqual: (a1, a2) => (boolean | any);
+    allChildren: (node) => any[];
+    toHierarchy: (list, accessor) => { children: any[]; key: string };
+    getAncestors: (node) => any[];
+    arraysIdentical: (a, b) => (boolean);
+}
+
 /**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
  * can be passed as the second argument to also alter the data being returned.
@@ -37,7 +61,42 @@ export const pluck = function (n, f) {
  * @namespace utils
  * @type {{}}
  */
-export const utils = {};
+export const utils: IUtils = {
+    _toTimeFunc(t): any {
+    }, add(l, r, t): Date {
+        return undefined;
+    }, allChildren(node): any[] {
+        return [];
+    }, appendOrSelect(parent, selector, tag): any {
+    }, arraysEqual(a1, a2): any {
+    }, arraysIdentical(a, b): boolean {
+        return false;
+    }, clamp(val, min, max): any {
+    }, constant(x): () => any {
+        return function () {
+        };
+    }, getAncestors(node): any[] {
+        return [];
+    }, isFloat(n): boolean {
+        return false;
+    }, isInteger(n): boolean {
+        return false;
+    }, isNegligible(n): boolean {
+        return false;
+    }, isNumber(n): boolean {
+        return false;
+    }, nameToId(name): string {
+        return "";
+    }, printSingleValue: undefined, safeNumber(n): number {
+        return 0;
+    }, subtract(l, r, t): Date {
+        return undefined;
+    }, toHierarchy(list, accessor): { children: any[]; key: string } {
+        return {children: [], key: ""};
+    }, uniqueId(): number {
+        return 0;
+    }
+};
 
 /**
  * Print a single value filter.
@@ -47,7 +106,7 @@ export const utils = {};
  * @returns {String}
  */
 utils.printSingleValue = function (filter) {
-    let s = `${filter}`;
+    let s: string|number = `${filter}`;
 
     if (filter instanceof Date) {
         s = config.dateFormat(filter);

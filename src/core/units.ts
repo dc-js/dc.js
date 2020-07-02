@@ -4,7 +4,7 @@ import {utils} from './utils';
  * @namespace units
  * @type {{}}
  */
-export const units = {};
+export const units: any = {};
 
 /**
  * The default value for {@link CoordinateGridMixin#xUnits .xUnits} for the

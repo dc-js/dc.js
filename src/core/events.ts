@@ -1,5 +1,11 @@
-export const events = {
-    current: null
+interface IEvents {
+    current: Function;
+    trigger: ((closure: Function, delay?:number) => void);
+}
+
+export const events: IEvents = {
+    current: null,
+    trigger: undefined
 };
 
 /**
@@ -21,7 +27,7 @@ export const events = {
  * @param {Number} [delay]
  * @return {undefined}
  */
-events.trigger = function (closure, delay) {
+events.trigger = function (closure: Function, delay?:number) {
     if (!delay) {
         closure();
         return;

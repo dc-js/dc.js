@@ -1,10 +1,21 @@
 import {utils} from './utils';
 
+interface IPrinters {
+    filters: (filters) => string;
+    filter: (filter) => string;
+}
+
 /**
  * @namespace printers
  * @type {{}}
  */
-export const printers = {};
+export const printers: IPrinters = {
+    filter(filter): string {
+        return "";
+    }, filters(filters): string {
+        return "";
+    }
+};
 
 /**
  * Converts a list of filters into a readable string.

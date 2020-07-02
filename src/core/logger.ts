@@ -2,6 +2,8 @@
  * Provides basis logging and deprecation utilities
  */
 export class Logger {
+    public enableDebugLog: boolean;
+    private readonly _alreadyWarned: { [msg: string]: boolean };
 
     constructor () {
         /**
@@ -22,7 +24,7 @@ export class Logger {
      * @param {String} [msg]
      * @returns {Logger}
      */
-    warn (msg) {
+    warn (msg: string): Logger {
         if (console) {
             if (console.warn) {
                 console.warn(msg);
@@ -41,7 +43,7 @@ export class Logger {
      * @param {String} [msg]
      * @returns {Logger}
      */
-    warnOnce (msg) {
+    warnOnce (msg: string): Logger {
         if (!this._alreadyWarned[msg]) {
             this._alreadyWarned[msg] = true;
 
@@ -58,7 +60,7 @@ export class Logger {
      * @param {String} [msg]
      * @returns {Logger}
      */
-    debug (msg) {
+    debug (msg: string): Logger {
         if (this.enableDebugLog && console) {
             if (console.debug) {
                 console.debug(msg);
