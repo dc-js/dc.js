@@ -48,7 +48,7 @@ export class SeriesChart extends CompositeChart {
         super.compose(subChartArray);
     }
 
-    compose (subChartArray) {
+    compose (subChartArray): this {
         throw new Error('Not supported for this chart type');
     }
 
@@ -116,7 +116,9 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [chartFunction= (anchor) =>  new LineChart(anchor)]
      * @returns {Function|SeriesChart}
      */
-    chart (chartFunction) {
+    public chart ();
+    public chart (chartFunction): this;
+    public chart (chartFunction?) {
         if (!arguments.length) {
             return this._chartFunction;
         }
@@ -136,7 +138,9 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [accessor]
      * @returns {Function|SeriesChart}
      */
-    seriesAccessor (accessor) {
+    public seriesAccessor ();
+    public seriesAccessor (accessor): this;
+    public seriesAccessor (accessor?) {
         if (!arguments.length) {
             return this._seriesAccessor;
         }
@@ -154,7 +158,9 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [sortFunction=d3.ascending]
      * @returns {Function|SeriesChart}
      */
-    seriesSort (sortFunction) {
+    public seriesSort ();
+    public seriesSort (sortFunction): this;
+    public seriesSort (sortFunction?) {
         if (!arguments.length) {
             return this._seriesSort;
         }
@@ -177,7 +183,9 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [sortFunction]
      * @returns {Function|SeriesChart}
      */
-    valueSort (sortFunction) {
+    public valueSort ();
+    public valueSort (sortFunction): this;
+    public valueSort (sortFunction?) {
         if (!arguments.length) {
             return this._valueSort;
         }

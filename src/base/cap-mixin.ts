@@ -64,14 +64,14 @@ export const CapMixin = Base => class extends Base {
         });
     }
 
-    cappedKeyAccessor (d, i) {
+    cappedKeyAccessor (d, i?) {
         if (d.others) {
             return d.key;
         }
         return this.keyAccessor()(d, i);
     }
 
-    cappedValueAccessor (d, i) {
+    cappedValueAccessor (d, i?) {
         if (d.others) {
             return d.value;
         }
@@ -191,7 +191,7 @@ export const CapMixin = Base => class extends Base {
         return this;
     }
 
-    public onClick (d) {
+    public onClick (d, i?) {
         if (d.others) {
             this.filter([d.others]);
         }

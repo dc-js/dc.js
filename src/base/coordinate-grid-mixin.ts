@@ -640,7 +640,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._renderHorizontalGridLinesForAxis(g, this._y, this._yAxis);
     }
 
-    renderYAxisLabel (axisClass, text, rotation, labelXPosition) {
+    renderYAxisLabel (axisClass, text, rotation, labelXPosition?) {
         labelXPosition = labelXPosition || this._yAxisLabelPadding;
 
         let axisYLab = this.g().select(`text.${Y_AXIS_LABEL_CLASS}.${axisClass}-label`);

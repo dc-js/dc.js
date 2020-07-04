@@ -30,7 +30,7 @@ export * from './charts/data-count';
 export * from './charts/data-grid';
 export * from './charts/data-table';
 export * from './charts/geo-choropleth-chart';
-export * from './charts/heatmap';
+export * from './charts/heat-map';
 export * from './charts/html-legend';
 export * from './charts/legend';
 export * from './charts/line-chart';

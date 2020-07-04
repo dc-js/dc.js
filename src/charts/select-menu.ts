@@ -13,6 +13,14 @@ const OPTION_CSS_CLASS = 'dc-select-option';
  * @mixes BaseMixin
  */
 export class SelectMenu extends BaseMixin {
+    private _select;
+    private _promptText: string;
+    private _multiple: boolean;
+    private _promptValue;
+    private _numberVisible;
+    private _filterDisplayed: (d) => boolean;
+    private _order: (a, b) => (number);
+
     /**
      * Create a Select Menu.
      * @example
@@ -159,7 +167,9 @@ export class SelectMenu extends BaseMixin {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
      */
-    order (order) {
+    public order ();
+    public order (order): this;
+    public order (order?) {
         if (!arguments.length) {
             return this._order;
         }
@@ -174,7 +184,9 @@ export class SelectMenu extends BaseMixin {
      * @example
      * chart.promptText('All states');
      */
-    promptText (promptText) {
+    public promptText ();
+    public promptText (promptText): this;
+    public promptText (promptText?) {
         if (!arguments.length) {
             return this._promptText;
         }
@@ -193,7 +205,9 @@ export class SelectMenu extends BaseMixin {
      *     return true;
      * });
      */
-    filterDisplayed (filterDisplayed) {
+    public filterDisplayed ();
+    public filterDisplayed (filterDisplayed): this;
+    public filterDisplayed (filterDisplayed?) {
         if (!arguments.length) {
             return this._filterDisplayed;
         }
@@ -209,7 +223,9 @@ export class SelectMenu extends BaseMixin {
      * @example
      * chart.multiple(true);
      */
-    multiple (multiple) {
+    public multiple ();
+    public multiple (multiple): this;
+    public multiple (multiple?) {
         if (!arguments.length) {
             return this._multiple;
         }
@@ -226,7 +242,9 @@ export class SelectMenu extends BaseMixin {
      * @param {?*} [promptValue=null]
      * @returns {*|SelectMenu}
      */
-    promptValue (promptValue) {
+    public promptValue ();
+    public promptValue (promptValue): this;
+    public promptValue (promptValue?) {
         if (!arguments.length) {
             return this._promptValue;
         }
@@ -244,7 +262,9 @@ export class SelectMenu extends BaseMixin {
      * @example
      * chart.numberVisible(10);
      */
-    numberVisible (numberVisible) {
+    public numberVisible ();
+    public numberVisible (numberVisible): this;
+    public numberVisible (numberVisible?) {
         if (!arguments.length) {
             return this._numberVisible;
         }

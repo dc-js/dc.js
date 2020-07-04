@@ -11,6 +11,18 @@ import {constants} from '../core/constants';
  * @returns {HtmlLegend}
  */
 export class HtmlLegend {
+    private _htmlLegendDivCssClass: string;
+    private _legendItemCssClassHorizontal: string;
+    private _legendItemCssClassVertical: string;
+    private _parent;
+    private _container;
+    private _legendText: (d, i) => string;
+    private _maxItems;
+    private _horizontal: boolean;
+    private _legendItemClass;
+    private _highlightSelected: boolean;
+    private _defaultLegendItemCssClass: string;
+
     constructor () {
         this._htmlLegendDivCssClass = 'dc-html-legend';
         this._legendItemCssClassHorizontal = 'dc-legend-item-horizontal';
@@ -75,7 +87,9 @@ export class HtmlLegend {
      * @param {String} [container]
      * @return {String|HtmlLegend}
      */
-    container (container) {
+    public container ();
+    public container (container): this;
+    public container (container?) {
         if (!arguments.length) {
             return this._container;
         }
@@ -92,7 +106,9 @@ export class HtmlLegend {
      * @param {String} [legendItemClass]
      * @return {String|HtmlLegend}
      */
-    legendItemClass (legendItemClass) {
+    public legendItemClass ();
+    public legendItemClass (legendItemClass): this;
+    public legendItemClass (legendItemClass?) {
         if (!arguments.length) {
             return this._legendItemClass;
         }
@@ -106,7 +122,9 @@ export class HtmlLegend {
      * @param {String} [highlightSelected]
      * @return {String|HtmlLegend}
      */
-    highlightSelected (highlightSelected) {
+    public highlightSelected ();
+    public highlightSelected (highlightSelected): this;
+    public highlightSelected (highlightSelected?) {
         if (!arguments.length) {
             return this._highlightSelected;
         }
@@ -119,7 +137,9 @@ export class HtmlLegend {
      * @param {String} [horizontal]
      * @return {String|HtmlLegend}
      */
-    horizontal (horizontal) {
+    public horizontal ();
+    public horizontal (horizontal): this;
+    public horizontal (horizontal?) {
         if (!arguments.length) {
             return this._horizontal;
         }
@@ -143,7 +163,9 @@ export class HtmlLegend {
      * // create legend displaying group counts
      * chart.legend(new HtmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
-    legendText (legendText) {
+    public legendText ();
+    public legendText (legendText): this;
+    public legendText (legendText?) {
         if (!arguments.length) {
             return this._legendText;
         }
@@ -156,7 +178,9 @@ export class HtmlLegend {
      * @param  {Number} [maxItems]
      * @return {HtmlLegend}
      */
-    maxItems (maxItems) {
+    public maxItems ();
+    public maxItems (maxItems): this;
+    public maxItems (maxItems?) {
         if (!arguments.length) {
             return this._maxItems;
         }

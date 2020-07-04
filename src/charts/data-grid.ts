@@ -1,4 +1,4 @@
-import {ascending} from 'd3-array';
+import {ascending, Primitive} from 'd3-array';
 import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
@@ -22,6 +22,15 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  * @mixes BaseMixin
  */
 export class DataGrid extends BaseMixin {
+    private _section;
+    private _size: number;
+    private _html: (d) => string;
+    private _sortBy: (d) => any;
+    private _order: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
+    private _beginSlice: number;
+    private _endSlice;
+    private _htmlSection: (d) => string;
+
     /**
      * Create a Data Grid.
      * @param {String|node|d3.selection} parent - Any valid
@@ -126,7 +135,9 @@ export class DataGrid extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataGrid}
      */
-    section (section) {
+    public section ();
+    public section (section): this;
+    public section (section?) {
         if (!arguments.length) {
             return this._section;
         }
@@ -140,7 +151,9 @@ export class DataGrid extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataGrid}
      */
-    group (section) {
+    public group ();
+    public group (section): this;
+    public group (section?) {
         logger.warnOnce('consider using dataGrid.section instead of dataGrid.group for clarity');
         if (!arguments.length) {
             return this.section();
@@ -154,7 +167,9 @@ export class DataGrid extends BaseMixin {
      * @param {Number} [beginSlice=0]
      * @returns {Number|DataGrid}
      */
-    beginSlice (beginSlice) {
+    public beginSlice ();
+    public beginSlice (beginSlice): this;
+    public beginSlice (beginSlice?) {
         if (!arguments.length) {
             return this._beginSlice;
         }
@@ -168,7 +183,9 @@ export class DataGrid extends BaseMixin {
      * @param {Number} [endSlice]
      * @returns {Number|DataGrid}
      */
-    endSlice (endSlice) {
+    public endSlice ();
+    public endSlice (endSlice): this;
+    public endSlice (endSlice?) {
         if (!arguments.length) {
             return this._endSlice;
         }
@@ -181,7 +198,9 @@ export class DataGrid extends BaseMixin {
      * @param {Number} [size=999]
      * @returns {Number|DataGrid}
      */
-    size (size) {
+    public size ();
+    public size (size): this;
+    public size (size?) {
         if (!arguments.length) {
             return this._size;
         }
@@ -198,7 +217,9 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [html]
      * @returns {Function|DataGrid}
      */
-    html (html) {
+    public html ();
+    public html (html): this;
+    public html (html?) {
         if (!arguments.length) {
             return this._html;
         }
@@ -213,7 +234,9 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [htmlSection]
      * @returns {Function|DataGrid}
      */
-    htmlSection (htmlSection) {
+    public htmlSection ();
+    public htmlSection (htmlSection): this;
+    public htmlSection (htmlSection?) {
         if (!arguments.length) {
             return this._htmlSection;
         }
@@ -226,7 +249,9 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [htmlSection]
      * @returns {Function|DataGrid}
      */
-    htmlGroup (htmlSection) {
+    public htmlGroup ();
+    public htmlGroup (htmlSection): this;
+    public htmlGroup (htmlSection?) {
         logger.warnOnce('consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
         if (!arguments.length) {
             return this.htmlSection();
@@ -244,7 +269,9 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [sortByFunction]
      * @returns {Function|DataGrid}
      */
-    sortBy (sortByFunction) {
+    public sortBy ();
+    public sortBy (sortByFunction): this;
+    public sortBy (sortByFunction?) {
         if (!arguments.length) {
             return this._sortBy;
         }
@@ -253,7 +280,7 @@ export class DataGrid extends BaseMixin {
     }
 
     /**
-     * Get or set sort the order function.
+     * Get or set the sort order function.
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
@@ -261,7 +288,9 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [order=d3.ascending]
      * @returns {Function|DataGrid}
      */
-    order (order) {
+    public order ();
+    public order (order): this;
+    public order (order?) {
         if (!arguments.length) {
             return this._order;
         }

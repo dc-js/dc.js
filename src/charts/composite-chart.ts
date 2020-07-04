@@ -39,7 +39,7 @@ export class CompositeChart extends CoordinateGridMixin {
         this._shareTitle = true;
         this._alignYAxes = false;
 
-        this._rightYAxis = axisRight();
+        this._rightYAxis = axisRight(undefined);
         this._rightYAxisLabel = 0;
         this._rightYAxisLabelPadding = DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING;
         this._rightY = undefined;
@@ -99,7 +99,9 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    resizing (resizing) {
+    public resizing ();
+    public resizing (resizing): this;
+    public resizing (resizing?) {
         if (!arguments.length) {
             return super.resizing();
         }
@@ -270,7 +272,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Boolean} [useRightAxisGridLines=false]
      * @returns {Boolean|CompositeChart}
      */
-    useRightAxisGridLines (useRightAxisGridLines) {
+    public useRightAxisGridLines ();
+    public useRightAxisGridLines (useRightAxisGridLines): this;
+    public useRightAxisGridLines (useRightAxisGridLines?) {
         if (!arguments) {
             return this._rightAxisGridLines;
         }
@@ -285,7 +289,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Object} [childOptions]
      * @returns {Object|CompositeChart}
      */
-    childOptions (childOptions) {
+    public childOptions ();
+    public childOptions (childOptions): this;
+    public childOptions (childOptions?) {
         if (!arguments.length) {
             return this._childOptions;
         }
@@ -311,7 +317,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Number} [padding]
      * @returns {String|CompositeChart}
      */
-    rightYAxisLabel (rightYAxisLabel, padding) {
+    public rightYAxisLabel ();
+    public rightYAxisLabel (rightYAxisLabel, padding?): this;
+    public rightYAxisLabel (rightYAxisLabel?, padding?) {
         if (!arguments.length) {
             return this._rightYAxisLabel;
         }
@@ -369,7 +377,9 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     // properties passed through in compose()
-    height (height) {
+    public height ();
+    public height (height): this;
+    public height (height?) {
         if(!arguments.length) {
             return super.height();
         }
@@ -378,7 +388,9 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    width (width) {
+    public width ();
+    public width (width): this;
+    public width (width?) {
         if(!arguments.length) {
             return super.width();
         }
@@ -387,7 +399,9 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    margins (margins) {
+    public margins ();
+    public margins (margins): this;
+    public margins (margins?) {
         if(!arguments.length) {
             return super.margins();
         }
@@ -412,7 +426,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Boolean} [shareColors=false]
      * @returns {Boolean|CompositeChart}
      */
-    shareColors (shareColors) {
+    public shareColors ();
+    public shareColors (shareColors): this;
+    public shareColors (shareColors?) {
         if (!arguments.length) {
             return this._shareColors;
         }
@@ -429,7 +445,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Boolean} [shareTitle=true]
      * @returns {Boolean|CompositeChart}
      */
-    shareTitle (shareTitle) {
+    public shareTitle ();
+    public shareTitle (shareTitle): this;
+    public shareTitle (shareTitle?) {
         if (!arguments.length) {
             return this._shareTitle;
         }
@@ -444,7 +462,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|CompositeChart}
      */
-    rightY (yScale) {
+    public rightY ();
+    public rightY (yScale): this;
+    public rightY (yScale?) {
         if (!arguments.length) {
             return this._rightY;
         }
@@ -459,7 +479,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Boolean} [alignYAxes=false]
      * @returns {Chart}
      */
-    alignYAxes (alignYAxes) {
+    public alignYAxes ();
+    public alignYAxes (alignYAxes): this;
+    public alignYAxes (alignYAxes?) {
         if (!arguments.length) {
             return this._alignYAxes;
         }
@@ -564,7 +586,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {d3.axisRight} [rightYAxis]
      * @returns {d3.axisRight|CompositeChart}
      */
-    rightYAxis (rightYAxis) {
+    public rightYAxis ();
+    public rightYAxis (rightYAxis): this;
+    public rightYAxis (rightYAxis?) {
         if (!arguments.length) {
             return this._rightYAxis;
         }
@@ -572,11 +596,11 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    yAxisMin () {
+    yAxisMin (): number {
         throw new Error('Not supported for this chart type');
     }
 
-    yAxisMax () {
+    yAxisMax (): number {
         throw new Error('Not supported for this chart type');
     }
 }

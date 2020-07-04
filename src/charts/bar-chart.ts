@@ -260,7 +260,9 @@ export class BarChart extends StackMixin {
      * @param {Boolean} [centerBar=false]
      * @returns {Boolean|BarChart}
      */
-    centerBar (centerBar) {
+    public centerBar ();
+    public centerBar (centerBar): this;
+    public centerBar (centerBar?) {
         if (!arguments.length) {
             return this._centerBar;
         }
@@ -268,8 +270,8 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    onClick (d) {
-        super.onClick(d.data);
+    onClick (d, i?) {
+        super.onClick(d.data, i);
     }
 
     /**
@@ -280,7 +282,9 @@ export class BarChart extends StackMixin {
      * @param {Number} [barPadding=0]
      * @returns {Number|BarChart}
      */
-    barPadding (barPadding) {
+    public barPadding ();
+    public barPadding (barPadding): this;
+    public barPadding (barPadding?) {
         if (!arguments.length) {
             return this._rangeBandPadding();
         }
@@ -300,7 +304,9 @@ export class BarChart extends StackMixin {
      * @param {Number} [gap=2]
      * @returns {Number|BarChart}
      */
-    gap (gap) {
+    public gap ();
+    public gap (gap): this;
+    public gap (gap?) {
         if (!arguments.length) {
             return this._gap;
         }
@@ -328,7 +334,9 @@ export class BarChart extends StackMixin {
      * @param {Boolean} [alwaysUseRounding=false]
      * @returns {Boolean|BarChart}
      */
-    alwaysUseRounding (alwaysUseRounding) {
+    public alwaysUseRounding ();
+    public alwaysUseRounding (alwaysUseRounding): this;
+    public alwaysUseRounding (alwaysUseRounding?) {
         if (!arguments.length) {
             return this._alwaysUseRounding;
         }
@@ -337,7 +345,7 @@ export class BarChart extends StackMixin {
     }
 
     legendHighlight (d) {
-        const colorFilter = (color, inv) => function () {
+        const colorFilter = (color, inv?) => function () {
             const item = select(this);
             const match = item.attr('fill') === color;
             return inv ? !match : match;

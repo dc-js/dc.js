@@ -111,7 +111,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [padding=0.8]
      * @returns {Number|BoxPlot}
      */
-    boxPadding (padding) {
+    public boxPadding ();
+    public boxPadding (padding): this;
+    public boxPadding (padding?) {
         if (!arguments.length) {
             return this._rangeBandPadding();
         }
@@ -125,7 +127,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [padding=0.5]
      * @returns {Number|BoxPlot}
      */
-    outerPadding (padding) {
+    public outerPadding ();
+    public outerPadding (padding): this;
+    public outerPadding (padding?) {
         if (!arguments.length) {
             return this._outerRangeBandPadding();
         }
@@ -144,7 +148,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number|Function} [boxWidth=0.5]
      * @returns {Number|Function|BoxPlot}
      */
-    boxWidth (boxWidth) {
+    public boxWidth ();
+    public boxWidth (boxWidth): this;
+    public boxWidth (boxWidth?) {
         if (!arguments.length) {
             return this._boxWidth;
         }
@@ -220,11 +226,11 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     _minDataValue () {
-        return min(this.data(), e => min(this.valueAccessor()(e)));
+        return min(this.data(), e => min<number>(this.valueAccessor()(e)));
     }
 
     _maxDataValue () {
-        return max(this.data(), e => max(this.valueAccessor()(e)));
+        return max(this.data(), e => max<number>(this.valueAccessor()(e)));
     }
 
     _yAxisRangeRatio () {
@@ -287,7 +293,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Function} [tickFormat]
      * @returns {Number|Function|BoxPlot}
      */
-    tickFormat (tickFormat) {
+    public tickFormat ();
+    public tickFormat (tickFormat): this;
+    public tickFormat (tickFormat?) {
         if (!arguments.length) {
             return this._tickFormat;
         }
@@ -304,7 +312,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Function} [yRangePadding = 8]
      * @returns {Number|Function|BoxPlot}
      */
-    yRangePadding (yRangePadding) {
+    public yRangePadding ();
+    public yRangePadding (yRangePadding): this;
+    public yRangePadding (yRangePadding?) {
         if (!arguments.length) {
             return this._yRangePadding;
         }
@@ -320,7 +330,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Boolean} [show=false]
      * @returns {Boolean|BoxPlot}
      */
-    renderDataPoints (show) {
+    public renderDataPoints ();
+    public renderDataPoints (show): this;
+    public renderDataPoints (show?) {
         if (!arguments.length) {
             return this._renderDataPoints;
         }
@@ -336,7 +348,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [opacity=0.3]
      * @returns {Number|BoxPlot}
      */
-    dataOpacity (opacity) {
+    public dataOpacity ();
+    public dataOpacity (opacity): this;
+    public dataOpacity (opacity?) {
         if (!arguments.length) {
             return this._dataOpacity;
         }
@@ -352,7 +366,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [percentage=0.8]
      * @returns {Number|BoxPlot}
      */
-    dataWidthPortion (percentage) {
+    public dataWidthPortion ();
+    public dataWidthPortion (percentage): this;
+    public dataWidthPortion (percentage?) {
         if (!arguments.length) {
             return this._dataWidthPortion;
         }
@@ -368,7 +384,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Boolean} [show=true]
      * @returns {Boolean|BoxPlot}
      */
-    showOutliers (show) {
+    public showOutliers ();
+    public showOutliers (show): this;
+    public showOutliers (show?) {
         if (!arguments.length) {
             return this._showOutliers;
         }
@@ -384,7 +402,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Boolean} [show=false]
      * @returns {Boolean|BoxPlot}
      */
-    boldOutlier (show) {
+    public boldOutlier ();
+    public boldOutlier (show): this;
+    public boldOutlier (show?) {
         if (!arguments.length) {
             return this._boldOutlier;
         }

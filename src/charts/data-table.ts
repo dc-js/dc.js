@@ -1,4 +1,4 @@
-import {ascending} from 'd3-array';
+import {ascending, Primitive} from 'd3-array';
 import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
@@ -35,6 +35,15 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  * @mixes BaseMixin
  */
 export class DataTable extends BaseMixin {
+    private _size: number;
+    private _columns: [];
+    private _sortBy: (d) => any;
+    private _order: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
+    private _beginSlice: number;
+    private _endSlice: number;
+    private _showSections: boolean;
+    private _section: () => string;
+
     /**
      * Create a Data Table.
      *
@@ -116,7 +125,7 @@ export class DataTable extends BaseMixin {
         // create what you need.
         let bAllFunctions = true;
         this._columns.forEach(f => {
-            bAllFunctions = bAllFunctions & (typeof f === 'function');
+            bAllFunctions = bAllFunctions && (typeof f === 'function');
         });
 
         if (!bAllFunctions) {
@@ -218,7 +227,9 @@ export class DataTable extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataTable}
      */
-    section (section) {
+    public section ();
+    public section (section): this;
+    public section (section?) {
         if (!arguments.length) {
             return this._section;
         }
@@ -232,7 +243,9 @@ export class DataTable extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataTable}
      */
-    group (section) {
+    public group ();
+    public group (section): this;
+    public group (section?) {
         logger.warnOnce('consider using dataTable.section instead of dataTable.group for clarity');
         if (!arguments.length) {
             return this.section();
@@ -245,7 +258,9 @@ export class DataTable extends BaseMixin {
      * @param {Number} [size=25]
      * @returns {Number|DataTable}
      */
-    size (size) {
+    public size ();
+    public size (size): this;
+    public size (size?) {
         if (!arguments.length) {
             return this._size;
         }
@@ -264,7 +279,9 @@ export class DataTable extends BaseMixin {
      * @param {Number} [beginSlice=0]
      * @returns {Number|DataTable}
      */
-    beginSlice (beginSlice) {
+    public beginSlice ();
+    public beginSlice (beginSlice): this;
+    public beginSlice (beginSlice?) {
         if (!arguments.length) {
             return this._beginSlice;
         }
@@ -278,7 +295,9 @@ export class DataTable extends BaseMixin {
      * @param {Number|undefined} [endSlice=undefined]
      * @returns {Number|DataTable}
      */
-    endSlice (endSlice) {
+    public endSlice ();
+    public endSlice (endSlice): this;
+    public endSlice (endSlice?) {
         if (!arguments.length) {
             return this._endSlice;
         }
@@ -362,7 +381,9 @@ export class DataTable extends BaseMixin {
      * @param {Array<Function>} [columns=[]]
      * @returns {Array<Function>}|DataTable}
      */
-    columns (columns) {
+    public columns ();
+    public columns (columns): this;
+    public columns (columns?) {
         if (!arguments.length) {
             return this._columns;
         }
@@ -380,7 +401,9 @@ export class DataTable extends BaseMixin {
      * @param {Function} [sortBy=identity function]
      * @returns {Function|DataTable}
      */
-    sortBy (sortBy) {
+    public sortBy ();
+    public sortBy (sortBy): this;
+    public sortBy (sortBy?) {
         if (!arguments.length) {
             return this._sortBy;
         }
@@ -398,7 +421,9 @@ export class DataTable extends BaseMixin {
      * @param {Function} [order=d3.ascending]
      * @returns {Function|DataTable}
      */
-    order (order) {
+    public order ();
+    public order (order): this;
+    public order (order?) {
         if (!arguments.length) {
             return this._order;
         }
@@ -415,7 +440,9 @@ export class DataTable extends BaseMixin {
      * @param {Boolean} [showSections=true]
      * @returns {Boolean|DataTable}
      */
-    showSections (showSections) {
+    public showSections ();
+    public showSections (showSections): this;
+    public showSections (showSections?) {
         if (!arguments.length) {
             return this._showSections;
         }
@@ -428,7 +455,9 @@ export class DataTable extends BaseMixin {
      * @param {Boolean} [showSections=true]
      * @returns {Boolean|DataTable}
      */
-    showGroups (showSections) {
+    public showGroups ();
+    public showGroups (showSections): this;
+    public showGroups (showSections?) {
         logger.warnOnce('consider using dataTable.showSections instead of dataTable.showGroups for clarity');
         if (!arguments.length) {
             return this.showSections();

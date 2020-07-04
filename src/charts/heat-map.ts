@@ -77,7 +77,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [labelFunction=function(d) { return d; }]
      * @returns {Function|HeatMap}
      */
-    colsLabel (labelFunction) {
+    public colsLabel ();
+    public colsLabel (labelFunction): this;
+    public colsLabel (labelFunction?) {
         if (!arguments.length) {
             return this._colsLabel;
         }
@@ -94,7 +96,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [labelFunction=function(d) { return d; }]
      * @returns {Function|HeatMap}
      */
-    rowsLabel (labelFunction) {
+    public rowsLabel ();
+    public rowsLabel (labelFunction): this;
+    public rowsLabel (labelFunction?) {
         if (!arguments.length) {
             return this._rowsLabel;
         }
@@ -136,7 +140,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @returns {Array<String|Number>|HeatMap}
      */
 
-    rows (rows) {
+    public rows ();
+    public rows (rows): this;
+    public rows (rows?) {
         if (!arguments.length) {
             return this._rows;
         }
@@ -150,7 +156,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [rowOrdering]
      * @returns {Function|HeatMap}
      */
-    rowOrdering (rowOrdering) {
+    public rowOrdering ();
+    public rowOrdering (rowOrdering): this;
+    public rowOrdering (rowOrdering?) {
         if (!arguments.length) {
             return this._rowOrdering;
         }
@@ -164,7 +172,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Array<String|Number>} [cols]
      * @returns {Array<String|Number>|HeatMap}
      */
-    cols (cols) {
+    public cols ();
+    public cols (cols): this;
+    public cols (cols?) {
         if (!arguments.length) {
             return this._cols;
         }
@@ -178,7 +188,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [colOrdering]
      * @returns {Function|HeatMap}
      */
-    colOrdering (colOrdering) {
+    public colOrdering ();
+    public colOrdering (colOrdering): this;
+    public colOrdering (colOrdering?) {
         if (!arguments.length) {
             return this._colOrdering;
         }
@@ -331,7 +343,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    boxOnClick (handler) {
+    public boxOnClick ();
+    public boxOnClick (handler): this;
+    public boxOnClick (handler?) {
         if (!arguments.length) {
             return this._boxOnClick;
         }
@@ -346,7 +360,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    xAxisOnClick (handler) {
+    public xAxisOnClick ();
+    public xAxisOnClick (handler): this;
+    public xAxisOnClick (handler?) {
         if (!arguments.length) {
             return this._xAxisOnClick;
         }
@@ -361,7 +377,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    yAxisOnClick (handler) {
+    public yAxisOnClick ();
+    public yAxisOnClick (handler): this;
+    public yAxisOnClick (handler?) {
         if (!arguments.length) {
             return this._yAxisOnClick;
         }
@@ -374,7 +392,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Number} [xBorderRadius=6.75]
      * @returns {Number|HeatMap}
      */
-    xBorderRadius (xBorderRadius) {
+    public xBorderRadius ();
+    public xBorderRadius (xBorderRadius): this;
+    public xBorderRadius (xBorderRadius?) {
         if (!arguments.length) {
             return this._xBorderRadius;
         }
@@ -387,7 +407,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Number} [yBorderRadius=6.75]
      * @returns {Number|HeatMap}
      */
-    yBorderRadius (yBorderRadius) {
+    public yBorderRadius ();
+    public yBorderRadius (yBorderRadius): this;
+    public yBorderRadius (yBorderRadius?) {
         if (!arguments.length) {
             return this._yBorderRadius;
         }

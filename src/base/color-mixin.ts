@@ -36,7 +36,7 @@ export const ColorMixin = Base => class extends Base {
      * @param {Number} [i]
      * @returns {String}
      */
-    getColor (d, i) {
+    getColor (d, i?) {
         return this._colorCalculator ?
             this._colorCalculator(d, i) :
             this._colors(this._colorAccessor(d, i));

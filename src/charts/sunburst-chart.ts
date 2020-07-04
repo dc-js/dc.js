@@ -289,7 +289,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [innerRadius=0]
      * @returns {Number|SunburstChart}
      */
-    innerRadius (innerRadius) {
+    public innerRadius ();
+    public innerRadius (innerRadius): this;
+    public innerRadius (innerRadius?) {
         if (!arguments.length) {
             return this._innerRadius;
         }
@@ -303,7 +305,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [radius]
      * @returns {Number|SunburstChart}
      */
-    radius (radius) {
+    public radius ();
+    public radius (radius): this;
+    public radius (radius?) {
         if (!arguments.length) {
             return this._givenRadius;
         }
@@ -316,7 +320,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [cx]
      * @returns {Number|SunburstChart}
      */
-    cx (cx) {
+    public cx ();
+    public cx (cx): this;
+    public cx (cx?) {
         if (!arguments.length) {
             return (this._cx || this.width() / 2);
         }
@@ -329,7 +335,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [cy]
      * @returns {Number|SunburstChart}
      */
-    cy (cy) {
+    public cy ();
+    public cy (cy): this;
+    public cy (cy?) {
         if (!arguments.length) {
             return (this._cy || this.height() / 2);
         }
@@ -343,7 +351,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [minAngleForLabel=0.5]
      * @returns {Number|SunburstChart}
      */
-    minAngleForLabel (minAngleForLabel) {
+    public minAngleForLabel ();
+    public minAngleForLabel (minAngleForLabel): this;
+    public minAngleForLabel (minAngleForLabel?) {
         if (!arguments.length) {
             return this._minAngleForLabel;
         }
@@ -356,7 +366,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {String} [title]
      * @returns {String|SunburstChart}
      */
-    emptyTitle (title) {
+    public emptyTitle ();
+    public emptyTitle (title): this;
+    public emptyTitle (title?) {
         if (arguments.length === 0) {
             return this._emptyTitle;
         }
@@ -371,7 +383,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [externalLabelRadius]
      * @returns {Number|SunburstChart}
      */
-    externalLabels (externalLabelRadius) {
+    public externalLabels ();
+    public externalLabels (externalLabelRadius): this;
+    public externalLabels (externalLabelRadius?) {
         if (arguments.length === 0) {
             return this._externalLabelRadius;
         } else if (externalLabelRadius) {
@@ -501,7 +515,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {RingSizes} ringSizes
      * @returns {Object|SunburstChart}
      */
-    ringSizes (ringSizes) {
+    public ringSizes ();
+    public ringSizes (ringSizes): this;
+    public ringSizes (ringSizes?) {
         if (!arguments.length) {
             if (!this._ringSizes) {
                 this._ringSizes = this.defaultRingSizes();
@@ -514,8 +530,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     _buildArcs () {
         return arc()
-            .startAngle(d => d.x0)
-            .endAngle(d => d.x1)
+            .startAngle((d:any) => d.x0) // TODO: revisit and look for proper typing
+            .endAngle((d:any) => d.x1) // TODO: revisit and look for proper typing
             .innerRadius(d => this.ringSizes().scaleInnerRadius(d))
             .outerRadius(d => this.ringSizes().scaleOuterRadius(d));
     }
@@ -567,6 +583,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         // In D3v4 the returned data is slightly different, change it enough to suit our purposes.
         const nodes = _hierarchy.descendants().map(d => {
+            // TODO: find a better way to augment `.key`; which is not part of the current type (HierarchyNode)
+            // @ts-ignore
             d.key = d.data.key;
             d.path = d.data.path;
             return d;
@@ -576,6 +594,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         return {
             nodes,
+            // TODO: find a better way to augment `.y1`; which is not part of the current type (HierarchyNode)
+            // @ts-ignore
             rootOffset: _hierarchy.y1,
             relativeRingSizes: relativeSizes
         };
@@ -598,7 +618,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return this.getColor(d.data, i);
     }
 
-    onClick (d, i) {
+    onClick (d, i?) {
         if (this._g.attr('class') === this._emptyCssClass) {
             return;
         }
@@ -654,7 +674,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     legendables () {
         return this.data().map((d, i) => {
-            const legendable = {name: d.key, data: d.value, others: d.others, chart: this};
+            const legendable: {[key: string]: any} = {name: d.key, data: d.value, others: d.others, chart: this};
             legendable.color = this.getColor(d, i);
             return legendable;
         });

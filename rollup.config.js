@@ -47,7 +47,7 @@ const umdMinConf = Object.assign({}, umdConf, {file: 'dist/dc.min.js'});
 
 export default [
     {
-        input: 'src/index-with-version.js',
+        input: 'src/index-with-version.ts',
         external: Object.keys(d3Modules),
         plugins: [
             terser({include: [/^.+\.min\.js$/]}),
@@ -55,7 +55,12 @@ export default [
             licensePlugin,
             typescript({
                 tsconfig: 'tsconfig.json',
-                tsconfigOverride: { compilerOptions: { declaration: false } } // Type definitions are generated as part of ESM6 by `tsc`
+                tsconfigOverride: { compilerOptions:
+                        {
+                            declaration: false,      // Type definitions are generated as part of ESM6 by `tsc`
+                            resolveJsonModule: true  // to get info from package.json
+                        }
+                }
             })
         ],
         output: [

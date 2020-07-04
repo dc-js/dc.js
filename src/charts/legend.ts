@@ -15,6 +15,20 @@ const LABEL_GAP = 2;
  * @returns {Legend}
  */
 export class Legend {
+    private _parent;
+    private _x: number;
+    private _y: number;
+    private _itemHeight: number;
+    private _gap: number;
+    private _horizontal: boolean;
+    private _legendWidth: number;
+    private _itemWidth: number;
+    private _autoItemWidth: boolean;
+    private _legendText: (d, i?) => string;
+    private _maxItems;
+    private _highlightSelected: boolean;
+    private _g;
+
     constructor () {
         this._parent = undefined;
         this._x = 0;
@@ -32,7 +46,9 @@ export class Legend {
         this._g = undefined;
     }
 
-    parent (p) {
+    public parent ();
+    public parent (p): this;
+    public parent (p?) {
         if (!arguments.length) {
             return this._parent;
         }
@@ -45,7 +61,9 @@ export class Legend {
      * @param  {Number} [x=0]
      * @returns {Number|Legend}
      */
-    x (x) {
+    public x ();
+    public x (x): this;
+    public x (x?) {
         if (!arguments.length) {
             return this._x;
         }
@@ -58,7 +76,9 @@ export class Legend {
      * @param  {Number} [y=0]
      * @returns {Number|Legend}
      */
-    y (y) {
+    public y ();
+    public y (y): this;
+    public y (y?) {
         if (!arguments.length) {
             return this._y;
         }
@@ -71,7 +91,9 @@ export class Legend {
      * @param  {Number} [gap=5]
      * @returns {Number|Legend}
      */
-    gap (gap) {
+    public gap ();
+    public gap (gap): this;
+    public gap (gap?) {
         if (!arguments.length) {
             return this._gap;
         }
@@ -85,7 +107,9 @@ export class Legend {
      * @param {String} [highlightSelected]
      * @return {String|dc.legend}
      **/
-    highlightSelected (highlightSelected) {
+    public highlightSelected ();
+    public highlightSelected (highlightSelected): this;
+    public highlightSelected (highlightSelected?) {
         if (!arguments.length) {
             return this._highlightSelected;
         }
@@ -98,7 +122,9 @@ export class Legend {
      * @param  {Number} [itemHeight=12]
      * @returns {Number|Legend}
      */
-    itemHeight (itemHeight) {
+    public itemHeight ();
+    public itemHeight (itemHeight): this;
+    public itemHeight (itemHeight?) {
         if (!arguments.length) {
             return this._itemHeight;
         }
@@ -111,7 +137,9 @@ export class Legend {
      * @param  {Boolean} [horizontal=false]
      * @returns {Boolean|Legend}
      */
-    horizontal (horizontal) {
+    public horizontal ();
+    public horizontal (horizontal): this;
+    public horizontal (horizontal?) {
         if (!arguments.length) {
             return this._horizontal;
         }
@@ -124,7 +152,9 @@ export class Legend {
      * @param  {Number} [legendWidth=500]
      * @returns {Number|Legend}
      */
-    legendWidth (legendWidth) {
+    public legendWidth ();
+    public legendWidth (legendWidth): this;
+    public legendWidth (legendWidth?) {
         if (!arguments.length) {
             return this._legendWidth;
         }
@@ -137,7 +167,9 @@ export class Legend {
      * @param  {Number} [itemWidth=70]
      * @returns {Number|Legend}
      */
-    itemWidth (itemWidth) {
+    public itemWidth ();
+    public itemWidth (itemWidth): this;
+    public itemWidth (itemWidth?) {
         if (!arguments.length) {
             return this._itemWidth;
         }
@@ -151,7 +183,9 @@ export class Legend {
      * @param  {Boolean} [autoItemWidth=false]
      * @returns {Boolean|Legend}
      */
-    autoItemWidth (autoItemWidth) {
+    public autoItemWidth ();
+    public autoItemWidth (autoItemWidth): this;
+    public autoItemWidth (autoItemWidth?) {
         if (!arguments.length) {
             return this._autoItemWidth;
         }
@@ -175,7 +209,9 @@ export class Legend {
      * // create legend displaying group counts
      * chart.legend(new Legend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
-    legendText (legendText) {
+    public legendText ();
+    public legendText (legendText): this;
+    public legendText (legendText?) {
         if (!arguments.length) {
             return this._legendText;
         }
@@ -188,7 +224,9 @@ export class Legend {
      * @param  {Number} [maxItems]
      * @return {Legend}
      */
-    maxItems (maxItems) {
+    public maxItems ();
+    public maxItems (maxItems): this;
+    public maxItems (maxItems?) {
         if (!arguments.length) {
             return this._maxItems;
         }

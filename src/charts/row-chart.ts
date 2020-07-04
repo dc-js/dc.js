@@ -53,7 +53,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this._elasticX = undefined;
 
-        this._xAxis = axisBottom();
+        this._xAxis = axisBottom(undefined);
 
         this._rowData = undefined;
 
@@ -68,7 +68,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     _calculateAxisScale () {
         if (!this._x || this._elasticX) {
-            const _extent = extent(this._rowData, d => this.cappedValueAccessor(d));
+            const _extent = extent<any, number>(this._rowData, d => this.cappedValueAccessor(d));
             if (_extent[0] > 0) {
                 _extent[0] = 0;
             }
@@ -114,7 +114,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {d3.scale} [scale]
      * @returns {d3.scale|RowChart}
      */
-    x (scale) {
+    public x ();
+    public x (scale): this;
+    public x (scale?) {
         if (!arguments.length) {
             return this._x;
         }
@@ -252,7 +254,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Boolean} [renderTitleLabel=false]
      * @returns {Boolean|RowChart}
      */
-    renderTitleLabel (renderTitleLabel) {
+    public renderTitleLabel ();
+    public renderTitleLabel (renderTitleLabel): this;
+    public renderTitleLabel (renderTitleLabel?) {
         if (!arguments.length) {
             return this._renderTitleLabel;
         }
@@ -260,8 +264,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this;
     }
 
-    _onClick (d) {
-        this.onClick(d);
+    _onClick (d, i?) {
+        this.onClick(d, i);
     }
 
     _translateX (d) {
@@ -291,7 +295,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * chart.xAxis(d3.axisTop())
      * @returns {d3.axis|RowChart}
      */
-    xAxis (xAxis) {
+    public xAxis ();
+    public xAxis (xAxis): this;
+    public xAxis (xAxis?) {
         if (!arguments.length) {
             return this._xAxis;
         }
@@ -309,7 +315,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Boolean|Number} [fixedBarHeight=false]
      * @returns {Boolean|Number|RowChart}
      */
-    fixedBarHeight (fixedBarHeight) {
+    public fixedBarHeight ();
+    public fixedBarHeight (fixedBarHeight): this;
+    public fixedBarHeight (fixedBarHeight?) {
         if (!arguments.length) {
             return this._fixedBarHeight;
         }
@@ -322,7 +330,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [gap=5]
      * @returns {Number|RowChart}
      */
-    gap (gap) {
+    public gap ();
+    public gap (gap): this;
+    public gap (gap?) {
         if (!arguments.length) {
             return this._gap;
         }
@@ -336,7 +346,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Boolean} [elasticX]
      * @returns {Boolean|RowChart}
      */
-    elasticX (elasticX) {
+    public elasticX ();
+    public elasticX (elasticX): this;
+    public elasticX (elasticX?) {
         if (!arguments.length) {
             return this._elasticX;
         }
@@ -349,7 +361,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [labelOffsetX=10]
      * @returns {Number|RowChart}
      */
-    labelOffsetX (labelOffsetX) {
+    public labelOffsetX ();
+    public labelOffsetX (labelOffsetX): this;
+    public labelOffsetX (labelOffsetX?) {
         if (!arguments.length) {
             return this._labelOffsetX;
         }
@@ -362,7 +376,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [labelOffsety=15]
      * @returns {Number|RowChart}
      */
-    labelOffsetY (labelOffsety) {
+    public labelOffsetY ();
+    public labelOffsetY (labelOffsety): this;
+    public labelOffsetY (labelOffsety?) {
         if (!arguments.length) {
             return this._labelOffsetY;
         }
@@ -376,7 +392,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [titleLabelOffsetX=2]
      * @returns {Number|RowChart}
      */
-    titleLabelOffsetX (titleLabelOffsetX) {
+    public titleLabelOffsetX ();
+    public titleLabelOffsetX (titleLabelOffsetX): this;
+    public titleLabelOffsetX (titleLabelOffsetX?) {
         if (!arguments.length) {
             return this._titleLabelOffsetX;
         }

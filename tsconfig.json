@@ -56,7 +56,6 @@
     // "experimentalDecorators": true,        /* Enables experimental support for ES7 decorators. */
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
-  "include": ["./src/**/*.ts", "./src/**/*.js"], /* Only compile files in src, avoids confusion with code in node_modules or compiled code */
-                                              /* TODO: remove .js after converting all src to .ts */
-  "exclude": ["./src/index-with-version.js"]  /* Version info is needed only in the UMD bundle */
+  "include": ["./src/**/*.ts"],               /* Only compile files in src, avoids confusion with code in node_modules or compiled code */
+  "exclude": ["./src/index-with-version.ts"]  /* Version info is needed only in the UMD bundle */
 }

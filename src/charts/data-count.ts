@@ -20,6 +20,11 @@ import {BaseMixin} from '../base/base-mixin';
  * @mixes BaseMixin
  */
 export class DataCount extends BaseMixin {
+    private _formatNumber: (n: (number | { valueOf(): number })) => string;
+    private _crossfilter;
+    private _groupAll;
+    private _html: { all: string; some: string };
+
     /**
      * Create a Data Count widget.
      * @example
@@ -62,7 +67,9 @@ export class DataCount extends BaseMixin {
      * @param {{some:String, all: String}} [options]
      * @returns {{some:String, all: String}|DataCount}
      */
-    html (options) {
+    public html ();
+    public html (options): this;
+    public html (options?) {
         if (!arguments.length) {
             return this._html;
         }
@@ -83,7 +90,9 @@ export class DataCount extends BaseMixin {
      * @param {Function} [formatter=d3.format('.2g')]
      * @returns {Function|DataCount}
      */
-    formatNumber (formatter) {
+    public formatNumber ();
+    public formatNumber (formatter): this;
+    public formatNumber (formatter?) {
         if (!arguments.length) {
             return this._formatNumber;
         }
@@ -112,7 +121,9 @@ export class DataCount extends BaseMixin {
         return this._doRender();
     }
 
-    crossfilter (cf) {
+    public crossfilter ();
+    public crossfilter (cf): this;
+    public crossfilter (cf?) {
         if (!arguments.length) {
             return this._crossfilter;
         }
@@ -120,7 +131,9 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    dimension (cf) {
+    public dimension ();
+    public dimension (cf): this;
+    public dimension (cf?) {
         logger.warnOnce('consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
         if (!arguments.length) {
             return this.crossfilter();
@@ -128,7 +141,9 @@ export class DataCount extends BaseMixin {
         return this.crossfilter(cf);
     }
 
-    groupAll (groupAll) {
+    public groupAll ();
+    public groupAll (groupAll): this;
+    public groupAll (groupAll?) {
         if (!arguments.length) {
             return this._groupAll;
         }
@@ -136,7 +151,9 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    group (groupAll) {
+    public group ();
+    public group (groupAll): this;
+    public group (groupAll?) {
         logger.warnOnce('consider using dataCount.groupAll instead of dataCount.group for clarity');
         if (!arguments.length) {
             return this.groupAll();

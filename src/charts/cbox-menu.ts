@@ -14,6 +14,15 @@ const ITEM_CSS_CLASS = 'dc-cbox-item';
  * @mixes BaseMixin
  */
 export class CboxMenu extends BaseMixin {
+    private _cbox;
+    private _promptText: string;
+    private _multiple: boolean;
+    private _inputType: string;
+    private _promptValue;
+    private _uniqueId: number;
+    private _filterDisplayed: (d) => boolean;
+    private _order: (a, b) => (number);
+
     /**
      * Create a Cbox Menu.
      *
@@ -154,9 +163,11 @@ export class CboxMenu extends BaseMixin {
         if (!target.datum()) {
             values = this._promptValue || null;
         } else {
+            // TODO: replace ewith d3 like way of doing things - consider selecting only checked items, or, at the least use .property
             options = select(element).selectAll('input')
                 .filter(function (o) {
                     if (o) {
+                        // @ts-ignore
                         return this.checked;
                     }
                 });
@@ -194,7 +205,9 @@ export class CboxMenu extends BaseMixin {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
      */
-    order (order) {
+    public order ();
+    public order (order): this;
+    public order (order?) {
         if (!arguments.length) {
             return this._order;
         }
@@ -209,7 +222,9 @@ export class CboxMenu extends BaseMixin {
      * @example
      * chart.promptText('All states');
      */
-    promptText (promptText) {
+    public promptText ();
+    public promptText (promptText): this;
+    public promptText (promptText?) {
         if (!arguments.length) {
             return this._promptText;
         }
@@ -228,7 +243,9 @@ export class CboxMenu extends BaseMixin {
      *     return true;
      * });
      */
-    filterDisplayed (filterDisplayed) {
+    public filterDisplayed ();
+    public filterDisplayed (filterDisplayed): this;
+    public filterDisplayed (filterDisplayed?) {
         if (!arguments.length) {
             return this._filterDisplayed;
         }
@@ -244,7 +261,9 @@ export class CboxMenu extends BaseMixin {
      * @example
      * chart.multiple(true);
      */
-    multiple (multiple) {
+    public multiple ();
+    public multiple (multiple): this;
+    public multiple (multiple?) {
         if (!arguments.length) {
             return this._multiple;
         }
@@ -265,7 +284,9 @@ export class CboxMenu extends BaseMixin {
      * @param {?*} [promptValue=null]
      * @returns {*|CboxMenu}
      */
-    promptValue (promptValue) {
+    public promptValue ();
+    public promptValue (promptValue): this;
+    public promptValue (promptValue?) {
         if (!arguments.length) {
             return this._promptValue;
         }

@@ -22,6 +22,10 @@ const SPAN_CLASS = 'number-display';
  * @mixes BaseMixin
  */
 export class NumberDisplay extends BaseMixin {
+    private _formatNumber: (n: (number | { valueOf(): number })) => string;
+    private _html: { some: string; one: string; none: string };
+    private _lastValue;
+
     /**
      * Create a Number Display widget.
      *
@@ -72,7 +76,9 @@ export class NumberDisplay extends BaseMixin {
      * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
      * @returns {{one:String, some:String, none:String}|NumberDisplay}
      */
-    html (html) {
+    public html ();
+    public html (html): this;
+    public html (html?) {
         if (!arguments.length) {
             return this._html;
         }
@@ -152,6 +158,7 @@ export class NumberDisplay extends BaseMixin {
                     };
                 });
         }
+        return this;
     }
 
     _doRedraw () {
@@ -164,7 +171,9 @@ export class NumberDisplay extends BaseMixin {
      * @param {Function} [formatter=d3.format('.2s')]
      * @returns {Function|NumberDisplay}
      */
-    formatNumber (formatter) {
+    public formatNumber ();
+    public formatNumber (formatter): this;
+    public formatNumber (formatter?) {
         if (!arguments.length) {
             return this._formatNumber;
         }

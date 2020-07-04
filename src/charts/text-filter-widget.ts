@@ -16,6 +16,11 @@ const INPUT_CSS_CLASS = 'dc-text-filter-input';
  * @mixes BaseMixin
  */
 export class TextFilterWidget extends BaseMixin {
+    private _normalize: (s) => string;
+    private _filterFunctionFactory: (query) => (d) => boolean;
+    private _placeHolder: string;
+    private _input: any;
+
     /**
      * Create Text Filter widget
      * @example
@@ -65,7 +70,7 @@ export class TextFilterWidget extends BaseMixin {
         this._input.on('input', function () {
             chart.dimension().filterFunction(chart._filterFunctionFactory(this.value));
             events.trigger(() => {
-                redrawAll();
+                this.redrawGroup();
             }, constants.EVENT_DELAY);
         });
 
@@ -91,7 +96,9 @@ export class TextFilterWidget extends BaseMixin {
      * @param {function} [normalize]
      * @returns {TextFilterWidget|function}
      */
-    normalize (normalize) {
+    public normalize ();
+    public normalize (normalize): this;
+    public normalize (normalize?) {
         if (!arguments.length) {
             return this._normalize;
         }
@@ -107,7 +114,9 @@ export class TextFilterWidget extends BaseMixin {
      * @param {function} [placeHolder='search']
      * @returns {TextFilterWidget|string}
      */
-    placeHolder (placeHolder) {
+    public placeHolder ();
+    public placeHolder (placeHolder): this;
+    public placeHolder (placeHolder?) {
         if (!arguments.length) {
             return this._placeHolder;
         }
@@ -129,7 +138,9 @@ export class TextFilterWidget extends BaseMixin {
      * @param {function} [filterFunctionFactory]
      * @returns {TextFilterWidget|function}
      */
-    filterFunctionFactory (filterFunctionFactory) {
+    public filterFunctionFactory ();
+    public filterFunctionFactory (filterFunctionFactory): this;
+    public filterFunctionFactory (filterFunctionFactory?) {
         if (!arguments.length) {
             return this._filterFunctionFactory;
         }

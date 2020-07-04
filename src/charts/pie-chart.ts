@@ -1,5 +1,5 @@
 import {min, sum} from 'd3-array';
-import {arc, pie} from 'd3-shape';
+import {arc, Pie, pie} from 'd3-shape';
 import {select} from 'd3-selection';
 import {interpolate} from 'd3-interpolate';
 
@@ -339,7 +339,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [externalRadiusPadding=0]
      * @returns {Number|PieChart}
      */
-    externalRadiusPadding (externalRadiusPadding) {
+    public externalRadiusPadding ();
+    public externalRadiusPadding (externalRadiusPadding);
+    public externalRadiusPadding (externalRadiusPadding?) {
         if (!arguments.length) {
             return this._externalRadiusPadding;
         }
@@ -353,7 +355,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [innerRadius=0]
      * @returns {Number|PieChart}
      */
-    innerRadius (innerRadius) {
+    public innerRadius ();
+    public innerRadius (innerRadius);
+    public innerRadius (innerRadius?) {
         if (!arguments.length) {
             return this._innerRadius;
         }
@@ -367,7 +371,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [radius]
      * @returns {Number|PieChart}
      */
-    radius (radius) {
+    public radius ();
+    public radius (radius);
+    public radius (radius?) {
         if (!arguments.length) {
             return this._givenRadius;
         }
@@ -380,7 +386,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [cx]
      * @returns {Number|PieChart}
      */
-    cx (cx) {
+    public cx ();
+    public cx (cx): this;
+    public cx (cx?) {
         if (!arguments.length) {
             return (this._cx || this.width() / 2);
         }
@@ -393,7 +401,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [cy]
      * @returns {Number|PieChart}
      */
-    cy (cy) {
+    public cy ();
+    public cy (cy): this;
+    public cy (cy?) {
         if (!arguments.length) {
             return (this._cy || this.height() / 2);
         }
@@ -422,7 +432,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [minAngleForLabel=0.5]
      * @returns {Number|PieChart}
      */
-    minAngleForLabel (minAngleForLabel) {
+    public minAngleForLabel ();
+    public minAngleForLabel (minAngleForLabel);
+    public minAngleForLabel (minAngleForLabel?) {
         if (!arguments.length) {
             return this._minAngleForLabel;
         }
@@ -431,7 +443,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     _pieLayout () {
-        return pie().sort(null).value(d => this.cappedValueAccessor(d));
+        // The 2nd argument is type of datum that will be used. TODO: revisit after refactoring.
+        return <Pie<any, any>>pie().sort(null).value(d => this.cappedValueAccessor(d));
     }
 
     _sliceTooSmall (d) {
@@ -470,7 +483,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {String} [title]
      * @returns {String|PieChart}
      */
-    emptyTitle (title) {
+    public emptyTitle ();
+    public emptyTitle (title);
+    public emptyTitle (title?) {
         if (arguments.length === 0) {
             return this._emptyTitle;
         }
@@ -485,7 +500,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [externalLabelRadius]
      * @returns {Number|PieChart}
      */
-    externalLabels (externalLabelRadius) {
+    public externalLabels ();
+    public externalLabels (externalLabelRadius);
+    public externalLabels (externalLabelRadius?) {
         if (arguments.length === 0) {
             return this._externalLabelRadius;
         } else if (externalLabelRadius) {
@@ -503,7 +520,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Boolean} [drawPaths]
      * @returns {Boolean|PieChart}
      */
-    drawPaths (drawPaths) {
+    public drawPaths ();
+    public drawPaths (drawPaths);
+    public drawPaths (drawPaths?) {
         if (arguments.length === 0) {
             return this._drawPaths;
         }
@@ -530,7 +549,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     legendables () {
         return this.data().map((d, i) => {
-            const legendable = {name: d.key, data: d.value, others: d.others, chart: this};
+            const legendable:{[key: string]: any} = {name: d.key, data: d.value, others: d.others, chart: this};
             legendable.color = this.getColor(d, i);
             return legendable;
         });

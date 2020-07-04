@@ -136,7 +136,9 @@ export class LineChart extends StackMixin {
      * @param  {d3.curve} [curve=d3.curveLinear]
      * @returns {d3.curve|LineChart}
      */
-    curve (curve) {
+    public curve ();
+    public curve (curve): this;
+    public curve (curve?) {
         if (!arguments.length) {
             return this._curve;
         }
@@ -160,7 +162,9 @@ export class LineChart extends StackMixin {
      * @param  {d3.curve} [interpolate=d3.curveLinear]
      * @returns {d3.curve|LineChart}
      */
-    interpolate (interpolate) {
+    public interpolate ();
+    public interpolate (interpolate): this;
+    public interpolate (interpolate?) {
         logger.warnOnce('dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
         if (!arguments.length) {
             return this._interpolate;
@@ -184,7 +188,9 @@ export class LineChart extends StackMixin {
      * @param  {Number} [tension=0]
      * @returns {Number|LineChart}
      */
-    tension (tension) {
+    public tension ();
+    public tension (tension): this;
+    public tension (tension?) {
         logger.warnOnce('dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
         if (!arguments.length) {
             return this._tension;
@@ -207,7 +213,9 @@ export class LineChart extends StackMixin {
      * @param  {Function} [defined]
      * @returns {Function|LineChart}
      */
-    defined (defined) {
+    public defined ();
+    public defined (defined): this;
+    public defined (defined?) {
         if (!arguments.length) {
             return this._defined;
         }
@@ -225,7 +233,9 @@ export class LineChart extends StackMixin {
      * @param  {Array<Number>} [dashStyle=[]]
      * @returns {Array<Number>|LineChart}
      */
-    dashStyle (dashStyle) {
+    public dashStyle ();
+    public dashStyle (dashStyle): this;
+    public dashStyle (dashStyle?) {
         if (!arguments.length) {
             return this._dashStyle;
         }
@@ -239,7 +249,9 @@ export class LineChart extends StackMixin {
      * @param  {Boolean} [renderArea=false]
      * @returns {Boolean|LineChart}
      */
-    renderArea (renderArea) {
+    public renderArea ();
+    public renderArea (renderArea): this;
+    public renderArea (renderArea?) {
         if (!arguments.length) {
             return this._renderArea;
         }
@@ -298,8 +310,8 @@ export class LineChart extends StackMixin {
 
     _drawLine (layersEnter, layers) {
         const _line = line()
-            .x(d => this.x()(d.x))
-            .y(d => this.y()(d.y + d.y0))
+            .x((d: any) => this.x()(d.x)) // TODO: revisit later to put proper type
+            .y((d: any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
             .curve(this._getCurveFactory());
         if (this._defined) {
             _line.defined(this._defined);
@@ -321,9 +333,9 @@ export class LineChart extends StackMixin {
     _drawArea (layersEnter, layers) {
         if (this._renderArea) {
             const _area = area()
-                .x(d => this.x()(d.x))
-                .y1(d => this.y()(d.y + d.y0))
-                .y0(d => this.y()(d.y0))
+                .x((d:any) => this.x()(d.x)) // TODO: revisit later to put proper type
+                .y1((d:any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
+                .y0((d:any) => this.y()(d.y0)) // TODO: revisit later to put proper type
                 .curve(this._getCurveFactory());
             if (this._defined) {
                 _area.defined(this._defined);
@@ -410,7 +422,7 @@ export class LineChart extends StackMixin {
         const chart = this;
         layers.each(function (data, layerIndex) {
             const layer = select(this);
-            const labels = layer.selectAll('text.lineLabel')
+            const labels = layer.selectAll<SVGTextElement, unknown>('text.lineLabel')
                 .data(data.values, pluck('x'));
 
             const labelsEnterModify = labels
@@ -490,7 +502,9 @@ export class LineChart extends StackMixin {
      * @param  {Boolean} [xyTipsOn=false]
      * @returns {Boolean|LineChart}
      */
-    xyTipsOn (xyTipsOn) {
+    public xyTipsOn ();
+    public xyTipsOn (xyTipsOn): this;
+    public xyTipsOn (xyTipsOn?) {
         if (!arguments.length) {
             return this._xyTipsOn;
         }
@@ -503,7 +517,9 @@ export class LineChart extends StackMixin {
      * @param  {Number} [dotRadius=5]
      * @returns {Number|LineChart}
      */
-    dotRadius (dotRadius) {
+    public dotRadius ();
+    public dotRadius (dotRadius): this;
+    public dotRadius (dotRadius?) {
         if (!arguments.length) {
             return this._dotRadius;
         }
@@ -521,7 +537,9 @@ export class LineChart extends StackMixin {
      * @param  {{fillOpacity: Number, strokeOpacity: Number, radius: Number}} [options={fillOpacity: 0.8, strokeOpacity: 0.0, radius: 2}]
      * @returns {{fillOpacity: Number, strokeOpacity: Number, radius: Number}|LineChart}
      */
-    renderDataPoints (options) {
+    public renderDataPoints ();
+    public renderDataPoints (options): this;
+    public renderDataPoints (options?) {
         if (!arguments.length) {
             return {
                 fillOpacity: this._dataPointFillOpacity,
@@ -540,7 +558,7 @@ export class LineChart extends StackMixin {
         return this;
     }
 
-    _colorFilter (color, dashstyle, inv) {
+    _colorFilter (color, dashstyle, inv?) {
         return function () {
             const item = select(this);
             const match = (item.attr('stroke') === color &&

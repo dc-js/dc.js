@@ -1148,7 +1148,7 @@ export class BaseMixin {
      * @param {*} datum
      * @return {undefined}
      */
-    public onClick (datum) {
+    public onClick (datum, i?) {
         const filter = this.keyAccessor()(datum);
         events.trigger(() => {
             this.filter(filter);
