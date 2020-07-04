@@ -100,7 +100,7 @@ export class BaseMixin {
     private _mandatoryAttributesList: string[];
     private _chartGroup: string;
     // TODO: the typing seems to be inconsistent with https://github.com/d3/d3-dispatch example as well as our use
-    private _listeners: any; // TODO: raise a ticket for this typing info
+    private _listeners: any; // TODO: external PR - https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45869
     private _legend; // TODO: figure out actual type
     private _commitHandler; // TODO: support async functions as well
     private _defaultData: (group) => any; // TODO: find correct type
