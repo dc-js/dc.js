@@ -115,7 +115,8 @@ filters.RangedTwoDimensionalFilter = function (filter) {
     }
 
     f.isFiltered = function (value) {
-        let x, y;
+        let x;
+        let y;
 
         if (value instanceof Array) {
             x = value[0];

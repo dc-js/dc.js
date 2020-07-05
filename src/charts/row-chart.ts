@@ -269,9 +269,10 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     _translateX (d) {
-        const x = this._x(this.cappedValueAccessor(d)),
-            x0 = this._rootValue(),
-            s = x > x0 ? x0 : x;
+        const x = this._x(this.cappedValueAccessor(d));
+        const x0 = this._rootValue();
+        const s = x > x0 ? x0 : x;
+
         return `translate(${s},0)`;
     }
 

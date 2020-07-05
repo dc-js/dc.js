@@ -106,7 +106,7 @@ export class Legend {
      * chart.
      * @param {String} [highlightSelected]
      * @return {String|dc.legend}
-     **/
+     */
     public highlightSelected ();
     public highlightSelected (highlightSelected): this;
     public highlightSelected (highlightSelected?) {

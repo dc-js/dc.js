@@ -12,6 +12,7 @@ import {events} from '../core/events';
  * @param {Object} Base
  * @returns {BubbleMixin}
  */
+// tslint:disable-next-line:variable-name
 export const BubbleMixin = Base => class extends ColorMixin(Base) {
     constructor () {
         super();
@@ -47,15 +48,15 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the bubble radius scale. By default the bubble chart uses
-         * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
-         * as its radius scale.
-         * @memberof BubbleMixin
-         * @instance
-         * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
-         * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
-         * @returns {d3.scale|BubbleMixin}
-         */
+     * Get or set the bubble radius scale. By default the bubble chart uses
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
+     * as its radius scale.
+     * @memberof BubbleMixin
+     * @instance
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+     * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
+     * @returns {d3.scale|BubbleMixin}
+     */
     public r ();
     public r (bubbleRadiusScale);
     public r (bubbleRadiusScale?) {
@@ -67,13 +68,13 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-         * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Boolean} [elasticRadius=false]
-         * @returns {Boolean|BubbleChart}
-         */
+     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Boolean} [elasticRadius=false]
+     * @returns {Boolean|BubbleChart}
+     */
     public elasticRadius ();
     public elasticRadius (elasticRadius);
     public elasticRadius (elasticRadius?) {
@@ -91,15 +92,15 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the radius value accessor function. If set, the radius value accessor function will
-         * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
-         * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
-         * size.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Function} [radiusValueAccessor]
-         * @returns {Function|BubbleMixin}
-         */
+     * Get or set the radius value accessor function. If set, the radius value accessor function will
+     * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
+     * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
+     * size.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Function} [radiusValueAccessor]
+     * @returns {Function|BubbleMixin}
+     */
     public radiusValueAccessor ();
     public radiusValueAccessor (radiusValueAccessor);
     public radiusValueAccessor (radiusValueAccessor?) {
@@ -198,13 +199,13 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
-         * bubbles will be sorted by their radius, with smaller bubbles in front.
-         * @memberof BubbleChart
-         * @instance
-         * @param {Boolean} [sortBubbleSize=false]
-         * @returns {Boolean|BubbleChart}
-         */
+     * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
+     * bubbles will be sorted by their radius, with smaller bubbles in front.
+     * @memberof BubbleChart
+     * @instance
+     * @param {Boolean} [sortBubbleSize=false]
+     * @returns {Boolean|BubbleChart}
+     */
     public sortBubbleSize ();
     public sortBubbleSize (sortBubbleSize);
     public sortBubbleSize (sortBubbleSize?) {
@@ -216,12 +217,12 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the minimum radius. This will be used to initialize the radius scale's range.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [radius=10]
-         * @returns {Number|BubbleMixin}
-         */
+     * Get or set the minimum radius. This will be used to initialize the radius scale's range.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Number} [radius=10]
+     * @returns {Number|BubbleMixin}
+     */
     public minRadius ();
     public minRadius (radius);
     public minRadius (radius?) {
@@ -233,14 +234,13 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
-         * then no label will be rendered.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [radius=10]
-         * @returns {Number|BubbleMixin}
-         */
-
+     * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
+     * then no label will be rendered.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Number} [radius=10]
+     * @returns {Number|BubbleMixin}
+     */
     public minRadiusWithLabel ();
     public minRadiusWithLabel (radius);
     public minRadiusWithLabel (radius?) {
@@ -252,13 +252,13 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
-         * when the difference in radius between bubbles is too great.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [relativeSize=0.3]
-         * @returns {Number|BubbleMixin}
-         */
+     * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
+     * when the difference in radius between bubbles is too great.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Number} [relativeSize=0.3]
+     * @returns {Number|BubbleMixin}
+     */
     public maxBubbleRelativeSize ();
     public maxBubbleRelativeSize (relativeSize);
     public maxBubbleRelativeSize (relativeSize?) {

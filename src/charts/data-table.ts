@@ -273,7 +273,6 @@ export class DataTable extends BaseMixin {
      * by the widget. Useful when implementing pagination.
      *
      * Note: the sortBy function will determine how the rows are ordered for pagination purposes.
-
      * See the {@link http://dc-js.github.io/dc.js/examples/table-pagination.html table pagination example}
      * to see how to implement the pagination user interface using `beginSlice` and `endSlice`.
      * @param {Number} [beginSlice=0]

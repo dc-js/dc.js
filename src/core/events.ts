@@ -1,6 +1,6 @@
 interface IEvents {
-    current: Function;
-    trigger: ((closure: Function, delay?:number) => void);
+    current: () => void;
+    trigger: ((closure: () => void, delay?:number) => void);
 }
 
 export const events: IEvents = {
@@ -27,7 +27,7 @@ export const events: IEvents = {
  * @param {Number} [delay]
  * @return {undefined}
  */
-events.trigger = function (closure: Function, delay?:number) {
+events.trigger = function (closure: () => void, delay?:number) {
     if (!delay) {
         closure();
         return;

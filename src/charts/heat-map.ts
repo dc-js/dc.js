@@ -211,8 +211,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
     _doRedraw () {
         const data = this.data();
-        let rows = this.rows() || data.map(this.valueAccessor()),
-            cols = this.cols() || data.map(this.keyAccessor());
+        let rows = this.rows() || data.map(this.valueAccessor());
+        let cols = this.cols() || data.map(this.keyAccessor());
+
         if (this._rowOrdering) {
             rows = rows.sort(this._rowOrdering);
         }
@@ -222,10 +223,10 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         rows = this._rowScale.domain(rows);
         cols = this._colScale.domain(cols);
 
-        const rowCount = rows.domain().length,
-            colCount = cols.domain().length,
-            boxWidth = Math.floor(this.effectiveWidth() / colCount),
-            boxHeight = Math.floor(this.effectiveHeight() / rowCount);
+        const rowCount = rows.domain().length;
+        const colCount = cols.domain().length;
+        const boxWidth = Math.floor(this.effectiveWidth() / colCount);
+        const boxHeight = Math.floor(this.effectiveHeight() / rowCount);
 
         cols.rangeRound([0, this.effectiveWidth()]);
         rows.rangeRound([this.effectiveHeight(), 0]);

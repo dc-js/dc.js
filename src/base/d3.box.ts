@@ -77,8 +77,8 @@ export const d3Box = function () {
             const quartileData = data.quartiles = quartiles(data);
 
             // Compute whiskers. Must return exactly 2 elements, or null.
-            const whiskerIndices = whiskers && whiskers.call(this, data, index),
-                whiskerData = whiskerIndices && whiskerIndices.map(_i => data[_i]);
+            const whiskerIndices = whiskers && whiskers.call(this, data, index);
+            const whiskerData = whiskerIndices && whiskerIndices.map(_i => data[_i]);
 
             // Compute outliers. If no whiskers are specified, all data are 'outliers'.
             // We compute the outliers as indices, so that we can join across transitions!
@@ -331,6 +331,8 @@ export const d3Box = function () {
             const boxTick = _g.selectAll('text.box')
                 .data(quartileData);
 
+            // tslint:disable:no-bitwise
+
             boxTick.enter().append('text')
                 .attr('class', 'box')
                 .attr('dy', '.3em')
@@ -350,6 +352,8 @@ export const d3Box = function () {
                 .text(format)
                 .attr('x', (d, i) => i & 1 ? width : 0)
                 .attr('y', x1);
+
+            // tslint:enable:no-bitwise
 
             // Update whisker ticks. These are handled separately from the box
             // ticks because they may or may not exist, and we want don't want

@@ -70,6 +70,7 @@ const _defaultResetFilterHandler = filters => [];
  * @mixin BaseMixin
  */
 export class BaseMixin {
+    // tslint:disable-next-line:variable-name
     private __dcFlag__: number;
     private _dimension; // TODO: create an interface for what dc needs
     private _group; // TODO: create an interface for what dc needs

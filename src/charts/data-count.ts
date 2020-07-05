@@ -101,8 +101,8 @@ export class DataCount extends BaseMixin {
     }
 
     _doRender () {
-        const tot = this.crossfilter().size(),
-            val = this.groupAll().value();
+        const tot = this.crossfilter().size();
+        const val = this.groupAll().value();
         const all = this._formatNumber(tot);
         const selected = this._formatNumber(val);
 

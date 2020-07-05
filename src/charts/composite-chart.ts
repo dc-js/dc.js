@@ -146,7 +146,10 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     _calculateYAxisRanges (left, right) {
-        let lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax;
+        let lyAxisMin;
+        let lyAxisMax;
+        let ryAxisMin;
+        let ryAxisMax;
         let ranges;
 
         if (left) {
@@ -186,8 +189,9 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     _prepareRightYAxis (ranges) {
-        const needDomain = this.rightY() === undefined || this.elasticY(),
-            needRange = needDomain || this.resizing();
+        const needDomain = this.rightY() === undefined || this.elasticY();
+        const needRange = needDomain || this.resizing();
+
         if (this.rightY() === undefined) {
             this.rightY(scaleLinear());
         }
@@ -206,8 +210,9 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     _prepareLeftYAxis (ranges) {
-        const needDomain = this.y() === undefined || this.elasticY(),
-            needRange = needDomain || this.resizing();
+        const needDomain = this.y() === undefined || this.elasticY();
+        const needRange = needDomain || this.resizing();
+
         if (this.y() === undefined) {
             this.y(scaleLinear());
         }

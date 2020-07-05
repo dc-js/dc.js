@@ -247,6 +247,7 @@ utils.isNumber = function (n) {
  * @returns {Boolean}
  */
 utils.isFloat = function (n) {
+    // tslint:disable-next-line:no-bitwise
     return n === +n && n !== (n | 0);
 };
 
@@ -258,6 +259,7 @@ utils.isFloat = function (n) {
  * @returns {Boolean}
  */
 utils.isInteger = function (n) {
+    // tslint:disable-next-line:no-bitwise
     return n === +n && n === (n | 0);
 };
 

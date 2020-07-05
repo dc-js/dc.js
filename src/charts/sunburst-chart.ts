@@ -117,7 +117,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         const arcs = this._buildArcs();
 
-        let partitionedNodes, cdata;
+        let partitionedNodes;
+        let cdata;
+
         // if we have data...
         if (sum(this.data(), this.valueAccessor())) {
             cdata = utils.toHierarchy(this.data(), this.valueAccessor());

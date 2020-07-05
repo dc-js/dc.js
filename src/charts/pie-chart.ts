@@ -340,7 +340,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public externalRadiusPadding ();
-    public externalRadiusPadding (externalRadiusPadding);
+    public externalRadiusPadding (externalRadiusPadding): this;
     public externalRadiusPadding (externalRadiusPadding?) {
         if (!arguments.length) {
             return this._externalRadiusPadding;
@@ -356,7 +356,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public innerRadius ();
-    public innerRadius (innerRadius);
+    public innerRadius (innerRadius): this;
     public innerRadius (innerRadius?) {
         if (!arguments.length) {
             return this._innerRadius;
@@ -372,7 +372,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public radius ();
-    public radius (radius);
+    public radius (radius): this;
     public radius (radius?) {
         if (!arguments.length) {
             return this._givenRadius;
@@ -433,7 +433,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public minAngleForLabel ();
-    public minAngleForLabel (minAngleForLabel);
+    public minAngleForLabel (minAngleForLabel): this;
     public minAngleForLabel (minAngleForLabel?) {
         if (!arguments.length) {
             return this._minAngleForLabel;
@@ -484,7 +484,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {String|PieChart}
      */
     public emptyTitle ();
-    public emptyTitle (title);
+    public emptyTitle (title): this;
     public emptyTitle (title?) {
         if (arguments.length === 0) {
             return this._emptyTitle;
@@ -501,7 +501,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public externalLabels ();
-    public externalLabels (externalLabelRadius);
+    public externalLabels (externalLabelRadius): this;
     public externalLabels (externalLabelRadius?) {
         if (arguments.length === 0) {
             return this._externalLabelRadius;
@@ -521,7 +521,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Boolean|PieChart}
      */
     public drawPaths ();
-    public drawPaths (drawPaths);
+    public drawPaths (drawPaths): this;
     public drawPaths (drawPaths?) {
         if (arguments.length === 0) {
             return this._drawPaths;
