@@ -278,7 +278,7 @@ export const d3Box = function () {
                 outlier.exit().transition()
                     .duration(duration)
                     .delay(delay)
-                    .attr('cy', 0) //function (i) { return x1(d[i]); })
+                    .attr('cy', 0) // function (i) { return x1(d[i]); })
                     .style('opacity', 1e-6)
                     .remove();
             }

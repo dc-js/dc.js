@@ -166,7 +166,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             regionG.selectAll('title').text(d => {
                 const key = this._getKey(layerIndex, d);
                 const value = data[key];
-                return this.title()({key: key, value: value});
+                return this.title()({key, value});
             });
         }
     }
@@ -209,7 +209,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
                 return this;
             }
         }
-        this._geoJsons.push({name: name, data: json, keyAccessor: keyAccessor});
+        this._geoJsons.push({name, data: json, keyAccessor});
         return this;
     }
 

@@ -93,7 +93,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     _locator (d) {
-        return `translate(${this.x()(this.keyAccessor()(d))},${ 
+        return `translate(${this.x()(this.keyAccessor()(d))},${
             this.y()(this.valueAccessor()(d))})`;
     }
 

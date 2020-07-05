@@ -325,7 +325,7 @@ export class LineChart extends StackMixin {
         }
 
         transition(layers.select('path.line'), this.transitionDuration(), this.transitionDelay())
-        //.ease('linear')
+        // .ease('linear')
             .attr('stroke', (d, i) => this.getColor(d, i))
             .attr('d', d => this._safeD(_line(d.values)));
     }
@@ -347,7 +347,7 @@ export class LineChart extends StackMixin {
                 .attr('d', d => this._safeD(_area(d.values)));
 
             transition(layers.select('path.area'), this.transitionDuration(), this.transitionDelay())
-            //.ease('linear')
+            // .ease('linear')
                 .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
         }

@@ -1081,7 +1081,7 @@ export class BaseMixin {
         }
         let filters: any[] = this._filters;
         // TODO: Not a great idea to have a method blessed onto an Array, needs redesign
-        if (filter instanceof Array && filter[0] instanceof Array && !(<any>filter).isFiltered) {
+        if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
             // toggle each filter
             filter[0].forEach(f => {
                 if (this._hasFilterHandler(filters, f)) {

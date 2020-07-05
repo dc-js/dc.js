@@ -76,7 +76,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
      * @returns {BubbleOverlay}
      */
     point (name, x, y) {
-        this._points.push({name: name, x: x, y: y});
+        this._points.push({name, x, y});
         return this;
     }
 

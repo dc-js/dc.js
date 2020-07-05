@@ -54,7 +54,7 @@ export class TextFilterWidget extends BaseMixin {
         this._placeHolder = 'search';
 
         this.group(() => {
-            throw 'the group function on textFilterWidget should never be called, please report the issue';
+            throw new Error('the group function on textFilterWidget should never be called, please report the issue');
         });
 
         this.anchor(parent, chartGroup);

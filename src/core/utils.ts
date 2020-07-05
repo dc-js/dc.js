@@ -86,13 +86,13 @@ export const utils: IUtils = {
     }, isNumber(n): boolean {
         return false;
     }, nameToId(name): string {
-        return "";
+        return '';
     }, printSingleValue: undefined, safeNumber(n): number {
         return 0;
     }, subtract(l, r, t?): Date {
         return undefined;
     }, toHierarchy(list, accessor): { children: any[]; key: string } {
-        return {children: [], key: ""};
+        return {children: [], key: ''};
     }, uniqueId(): number {
         return 0;
     }

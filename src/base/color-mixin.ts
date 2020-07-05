@@ -4,7 +4,7 @@ import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
 import {utils} from '../core/utils';
-import {ColorCommonInstance} from "d3-color";
+import {ColorCommonInstance} from 'd3-color';
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support

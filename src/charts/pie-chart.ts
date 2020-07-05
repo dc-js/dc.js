@@ -444,7 +444,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     _pieLayout () {
         // The 2nd argument is type of datum that will be used. TODO: revisit after refactoring.
-        return <Pie<any, any>>pie().sort(null).value(d => this.cappedValueAccessor(d));
+        return pie().sort(null).value(d => this.cappedValueAccessor(d)) as Pie<any, any>;
     }
 
     _sliceTooSmall (d) {

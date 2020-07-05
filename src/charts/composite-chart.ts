@@ -163,12 +163,7 @@ export class CompositeChart extends CoordinateGridMixin {
             ranges = this._alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
         }
 
-        return ranges || {
-            lyAxisMin: lyAxisMin,
-            lyAxisMax: lyAxisMax,
-            ryAxisMin: ryAxisMin,
-            ryAxisMax: ryAxisMax
-        };
+        return ranges || {lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax};
     }
 
     _alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {

@@ -69,8 +69,8 @@ export class StackMixin extends CoordinateGridMixin {
         const xDomain = this.x().domain();
         if (this.isOrdinal()) {
             // TODO #416
-            //var domainSet = d3.set(xDomain);
-            return () => true //domainSet.has(p.x);
+            // var domainSet = d3.set(xDomain);
+            return () => true // domainSet.has(p.x);
             ;
         }
         if (this.elasticX()) {
@@ -108,7 +108,7 @@ export class StackMixin extends CoordinateGridMixin {
             accessor = name;
         }
 
-        const layer: {[key: string]: any} = {group: group};
+        const layer: {[key: string]: any} = {group};
         if (typeof name === 'string') {
             layer.name = name;
         } else {
@@ -318,7 +318,7 @@ export class StackMixin extends CoordinateGridMixin {
             } else {
                 this.hideStack(d.name);
             }
-            //_chart.redraw();
+            // _chart.redraw();
             this.renderGroup();
         }
     }
