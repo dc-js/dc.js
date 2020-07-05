@@ -28,6 +28,7 @@
     "@types/d3": "^5.7.2",
     "d3": "^5.15.1",
     "rollup-plugin-typescript2": "^0.27.1",
+    "tslint": "^6.1.2",
     "typescript": "^3.9.5"
   },
   "devDependencies": {
