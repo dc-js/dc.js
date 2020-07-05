@@ -25,6 +25,7 @@
     "url": "https://github.com/dc-js/dc.js.git"
   },
   "dependencies": {
+    "@types/d3": "^5.7.2",
     "d3": "^5.15.1",
     "rollup-plugin-typescript2": "^0.27.1",
     "typescript": "^3.9.5"
