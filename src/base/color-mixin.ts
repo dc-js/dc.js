@@ -37,7 +37,7 @@ export const ColorMixin = Base => class extends Base {
      * @param {Number} [i]
      * @returns {String}
      */
-    getColor (d, i?) {
+    public getColor (d, i?) {
         return this._colorCalculator ?
             this._colorCalculator(d, i) :
             this._colors(this._colorAccessor(d, i));
@@ -50,7 +50,7 @@ export const ColorMixin = Base => class extends Base {
      * @instance
      * @returns {ColorMixin}
      */
-    calculateColorDomain (): this {
+    public calculateColorDomain (): this {
         const newDomain = [min(this.data(), this.colorAccessor()),
                            max(this.data(), this.colorAccessor())];
         this._colors.domain(newDomain);
@@ -98,7 +98,7 @@ export const ColorMixin = Base => class extends Base {
      * @param {Array<String>} r
      * @returns {ColorMixin}
      */
-    ordinalColors (r) {
+    public ordinalColors (r) {
         return this.colors(scaleOrdinal().range(r));
     }
 
@@ -109,7 +109,7 @@ export const ColorMixin = Base => class extends Base {
      * @param {Array<Number>} r
      * @returns {ColorMixin}
      */
-    linearColors (r) {
+    public linearColors (r) {
         // We have to hint Typescript that the scale will map colors to colors.
         // Picked up the signature from type definition of interpolateHcl.
         return this.colors(scaleLinear<string | ColorCommonInstance>()

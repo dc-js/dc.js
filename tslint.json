@@ -6,7 +6,7 @@
   "jsdoc-format": false,
   "jsRules": {},
   "rules": {
-    "member-access": false, // TODO: switch and auto fix
+    "member-access": true,
     "member-ordering": false,
     "no-console": false,
     "no-empty": [

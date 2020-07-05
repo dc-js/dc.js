@@ -236,11 +236,11 @@ export class Legend {
 
     // Implementation methods
 
-    _legendItemHeight () {
+    public _legendItemHeight () {
         return this._gap + this._itemHeight;
     }
 
-    render () {
+    public render () {
         this._parent.svg().select('g.dc-legend').remove();
         this._g = this._parent.svg().append('g')
             .attr('class', 'dc-legend')

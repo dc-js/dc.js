@@ -62,7 +62,7 @@ export class DataGrid extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    _doRender () {
+    public _doRender () {
         this.selectAll(`div.${GRID_CSS_CLASS}`).remove();
 
         this._renderItems(this._renderSections());
@@ -70,7 +70,7 @@ export class DataGrid extends BaseMixin {
         return this;
     }
 
-    _renderSections () {
+    public _renderSections () {
         const sections = this.root().selectAll(`div.${GRID_CSS_CLASS}`)
             .data(this._nestEntries(), d => this.keyAccessor()(d));
 
@@ -88,7 +88,7 @@ export class DataGrid extends BaseMixin {
         return itemSection;
     }
 
-    _nestEntries () {
+    public _nestEntries () {
         const entries = this.dimension().top(this._size);
 
         return nest()
@@ -101,7 +101,7 @@ export class DataGrid extends BaseMixin {
             );
     }
 
-    _renderItems (sections) {
+    public _renderItems (sections) {
         let items = sections.order()
             .selectAll(`div.${ITEM_CSS_CLASS}`)
             .data(d => d.values);
@@ -118,7 +118,7 @@ export class DataGrid extends BaseMixin {
         return items;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         return this._doRender();
     }
 

@@ -36,7 +36,7 @@ export class HtmlLegend {
         this._highlightSelected = false;
     }
 
-    parent (p) {
+    public parent (p) {
         if (!arguments.length) {
             return this._parent;
         }
@@ -44,7 +44,7 @@ export class HtmlLegend {
         return this;
     }
 
-    render () {
+    public render () {
         this._defaultLegendItemCssClass = this._horizontal ? this._legendItemCssClassHorizontal : this._legendItemCssClassVertical;
         this._container.select(`div.${this._htmlLegendDivCssClass}`).remove();
 

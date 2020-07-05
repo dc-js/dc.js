@@ -66,7 +66,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    _calculateAxisScale () {
+    public _calculateAxisScale () {
         if (!this._x || this._elasticX) {
             const _extent = extent<any, number>(this._rowData, d => this.cappedValueAccessor(d));
             if (_extent[0] > 0) {
@@ -81,7 +81,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._xAxis.scale(this._x);
     }
 
-    _drawAxis () {
+    public _drawAxis () {
         let axisG = this._g.select('g.axis');
 
         this._calculateAxisScale();
@@ -95,7 +95,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .call(this._xAxis);
     }
 
-    _doRender () {
+    public _doRender () {
         this.resetSvg();
 
         this._g = this.svg()
@@ -124,7 +124,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this;
     }
 
-    _drawGridLines () {
+    public _drawGridLines () {
         this._g.selectAll('g.tick')
             .select('line.grid-line')
             .remove();
@@ -138,7 +138,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .attr('y2', () => -this.effectiveHeight());
     }
 
-    _drawChart () {
+    public _drawChart () {
         this._rowData = this.data();
 
         this._drawAxis();
@@ -153,7 +153,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._updateElements(rows);
     }
 
-    _createElements (rows) {
+    public _createElements (rows) {
         const rowEnter = rows.enter()
             .append('g')
             .attr('class', (d, i) => `${this._rowCssClass} _${i}`);
@@ -165,16 +165,16 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return rowEnter;
     }
 
-    _removeElements (rows) {
+    public _removeElements (rows) {
         rows.exit().remove();
     }
 
-    _rootValue () {
+    public _rootValue () {
         const root = this._x(0);
         return (root === -Infinity || root !== root) ? this._x(1) : root;
     }
 
-    _updateElements (rows) {
+    public _updateElements (rows) {
         const n = this._rowData.length;
 
         let height;
@@ -204,14 +204,14 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._updateLabels(rows);
     }
 
-    _createTitles (rows) {
+    public _createTitles (rows) {
         if (this.renderTitle()) {
             rows.select('title').remove();
             rows.append('title').text(this.title());
         }
     }
 
-    _createLabels (rowEnter) {
+    public _createLabels (rowEnter) {
         if (this.renderLabel()) {
             rowEnter.append('text')
                 .on('click', d => this._onClick(d));
@@ -223,7 +223,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         }
     }
 
-    _updateLabels (rows) {
+    public _updateLabels (rows) {
         if (this.renderLabel()) {
             const lab = rows.select('text')
                 .attr('x', this._labelOffsetX)
@@ -264,11 +264,11 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this;
     }
 
-    _onClick (d, i?) {
+    public _onClick (d, i?) {
         this.onClick(d, i);
     }
 
-    _translateX (d) {
+    public _translateX (d) {
         const x = this._x(this.cappedValueAccessor(d));
         const x0 = this._rootValue();
         const s = x > x0 ? x0 : x;
@@ -276,7 +276,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return `translate(${s},0)`;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this._drawChart();
         return this;
     }
@@ -403,7 +403,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this;
     }
 
-    _isSelectedRow (d) {
+    public _isSelectedRow (d) {
         return this.hasFilter(this.cappedKeyAccessor(d));
     }
 }

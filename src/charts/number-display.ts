@@ -106,11 +106,11 @@ export class NumberDisplay extends BaseMixin {
      * Calculate and return the underlying value of the display.
      * @returns {Number}
      */
-    value () {
+    public value () {
         return this.data();
     }
 
-    _maxBin (all) {
+    public _maxBin (all) {
         if (!all.length) {
             return null;
         }
@@ -118,7 +118,7 @@ export class NumberDisplay extends BaseMixin {
         return sorted[sorted.length - 1];
     }
 
-    _doRender () {
+    public _doRender () {
         const newValue = this.value();
         let span = this.selectAll(`.${SPAN_CLASS}`);
 
@@ -161,7 +161,7 @@ export class NumberDisplay extends BaseMixin {
         return this;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         return this._doRender();
     }
 

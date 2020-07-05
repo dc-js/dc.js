@@ -60,7 +60,7 @@ export class TextFilterWidget extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    _doRender () {
+    public _doRender () {
         this.select('input').remove();
 
         this._input = this.root().append('input')
@@ -79,7 +79,7 @@ export class TextFilterWidget extends BaseMixin {
         return this;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this.root().selectAll('input')
             .attr('placeholder', this._placeHolder);
 

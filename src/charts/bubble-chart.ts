@@ -41,11 +41,11 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    _bubbleLocator (d) {
+    public _bubbleLocator (d) {
         return `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
     }
 
-    plotData () {
+    public plotData () {
         this.calculateRadiusDomain();
         this.r().range([this.MIN_RADIUS, this.xAxisLength() * this.maxBubbleRelativeSize()]);
 
@@ -66,7 +66,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.fadeDeselectedArea(this.filter());
     }
 
-    _renderNodes (bubbleG) {
+    public _renderNodes (bubbleG) {
         const bubbleGEnter = bubbleG.enter().append('g');
 
         bubbleGEnter
@@ -91,7 +91,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return bubbleG;
     }
 
-    _updateNodes (bubbleG) {
+    public _updateNodes (bubbleG) {
         transition(bubbleG, this.transitionDuration(), this.transitionDelay())
             .attr('transform', d => this._bubbleLocator(d))
             .select(`circle.${this.BUBBLE_CLASS}`)
@@ -103,11 +103,11 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.doUpdateTitles(bubbleG);
     }
 
-    _removeNodes (bubbleG) {
+    public _removeNodes (bubbleG) {
         bubbleG.exit().remove();
     }
 
-    _bubbleX (d) {
+    public _bubbleX (d) {
         let x = this.x()(this.keyAccessor()(d));
         if (isNaN(x) || !isFinite(x)) {
             x = 0;
@@ -115,7 +115,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return x;
     }
 
-    _bubbleY (d) {
+    public _bubbleY (d) {
         let y = this.y()(this.valueAccessor()(d));
         if (isNaN(y) || !isFinite(y)) {
             y = 0;
@@ -123,11 +123,11 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return y;
     }
 
-    renderBrush () {
+    public renderBrush () {
         // override default x axis brush from parent chart
     }
 
-    redrawBrush (brushSelection, doTransition) {
+    public redrawBrush (brushSelection, doTransition) {
         // override default x axis brush from parent chart
         this.fadeDeselectedArea(brushSelection);
     }

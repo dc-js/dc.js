@@ -425,7 +425,7 @@ export class BaseMixin {
         return this;
     }
 
-    _computeOrderedGroups (data) {
+    public _computeOrderedGroups (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
         return Array.from(data).sort((a, b) => ascending(this._ordering(a), this._ordering(b)));
     }
@@ -435,7 +435,7 @@ export class BaseMixin {
      * {@link BaseMixin#filter chart.filter(null)}.
      * @returns {BaseMixin}
      */
-    filterAll () {
+    public filterAll () {
         return this.filter(null);
     }
 
@@ -452,7 +452,7 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    select (sel) {
+    public select (sel) {
         return this._root.select(sel);
     }
 
@@ -468,7 +468,7 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    selectAll (sel) {
+    public selectAll (sel) {
         return this._root ? this._root.selectAll(sel) : null;
     }
 
@@ -1449,7 +1449,7 @@ export class BaseMixin {
      * @param {{}} opts
      * @returns {BaseMixin}
      */
-    options (opts) {
+    public options (opts) {
         const applyOptions = [
             'anchor',
             'group',

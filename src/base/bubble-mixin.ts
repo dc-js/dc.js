@@ -43,7 +43,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         this._r = scaleLinear().domain([0, 100]);
     }
 
-    _rValueAccessor (d) {
+    public _rValueAccessor (d) {
         return d.r;
     }
 
@@ -85,7 +85,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return this;
     }
 
-    calculateRadiusDomain () {
+    public calculateRadiusDomain () {
         if (this._elasticRadius) {
             this.r().domain([this.rMin(), this.rMax()]);
         }
@@ -111,7 +111,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return this;
     }
 
-    rMin () {
+    public rMin () {
         let values = this.data().map(this.radiusValueAccessor());
         if(this._excludeElasticZero) {
             values = values.filter(value => value > 0);
@@ -119,11 +119,11 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return min(values);
     }
 
-    rMax () {
+    public rMax () {
         return max(this.data(), e => this.radiusValueAccessor()(e));
     }
 
-    bubbleR (d) {
+    public bubbleR (d) {
         const value = this.radiusValueAccessor()(d);
         let r = this.r()(value);
         if (isNaN(r) || value <= 0) {
@@ -132,23 +132,23 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return r;
     }
 
-    _labelFunction (d) {
+    public _labelFunction (d) {
         return this.label()(d);
     }
 
-    _shouldLabel (d) {
+    public _shouldLabel (d) {
         return (this.bubbleR(d) > this._minRadiusWithLabel);
     }
 
-    _labelOpacity (d) {
+    public _labelOpacity (d) {
         return this._shouldLabel(d) ? 1 : 0;
     }
 
-    _labelPointerEvent (d) {
+    public _labelPointerEvent (d) {
         return this._shouldLabel(d) ? 'all' : 'none';
     }
 
-    _doRenderLabel (bubbleGEnter) {
+    public _doRenderLabel (bubbleGEnter) {
         if (this.renderLabel()) {
             let label = bubbleGEnter.select('text');
 
@@ -168,7 +168,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    doUpdateLabels (bubbleGEnter) {
+    public doUpdateLabels (bubbleGEnter) {
         if (this.renderLabel()) {
             const labels = bubbleGEnter.select('text')
                     .attr('pointer-events', d => this._labelPointerEvent(d))
@@ -178,11 +178,11 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    _titleFunction (d) {
+    public _titleFunction (d) {
         return this.title()(d);
     }
 
-    _doRenderTitles (g) {
+    public _doRenderTitles (g) {
         if (this.renderTitle()) {
             const title = g.select('title');
 
@@ -192,7 +192,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    doUpdateTitles (g) {
+    public doUpdateTitles (g) {
         if (this.renderTitle()) {
             g.select('title').text(d => this._titleFunction(d));
         }
@@ -286,7 +286,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return this;
     }
 
-    fadeDeselectedArea (selection) {
+    public fadeDeselectedArea (selection) {
         if (this.hasFilter()) {
             const chart = this;
             this.selectAll(`g.${chart.BUBBLE_NODE_CLASS}`).each(function (d) {
@@ -304,11 +304,11 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    isSelectedNode (d) {
+    public isSelectedNode (d) {
         return this.hasFilter(d.key);
     }
 
-    onClick (d) {
+    public onClick (d) {
         const filter = d.key;
         events.trigger(() => {
             this.filter(filter);

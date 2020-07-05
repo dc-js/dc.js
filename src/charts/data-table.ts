@@ -70,7 +70,7 @@ export class DataTable extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    _doRender () {
+    public _doRender () {
         this.selectAll('tbody').remove();
 
         this._renderRows(this._renderSections());
@@ -78,13 +78,13 @@ export class DataTable extends BaseMixin {
         return this;
     }
 
-    _doColumnValueFormat (v, d) {
+    public _doColumnValueFormat (v, d) {
         return (typeof v === 'function') ? v(d) :  // v as function
             (typeof v === 'string') ? d[v] :       // v is field name string
             v.format(d);                           // v is Object, use fn (element 2)
     }
 
-    _doColumnHeaderFormat (d) {
+    public _doColumnHeaderFormat (d) {
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
@@ -93,12 +93,12 @@ export class DataTable extends BaseMixin {
             String(d.label);
     }
 
-    _doColumnHeaderCapitalize (s) {
+    public _doColumnHeaderCapitalize (s) {
         // capitalize
         return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
-    _doColumnHeaderFnToString (f) {
+    public _doColumnHeaderFnToString (f) {
         // columnString(f) {
         let s = String(f);
         const i1 = s.indexOf('return ');
@@ -115,7 +115,7 @@ export class DataTable extends BaseMixin {
         return s;
     }
 
-    _renderSections () {
+    public _renderSections () {
         // The 'original' example uses all 'functions'.
         // If all 'functions' are used, then don't remove/add a header, and leave
         // the html alone. This preserves the functionality of earlier releases.
@@ -175,7 +175,7 @@ export class DataTable extends BaseMixin {
         return rowSection;
     }
 
-    _nestEntries () {
+    public _nestEntries () {
         let entries;
         if (this._order === ascending) {
             entries = this.dimension().bottom(this._size);
@@ -189,7 +189,7 @@ export class DataTable extends BaseMixin {
             .entries(entries.sort((a, b) => this._order(this._sortBy(a), this._sortBy(b))).slice(this._beginSlice, this._endSlice));
     }
 
-    _renderRows (sections) {
+    public _renderRows (sections) {
         const rows = sections.order()
             .selectAll(`tr.${ROW_CSS_CLASS}`)
             .data(d => d.values);
@@ -209,7 +209,7 @@ export class DataTable extends BaseMixin {
         return rows;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         return this._doRender();
     }
 

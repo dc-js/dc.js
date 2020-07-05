@@ -65,7 +65,7 @@ export class SelectMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    _doRender () {
+    public _doRender () {
         this.select('select').remove();
         this._select = this.root().append('select')
             .classed(SELECT_CSS_CLASS, true);
@@ -75,7 +75,7 @@ export class SelectMenu extends BaseMixin {
         return this;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this._setAttributes();
         this._renderOptions();
         // select the option(s) corresponding to current filter(s)
@@ -90,7 +90,7 @@ export class SelectMenu extends BaseMixin {
         return this;
     }
 
-    _renderOptions () {
+    public _renderOptions () {
         const options = this._select.selectAll(`option.${OPTION_CSS_CLASS}`)
             .data(this.data(), d => this.keyAccessor()(d));
 
@@ -108,7 +108,7 @@ export class SelectMenu extends BaseMixin {
         this._select.on('change', (d, i) => this._onChange(d, i));
     }
 
-    _onChange (_d, i) {
+    public _onChange (_d, i) {
         let values;
         const target = event.target;
         if (target.selectedOptions) {
@@ -129,7 +129,7 @@ export class SelectMenu extends BaseMixin {
         this.onChange(values);
     }
 
-    onChange (val) {
+    public onChange (val) {
         if (val && this._multiple) {
             this.replaceFilter([val]);
         } else if (val) {
@@ -142,7 +142,7 @@ export class SelectMenu extends BaseMixin {
         });
     }
 
-    _setAttributes () {
+    public _setAttributes () {
         if (this._multiple) {
             this._select.attr('multiple', true);
         } else {
@@ -273,7 +273,7 @@ export class SelectMenu extends BaseMixin {
         return this;
     }
 
-    size (numberVisible) {
+    public size (numberVisible) {
         logger.warnOnce('selectMenu.size is ambiguous - use selectMenu.numberVisible instead');
         if (!arguments.length) {
             return this.numberVisible();
