@@ -1,4 +1,4 @@
-import {geoPath, geoAlbersUsa} from 'd3-geo';
+import {geoPath, geoAlbersUsa, GeoPath} from 'd3-geo';
 import {select} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';
@@ -19,6 +19,11 @@ import {utils} from '../core/utils';
  * @mixes BaseMixin
  */
 export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
+    private _geoPath: GeoPath;
+    private _projectionFlag: boolean;
+    private _projection;
+    private _geoJsons;
+
     /**
      * Create a Geo Choropleth Chart.
      * @example
@@ -70,6 +75,8 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             this._plotData(layerIndex);
         }
         this._projectionFlag = false;
+
+        return this;
     }
 
     public _plotData (layerIndex) {
@@ -179,6 +186,8 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             }
         }
         this._projectionFlag = false;
+
+        return this;
     }
 
     /**

@@ -23,6 +23,23 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes BaseMixin
  */
 export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
+    private _sliceCssClass: string;
+    private _labelCssClass: string;
+    private _sliceGroupCssClass: string;
+    private _labelGroupCssClass: string;
+    private _emptyCssClass: string;
+    private _emptyTitle: string;
+    private _radius;
+    private _givenRadius;
+    private _innerRadius: number;
+    private _externalRadiusPadding: number;
+    private _g;
+    private _cx;
+    private _cy;
+    private _minAngleForLabel: number;
+    private _externalLabelRadius;
+    private _drawPaths: boolean;
+
     /**
      * Create a Pie Chart
      *

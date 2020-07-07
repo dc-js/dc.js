@@ -18,6 +18,23 @@ import {transition} from '../core/core';
  * @mixes BaseMixin
  */
 export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
+    private _g;
+    private _labelOffsetX: number;
+    private _labelOffsetY: number;
+    private _hasLabelOffsetY: boolean;
+    private _dyOffset: string;
+    private _titleLabelOffsetX: number;
+    private _gap: number;
+    private _fixedBarHeight: boolean;
+    private _rowCssClass: string;
+    private _titleRowCssClass: string;
+    private _renderTitleLabel: boolean;
+    private _x;
+    private _elasticX;
+    private _xAxis;
+    private _rowData;
+    private rowsCap;
+
     /**
      * Create a Row Chart.
      * @example

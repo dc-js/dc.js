@@ -40,6 +40,18 @@ const LABEL_PADDING = 3;
  * @mixes CoordinateGridMixin
  */
 export class LineChart extends StackMixin {
+    private _renderArea: boolean;
+    private _dotRadius: number;
+    private _dataPointRadius;
+    private _dataPointFillOpacity: number;
+    private _dataPointStrokeOpacity: number;
+    private _curve;
+    private _interpolate;
+    private _tension;
+    private _defined;
+    private _dashStyle;
+    private _xyTipsOn: boolean;
+
     /**
      * Create a Line Chart.
      * @example

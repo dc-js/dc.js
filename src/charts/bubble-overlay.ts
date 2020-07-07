@@ -5,6 +5,7 @@ import {BubbleMixin} from '../base/bubble-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
+import {ColorMixin} from '../base/color-mixin';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -21,7 +22,10 @@ const BUBBLE_CLASS = 'bubble';
  * @mixes BubbleMixin
  * @mixes BaseMixin
  */
-export class BubbleOverlay extends BubbleMixin(BaseMixin) {
+export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
+    private _g;
+    private _points;
+
     /**
      * Create a Bubble Overlay.
      *

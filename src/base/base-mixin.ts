@@ -99,7 +99,7 @@ export class BaseMixin {
     private _transitionDelay: number;
     private _filterPrinter: (filters) => string;
     private _mandatoryAttributesList: string[];
-    private _chartGroup: string;
+    protected _chartGroup: string;
     // TODO: the typing seems to be inconsistent with https://github.com/d3/d3-dispatch example as well as our use
     private _listeners: any; // TODO: external PR - https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45869
     private _legend; // TODO: figure out actual type
@@ -112,7 +112,7 @@ export class BaseMixin {
     private _removeFilterHandler: (filters, filter) => any;
     private _addFilterHandler: (filters, filter) => any;
     private _resetFilterHandler: (filters) => any[];
-    private _groupName: string;
+    protected _groupName: string; // StackMixin needs it
 
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
@@ -393,8 +393,8 @@ export class BaseMixin {
      * @returns {crossfilter.group|BaseMixin}
      */
     public group ();
-    public group (group, name?): this;
-    public group (group?, name?) {
+    public group (group, name?, accessor?): this;
+    public group (group?, name?, accessor?) {
         if (!arguments.length) {
             return this._group;
         }
@@ -1227,19 +1227,19 @@ export class BaseMixin {
         return [];
     }
 
-    protected legendHighlight () {
+    protected legendHighlight (d?) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    protected legendReset () {
+    protected legendReset (d?) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    protected legendToggle () {
+    protected legendToggle (d?) {
         // do nothing in base, should be overriden by sub-function
     }
 
-    protected isLegendableHidden () {
+    protected isLegendableHidden (d?) {
         // do nothing in base, should be overridden by sub-function
         return false;
     }

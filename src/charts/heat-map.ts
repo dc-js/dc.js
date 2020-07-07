@@ -1,4 +1,4 @@
-import {ascending} from 'd3-array';
+import {ascending, Primitive} from 'd3-array';
 import {scaleBand} from 'd3-scale';
 
 import {transition} from '../core/core';
@@ -17,6 +17,21 @@ const DEFAULT_BORDER_RADIUS = 6.75;
  * @mixes BaseMixin
  */
 export class HeatMap extends ColorMixin(MarginMixin) {
+    private _chartBody;
+    private _cols;
+    private _rows;
+    private _colOrdering: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
+    private _rowOrdering: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
+    private _colScale;
+    private _rowScale;
+    private _xBorderRadius: number;
+    private _yBorderRadius: number;
+    private _colsLabel;
+    private _rowsLabel;
+    private _xAxisOnClick;
+    private _yAxisOnClick;
+    private _boxOnClick;
+
     /**
      * Create a Heat Map
      * @example
@@ -117,10 +132,10 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         });
     }
 
-    public filter (filter) {
+    public filter (filter?) {
         const nonstandardFilter = f => {
             logger.warnOnce('heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
-            return this._filter(filters.TwoDimensionalFilter(f));
+            return this.filter(filters.TwoDimensionalFilter(f));
         };
 
         if (!arguments.length) {

@@ -17,6 +17,22 @@ import {events} from '../core/events';
  * @mixes CoordinateGridMixin
  */
 export class ScatterPlot extends CoordinateGridMixin {
+    private _symbol;
+    private _existenceAccessor;
+    private _highlightedSize: number;
+    private _symbolSize: number;
+    private _excludedSize: number;
+    private _excludedColor;
+    private _excludedOpacity: number;
+    private _emptySize: number;
+    private _emptyOpacity: number;
+    private _nonemptyOpacity: number;
+    private _emptyColor;
+    private _filtered;
+    private _canvas;
+    private _context;
+    private _useCanvas: boolean;
+    
     /**
      * Create a Scatter Plot.
      * @example
@@ -663,17 +679,17 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     public redrawBrush (brushSelection, doTransition) {
         // override default x axis brush from parent chart
-        this._brush = this.brush();
-        this._gBrush = this.gBrush();
+        const brush = this.brush();
+        const gBrush = this.gBrush();
 
-        if (this.brushOn() && this._gBrush) {
+        if (this.brushOn() && gBrush) {
             if (this.resizing()) {
                 this.setBrushExtents(doTransition);
             }
 
             if (!brushSelection) {
-                this._gBrush
-                    .call(this._brush.move, brushSelection);
+                gBrush
+                    .call(brush.move, brushSelection);
 
             } else {
                 brushSelection = brushSelection.map(point => point.map((coord, i) => {
@@ -681,11 +697,11 @@ export class ScatterPlot extends CoordinateGridMixin {
                     return scale(coord);
                 }));
 
-                const gBrush =
-                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(this._gBrush);
+                const gBrushWithTransition =
+                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(gBrush);
 
-                gBrush
-                    .call(this._brush.move, brushSelection);
+                gBrushWithTransition
+                    .call(brush.move, brushSelection);
 
             }
         }

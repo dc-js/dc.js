@@ -15,6 +15,17 @@ const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
  * @mixes CoordinateGridMixin
  */
 export class CompositeChart extends CoordinateGridMixin {
+    private _children;
+    private _childOptions;
+    private _shareColors: boolean;
+    private _shareTitle: boolean;
+    private _alignYAxes: boolean;
+    private _rightYAxis;
+    private _rightYAxisLabel: number;
+    private _rightYAxisLabelPadding: number;
+    private _rightY;
+    private _rightAxisGridLines: boolean;
+
     /**
      * Create a Composite Chart.
      * @example

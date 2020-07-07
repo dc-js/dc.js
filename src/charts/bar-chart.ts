@@ -19,6 +19,11 @@ const LABEL_PADDING = 3;
  * @mixes StackMixin
  */
 export class BarChart extends StackMixin {
+    private _gap: number;
+    private _centerBar: boolean;
+    private _alwaysUseRounding: boolean;
+    private _barWidth;
+
     /**
      * Create a Bar Chart
      * @example

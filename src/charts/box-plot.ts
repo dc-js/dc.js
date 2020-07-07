@@ -41,6 +41,20 @@ function defaultWhiskersIQR (k) {
  * @mixes CoordinateGridMixin
  */
 export class BoxPlot extends CoordinateGridMixin {
+    private _whiskerIqrFactor: number;
+    private _whiskersIqr;
+    private _whiskers;
+    private _box;
+    private _tickFormat;
+    private _renderDataPoints: boolean;
+    private _dataOpacity: number;
+    private _dataWidthPortion: number;
+    private _showOutliers: boolean;
+    private _boldOutlier: boolean;
+    private _yRangePadding: number;
+    private _boxWidth;
+    private _calculatedBoxWidth;
+
     /**
      * Create a BoxP lot.
      *
