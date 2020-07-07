@@ -23,7 +23,7 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    const lintableFiles = `'${config.src}' '${config.spec}' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
+    const lintableFiles = `'${config.spec}/**/*.js' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
 
     const sass = require('node-sass');
 
@@ -102,7 +102,7 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs:  '<%= conf.spec %>/*-spec.js',
+                    specs: '<%= conf.spec %>/*-spec.js',
                     helpers: [
                         '<%= conf.spec %>/helpers/*.js',
                         '<%= conf.spec %>/3rd-party/*.js'
@@ -323,7 +323,8 @@ module.exports = function (grunt) {
                         'These pages fit the charts to the browser dynamically so it\'s easier to test. ' +
                         'For the examples with a single chart taking up the entire window, you can add <code>?resize=viewbox</code> ' +
                         'to the URL to test resizing the chart using the ' +
-          '<a href="http://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#useViewBoxResizing__anchor">useViewBoxResizing</a> strategy.',
+                        '<a href="http://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#useViewBoxResizing__anchor">' +
+                        'useViewBoxResizing</a> strategy.',
                     also: ['examples', 'transitions', 'zoom'],
                     sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/resizing'
                 },
@@ -397,6 +398,12 @@ module.exports = function (grunt) {
             'eslint-fix': {
                 command: `eslint ${lintableFiles} --fix`
             },
+            tslint: {
+                command: 'tslint src/**/*.ts'
+            },
+            'tslint-fix': {
+                command: 'tslint src/**/*.ts --fix'
+            },
             tsc: {
                 command: 'tsc'
             }
@@ -405,7 +412,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('merge', 'Merge a github pull request.', pr => {
         grunt.log.writeln(`Merge Github Pull Request #${pr}`);
-        grunt.task.run([`shell:merge:${pr}`, 'test' , 'shell:amend']);
+        grunt.task.run([`shell:merge:${pr}`, 'test', 'shell:amend']);
     });
     grunt.registerTask(
         'test-stock-example',
@@ -444,8 +451,8 @@ module.exports = function (grunt) {
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
-    grunt.registerTask('lint', ['shell:eslint']);
-    grunt.registerTask('lint-fix', ['shell:eslint-fix']);
+    grunt.registerTask('lint', ['shell:tslint', 'shell:eslint']);
+    grunt.registerTask('lint-fix', ['shell:tslint-fix', 'shell:eslint-fix']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };

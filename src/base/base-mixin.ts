@@ -70,6 +70,7 @@ const _defaultResetFilterHandler = filters => [];
  * @mixin BaseMixin
  */
 export class BaseMixin {
+    // tslint:disable-next-line:variable-name
     private __dcFlag__: number;
     private _dimension; // TODO: create an interface for what dc needs
     private _group; // TODO: create an interface for what dc needs
@@ -424,7 +425,7 @@ export class BaseMixin {
         return this;
     }
 
-    _computeOrderedGroups (data) {
+    public _computeOrderedGroups (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
         return Array.from(data).sort((a, b) => ascending(this._ordering(a), this._ordering(b)));
     }
@@ -434,7 +435,7 @@ export class BaseMixin {
      * {@link BaseMixin#filter chart.filter(null)}.
      * @returns {BaseMixin}
      */
-    filterAll () {
+    public filterAll () {
         return this.filter(null);
     }
 
@@ -451,7 +452,7 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    select (sel) {
+    public select (sel) {
         return this._root.select(sel);
     }
 
@@ -467,7 +468,7 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    selectAll (sel) {
+    public selectAll (sel) {
         return this._root ? this._root.selectAll(sel) : null;
     }
 
@@ -1081,7 +1082,7 @@ export class BaseMixin {
         }
         let filters: any[] = this._filters;
         // TODO: Not a great idea to have a method blessed onto an Array, needs redesign
-        if (filter instanceof Array && filter[0] instanceof Array && !(<any>filter).isFiltered) {
+        if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
             // toggle each filter
             filter[0].forEach(f => {
                 if (this._hasFilterHandler(filters, f)) {
@@ -1448,7 +1449,7 @@ export class BaseMixin {
      * @param {{}} opts
      * @returns {BaseMixin}
      */
-    options (opts) {
+    public options (opts) {
         const applyOptions = [
             'anchor',
             'group',

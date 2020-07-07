@@ -83,21 +83,21 @@ export class NumberDisplay extends BaseMixin {
             return this._html;
         }
         if (html.none) {
-            this._html.none = html.none;//if none available
+            this._html.none = html.none;// if none available
         } else if (html.one) {
-            this._html.none = html.one;//if none not available use one
+            this._html.none = html.one;// if none not available use one
         } else if (html.some) {
-            this._html.none = html.some;//if none and one not available use some
+            this._html.none = html.some;// if none and one not available use some
         }
         if (html.one) {
-            this._html.one = html.one;//if one available
+            this._html.one = html.one;// if one available
         } else if (html.some) {
-            this._html.one = html.some;//if one not available use some
+            this._html.one = html.some;// if one not available use some
         }
         if (html.some) {
-            this._html.some = html.some;//if some available
+            this._html.some = html.some;// if some available
         } else if (html.one) {
-            this._html.some = html.one;//if some not available use one
+            this._html.some = html.one;// if some not available use one
         }
         return this;
     }
@@ -106,11 +106,11 @@ export class NumberDisplay extends BaseMixin {
      * Calculate and return the underlying value of the display.
      * @returns {Number}
      */
-    value () {
+    public value () {
         return this.data();
     }
 
-    _maxBin (all) {
+    public _maxBin (all) {
         if (!all.length) {
             return null;
         }
@@ -118,7 +118,7 @@ export class NumberDisplay extends BaseMixin {
         return sorted[sorted.length - 1];
     }
 
-    _doRender () {
+    public _doRender () {
         const newValue = this.value();
         let span = this.selectAll(`.${SPAN_CLASS}`);
 
@@ -161,7 +161,7 @@ export class NumberDisplay extends BaseMixin {
         return this;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         return this._doRender();
     }
 

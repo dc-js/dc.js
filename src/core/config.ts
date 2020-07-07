@@ -10,7 +10,7 @@ type typeColorsList = string[];
 export class Config {
     public dateFormat: (date: Date) => string;
 
-    _renderlet: any; // TODO: determine correct type
+    public _renderlet: any; // TODO: determine correct type
 
     public disableTransitions: boolean;
 
@@ -69,7 +69,7 @@ export class Config {
     }
 
     // D3v5 has removed schemeCategory20c, copied here for backward compatibility
-    static _schemeCategory20c: typeColorsList = [
+    public static _schemeCategory20c: typeColorsList = [
         '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
         '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
         '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',

@@ -11,9 +11,9 @@ interface IPrinters {
  */
 export const printers: IPrinters = {
     filter(filter): string {
-        return "";
+        return '';
     }, filters(filters): string {
-        return "";
+        return '';
     }
 };
 

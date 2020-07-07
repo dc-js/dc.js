@@ -100,9 +100,9 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    _doRender () {
-        const tot = this.crossfilter().size(),
-            val = this.groupAll().value();
+    public _doRender () {
+        const tot = this.crossfilter().size();
+        const val = this.groupAll().value();
         const all = this._formatNumber(tot);
         const selected = this._formatNumber(val);
 
@@ -117,7 +117,7 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         return this._doRender();
     }
 

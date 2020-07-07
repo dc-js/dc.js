@@ -1,0 +1,33 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsdoc-format": false,
+  "jsRules": {},
+  "rules": {
+    "member-access": true,
+    "member-ordering": false,
+    "no-console": false,
+    "no-empty": [
+      true,
+      "allow-empty-catch",
+      "allow-empty-functions"
+    ],
+    "object-literal-sort-keys": false,
+    "only-arrow-functions": false, // TODO: switch and manual fix
+    "prefer-for-of": false,
+    "quotemark": [
+      true,
+      "single"
+    ],
+    "trailing-comma": false,
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore"
+    ]
+  },
+  "rulesDirectory": []
+}

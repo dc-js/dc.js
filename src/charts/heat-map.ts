@@ -106,7 +106,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    _filterAxis (axis, value) {
+    public _filterAxis (axis, value) {
         const cellsOnAxis = this.selectAll('.box-group').filter(d => d.key[axis] === value);
         const unfilteredCellsOnAxis = cellsOnAxis.filter(d => !this.hasFilter(d.key));
         events.trigger(() => {
@@ -117,7 +117,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         });
     }
 
-    filter (filter) {
+    public filter (filter) {
         const nonstandardFilter = f => {
             logger.warnOnce('heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
             return this._filter(filters.TwoDimensionalFilter(f));
@@ -198,7 +198,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    _doRender () {
+    public _doRender () {
         this.resetSvg();
 
         this._chartBody = this.svg()
@@ -209,10 +209,11 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this._doRedraw();
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         const data = this.data();
-        let rows = this.rows() || data.map(this.valueAccessor()),
-            cols = this.cols() || data.map(this.keyAccessor());
+        let rows = this.rows() || data.map(this.valueAccessor());
+        let cols = this.cols() || data.map(this.keyAccessor());
+
         if (this._rowOrdering) {
             rows = rows.sort(this._rowOrdering);
         }
@@ -222,10 +223,10 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         rows = this._rowScale.domain(rows);
         cols = this._colScale.domain(cols);
 
-        const rowCount = rows.domain().length,
-            colCount = cols.domain().length,
-            boxWidth = Math.floor(this.effectiveWidth() / colCount),
-            boxHeight = Math.floor(this.effectiveHeight() / rowCount);
+        const rowCount = rows.domain().length;
+        const colCount = cols.domain().length;
+        const boxWidth = Math.floor(this.effectiveWidth() / colCount);
+        const boxHeight = Math.floor(this.effectiveHeight() / rowCount);
 
         cols.rangeRound([0, this.effectiveWidth()]);
         rows.rangeRound([this.effectiveHeight(), 0]);
@@ -417,7 +418,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    isSelectedNode (d) {
+    public isSelectedNode (d) {
         return this.hasFilter(d.key);
     }
 }

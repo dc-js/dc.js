@@ -75,12 +75,12 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
      * @param {Number} y
      * @returns {BubbleOverlay}
      */
-    point (name, x, y) {
-        this._points.push({name: name, x: x, y: y});
+    public point (name, x, y) {
+        this._points.push({name, x, y});
         return this;
     }
 
-    _doRender () {
+    public _doRender () {
         this._g = this._initOverlayG();
 
         this.r().range([this.MIN_RADIUS, this.width() * this.maxBubbleRelativeSize()]);
@@ -92,7 +92,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         return this;
     }
 
-    _initOverlayG () {
+    public _initOverlayG () {
         this._g = this.select(`g.${BUBBLE_OVERLAY_CLASS}`);
         if (this._g.empty()) {
             this._g = this.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
@@ -100,7 +100,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         return this._g;
     }
 
-    _initializeBubbles () {
+    public _initializeBubbles () {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
@@ -126,7 +126,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         });
     }
 
-    _mapData () {
+    public _mapData () {
         const data = {};
         this.data().forEach(datum => {
             data[this.keyAccessor()(datum)] = datum;
@@ -134,7 +134,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         return data;
     }
 
-    _getNodeG (point, data) {
+    public _getNodeG (point, data) {
         const bubbleNodeClass = `${BUBBLE_NODE_CLASS} ${utils.nameToId(point.name)}`;
 
         let nodeG = this._g.select(`g.${utils.nameToId(point.name)}`);
@@ -150,7 +150,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         return nodeG;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this._updateBubbles();
 
         this.fadeDeselectedArea(this.filter());
@@ -158,7 +158,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         return this;
     }
 
-    _updateBubbles () {
+    public _updateBubbles () {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
@@ -177,7 +177,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
         });
     }
 
-    debug (flag) {
+    public debug (flag) {
         if (flag) {
             let debugG = this.select(`g.${constants.DEBUG_GROUP_CLASS}`);
 

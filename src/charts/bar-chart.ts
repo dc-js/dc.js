@@ -56,20 +56,20 @@ export class BarChart extends StackMixin {
      * @param {Number} [padding=0.5]
      * @returns {Number|BarChart}
      */
-    outerPadding (padding) {
+    public outerPadding (padding) {
         if (!arguments.length) {
             return this._outerRangeBandPadding();
         }
         return this._outerRangeBandPadding(padding);
     }
 
-    rescale () {
+    public rescale () {
         super.rescale();
         this._barWidth = undefined;
         return this;
     }
 
-    render () {
+    public render () {
         if (this.round() && this._centerBar && !this._alwaysUseRounding) {
             logger.warn('By default, brush rounding is disabled if bars are centered. ' +
                 'See dc.js bar chart API documentation for details.');
@@ -78,7 +78,7 @@ export class BarChart extends StackMixin {
         return super.render();
     }
 
-    plotData () {
+    public plotData () {
         let layers = this.chartBodyG().selectAll('g.stack')
             .data(this.data());
 
@@ -105,11 +105,11 @@ export class BarChart extends StackMixin {
         }
     }
 
-    _barHeight (d) {
+    public _barHeight (d) {
         return utils.safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
     }
 
-    _labelXPos (d) {
+    public _labelXPos (d) {
         let x = this.x()(d.x);
         if (!this._centerBar) {
             x += this._barWidth / 2;
@@ -120,7 +120,7 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(x);
     }
 
-    _labelYPos (d) {
+    public _labelYPos (d) {
         let y = this.y()(d.y + d.y0);
 
         if (d.y < 0) {
@@ -130,7 +130,7 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(y - LABEL_PADDING);
     }
 
-    _renderLabels (layer, layerIndex, data) {
+    public _renderLabels (layer, layerIndex, data) {
         const labels = layer.selectAll('text.barLabel')
             .data(data.values, pluck('x'));
 
@@ -158,7 +158,7 @@ export class BarChart extends StackMixin {
             .remove();
     }
 
-    _barXPos (d) {
+    public _barXPos (d) {
         let x = this.x()(d.x);
         if (this._centerBar) {
             x -= this._barWidth / 2;
@@ -169,7 +169,7 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(x);
     }
 
-    _renderBars (layer, layerIndex, data) {
+    public _renderBars (layer, layerIndex, data) {
         const bars = layer.selectAll('rect.bar')
             .data(data.values, pluck('x'));
 
@@ -213,7 +213,7 @@ export class BarChart extends StackMixin {
             .remove();
     }
 
-    _calculateBarWidth () {
+    public _calculateBarWidth () {
         if (this._barWidth === undefined) {
             const numberOfBars = this.xUnitCount();
 
@@ -232,7 +232,7 @@ export class BarChart extends StackMixin {
         }
     }
 
-    fadeDeselectedArea (brushSelection) {
+    public fadeDeselectedArea (brushSelection) {
         const bars = this.chartBodyG().selectAll('rect.bar');
 
         if (this.isOrdinal()) {
@@ -270,7 +270,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    onClick (d, i?) {
+    public onClick (d, i?) {
         super.onClick(d.data, i);
     }
 
@@ -293,7 +293,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    _useOuterPadding () {
+    public _useOuterPadding () {
         return this._gap === undefined;
     }
 
@@ -314,7 +314,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    extendBrush (brushSelection) {
+    public extendBrush (brushSelection) {
         if (brushSelection && this.round() && (!this._centerBar || this._alwaysUseRounding)) {
             brushSelection[0] = this.round()(brushSelection[0]);
             brushSelection[1] = this.round()(brushSelection[1]);
@@ -344,7 +344,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    legendHighlight (d) {
+    public legendHighlight (d) {
         const colorFilter = (color, inv?) => function () {
             const item = select(this);
             const match = item.attr('fill') === color;
@@ -358,13 +358,13 @@ export class BarChart extends StackMixin {
         }
     }
 
-    legendReset () {
+    public legendReset () {
         this.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
     }
 
-    xAxisMax () {
+    public xAxisMax () {
         let max = super.xAxisMax();
         if ('resolution' in this.xUnits()) {
             const res = this.xUnits().resolution;

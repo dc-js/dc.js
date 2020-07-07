@@ -158,18 +158,18 @@ export class BoxPlot extends CoordinateGridMixin {
         return this;
     }
 
-    _boxTransform (d, i) {
+    public _boxTransform (d, i) {
         const xOffset = this.x()(this.keyAccessor()(d, i));
         return `translate(${xOffset}, 0)`;
     }
 
-    _preprocessData () {
+    public _preprocessData () {
         if (this.elasticX()) {
             this.x().domain([]);
         }
     }
 
-    plotData () {
+    public plotData () {
         this._calculatedBoxWidth = this._boxWidth(this.effectiveWidth(), this.xUnitCount());
 
         this._box.whiskers(this._whiskers)
@@ -195,7 +195,7 @@ export class BoxPlot extends CoordinateGridMixin {
         this.fadeDeselectedArea(this.filter());
     }
 
-    _renderBoxes (boxesG) {
+    public _renderBoxes (boxesG) {
         const boxesGEnter = boxesG.enter().append('g');
 
         boxesGEnter
@@ -209,7 +209,7 @@ export class BoxPlot extends CoordinateGridMixin {
         return boxesGEnter.merge(boxesG);
     }
 
-    _updateBoxes (boxesG) {
+    public _updateBoxes (boxesG) {
         const chart = this;
         transition(boxesG, this.transitionDuration(), this.transitionDelay())
             .attr('transform', (d, i) => this._boxTransform(d, i))
@@ -221,23 +221,23 @@ export class BoxPlot extends CoordinateGridMixin {
             });
     }
 
-    _removeBoxes (boxesG) {
+    public _removeBoxes (boxesG) {
         boxesG.exit().remove().call(this._box);
     }
 
-    _minDataValue () {
+    public _minDataValue () {
         return min(this.data(), e => min<number>(this.valueAccessor()(e)));
     }
 
-    _maxDataValue () {
+    public _maxDataValue () {
         return max(this.data(), e => max<number>(this.valueAccessor()(e)));
     }
 
-    _yAxisRangeRatio () {
+    public _yAxisRangeRatio () {
         return ((this._maxDataValue() - this._minDataValue()) / this.effectiveHeight());
     }
 
-    fadeDeselectedArea (brushSelection) {
+    public fadeDeselectedArea (brushSelection) {
         const chart = this;
         if (this.hasFilter()) {
             if (this.isOrdinal()) {
@@ -270,16 +270,16 @@ export class BoxPlot extends CoordinateGridMixin {
         }
     }
 
-    isSelectedNode (d) {
+    public isSelectedNode (d) {
         return this.hasFilter(this.keyAccessor()(d));
     }
 
-    yAxisMin () {
+    public yAxisMin () {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
         return utils.subtract(this._minDataValue() - padding, this.yAxisPadding());
     }
 
-    yAxisMax () {
+    public yAxisMax () {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
         return utils.add(this._maxDataValue() + padding, this.yAxisPadding());
     }

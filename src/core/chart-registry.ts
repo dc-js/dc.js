@@ -20,7 +20,7 @@ class ChartRegistry {
         this._chartMap = {};
     }
 
-    _initializeChartGroup (group) {
+    public _initializeChartGroup (group) {
         if (!group) {
             group = constants.DEFAULT_CHART_GROUP;
         }
@@ -37,7 +37,7 @@ class ChartRegistry {
      * @param {Object} chart dc.js chart instance
      * @returns {Boolean}
      */
-    has (chart) {
+    public has (chart) {
         for (const e in this._chartMap) {
             if ((this._chartMap)[e].indexOf(chart) >= 0) {
                 return true;
@@ -53,7 +53,7 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @return {undefined}
      */
-    register (chart, group) {
+    public register (chart, group) {
         const _chartMap = this._chartMap;
         group = this._initializeChartGroup(group);
         _chartMap[group].push(chart);
@@ -66,7 +66,7 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @return {undefined}
      */
-    deregister (chart, group) {
+    public deregister (chart, group) {
         group = this._initializeChartGroup(group);
         for (let i = 0; i < (this._chartMap)[group].length; i++) {
             if ((this._chartMap)[group][i].anchorName() === chart.anchorName()) {
@@ -81,7 +81,7 @@ class ChartRegistry {
      * @param {String} group Group name
      * @return {undefined}
      */
-    clear (group) {
+    public clear (group) {
         if (group) {
             delete (this._chartMap)[group];
         } else {
@@ -95,7 +95,7 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @returns {Array<Object>}
      */
-    list (group) {
+    public list (group) {
         group = this._initializeChartGroup(group);
         return (this._chartMap)[group];
     }

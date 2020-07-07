@@ -12,6 +12,7 @@ import {events} from '../core/events';
  * @param {Object} Base
  * @returns {BubbleMixin}
  */
+// tslint:disable-next-line:variable-name
 export const BubbleMixin = Base => class extends ColorMixin(Base) {
     constructor () {
         super();
@@ -42,20 +43,20 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         this._r = scaleLinear().domain([0, 100]);
     }
 
-    _rValueAccessor (d) {
+    public _rValueAccessor (d) {
         return d.r;
     }
 
     /**
-         * Get or set the bubble radius scale. By default the bubble chart uses
-         * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
-         * as its radius scale.
-         * @memberof BubbleMixin
-         * @instance
-         * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
-         * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
-         * @returns {d3.scale|BubbleMixin}
-         */
+     * Get or set the bubble radius scale. By default the bubble chart uses
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
+     * as its radius scale.
+     * @memberof BubbleMixin
+     * @instance
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+     * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
+     * @returns {d3.scale|BubbleMixin}
+     */
     public r ();
     public r (bubbleRadiusScale);
     public r (bubbleRadiusScale?) {
@@ -67,13 +68,13 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
-         * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Boolean} [elasticRadius=false]
-         * @returns {Boolean|BubbleChart}
-         */
+     * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
+     * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Boolean} [elasticRadius=false]
+     * @returns {Boolean|BubbleChart}
+     */
     public elasticRadius ();
     public elasticRadius (elasticRadius);
     public elasticRadius (elasticRadius?) {
@@ -84,22 +85,22 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return this;
     }
 
-    calculateRadiusDomain () {
+    public calculateRadiusDomain () {
         if (this._elasticRadius) {
             this.r().domain([this.rMin(), this.rMax()]);
         }
     }
 
     /**
-         * Get or set the radius value accessor function. If set, the radius value accessor function will
-         * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
-         * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
-         * size.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Function} [radiusValueAccessor]
-         * @returns {Function|BubbleMixin}
-         */
+     * Get or set the radius value accessor function. If set, the radius value accessor function will
+     * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
+     * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
+     * size.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Function} [radiusValueAccessor]
+     * @returns {Function|BubbleMixin}
+     */
     public radiusValueAccessor ();
     public radiusValueAccessor (radiusValueAccessor);
     public radiusValueAccessor (radiusValueAccessor?) {
@@ -110,7 +111,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return this;
     }
 
-    rMin () {
+    public rMin () {
         let values = this.data().map(this.radiusValueAccessor());
         if(this._excludeElasticZero) {
             values = values.filter(value => value > 0);
@@ -118,11 +119,11 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return min(values);
     }
 
-    rMax () {
+    public rMax () {
         return max(this.data(), e => this.radiusValueAccessor()(e));
     }
 
-    bubbleR (d) {
+    public bubbleR (d) {
         const value = this.radiusValueAccessor()(d);
         let r = this.r()(value);
         if (isNaN(r) || value <= 0) {
@@ -131,23 +132,23 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return r;
     }
 
-    _labelFunction (d) {
+    public _labelFunction (d) {
         return this.label()(d);
     }
 
-    _shouldLabel (d) {
+    public _shouldLabel (d) {
         return (this.bubbleR(d) > this._minRadiusWithLabel);
     }
 
-    _labelOpacity (d) {
+    public _labelOpacity (d) {
         return this._shouldLabel(d) ? 1 : 0;
     }
 
-    _labelPointerEvent (d) {
+    public _labelPointerEvent (d) {
         return this._shouldLabel(d) ? 'all' : 'none';
     }
 
-    _doRenderLabel (bubbleGEnter) {
+    public _doRenderLabel (bubbleGEnter) {
         if (this.renderLabel()) {
             let label = bubbleGEnter.select('text');
 
@@ -167,7 +168,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    doUpdateLabels (bubbleGEnter) {
+    public doUpdateLabels (bubbleGEnter) {
         if (this.renderLabel()) {
             const labels = bubbleGEnter.select('text')
                     .attr('pointer-events', d => this._labelPointerEvent(d))
@@ -177,11 +178,11 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    _titleFunction (d) {
+    public _titleFunction (d) {
         return this.title()(d);
     }
 
-    _doRenderTitles (g) {
+    public _doRenderTitles (g) {
         if (this.renderTitle()) {
             const title = g.select('title');
 
@@ -191,20 +192,20 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    doUpdateTitles (g) {
+    public doUpdateTitles (g) {
         if (this.renderTitle()) {
             g.select('title').text(d => this._titleFunction(d));
         }
     }
 
     /**
-         * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
-         * bubbles will be sorted by their radius, with smaller bubbles in front.
-         * @memberof BubbleChart
-         * @instance
-         * @param {Boolean} [sortBubbleSize=false]
-         * @returns {Boolean|BubbleChart}
-         */
+     * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
+     * bubbles will be sorted by their radius, with smaller bubbles in front.
+     * @memberof BubbleChart
+     * @instance
+     * @param {Boolean} [sortBubbleSize=false]
+     * @returns {Boolean|BubbleChart}
+     */
     public sortBubbleSize ();
     public sortBubbleSize (sortBubbleSize);
     public sortBubbleSize (sortBubbleSize?) {
@@ -216,12 +217,12 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the minimum radius. This will be used to initialize the radius scale's range.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [radius=10]
-         * @returns {Number|BubbleMixin}
-         */
+     * Get or set the minimum radius. This will be used to initialize the radius scale's range.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Number} [radius=10]
+     * @returns {Number|BubbleMixin}
+     */
     public minRadius ();
     public minRadius (radius);
     public minRadius (radius?) {
@@ -233,14 +234,13 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
-         * then no label will be rendered.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [radius=10]
-         * @returns {Number|BubbleMixin}
-         */
-
+     * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
+     * then no label will be rendered.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Number} [radius=10]
+     * @returns {Number|BubbleMixin}
+     */
     public minRadiusWithLabel ();
     public minRadiusWithLabel (radius);
     public minRadiusWithLabel (radius?) {
@@ -252,13 +252,13 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
     }
 
     /**
-         * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
-         * when the difference in radius between bubbles is too great.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [relativeSize=0.3]
-         * @returns {Number|BubbleMixin}
-         */
+     * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
+     * when the difference in radius between bubbles is too great.
+     * @memberof BubbleMixin
+     * @instance
+     * @param {Number} [relativeSize=0.3]
+     * @returns {Number|BubbleMixin}
+     */
     public maxBubbleRelativeSize ();
     public maxBubbleRelativeSize (relativeSize);
     public maxBubbleRelativeSize (relativeSize?) {
@@ -286,7 +286,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         return this;
     }
 
-    fadeDeselectedArea (selection) {
+    public fadeDeselectedArea (selection) {
         if (this.hasFilter()) {
             const chart = this;
             this.selectAll(`g.${chart.BUBBLE_NODE_CLASS}`).each(function (d) {
@@ -304,11 +304,11 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
         }
     }
 
-    isSelectedNode (d) {
+    public isSelectedNode (d) {
         return this.hasFilter(d.key);
     }
 
-    onClick (d) {
+    public onClick (d) {
         const filter = d.key;
         events.trigger(() => {
             this.filter(filter);

@@ -79,11 +79,11 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [cap]
      * @returns {Number|PieChart}
      */
-    slicesCap (cap) {
+    public slicesCap (cap) {
         return this.cap(cap)
     }
 
-    _doRender () {
+    public _doRender () {
         this.resetSvg();
 
         this._g = this.svg()
@@ -98,7 +98,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    _drawChart () {
+    public _drawChart () {
         // set radius from chart size if none given, or if given radius is too large
         const maxRadius = min([this.width(), this.height()]) / 2;
         this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
@@ -140,7 +140,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    _createElements (slices, labels, arcs, pieData) {
+    public _createElements (slices, labels, arcs, pieData) {
         const slicesEnter = this._createSliceNodes(slices);
 
         this._createSlicePath(slicesEnter, arcs);
@@ -150,14 +150,14 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._createLabels(labels, pieData, arcs);
     }
 
-    _createSliceNodes (slices) {
+    public _createSliceNodes (slices) {
         return slices
             .enter()
             .append('g')
             .attr('class', (d, i) => `${this._sliceCssClass} _${i}`);
     }
 
-    _createSlicePath (slicesEnter, arcs) {
+    public _createSlicePath (slicesEnter, arcs) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', (d, i) => this._onClick(d, i))
@@ -172,13 +172,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    _createTitles (slicesEnter) {
+    public _createTitles (slicesEnter) {
         if (this.renderTitle()) {
             slicesEnter.append('title').text(d => this.title()(d.data));
         }
     }
 
-    _applyLabelText (labels) {
+    public _applyLabelText (labels) {
         labels
             .text(d => {
                 const data = d.data;
@@ -189,19 +189,19 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             });
     }
 
-    _positionLabels (labels, arcs) {
+    public _positionLabels (labels, arcs) {
         this._applyLabelText(labels);
         transition(labels, this.transitionDuration(), this.transitionDelay())
             .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle');
     }
 
-    _highlightSlice (i, whether) {
+    public _highlightSlice (i, whether) {
         this.select(`g.pie-slice._${i}`)
             .classed('highlight', whether);
     }
 
-    _createLabels (labels, pieData, arcs) {
+    public _createLabels (labels, pieData, arcs) {
         if (this.renderLabel()) {
             const labelsEnter = labels
                 .enter()
@@ -227,7 +227,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    _updateLabelPaths (pieData, arcs) {
+    public _updateLabelPaths (pieData, arcs) {
         let polyline = this._g.selectAll(`polyline.${this._sliceCssClass}`)
             .data(pieData);
 
@@ -270,13 +270,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     }
 
-    _updateElements (pieData, arcs) {
+    public _updateElements (pieData, arcs) {
         this._updateSlicePaths(pieData, arcs);
         this._updateLabels(pieData, arcs);
         this._updateTitles(pieData);
     }
 
-    _updateSlicePaths (pieData, arcs) {
+    public _updateSlicePaths (pieData, arcs) {
         const slicePaths = this._g.selectAll(`g.${this._sliceCssClass}`)
             .data(pieData)
             .select('path')
@@ -291,7 +291,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
 
-    _updateLabels (pieData, arcs) {
+    public _updateLabels (pieData, arcs) {
         if (this.renderLabel()) {
             const labels = this._g.selectAll(`text.${this._labelCssClass}`)
                 .data(pieData);
@@ -302,7 +302,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    _updateTitles (pieData) {
+    public _updateTitles (pieData) {
         if (this.renderTitle()) {
             this._g.selectAll(`g.${this._sliceCssClass}`)
                 .data(pieData)
@@ -311,12 +311,12 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    _removeElements (slices, labels) {
+    public _removeElements (slices, labels) {
         slices.exit().remove();
         labels.exit().remove();
     }
 
-    _highlightFilter () {
+    public _highlightFilter () {
         const chart = this;
         if (this.hasFilter()) {
             this.selectAll(`g.${this._sliceCssClass}`).each(function (d) {
@@ -340,7 +340,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public externalRadiusPadding ();
-    public externalRadiusPadding (externalRadiusPadding);
+    public externalRadiusPadding (externalRadiusPadding): this;
     public externalRadiusPadding (externalRadiusPadding?) {
         if (!arguments.length) {
             return this._externalRadiusPadding;
@@ -356,7 +356,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public innerRadius ();
-    public innerRadius (innerRadius);
+    public innerRadius (innerRadius): this;
     public innerRadius (innerRadius?) {
         if (!arguments.length) {
             return this._innerRadius;
@@ -372,7 +372,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public radius ();
-    public radius (radius);
+    public radius (radius): this;
     public radius (radius?) {
         if (!arguments.length) {
             return this._givenRadius;
@@ -411,17 +411,17 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    _buildArcs () {
+    public _buildArcs () {
         return arc()
             .outerRadius(this._radius - this._externalRadiusPadding)
             .innerRadius(this._innerRadius);
     }
 
-    _isSelectedSlice (d) {
+    public _isSelectedSlice (d) {
         return this.hasFilter(this.cappedKeyAccessor(d.data));
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this._drawChart();
         return this;
     }
@@ -433,7 +433,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public minAngleForLabel ();
-    public minAngleForLabel (minAngleForLabel);
+    public minAngleForLabel (minAngleForLabel): this;
     public minAngleForLabel (minAngleForLabel?) {
         if (!arguments.length) {
             return this._minAngleForLabel;
@@ -442,35 +442,35 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    _pieLayout () {
+    public _pieLayout () {
         // The 2nd argument is type of datum that will be used. TODO: revisit after refactoring.
-        return <Pie<any, any>>pie().sort(null).value(d => this.cappedValueAccessor(d));
+        return pie().sort(null).value(d => this.cappedValueAccessor(d)) as Pie<any, any>;
     }
 
-    _sliceTooSmall (d) {
+    public _sliceTooSmall (d) {
         const angle = (d.endAngle - d.startAngle);
         return isNaN(angle) || angle < this._minAngleForLabel;
     }
 
-    _sliceHasNoData (d) {
+    public _sliceHasNoData (d) {
         return this.cappedValueAccessor(d) === 0;
     }
 
-    _isOffCanvas (current) {
+    public _isOffCanvas (current) {
         return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    _fill (d, i) {
+    public _fill (d, i) {
         return this.getColor(d.data, i);
     }
 
-    _onClick (d, i) {
+    public _onClick (d, i) {
         if (this._g.attr('class') !== this._emptyCssClass) {
             this.onClick(d.data, i);
         }
     }
 
-    _safeArc (d, i, _arc) {
+    public _safeArc (d, i, _arc) {
         let path = _arc(d, i);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
@@ -484,7 +484,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {String|PieChart}
      */
     public emptyTitle ();
-    public emptyTitle (title);
+    public emptyTitle (title): this;
     public emptyTitle (title?) {
         if (arguments.length === 0) {
             return this._emptyTitle;
@@ -501,7 +501,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Number|PieChart}
      */
     public externalLabels ();
-    public externalLabels (externalLabelRadius);
+    public externalLabels (externalLabelRadius): this;
     public externalLabels (externalLabelRadius?) {
         if (arguments.length === 0) {
             return this._externalLabelRadius;
@@ -521,7 +521,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @returns {Boolean|PieChart}
      */
     public drawPaths ();
-    public drawPaths (drawPaths);
+    public drawPaths (drawPaths): this;
     public drawPaths (drawPaths?) {
         if (arguments.length === 0) {
             return this._drawPaths;
@@ -530,7 +530,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    _labelPosition (d, _arc) {
+    public _labelPosition (d, _arc) {
         let centroid;
         if (this._externalLabelRadius) {
             centroid = arc()
@@ -547,7 +547,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    legendables () {
+    public legendables () {
         return this.data().map((d, i) => {
             const legendable:{[key: string]: any} = {name: d.key, data: d.value, others: d.others, chart: this};
             legendable.color = this.getColor(d, i);
@@ -555,19 +555,19 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    legendHighlight (d) {
+    public legendHighlight (d) {
         this._highlightSliceFromLegendable(d, true);
     }
 
-    legendReset (d) {
+    public legendReset (d) {
         this._highlightSliceFromLegendable(d, false);
     }
 
-    legendToggle (d) {
+    public legendToggle (d) {
         this.onClick({key: d.name, others: d.others});
     }
 
-    _highlightSliceFromLegendable (legendable, highlighted) {
+    public _highlightSliceFromLegendable (legendable, highlighted) {
         this.selectAll('g.pie-slice').each(function (d) {
             if (legendable.name === d.data.key) {
                 select(this).classed('highlight', highlighted);
@@ -575,7 +575,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    _tweenPie (b, element) {
+    public _tweenPie (b, element) {
         b.innerRadius = this._innerRadius;
         let current = element._current;
         if (this._isOffCanvas(current)) {

@@ -81,7 +81,7 @@ export class LineChart extends StackMixin {
         this.anchor(parent, chartGroup);
     }
 
-    plotData () {
+    public plotData () {
         const chartBody = this.chartBodyG();
         let layersList = chartBody.select('g.stack-list');
 
@@ -262,7 +262,7 @@ export class LineChart extends StackMixin {
     // To keep it backward compatible, this covers multiple cases
     // See https://github.com/dc-js/dc.js/issues/1376
     // It will be removed when interpolate and tension are removed.
-    _getCurveFactory () {
+    public _getCurveFactory () {
         let curve = null;
 
         // _curve takes precedence
@@ -308,7 +308,7 @@ export class LineChart extends StackMixin {
         return curve;
     }
 
-    _drawLine (layersEnter, layers) {
+    public _drawLine (layersEnter, layers) {
         const _line = line()
             .x((d: any) => this.x()(d.x)) // TODO: revisit later to put proper type
             .y((d: any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
@@ -325,12 +325,12 @@ export class LineChart extends StackMixin {
         }
 
         transition(layers.select('path.line'), this.transitionDuration(), this.transitionDelay())
-        //.ease('linear')
+        // .ease('linear')
             .attr('stroke', (d, i) => this.getColor(d, i))
             .attr('d', d => this._safeD(_line(d.values)));
     }
 
-    _drawArea (layersEnter, layers) {
+    public _drawArea (layersEnter, layers) {
         if (this._renderArea) {
             const _area = area()
                 .x((d:any) => this.x()(d.x)) // TODO: revisit later to put proper type
@@ -347,17 +347,17 @@ export class LineChart extends StackMixin {
                 .attr('d', d => this._safeD(_area(d.values)));
 
             transition(layers.select('path.area'), this.transitionDuration(), this.transitionDelay())
-            //.ease('linear')
+            // .ease('linear')
                 .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
         }
     }
 
-    _safeD (d) {
+    public _safeD (d) {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
     }
 
-    _drawDots (chartBody, layers) {
+    public _drawDots (chartBody, layers) {
         if (this.xyTipsOn() === 'always' || (!(this.brushOn() || this.parentBrushOn()) && this.xyTipsOn())) {
             const tooltipListClass = `${TOOLTIP_G_CLASS}-list`;
             let tooltips = chartBody.select(`g.${tooltipListClass}`);
@@ -418,7 +418,7 @@ export class LineChart extends StackMixin {
         }
     }
 
-    _drawLabels (layers) {
+    public _drawLabels (layers) {
         const chart = this;
         layers.each(function (data, layerIndex) {
             const layer = select(this);
@@ -446,7 +446,7 @@ export class LineChart extends StackMixin {
         });
     }
 
-    _createRefLines (g) {
+    public _createRefLines (g) {
         const yRefLine = g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).empty() ?
             g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select(`path.${Y_AXIS_REF_LINE_CLASS}`);
         yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
@@ -456,14 +456,14 @@ export class LineChart extends StackMixin {
         xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
     }
 
-    _showDot (dot) {
+    public _showDot (dot) {
         dot.style('fill-opacity', 0.8);
         dot.style('stroke-opacity', 0.8);
         dot.attr('r', this._dotRadius);
         return dot;
     }
 
-    _showRefLines (dot, g) {
+    public _showRefLines (dot, g) {
         const x = dot.attr('cx');
         const y = dot.attr('cy');
         const yAxisX = (this._yAxisX() - this.margins().left);
@@ -473,22 +473,22 @@ export class LineChart extends StackMixin {
         g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', xAxisRefPathD);
     }
 
-    _getDotRadius () {
+    public _getDotRadius () {
         return this._dataPointRadius || this._dotRadius;
     }
 
-    _hideDot (dot) {
+    public _hideDot (dot) {
         dot.style('fill-opacity', this._dataPointFillOpacity)
             .style('stroke-opacity', this._dataPointStrokeOpacity)
             .attr('r', this._getDotRadius());
     }
 
-    _hideRefLines (g) {
+    public _hideRefLines (g) {
         g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', 'none');
         g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', 'none');
     }
 
-    _doRenderTitle (dot, d) {
+    public _doRenderTitle (dot, d) {
         if (this.renderTitle()) {
             dot.select('title').remove();
             dot.append('title').text(pluck('data', this.title(d.name)));
@@ -558,7 +558,7 @@ export class LineChart extends StackMixin {
         return this;
     }
 
-    _colorFilter (color, dashstyle, inv?) {
+    public _colorFilter (color, dashstyle, inv?) {
         return function () {
             const item = select(this);
             const match = (item.attr('stroke') === color &&
@@ -568,7 +568,7 @@ export class LineChart extends StackMixin {
         };
     }
 
-    legendHighlight (d) {
+    public legendHighlight (d) {
         if (!this.isLegendableHidden(d)) {
             this.g().selectAll('path.line, path.area')
                 .classed('highlight', this._colorFilter(d.color, d.dashstyle))
@@ -576,13 +576,13 @@ export class LineChart extends StackMixin {
         }
     }
 
-    legendReset () {
+    public legendReset () {
         this.g().selectAll('path.line, path.area')
             .classed('highlight', false)
             .classed('fadeout', false);
     }
 
-    legendables () {
+    public legendables () {
         const legendables = super.legendables();
         if (!this._dashStyle) {
             return legendables;

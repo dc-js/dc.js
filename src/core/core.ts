@@ -61,7 +61,7 @@ export const afterTransition = function (_transition, callback) {
     }
 };
 
-export const renderlet = function (_?: Function): Function {
+export const renderlet = function (_?: () => void): () => void {
     if (!arguments.length) {
         return config._renderlet;
     }
@@ -69,6 +69,6 @@ export const renderlet = function (_?: Function): Function {
     return null;
 };
 
-export const instanceOfChart: ((any) => boolean) = function (o) {
+export const instanceOfChart: ((o: any) => boolean) = function (o) {
     return o instanceof Object && o.__dcFlag__ && true;
 };

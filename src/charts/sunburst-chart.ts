@@ -78,14 +78,14 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     // Handle cases if value corresponds to generated parent nodes
-    _extendedValueAccessor (d) {
+    public _extendedValueAccessor (d) {
         if (d.path) {
             return d.value;
         }
         return this.valueAccessor()(d);
     }
 
-    _scaleRadius (ringIndex, y) {
+    public _scaleRadius (ringIndex, y) {
         if (ringIndex === 0) {
             return this._innerRadius;
         } else {
@@ -98,7 +98,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _doRender () {
+    public _doRender () {
         this.resetSvg();
 
         this._g = this.svg()
@@ -110,14 +110,16 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return this;
     }
 
-    _drawChart () {
+    public _drawChart () {
         // set radius from chart size if none given, or if given radius is too large
         const maxRadius = min([this.width(), this.height()]) / 2;
         this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
 
         const arcs = this._buildArcs();
 
-        let partitionedNodes, cdata;
+        let partitionedNodes;
+        let cdata;
+
         // if we have data...
         if (sum(this.data(), this.valueAccessor())) {
             cdata = utils.toHierarchy(this.data(), this.valueAccessor());
@@ -151,7 +153,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _createElements (slices, arcs, sunburstData) {
+    public _createElements (slices, arcs, sunburstData) {
         const slicesEnter = this._createSliceNodes(slices);
 
         this._createSlicePath(slicesEnter, arcs);
@@ -159,7 +161,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this._createLabels(sunburstData, arcs);
     }
 
-    _createSliceNodes (slices) {
+    public _createSliceNodes (slices) {
         return slices
             .enter()
             .append('g')
@@ -168,7 +170,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 this._sliceCssClass}-level-${d.depth}`);
     }
 
-    _createSlicePath (slicesEnter, arcs) {
+    public _createSlicePath (slicesEnter, arcs) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', (d, i) => this.onClick(d, i))
@@ -183,13 +185,13 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _createTitles (slicesEnter) {
+    public _createTitles (slicesEnter) {
         if (this.renderTitle()) {
             slicesEnter.append('title').text(d => this.title()(d));
         }
     }
 
-    _positionLabels (labelsEnter, arcs) {
+    public _positionLabels (labelsEnter, arcs) {
         transition(labelsEnter, this.transitionDuration())
             .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle')
@@ -202,7 +204,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             });
     }
 
-    _createLabels (sunburstData, arcs) {
+    public _createLabels (sunburstData, arcs) {
         if (this.renderLabel()) {
             const labels = this._g.selectAll(`text.${this._sliceCssClass}`)
                 .data(sunburstData);
@@ -224,13 +226,13 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _updateElements (sunburstData, arcs) {
+    public _updateElements (sunburstData, arcs) {
         this._updateSlicePaths(sunburstData, arcs);
         this._updateLabels(sunburstData, arcs);
         this._updateTitles(sunburstData);
     }
 
-    _updateSlicePaths (sunburstData, arcs) {
+    public _updateSlicePaths (sunburstData, arcs) {
         const slicePaths = this._g.selectAll(`g.${this._sliceCssClass}`)
             .data(sunburstData)
             .select('path')
@@ -245,7 +247,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
 
-    _updateLabels (sunburstData, arcs) {
+    public _updateLabels (sunburstData, arcs) {
         if (this.renderLabel()) {
             const labels = this._g.selectAll(`text.${this._sliceCssClass}`)
                 .data(sunburstData);
@@ -253,7 +255,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _updateTitles (sunburstData) {
+    public _updateTitles (sunburstData) {
         if (this.renderTitle()) {
             this._g.selectAll(`g.${this._sliceCssClass}`)
                 .data(sunburstData)
@@ -262,11 +264,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    _removeElements (slices) {
+    public _removeElements (slices) {
         slices.exit().remove();
     }
 
-    _highlightFilter () {
+    public _highlightFilter () {
         const chart = this;
         if (chart.hasFilter()) {
             chart.selectAll(`g.${chart._sliceCssClass}`).each(function (d) {
@@ -408,7 +410,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      *   chart.ringSizes(chart.defaultRingSizes())
      * @returns {RingSizes}
      */
-    defaultRingSizes () {
+    public defaultRingSizes () {
         return {
             partitionDy: () => this._radius * this._radius,
             scaleInnerRadius: d => d.data.path && d.data.path.length === 1 ?
@@ -428,7 +430,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      *   chart.ringSizes(chart.equalRingSizes())
      * @returns {RingSizes}
      */
-    equalRingSizes () {
+    public equalRingSizes () {
         return this.relativeRingSizes(
             ringCount => {
                 const result = [];
@@ -457,7 +459,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Function} [relativeRingSizesFunction]
      * @returns {RingSizes}
      */
-    relativeRingSizes (relativeRingSizesFunction) {
+    public relativeRingSizes (relativeRingSizesFunction) {
         function assertPortionsArray (relativeSizes, numberOfRings) {
             if (!Array.isArray(relativeSizes)) {
                 throw new BadArgumentException('relativeRingSizes function must return an array');
@@ -528,7 +530,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return this;
     }
 
-    _buildArcs () {
+    public _buildArcs () {
         return arc()
             .startAngle((d:any) => d.x0) // TODO: revisit and look for proper typing
             .endAngle((d:any) => d.x1) // TODO: revisit and look for proper typing
@@ -536,11 +538,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             .outerRadius(d => this.ringSizes().scaleOuterRadius(d));
     }
 
-    _isSelectedSlice (d) {
+    public _isSelectedSlice (d) {
         return this._isPathFiltered(d.path);
     }
 
-    _isPathFiltered (path) {
+    public _isPathFiltered (path) {
         for (let i = 0; i < this.filters().length; i++) {
             const currentFilter = this.filters()[i];
             if (currentFilter.isFiltered(path)) {
@@ -551,7 +553,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     // returns all filters that are a parent or child of the path
-    _filtersForPath (path) {
+    public _filtersForPath (path) {
         const pathFilter = filters.HierarchyFilter(path);
         const filtersList = [];
         for (let i = 0; i < this.filters().length; i++) {
@@ -563,12 +565,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return filtersList;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this._drawChart();
         return this;
     }
 
-    _partitionNodes (data) {
+    public _partitionNodes (data) {
         const getSortable = function (d) {
             return {'key': d.data.key, 'value': d.value};
         };
@@ -601,24 +603,24 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         };
     }
 
-    _sliceTooSmall (d) {
+    public _sliceTooSmall (d) {
         const angle = d.x1 - d.x0;
         return isNaN(angle) || angle < this._minAngleForLabel;
     }
 
-    _sliceHasNoData (d) {
+    public _sliceHasNoData (d) {
         return this._extendedValueAccessor(d) === 0;
     }
 
-    _isOffCanvas (d) {
+    public _isOffCanvas (d) {
         return !d || isNaN(d.x0) || isNaN(d.y0);
     }
 
-    _fill (d, i) {
+    public _fill (d, i) {
         return this.getColor(d.data, i);
     }
 
-    onClick (d, i?) {
+    public onClick (d, i?) {
         if (this._g.attr('class') === this._emptyCssClass) {
             return;
         }
@@ -647,7 +649,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    _safeArc (_arc, d) {
+    public _safeArc (_arc, d) {
         let path = _arc(d);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
@@ -655,7 +657,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return path;
     }
 
-    _labelPosition (d, _arc) {
+    public _labelPosition (d, _arc) {
         let centroid;
         if (this._externalLabelRadius) {
             centroid = arc()
@@ -672,7 +674,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    legendables () {
+    public legendables () {
         return this.data().map((d, i) => {
             const legendable: {[key: string]: any} = {name: d.key, data: d.value, others: d.others, chart: this};
             legendable.color = this.getColor(d, i);
@@ -680,19 +682,19 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    legendHighlight (d) {
+    public legendHighlight (d) {
         this._highlightSliceFromLegendable(d, true);
     }
 
-    legendReset (d) {
+    public legendReset (d) {
         this._highlightSliceFromLegendable(d, false);
     }
 
-    legendToggle (d) {
+    public legendToggle (d) {
         this.onClick({key: d.name, others: d.others});
     }
 
-    _highlightSliceFromLegendable (legendable, highlighted) {
+    public _highlightSliceFromLegendable (legendable, highlighted) {
         this.selectAll('g.pie-slice').each(function (d) {
             if (legendable.name === d.key) {
                 select(this).classed('highlight', highlighted);
@@ -700,7 +702,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    _tweenSlice (d, element) {
+    public _tweenSlice (d, element) {
         let current = element._current;
         if (this._isOffCanvas(current)) {
             current = {x0: 0, x1: 0, y0: 0, y1: 0};

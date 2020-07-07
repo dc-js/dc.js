@@ -24,7 +24,7 @@ export class Logger {
      * @param {String} [msg]
      * @returns {Logger}
      */
-    warn (msg: string): Logger {
+    public warn (msg: string): Logger {
         if (console) {
             if (console.warn) {
                 console.warn(msg);
@@ -43,7 +43,7 @@ export class Logger {
      * @param {String} [msg]
      * @returns {Logger}
      */
-    warnOnce (msg: string): Logger {
+    public warnOnce (msg: string): Logger {
         if (!this._alreadyWarned[msg]) {
             this._alreadyWarned[msg] = true;
 
@@ -60,7 +60,7 @@ export class Logger {
      * @param {String} [msg]
      * @returns {Logger}
      */
-    debug (msg: string): Logger {
+    public debug (msg: string): Logger {
         if (this.enableDebugLog && console) {
             if (console.debug) {
                 console.debug(msg);

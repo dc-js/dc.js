@@ -71,11 +71,11 @@ export class CboxMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    _doRender () {
+    public _doRender () {
         return this._doRedraw();
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this.select('ul').remove();
         this._cbox = this.root()
             .append('ul')
@@ -98,7 +98,7 @@ export class CboxMenu extends BaseMixin {
         return this;
     }
 
-    _renderOptions () {
+    public _renderOptions () {
         let options = this._cbox
             .selectAll(`li.${ITEM_CSS_CLASS}`)
             .data(this.data(), d => this.keyAccessor()(d));
@@ -155,7 +155,7 @@ export class CboxMenu extends BaseMixin {
         return options;
     }
 
-    _onChange (d, i, element) {
+    public _onChange (d, i, element) {
         let values;
         const target = select(event.target);
         let options;
@@ -180,7 +180,7 @@ export class CboxMenu extends BaseMixin {
         this.onChange(values);
     }
 
-    onChange (val) {
+    public onChange (val) {
         if (val && this._multiple) {
             this.replaceFilter([val]);
         } else if (val) {

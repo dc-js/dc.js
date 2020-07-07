@@ -54,13 +54,13 @@ export class TextFilterWidget extends BaseMixin {
         this._placeHolder = 'search';
 
         this.group(() => {
-            throw 'the group function on textFilterWidget should never be called, please report the issue';
+            throw new Error('the group function on textFilterWidget should never be called, please report the issue');
         });
 
         this.anchor(parent, chartGroup);
     }
 
-    _doRender () {
+    public _doRender () {
         this.select('input').remove();
 
         this._input = this.root().append('input')
@@ -79,7 +79,7 @@ export class TextFilterWidget extends BaseMixin {
         return this;
     }
 
-    _doRedraw () {
+    public _doRedraw () {
         this.root().selectAll('input')
             .attr('placeholder', this._placeHolder);
 

@@ -44,15 +44,15 @@ export class SeriesChart extends CompositeChart {
         this.shareColors(true);
     }
 
-    _compose (subChartArray) {
+    public _compose (subChartArray) {
         super.compose(subChartArray);
     }
 
-    compose (subChartArray): this {
+    public compose (subChartArray): this {
         throw new Error('Not supported for this chart type');
     }
 
-    _preprocessData () {
+    public _preprocessData () {
         const keep = [];
         let childrenChanged;
         const nester = nest().key(this._seriesAccessor);
@@ -94,14 +94,14 @@ export class SeriesChart extends CompositeChart {
         }
     }
 
-    _clearChart (c) {
+    public _clearChart (c) {
         if (this._charts[c].g()) {
             this._charts[c].g().remove();
         }
         delete this._charts[c];
     }
 
-    _resetChildren () {
+    public _resetChildren () {
         Object.keys(this._charts).map(this._clearChart);
         this._charts = {};
     }
