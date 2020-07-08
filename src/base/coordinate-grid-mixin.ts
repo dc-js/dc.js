@@ -1,5 +1,5 @@
 import {schemeCategory10} from 'd3-scale-chromatic';
-import {timeDay} from 'd3-time';
+import {CountableTimeInterval, timeDay} from 'd3-time';
 import {max, min} from 'd3-array';
 import {scaleBand, scaleLinear, scaleOrdinal} from 'd3-scale';
 import {axisBottom, axisLeft, axisRight} from 'd3-axis';
@@ -33,6 +33,48 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * @mixes MarginMixin
  */
 export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
+    private _parent;
+    private _g;
+    private _chartBodyG;
+    private _x;
+    private _origX;
+    private _xOriginalDomain;
+    private _xAxis;
+    private _xUnits;
+    private _xAxisPadding: number;
+    private _xAxisPaddingUnit: CountableTimeInterval;
+    private _xElasticity: boolean;
+    private _xAxisLabel;
+    private _xAxisLabelPadding: number;
+    private _lastXDomain;
+    private _y;
+    private _yAxis;
+    private _yAxisPadding: number;
+    private _yElasticity: boolean;
+    private _yAxisLabel;
+    private _yAxisLabelPadding: number;
+    private _brush;
+    private _gBrush;
+    private _brushOn: boolean;
+    private _parentBrushOn: boolean;
+    private _round;
+    private _renderHorizontalGridLine: boolean;
+    private _renderVerticalGridLine: boolean;
+    private _resizing: boolean;
+    private _unitCount;
+    private _zoomScale: (number)[];
+    private _zoomOutRestrict: boolean;
+    private _zoom;
+    private _nullZoom;
+    private _hasBeenMouseZoomable: boolean;
+    private _rangeChart;
+    private _focusChart;
+    private _mouseZoomable: boolean;
+    private _clipPadding: number;
+    private _fOuterRangeBandPadding: number;
+    private _fRangeBandPadding: number;
+    private _useRightYAxis: boolean;
+
     constructor () {
         super();
 
@@ -1210,6 +1252,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
         this.fadeDeselectedArea(this.filter());
         this.resizing(false);
+    }
+
+    plotData() {
+        // To be implemented in derived class
+        throw new Error("Method not implemented.");
     }
 
     public _configureMouseZoom () {

@@ -1,4 +1,4 @@
-import {ascending} from 'd3-array';
+import {ascending, Primitive} from 'd3-array';
 import {nest} from 'd3-collection';
 
 import {CompositeChart} from './composite-chart';
@@ -15,6 +15,13 @@ import {utils} from '../core/utils';
  * @mixes CompositeChart
  */
 export class SeriesChart extends CompositeChart {
+    private _keySort: (a, b) => number;
+    private _charts;
+    private _chartFunction;
+    private _seriesAccessor;
+    private _seriesSort: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
+    private _valueSort: (a, b) => number;
+
     /**
      * Create a Series Chart.
      * @example

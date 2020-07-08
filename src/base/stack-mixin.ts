@@ -1,4 +1,4 @@
-import {stack} from 'd3-shape';
+import {Stack, stack} from 'd3-shape';
 import {max, min} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
@@ -10,6 +10,13 @@ import {CoordinateGridMixin} from './coordinate-grid-mixin';
  * @mixes CoordinateGridMixin
  */
 export class StackMixin extends CoordinateGridMixin {
+    private _stackLayout: Stack<any, { [p: string]: number }, string>;
+    private _stack;
+    private _titles;
+    private _hidableStacks: boolean;
+    private _hiddenStacks;
+    private _evadeDomainFilter: boolean;
+
     constructor () {
         super();
 
@@ -122,7 +129,7 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    public group (g, n, f) {
+    public group (g?, n?, f?) {
         if (!arguments.length) {
             return super.group();
         }
