@@ -245,9 +245,6 @@ export const d3Box = function () {
                         return width / 2;
                     };
 
-                // TODO: typing seems to be incorrect, value function might return a number
-                // TODO: PR ref https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45885
-                // @ts-ignore
                 const outlier = _g.selectAll(`circle.${outlierClass}`)
                     .data(outlierIndices, Number);
 
