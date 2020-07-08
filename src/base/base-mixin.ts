@@ -1,5 +1,5 @@
 import {select} from 'd3-selection';
-import {dispatch} from 'd3-dispatch';
+import {dispatch, Dispatch} from 'd3-dispatch';
 import {ascending} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
@@ -26,7 +26,7 @@ const _defaultFilterHandler = (dimension, filters) => {
             for (let i = 0; i < filters.length; i++) {
                 const filter = filters[i];
                 if (filter.isFiltered) {
-                    if(filter.isFiltered(d)) {
+                    if (filter.isFiltered(d)) {
                         return true;
                     }
                 } else if (filter <= d && filter >= d) {
@@ -100,8 +100,7 @@ export class BaseMixin {
     private _filterPrinter: (filters) => string;
     private _mandatoryAttributesList: string[];
     protected _chartGroup: string;
-    // TODO: the typing seems to be inconsistent with https://github.com/d3/d3-dispatch example as well as our use
-    private _listeners: any; // TODO: external PR - https://github.com/DefinitelyTyped/DefinitelyTyped/pull/45869
+    private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
     private _commitHandler; // TODO: support async functions as well
     private _defaultData: (group) => any; // TODO: find correct type
