@@ -1,6 +1,5 @@
 import {format} from 'd3-format';
 
-import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
 
 /**
@@ -131,16 +130,6 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    public dimension ();
-    public dimension (cf): this;
-    public dimension (cf?) {
-        logger.warnOnce('consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
-        if (!arguments.length) {
-            return this.crossfilter();
-        }
-        return this.crossfilter(cf);
-    }
-
     public groupAll ();
     public groupAll (groupAll): this;
     public groupAll (groupAll?) {
@@ -150,16 +139,4 @@ export class DataCount extends BaseMixin {
         this._groupAll = groupAll;
         return this;
     }
-
-    public group ();
-    public group (groupAll): this;
-    public group (groupAll?) {
-        logger.warnOnce('consider using dataCount.groupAll instead of dataCount.group for clarity');
-        if (!arguments.length) {
-            return this.groupAll();
-        }
-        return this.groupAll(groupAll);
-    }
 }
-
-export const dataCount = (parent, chartGroup) => new DataCount(parent, chartGroup);
