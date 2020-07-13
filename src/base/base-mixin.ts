@@ -11,6 +11,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
+import {KeyAccessor, ValueAccessor} from '../core/types';
 
 const _defaultFilterHandler = (dimension, filters) => {
     if (filters.length === 0) {
@@ -87,8 +88,8 @@ export class BaseMixin {
     private _width: number;
     private _height: number;
     private _useViewBoxResizing: boolean;
-    private _keyAccessor: (d, i?) => string;
-    private _valueAccessor: (d, i?) => any; // TODO: should it return number?
+    private _keyAccessor: KeyAccessor;
+    private _valueAccessor: ValueAccessor;
     private _label: (d, i?) => any; // TODO: should it be string or string|number|Date
     private _ordering: (d, i?) => any; // TODO: should it be string or string|number|Date
     private _renderLabel: boolean;
@@ -1255,8 +1256,8 @@ export class BaseMixin {
      * @param {Function} [keyAccessor]
      * @returns {Function|BaseMixin}
      */
-    public keyAccessor(); // TODO: define KeyAccessorType
-    public keyAccessor(keyAccessor): this;
+    public keyAccessor(): KeyAccessor;
+    public keyAccessor(keyAccessor: KeyAccessor): this;
     public keyAccessor (keyAccessor?) {
         if (!arguments.length) {
             return this._keyAccessor;
@@ -1278,8 +1279,8 @@ export class BaseMixin {
      * @param {Function} [valueAccessor]
      * @returns {Function|BaseMixin}
      */
-    public valueAccessor (); // TODO: define ValueAccessorType
-    public valueAccessor (valueAccessor): this;
+    public valueAccessor (): ValueAccessor;
+    public valueAccessor (valueAccessor: ValueAccessor): this;
     public valueAccessor (valueAccessor?) {
         if (!arguments.length) {
             return this._valueAccessor;
