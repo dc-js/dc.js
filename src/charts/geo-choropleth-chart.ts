@@ -1,5 +1,5 @@
 import {geoPath, geoAlbersUsa, GeoPath} from 'd3-geo';
-import {select} from 'd3-selection';
+import {select, Selection} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';
 import {ColorMixin} from '../base/color-mixin';
@@ -57,7 +57,9 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             const states = this.svg().append('g')
                 .attr('class', `layer${layerIndex}`);
 
-            let regionG = states.selectAll(`g.${this._geoJson(layerIndex).name}`)
+            // Usually it picks up correct type, needs hinting in this case
+            let regionG: Selection<SVGGElement, unknown, SVGGElement, any> =
+                (states.selectAll(`g.${this._geoJson(layerIndex).name}`) as Selection<SVGGElement, unknown, SVGGElement, any>)
                 .data(this._geoJson(layerIndex).data);
 
             regionG = regionG.enter()
