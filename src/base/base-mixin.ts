@@ -11,7 +11,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {KeyAccessor, ValueAccessor} from '../core/types';
+import {KeyAccessor, LabelAccessor, TitleAccessor, ValueAccessor} from '../core/types';
 
 const _defaultFilterHandler = (dimension, filters) => {
     if (filters.length === 0) {
@@ -72,7 +72,7 @@ const _defaultResetFilterHandler = filters => [];
  */
 export class BaseMixin {
     // tslint:disable-next-line:variable-name
-    private __dcFlag__: number;
+    private __dcFlag__: string;
     private _dimension; // TODO: create an interface for what dc needs
     private _group; // TODO: create an interface for what dc needs
     private _anchor; // TODO: figure out actual type
@@ -90,10 +90,10 @@ export class BaseMixin {
     private _useViewBoxResizing: boolean;
     private _keyAccessor: KeyAccessor;
     private _valueAccessor: ValueAccessor;
-    private _label: (d, i?) => any; // TODO: should it be string or string|number|Date
+    private _label: LabelAccessor;
     private _ordering: (d, i?) => any; // TODO: should it be string or string|number|Date
     private _renderLabel: boolean;
-    private _title: (d, i?) => any; // TODO: should it be string or string|number|Date
+    private _title: TitleAccessor;
     private _renderTitle: boolean;
     private _controlsUseVisibility: boolean;
     private _transitionDuration: number;
@@ -115,7 +115,7 @@ export class BaseMixin {
     protected _groupName: string; // StackMixin needs it
 
     constructor () {
-        this.__dcFlag__ = utils.uniqueId();
+        this.__dcFlag__ = utils.uniqueId().toString();
 
         this._dimension = undefined;
         this._group = undefined;
@@ -569,12 +569,12 @@ export class BaseMixin {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
      * @returns {SVGElement}
      */
-    public resetSvg () {
+    public resetSvg (): Selection<SVGElement, any, any, any> {
         this.select('svg').remove();
         return this.generateSvg();
     }
 
-    public sizeSvg () {
+    public sizeSvg (): void {
         if (this._svg) {
             if (!this._useViewBoxResizing) {
                 this._svg
@@ -774,7 +774,7 @@ export class BaseMixin {
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}).
      * @returns {BaseMixin}
      */
-    public redraw () {
+    public redraw (): this {
         this.sizeSvg();
         this._listeners.call('preRedraw', this, this);
 
@@ -1149,7 +1149,7 @@ export class BaseMixin {
      * @param {*} datum
      * @return {undefined}
      */
-    public onClick (datum, i?): void {
+    public onClick (datum: any, i?: number): void {
         const filter = this.keyAccessor()(datum);
         events.trigger(() => {
             this.filter(filter);
@@ -1303,8 +1303,8 @@ export class BaseMixin {
      * @param {Boolean} [enableLabels=true]
      * @returns {Function|BaseMixin}
      */
-    public label ();
-    public label (labelFunction, enableLabels?: boolean): this;
+    public label (): LabelAccessor;
+    public label (labelFunction: LabelAccessor, enableLabels?: boolean): this;
     public label (labelFunction?, enableLabels?) {
         if (!arguments.length) {
             return this._label;
@@ -1322,7 +1322,7 @@ export class BaseMixin {
      * @param {Boolean} [renderLabel=false]
      * @returns {Boolean|BaseMixin}
      */
-    public renderLabel ();
+    public renderLabel (): boolean;
     public renderLabel (renderLabel: boolean): this;
     public renderLabel (renderLabel?) {
         if (!arguments.length) {
@@ -1352,8 +1352,8 @@ export class BaseMixin {
      * @param {Function} [titleFunction]
      * @returns {Function|BaseMixin}
      */
-    public title ();
-    public title (titleFunction): this;
+    public title (): TitleAccessor;
+    public title (titleFunction: TitleAccessor): this;
     public title (titleFunction?) {
         if (!arguments.length) {
             return this._title;
@@ -1368,8 +1368,8 @@ export class BaseMixin {
      * @param {Boolean} [renderTitle=true]
      * @returns {Boolean|BaseMixin}
      */
-    public renderTitle ();
-    public renderTitle (renderTitle): this;
+    public renderTitle (): boolean;
+    public renderTitle (renderTitle: boolean): this;
     public renderTitle (renderTitle?) {
         if (!arguments.length) {
             return this._renderTitle;
@@ -1409,7 +1409,7 @@ export class BaseMixin {
      * clear the cache to make sure charts are rendered properly.
      * @returns {BaseMixin}
      */
-    protected expireCache () {
+    protected expireCache (): this {
         // do nothing in base, should be overridden by sub-function
         return this;
     }
@@ -1437,7 +1437,7 @@ export class BaseMixin {
      * Returns the internal numeric ID of the chart.
      * @returns {String}
      */
-    public chartID () {
+    public chartID (): string {
         return this.__dcFlag__;
     }
 
@@ -1504,7 +1504,7 @@ export class BaseMixin {
      * @param {Function} listener
      * @returns {BaseMixin}
      */
-    public on (event, listener) {
+    public on (event, listener): this {
         this._listeners.on(event, listener);
         return this;
     }
@@ -1530,7 +1530,7 @@ export class BaseMixin {
      * @param {Function} renderletFunction
      * @returns {BaseMixin}
      */
-    public renderlet (renderletFunction) {
+    public renderlet (renderletFunction): this {
         logger.warnOnce('chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
         this.on(`renderlet.${utils.uniqueId()}`, renderletFunction);
         return this;

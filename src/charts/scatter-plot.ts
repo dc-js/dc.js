@@ -32,7 +32,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     private _canvas;
     private _context;
     private _useCanvas: boolean;
-    
+
     /**
      * Create a Scatter Plot.
      * @example
@@ -679,7 +679,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     public redrawBrush (brushSelection, doTransition) {
         // override default x axis brush from parent chart
-        const brush = this.brush();
+        const brush1 = this.brush(); // TODO: figure out why the linter complained about shadowing with name `brush`
         const gBrush = this.gBrush();
 
         if (this.brushOn() && gBrush) {
@@ -689,7 +689,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
             if (!brushSelection) {
                 gBrush
-                    .call(brush.move, brushSelection);
+                    .call(brush1.move, brushSelection);
 
             } else {
                 brushSelection = brushSelection.map(point => point.map((coord, i) => {
@@ -701,7 +701,7 @@ export class ScatterPlot extends CoordinateGridMixin {
                     optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(gBrush);
 
                 gBrushWithTransition
-                    .call(brush.move, brushSelection);
+                    .call(brush1.move, brushSelection);
 
             }
         }

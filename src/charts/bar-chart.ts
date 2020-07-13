@@ -373,7 +373,7 @@ export class BarChart extends StackMixin {
         let max = super.xAxisMax();
         if ('resolution' in this.xUnits()) {
             const res = this.xUnits().resolution;
-            max += res;
+            max = (max as number) + res; // max can be date as well, this case refers when xUnits is floating point
         }
         return max;
     }
