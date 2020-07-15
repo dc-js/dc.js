@@ -21,6 +21,7 @@
       true,
       "single"
     ],
+    "space-before-function-paren": [true, "always"],
     "trailing-comma": false,
     "variable-name": [
       true,
