@@ -22,7 +22,7 @@ const SPAN_CLASS = 'number-display';
  * @mixes BaseMixin
  */
 export class NumberDisplay extends BaseMixin {
-    private _formatNumber: (n: (number | { valueOf(): number })) => string;
+    private _formatNumber: (n: (number | { valueOf (): number })) => string;
     private _html: { some: string; one: string; none: string };
     private _lastValue;
 

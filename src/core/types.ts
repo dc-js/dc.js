@@ -21,11 +21,11 @@ export type TitleAccessor = (d: any, i?: number) => string|number;
 export interface MinimalScaleWithRange<DomainType, RangeType> {
     (x: DomainType): RangeType;
 
-    domain(): DomainType;
-    domain(newDomain: DomainType): this;
+    domain (): DomainType;
+    domain (newDomain: DomainType): this;
 
-    range(): RangeType[];
-    range(newRange: [RangeType, RangeType]): this;
+    range (): RangeType[];
+    range (newRange: [RangeType, RangeType]): this;
 }
 
 export type MinimalColorScale = MinimalScaleWithRange<any, string>;
@@ -34,19 +34,19 @@ export type MinimalRadiusScale = MinimalScaleWithRange<any, number>;
 
 // Specifically created for scales in Coordinate Grid charts
 export interface MinimalXYScale extends MinimalScaleWithRange<any, number> {
-    rangeRound(range: [number | { valueOf(): number }, number | { valueOf(): number }]): this;
+    rangeRound (range: [number | { valueOf (): number }, number | { valueOf (): number }]): this;
 
-    bandwidth?(): number;
-    paddingInner?(): number;
-    paddingInner?(padding: number): this;
-    paddingOuter?(): number;
-    paddingOuter?(padding: number): this;
+    bandwidth? (): number;
+    paddingInner? (): number;
+    paddingInner? (padding: number): this;
+    paddingOuter? (): number;
+    paddingOuter? (padding: number): this;
 
-    invert?(value: number | { valueOf(): number }): any;
+    invert? (value: number | { valueOf (): number }): any;
 
-    ticks?(count?: number): number[];
+    ticks? (count?: number): number[];
 
-    copy(): this;
+    copy (): this;
 }
 
 // Units, used by Coordinate Grid Charts

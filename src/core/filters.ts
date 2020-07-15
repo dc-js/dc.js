@@ -25,11 +25,11 @@ interface IFilters {
  * @type {{}}
  */
 export const filters: IFilters = {
-    HierarchyFilter(path): any {
-    }, RangedFilter(low, high): any[] {
+    HierarchyFilter (path): any {
+    }, RangedFilter (low, high): any[] {
         return [];
-    }, RangedTwoDimensionalFilter(filter): any {
-    }, TwoDimensionalFilter(filter): any {
+    }, RangedTwoDimensionalFilter (filter): any {
+    }, TwoDimensionalFilter (filter): any {
     }
 };
 

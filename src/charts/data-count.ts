@@ -19,7 +19,7 @@ import {BaseMixin} from '../base/base-mixin';
  * @mixes BaseMixin
  */
 export class DataCount extends BaseMixin {
-    private _formatNumber: (n: (number | { valueOf(): number })) => string;
+    private _formatNumber: (n: (number | { valueOf (): number })) => string;
     private _crossfilter;
     private _groupAll;
     private _html: { all: string; some: string };

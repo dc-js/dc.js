@@ -1260,7 +1260,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.resizing(false);
     }
 
-    protected plotData(): void {
+    protected plotData (): void {
         // To be implemented in derived class
         throw new Error('Method not implemented.');
     }
@@ -1378,7 +1378,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             console.warn('Could not intersect extents, will reset');
         }
         // Math.max does not work (as the values may be dates as well)
-        return <DCBrushSelection>[ext[0] > outerLimits[0] ? ext[0] : outerLimits[0], ext[1] < outerLimits[1] ? ext[1] : outerLimits[1]];
+        return [ext[0] > outerLimits[0] ? ext[0] : outerLimits[0], ext[1] < outerLimits[1] ? ext[1] : outerLimits[1]] as DCBrushSelection;
     }
 
     /**

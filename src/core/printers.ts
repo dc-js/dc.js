@@ -10,9 +10,9 @@ interface IPrinters {
  * @type {{}}
  */
 export const printers: IPrinters = {
-    filter(filter): string {
+    filter (filter): string {
         return '';
-    }, filters(filters): string {
+    }, filters (filters): string {
         return '';
     }
 };

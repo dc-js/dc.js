@@ -1256,8 +1256,8 @@ export class BaseMixin {
      * @param {Function} [keyAccessor]
      * @returns {Function|BaseMixin}
      */
-    public keyAccessor(): KeyAccessor;
-    public keyAccessor(keyAccessor: KeyAccessor): this;
+    public keyAccessor (): KeyAccessor;
+    public keyAccessor (keyAccessor: KeyAccessor): this;
     public keyAccessor (keyAccessor?) {
         if (!arguments.length) {
             return this._keyAccessor;
