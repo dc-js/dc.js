@@ -1,8 +1,7 @@
 import {timeFormat} from 'd3-time-format';
 
 import {logger} from './logger';
-
-type typeColorsList = string[];
+import {ColorsList} from './types';
 
 /**
  * General configuration
@@ -10,11 +9,11 @@ type typeColorsList = string[];
 export class Config {
     public dateFormat: (date: Date) => string;
 
-    public _renderlet: any; // TODO: determine correct type
+    public _renderlet: (arg0?: string) => void; // TODO: determine correct type
 
     public disableTransitions: boolean;
 
-    private _defaultColors: typeColorsList;
+    private _defaultColors: ColorsList;
 
     constructor () {
         this._defaultColors = Config._schemeCategory20c;
@@ -50,9 +49,9 @@ export class Config {
      * @param {Array} [colors]
      * @returns {Array|config}
      */
-    public defaultColors (): typeColorsList;
-    public defaultColors (colors): this;
-    public defaultColors (colors?): typeColorsList|Config {
+    public defaultColors (): ColorsList;
+    public defaultColors (colors: ColorsList): this;
+    public defaultColors (colors?) {
         if (!arguments.length) {
             // Issue warning if it uses _schemeCategory20c
             if (this._defaultColors === Config._schemeCategory20c) {
@@ -69,7 +68,7 @@ export class Config {
     }
 
     // D3v5 has removed schemeCategory20c, copied here for backward compatibility
-    public static _schemeCategory20c: typeColorsList = [
+    public static _schemeCategory20c: ColorsList = [
         '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
         '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
         '#a1d99b', '#c7e9c0', '#756bb1', '#9e9ac8', '#bcbddc',
