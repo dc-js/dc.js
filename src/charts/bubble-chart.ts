@@ -1,6 +1,7 @@
 import {BubbleMixin} from '../base/bubble-mixin';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
+import {DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
@@ -17,6 +18,8 @@ import {transition} from '../core/core';
  * @mixes CoordinateGridMixin
  */
 export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
+    private _bubbleLocator: (d) => string;
+
     /**
      * Create a Bubble Chart.
      *
@@ -38,19 +41,17 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 
         this.transitionDelay(0);
 
+        this._bubbleLocator = d => `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
+
         this.anchor(parent, chartGroup);
     }
 
-    public _bubbleLocator (d) {
-        return `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
-    }
-
-    public plotData () {
+    public plotData (): void {
         this.calculateRadiusDomain();
         this.r().range([this.MIN_RADIUS, this.xAxisLength() * this.maxBubbleRelativeSize()]);
 
         const data = this.data();
-        let bubbleG = this.chartBodyG().selectAll(`g.${this.BUBBLE_NODE_CLASS}`)
+        let bubbleG: SVGGElementSelection = this.chartBodyG().selectAll(`g.${this.BUBBLE_NODE_CLASS}`)
             .data(data, d => d.key);
         if (this.sortBubbleSize()) {
             // update dom order based on sort
@@ -66,7 +67,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.fadeDeselectedArea(this.filter());
     }
 
-    public _renderNodes (bubbleG) {
+    public _renderNodes (bubbleG: SVGGElementSelection): SVGGElementSelection {
         const bubbleGEnter = bubbleG.enter().append('g');
 
         bubbleGEnter
@@ -91,7 +92,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return bubbleG;
     }
 
-    public _updateNodes (bubbleG) {
+    public _updateNodes (bubbleG: SVGGElementSelection): void {
         transition(bubbleG, this.transitionDuration(), this.transitionDelay())
             .attr('transform', d => this._bubbleLocator(d))
             .select(`circle.${this.BUBBLE_CLASS}`)
@@ -103,11 +104,11 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.doUpdateTitles(bubbleG);
     }
 
-    public _removeNodes (bubbleG) {
+    public _removeNodes (bubbleG: SVGGElementSelection): void {
         bubbleG.exit().remove();
     }
 
-    public _bubbleX (d) {
+    public _bubbleX (d): number {
         let x = this.x()(this.keyAccessor()(d));
         if (isNaN(x) || !isFinite(x)) {
             x = 0;
@@ -115,7 +116,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return x;
     }
 
-    public _bubbleY (d) {
+    public _bubbleY (d): number {
         let y = this.y()(this.valueAccessor()(d));
         if (isNaN(y) || !isFinite(y)) {
             y = 0;
@@ -123,11 +124,11 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return y;
     }
 
-    public renderBrush () {
+    public renderBrush (): void {
         // override default x axis brush from parent chart
     }
 
-    public redrawBrush (brushSelection, doTransition) {
+    public redrawBrush (brushSelection: DCBrushSelection, doTransition: boolean): void {
         // override default x axis brush from parent chart
         this.fadeDeselectedArea(brushSelection);
     }

@@ -1,4 +1,4 @@
-import {geoPath, geoAlbersUsa, GeoPath} from 'd3-geo';
+import {geoPath, geoAlbersUsa, GeoPath, GeoProjection} from 'd3-geo';
 import {select, Selection} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';
@@ -7,6 +7,13 @@ import {transition} from '../core/core';
 import {logger} from '../core/logger';
 import {events} from '../core/events';
 import {utils} from '../core/utils';
+import {BaseAccessor} from '../core/types';
+
+interface GeoJson {
+    data;
+    name: string;
+    keyAccessor: BaseAccessor<any>;
+}
 
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
@@ -21,8 +28,8 @@ import {utils} from '../core/utils';
 export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     private _geoPath: GeoPath;
     private _projectionFlag: boolean;
-    private _projection;
-    private _geoJsons;
+    private _projection: GeoProjection;
+    private _geoJsons: GeoJson[];
 
     /**
      * Create a Geo Choropleth Chart.
@@ -54,12 +61,10 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     public _doRender () {
         this.resetSvg();
         for (let layerIndex = 0; layerIndex < this._geoJsons.length; ++layerIndex) {
-            const states = this.svg().append('g')
+            const states: Selection<SVGGElement, any, any, any> = this.svg().append('g')
                 .attr('class', `layer${layerIndex}`);
 
-            // Usually it picks up correct type, needs hinting in this case
-            let regionG: Selection<SVGGElement, unknown, SVGGElement, any> =
-                (states.selectAll(`g.${this._geoJson(layerIndex).name}`) as Selection<SVGGElement, unknown, SVGGElement, any>)
+            let regionG = states.selectAll<SVGGElement, any>(`g.${this._geoJson(layerIndex).name}`)
                 .data(this._geoJson(layerIndex).data);
 
             regionG = regionG.enter()
@@ -81,7 +86,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         return this;
     }
 
-    public _plotData (layerIndex) {
+    public _plotData (layerIndex: number): void {
         const data = this._generateLayeredData();
 
         if (this._isDataLayer(layerIndex)) {
@@ -102,13 +107,13 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         return data;
     }
 
-    public _isDataLayer (layerIndex) {
-        return this._geoJson(layerIndex).keyAccessor;
+    public _isDataLayer (layerIndex: number): boolean {
+        return !!(this._geoJson(layerIndex).keyAccessor);
     }
 
-    public _renderRegionG (layerIndex) {
-        const regionG = this.svg()
-            .selectAll(this._layerSelector(layerIndex))
+    public _renderRegionG (layerIndex: number): Selection<SVGGElement, any, SVGElement, any> {
+        const regionG: Selection<SVGGElement, any, SVGElement, any> = this.svg()
+            .selectAll<SVGGElement, any>(this._layerSelector(layerIndex))
             .classed('selected', d => this._isSelected(layerIndex, d))
             .classed('deselected', d => this._isDeselected(layerIndex, d))
             .attr('class', d => {
@@ -126,29 +131,29 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         return regionG;
     }
 
-    public _layerSelector (layerIndex) {
+    public _layerSelector (layerIndex: number): string {
         return `g.layer${layerIndex} g.${this._geoJson(layerIndex).name}`;
     }
 
-    public _isSelected (layerIndex, d) {
+    public _isSelected (layerIndex, d): boolean {
         return this.hasFilter() && this.hasFilter(this._getKey(layerIndex, d));
     }
 
-    public _isDeselected (layerIndex, d) {
+    public _isDeselected (layerIndex: number, d): boolean {
         return this.hasFilter() && !this.hasFilter(this._getKey(layerIndex, d));
     }
 
-    public _getKey (layerIndex, d) {
+    public _getKey (layerIndex: number, d) {
         return this._geoJson(layerIndex).keyAccessor(d);
     }
 
-    public _geoJson (index) {
+    public _geoJson (index: number) {
         return this._geoJsons[index];
     }
 
-    public _renderPaths (regionG, layerIndex, data) {
-        const paths = regionG
-            .select('path')
+    public _renderPaths (regionG: Selection<SVGGElement, any, SVGElement, any>, layerIndex: number, data) {
+        const paths: Selection<SVGPathElement, any, SVGElement, any> = regionG
+            .select<SVGPathElement>('path')
             .attr('fill', function () {
                 const currentFill = select(this).attr('fill');
                 if (currentFill) {
@@ -170,7 +175,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    public _renderTitles (regionG, layerIndex, data) {
+    public _renderTitles (regionG: Selection<SVGGElement, any, SVGElement, any>, layerIndex: number, data): void {
         if (this.renderTitle()) {
             regionG.selectAll('title').text(d => {
                 const key = this._getKey(layerIndex, d);
@@ -180,7 +185,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    public _doRedraw () {
+    public _doRedraw (): this {
         for (let layerIndex = 0; layerIndex < this._geoJsons.length; ++layerIndex) {
             this._plotData(layerIndex);
             if (this._projectionFlag) {
@@ -212,7 +217,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * this function should match the keys returned by the crossfilter groups.
      * @returns {GeoChoroplethChart}
      */
-    public overlayGeoJson (json, name, keyAccessor) {
+    public overlayGeoJson (json, name: string, keyAccessor: BaseAccessor<any>) {
         for (let i = 0; i < this._geoJsons.length; ++i) {
             if (this._geoJsons[i].name === name) {
                 this._geoJsons[i].data = json;
@@ -238,7 +243,9 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * @param {d3.projection} [projection=d3.geoAlbersUsa()]
      * @returns {d3.projection|GeoChoroplethChart}
      */
-    public projection (projection) {
+    public projection (): GeoProjection;
+    public projection (projection: GeoProjection): this;
+    public projection (projection?) {
         if (!arguments.length) {
             return this._projection;
         }
@@ -248,7 +255,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         return this;
     }
 
-    public _getGeoPath () {
+    public _getGeoPath (): GeoPath {
         if (this._projection === undefined) {
             logger.warn('choropleth projection default of geoAlbers is deprecated,' +
                 ' in next version projection will need to be set explicitly');
@@ -264,7 +271,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * modify this chart's internal registration.
      * @returns {Array<{name:String, data: Object, accessor: Function}>}
      */
-    public geoJsons () {
+    public geoJsons (): GeoJson[] {
         return this._geoJsons;
     }
 
@@ -275,7 +282,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath}
      * @returns {d3.geoPath}
      */
-    public geoPath () {
+    public geoPath (): GeoPath {
         return this._geoPath;
     }
 
@@ -284,7 +291,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * @param {String} name
      * @returns {GeoChoroplethChart}
      */
-    public removeGeoJson (name) {
+    public removeGeoJson (name: string): this {
         const geoJsons = [];
 
         for (let i = 0; i < this._geoJsons.length; ++i) {

@@ -1,9 +1,12 @@
-import {ascending, Primitive} from 'd3-array';
+import {ascending} from 'd3-array';
 import {nest} from 'd3-collection';
 
 import {CompositeChart} from './composite-chart';
-import {lineChart} from './line-chart';
+import {LineChart} from './line-chart';
 import {utils} from '../core/utils';
+import {BaseAccessor, CompareFn} from '../core/types';
+
+export type LineChartFunction = (parent, chartGroup) => LineChart;
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -15,12 +18,12 @@ import {utils} from '../core/utils';
  * @mixes CompositeChart
  */
 export class SeriesChart extends CompositeChart {
-    private _keySort: (a, b) => number;
-    private _charts;
-    private _chartFunction;
-    private _seriesAccessor;
-    private _seriesSort: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
-    private _valueSort: (a, b) => number;
+    private _keySort: CompareFn;
+    private _charts: {[key: string]: LineChart};
+    private _chartFunction: LineChartFunction;
+    private _seriesAccessor: BaseAccessor<string>;
+    private _seriesSort: CompareFn;
+    private _valueSort: CompareFn;
 
     /**
      * Create a Series Chart.
@@ -41,7 +44,7 @@ export class SeriesChart extends CompositeChart {
         this._keySort = (a, b) => ascending(this.keyAccessor()(a), this.keyAccessor()(b));
 
         this._charts = {};
-        this._chartFunction = lineChart;
+        this._chartFunction = (p, cg) => new LineChart(p, cg);
         this._chartGroup = chartGroup;
         this._seriesAccessor = undefined;
         this._seriesSort = ascending;
@@ -51,7 +54,7 @@ export class SeriesChart extends CompositeChart {
         this.shareColors(true);
     }
 
-    public _compose (subChartArray) {
+    private _compose (subChartArray: LineChart[]): void {
         super.compose(subChartArray);
     }
 
@@ -60,8 +63,10 @@ export class SeriesChart extends CompositeChart {
     }
 
     public _preprocessData () {
-        const keep = [];
-        let childrenChanged;
+        const keep: string[] = [];
+        let childrenChanged: boolean;
+
+        // TODO: nest is deprecated, change as per their instructions
         const nester = nest().key(this._seriesAccessor);
         if (this._seriesSort) {
             nester.sortKeys(this._seriesSort);
@@ -72,7 +77,7 @@ export class SeriesChart extends CompositeChart {
         const nesting = nester.entries(this.data());
         const children =
             nesting.map((sub, i) => {
-                const subChart = this._charts[sub.key] || this._chartFunction(this, this._chartGroup , sub.key, i);
+                const subChart = this._charts[sub.key] || this._chartFunction(this, this._chartGroup);
                 if (!this._charts[sub.key]) {
                     childrenChanged = true;
                 }
@@ -101,14 +106,14 @@ export class SeriesChart extends CompositeChart {
         }
     }
 
-    public _clearChart (c) {
+    private _clearChart (c: string): void {
         if (this._charts[c].g()) {
             this._charts[c].g().remove();
         }
         delete this._charts[c];
     }
 
-    public _resetChildren () {
+    private _resetChildren (): void {
         Object.keys(this._charts).map(this._clearChart);
         this._charts = {};
     }
@@ -123,8 +128,8 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [chartFunction= (anchor) =>  new LineChart(anchor)]
      * @returns {Function|SeriesChart}
      */
-    public chart ();
-    public chart (chartFunction): this;
+    public chart (): LineChartFunction;
+    public chart (chartFunction: LineChartFunction): this;
     public chart (chartFunction?) {
         if (!arguments.length) {
             return this._chartFunction;
@@ -145,8 +150,8 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [accessor]
      * @returns {Function|SeriesChart}
      */
-    public seriesAccessor ();
-    public seriesAccessor (accessor): this;
+    public seriesAccessor (): BaseAccessor<string>;
+    public seriesAccessor (accessor: BaseAccessor<string>): this;
     public seriesAccessor (accessor?) {
         if (!arguments.length) {
             return this._seriesAccessor;
@@ -165,8 +170,8 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [sortFunction=d3.ascending]
      * @returns {Function|SeriesChart}
      */
-    public seriesSort ();
-    public seriesSort (sortFunction): this;
+    public seriesSort (): CompareFn;
+    public seriesSort (sortFunction: CompareFn): this;
     public seriesSort (sortFunction?) {
         if (!arguments.length) {
             return this._seriesSort;
@@ -190,8 +195,8 @@ export class SeriesChart extends CompositeChart {
      * @param {Function} [sortFunction]
      * @returns {Function|SeriesChart}
      */
-    public valueSort ();
-    public valueSort (sortFunction): this;
+    public valueSort (): CompareFn;
+    public valueSort (sortFunction: CompareFn): this;
     public valueSort (sortFunction?) {
         if (!arguments.length) {
             return this._valueSort;

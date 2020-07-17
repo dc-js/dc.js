@@ -1,6 +1,21 @@
 import {format} from 'd3-format';
 
 import {BaseMixin} from '../base/base-mixin';
+import {NumberFormatFn} from '../core/types';
+
+// Keeping these here for now, check if any other charts need same entities
+interface CF {
+    size (): number;
+}
+
+interface MinimalGroupAll {
+    value (): number;
+}
+
+interface HTMLOptions {
+    all: string;
+    some: string;
+}
 
 /**
  * The data count widget is a simple widget designed to display the number of records selected by the
@@ -19,10 +34,10 @@ import {BaseMixin} from '../base/base-mixin';
  * @mixes BaseMixin
  */
 export class DataCount extends BaseMixin {
-    private _formatNumber: (n: (number | { valueOf (): number })) => string;
-    private _crossfilter;
-    private _groupAll;
-    private _html: { all: string; some: string };
+    private _formatNumber: NumberFormatFn;
+    private _crossfilter: CF;
+    private _groupAll: MinimalGroupAll;
+    private _html: HTMLOptions;
 
     /**
      * Create a Data Count widget.
@@ -66,8 +81,8 @@ export class DataCount extends BaseMixin {
      * @param {{some:String, all: String}} [options]
      * @returns {{some:String, all: String}|DataCount}
      */
-    public html ();
-    public html (options): this;
+    public html (): HTMLOptions;
+    public html (options: HTMLOptions): this;
     public html (options?) {
         if (!arguments.length) {
             return this._html;
@@ -89,8 +104,8 @@ export class DataCount extends BaseMixin {
      * @param {Function} [formatter=d3.format('.2g')]
      * @returns {Function|DataCount}
      */
-    public formatNumber ();
-    public formatNumber (formatter): this;
+    public formatNumber (): NumberFormatFn;
+    public formatNumber (formatter: NumberFormatFn): this;
     public formatNumber (formatter?) {
         if (!arguments.length) {
             return this._formatNumber;
@@ -100,10 +115,10 @@ export class DataCount extends BaseMixin {
     }
 
     public _doRender () {
-        const tot = this.crossfilter().size();
-        const val = this.groupAll().value();
-        const all = this._formatNumber(tot);
-        const selected = this._formatNumber(val);
+        const tot: number = this.crossfilter().size();
+        const val: number = this.groupAll().value();
+        const all: string = this._formatNumber(tot);
+        const selected: string = this._formatNumber(val);
 
         if ((tot === val) && (this._html.all !== '')) {
             this.root().html(this._html.all.replace('%total-count', all).replace('%filter-count', selected));
@@ -120,8 +135,8 @@ export class DataCount extends BaseMixin {
         return this._doRender();
     }
 
-    public crossfilter ();
-    public crossfilter (cf): this;
+    public crossfilter (): CF;
+    public crossfilter (cf: CF): this;
     public crossfilter (cf?) {
         if (!arguments.length) {
             return this._crossfilter;
@@ -130,8 +145,8 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    public groupAll ();
-    public groupAll (groupAll): this;
+    public groupAll ():MinimalGroupAll;
+    public groupAll (groupAll:MinimalGroupAll): this;
     public groupAll (groupAll?) {
         if (!arguments.length) {
             return this._groupAll;

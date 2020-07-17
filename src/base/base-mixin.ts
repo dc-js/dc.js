@@ -746,7 +746,8 @@ export class BaseMixin {
         return result;
     }
 
-    private _activateRenderlets (event): void {
+    // Needed by Composite Charts
+    public _activateRenderlets (event?): void {
         this._listeners.call('pretransition', this, this);
         if (this.transitionDuration() > 0 && this._svg) {
             this._svg.transition().duration(this.transitionDuration()).delay(this.transitionDelay())
@@ -1222,24 +1223,26 @@ export class BaseMixin {
         return this;
     }
 
-    protected legendables () {
+    // Legend methods are used by Composite Charts
+
+    public legendables () {
         // do nothing in base, should be overridden by sub-function
         return [];
     }
 
-    protected legendHighlight (d?) {
+    public legendHighlight (d?) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    protected legendReset (d?) {
+    public legendReset (d?) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    protected legendToggle (d?) {
+    public legendToggle (d?) {
         // do nothing in base, should be overriden by sub-function
     }
 
-    protected isLegendableHidden (d?): boolean {
+    public isLegendableHidden (d?): boolean {
         // do nothing in base, should be overridden by sub-function
         return false;
     }

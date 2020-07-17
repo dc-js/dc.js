@@ -1,8 +1,9 @@
-import {event} from 'd3-selection';
+import {event, Selection} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {logger} from '../core/logger';
+import {BaseAccessor, CompareFn} from '../core/types';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -13,13 +14,13 @@ const OPTION_CSS_CLASS = 'dc-select-option';
  * @mixes BaseMixin
  */
 export class SelectMenu extends BaseMixin {
-    private _select;
+    private _select: Selection<HTMLSelectElement, any, any, any>;
     private _promptText: string;
     private _multiple: boolean;
-    private _promptValue;
-    private _numberVisible;
-    private _filterDisplayed: (d) => boolean;
-    private _order: (a, b) => (number);
+    private _promptValue: string;
+    private _numberVisible: number;
+    private _filterDisplayed: BaseAccessor<boolean>;
+    private _order: CompareFn;
 
     /**
      * Create a Select Menu.
@@ -90,9 +91,9 @@ export class SelectMenu extends BaseMixin {
         return this;
     }
 
-    public _renderOptions () {
-        const options = this._select.selectAll(`option.${OPTION_CSS_CLASS}`)
-            .data(this.data(), d => this.keyAccessor()(d));
+    private _renderOptions () {
+        const options = this._select.selectAll<HTMLOptionElement, any>(`option.${OPTION_CSS_CLASS}`)
+            .data<any>(this.data(), d => this.keyAccessor()(d));
 
         options.exit().remove();
 
@@ -108,7 +109,7 @@ export class SelectMenu extends BaseMixin {
         this._select.on('change', (d, i) => this._onChange(d, i));
     }
 
-    public _onChange (_d, i) {
+    private _onChange (_d, i: number): void {
         let values;
         const target = event.target;
         if (target.selectedOptions) {
@@ -129,7 +130,7 @@ export class SelectMenu extends BaseMixin {
         this.onChange(values);
     }
 
-    public onChange (val) {
+    public onChange (val): void {
         if (val && this._multiple) {
             this.replaceFilter([val]);
         } else if (val) {
@@ -142,7 +143,7 @@ export class SelectMenu extends BaseMixin {
         });
     }
 
-    public _setAttributes () {
+    private _setAttributes (): void {
         if (this._multiple) {
             this._select.attr('multiple', true);
         } else {
@@ -167,8 +168,8 @@ export class SelectMenu extends BaseMixin {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
      */
-    public order ();
-    public order (order): this;
+    public order (): CompareFn;
+    public order (order: CompareFn): this;
     public order (order?) {
         if (!arguments.length) {
             return this._order;
@@ -184,8 +185,8 @@ export class SelectMenu extends BaseMixin {
      * @example
      * chart.promptText('All states');
      */
-    public promptText ();
-    public promptText (promptText): this;
+    public promptText (): string;
+    public promptText (promptText: string): this;
     public promptText (promptText?) {
         if (!arguments.length) {
             return this._promptText;
@@ -205,8 +206,8 @@ export class SelectMenu extends BaseMixin {
      *     return true;
      * });
      */
-    public filterDisplayed ();
-    public filterDisplayed (filterDisplayed): this;
+    public filterDisplayed (): BaseAccessor<boolean>;
+    public filterDisplayed (filterDisplayed: BaseAccessor<boolean>): this;
     public filterDisplayed (filterDisplayed?) {
         if (!arguments.length) {
             return this._filterDisplayed;
@@ -223,8 +224,8 @@ export class SelectMenu extends BaseMixin {
      * @example
      * chart.multiple(true);
      */
-    public multiple ();
-    public multiple (multiple): this;
+    public multiple (): boolean;
+    public multiple (multiple: boolean): this;
     public multiple (multiple?) {
         if (!arguments.length) {
             return this._multiple;
@@ -242,8 +243,8 @@ export class SelectMenu extends BaseMixin {
      * @param {?*} [promptValue=null]
      * @returns {*|SelectMenu}
      */
-    public promptValue ();
-    public promptValue (promptValue): this;
+    public promptValue (): string;
+    public promptValue (promptValue: string): this;
     public promptValue (promptValue?) {
         if (!arguments.length) {
             return this._promptValue;
@@ -262,8 +263,8 @@ export class SelectMenu extends BaseMixin {
      * @example
      * chart.numberVisible(10);
      */
-    public numberVisible ();
-    public numberVisible (numberVisible): this;
+    public numberVisible (): number;
+    public numberVisible (numberVisible: number): this;
     public numberVisible (numberVisible?) {
         if (!arguments.length) {
             return this._numberVisible;
@@ -273,7 +274,9 @@ export class SelectMenu extends BaseMixin {
         return this;
     }
 
-    public size (numberVisible) {
+    public size (): number;
+    public size (numberVisible: number): this;
+    public size (numberVisible?) {
         logger.warnOnce('selectMenu.size is ambiguous - use selectMenu.numberVisible instead');
         if (!arguments.length) {
             return this.numberVisible();

@@ -9,14 +9,23 @@ export type DCPrimitive = number | string | Date;
 
 export type Margins = { top: number; left: number; bottom: number; right: number };
 
+export interface CompareFn {
+    (a: number, b: number): number;
+    (a: string, b: string): number;
+    (a: Date, b: Date): number;
+}
+
+export type GroupingFn = (d) => any;
+
 // Accessors
 
-export type KeyAccessor =  (d: any, i?: number) => any; // TODO: check if using generics gives better type safety
-export type ValueAccessor =  (d: any, i?: number) => any; // TODO: check if using generics gives better type safety
-export type ColorAccessor =  (d: any, i?: number) => any;
-export type RValueAccessor = (d: any, i?: number) => number;
-export type LabelAccessor = (d: any, i?: number) => string|number;
-export type TitleAccessor = (d: any, i?: number) => string|number;
+export type BaseAccessor<T> = (d: any, i?: number) => T;
+export type KeyAccessor = BaseAccessor<any>; // TODO: check if using generics gives better type safety
+export type ValueAccessor = BaseAccessor<any>; // TODO: check if using generics gives better type safety
+export type ColorAccessor = BaseAccessor<any>;
+export type RValueAccessor = BaseAccessor<number>;
+export type LabelAccessor = BaseAccessor<string|number>;
+export type TitleAccessor = BaseAccessor<string|number>;
 
 // Scales
 
@@ -64,6 +73,36 @@ export interface Units {
 export type SVGGElementSelection = Selection<SVGGElement, any, SVGGElement, any>;
 
 // Used by Coordinate Grid charts
+
+// TODO: convert to two alternate signatures for Date and number
 export type RoundFn = (inp:Date|number) => Date|number;
 
+// TODO: handle 2D brush selection as well - as in ScatterPlot
 export type DCBrushSelection = [Date, Date]|[number, number];
+
+// Used by BoxPlot
+export type BoxWidthFn = (effectiveWitdh: number, noOfBoxes: number) => number;
+
+export type NumberFormatFn = (n: number | { valueOf (): number }) => string;
+
+// Legends
+export interface ParentOfLegend {
+    legendToggle: (d: LegendSpecs) => void;
+    legendReset: (d: LegendSpecs) => void;
+    legendHighlight: (d: LegendSpecs) => void;
+    filters; // function, TODO: signature
+    legendables: () => LegendSpecs[];
+
+    svg (): Selection<SVGElement, any, any, any>;
+}
+
+export interface LegendSpecs {
+    others?; // TODO: will not be needed after refactoring
+    name: string;
+    data?;
+    chart: ParentOfLegend;
+    color?: string;
+    dashstyle?;
+}
+
+export type LegendTextAccessor = (d: LegendSpecs) => string;

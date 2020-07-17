@@ -3,8 +3,11 @@ import {easeQuad} from 'd3-ease';
 import {interpolateNumber} from 'd3-interpolate';
 
 import {BaseMixin} from '../base/base-mixin';
+import {NumberFormatFn} from '../core/types';
 
 const SPAN_CLASS = 'number-display';
+
+type HTMLSpec = { some: string; one: string; none: string };
 
 /**
  * A display of a single numeric value.
@@ -22,9 +25,9 @@ const SPAN_CLASS = 'number-display';
  * @mixes BaseMixin
  */
 export class NumberDisplay extends BaseMixin {
-    private _formatNumber: (n: (number | { valueOf (): number })) => string;
-    private _html: { some: string; one: string; none: string };
-    private _lastValue;
+    private _formatNumber: NumberFormatFn;
+    private _html: HTMLSpec;
+    private _lastValue: number;
 
     /**
      * Create a Number Display widget.
@@ -76,7 +79,7 @@ export class NumberDisplay extends BaseMixin {
      * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
      * @returns {{one:String, some:String, none:String}|NumberDisplay}
      */
-    public html ();
+    public html (): HTMLSpec;
     public html (html): this;
     public html (html?) {
         if (!arguments.length) {
@@ -106,11 +109,11 @@ export class NumberDisplay extends BaseMixin {
      * Calculate and return the underlying value of the display.
      * @returns {Number}
      */
-    public value () {
+    public value (): number {
         return this.data();
     }
 
-    public _maxBin (all) {
+    private _maxBin (all) {
         if (!all.length) {
             return null;
         }
@@ -118,8 +121,8 @@ export class NumberDisplay extends BaseMixin {
         return sorted[sorted.length - 1];
     }
 
-    public _doRender () {
-        const newValue = this.value();
+    public _doRender (): this {
+        const newValue: number = this.value();
         let span = this.selectAll(`.${SPAN_CLASS}`);
 
         if (span.empty()) {
@@ -161,7 +164,7 @@ export class NumberDisplay extends BaseMixin {
         return this;
     }
 
-    public _doRedraw () {
+    public _doRedraw (): this {
         return this._doRender();
     }
 
@@ -171,8 +174,8 @@ export class NumberDisplay extends BaseMixin {
      * @param {Function} [formatter=d3.format('.2s')]
      * @returns {Function|NumberDisplay}
      */
-    public formatNumber ();
-    public formatNumber (formatter): this;
+    public formatNumber (): NumberFormatFn;
+    public formatNumber (formatter: NumberFormatFn): this;
     public formatNumber (formatter?) {
         if (!arguments.length) {
             return this._formatNumber;

@@ -1,7 +1,8 @@
-import {select} from 'd3-selection';
+import {select, Selection} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
 import {constants} from '../core/constants';
+import {LegendSpecs, LegendTextAccessor, ParentOfLegend} from '../core/types';
 
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
@@ -14,14 +15,13 @@ export class HtmlLegend {
     private _htmlLegendDivCssClass: string;
     private _legendItemCssClassHorizontal: string;
     private _legendItemCssClassVertical: string;
-    private _parent;
-    private _container;
-    private _legendText: (d, i) => string;
-    private _maxItems;
+    private _parent: ParentOfLegend;
+    private _container: Selection<HTMLElement, any, any, any>;
+    private _legendText: LegendTextAccessor;
+    private _maxItems: number;
     private _horizontal: boolean;
-    private _legendItemClass;
+    private _legendItemClass: string;
     private _highlightSelected: boolean;
-    private _defaultLegendItemCssClass: string;
 
     constructor () {
         this._htmlLegendDivCssClass = 'dc-html-legend';
@@ -29,14 +29,16 @@ export class HtmlLegend {
         this._legendItemCssClassVertical = 'dc-legend-item-vertical';
         this._parent = undefined;
         this._container = undefined;
-        this._legendText = pluck('name');
+        this._legendText = d => d.name;
         this._maxItems = undefined;
         this._horizontal = false;
         this._legendItemClass = undefined;
         this._highlightSelected = false;
     }
 
-    public parent (p) {
+    public parent (): ParentOfLegend;
+    public parent (p: ParentOfLegend): this;
+    public parent (p?) {
         if (!arguments.length) {
             return this._parent;
         }
@@ -45,30 +47,32 @@ export class HtmlLegend {
     }
 
     public render () {
-        this._defaultLegendItemCssClass = this._horizontal ? this._legendItemCssClassHorizontal : this._legendItemCssClassVertical;
+        const defaultLegendItemCssClass = this._horizontal ? this._legendItemCssClassHorizontal : this._legendItemCssClassVertical;
         this._container.select(`div.${this._htmlLegendDivCssClass}`).remove();
 
         const container = this._container.append('div').attr('class', this._htmlLegendDivCssClass);
         container.attr('style', `max-width:${this._container.nodes()[0].style.width}`);
 
-        let legendables = this._parent.legendables();
+        let legendables: LegendSpecs[] = this._parent.legendables();
         const filters = this._parent.filters();
 
         if (this._maxItems !== undefined) {
             legendables = legendables.slice(0, this._maxItems);
         }
 
-        const legendItemClassName = this._legendItemClass ? this._legendItemClass : this._defaultLegendItemCssClass;
+        const legendItemClassName = this._legendItemClass ? this._legendItemClass : defaultLegendItemCssClass;
 
-        const itemEnter = container.selectAll(`div.${legendItemClassName}`)
-            .data(legendables).enter()
-            .append('div')
-            .classed(legendItemClassName, true)
-            .on('mouseover', d => this._parent.legendHighlight(d))
-            .on('mouseout', d => this._parent.legendReset(d))
-            .on('click', d => this._parent.legendToggle(d));
+        const itemEnter: Selection<HTMLDivElement, LegendSpecs, HTMLElement, any> =
+            container.selectAll<HTMLDivElement, any>(`div.${legendItemClassName}`)
+                .data<LegendSpecs>(legendables).enter()
+                .append('div')
+                    .classed(legendItemClassName, true)
+                .on('mouseover', d => this._parent.legendHighlight(d))
+                .on('mouseout', d => this._parent.legendReset(d))
+                .on('click', d => this._parent.legendToggle(d));
 
         if (this._highlightSelected) {
+            // TODO: fragile code - there may be other types of filters
             itemEnter.classed(constants.SELECTED_CLASS, d => filters.indexOf(d.name) !== -1);
         }
 
@@ -87,8 +91,8 @@ export class HtmlLegend {
      * @param {String} [container]
      * @return {String|HtmlLegend}
      */
-    public container ();
-    public container (container): this;
+    public container (): Selection<HTMLElement, any, any, any>;
+    public container (container: string|Selection<HTMLElement, any, any, any>): this;
     public container (container?) {
         if (!arguments.length) {
             return this._container;
@@ -106,8 +110,8 @@ export class HtmlLegend {
      * @param {String} [legendItemClass]
      * @return {String|HtmlLegend}
      */
-    public legendItemClass ();
-    public legendItemClass (legendItemClass): this;
+    public legendItemClass (): string;
+    public legendItemClass (legendItemClass: string): this;
     public legendItemClass (legendItemClass?) {
         if (!arguments.length) {
             return this._legendItemClass;
@@ -119,11 +123,11 @@ export class HtmlLegend {
     /**
      * This can be optionally used to enable highlighting legends for the selections/filters for the
      * chart.
-     * @param {String} [highlightSelected]
-     * @return {String|HtmlLegend}
+     * @param {boolean} [highlightSelected]
+     * @return {boolean|HtmlLegend}
      */
-    public highlightSelected ();
-    public highlightSelected (highlightSelected): this;
+    public highlightSelected (): boolean;
+    public highlightSelected (highlightSelected: boolean): this;
     public highlightSelected (highlightSelected?) {
         if (!arguments.length) {
             return this._highlightSelected;
@@ -134,11 +138,11 @@ export class HtmlLegend {
 
     /**
      * Display the legend horizontally instead of vertically
-     * @param {String} [horizontal]
-     * @return {String|HtmlLegend}
+     * @param {boolean} [horizontal]
+     * @return {boolean|HtmlLegend}
      */
-    public horizontal ();
-    public horizontal (horizontal): this;
+    public horizontal (): boolean;
+    public horizontal (horizontal: boolean): this;
     public horizontal (horizontal?) {
         if (!arguments.length) {
             return this._horizontal;
@@ -163,8 +167,8 @@ export class HtmlLegend {
      * // create legend displaying group counts
      * chart.legend(new HtmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
-    public legendText ();
-    public legendText (legendText): this;
+    public legendText (): LegendTextAccessor;
+    public legendText (legendText: LegendTextAccessor): this;
     public legendText (legendText?) {
         if (!arguments.length) {
             return this._legendText;
@@ -178,8 +182,8 @@ export class HtmlLegend {
      * @param  {Number} [maxItems]
      * @return {HtmlLegend}
      */
-    public maxItems ();
-    public maxItems (maxItems): this;
+    public maxItems (): number;
+    public maxItems (maxItems: number): this;
     public maxItems (maxItems?) {
         if (!arguments.length) {
             return this._maxItems;

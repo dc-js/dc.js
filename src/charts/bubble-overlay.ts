@@ -6,6 +6,7 @@ import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
 import {ColorMixin} from '../base/color-mixin';
+import {SVGGElementSelection} from '../core/types';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -23,8 +24,8 @@ const BUBBLE_CLASS = 'bubble';
  * @mixes BaseMixin
  */
 export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
-    private _g;
-    private _points;
+    private _g: SVGGElementSelection;
+    private _points: { name: string; x: number; y: number; }[];
 
     /**
      * Create a Bubble Overlay.
@@ -79,12 +80,12 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
      * @param {Number} y
      * @returns {BubbleOverlay}
      */
-    public point (name, x, y) {
+    public point (name: string, x: number, y: number): this {
         this._points.push({name, x, y});
         return this;
     }
 
-    public _doRender () {
+    public _doRender (): this {
         this._g = this._initOverlayG();
 
         this.r().range([this.MIN_RADIUS, this.width() * this.maxBubbleRelativeSize()]);
@@ -96,7 +97,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _initOverlayG () {
+    public _initOverlayG (): SVGGElementSelection {
         this._g = this.select(`g.${BUBBLE_OVERLAY_CLASS}`);
         if (this._g.empty()) {
             this._g = this.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
@@ -138,10 +139,10 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return data;
     }
 
-    public _getNodeG (point, data) {
+    public _getNodeG (point: { name: string; x: number; y: number }, data): SVGGElementSelection {
         const bubbleNodeClass = `${BUBBLE_NODE_CLASS} ${utils.nameToId(point.name)}`;
 
-        let nodeG = this._g.select(`g.${utils.nameToId(point.name)}`);
+        let nodeG: SVGGElementSelection = this._g.select(`g.${utils.nameToId(point.name)}`);
 
         if (nodeG.empty()) {
             nodeG = this._g.append('g')
@@ -154,7 +155,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return nodeG;
     }
 
-    public _doRedraw () {
+    public _doRedraw (): this {
         this._updateBubbles();
 
         this.fadeDeselectedArea(this.filter());
@@ -162,7 +163,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _updateBubbles () {
+    public _updateBubbles (): void {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
@@ -181,9 +182,9 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    public debug (flag) {
+    public debug (flag: boolean): this {
         if (flag) {
-            let debugG = this.select(`g.${constants.DEBUG_GROUP_CLASS}`);
+            let debugG: SVGGElementSelection = this.select(`g.${constants.DEBUG_GROUP_CLASS}`);
 
             if (debugG.empty()) {
                 debugG = this.svg()

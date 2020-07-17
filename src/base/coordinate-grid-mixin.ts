@@ -1260,7 +1260,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.resizing(false);
     }
 
-    protected plotData (): void {
+    public plotData (): void {
         // To be implemented in derived class
         throw new Error('Method not implemented.');
     }

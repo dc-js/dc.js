@@ -1,5 +1,7 @@
 import {pluck, utils} from '../core/utils';
 import {constants} from '../core/constants';
+import {LegendSpecs, LegendTextAccessor, ParentOfLegend} from '../core/types';
+import {Selection} from 'd3-selection';
 
 const LABEL_GAP = 2;
 
@@ -15,7 +17,7 @@ const LABEL_GAP = 2;
  * @returns {Legend}
  */
 export class Legend {
-    private _parent;
+    private _parent: ParentOfLegend;
     private _x: number;
     private _y: number;
     private _itemHeight: number;
@@ -24,10 +26,10 @@ export class Legend {
     private _legendWidth: number;
     private _itemWidth: number;
     private _autoItemWidth: boolean;
-    private _legendText: (d, i?) => string;
-    private _maxItems;
+    private _legendText: LegendTextAccessor;
+    private _maxItems: number;
     private _highlightSelected: boolean;
-    private _g;
+    private _g: Selection<SVGGElement, any, SVGElement, any>;
 
     constructor () {
         this._parent = undefined;
@@ -39,15 +41,15 @@ export class Legend {
         this._legendWidth = 560;
         this._itemWidth = 70;
         this._autoItemWidth = false;
-        this._legendText = pluck('name');
+        this._legendText = d => d.name;
         this._maxItems = undefined;
         this._highlightSelected = false;
 
         this._g = undefined;
     }
 
-    public parent ();
-    public parent (p): this;
+    public parent (): ParentOfLegend;
+    public parent (p: ParentOfLegend): this;
     public parent (p?) {
         if (!arguments.length) {
             return this._parent;
@@ -61,8 +63,8 @@ export class Legend {
      * @param  {Number} [x=0]
      * @returns {Number|Legend}
      */
-    public x ();
-    public x (x): this;
+    public x (): number;
+    public x (x: number): this;
     public x (x?) {
         if (!arguments.length) {
             return this._x;
@@ -76,8 +78,8 @@ export class Legend {
      * @param  {Number} [y=0]
      * @returns {Number|Legend}
      */
-    public y ();
-    public y (y): this;
+    public y (): number;
+    public y (y: number): this;
     public y (y?) {
         if (!arguments.length) {
             return this._y;
@@ -91,8 +93,8 @@ export class Legend {
      * @param  {Number} [gap=5]
      * @returns {Number|Legend}
      */
-    public gap ();
-    public gap (gap): this;
+    public gap (): number;
+    public gap (gap: number): this;
     public gap (gap?) {
         if (!arguments.length) {
             return this._gap;
@@ -104,11 +106,11 @@ export class Legend {
     /**
      * This can be optionally used to enable highlighting legends for the selections/filters for the
      * chart.
-     * @param {String} [highlightSelected]
-     * @return {String|dc.legend}
+     * @param {boolean} [highlightSelected]
+     * @return {boolean|dc.legend}
      */
-    public highlightSelected ();
-    public highlightSelected (highlightSelected): this;
+    public highlightSelected (): boolean;
+    public highlightSelected (highlightSelected: boolean): this;
     public highlightSelected (highlightSelected?) {
         if (!arguments.length) {
             return this._highlightSelected;
@@ -122,8 +124,8 @@ export class Legend {
      * @param  {Number} [itemHeight=12]
      * @returns {Number|Legend}
      */
-    public itemHeight ();
-    public itemHeight (itemHeight): this;
+    public itemHeight (): number;
+    public itemHeight (itemHeight: number): this;
     public itemHeight (itemHeight?) {
         if (!arguments.length) {
             return this._itemHeight;
@@ -137,8 +139,8 @@ export class Legend {
      * @param  {Boolean} [horizontal=false]
      * @returns {Boolean|Legend}
      */
-    public horizontal ();
-    public horizontal (horizontal): this;
+    public horizontal (): boolean;
+    public horizontal (horizontal: boolean): this;
     public horizontal (horizontal?) {
         if (!arguments.length) {
             return this._horizontal;
@@ -152,8 +154,8 @@ export class Legend {
      * @param  {Number} [legendWidth=500]
      * @returns {Number|Legend}
      */
-    public legendWidth ();
-    public legendWidth (legendWidth): this;
+    public legendWidth (): number;
+    public legendWidth (legendWidth: number): this;
     public legendWidth (legendWidth?) {
         if (!arguments.length) {
             return this._legendWidth;
@@ -167,8 +169,8 @@ export class Legend {
      * @param  {Number} [itemWidth=70]
      * @returns {Number|Legend}
      */
-    public itemWidth ();
-    public itemWidth (itemWidth): this;
+    public itemWidth (): number;
+    public itemWidth (itemWidth: number): this;
     public itemWidth (itemWidth?) {
         if (!arguments.length) {
             return this._itemWidth;
@@ -183,8 +185,8 @@ export class Legend {
      * @param  {Boolean} [autoItemWidth=false]
      * @returns {Boolean|Legend}
      */
-    public autoItemWidth ();
-    public autoItemWidth (autoItemWidth): this;
+    public autoItemWidth (): boolean;
+    public autoItemWidth (autoItemWidth: boolean): this;
     public autoItemWidth (autoItemWidth?) {
         if (!arguments.length) {
             return this._autoItemWidth;
@@ -209,8 +211,8 @@ export class Legend {
      * // create legend displaying group counts
      * chart.legend(new Legend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
-    public legendText ();
-    public legendText (legendText): this;
+    public legendText (): LegendTextAccessor;
+    public legendText (legendText: LegendTextAccessor): this;
     public legendText (legendText?) {
         if (!arguments.length) {
             return this._legendText;
@@ -224,8 +226,8 @@ export class Legend {
      * @param  {Number} [maxItems]
      * @return {Legend}
      */
-    public maxItems ();
-    public maxItems (maxItems): this;
+    public maxItems (): number;
+    public maxItems (maxItems: number): this;
     public maxItems (maxItems?) {
         if (!arguments.length) {
             return this._maxItems;
@@ -236,24 +238,24 @@ export class Legend {
 
     // Implementation methods
 
-    public _legendItemHeight () {
+    public _legendItemHeight (): number {
         return this._gap + this._itemHeight;
     }
 
-    public render () {
+    public render (): void {
         this._parent.svg().select('g.dc-legend').remove();
         this._g = this._parent.svg().append('g')
             .attr('class', 'dc-legend')
             .attr('transform', `translate(${this._x},${this._y})`);
-        let legendables = this._parent.legendables();
+        let legendables:LegendSpecs[] = this._parent.legendables();
         const filters = this._parent.filters();
 
         if (this._maxItems !== undefined) {
             legendables = legendables.slice(0, this._maxItems);
         }
 
-        const itemEnter = this._g.selectAll('g.dc-legend-item')
-            .data(legendables)
+        const itemEnter: Selection<SVGGElement, any, SVGGElement, any> = this._g.selectAll<SVGGElement, any>('g.dc-legend-item')
+            .data<LegendSpecs>(legendables)
             .enter()
             .append('g')
             .attr('class', 'dc-legend-item')
@@ -268,12 +270,12 @@ export class Legend {
             });
 
         if (this._highlightSelected) {
+            // TODO: fragile code - there may be other types of filters
             itemEnter.classed(constants.SELECTED_CLASS,
                               d => filters.indexOf(d.name) !== -1);
         }
 
-
-        this._g.selectAll('g.dc-legend-item')
+        this._g.selectAll<SVGGElement, any>('g.dc-legend-item')
             .classed('fadeout', d => d.chart.isLegendableHidden(d));
 
         if (legendables.some(pluck('dashstyle'))) {

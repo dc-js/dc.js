@@ -40,7 +40,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Number} [i]
          * @returns {String}
          */
-        public getColor (d, i?): string {
+        public getColor (d?, i?): string {
             return this._colorCalculator ?
                 this._colorCalculator(d, i) :
                 this._colors(this._colorAccessor(d, i));

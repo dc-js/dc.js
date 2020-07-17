@@ -1,8 +1,9 @@
-import {event, select} from 'd3-selection';
+import {event, select, Selection} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {utils} from '../core/utils'
+import {CompareFn} from '../core/types';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -14,14 +15,14 @@ const ITEM_CSS_CLASS = 'dc-cbox-item';
  * @mixes BaseMixin
  */
 export class CboxMenu extends BaseMixin {
-    private _cbox;
+    private _cbox: Selection<HTMLElement, any, HTMLElement, any>;
     private _promptText: string;
     private _multiple: boolean;
     private _inputType: string;
-    private _promptValue;
+    private _promptValue; // TODO: figure out what is Prompt value and some use cases
     private _uniqueId: number;
     private _filterDisplayed: (d) => boolean;
-    private _order: (a, b) => (number);
+    private _order: CompareFn;
 
     /**
      * Create a Cbox Menu.
@@ -71,11 +72,11 @@ export class CboxMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public _doRender () {
+    public _doRender (): this {
         return this._doRedraw();
     }
 
-    public _doRedraw () {
+    public _doRedraw (): this {
         this.select('ul').remove();
         this._cbox = this.root()
             .append('ul')
@@ -99,8 +100,8 @@ export class CboxMenu extends BaseMixin {
     }
 
     public _renderOptions () {
-        let options = this._cbox
-            .selectAll(`li.${ITEM_CSS_CLASS}`)
+        let options: Selection<HTMLLIElement, unknown, HTMLElement, any> = this._cbox
+            .selectAll<HTMLLIElement, any>(`li.${ITEM_CSS_CLASS}`)
             .data(this.data(), d => this.keyAccessor()(d));
 
         options.exit().remove();
@@ -155,19 +156,17 @@ export class CboxMenu extends BaseMixin {
         return options;
     }
 
-    public _onChange (d, i, element) {
+    private _onChange (d, i: number, element: HTMLElement) {
         let values;
         const target = select(event.target);
-        let options;
+        let options: Selection<HTMLInputElement, unknown, HTMLElement, unknown>;
 
         if (!target.datum()) {
             values = this._promptValue || null;
         } else {
-            // TODO: replace ewith d3 like way of doing things - consider selecting only checked items, or, at the least use .property
-            options = select(element).selectAll('input')
+            options = select(element).selectAll<HTMLInputElement, any>('input')
                 .filter(function (o) {
                     if (o) {
-                        // @ts-ignore
                         return this.checked;
                     }
                 });
@@ -180,6 +179,7 @@ export class CboxMenu extends BaseMixin {
         this.onChange(values);
     }
 
+    // TODO: come back for better typing, probably generics
     public onChange (val) {
         if (val && this._multiple) {
             this.replaceFilter([val]);
@@ -205,8 +205,8 @@ export class CboxMenu extends BaseMixin {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
      */
-    public order ();
-    public order (order): this;
+    public order (): CompareFn;
+    public order (order: CompareFn): this;
     public order (order?) {
         if (!arguments.length) {
             return this._order;
@@ -222,8 +222,8 @@ export class CboxMenu extends BaseMixin {
      * @example
      * chart.promptText('All states');
      */
-    public promptText ();
-    public promptText (promptText): this;
+    public promptText (): string;
+    public promptText (promptText: string): this;
     public promptText (promptText?) {
         if (!arguments.length) {
             return this._promptText;
@@ -233,8 +233,8 @@ export class CboxMenu extends BaseMixin {
     }
 
     /**
-     * Get or set the function that filters options prior to display. By default options
-     * with a value of < 1 are not displayed.
+     * Get or set the function that filters options prior to display. By default only options
+     * with a value > 0 are displayed.
      * @param {function} [filterDisplayed]
      * @returns {Function|CboxMenu}
      * @example
@@ -243,8 +243,8 @@ export class CboxMenu extends BaseMixin {
      *     return true;
      * });
      */
-    public filterDisplayed ();
-    public filterDisplayed (filterDisplayed): this;
+    public filterDisplayed (): (d) => boolean;
+    public filterDisplayed (filterDisplayed: (d) => boolean): this;
     public filterDisplayed (filterDisplayed?) {
         if (!arguments.length) {
             return this._filterDisplayed;
@@ -261,15 +261,16 @@ export class CboxMenu extends BaseMixin {
      * @example
      * chart.multiple(true);
      */
-    public multiple ();
-    public multiple (multiple): this;
+    public multiple (): boolean;
+    public multiple (multiple: boolean): this;
     public multiple (multiple?) {
         if (!arguments.length) {
             return this._multiple;
         }
         this._multiple = multiple;
         if (this._multiple) {
-            this._inputType = 'checkbox';
+            this._inputType = 'checkbox'; // TODO: make this._inputType a local variable in _renderOptions()
+                                          // properties, as far as possible should not have side effects
         } else {
             this._inputType = 'radio';
         }
