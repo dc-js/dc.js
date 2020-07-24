@@ -16,7 +16,8 @@ import {
     ChartParentType,
     KeyAccessor,
     LabelAccessor,
-    MinimalCFDimension, MinimalCFGroup,
+    MinimalCFDimension,
+    MinimalCFGroup,
     TitleAccessor,
     ValueAccessor
 } from '../core/types';

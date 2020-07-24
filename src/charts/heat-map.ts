@@ -1,4 +1,4 @@
-import {ascending, Primitive} from 'd3-array';
+import {ascending} from 'd3-array';
 import {scaleBand} from 'd3-scale';
 
 import {transition} from '../core/core';

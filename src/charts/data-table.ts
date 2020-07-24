@@ -1,4 +1,4 @@
-import {ascending, Primitive} from 'd3-array';
+import {ascending} from 'd3-array';
 import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';

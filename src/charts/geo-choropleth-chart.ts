@@ -1,4 +1,4 @@
-import {geoPath, geoAlbersUsa, GeoPath, GeoProjection} from 'd3-geo';
+import {geoAlbersUsa, geoPath, GeoPath, GeoProjection} from 'd3-geo';
 import {select, Selection} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';

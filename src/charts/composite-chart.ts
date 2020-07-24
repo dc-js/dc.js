@@ -1,6 +1,6 @@
-import {min, max} from 'd3-array';
+import {max, min} from 'd3-array';
 import {scaleLinear} from 'd3-scale';
-import {axisRight, Axis} from 'd3-axis';
+import {Axis, axisRight} from 'd3-axis';
 
 import {utils} from '../core/utils';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';

@@ -1,6 +1,6 @@
 import {scaleBand} from 'd3-scale';
 import {select} from 'd3-selection';
-import {min, max} from 'd3-array';
+import {max, min} from 'd3-array';
 
 import {d3Box} from '../base/d3.box'
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';

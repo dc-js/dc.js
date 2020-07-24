@@ -3,8 +3,8 @@ import {CountableTimeInterval, timeDay} from 'd3-time';
 import {max, min} from 'd3-array';
 import {scaleBand, scaleLinear, scaleOrdinal} from 'd3-scale';
 import {Axis, axisBottom, axisLeft, axisRight} from 'd3-axis';
-import {zoom, zoomIdentity, ZoomTransform, ZoomBehavior} from 'd3-zoom';
-import {brushX, BrushBehavior} from 'd3-brush';
+import {zoom, ZoomBehavior, zoomIdentity, ZoomTransform} from 'd3-zoom';
+import {BrushBehavior, brushX} from 'd3-brush';
 import {event, Selection} from 'd3-selection';
 
 import {ColorMixin} from './color-mixin';
