@@ -20,7 +20,7 @@ import {
 import {select, Selection} from 'd3-selection';
 
 import {logger} from '../core/logger';
-import {pluck, utils} from '../core/utils';
+import {utils} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {BaseAccessor, ChartParentType, LegendSpecs, SVGGElementSelection} from '../core/types';
@@ -401,7 +401,7 @@ export class LineChart extends StackMixin {
 
                 const dots: Selection<SVGCircleElement, any, SVGGElement, any> =
                     g.selectAll<SVGCircleElement, any>(`circle.${DOT_CIRCLE_CLASS}`)
-                     .data<any>(points, pluck('x'));
+                     .data<any>(points, d => d.x);
 
                 const chart = this;
                 const dotsEnterModify = dots
@@ -443,8 +443,8 @@ export class LineChart extends StackMixin {
         const chart = this;
         layers.each(function (data, layerIndex) {
             const layer = select(this);
-            const labels = layer.selectAll<SVGTextElement, unknown>('text.lineLabel')
-                .data(data.values, pluck('x'));
+            const labels = layer.selectAll<SVGTextElement, any>('text.lineLabel')
+                .data(data.values, d => d.x);
 
             const labelsEnterModify = labels
                 .enter()
@@ -520,7 +520,7 @@ export class LineChart extends StackMixin {
     private _doRenderTitle (dot: Selection<SVGCircleElement, any, SVGGElement, any>, d): void {
         if (this.renderTitle()) {
             dot.select('title').remove();
-            dot.append('title').text(pluck('data', this.title(d.name)));
+            dot.append('title').text( (d, i) => this.title(d.name)(d.data, i));
         }
     }
 

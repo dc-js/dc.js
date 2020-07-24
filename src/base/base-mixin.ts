@@ -2,7 +2,7 @@ import {BaseType, select, Selection} from 'd3-selection';
 import {dispatch, Dispatch} from 'd3-dispatch';
 import {ascending} from 'd3-array';
 
-import {pluck, utils} from '../core/utils';
+import {utils} from '../core/utils';
 import {instanceOfChart} from '../core/core';
 import {deregisterChart, redrawAll, registerChart, renderAll} from '../core/chart-registry';
 import {constants} from '../core/constants';
@@ -151,11 +151,11 @@ export class BaseMixin {
         this._height = undefined;
         this._useViewBoxResizing = false;
 
-        this._keyAccessor = pluck('key');
-        this._valueAccessor = pluck('value');
-        this._label = pluck('key');
+        this._keyAccessor = d => d.key;
+        this._valueAccessor = d => d.value;
+        this._label = d => d.key;
 
-        this._ordering = pluck('key');
+        this._ordering = d => d.key;
 
         this._renderLabel = false;
 

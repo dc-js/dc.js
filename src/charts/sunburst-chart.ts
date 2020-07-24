@@ -6,7 +6,7 @@ import {interpolate} from 'd3-interpolate';
 
 import {transition} from '../core/core';
 import {filters} from '../core/filters';
-import {pluck, utils} from '../core/utils';
+import {utils} from '../core/utils';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
@@ -92,7 +92,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this.colorAccessor(d => this.keyAccessor()(d));
 
         // override cap mixin
-        this.ordering(pluck('key'));
+        this.ordering(d => d.key);
 
         this.title(d => `${this.keyAccessor()(d)}: ${this._extendedValueAccessor(d)}`);
 
