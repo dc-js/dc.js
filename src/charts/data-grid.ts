@@ -153,8 +153,11 @@ export class DataGrid extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataGrid}
      */
+    // @ts-ignore, signature is different in BaseMixin
     public group (): GroupingFn;
+    // @ts-ignore, signature is different in BaseMixin
     public group (section: GroupingFn): this;
+    // @ts-ignore, signature is different in BaseMixin
     public group (section?) {
         logger.warnOnce('consider using dataGrid.section instead of dataGrid.group for clarity');
         if (!arguments.length) {

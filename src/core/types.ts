@@ -5,6 +5,25 @@ export type ChartParentType = string | BaseMixin | Selection<Element, undefined,
 
 export type ColorsList = string[];
 
+export interface MinimalCFDimension {
+    filter(value): this;
+    filterExact(value): this;
+    filterRange(value: any[]): this;
+    filterFunction(value: (k) => any): this;
+    // filterAll(): this; // unused
+    top(k: number): any[];
+    bottom(k: number): any[];
+}
+
+interface CFGrouping {
+    key: any;
+    value: any;
+}
+
+export interface MinimalCFGroup {
+    all: CFGrouping[];
+}
+
 // Used for mix-ins
 export type Constructor<T = {}> = new (...args: any[]) => T;
 

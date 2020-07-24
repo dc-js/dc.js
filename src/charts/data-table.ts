@@ -251,8 +251,11 @@ export class DataTable extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataTable}
      */
+    // @ts-ignore, signature is different in BaseMixin
     public group (): BaseAccessor<string>;
+    // @ts-ignore, signature is different in BaseMixin
     public group (section: BaseAccessor<string>): this;
+    // @ts-ignore, signature is different in BaseMixin
     public group (section?) {
         logger.warnOnce('consider using dataTable.section instead of dataTable.group for clarity');
         if (!arguments.length) {

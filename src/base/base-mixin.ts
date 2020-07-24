@@ -11,9 +11,17 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {ChartParentType, KeyAccessor, LabelAccessor, TitleAccessor, ValueAccessor} from '../core/types';
+import {
+    BaseAccessor,
+    ChartParentType,
+    KeyAccessor,
+    LabelAccessor,
+    MinimalCFDimension, MinimalCFGroup,
+    TitleAccessor,
+    ValueAccessor
+} from '../core/types';
 
-const _defaultFilterHandler = (dimension, filters) => {
+const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
     if (filters.length === 0) {
         dimension.filter(null);
     } else if (filters.length === 1 && !filters[0].isFiltered) {
@@ -73,8 +81,8 @@ const _defaultResetFilterHandler = filters => [];
 export class BaseMixin {
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
-    private _dimension; // TODO: create an interface for what dc needs
-    private _group; // TODO: create an interface for what dc needs
+    private _dimension: MinimalCFDimension;
+    private _group: MinimalCFGroup;
     private _anchor: string|Element;
     private _root: Selection<Element, any, any, any>; // Do not assume much, allow any HTML or SVG element
     private _svg: Selection<SVGElement, any, any, any>; // from d3-selection
@@ -337,8 +345,8 @@ export class BaseMixin {
      * @param {crossfilter.dimension} [dimension]
      * @returns {crossfilter.dimension|BaseMixin}
      */
-    public dimension ();
-    public dimension (dimension): this;
+    public dimension (): MinimalCFDimension;
+    public dimension (dimension: MinimalCFDimension): this;
     public dimension (dimension?) {
         if (!arguments.length) {
             return this._dimension;
@@ -392,8 +400,8 @@ export class BaseMixin {
      * @param {String} [name]
      * @returns {crossfilter.group|BaseMixin}
      */
-    public group ();
-    public group (group, name?, accessor?): this;
+    public group (): MinimalCFGroup;
+    public group (group: MinimalCFGroup, name?: string, accessor?: BaseAccessor<any>): this;
     public group (group?, name?, accessor?) {
         if (!arguments.length) {
             return this._group;

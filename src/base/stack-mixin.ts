@@ -3,7 +3,7 @@ import {max, min} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
-import {LegendSpecs, TitleAccessor} from '../core/types';
+import {BaseAccessor, LegendSpecs, MinimalCFGroup, TitleAccessor} from '../core/types';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -130,6 +130,8 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
+    public group (): MinimalCFGroup;
+    public group (g: MinimalCFGroup, n?: string, f?: BaseAccessor<any>): this;
     public group (g?, n?, f?) {
         if (!arguments.length) {
             return super.group();

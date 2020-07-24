@@ -54,6 +54,7 @@ export class TextFilterWidget extends BaseMixin {
 
         this._placeHolder = 'search';
 
+        // @ts-ignore, signature is different in BaseMixin
         this.group(() => {
             throw new Error('the group function on textFilterWidget should never be called, please report the issue');
         });
