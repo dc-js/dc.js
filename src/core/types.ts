@@ -1,4 +1,7 @@
 import {Selection} from 'd3-selection';
+import {BaseMixin} from '../base/base-mixin';
+
+export type ChartParentType = string | BaseMixin | Selection<Element, undefined, Element, unknown>;
 
 export type ColorsList = string[];
 

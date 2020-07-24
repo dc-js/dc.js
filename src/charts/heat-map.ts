@@ -7,7 +7,7 @@ import {filters} from '../core/filters';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {MarginMixin} from '../base/margin-mixin';
-import {BaseAccessor, CompareFn, MinimalXYScale} from '../core/types';
+import {BaseAccessor, ChartParentType, CompareFn, MinimalXYScale} from '../core/types';
 import {Selection} from 'd3-selection';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
@@ -49,7 +49,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._chartBody = undefined;

@@ -6,7 +6,7 @@ import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
 import {ColorMixin} from '../base/color-mixin';
-import {SVGGElementSelection} from '../core/types';
+import {ChartParentType, SVGGElementSelection} from '../core/types';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -41,7 +41,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         /**

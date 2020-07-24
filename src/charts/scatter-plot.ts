@@ -7,7 +7,7 @@ import {optionalTransition, transition} from '../core/core';
 import {filters} from '../core/filters';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {BaseAccessor, LegendSpecs} from '../core/types';
+import {BaseAccessor, ChartParentType, LegendSpecs} from '../core/types';
 
 export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
 
@@ -51,7 +51,7 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._symbol = symbol();

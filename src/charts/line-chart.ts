@@ -21,7 +21,7 @@ import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
-import {BaseAccessor, LegendSpecs, SVGGElementSelection} from '../core/types';
+import {BaseAccessor, ChartParentType, LegendSpecs, SVGGElementSelection} from '../core/types';
 
 const DEFAULT_DOT_RADIUS = 5;
 const TOOLTIP_G_CLASS = 'dc-tooltip';
@@ -70,7 +70,7 @@ export class LineChart extends StackMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._renderArea = false;

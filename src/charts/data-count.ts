@@ -1,7 +1,7 @@
 import {format} from 'd3-format';
 
 import {BaseMixin} from '../base/base-mixin';
-import {NumberFormatFn} from '../core/types';
+import {ChartParentType, NumberFormatFn} from '../core/types';
 
 // Keeping these here for now, check if any other charts need same entities
 interface CF {
@@ -54,7 +54,7 @@ export class DataCount extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._formatNumber = format(',d');

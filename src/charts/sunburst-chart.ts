@@ -12,7 +12,7 @@ import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {BaseAccessor, LegendSpecs, SVGGElementSelection} from '../core/types';
+import {BaseAccessor, ChartParentType, LegendSpecs, SVGGElementSelection} from '../core/types';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -71,7 +71,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._sliceCssClass = 'pie-slice';

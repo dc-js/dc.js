@@ -1,7 +1,7 @@
 import {BubbleMixin} from '../base/bubble-mixin';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
-import {DCBrushSelection, SVGGElementSelection} from '../core/types';
+import {ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
@@ -34,7 +34,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this.transitionDuration(750);

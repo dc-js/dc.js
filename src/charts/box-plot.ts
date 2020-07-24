@@ -7,7 +7,7 @@ import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {units} from '../core/units';
 import {utils} from '../core/utils';
-import {BoxWidthFn, DCBrushSelection, NumberFormatFn, SVGGElementSelection} from '../core/types';
+import {BoxWidthFn, ChartParentType, DCBrushSelection, NumberFormatFn, SVGGElementSelection} from '../core/types';
 
 // Returns a function to compute the interquartile range.
 function defaultWhiskersIQR (k: number): (d) => [number, number] {
@@ -69,7 +69,7 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._whiskerIqrFactor = 1.5;

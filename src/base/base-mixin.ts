@@ -11,7 +11,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {KeyAccessor, LabelAccessor, TitleAccessor, ValueAccessor} from '../core/types';
+import {ChartParentType, KeyAccessor, LabelAccessor, TitleAccessor, ValueAccessor} from '../core/types';
 
 const _defaultFilterHandler = (dimension, filters) => {
     if (filters.length === 0) {
@@ -75,7 +75,7 @@ export class BaseMixin {
     private __dcFlag__: string;
     private _dimension; // TODO: create an interface for what dc needs
     private _group; // TODO: create an interface for what dc needs
-    private _anchor; // TODO: figure out actual type
+    private _anchor: string|Element;
     private _root: Selection<Element, any, any, any>; // Do not assume much, allow any HTML or SVG element
     private _svg: Selection<SVGElement, any, any, any>; // from d3-selection
     private _isChild: boolean;
@@ -482,15 +482,15 @@ export class BaseMixin {
      * @param {String} [chartGroup]
      * @returns {String|node|d3.selection|BaseMixin}
      */
-    public anchor ();
-    public anchor (parent, chartGroup): this;
+    public anchor (): string|Element;
+    public anchor (parent: ChartParentType, chartGroup: string): this;
     public anchor (parent?, chartGroup?) {
         if (!arguments.length) {
             return this._anchor;
         }
         if (instanceOfChart(parent)) {
             this._anchor = parent.anchor();
-            if (this._anchor.children) { // is _anchor a div?
+            if ((this._anchor as any).children) { // is _anchor a div?
                 this._anchor = `#${parent.anchorName()}`;
             }
             this._root = parent.root();
@@ -501,7 +501,7 @@ export class BaseMixin {
             } else {
                 this._anchor = parent;
             }
-            this._root = select(this._anchor);
+            this._root = select(this._anchor as any); // _anchor can be either string or an Element, both are valid
             this._root.classed(constants.CHART_CLASS, true);
             registerChart(this, chartGroup);
             this._isChild = false;
@@ -517,12 +517,13 @@ export class BaseMixin {
      * @returns {String}
      */
     public anchorName (): string {
-        const a = this.anchor();
-        if (a && a.id) {
-            return a.id;
-        }
-        if (a && a.replace) {
-            return a.replace('#', '');
+        const a: string | Element = this.anchor();
+        if (a) {
+            if ( typeof a === 'string') {
+                return a.replace('#', '');
+            } else if (a.id) {
+                return a.id;
+            }
         }
         return `dc-chart${this.chartID()}`;
     }

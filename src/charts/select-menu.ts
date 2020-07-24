@@ -3,7 +3,7 @@ import {event, Selection} from 'd3-selection';
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {logger} from '../core/logger';
-import {BaseAccessor, CompareFn} from '../core/types';
+import {BaseAccessor, ChartParentType, CompareFn} from '../core/types';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -40,7 +40,7 @@ export class SelectMenu extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
      * Interaction with the widget will only trigger events and redraws within its group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._select = undefined;

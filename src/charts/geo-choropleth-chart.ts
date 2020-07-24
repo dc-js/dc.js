@@ -7,7 +7,7 @@ import {transition} from '../core/core';
 import {logger} from '../core/logger';
 import {events} from '../core/events';
 import {utils} from '../core/utils';
-import {BaseAccessor} from '../core/types';
+import {BaseAccessor, ChartParentType} from '../core/types';
 
 interface GeoJson {
     data;
@@ -44,7 +44,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this.colorAccessor(d => d || 0);

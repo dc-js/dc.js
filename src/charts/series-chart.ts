@@ -4,7 +4,7 @@ import {nest} from 'd3-collection';
 import {CompositeChart} from './composite-chart';
 import {LineChart} from './line-chart';
 import {utils} from '../core/utils';
-import {BaseAccessor, CompareFn} from '../core/types';
+import {BaseAccessor, ChartParentType, CompareFn} from '../core/types';
 
 export type LineChartFunction = (parent, chartGroup) => LineChart;
 
@@ -38,7 +38,7 @@ export class SeriesChart extends CompositeChart {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super(parent, chartGroup);
 
         this._keySort = (a, b) => ascending(this.keyAccessor()(a), this.keyAccessor()(b));
