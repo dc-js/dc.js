@@ -99,7 +99,7 @@ export class BaseMixin {
     private _keyAccessor: KeyAccessor;
     private _valueAccessor: ValueAccessor;
     private _label: LabelAccessor;
-    private _ordering: (d, i?) => any; // TODO: should it be string or string|number|Date
+    private _ordering: BaseAccessor<any>; // TODO: should it be string or string|number|Date
     private _renderLabel: boolean;
     private _title: TitleAccessor;
     private _renderTitle: boolean;
@@ -115,7 +115,7 @@ export class BaseMixin {
     private _defaultData: (group) => any; // TODO: find correct type
     private _data: (group) => any;
     private _filters: any[]; // TODO: find better types
-    private _filterHandler: (dimension, filters) => any;
+    private _filterHandler: (dimension: MinimalCFDimension, filters) => any;
     private _hasFilterHandler: (filters, filter) => (boolean | any);
     private _removeFilterHandler: (filters, filter) => any;
     private _addFilterHandler: (filters, filter) => any;
@@ -422,8 +422,8 @@ export class BaseMixin {
      * @param {Function} [orderFunction]
      * @returns {Function|BaseMixin}
      */
-    public ordering ();
-    public ordering (orderFunction): this;
+    public ordering (): BaseAccessor<any>;
+    public ordering (orderFunction: BaseAccessor<any>): this;
     public ordering (orderFunction?) {
         if (!arguments.length) {
             return this._ordering;
