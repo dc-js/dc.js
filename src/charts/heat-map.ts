@@ -126,8 +126,10 @@ export class HeatMap extends ColorMixin(MarginMixin) {
     }
 
     public _filterAxis (axis: number, value): void {
-        const cellsOnAxis = this.selectAll('.box-group').filter(d => d.key[axis] === value);
+        const cellsOnAxis = this.selectAll<SVGElement, any>('.box-group').filter(d => d.key[axis] === value);
+
         const unfilteredCellsOnAxis = cellsOnAxis.filter(d => !this.hasFilter(d.key));
+
         events.trigger(() => {
             const selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
             const filtersList = selection.data().map(kv => filters.TwoDimensionalFilter(kv.key));

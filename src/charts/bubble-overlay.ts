@@ -1,4 +1,4 @@
-import {mouse} from 'd3-selection';
+import {mouse, Selection} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';
 import {BubbleMixin} from '../base/bubble-mixin';
@@ -24,7 +24,7 @@ const BUBBLE_CLASS = 'bubble';
  * @mixes BaseMixin
  */
 export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
-    private _g: SVGGElementSelection;
+    private _g: Selection<SVGGElement, any, any, any>;
     private _points: { name: string; x: number; y: number; }[];
 
     /**
@@ -97,8 +97,8 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _initOverlayG (): SVGGElementSelection {
-        this._g = this.select(`g.${BUBBLE_OVERLAY_CLASS}`);
+    public _initOverlayG (): Selection<SVGGElement, any, any, any> {
+        this._g = this.select<SVGGElement>(`g.${BUBBLE_OVERLAY_CLASS}`);
         if (this._g.empty()) {
             this._g = this.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
         }

@@ -726,7 +726,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _highlightSliceFromLegendable (legendable: LegendSpecs, highlighted: boolean): void {
-        this.selectAll('g.pie-slice').each(function (d) {
+        this.selectAll<SVGGElement, any>('g.pie-slice').each(function (d) {
             if (legendable.name === d.key) {
                 select(this).classed('highlight', highlighted);
             }

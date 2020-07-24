@@ -1,4 +1,4 @@
-import {select, Selection} from 'd3-selection';
+import {BaseType, select, Selection} from 'd3-selection';
 import {dispatch, Dispatch} from 'd3-dispatch';
 import {ascending} from 'd3-array';
 
@@ -76,7 +76,7 @@ export class BaseMixin {
     private _dimension; // TODO: create an interface for what dc needs
     private _group; // TODO: create an interface for what dc needs
     private _anchor; // TODO: figure out actual type
-    private _root; // TODO: figure out actual type
+    private _root: Selection<Element, any, any, any>; // Do not assume much, allow any HTML or SVG element
     private _svg: Selection<SVGElement, any, any, any>; // from d3-selection
     private _isChild: boolean;
     private _minWidth: number;
@@ -452,8 +452,8 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    public select (sel) {
-        return this._root.select(sel);
+    public select<DescElement extends BaseType> (sel) {
+        return this._root.select<DescElement>(sel);
     }
 
     /**
@@ -468,8 +468,8 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    public selectAll (sel) {
-        return this._root ? this._root.selectAll(sel) : null;
+    public selectAll<DescElement extends BaseType, OldDatum> (sel) {
+        return this._root ? this._root.selectAll<DescElement, OldDatum>(sel) : null;
     }
 
     /**
@@ -536,8 +536,8 @@ export class BaseMixin {
      * @param {HTMLElement} [rootElement]
      * @returns {HTMLElement|BaseMixin}
      */
-    public root ();
-    public root (rootElement): this;
+    public root (): Selection<Element, any, any, any>;
+    public root (rootElement: Selection<Element, any, any, any>): this;
     public root (rootElement?) {
         if (!arguments.length) {
             return this._root;

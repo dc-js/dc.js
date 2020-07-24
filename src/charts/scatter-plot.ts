@@ -142,7 +142,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             this.select('canvas').remove(); // remove old canvas
 
             const svgSel: Selection<SVGElement, any, any, any> = this.svg();
-            const rootSel: Selection<HTMLElement, any, any, any> = this.root();
+            const rootSel: Selection<Element, any, any, any> = this.root();
 
             // Set root node to relative positioning and svg to absolute
             rootSel.style('position', 'relative');

@@ -120,7 +120,7 @@ export class DataTable extends BaseMixin {
         return s;
     }
 
-    private _renderSections (): Selection<HTMLTableSectionElement, any, HTMLElement, any> {
+    private _renderSections (): Selection<HTMLTableSectionElement, any, Element, any> {
         // The 'original' example uses all 'functions'.
         // If all 'functions' are used, then don't remove/add a header, and leave
         // the html alone. This preserves the functionality of earlier releases.
@@ -135,7 +135,9 @@ export class DataTable extends BaseMixin {
 
         if (!bAllFunctions) {
             // ensure one thead
-            let thead: Selection<HTMLTableSectionElement, any, HTMLElement, any> = this.selectAll('thead').data([0]);
+            let thead: Selection<HTMLTableSectionElement, any, Element, any> =
+                this.selectAll<HTMLTableSectionElement, any>('thead').data([0]);
+
             thead.exit().remove();
             thead = thead.enter()
                 .append('thead')
@@ -158,10 +160,11 @@ export class DataTable extends BaseMixin {
                 .html(d => (this._doColumnHeaderFormat(d)));
         }
 
-        const sections: Selection<HTMLTableSectionElement, any, HTMLElement, any> = this.root().selectAll('tbody')
-            .data(this._nestEntries(), d => this.keyAccessor()(d));
+        const sections: Selection<HTMLTableSectionElement, any, Element, any> =
+            this.root().selectAll<HTMLTableSectionElement, any>('tbody')
+                       .data<any>(this._nestEntries(), d => this.keyAccessor()(d));
 
-        const rowSection: Selection<HTMLTableSectionElement, any, HTMLElement, any> = sections
+        const rowSection = sections
             .enter()
             .append('tbody');
 
@@ -194,7 +197,7 @@ export class DataTable extends BaseMixin {
             .entries(entries.sort((a, b) => this._order(this._sortBy(a), this._sortBy(b))).slice(this._beginSlice, this._endSlice));
     }
 
-    private _renderRows (sections: Selection<HTMLTableSectionElement, any, HTMLElement, any>) {
+    private _renderRows (sections: Selection<HTMLTableSectionElement, any, Element, any>) {
         const rows: Selection<HTMLTableRowElement, unknown, HTMLTableSectionElement, any> = sections.order()
             .selectAll<HTMLTableRowElement, any>(`tr.${ROW_CSS_CLASS}`)
             .data(d => d.values);
