@@ -15,7 +15,8 @@ import {config} from './config';
  * elements are needed)
  * @returns {d3.transition|d3.selection}
  */
-export const transition = function (selection, duration?: number, delay?: number, name?: string) {
+export function transition (selection, duration?: number, delay?: number, name?: string) {
+    // TODO: can we do typing for selection here
     if (config.disableTransitions || duration <= 0) {
         return selection;
     }
@@ -30,10 +31,10 @@ export const transition = function (selection, duration?: number, delay?: number
     }
 
     return s;
-};
+}
 
 /* somewhat silly, but to avoid duplicating logic */
-export const optionalTransition = function (enable: boolean, duration?: number, delay?: number, name?: string) {
+export function optionalTransition (enable: boolean, duration?: number, delay?: number, name?: string) {
     if (enable) {
         return function (selection) {
             return transition(selection, duration, delay, name);
@@ -43,10 +44,10 @@ export const optionalTransition = function (enable: boolean, duration?: number, 
             return selection;
         };
     }
-};
+}
 
 // See http://stackoverflow.com/a/20773846
-export const afterTransition = function (_transition, callback) {
+export function afterTransition (_transition, callback) {
     if (_transition.empty() || !_transition.duration) {
         callback.call(_transition);
     } else {
@@ -59,16 +60,16 @@ export const afterTransition = function (_transition, callback) {
                 }
             });
     }
-};
+}
 
-export const renderlet = function (_?: () => void): () => void {
+export function renderlet (_?: (arg0?) => void): (arg0) => void {
     if (!arguments.length) {
         return config._renderlet;
     }
     config._renderlet = _;
     return null;
-};
+}
 
-export const instanceOfChart: ((o: any) => boolean) = function (o) {
+export function instanceOfChart (o: any): boolean {
     return o instanceof Object && o.__dcFlag__ && true;
-};
+}

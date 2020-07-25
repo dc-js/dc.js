@@ -7,6 +7,8 @@ import {
     curveCardinal,
     curveCardinalClosed,
     curveCardinalOpen,
+    CurveFactory,
+    CurveFactoryLineOnly,
     curveLinear,
     curveLinearClosed,
     curveMonotoneX,
@@ -15,12 +17,13 @@ import {
     curveStepBefore,
     line
 } from 'd3-shape';
-import {select} from 'd3-selection';
+import {select, Selection} from 'd3-selection';
 
 import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
+import {BaseAccessor, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
 
 const DEFAULT_DOT_RADIUS = 5;
 const TOOLTIP_G_CLASS = 'dc-tooltip';
@@ -42,15 +45,15 @@ const LABEL_PADDING = 3;
 export class LineChart extends StackMixin {
     private _renderArea: boolean;
     private _dotRadius: number;
-    private _dataPointRadius;
+    private _dataPointRadius: number;
     private _dataPointFillOpacity: number;
     private _dataPointStrokeOpacity: number;
-    private _curve;
-    private _interpolate;
-    private _tension;
-    private _defined;
-    private _dashStyle;
-    private _xyTipsOn: boolean;
+    private _curve: CurveFactory | CurveFactoryLineOnly;
+    private _interpolate: CurveFactory | CurveFactoryLineOnly | string;
+    private _tension: number;
+    private _defined: BaseAccessor<boolean>;
+    private _dashStyle: number[];
+    private _xyTipsOn: boolean|'always';
 
     /**
      * Create a Line Chart.
@@ -69,7 +72,7 @@ export class LineChart extends StackMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._renderArea = false;
@@ -94,14 +97,14 @@ export class LineChart extends StackMixin {
     }
 
     public plotData () {
-        const chartBody = this.chartBodyG();
-        let layersList = chartBody.select('g.stack-list');
+        const chartBody: SVGGElementSelection = this.chartBodyG();
+        let layersList = chartBody.select<SVGGElement>('g.stack-list');
 
         if (layersList.empty()) {
             layersList = chartBody.append('g').attr('class', 'stack-list');
         }
 
-        let layers = layersList.selectAll('g.stack').data(this.data());
+        let layers = layersList.selectAll<SVGGElement, any>('g.stack').data(this.data());
 
         const layersEnter = layers
             .enter()
@@ -148,8 +151,8 @@ export class LineChart extends StackMixin {
      * @param  {d3.curve} [curve=d3.curveLinear]
      * @returns {d3.curve|LineChart}
      */
-    public curve ();
-    public curve (curve): this;
+    public curve (): CurveFactory | CurveFactoryLineOnly;
+    public curve (curve: CurveFactory | CurveFactoryLineOnly): this;
     public curve (curve?) {
         if (!arguments.length) {
             return this._curve;
@@ -174,8 +177,8 @@ export class LineChart extends StackMixin {
      * @param  {d3.curve} [interpolate=d3.curveLinear]
      * @returns {d3.curve|LineChart}
      */
-    public interpolate ();
-    public interpolate (interpolate): this;
+    public interpolate (): CurveFactory | CurveFactoryLineOnly | string;
+    public interpolate (interpolate: CurveFactory | CurveFactoryLineOnly | string): this;
     public interpolate (interpolate?) {
         logger.warnOnce('dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
         if (!arguments.length) {
@@ -200,8 +203,8 @@ export class LineChart extends StackMixin {
      * @param  {Number} [tension=0]
      * @returns {Number|LineChart}
      */
-    public tension ();
-    public tension (tension): this;
+    public tension (): number;
+    public tension (tension: number): this;
     public tension (tension?) {
         logger.warnOnce('dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
         if (!arguments.length) {
@@ -225,8 +228,8 @@ export class LineChart extends StackMixin {
      * @param  {Function} [defined]
      * @returns {Function|LineChart}
      */
-    public defined ();
-    public defined (defined): this;
+    public defined (): BaseAccessor<boolean>;
+    public defined (defined: BaseAccessor<boolean>): this;
     public defined (defined?) {
         if (!arguments.length) {
             return this._defined;
@@ -245,8 +248,8 @@ export class LineChart extends StackMixin {
      * @param  {Array<Number>} [dashStyle=[]]
      * @returns {Array<Number>|LineChart}
      */
-    public dashStyle ();
-    public dashStyle (dashStyle): this;
+    public dashStyle (): number[];
+    public dashStyle (dashStyle: number[]): this;
     public dashStyle (dashStyle?) {
         if (!arguments.length) {
             return this._dashStyle;
@@ -261,8 +264,8 @@ export class LineChart extends StackMixin {
      * @param  {Boolean} [renderArea=false]
      * @returns {Boolean|LineChart}
      */
-    public renderArea ();
-    public renderArea (renderArea): this;
+    public renderArea (): boolean;
+    public renderArea (renderArea: boolean): this;
     public renderArea (renderArea?) {
         if (!arguments.length) {
             return this._renderArea;
@@ -274,7 +277,7 @@ export class LineChart extends StackMixin {
     // To keep it backward compatible, this covers multiple cases
     // See https://github.com/dc-js/dc.js/issues/1376
     // It will be removed when interpolate and tension are removed.
-    public _getCurveFactory () {
+    private _getCurveFactory (): CurveFactory | CurveFactoryLineOnly {
         let curve = null;
 
         // _curve takes precedence
@@ -320,19 +323,23 @@ export class LineChart extends StackMixin {
         return curve;
     }
 
-    public _drawLine (layersEnter, layers) {
+    private _drawLine (layersEnter: SVGGElementSelection, layers: SVGGElementSelection) {
         const _line = line()
             .x((d: any) => this.x()(d.x)) // TODO: revisit later to put proper type
             .y((d: any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
             .curve(this._getCurveFactory());
+
         if (this._defined) {
             _line.defined(this._defined);
         }
 
-        const path = layersEnter.append('path')
+        const path = layersEnter.append<SVGPathElement>('path')
             .attr('class', 'line')
             .attr('stroke', (d, i) => this.getColor(d, i));
+
         if (this._dashStyle) {
+            // TODO: see https://github.com/dc-js/dc.js/issues/1723
+            // @ts-ignore
             path.attr('stroke-dasharray', this._dashStyle);
         }
 
@@ -342,13 +349,14 @@ export class LineChart extends StackMixin {
             .attr('d', d => this._safeD(_line(d.values)));
     }
 
-    public _drawArea (layersEnter, layers) {
+    private _drawArea (layersEnter: SVGGElementSelection, layers: SVGGElementSelection): void {
         if (this._renderArea) {
             const _area = area()
                 .x((d:any) => this.x()(d.x)) // TODO: revisit later to put proper type
                 .y1((d:any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
                 .y0((d:any) => this.y()(d.y0)) // TODO: revisit later to put proper type
-                .curve(this._getCurveFactory());
+                .curve(this._getCurveFactory() as CurveFactory); // the types slightly differ for area and line
+
             if (this._defined) {
                 _area.defined(this._defined);
             }
@@ -365,14 +373,14 @@ export class LineChart extends StackMixin {
         }
     }
 
-    public _safeD (d) {
+    private _safeD (d: string): string {
         return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
     }
 
-    public _drawDots (chartBody, layers) {
+    private _drawDots (chartBody: SVGGElementSelection, layers: SVGGElementSelection) {
         if (this.xyTipsOn() === 'always' || (!(this.brushOn() || this.parentBrushOn()) && this.xyTipsOn())) {
             const tooltipListClass = `${TOOLTIP_G_CLASS}-list`;
-            let tooltips = chartBody.select(`g.${tooltipListClass}`);
+            let tooltips = chartBody.select<SVGGElement>(`g.${tooltipListClass}`);
 
             if (tooltips.empty()) {
                 tooltips = chartBody.append('g').attr('class', tooltipListClass);
@@ -384,15 +392,16 @@ export class LineChart extends StackMixin {
                     points = points.filter(this._defined);
                 }
 
-                let g = tooltips.select(`g.${TOOLTIP_G_CLASS}._${layerIndex}`);
+                let g = tooltips.select<SVGGElement>(`g.${TOOLTIP_G_CLASS}._${layerIndex}`);
                 if (g.empty()) {
                     g = tooltips.append('g').attr('class', `${TOOLTIP_G_CLASS} _${layerIndex}`);
                 }
 
                 this._createRefLines(g);
 
-                const dots = g.selectAll(`circle.${DOT_CIRCLE_CLASS}`)
-                    .data(points, pluck('x'));
+                const dots: Selection<SVGCircleElement, any, SVGGElement, any> =
+                    g.selectAll<SVGCircleElement, any>(`circle.${DOT_CIRCLE_CLASS}`)
+                     .data<any>(points, pluck('x'));
 
                 const chart = this;
                 const dotsEnterModify = dots
@@ -430,7 +439,7 @@ export class LineChart extends StackMixin {
         }
     }
 
-    public _drawLabels (layers) {
+    private _drawLabels (layers: SVGGElementSelection): void {
         const chart = this;
         layers.each(function (data, layerIndex) {
             const layer = select(this);
@@ -458,24 +467,32 @@ export class LineChart extends StackMixin {
         });
     }
 
-    public _createRefLines (g) {
-        const yRefLine = g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).empty() ?
-            g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS) : g.select(`path.${Y_AXIS_REF_LINE_CLASS}`);
+    private _createRefLines (g: SVGGElementSelection): void {
+        let yRefLine = g.select<SVGPathElement>(`path.${Y_AXIS_REF_LINE_CLASS}`);
+
+        if (yRefLine.empty()) {
+            yRefLine = g.append('path').attr('class', Y_AXIS_REF_LINE_CLASS);
+        }
+
         yRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
 
-        const xRefLine = g.select(`path.${X_AXIS_REF_LINE_CLASS}`).empty() ?
-            g.append('path').attr('class', X_AXIS_REF_LINE_CLASS) : g.select(`path.${X_AXIS_REF_LINE_CLASS}`);
+        let xRefLine = g.select<SVGPathElement>(`path.${X_AXIS_REF_LINE_CLASS}`);
+
+        if (xRefLine.empty()) {
+            xRefLine = g.append('path').attr('class', X_AXIS_REF_LINE_CLASS);
+        }
+
         xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
     }
 
-    public _showDot (dot) {
+    private _showDot (dot: Selection<SVGCircleElement, unknown, null, undefined>): Selection<SVGCircleElement, unknown, null, undefined> {
         dot.style('fill-opacity', 0.8);
         dot.style('stroke-opacity', 0.8);
         dot.attr('r', this._dotRadius);
         return dot;
     }
 
-    public _showRefLines (dot, g) {
+    private _showRefLines (dot: Selection<SVGCircleElement, unknown, null, undefined>, g: SVGGElementSelection): void {
         const x = dot.attr('cx');
         const y = dot.attr('cy');
         const yAxisX = (this._yAxisX() - this.margins().left);
@@ -485,22 +502,22 @@ export class LineChart extends StackMixin {
         g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', xAxisRefPathD);
     }
 
-    public _getDotRadius () {
+    private _getDotRadius () {
         return this._dataPointRadius || this._dotRadius;
     }
 
-    public _hideDot (dot) {
+    private _hideDot (dot: Selection<SVGCircleElement, unknown, null, undefined>): void {
         dot.style('fill-opacity', this._dataPointFillOpacity)
             .style('stroke-opacity', this._dataPointStrokeOpacity)
             .attr('r', this._getDotRadius());
     }
 
-    public _hideRefLines (g) {
+    private _hideRefLines (g: SVGGElementSelection): void {
         g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', 'none');
         g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', 'none');
     }
 
-    public _doRenderTitle (dot, d) {
+    private _doRenderTitle (dot: Selection<SVGCircleElement, any, SVGGElement, any>, d): void {
         if (this.renderTitle()) {
             dot.select('title').remove();
             dot.append('title').text(pluck('data', this.title(d.name)));
@@ -510,12 +527,13 @@ export class LineChart extends StackMixin {
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
      * dashed lines back to each respective axis.  This is ignored if the chart
-     * {@link CoordinateGridMixin#brushOn brush} is on
+     * {@link CoordinateGridMixin#brushOn brush} is on.
+     *
      * @param  {Boolean} [xyTipsOn=false]
      * @returns {Boolean|LineChart}
      */
-    public xyTipsOn ();
-    public xyTipsOn (xyTipsOn): this;
+    public xyTipsOn (): boolean|'always';
+    public xyTipsOn (xyTipsOn: |'always'): this;
     public xyTipsOn (xyTipsOn?) {
         if (!arguments.length) {
             return this._xyTipsOn;
@@ -529,8 +547,8 @@ export class LineChart extends StackMixin {
      * @param  {Number} [dotRadius=5]
      * @returns {Number|LineChart}
      */
-    public dotRadius ();
-    public dotRadius (dotRadius): this;
+    public dotRadius (): number;
+    public dotRadius (dotRadius: number): this;
     public dotRadius (dotRadius?) {
         if (!arguments.length) {
             return this._dotRadius;
@@ -580,7 +598,7 @@ export class LineChart extends StackMixin {
         };
     }
 
-    public legendHighlight (d) {
+    public legendHighlight (d: LegendItem) {
         if (!this.isLegendableHidden(d)) {
             this.g().selectAll('path.line, path.area')
                 .classed('highlight', this._colorFilter(d.color, d.dashstyle))
@@ -594,7 +612,7 @@ export class LineChart extends StackMixin {
             .classed('fadeout', false);
     }
 
-    public legendables () {
+    public legendables (): LegendItem[] {
         const legendables = super.legendables();
         if (!this._dashStyle) {
             return legendables;

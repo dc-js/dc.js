@@ -1,4 +1,4 @@
-import {ascending, Primitive} from 'd3-array';
+import {ascending} from 'd3-array';
 import {scaleBand} from 'd3-scale';
 
 import {transition} from '../core/core';
@@ -7,8 +7,12 @@ import {filters} from '../core/filters';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {MarginMixin} from '../base/margin-mixin';
+import {BaseAccessor, ChartParentType, CompareFn, MinimalXYScale} from '../core/types';
+import {Selection} from 'd3-selection';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
+
+type ClickHandler = (d: any) => void;
 
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
@@ -17,20 +21,20 @@ const DEFAULT_BORDER_RADIUS = 6.75;
  * @mixes BaseMixin
  */
 export class HeatMap extends ColorMixin(MarginMixin) {
-    private _chartBody;
+    private _chartBody: Selection<SVGGElement, any, SVGElement, any>;
     private _cols;
     private _rows;
-    private _colOrdering: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
-    private _rowOrdering: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
-    private _colScale;
-    private _rowScale;
+    private _colOrdering: CompareFn;
+    private _rowOrdering: CompareFn;
+    private _colScale: MinimalXYScale;
+    private _rowScale: MinimalXYScale;
     private _xBorderRadius: number;
     private _yBorderRadius: number;
-    private _colsLabel;
-    private _rowsLabel;
-    private _xAxisOnClick;
-    private _yAxisOnClick;
-    private _boxOnClick;
+    private _colsLabel: BaseAccessor<any>;
+    private _rowsLabel: BaseAccessor<any>;
+    private _xAxisOnClick: ClickHandler;
+    private _yAxisOnClick: ClickHandler;
+    private _boxOnClick: ClickHandler;
 
     /**
      * Create a Heat Map
@@ -45,7 +49,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._chartBody = undefined;
@@ -92,8 +96,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [labelFunction=function(d) { return d; }]
      * @returns {Function|HeatMap}
      */
-    public colsLabel ();
-    public colsLabel (labelFunction): this;
+    public colsLabel (): BaseAccessor<any>;
+    public colsLabel (labelFunction: BaseAccessor<any>): this;
     public colsLabel (labelFunction?) {
         if (!arguments.length) {
             return this._colsLabel;
@@ -111,8 +115,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [labelFunction=function(d) { return d; }]
      * @returns {Function|HeatMap}
      */
-    public rowsLabel ();
-    public rowsLabel (labelFunction): this;
+    public rowsLabel (): BaseAccessor<any>;
+    public rowsLabel (labelFunction: BaseAccessor<any>): this;
     public rowsLabel (labelFunction?) {
         if (!arguments.length) {
             return this._rowsLabel;
@@ -121,9 +125,11 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public _filterAxis (axis, value) {
-        const cellsOnAxis = this.selectAll('.box-group').filter(d => d.key[axis] === value);
+    public _filterAxis (axis: number, value): void {
+        const cellsOnAxis = this.selectAll<SVGElement, any>('.box-group').filter(d => d.key[axis] === value);
+
         const unfilteredCellsOnAxis = cellsOnAxis.filter(d => !this.hasFilter(d.key));
+
         events.trigger(() => {
             const selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
             const filtersList = selection.data().map(kv => filters.TwoDimensionalFilter(kv.key));
@@ -132,6 +138,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         });
     }
 
+    public filter ();
+    public filter (filter): this;
     public filter (filter?) {
         const nonstandardFilter = f => {
             logger.warnOnce('heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
@@ -171,8 +179,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [rowOrdering]
      * @returns {Function|HeatMap}
      */
-    public rowOrdering ();
-    public rowOrdering (rowOrdering): this;
+    public rowOrdering (): CompareFn;
+    public rowOrdering (rowOrdering: CompareFn): this;
     public rowOrdering (rowOrdering?) {
         if (!arguments.length) {
             return this._rowOrdering;
@@ -203,8 +211,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [colOrdering]
      * @returns {Function|HeatMap}
      */
-    public colOrdering ();
-    public colOrdering (colOrdering): this;
+    public colOrdering (): CompareFn;
+    public colOrdering (colOrdering: CompareFn): this;
     public colOrdering (colOrdering?) {
         if (!arguments.length) {
             return this._colOrdering;
@@ -213,7 +221,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public _doRender () {
+    public _doRender (): this {
         this.resetSvg();
 
         this._chartBody = this.svg()
@@ -246,8 +254,9 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         cols.rangeRound([0, this.effectiveWidth()]);
         rows.rangeRound([this.effectiveHeight(), 0]);
 
-        let boxes = this._chartBody.selectAll('g.box-group').data(this.data(),
-                                                                  (d, i) => `${this.keyAccessor()(d, i)}\0${this.valueAccessor()(d, i)}`);
+        let boxes: Selection<SVGGElement, unknown, SVGGElement, any> = this._chartBody
+            .selectAll<SVGGElement, any>('g.box-group')
+            .data(this.data(), (d, i) => `${this.keyAccessor()(d, i)}\0${this.valueAccessor()(d, i)}`);
 
         boxes.exit().remove();
 
@@ -277,11 +286,11 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('width', boxWidth)
             .attr('height', boxHeight);
 
-        let gCols = this._chartBody.select('g.cols');
+        let gCols = this._chartBody.select<SVGGElement>('g.cols');
         if (gCols.empty()) {
             gCols = this._chartBody.append('g').attr('class', 'cols axis');
         }
-        let gColsText = gCols.selectAll('text').data(cols.domain());
+        let gColsText = gCols.selectAll<SVGTextElement, any>('text').data(cols.domain());
 
         gColsText.exit().remove();
 
@@ -301,12 +310,12 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('x', d => cols(d) + boxWidth / 2)
             .attr('y', this.effectiveHeight());
 
-        let gRows = this._chartBody.select('g.rows');
+        let gRows = this._chartBody.select<SVGGElement>('g.rows');
         if (gRows.empty()) {
             gRows = this._chartBody.append('g').attr('class', 'rows axis');
         }
 
-        let gRowsText = gRows.selectAll('text').data(rows.domain());
+        let gRowsText = gRows.selectAll<SVGTextElement, any>('text').data(rows.domain());
 
         gRowsText.exit().remove();
 
@@ -359,8 +368,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    public boxOnClick ();
-    public boxOnClick (handler): this;
+    public boxOnClick (): ClickHandler;
+    public boxOnClick (handler: ClickHandler): this;
     public boxOnClick (handler?) {
         if (!arguments.length) {
             return this._boxOnClick;
@@ -376,8 +385,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    public xAxisOnClick ();
-    public xAxisOnClick (handler): this;
+    public xAxisOnClick (): ClickHandler;
+    public xAxisOnClick (handler: ClickHandler): this;
     public xAxisOnClick (handler?) {
         if (!arguments.length) {
             return this._xAxisOnClick;
@@ -393,8 +402,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    public yAxisOnClick ();
-    public yAxisOnClick (handler): this;
+    public yAxisOnClick (): ClickHandler;
+    public yAxisOnClick (handler: ClickHandler): this;
     public yAxisOnClick (handler?) {
         if (!arguments.length) {
             return this._yAxisOnClick;
@@ -408,8 +417,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Number} [xBorderRadius=6.75]
      * @returns {Number|HeatMap}
      */
-    public xBorderRadius ();
-    public xBorderRadius (xBorderRadius): this;
+    public xBorderRadius (): number;
+    public xBorderRadius (xBorderRadius: number): this;
     public xBorderRadius (xBorderRadius?) {
         if (!arguments.length) {
             return this._xBorderRadius;
@@ -423,8 +432,8 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param  {Number} [yBorderRadius=6.75]
      * @returns {Number|HeatMap}
      */
-    public yBorderRadius ();
-    public yBorderRadius (yBorderRadius): this;
+    public yBorderRadius (): number;
+    public yBorderRadius (yBorderRadius: number): this;
     public yBorderRadius (yBorderRadius?) {
         if (!arguments.length) {
             return this._yBorderRadius;
@@ -433,7 +442,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public isSelectedNode (d) {
+    public isSelectedNode (d): boolean {
         return this.hasFilter(d.key);
     }
 }

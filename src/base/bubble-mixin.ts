@@ -1,10 +1,10 @@
-import { descending, min, max } from 'd3-array';
-import { scaleLinear } from 'd3-scale';
+import {descending, max, min} from 'd3-array';
+import {scaleLinear} from 'd3-scale';
 
 import {ColorMixin} from './color-mixin';
 import {transition} from '../core/core';
 import {events} from '../core/events';
-import {Constructor} from '../core/types';
+import {Constructor, MinimalRadiusScale, RValueAccessor, SVGGElementSelection} from '../core/types';
 import {BaseMixin} from './base-mixin';
 
 /**
@@ -15,7 +15,7 @@ import {BaseMixin} from './base-mixin';
  * @returns {BubbleMixin}
  */
 // tslint:disable-next-line:variable-name
-export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
+export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
         private _maxBubbleRelativeSize: number;
@@ -26,9 +26,10 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
         protected BUBBLE_NODE_CLASS: string;
         protected BUBBLE_CLASS: string;
         protected MIN_RADIUS: number;
-        private _r;
+        private _r: MinimalRadiusScale;
+        private _rValueAccessor: RValueAccessor;
 
-        constructor(...args: any[]) {
+        constructor (...args: any[]) {
             super();
 
             this._maxBubbleRelativeSize = 0.3;
@@ -55,10 +56,8 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             });
 
             this._r = scaleLinear().domain([0, 100]);
-        }
 
-        public _rValueAccessor(d) {
-            return d.r;
+            this._rValueAccessor = d => d.r;
         }
 
         /**
@@ -71,9 +70,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
          * @returns {d3.scale|BubbleMixin}
          */
-        public r();
-        public r(bubbleRadiusScale);
-        public r(bubbleRadiusScale?) {
+        public r (): MinimalRadiusScale;
+        public r (bubbleRadiusScale: MinimalRadiusScale): this;
+        public r (bubbleRadiusScale?) {
             if (!arguments.length) {
                 return this._r;
             }
@@ -89,9 +88,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Boolean} [elasticRadius=false]
          * @returns {Boolean|BubbleChart}
          */
-        public elasticRadius();
-        public elasticRadius(elasticRadius);
-        public elasticRadius(elasticRadius?) {
+        public elasticRadius (): boolean;
+        public elasticRadius (elasticRadius: boolean);
+        public elasticRadius (elasticRadius?) {
             if (!arguments.length) {
                 return this._elasticRadius;
             }
@@ -99,7 +98,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             return this;
         }
 
-        public calculateRadiusDomain() {
+        public calculateRadiusDomain (): void {
             if (this._elasticRadius) {
                 this.r().domain([this.rMin(), this.rMax()]);
             }
@@ -115,9 +114,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Function} [radiusValueAccessor]
          * @returns {Function|BubbleMixin}
          */
-        public radiusValueAccessor();
-        public radiusValueAccessor(radiusValueAccessor);
-        public radiusValueAccessor(radiusValueAccessor?) {
+        public radiusValueAccessor (): RValueAccessor;
+        public radiusValueAccessor (radiusValueAccessor: RValueAccessor);
+        public radiusValueAccessor (radiusValueAccessor?) {
             if (!arguments.length) {
                 return this._rValueAccessor;
             }
@@ -125,19 +124,19 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             return this;
         }
 
-        public rMin() {
-            let values = this.data().map(this.radiusValueAccessor());
+        public rMin (): number {
+            let values: number[] = this.data().map(this.radiusValueAccessor());
             if (this._excludeElasticZero) {
                 values = values.filter(value => value > 0);
             }
             return min(values);
         }
 
-        public rMax() {
+        public rMax ():number {
             return max(this.data(), e => this.radiusValueAccessor()(e));
         }
 
-        public bubbleR(d) {
+        public bubbleR (d): number {
             const value = this.radiusValueAccessor()(d);
             let r = this.r()(value);
             if (isNaN(r) || value <= 0) {
@@ -146,23 +145,23 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             return r;
         }
 
-        public _labelFunction(d) {
+        public _labelFunction (d): string|number {
             return this.label()(d);
         }
 
-        public _shouldLabel(d) {
+        public _shouldLabel (d): boolean {
             return (this.bubbleR(d) > this._minRadiusWithLabel);
         }
 
-        public _labelOpacity(d) {
+        public _labelOpacity (d): number {
             return this._shouldLabel(d) ? 1 : 0;
         }
 
-        public _labelPointerEvent(d) {
+        public _labelPointerEvent (d): string {
             return this._shouldLabel(d) ? 'all' : 'none';
         }
 
-        public _doRenderLabel(bubbleGEnter) {
+        public _doRenderLabel (bubbleGEnter): void {
             if (this.renderLabel()) {
                 let label = bubbleGEnter.select('text');
 
@@ -182,7 +181,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             }
         }
 
-        public doUpdateLabels(bubbleGEnter) {
+        public doUpdateLabels (bubbleGEnter): void {
             if (this.renderLabel()) {
                 const labels = bubbleGEnter.select('text')
                     .attr('pointer-events', d => this._labelPointerEvent(d))
@@ -192,11 +191,11 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             }
         }
 
-        public _titleFunction(d) {
+        public _titleFunction (d): string|number {
             return this.title()(d);
         }
 
-        public _doRenderTitles(g) {
+        public _doRenderTitles (g): void {
             if (this.renderTitle()) {
                 const title = g.select('title');
 
@@ -206,7 +205,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             }
         }
 
-        public doUpdateTitles(g) {
+        public doUpdateTitles (g): void {
             if (this.renderTitle()) {
                 g.select('title').text(d => this._titleFunction(d));
             }
@@ -220,9 +219,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Boolean} [sortBubbleSize=false]
          * @returns {Boolean|BubbleChart}
          */
-        public sortBubbleSize();
-        public sortBubbleSize(sortBubbleSize);
-        public sortBubbleSize(sortBubbleSize?) {
+        public sortBubbleSize (): boolean;
+        public sortBubbleSize (sortBubbleSize: boolean);
+        public sortBubbleSize (sortBubbleSize?) {
             if (!arguments.length) {
                 return this._sortBubbleSize;
             }
@@ -237,9 +236,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Number} [radius=10]
          * @returns {Number|BubbleMixin}
          */
-        public minRadius();
-        public minRadius(radius);
-        public minRadius(radius?) {
+        public minRadius (): number;
+        public minRadius (radius: number);
+        public minRadius (radius?) {
             if (!arguments.length) {
                 return this.MIN_RADIUS;
             }
@@ -255,9 +254,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Number} [radius=10]
          * @returns {Number|BubbleMixin}
          */
-        public minRadiusWithLabel();
-        public minRadiusWithLabel(radius);
-        public minRadiusWithLabel(radius?) {
+        public minRadiusWithLabel (): number;
+        public minRadiusWithLabel (radius: number);
+        public minRadiusWithLabel (radius?) {
             if (!arguments.length) {
                 return this._minRadiusWithLabel;
             }
@@ -273,9 +272,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Number} [relativeSize=0.3]
          * @returns {Number|BubbleMixin}
          */
-        public maxBubbleRelativeSize();
-        public maxBubbleRelativeSize(relativeSize);
-        public maxBubbleRelativeSize(relativeSize?) {
+        public maxBubbleRelativeSize (): number;
+        public maxBubbleRelativeSize (relativeSize: number);
+        public maxBubbleRelativeSize (relativeSize?) {
             if (!arguments.length) {
                 return this._maxBubbleRelativeSize;
             }
@@ -290,9 +289,9 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param  {Boolean} [excludeZero=true]
          * @returns {Boolean|BubbleMixin}
          */
-        public excludeElasticZero();
-        public excludeElasticZero(excludeZero);
-        public excludeElasticZero(excludeZero?) {
+        public excludeElasticZero (): boolean;
+        public excludeElasticZero (excludeZero: boolean);
+        public excludeElasticZero (excludeZero?) {
             if (!arguments.length) {
                 return this._excludeElasticZero;
             }
@@ -300,7 +299,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             return this;
         }
 
-        public fadeDeselectedArea(selection) {
+        public fadeDeselectedArea (selection: SVGGElementSelection): void {
             if (this.hasFilter()) {
                 const chart = this;
                 this.selectAll(`g.${chart.BUBBLE_NODE_CLASS}`).each(function (d) {
@@ -318,11 +317,11 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             }
         }
 
-        public isSelectedNode(d) {
+        public isSelectedNode (d: any) {
             return this.hasFilter(d.key);
         }
 
-        public onClick(d) {
+        public onClick (d: any) {
             const filter = d.key;
             events.trigger(() => {
                 this.filter(filter);

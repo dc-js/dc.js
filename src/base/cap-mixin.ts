@@ -15,7 +15,7 @@ import {BaseMixin} from './base-mixin';
  * @returns {CapMixin}
  */
 // tslint:disable-next-line:variable-name
-export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
+export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
         private _cap: number;
@@ -23,7 +23,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
         private _othersLabel: string;
         private _othersGrouper: (topItems, restItems) => (any);
 
-        constructor(...args: any[]) {
+        constructor (...args: any[]) {
             super();
 
             this._cap = Infinity;
@@ -77,14 +77,14 @@ export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             });
         }
 
-        public cappedKeyAccessor(d, i?) {
+        public cappedKeyAccessor (d, i?) {
             if (d.others) {
                 return d.key;
             }
             return this.keyAccessor()(d, i);
         }
 
-        public cappedValueAccessor(d, i?) {
+        public cappedValueAccessor (d, i?) {
             if (d.others) {
                 return d.value;
             }
@@ -121,9 +121,9 @@ export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Number} [count=Infinity]
          * @returns {Number|CapMixin}
          */
-        public cap();
-        public cap(count): this;
-        public cap(count?) {
+        public cap ();
+        public cap (count): this;
+        public cap (count?) {
             if (!arguments.length) {
                 return this._cap;
             }
@@ -140,9 +140,9 @@ export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Boolean} [takeFront=true]
          * @returns {Boolean|CapMixin}
          */
-        public takeFront();
-        public takeFront(takeFront): this;
-        public takeFront(takeFront?) {
+        public takeFront ();
+        public takeFront (takeFront): this;
+        public takeFront (takeFront?) {
             if (!arguments.length) {
                 return this._takeFront;
             }
@@ -157,9 +157,9 @@ export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {String} [label="Others"]
          * @returns {String|CapMixin}
          */
-        public othersLabel();
-        public othersLabel(label): this;
-        public othersLabel(label?) {
+        public othersLabel ();
+        public othersLabel (label): this;
+        public othersLabel (label?) {
             if (!arguments.length) {
                 return this._othersLabel;
             }
@@ -194,9 +194,9 @@ export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {Function} [grouperFunction]
          * @returns {Function|CapMixin}
          */
-        public othersGrouper();
-        public othersGrouper(grouperFunction): this;
-        public othersGrouper(grouperFunction?) {
+        public othersGrouper ();
+        public othersGrouper (grouperFunction): this;
+        public othersGrouper (grouperFunction?) {
             if (!arguments.length) {
                 return this._othersGrouper;
             }
@@ -204,7 +204,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
             return this;
         }
 
-        public onClick(d, i?) {
+        public onClick (d, i?) {
             if (d.others) {
                 this.filter([d.others]);
             }

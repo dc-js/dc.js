@@ -1,14 +1,18 @@
-import {ascending, Primitive} from 'd3-array';
+import {ascending} from 'd3-array';
 import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
+import {BaseAccessor, ChartParentType, CompareFn} from '../core/types';
+import {Selection} from 'd3-selection';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
 const ROW_CSS_CLASS = 'dc-table-row';
 const COLUMN_CSS_CLASS = 'dc-table-column';
 const SECTION_CSS_CLASS = 'dc-table-section dc-table-group';
 const HEAD_CSS_CLASS = 'dc-table-head';
+
+type ColumnSpec = ((d) => string) | string | {label: string; format: (d) => string};
 
 /**
  * The data table is a simple widget designed to list crossfilter focused data set (rows being
@@ -36,13 +40,13 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  */
 export class DataTable extends BaseMixin {
     private _size: number;
-    private _columns: [];
-    private _sortBy: (d) => any;
-    private _order: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
+    private _columns: ColumnSpec[];
+    private _sortBy: BaseAccessor<any>;
+    private _order: CompareFn;
     private _beginSlice: number;
     private _endSlice: number;
     private _showSections: boolean;
-    private _section: () => string;
+    private _section: BaseAccessor<string>;
 
     /**
      * Create a Data Table.
@@ -53,7 +57,7 @@ export class DataTable extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._size = 25;
@@ -78,13 +82,13 @@ export class DataTable extends BaseMixin {
         return this;
     }
 
-    public _doColumnValueFormat (v, d) {
+    private _doColumnValueFormat (v, d) {
         return (typeof v === 'function') ? v(d) :  // v as function
             (typeof v === 'string') ? d[v] :       // v is field name string
             v.format(d);                           // v is Object, use fn (element 2)
     }
 
-    public _doColumnHeaderFormat (d) {
+    private _doColumnHeaderFormat (d: ColumnSpec): string {
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
@@ -93,12 +97,13 @@ export class DataTable extends BaseMixin {
             String(d.label);
     }
 
-    public _doColumnHeaderCapitalize (s) {
+    private _doColumnHeaderCapitalize (s: string): string {
         // capitalize
         return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
-    public _doColumnHeaderFnToString (f) {
+    // TODO: This looks really peculiar, investigate, code is quite fragile
+    private _doColumnHeaderFnToString (f: (...args) => any): string {
         // columnString(f) {
         let s = String(f);
         const i1 = s.indexOf('return ');
@@ -115,7 +120,7 @@ export class DataTable extends BaseMixin {
         return s;
     }
 
-    public _renderSections () {
+    private _renderSections (): Selection<HTMLTableSectionElement, any, Element, any> {
         // The 'original' example uses all 'functions'.
         // If all 'functions' are used, then don't remove/add a header, and leave
         // the html alone. This preserves the functionality of earlier releases.
@@ -130,21 +135,23 @@ export class DataTable extends BaseMixin {
 
         if (!bAllFunctions) {
             // ensure one thead
-            let thead = this.selectAll('thead').data([0]);
+            let thead: Selection<HTMLTableSectionElement, any, Element, any> =
+                this.selectAll<HTMLTableSectionElement, any>('thead').data([0]);
+
             thead.exit().remove();
             thead = thead.enter()
                 .append('thead')
                 .merge(thead);
 
             // with one tr
-            let headrow = thead.selectAll('tr').data([0]);
+            let headrow = thead.selectAll<HTMLTableRowElement, any>('tr').data([0]);
             headrow.exit().remove();
             headrow = headrow.enter()
                 .append('tr')
                 .merge(headrow);
 
             // with a th for each column
-            const headcols = headrow.selectAll('th')
+            const headcols = headrow.selectAll<HTMLTableHeaderCellElement, any>('th')
                 .data(this._columns);
             headcols.exit().remove();
             headcols.enter().append('th')
@@ -153,8 +160,9 @@ export class DataTable extends BaseMixin {
                 .html(d => (this._doColumnHeaderFormat(d)));
         }
 
-        const sections = this.root().selectAll('tbody')
-            .data(this._nestEntries(), d => this.keyAccessor()(d));
+        const sections: Selection<HTMLTableSectionElement, any, Element, any> =
+            this.root().selectAll<HTMLTableSectionElement, any>('tbody')
+                       .data<any>(this._nestEntries(), d => this.keyAccessor()(d));
 
         const rowSection = sections
             .enter()
@@ -175,7 +183,7 @@ export class DataTable extends BaseMixin {
         return rowSection;
     }
 
-    public _nestEntries () {
+    private _nestEntries (): { key: string; values: any }[] {
         let entries;
         if (this._order === ascending) {
             entries = this.dimension().bottom(this._size);
@@ -189,12 +197,12 @@ export class DataTable extends BaseMixin {
             .entries(entries.sort((a, b) => this._order(this._sortBy(a), this._sortBy(b))).slice(this._beginSlice, this._endSlice));
     }
 
-    public _renderRows (sections) {
-        const rows = sections.order()
-            .selectAll(`tr.${ROW_CSS_CLASS}`)
+    private _renderRows (sections: Selection<HTMLTableSectionElement, any, Element, any>) {
+        const rows: Selection<HTMLTableRowElement, unknown, HTMLTableSectionElement, any> = sections.order()
+            .selectAll<HTMLTableRowElement, any>(`tr.${ROW_CSS_CLASS}`)
             .data(d => d.values);
 
-        const rowEnter = rows.enter()
+        const rowEnter: Selection<HTMLTableRowElement, unknown, HTMLTableSectionElement, any> = rows.enter()
             .append('tr')
             .attr('class', ROW_CSS_CLASS);
 
@@ -209,7 +217,7 @@ export class DataTable extends BaseMixin {
         return rows;
     }
 
-    public _doRedraw () {
+    public _doRedraw (): this {
         return this._doRender();
     }
 
@@ -227,8 +235,8 @@ export class DataTable extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataTable}
      */
-    public section ();
-    public section (section): this;
+    public section (): BaseAccessor<string>;
+    public section (section: BaseAccessor<string>): this;
     public section (section?) {
         if (!arguments.length) {
             return this._section;
@@ -243,8 +251,11 @@ export class DataTable extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataTable}
      */
-    public group ();
-    public group (section): this;
+    // @ts-ignore, signature is different in BaseMixin
+    public group (): BaseAccessor<string>;
+    // @ts-ignore, signature is different in BaseMixin
+    public group (section: BaseAccessor<string>): this;
+    // @ts-ignore, signature is different in BaseMixin
     public group (section?) {
         logger.warnOnce('consider using dataTable.section instead of dataTable.group for clarity');
         if (!arguments.length) {
@@ -258,8 +269,8 @@ export class DataTable extends BaseMixin {
      * @param {Number} [size=25]
      * @returns {Number|DataTable}
      */
-    public size ();
-    public size (size): this;
+    public size (): number;
+    public size (size: number): this;
     public size (size?) {
         if (!arguments.length) {
             return this._size;
@@ -278,8 +289,8 @@ export class DataTable extends BaseMixin {
      * @param {Number} [beginSlice=0]
      * @returns {Number|DataTable}
      */
-    public beginSlice ();
-    public beginSlice (beginSlice): this;
+    public beginSlice (): number;
+    public beginSlice (beginSlice: number): this;
     public beginSlice (beginSlice?) {
         if (!arguments.length) {
             return this._beginSlice;
@@ -294,8 +305,8 @@ export class DataTable extends BaseMixin {
      * @param {Number|undefined} [endSlice=undefined]
      * @returns {Number|DataTable}
      */
-    public endSlice ();
-    public endSlice (endSlice): this;
+    public endSlice (): number;
+    public endSlice (endSlice: number): this;
     public endSlice (endSlice?) {
         if (!arguments.length) {
             return this._endSlice;
@@ -380,8 +391,8 @@ export class DataTable extends BaseMixin {
      * @param {Array<Function>} [columns=[]]
      * @returns {Array<Function>}|DataTable}
      */
-    public columns ();
-    public columns (columns): this;
+    public columns (): ColumnSpec[];
+    public columns (columns: ColumnSpec[]): this;
     public columns (columns?) {
         if (!arguments.length) {
             return this._columns;
@@ -400,8 +411,8 @@ export class DataTable extends BaseMixin {
      * @param {Function} [sortBy=identity function]
      * @returns {Function|DataTable}
      */
-    public sortBy ();
-    public sortBy (sortBy): this;
+    public sortBy (): BaseAccessor<any>;
+    public sortBy (sortBy: BaseAccessor<any>): this;
     public sortBy (sortBy?) {
         if (!arguments.length) {
             return this._sortBy;
@@ -420,8 +431,8 @@ export class DataTable extends BaseMixin {
      * @param {Function} [order=d3.ascending]
      * @returns {Function|DataTable}
      */
-    public order ();
-    public order (order): this;
+    public order (): CompareFn;
+    public order (order: CompareFn): this;
     public order (order?) {
         if (!arguments.length) {
             return this._order;
@@ -439,8 +450,8 @@ export class DataTable extends BaseMixin {
      * @param {Boolean} [showSections=true]
      * @returns {Boolean|DataTable}
      */
-    public showSections ();
-    public showSections (showSections): this;
+    public showSections (): boolean;
+    public showSections (showSections: boolean): this;
     public showSections (showSections?) {
         if (!arguments.length) {
             return this._showSections;
@@ -454,8 +465,8 @@ export class DataTable extends BaseMixin {
      * @param {Boolean} [showSections=true]
      * @returns {Boolean|DataTable}
      */
-    public showGroups ();
-    public showGroups (showSections): this;
+    public showGroups (): boolean;
+    public showGroups (showSections: boolean): this;
     public showGroups (showSections?) {
         logger.warnOnce('consider using dataTable.showSections instead of dataTable.showGroups for clarity');
         if (!arguments.length) {

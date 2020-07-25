@@ -62,38 +62,38 @@ export const pluck = function (n, f?) {
  * @type {{}}
  */
 export const utils: IUtils = {
-    _toTimeFunc(t): any {
-    }, add(l, r, t?): Date {
+    _toTimeFunc (t): any {
+    }, add (l, r, t?): Date {
         return undefined;
-    }, allChildren(node): any[] {
+    }, allChildren (node): any[] {
         return [];
-    }, appendOrSelect(parent, selector, tag?): any {
-    }, arraysEqual(a1, a2): any {
-    }, arraysIdentical(a, b): boolean {
+    }, appendOrSelect (parent, selector, tag?): any {
+    }, arraysEqual (a1, a2): any {
+    }, arraysIdentical (a, b): boolean {
         return false;
-    }, clamp(val, min, max): any {
-    }, constant(x): () => any {
+    }, clamp (val, min, max): any {
+    }, constant (x): () => any {
         return function () {
         };
-    }, getAncestors(node): any[] {
+    }, getAncestors (node): any[] {
         return [];
-    }, isFloat(n): boolean {
+    }, isFloat (n): boolean {
         return false;
-    }, isInteger(n): boolean {
+    }, isInteger (n): boolean {
         return false;
-    }, isNegligible(n): boolean {
+    }, isNegligible (n): boolean {
         return false;
-    }, isNumber(n): boolean {
+    }, isNumber (n): boolean {
         return false;
-    }, nameToId(name): string {
+    }, nameToId (name): string {
         return '';
-    }, printSingleValue: undefined, safeNumber(n): number {
+    }, printSingleValue: undefined, safeNumber (n): number {
         return 0;
-    }, subtract(l, r, t?): Date {
+    }, subtract (l, r, t?): Date {
         return undefined;
-    }, toHierarchy(list, accessor): { children: any[]; key: string } {
+    }, toHierarchy (list, accessor): { children: any[]; key: string } {
         return {children: [], key: ''};
-    }, uniqueId(): number {
+    }, uniqueId (): number {
         return 0;
     }
 };

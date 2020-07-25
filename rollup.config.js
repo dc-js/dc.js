@@ -47,7 +47,7 @@ const umdMinConf = Object.assign({}, umdConf, {file: 'dist/dc.min.js'});
 
 export default [
     {
-        input: 'src/index-with-version.ts',
+        input: 'src/compat/index-compat.ts',
         external: Object.keys(d3Modules),
         plugins: [
             terser({include: [/^.+\.min\.js$/]}),

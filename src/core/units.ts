@@ -1,4 +1,5 @@
 import {utils} from './utils';
+import {Units} from './types';
 
 /**
  * @namespace units
@@ -20,7 +21,7 @@ export const units: any = {};
  * @param {Number} end
  * @returns {Number}
  */
-units.integers = function (start, end) {
+units.integers = function (start: number, end: number): number {
     return Math.abs(end - start);
 };
 
@@ -43,7 +44,7 @@ units.integers = function (start, end) {
  * chart.xUnits(units.ordinal)
  *      .x(d3.scaleOrdinal())
  */
-units.ordinal = function () {
+units.ordinal = function (start, end): number {
     throw new Error('dc.units.ordinal should not be called - it is a placeholder');
 };
 
@@ -71,8 +72,8 @@ units.fp = {};
  * @param {Number} precision
  * @returns {Function} start-end unit function
  */
-units.fp.precision = function (precision) {
-    const _f = function (s, e) {
+units.fp.precision = function (precision: number): Units {
+    const _f: Units = function (s: number, e:number): number {
         const d = Math.abs((e - s) / _f.resolution);
         if (utils.isNegligible(d - Math.floor(d))) {
             return Math.floor(d);

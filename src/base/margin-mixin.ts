@@ -1,4 +1,5 @@
 import {BaseMixin} from './base-mixin';
+import {Margins} from '../core/types';
 
 /**
  * Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
@@ -8,12 +9,12 @@ import {BaseMixin} from './base-mixin';
  * @returns {MarginMixin}
  */
 export class MarginMixin extends BaseMixin {
-    private _margin: { top: number; left: number; bottom: number; right: number };
+    private _margins: Margins;
 
     constructor () {
         super();
 
-        this._margin = {top: 10, right: 50, bottom: 30, left: 30};
+        this._margins = {top: 10, right: 50, bottom: 30, left: 30};
     }
 
     /**
@@ -28,13 +29,13 @@ export class MarginMixin extends BaseMixin {
      * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
      * @returns {{top: Number, right: Number, left: Number, bottom: Number}|MarginMixin}
      */
-    public margins ();
-    public margins (margins): this;
+    public margins (): Margins;
+    public margins (margins: Margins): this;
     public margins (margins?) {
         if (!arguments.length) {
-            return this._margin;
+            return this._margins;
         }
-        this._margin = margins;
+        this._margins = margins;
         return this;
     }
 

@@ -1,3 +1,5 @@
+// TODO: convert this to a class so that events is an Object of that class
+
 interface IEvents {
     current: () => void;
     trigger: ((closure: () => void, delay?:number) => void);

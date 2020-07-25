@@ -1,15 +1,16 @@
 import {scaleBand} from 'd3-scale';
 import {select} from 'd3-selection';
-import {min, max} from 'd3-array';
+import {max, min} from 'd3-array';
 
 import {d3Box} from '../base/d3.box'
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {units} from '../core/units';
 import {utils} from '../core/utils';
+import {BoxWidthFn, ChartParentType, DCBrushSelection, NumberFormatFn, SVGGElementSelection} from '../core/types';
 
 // Returns a function to compute the interquartile range.
-function defaultWhiskersIQR (k) {
+function defaultWhiskersIQR (k: number): (d) => [number, number] {
     return d => {
         const q1 = d.quartiles[0];
         const q3 = d.quartiles[2];
@@ -42,18 +43,17 @@ function defaultWhiskersIQR (k) {
  */
 export class BoxPlot extends CoordinateGridMixin {
     private _whiskerIqrFactor: number;
-    private _whiskersIqr;
-    private _whiskers;
+    private _whiskersIqr: (k: number) => ((d) => [number, number]);
+    private _whiskers: (d) => [number, number];
     private _box;
-    private _tickFormat;
+    private _tickFormat: NumberFormatFn;
     private _renderDataPoints: boolean;
     private _dataOpacity: number;
     private _dataWidthPortion: number;
     private _showOutliers: boolean;
     private _boldOutlier: boolean;
     private _yRangePadding: number;
-    private _boxWidth;
-    private _calculatedBoxWidth;
+    private _boxWidth: BoxWidthFn;
 
     /**
      * Create a BoxP lot.
@@ -69,7 +69,7 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._whiskerIqrFactor = 1.5;
@@ -125,8 +125,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [padding=0.8]
      * @returns {Number|BoxPlot}
      */
-    public boxPadding ();
-    public boxPadding (padding): this;
+    public boxPadding (): number;
+    public boxPadding (padding: number): this;
     public boxPadding (padding?) {
         if (!arguments.length) {
             return this._rangeBandPadding();
@@ -141,8 +141,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [padding=0.5]
      * @returns {Number|BoxPlot}
      */
-    public outerPadding ();
-    public outerPadding (padding): this;
+    public outerPadding (): number;
+    public outerPadding (padding: number): this;
     public outerPadding (padding?) {
         if (!arguments.length) {
             return this._outerRangeBandPadding();
@@ -162,8 +162,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number|Function} [boxWidth=0.5]
      * @returns {Number|Function|BoxPlot}
      */
-    public boxWidth ();
-    public boxWidth (boxWidth): this;
+    public boxWidth (): BoxWidthFn;
+    public boxWidth (boxWidth: BoxWidthFn): this;
     public boxWidth (boxWidth?) {
         if (!arguments.length) {
             return this._boxWidth;
@@ -172,22 +172,22 @@ export class BoxPlot extends CoordinateGridMixin {
         return this;
     }
 
-    public _boxTransform (d, i) {
+    public _boxTransform (d, i: number): string {
         const xOffset = this.x()(this.keyAccessor()(d, i));
         return `translate(${xOffset}, 0)`;
     }
 
-    public _preprocessData () {
+    public _preprocessData (): void {
         if (this.elasticX()) {
             this.x().domain([]);
         }
     }
 
-    public plotData () {
-        this._calculatedBoxWidth = this._boxWidth(this.effectiveWidth(), this.xUnitCount());
+    public plotData (): void {
+        const calculatedBoxWidth: number = this._boxWidth(this.effectiveWidth(), this.xUnitCount());
 
         this._box.whiskers(this._whiskers)
-            .width(this._calculatedBoxWidth)
+            .width(calculatedBoxWidth)
             .height(this.effectiveHeight())
             .value(this.valueAccessor())
             .domain(this.y().domain())
@@ -200,17 +200,17 @@ export class BoxPlot extends CoordinateGridMixin {
             .showOutliers(this._showOutliers)
             .boldOutlier(this._boldOutlier);
 
-        const boxesG = this.chartBodyG().selectAll('g.box').data(this.data(), this.keyAccessor());
+        const boxesG: SVGGElementSelection = this.chartBodyG().selectAll('g.box').data(this.data(), this.keyAccessor());
 
-        const boxesGEnterUpdate = this._renderBoxes(boxesG);
+        const boxesGEnterUpdate: SVGGElementSelection = this._renderBoxes(boxesG);
         this._updateBoxes(boxesGEnterUpdate);
         this._removeBoxes(boxesG);
 
         this.fadeDeselectedArea(this.filter());
     }
 
-    public _renderBoxes (boxesG) {
-        const boxesGEnter = boxesG.enter().append('g');
+    public _renderBoxes (boxesG: SVGGElementSelection) {
+        const boxesGEnter: SVGGElementSelection = boxesG.enter().append('g');
 
         boxesGEnter
             .attr('class', 'box')
@@ -223,7 +223,7 @@ export class BoxPlot extends CoordinateGridMixin {
         return boxesGEnter.merge(boxesG);
     }
 
-    public _updateBoxes (boxesG) {
+    public _updateBoxes (boxesG: SVGGElementSelection) {
         const chart = this;
         transition(boxesG, this.transitionDuration(), this.transitionDelay())
             .attr('transform', (d, i) => this._boxTransform(d, i))
@@ -235,23 +235,23 @@ export class BoxPlot extends CoordinateGridMixin {
             });
     }
 
-    public _removeBoxes (boxesG) {
+    public _removeBoxes (boxesG: SVGGElementSelection): void {
         boxesG.exit().remove().call(this._box);
     }
 
-    public _minDataValue () {
+    public _minDataValue (): number {
         return min(this.data(), e => min<number>(this.valueAccessor()(e)));
     }
 
-    public _maxDataValue () {
+    public _maxDataValue (): number {
         return max(this.data(), e => max<number>(this.valueAccessor()(e)));
     }
 
-    public _yAxisRangeRatio () {
+    public _yAxisRangeRatio (): number {
         return ((this._maxDataValue() - this._minDataValue()) / this.effectiveHeight());
     }
 
-    public fadeDeselectedArea (brushSelection) {
+    public fadeDeselectedArea (brushSelection: DCBrushSelection): void {
         const chart = this;
         if (this.hasFilter()) {
             if (this.isOrdinal()) {
@@ -284,18 +284,18 @@ export class BoxPlot extends CoordinateGridMixin {
         }
     }
 
-    public isSelectedNode (d) {
+    public isSelectedNode (d): boolean {
         return this.hasFilter(this.keyAccessor()(d));
     }
 
-    public yAxisMin () {
+    public yAxisMin (): number {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return utils.subtract(this._minDataValue() - padding, this.yAxisPadding());
+        return utils.subtract(this._minDataValue() - padding, this.yAxisPadding()) as number;
     }
 
-    public yAxisMax () {
+    public yAxisMax (): number {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return utils.add(this._maxDataValue() + padding, this.yAxisPadding());
+        return utils.add(this._maxDataValue() + padding, this.yAxisPadding()) as number;
     }
 
     /**
@@ -307,8 +307,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Function} [tickFormat]
      * @returns {Number|Function|BoxPlot}
      */
-    public tickFormat ();
-    public tickFormat (tickFormat): this;
+    public tickFormat (): NumberFormatFn;
+    public tickFormat (tickFormat: NumberFormatFn): this;
     public tickFormat (tickFormat?) {
         if (!arguments.length) {
             return this._tickFormat;
@@ -326,8 +326,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Function} [yRangePadding = 8]
      * @returns {Number|Function|BoxPlot}
      */
-    public yRangePadding ();
-    public yRangePadding (yRangePadding): this;
+    public yRangePadding (): number;
+    public yRangePadding (yRangePadding: number): this;
     public yRangePadding (yRangePadding?) {
         if (!arguments.length) {
             return this._yRangePadding;
@@ -344,8 +344,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Boolean} [show=false]
      * @returns {Boolean|BoxPlot}
      */
-    public renderDataPoints ();
-    public renderDataPoints (show): this;
+    public renderDataPoints (): boolean;
+    public renderDataPoints (show: boolean): this;
     public renderDataPoints (show?) {
         if (!arguments.length) {
             return this._renderDataPoints;
@@ -362,8 +362,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [opacity=0.3]
      * @returns {Number|BoxPlot}
      */
-    public dataOpacity ();
-    public dataOpacity (opacity): this;
+    public dataOpacity (): number;
+    public dataOpacity (opacity: number): this;
     public dataOpacity (opacity?) {
         if (!arguments.length) {
             return this._dataOpacity;
@@ -380,8 +380,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Number} [percentage=0.8]
      * @returns {Number|BoxPlot}
      */
-    public dataWidthPortion ();
-    public dataWidthPortion (percentage): this;
+    public dataWidthPortion (): number;
+    public dataWidthPortion (percentage: number): this;
     public dataWidthPortion (percentage?) {
         if (!arguments.length) {
             return this._dataWidthPortion;
@@ -398,8 +398,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Boolean} [show=true]
      * @returns {Boolean|BoxPlot}
      */
-    public showOutliers ();
-    public showOutliers (show): this;
+    public showOutliers (): boolean;
+    public showOutliers (show: boolean): this;
     public showOutliers (show?) {
         if (!arguments.length) {
             return this._showOutliers;
@@ -416,8 +416,8 @@ export class BoxPlot extends CoordinateGridMixin {
      * @param {Boolean} [show=false]
      * @returns {Boolean|BoxPlot}
      */
-    public boldOutlier ();
-    public boldOutlier (show): this;
+    public boldOutlier (): boolean;
+    public boldOutlier (show: boolean): this;
     public boldOutlier (show?) {
         if (!arguments.length) {
             return this._boldOutlier;

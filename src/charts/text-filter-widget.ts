@@ -1,7 +1,8 @@
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {redrawAll} from '../core/chart-registry';
+import {BaseAccessor, ChartParentType} from '../core/types';
+import {Selection} from 'd3-selection';
 
 const INPUT_CSS_CLASS = 'dc-text-filter-input';
 
@@ -17,9 +18,9 @@ const INPUT_CSS_CLASS = 'dc-text-filter-input';
  */
 export class TextFilterWidget extends BaseMixin {
     private _normalize: (s) => string;
-    private _filterFunctionFactory: (query) => (d) => boolean;
+    private _filterFunctionFactory: (query) => BaseAccessor<boolean>;
     private _placeHolder: string;
-    private _input: any;
+    private _input: Selection<HTMLInputElement, any, any, any>;
 
     /**
      * Create Text Filter widget
@@ -41,7 +42,7 @@ export class TextFilterWidget extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._normalize = s => s.toLowerCase();
@@ -53,6 +54,7 @@ export class TextFilterWidget extends BaseMixin {
 
         this._placeHolder = 'search';
 
+        // @ts-ignore, signature is different in BaseMixin
         this.group(() => {
             throw new Error('the group function on textFilterWidget should never be called, please report the issue');
         });
@@ -60,7 +62,7 @@ export class TextFilterWidget extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public _doRender () {
+    public _doRender (): this {
         this.select('input').remove();
 
         this._input = this.root().append('input')
@@ -70,7 +72,7 @@ export class TextFilterWidget extends BaseMixin {
         this._input.on('input', function () {
             chart.dimension().filterFunction(chart._filterFunctionFactory(this.value));
             events.trigger(() => {
-                this.redrawGroup();
+                chart.redrawGroup();
             }, constants.EVENT_DELAY);
         });
 
@@ -79,7 +81,7 @@ export class TextFilterWidget extends BaseMixin {
         return this;
     }
 
-    public _doRedraw () {
+    public _doRedraw (): this {
         this.root().selectAll('input')
             .attr('placeholder', this._placeHolder);
 
@@ -96,8 +98,8 @@ export class TextFilterWidget extends BaseMixin {
      * @param {function} [normalize]
      * @returns {TextFilterWidget|function}
      */
-    public normalize ();
-    public normalize (normalize): this;
+    public normalize (): (s) => string;
+    public normalize (normalize: (s) => string): this;
     public normalize (normalize?) {
         if (!arguments.length) {
             return this._normalize;
@@ -114,8 +116,8 @@ export class TextFilterWidget extends BaseMixin {
      * @param {function} [placeHolder='search']
      * @returns {TextFilterWidget|string}
      */
-    public placeHolder ();
-    public placeHolder (placeHolder): this;
+    public placeHolder (): string;
+    public placeHolder (placeHolder: string): this;
     public placeHolder (placeHolder?) {
         if (!arguments.length) {
             return this._placeHolder;
@@ -138,8 +140,8 @@ export class TextFilterWidget extends BaseMixin {
      * @param {function} [filterFunctionFactory]
      * @returns {TextFilterWidget|function}
      */
-    public filterFunctionFactory ();
-    public filterFunctionFactory (filterFunctionFactory): this;
+    public filterFunctionFactory (): (query) => BaseAccessor<boolean>;
+    public filterFunctionFactory (filterFunctionFactory: (query) => BaseAccessor<boolean>): this;
     public filterFunctionFactory (filterFunctionFactory?) {
         if (!arguments.length) {
             return this._filterFunctionFactory;

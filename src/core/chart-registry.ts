@@ -1,5 +1,6 @@
 import {constants} from './constants';
 import {config} from './config';
+import {BaseMixin} from '../base/base-mixin';
 
 /**
  * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
@@ -13,14 +14,14 @@ import {config} from './config';
  * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  */
 class ChartRegistry {
-    private _chartMap: {};
+    private _chartMap: {[group: string]: BaseMixin[]};
 
     constructor () {
         // chartGroup:string => charts:array
         this._chartMap = {};
     }
 
-    public _initializeChartGroup (group) {
+    public _initializeChartGroup (group?: string): string {
         if (!group) {
             group = constants.DEFAULT_CHART_GROUP;
         }
@@ -37,7 +38,7 @@ class ChartRegistry {
      * @param {Object} chart dc.js chart instance
      * @returns {Boolean}
      */
-    public has (chart) {
+    public has (chart: BaseMixin): boolean {
         for (const e in this._chartMap) {
             if ((this._chartMap)[e].indexOf(chart) >= 0) {
                 return true;
@@ -53,7 +54,7 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @return {undefined}
      */
-    public register (chart, group) {
+    public register (chart: BaseMixin, group: string): void {
         const _chartMap = this._chartMap;
         group = this._initializeChartGroup(group);
         _chartMap[group].push(chart);
@@ -66,7 +67,7 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @return {undefined}
      */
-    public deregister (chart, group) {
+    public deregister (chart: BaseMixin, group: string): void {
         group = this._initializeChartGroup(group);
         for (let i = 0; i < (this._chartMap)[group].length; i++) {
             if ((this._chartMap)[group][i].anchorName() === chart.anchorName()) {
@@ -81,7 +82,7 @@ class ChartRegistry {
      * @param {String} group Group name
      * @return {undefined}
      */
-    public clear (group) {
+    public clear (group: string): void {
         if (group) {
             delete (this._chartMap)[group];
         } else {
@@ -95,7 +96,7 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @returns {Array<Object>}
      */
-    public list (group) {
+    public list (group: string): BaseMixin[] {
         group = this._initializeChartGroup(group);
         return (this._chartMap)[group];
     }
@@ -115,9 +116,9 @@ export const chartRegistry = new ChartRegistry();
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export const registerChart = function (chart, group) {
+export function registerChart (chart: BaseMixin, group: string): void {
     chartRegistry.register(chart, group);
-};
+}
 
 /**
  * Remove given chart instance from the given group, creating the group if necessary.
@@ -127,9 +128,9 @@ export const registerChart = function (chart, group) {
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export const deregisterChart = function (chart, group) {
+export function deregisterChart (chart: BaseMixin, group: string): void {
     chartRegistry.deregister(chart, group);
-};
+}
 
 /**
  * Determine if a given chart instance resides in any group in the registry.
@@ -137,9 +138,9 @@ export const deregisterChart = function (chart, group) {
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
-export const hasChart = function (chart) {
+export function hasChart (chart: BaseMixin): boolean {
     return chartRegistry.has(chart);
-};
+}
 
 /**
  * Clear given group if one is provided, otherwise clears all groups.
@@ -158,12 +159,12 @@ export const deregisterAllCharts = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-export const filterAll = function (group) {
+export function filterAll (group: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
     }
-};
+}
 
 /**
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
@@ -172,14 +173,16 @@ export const filterAll = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-export const refocusAll = function (group) {
+export function refocusAll (group: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
+        // @ts-ignore
         if (charts[i].focus) {
+            // @ts-ignore
             charts[i].focus();
         }
     }
-};
+}
 
 /**
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
@@ -188,7 +191,7 @@ export const refocusAll = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-export const renderAll = function (group) {
+export function renderAll (group: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
         charts[i].render();
@@ -197,7 +200,7 @@ export const renderAll = function (group) {
     if (config._renderlet !== null) {
         config._renderlet(group);
     }
-};
+}
 
 /**
  * Redraw all charts belong to the given chart group. If the chart group is not given then only charts
@@ -208,7 +211,7 @@ export const renderAll = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-export const redrawAll = function (group) {
+export function redrawAll (group: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
         charts[i].redraw();
@@ -217,4 +220,4 @@ export const redrawAll = function (group) {
     if (config._renderlet !== null) {
         config._renderlet(group);
     }
-};
+}

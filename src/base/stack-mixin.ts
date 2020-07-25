@@ -3,6 +3,7 @@ import {max, min} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
+import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/types';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -129,6 +130,8 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
+    public group (): MinimalCFGroup;
+    public group (g: MinimalCFGroup, n?: string, f?: BaseAccessor<any>): this;
     public group (g?, n?, f?) {
         if (!arguments.length) {
             return super.group();
@@ -231,8 +234,9 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Function} [titleAccessor]
      * @returns {String|StackMixin}
      */
-    public title ();
-    public title (stackName, titleAccessor?): this;
+    public title (): TitleAccessor;
+    public title (stackName); // TODO: actually TitleAccessor, however conflicts with base class signature
+    public title (stackName, titleAccessor): this;
     public title (stackName?, titleAccessor?) {
         if (!stackName) {
             return super.title();
@@ -304,7 +308,7 @@ export class StackMixin extends CoordinateGridMixin {
         return ordered.map(this.keyAccessor());
     }
 
-    public legendables () {
+    public legendables (): LegendItem[] {
         return this._stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
@@ -313,12 +317,12 @@ export class StackMixin extends CoordinateGridMixin {
         }));
     }
 
-    public isLegendableHidden (d) {
+    public isLegendableHidden (d: LegendItem) {
         const layer = this._findLayerByName(d.name);
         return layer ? !this._visibility(layer) : false;
     }
 
-    public legendToggle (d) {
+    public legendToggle (d: LegendItem) {
         if (this._hidableStacks) {
             if (this.isLegendableHidden(d)) {
                 this.showStack(d.name);

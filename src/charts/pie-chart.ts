@@ -1,12 +1,13 @@
 import {min, sum} from 'd3-array';
-import {arc, Pie, pie} from 'd3-shape';
-import {select} from 'd3-selection';
+import {Arc, arc, DefaultArcObject, Pie, pie} from 'd3-shape';
+import {select, Selection} from 'd3-selection';
 import {interpolate} from 'd3-interpolate';
 
 import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {transition} from '../core/core';
+import {ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -29,13 +30,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     private _labelGroupCssClass: string;
     private _emptyCssClass: string;
     private _emptyTitle: string;
-    private _radius;
-    private _givenRadius;
+    private _radius: number;
+    private _givenRadius: number;
     private _innerRadius: number;
     private _externalRadiusPadding: number;
-    private _g;
-    private _cx;
-    private _cy;
+    private _g: Selection<SVGGElement, any, any, any>;
+    private _cx: number;
+    private _cy: number;
     private _minAngleForLabel: number;
     private _externalLabelRadius;
     private _drawPaths: boolean;
@@ -54,7 +55,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._sliceCssClass = 'pie-slice';
@@ -96,11 +97,11 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [cap]
      * @returns {Number|PieChart}
      */
-    public slicesCap (cap) {
-        return this.cap(cap)
+    public slicesCap (cap?: number): this|number {
+        return this.cap(cap);
     }
 
-    public _doRender () {
+    public _doRender (): this {
         this.resetSvg();
 
         this._g = this.svg()
@@ -115,14 +116,15 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _drawChart () {
+    public _drawChart (): void {
         // set radius from chart size if none given, or if given radius is too large
         const maxRadius = min([this.width(), this.height()]) / 2;
         this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
 
-        const arcs = this._buildArcs();
+        const arcs: Arc<any, DefaultArcObject> = this._buildArcs();
 
-        const pieLayout = this._pieLayout();
+        const pieLayout: Pie<any, any> = this._pieLayout();
+
         let pieData;
         // if we have data...
         if (sum(this.data(), d => this.cappedValueAccessor(d))) {
@@ -136,13 +138,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
 
         if (this._g) {
-            const slices = this._g.select(`g.${this._sliceGroupCssClass}`)
-                .selectAll(`g.${this._sliceCssClass}`)
+            const slices: SVGGElementSelection = this._g.select<SVGGElement>(`g.${this._sliceGroupCssClass}`)
+                .selectAll<SVGGElement, any>(`g.${this._sliceCssClass}`)
                 .data(pieData);
 
-            const labels = this._g.select(`g.${this._labelGroupCssClass}`)
-                .selectAll(`text.${this._labelCssClass}`)
-                .data(pieData);
+            const labels = this._g.select<SVGGElement>(`g.${this._labelGroupCssClass}`)
+                .selectAll<SVGTextElement, any>(`text.${this._labelCssClass}`)
+                .data<any>(pieData);
 
             this._removeElements(slices, labels);
 
@@ -157,7 +159,11 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    public _createElements (slices, labels, arcs, pieData) {
+    public _createElements (slices: SVGGElementSelection,
+                            labels: Selection<SVGTextElement, any, SVGGElement, any>,
+                            arcs: Arc<any, DefaultArcObject>,
+                            pieData) {
+
         const slicesEnter = this._createSliceNodes(slices);
 
         this._createSlicePath(slicesEnter, arcs);
@@ -167,14 +173,14 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._createLabels(labels, pieData, arcs);
     }
 
-    public _createSliceNodes (slices) {
+    public _createSliceNodes (slices: SVGGElementSelection): SVGGElementSelection {
         return slices
             .enter()
             .append('g')
             .attr('class', (d, i) => `${this._sliceCssClass} _${i}`);
     }
 
-    public _createSlicePath (slicesEnter, arcs) {
+    public _createSlicePath (slicesEnter: SVGGElementSelection, arcs: Arc<any, DefaultArcObject>): void {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', (d, i) => this._onClick(d, i))
@@ -189,13 +195,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    public _createTitles (slicesEnter) {
+    private _createTitles (slicesEnter: SVGGElementSelection): void {
         if (this.renderTitle()) {
             slicesEnter.append('title').text(d => this.title()(d.data));
         }
     }
 
-    public _applyLabelText (labels) {
+    private _applyLabelText (labels: Selection<SVGTextElement, any, SVGGElement, any>): void {
         labels
             .text(d => {
                 const data = d.data;
@@ -206,19 +212,19 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             });
     }
 
-    public _positionLabels (labels, arcs) {
+    private _positionLabels (labels: Selection<SVGTextElement, any, SVGGElement, any>, arcs: Arc<any, DefaultArcObject>): void {
         this._applyLabelText(labels);
         transition(labels, this.transitionDuration(), this.transitionDelay())
             .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle');
     }
 
-    public _highlightSlice (i, whether) {
+    private _highlightSlice (i: number, whether): void {
         this.select(`g.pie-slice._${i}`)
             .classed('highlight', whether);
     }
 
-    public _createLabels (labels, pieData, arcs) {
+    private _createLabels (labels: Selection<SVGTextElement, any, SVGGElement, any>, pieData, arcs: Arc<any, DefaultArcObject>) {
         if (this.renderLabel()) {
             const labelsEnter = labels
                 .enter()
@@ -244,8 +250,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    public _updateLabelPaths (pieData, arcs) {
-        let polyline = this._g.selectAll(`polyline.${this._sliceCssClass}`)
+    private _updateLabelPaths (pieData, arcs: { centroid: (arg0: any) => any; }): void {
+        let polyline = this._g.selectAll<SVGPolylineElement, any>(`polyline.${this._sliceCssClass}`)
             .data(pieData);
 
         polyline.exit().remove();
@@ -287,13 +293,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     }
 
-    public _updateElements (pieData, arcs) {
+    private _updateElements (pieData: any, arcs: Arc<any, DefaultArcObject>): void {
         this._updateSlicePaths(pieData, arcs);
         this._updateLabels(pieData, arcs);
         this._updateTitles(pieData);
     }
 
-    public _updateSlicePaths (pieData, arcs) {
+    private _updateSlicePaths (pieData, arcs: Arc<any, DefaultArcObject>) {
         const slicePaths = this._g.selectAll(`g.${this._sliceCssClass}`)
             .data(pieData)
             .select('path')
@@ -308,9 +314,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
 
-    public _updateLabels (pieData, arcs) {
+    public _updateLabels (pieData, arcs: Arc<any, DefaultArcObject>): void {
         if (this.renderLabel()) {
-            const labels = this._g.selectAll(`text.${this._labelCssClass}`)
+            const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._labelCssClass}`)
                 .data(pieData);
             this._positionLabels(labels, arcs);
             if (this._externalLabelRadius && this._drawPaths) {
@@ -321,19 +327,19 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     public _updateTitles (pieData) {
         if (this.renderTitle()) {
-            this._g.selectAll(`g.${this._sliceCssClass}`)
-                .data(pieData)
+            this._g.selectAll<SVGGElement, any>(`g.${this._sliceCssClass}`)
+                .data<any>(pieData)
                 .select('title')
                 .text(d => this.title()(d.data));
         }
     }
 
-    public _removeElements (slices, labels) {
+    public _removeElements (slices: SVGGElementSelection, labels: Selection<SVGTextElement, any, SVGGElement, any>) {
         slices.exit().remove();
         labels.exit().remove();
     }
 
-    public _highlightFilter () {
+    private _highlightFilter (): void {
         const chart = this;
         if (this.hasFilter()) {
             this.selectAll(`g.${this._sliceCssClass}`).each(function (d) {
@@ -356,8 +362,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [externalRadiusPadding=0]
      * @returns {Number|PieChart}
      */
-    public externalRadiusPadding ();
-    public externalRadiusPadding (externalRadiusPadding): this;
+    public externalRadiusPadding (): number;
+    public externalRadiusPadding (externalRadiusPadding: number): this;
     public externalRadiusPadding (externalRadiusPadding?) {
         if (!arguments.length) {
             return this._externalRadiusPadding;
@@ -372,8 +378,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [innerRadius=0]
      * @returns {Number|PieChart}
      */
-    public innerRadius ();
-    public innerRadius (innerRadius): this;
+    public innerRadius (): number;
+    public innerRadius (innerRadius: number): this;
     public innerRadius (innerRadius?) {
         if (!arguments.length) {
             return this._innerRadius;
@@ -388,8 +394,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [radius]
      * @returns {Number|PieChart}
      */
-    public radius ();
-    public radius (radius): this;
+    public radius (): number;
+    public radius (radius: number): this;
     public radius (radius?) {
         if (!arguments.length) {
             return this._givenRadius;
@@ -403,8 +409,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [cx]
      * @returns {Number|PieChart}
      */
-    public cx ();
-    public cx (cx): this;
+    public cx (): number;
+    public cx (cx: number): this;
     public cx (cx?) {
         if (!arguments.length) {
             return (this._cx || this.width() / 2);
@@ -418,8 +424,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [cy]
      * @returns {Number|PieChart}
      */
-    public cy ();
-    public cy (cy): this;
+    public cy (): number;
+    public cy (cy: number): this;
     public cy (cy?) {
         if (!arguments.length) {
             return (this._cy || this.height() / 2);
@@ -428,17 +434,17 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _buildArcs () {
+    public _buildArcs (): Arc<any, DefaultArcObject> {
         return arc()
             .outerRadius(this._radius - this._externalRadiusPadding)
             .innerRadius(this._innerRadius);
     }
 
-    public _isSelectedSlice (d) {
+    public _isSelectedSlice (d): boolean {
         return this.hasFilter(this.cappedKeyAccessor(d.data));
     }
 
-    public _doRedraw () {
+    public _doRedraw (): this {
         this._drawChart();
         return this;
     }
@@ -449,8 +455,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [minAngleForLabel=0.5]
      * @returns {Number|PieChart}
      */
-    public minAngleForLabel ();
-    public minAngleForLabel (minAngleForLabel): this;
+    public minAngleForLabel (): number;
+    public minAngleForLabel (minAngleForLabel: number): this;
     public minAngleForLabel (minAngleForLabel?) {
         if (!arguments.length) {
             return this._minAngleForLabel;
@@ -459,35 +465,35 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _pieLayout () {
+    public _pieLayout (): Pie<any, any> {
         // The 2nd argument is type of datum that will be used. TODO: revisit after refactoring.
         return pie().sort(null).value(d => this.cappedValueAccessor(d)) as Pie<any, any>;
     }
 
-    public _sliceTooSmall (d) {
+    public _sliceTooSmall (d): boolean {
         const angle = (d.endAngle - d.startAngle);
         return isNaN(angle) || angle < this._minAngleForLabel;
     }
 
-    public _sliceHasNoData (d) {
+    public _sliceHasNoData (d): boolean {
         return this.cappedValueAccessor(d) === 0;
     }
 
-    public _isOffCanvas (current) {
+    public _isOffCanvas (current): boolean {
         return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    public _fill (d, i) {
+    public _fill (d, i: number): string {
         return this.getColor(d.data, i);
     }
 
-    public _onClick (d, i) {
+    public _onClick (d, i: number): void {
         if (this._g.attr('class') !== this._emptyCssClass) {
             this.onClick(d.data, i);
         }
     }
 
-    public _safeArc (d, i, _arc) {
+    public _safeArc (d, i: number, _arc: Arc<any, DefaultArcObject>): string {
         let path = _arc(d, i);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
@@ -500,8 +506,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {String} [title]
      * @returns {String|PieChart}
      */
-    public emptyTitle ();
-    public emptyTitle (title): this;
+    public emptyTitle (): string;
+    public emptyTitle (title: string): this;
     public emptyTitle (title?) {
         if (arguments.length === 0) {
             return this._emptyTitle;
@@ -517,12 +523,12 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Number} [externalLabelRadius]
      * @returns {Number|PieChart}
      */
-    public externalLabels ();
-    public externalLabels (externalLabelRadius): this;
+    public externalLabels (): number;
+    public externalLabels (externalLabelRadius: number): this;
     public externalLabels (externalLabelRadius?) {
         if (arguments.length === 0) {
             return this._externalLabelRadius;
-        } else if (externalLabelRadius) {
+        } else if (externalLabelRadius) { // TODO: figure out why there is special handling, do we need it?
             this._externalLabelRadius = externalLabelRadius;
         } else {
             this._externalLabelRadius = undefined;
@@ -537,8 +543,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {Boolean} [drawPaths]
      * @returns {Boolean|PieChart}
      */
-    public drawPaths ();
-    public drawPaths (drawPaths): this;
+    public drawPaths (): boolean;
+    public drawPaths (drawPaths: boolean): this;
     public drawPaths (drawPaths?) {
         if (arguments.length === 0) {
             return this._drawPaths;
@@ -547,8 +553,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _labelPosition (d, _arc) {
-        let centroid;
+    private _labelPosition (d, _arc: Arc<any, DefaultArcObject>) {
+        let centroid: number[];
         if (this._externalLabelRadius) {
             centroid = arc()
                 .outerRadius(this._radius - this._externalRadiusPadding + this._externalLabelRadius)
@@ -564,7 +570,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    public legendables () {
+    public legendables (): LegendItem[] {
         return this.data().map((d, i) => {
             const legendable:{[key: string]: any} = {name: d.key, data: d.value, others: d.others, chart: this};
             legendable.color = this.getColor(d, i);
@@ -572,27 +578,27 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    public legendHighlight (d) {
+    public legendHighlight (d: LegendItem) {
         this._highlightSliceFromLegendable(d, true);
     }
 
-    public legendReset (d) {
+    public legendReset (d: LegendItem) {
         this._highlightSliceFromLegendable(d, false);
     }
 
-    public legendToggle (d) {
+    public legendToggle (d: LegendItem) {
         this.onClick({key: d.name, others: d.others});
     }
 
-    public _highlightSliceFromLegendable (legendable, highlighted) {
-        this.selectAll('g.pie-slice').each(function (d) {
+    private _highlightSliceFromLegendable (legendable: LegendItem, highlighted: boolean): void {
+        this.selectAll<SVGGElement, any>('g.pie-slice').each(function (d) {
             if (legendable.name === d.data.key) {
                 select(this).classed('highlight', highlighted);
             }
         });
     }
 
-    public _tweenPie (b, element) {
+    private _tweenPie (b, element) {
         b.innerRadius = this._innerRadius;
         let current = element._current;
         if (this._isOffCanvas(current)) {
@@ -605,8 +611,6 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         element._current = i(0);
         return t => this._safeArc(i(t), 0, this._buildArcs());
     }
-
-
 }
 
 export const pieChart = (parent, chartGroup) => new PieChart(parent, chartGroup);

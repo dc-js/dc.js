@@ -1,8 +1,10 @@
-import {ascending, Primitive} from 'd3-array';
+import {ascending} from 'd3-array';
 import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
+import {BaseAccessor, ChartParentType, CompareFn, GroupingFn} from '../core/types';
+import {Selection} from 'd3-selection';
 
 const LABEL_CSS_CLASS = 'dc-grid-label';
 const ITEM_CSS_CLASS = 'dc-grid-item';
@@ -22,14 +24,14 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  * @mixes BaseMixin
  */
 export class DataGrid extends BaseMixin {
-    private _section;
+    private _section: GroupingFn;
     private _size: number;
-    private _html: (d) => string;
-    private _sortBy: (d) => any;
-    private _order: (a: (Primitive | undefined), b: (Primitive | undefined)) => number;
+    private _html: BaseAccessor<string>;
+    private _sortBy: BaseAccessor<any>;
+    private _order: CompareFn;
     private _beginSlice: number;
-    private _endSlice;
-    private _htmlSection: (d) => string;
+    private _endSlice: number;
+    private _htmlSection: BaseAccessor<string>;
 
     /**
      * Create a Data Grid.
@@ -39,7 +41,7 @@ export class DataGrid extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._section = null;
@@ -71,10 +73,10 @@ export class DataGrid extends BaseMixin {
     }
 
     public _renderSections () {
-        const sections = this.root().selectAll(`div.${GRID_CSS_CLASS}`)
-            .data(this._nestEntries(), d => this.keyAccessor()(d));
+        const sections: Selection<HTMLDivElement, any, Element, any> = this.root().selectAll<HTMLDivElement, any>(`div.${GRID_CSS_CLASS}`)
+            .data<any>(this._nestEntries(), d => this.keyAccessor()(d));
 
-        const itemSection = sections
+        const itemSection: Selection<HTMLDivElement, any, Element, any> = sections
             .enter()
             .append('div')
             .attr('class', GRID_CSS_CLASS);
@@ -101,9 +103,9 @@ export class DataGrid extends BaseMixin {
             );
     }
 
-    public _renderItems (sections) {
-        let items = sections.order()
-            .selectAll(`div.${ITEM_CSS_CLASS}`)
+    public _renderItems (sections: Selection<HTMLDivElement, any, Element, any>) {
+        let items: Selection<HTMLDivElement, unknown, HTMLDivElement, any> = sections.order()
+            .selectAll<HTMLDivElement, any>(`div.${ITEM_CSS_CLASS}`)
             .data(d => d.values);
 
         items.exit().remove();
@@ -135,8 +137,8 @@ export class DataGrid extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataGrid}
      */
-    public section ();
-    public section (section): this;
+    public section (): GroupingFn;
+    public section (section: GroupingFn): this;
     public section (section?) {
         if (!arguments.length) {
             return this._section;
@@ -151,8 +153,11 @@ export class DataGrid extends BaseMixin {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataGrid}
      */
-    public group ();
-    public group (section): this;
+    // @ts-ignore, signature is different in BaseMixin
+    public group (): GroupingFn;
+    // @ts-ignore, signature is different in BaseMixin
+    public group (section: GroupingFn): this;
+    // @ts-ignore, signature is different in BaseMixin
     public group (section?) {
         logger.warnOnce('consider using dataGrid.section instead of dataGrid.group for clarity');
         if (!arguments.length) {
@@ -167,8 +172,8 @@ export class DataGrid extends BaseMixin {
      * @param {Number} [beginSlice=0]
      * @returns {Number|DataGrid}
      */
-    public beginSlice ();
-    public beginSlice (beginSlice): this;
+    public beginSlice (): number;
+    public beginSlice (beginSlice: number): this;
     public beginSlice (beginSlice?) {
         if (!arguments.length) {
             return this._beginSlice;
@@ -183,8 +188,8 @@ export class DataGrid extends BaseMixin {
      * @param {Number} [endSlice]
      * @returns {Number|DataGrid}
      */
-    public endSlice ();
-    public endSlice (endSlice): this;
+    public endSlice (): number;
+    public endSlice (endSlice: number): this;
     public endSlice (endSlice?) {
         if (!arguments.length) {
             return this._endSlice;
@@ -198,8 +203,8 @@ export class DataGrid extends BaseMixin {
      * @param {Number} [size=999]
      * @returns {Number|DataGrid}
      */
-    public size ();
-    public size (size): this;
+    public size (): number;
+    public size (size: number): this;
     public size (size?) {
         if (!arguments.length) {
             return this._size;
@@ -217,8 +222,8 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [html]
      * @returns {Function|DataGrid}
      */
-    public html ();
-    public html (html): this;
+    public html (): BaseAccessor<string>;
+    public html (html: BaseAccessor<string>): this;
     public html (html?) {
         if (!arguments.length) {
             return this._html;
@@ -234,8 +239,8 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [htmlSection]
      * @returns {Function|DataGrid}
      */
-    public htmlSection ();
-    public htmlSection (htmlSection): this;
+    public htmlSection (): BaseAccessor<string>;
+    public htmlSection (htmlSection: BaseAccessor<string>): this;
     public htmlSection (htmlSection?) {
         if (!arguments.length) {
             return this._htmlSection;
@@ -249,8 +254,8 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [htmlSection]
      * @returns {Function|DataGrid}
      */
-    public htmlGroup ();
-    public htmlGroup (htmlSection): this;
+    public htmlGroup (): BaseAccessor<string>;
+    public htmlGroup (htmlSection: BaseAccessor<string>): this;
     public htmlGroup (htmlSection?) {
         logger.warnOnce('consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
         if (!arguments.length) {
@@ -269,8 +274,8 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [sortByFunction]
      * @returns {Function|DataGrid}
      */
-    public sortBy ();
-    public sortBy (sortByFunction): this;
+    public sortBy (): BaseAccessor<any>;
+    public sortBy (sortByFunction: BaseAccessor<any>): this;
     public sortBy (sortByFunction?) {
         if (!arguments.length) {
             return this._sortBy;
@@ -288,8 +293,8 @@ export class DataGrid extends BaseMixin {
      * @param {Function} [order=d3.ascending]
      * @returns {Function|DataGrid}
      */
-    public order ();
-    public order (order): this;
+    public order (): CompareFn;
+    public order (order: CompareFn): this;
     public order (order?) {
         if (!arguments.length) {
             return this._order;

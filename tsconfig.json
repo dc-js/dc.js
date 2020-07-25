@@ -58,5 +58,5 @@
     // "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
   },
   "include": ["./src/**/*.ts"],               /* Only compile files in src, avoids confusion with code in node_modules or compiled code */
-  "exclude": ["./src/index-with-version.ts"]  /* Version info is needed only in the UMD bundle */
+  "exclude": ["./src/index-with-version.ts", "./src/compat/**"]  /* Version info is needed only in the UMD bundle */
 }

@@ -1,11 +1,13 @@
 import {extent} from 'd3-array';
-import {axisBottom} from 'd3-axis';
+import {Axis, axisBottom} from 'd3-axis';
 import {scaleLinear} from 'd3-scale';
 
 import {CapMixin} from '../base/cap-mixin';
 import {MarginMixin} from '../base/margin-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {transition} from '../core/core';
+import {Selection} from 'd3-selection';
+import {ChartParentType, MinimalXYScale, SVGGElementSelection} from '../core/types';
 
 /**
  * Concrete row chart implementation.
@@ -18,22 +20,22 @@ import {transition} from '../core/core';
  * @mixes BaseMixin
  */
 export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
-    private _g;
+    private _g: Selection<SVGGElement, any, any, any>;
     private _labelOffsetX: number;
     private _labelOffsetY: number;
     private _hasLabelOffsetY: boolean;
     private _dyOffset: string;
     private _titleLabelOffsetX: number;
     private _gap: number;
-    private _fixedBarHeight: boolean;
+    private _fixedBarHeight: boolean|number;
     private _rowCssClass: string;
     private _titleRowCssClass: string;
     private _renderTitleLabel: boolean;
-    private _x;
-    private _elasticX;
-    private _xAxis;
-    private _rowData;
-    private rowsCap;
+    private _x: MinimalXYScale;
+    private _elasticX: boolean;
+    private _xAxis: Axis<any>;
+    private _rowData; // This is chart data
+    public rowsCap; // Alias for this.cap
 
     /**
      * Create a Row Chart.
@@ -48,7 +50,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._g = undefined;
@@ -83,7 +85,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    public _calculateAxisScale () {
+    private _calculateAxisScale (): void {
         if (!this._x || this._elasticX) {
             const _extent = extent<any, number>(this._rowData, d => this.cappedValueAccessor(d));
             if (_extent[0] > 0) {
@@ -98,8 +100,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._xAxis.scale(this._x);
     }
 
-    public _drawAxis () {
-        let axisG = this._g.select('g.axis');
+    private _drawAxis (): void {
+        let axisG = this._g.select<SVGGElement>('g.axis');
 
         this._calculateAxisScale();
 
@@ -112,7 +114,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .call(this._xAxis);
     }
 
-    public _doRender () {
+    public _doRender (): this {
         this.resetSvg();
 
         this._g = this.svg()
@@ -131,8 +133,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {d3.scale} [scale]
      * @returns {d3.scale|RowChart}
      */
-    public x ();
-    public x (scale): this;
+    public x (): MinimalXYScale;
+    public x (scale: MinimalXYScale): this;
     public x (scale?) {
         if (!arguments.length) {
             return this._x;
@@ -141,12 +143,12 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this;
     }
 
-    public _drawGridLines () {
-        this._g.selectAll('g.tick')
-            .select('line.grid-line')
+    private _drawGridLines () {
+        this._g.selectAll<SVGGElement, any>('g.tick')
+            .select<SVGLineElement>('line.grid-line')
             .remove();
 
-        this._g.selectAll('g.tick')
+        this._g.selectAll<SVGGElement, any>('g.tick')
             .append('line')
             .attr('class', 'grid-line')
             .attr('x1', 0)
@@ -155,14 +157,14 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .attr('y2', () => -this.effectiveHeight());
     }
 
-    public _drawChart () {
+    private _drawChart () {
         this._rowData = this.data();
 
         this._drawAxis();
         this._drawGridLines();
 
-        let rows = this._g.selectAll(`g.${this._rowCssClass}`)
-            .data(this._rowData);
+        let rows: SVGGElementSelection = this._g.selectAll<SVGGElement, any>(`g.${this._rowCssClass}`)
+            .data<any>(this._rowData);
 
         this._removeElements(rows);
         rows = this._createElements(rows)
@@ -170,8 +172,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._updateElements(rows);
     }
 
-    public _createElements (rows) {
-        const rowEnter = rows.enter()
+    private _createElements (rows: SVGGElementSelection): SVGGElementSelection {
+        const rowEnter: SVGGElementSelection = rows.enter()
             .append('g')
             .attr('class', (d, i) => `${this._rowCssClass} _${i}`);
 
@@ -182,23 +184,23 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return rowEnter;
     }
 
-    public _removeElements (rows) {
+    private _removeElements (rows: SVGGElementSelection): void {
         rows.exit().remove();
     }
 
-    public _rootValue () {
+    private _rootValue (): number {
         const root = this._x(0);
         return (root === -Infinity || root !== root) ? this._x(1) : root;
     }
 
-    public _updateElements (rows) {
+    private _updateElements (rows: SVGGElementSelection): void {
         const n = this._rowData.length;
 
-        let height;
-        if (!this._fixedBarHeight) {
+        let height: number;
+        if (!this._fixedBarHeight) { // It is either false or number
             height = (this.effectiveHeight() - (n + 1) * this._gap) / n;
         } else {
-            height = this._fixedBarHeight;
+            height = this._fixedBarHeight as number;
         }
 
         // vertically align label in center unless they override the value via property setter
@@ -221,14 +223,14 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._updateLabels(rows);
     }
 
-    public _createTitles (rows) {
+    private _createTitles (rows: SVGGElementSelection): void {
         if (this.renderTitle()) {
             rows.select('title').remove();
             rows.append('title').text(this.title());
         }
     }
 
-    public _createLabels (rowEnter) {
+    private _createLabels (rowEnter: SVGGElementSelection): void {
         if (this.renderLabel()) {
             rowEnter.append('text')
                 .on('click', d => this._onClick(d));
@@ -240,7 +242,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         }
     }
 
-    public _updateLabels (rows) {
+    private _updateLabels (rows: SVGGElementSelection): void {
         if (this.renderLabel()) {
             const lab = rows.select('text')
                 .attr('x', this._labelOffsetX)
@@ -249,11 +251,13 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
                 .on('click', d => this._onClick(d))
                 .attr('class', (d, i) => `${this._rowCssClass} _${i}`)
                 .text(d => this.label()(d));
+
             transition(lab, this.transitionDuration(), this.transitionDelay())
                 .attr('transform', d => this._translateX(d));
         }
+
         if (this.renderTitleLabel()) {
-            const titlelab = rows.select(`.${this._titleRowCssClass}`)
+            const titlelab = rows.select<SVGTextElement>(`.${this._titleRowCssClass}`)
                 .attr('x', this.effectiveWidth() - this._titleLabelOffsetX)
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
@@ -261,6 +265,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
                 .on('click', d => this._onClick(d))
                 .attr('class', (d, i) => `${this._titleRowCssClass} _${i}`)
                 .text(d => this.title()(d));
+
             transition(titlelab, this.transitionDuration(), this.transitionDelay())
                 .attr('transform', d => this._translateX(d));
         }
@@ -271,8 +276,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Boolean} [renderTitleLabel=false]
      * @returns {Boolean|RowChart}
      */
-    public renderTitleLabel ();
-    public renderTitleLabel (renderTitleLabel): this;
+    public renderTitleLabel (): boolean;
+    public renderTitleLabel (renderTitleLabel: boolean): this;
     public renderTitleLabel (renderTitleLabel?) {
         if (!arguments.length) {
             return this._renderTitleLabel;
@@ -281,11 +286,11 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this;
     }
 
-    public _onClick (d, i?) {
+    private _onClick (d, i?: number) {
         this.onClick(d, i);
     }
 
-    public _translateX (d) {
+    private _translateX (d): string {
         const x = this._x(this.cappedValueAccessor(d));
         const x0 = this._rootValue();
         const s = x > x0 ? x0 : x;
@@ -313,8 +318,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * chart.xAxis(d3.axisTop())
      * @returns {d3.axis|RowChart}
      */
-    public xAxis ();
-    public xAxis (xAxis): this;
+    public xAxis (): Axis<any>;
+    public xAxis (xAxis: Axis<any>): this;
     public xAxis (xAxis?) {
         if (!arguments.length) {
             return this._xAxis;
@@ -333,8 +338,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Boolean|Number} [fixedBarHeight=false]
      * @returns {Boolean|Number|RowChart}
      */
-    public fixedBarHeight ();
-    public fixedBarHeight (fixedBarHeight): this;
+    public fixedBarHeight (): boolean|number;
+    public fixedBarHeight (fixedBarHeight: boolean|number): this;
     public fixedBarHeight (fixedBarHeight?) {
         if (!arguments.length) {
             return this._fixedBarHeight;
@@ -348,8 +353,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [gap=5]
      * @returns {Number|RowChart}
      */
-    public gap ();
-    public gap (gap): this;
+    public gap (): number;
+    public gap (gap: number): this;
     public gap (gap?) {
         if (!arguments.length) {
             return this._gap;
@@ -364,8 +369,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Boolean} [elasticX]
      * @returns {Boolean|RowChart}
      */
-    public elasticX ();
-    public elasticX (elasticX): this;
+    public elasticX (): boolean;
+    public elasticX (elasticX: boolean): this;
     public elasticX (elasticX?) {
         if (!arguments.length) {
             return this._elasticX;
@@ -379,8 +384,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [labelOffsetX=10]
      * @returns {Number|RowChart}
      */
-    public labelOffsetX ();
-    public labelOffsetX (labelOffsetX): this;
+    public labelOffsetX (): number;
+    public labelOffsetX (labelOffsetX: number): this;
     public labelOffsetX (labelOffsetX?) {
         if (!arguments.length) {
             return this._labelOffsetX;
@@ -394,8 +399,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [labelOffsety=15]
      * @returns {Number|RowChart}
      */
-    public labelOffsetY ();
-    public labelOffsetY (labelOffsety): this;
+    public labelOffsetY (): number;
+    public labelOffsetY (labelOffsety: number): this;
     public labelOffsetY (labelOffsety?) {
         if (!arguments.length) {
             return this._labelOffsetY;
@@ -410,8 +415,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {Number} [titleLabelOffsetX=2]
      * @returns {Number|RowChart}
      */
-    public titleLabelOffsetX ();
-    public titleLabelOffsetX (titleLabelOffsetX): this;
+    public titleLabelOffsetX (): number;
+    public titleLabelOffsetX (titleLabelOffsetX: number): this;
     public titleLabelOffsetX (titleLabelOffsetX?) {
         if (!arguments.length) {
             return this._titleLabelOffsetX;
@@ -420,7 +425,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this;
     }
 
-    public _isSelectedRow (d) {
+    private _isSelectedRow (d): boolean {
         return this.hasFilter(this.cappedKeyAccessor(d));
     }
 }

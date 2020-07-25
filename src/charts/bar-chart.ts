@@ -1,10 +1,11 @@
-import {select} from 'd3-selection';
+import {select, Selection} from 'd3-selection';
 
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
+import {ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 const MIN_BAR_WIDTH = 1;
 const DEFAULT_GAP_BETWEEN_BARS = 2;
@@ -22,7 +23,7 @@ export class BarChart extends StackMixin {
     private _gap: number;
     private _centerBar: boolean;
     private _alwaysUseRounding: boolean;
-    private _barWidth;
+    private _barWidth: number;
 
     /**
      * Create a Bar Chart
@@ -41,7 +42,7 @@ export class BarChart extends StackMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent, chartGroup) {
+    constructor (parent: ChartParentType, chartGroup: string) {
         super();
 
         this._gap = DEFAULT_GAP_BETWEEN_BARS;
@@ -61,20 +62,22 @@ export class BarChart extends StackMixin {
      * @param {Number} [padding=0.5]
      * @returns {Number|BarChart}
      */
-    public outerPadding (padding) {
+    public outerPadding (): number;
+    public outerPadding (padding: number): this;
+    public outerPadding (padding?) {
         if (!arguments.length) {
             return this._outerRangeBandPadding();
         }
         return this._outerRangeBandPadding(padding);
     }
 
-    public rescale () {
+    public rescale (): this {
         super.rescale();
         this._barWidth = undefined;
         return this;
     }
 
-    public render () {
+    public render (): this {
         if (this.round() && this._centerBar && !this._alwaysUseRounding) {
             logger.warn('By default, brush rounding is disabled if bars are centered. ' +
                 'See dc.js bar chart API documentation for details.');
@@ -83,8 +86,8 @@ export class BarChart extends StackMixin {
         return super.render();
     }
 
-    public plotData () {
-        let layers = this.chartBodyG().selectAll('g.stack')
+    public plotData (): void {
+        let layers: SVGGElementSelection = this.chartBodyG().selectAll('g.stack')
             .data(this.data());
 
         this._calculateBarWidth();
@@ -110,11 +113,11 @@ export class BarChart extends StackMixin {
         }
     }
 
-    public _barHeight (d) {
+    public _barHeight (d): number {
         return utils.safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
     }
 
-    public _labelXPos (d) {
+    public _labelXPos (d): number {
         let x = this.x()(d.x);
         if (!this._centerBar) {
             x += this._barWidth / 2;
@@ -125,7 +128,7 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(x);
     }
 
-    public _labelYPos (d) {
+    public _labelYPos (d): number {
         let y = this.y()(d.y + d.y0);
 
         if (d.y < 0) {
@@ -135,11 +138,11 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(y - LABEL_PADDING);
     }
 
-    public _renderLabels (layer, layerIndex, data) {
-        const labels = layer.selectAll('text.barLabel')
+    public _renderLabels (layer: SVGGElementSelection, layerIndex: number, data): void {
+        const labels: Selection<SVGTextElement, unknown, SVGGElement, any> = layer.selectAll<SVGTextElement, any>('text.barLabel')
             .data(data.values, pluck('x'));
 
-        const labelsEnterUpdate = labels
+        const labelsEnterUpdate: Selection<SVGTextElement, unknown, SVGGElement, any> = labels
             .enter()
             .append('text')
             .attr('class', 'barLabel')
@@ -163,8 +166,8 @@ export class BarChart extends StackMixin {
             .remove();
     }
 
-    public _barXPos (d) {
-        let x = this.x()(d.x);
+    public _barXPos (d): number {
+        let x: number = this.x()(d.x);
         if (this._centerBar) {
             x -= this._barWidth / 2;
         }
@@ -174,11 +177,11 @@ export class BarChart extends StackMixin {
         return utils.safeNumber(x);
     }
 
-    public _renderBars (layer, layerIndex, data) {
-        const bars = layer.selectAll('rect.bar')
+    public _renderBars (layer: SVGGElementSelection, layerIndex: number, data): void {
+        const bars: Selection<SVGRectElement, unknown, SVGGElement, any> = layer.selectAll<SVGRectElement, any>('rect.bar')
             .data(data.values, pluck('x'));
 
-        const enter = bars.enter()
+        const enter: Selection<SVGRectElement, unknown, SVGGElement, any> = bars.enter()
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', (d, i) => this.getColor(d, i))
@@ -186,7 +189,7 @@ export class BarChart extends StackMixin {
             .attr('y', this.yAxisHeight())
             .attr('height', 0);
 
-        const barsEnterUpdate = enter.merge(bars);
+        const barsEnterUpdate: Selection<SVGRectElement, unknown, SVGGElement, any> = enter.merge(bars);
 
         if (this.renderTitle()) {
             enter.append('title').text(pluck('data', this.title(data.name)));
@@ -218,7 +221,7 @@ export class BarChart extends StackMixin {
             .remove();
     }
 
-    public _calculateBarWidth () {
+    public _calculateBarWidth (): void {
         if (this._barWidth === undefined) {
             const numberOfBars = this.xUnitCount();
 
@@ -237,8 +240,8 @@ export class BarChart extends StackMixin {
         }
     }
 
-    public fadeDeselectedArea (brushSelection) {
-        const bars = this.chartBodyG().selectAll('rect.bar');
+    public fadeDeselectedArea (brushSelection: DCBrushSelection): void {
+        const bars: Selection<SVGRectElement, any, SVGGElement, any> = this.chartBodyG().selectAll('rect.bar');
 
         if (this.isOrdinal()) {
             if (this.hasFilter()) {
@@ -265,8 +268,8 @@ export class BarChart extends StackMixin {
      * @param {Boolean} [centerBar=false]
      * @returns {Boolean|BarChart}
      */
-    public centerBar ();
-    public centerBar (centerBar): this;
+    public centerBar (): boolean;
+    public centerBar (centerBar: boolean): this;
     public centerBar (centerBar?) {
         if (!arguments.length) {
             return this._centerBar;
@@ -275,7 +278,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    public onClick (d, i?) {
+    public onClick (d, i?): void {
         super.onClick(d.data, i);
     }
 
@@ -287,8 +290,8 @@ export class BarChart extends StackMixin {
      * @param {Number} [barPadding=0]
      * @returns {Number|BarChart}
      */
-    public barPadding ();
-    public barPadding (barPadding): this;
+    public barPadding (): number;
+    public barPadding (barPadding: number): this;
     public barPadding (barPadding?) {
         if (!arguments.length) {
             return this._rangeBandPadding();
@@ -298,7 +301,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    public _useOuterPadding () {
+    public _useOuterPadding (): boolean {
         return this._gap === undefined;
     }
 
@@ -309,8 +312,8 @@ export class BarChart extends StackMixin {
      * @param {Number} [gap=2]
      * @returns {Number|BarChart}
      */
-    public gap ();
-    public gap (gap): this;
+    public gap (): number;
+    public gap (gap: number): this;
     public gap (gap?) {
         if (!arguments.length) {
             return this._gap;
@@ -339,8 +342,8 @@ export class BarChart extends StackMixin {
      * @param {Boolean} [alwaysUseRounding=false]
      * @returns {Boolean|BarChart}
      */
-    public alwaysUseRounding ();
-    public alwaysUseRounding (alwaysUseRounding): this;
+    public alwaysUseRounding (): boolean;
+    public alwaysUseRounding (alwaysUseRounding: boolean): this;
     public alwaysUseRounding (alwaysUseRounding?) {
         if (!arguments.length) {
             return this._alwaysUseRounding;
@@ -349,7 +352,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    public legendHighlight (d) {
+    public legendHighlight (d): void {
         const colorFilter = (color, inv?) => function () {
             const item = select(this);
             const match = item.attr('fill') === color;
@@ -363,17 +366,17 @@ export class BarChart extends StackMixin {
         }
     }
 
-    public legendReset () {
+    public legendReset (): void {
         this.g().selectAll('rect.bar')
             .classed('highlight', false)
             .classed('fadeout', false);
     }
 
-    public xAxisMax () {
+    public xAxisMax (): Date | number {
         let max = super.xAxisMax();
         if ('resolution' in this.xUnits()) {
             const res = this.xUnits().resolution;
-            max += res;
+            max = (max as number) + res; // max can be date as well, this case refers when xUnits is floating point
         }
         return max;
     }
