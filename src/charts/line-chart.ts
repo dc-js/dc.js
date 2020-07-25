@@ -23,7 +23,7 @@ import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
-import {BaseAccessor, ChartParentType, LegendSpecs, SVGGElementSelection} from '../core/types';
+import {BaseAccessor, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
 
 const DEFAULT_DOT_RADIUS = 5;
 const TOOLTIP_G_CLASS = 'dc-tooltip';
@@ -598,7 +598,7 @@ export class LineChart extends StackMixin {
         };
     }
 
-    public legendHighlight (d: LegendSpecs) {
+    public legendHighlight (d: LegendItem) {
         if (!this.isLegendableHidden(d)) {
             this.g().selectAll('path.line, path.area')
                 .classed('highlight', this._colorFilter(d.color, d.dashstyle))
@@ -612,7 +612,7 @@ export class LineChart extends StackMixin {
             .classed('fadeout', false);
     }
 
-    public legendables (): LegendSpecs[] {
+    public legendables (): LegendItem[] {
         const legendables = super.legendables();
         if (!this._dashStyle) {
             return legendables;

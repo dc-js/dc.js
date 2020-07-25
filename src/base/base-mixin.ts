@@ -15,7 +15,7 @@ import {
     BaseAccessor,
     ChartParentType,
     KeyAccessor,
-    LabelAccessor,
+    LabelAccessor, LegendItem,
     MinimalCFDimension,
     MinimalCFGroup,
     TitleAccessor,
@@ -1235,24 +1235,24 @@ export class BaseMixin {
 
     // Legend methods are used by Composite Charts
 
-    public legendables () {
+    public legendables (): LegendItem[] {
         // do nothing in base, should be overridden by sub-function
         return [];
     }
 
-    public legendHighlight (d?) {
+    public legendHighlight (d?: LegendItem) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    public legendReset (d?) {
+    public legendReset (d?: LegendItem) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    public legendToggle (d?) {
+    public legendToggle (d?: LegendItem) {
         // do nothing in base, should be overriden by sub-function
     }
 
-    public isLegendableHidden (d?): boolean {
+    public isLegendableHidden (d?: LegendItem): boolean {
         // do nothing in base, should be overridden by sub-function
         return false;
     }

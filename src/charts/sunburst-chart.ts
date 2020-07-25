@@ -12,7 +12,7 @@ import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {BaseAccessor, ChartParentType, LegendSpecs, SVGGElementSelection} from '../core/types';
+import {BaseAccessor, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -705,27 +705,27 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    public legendables (): LegendSpecs[] {
+    public legendables (): LegendItem[] {
         return this.data().map((d, i) => {
-            const legendable: LegendSpecs = {name: d.key, data: d.value, others: d.others, chart: this};
+            const legendable: LegendItem = {name: d.key, data: d.value, others: d.others, chart: this};
             legendable.color = this.getColor(d, i);
             return legendable;
         });
     }
 
-    public legendHighlight (d: LegendSpecs) {
+    public legendHighlight (d: LegendItem) {
         this._highlightSliceFromLegendable(d, true);
     }
 
-    public legendReset (d: LegendSpecs) {
+    public legendReset (d: LegendItem) {
         this._highlightSliceFromLegendable(d, false);
     }
 
-    public legendToggle (d: LegendSpecs) {
+    public legendToggle (d: LegendItem) {
         this.onClick({key: d.name, others: d.others});
     }
 
-    private _highlightSliceFromLegendable (legendable: LegendSpecs, highlighted: boolean): void {
+    private _highlightSliceFromLegendable (legendable: LegendItem, highlighted: boolean): void {
         this.selectAll<SVGGElement, any>('g.pie-slice').each(function (d) {
             if (legendable.name === d.key) {
                 select(this).classed('highlight', highlighted);

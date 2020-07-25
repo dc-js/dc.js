@@ -109,16 +109,16 @@ export type NumberFormatFn = (n: number | { valueOf (): number }) => string;
 
 // Legends
 export interface ParentOfLegend {
-    legendToggle: (d: LegendSpecs) => void;
-    legendReset: (d: LegendSpecs) => void;
-    legendHighlight: (d: LegendSpecs) => void;
+    legendToggle: (d: LegendItem) => void;
+    legendReset: (d: LegendItem) => void;
+    legendHighlight: (d: LegendItem) => void;
     filters; // function, TODO: signature
-    legendables: () => LegendSpecs[];
+    legendables: () => LegendItem[];
 
     svg (): Selection<SVGElement, any, any, any>;
 }
 
-export interface LegendSpecs {
+export interface LegendItem {
     others?; // TODO: will not be needed after refactoring
     name: string;
     data?;
@@ -127,4 +127,4 @@ export interface LegendSpecs {
     dashstyle?;
 }
 
-export type LegendTextAccessor = (d: LegendSpecs) => string;
+export type LegendTextAccessor = (d: LegendItem) => string;

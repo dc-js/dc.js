@@ -2,7 +2,7 @@ import {select, Selection} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
 import {constants} from '../core/constants';
-import {LegendSpecs, LegendTextAccessor, ParentOfLegend} from '../core/types';
+import {LegendItem, LegendTextAccessor, ParentOfLegend} from '../core/types';
 
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
@@ -53,7 +53,7 @@ export class HtmlLegend {
         const container = this._container.append('div').attr('class', this._htmlLegendDivCssClass);
         container.attr('style', `max-width:${this._container.nodes()[0].style.width}`);
 
-        let legendables: LegendSpecs[] = this._parent.legendables();
+        let legendables: LegendItem[] = this._parent.legendables();
         const filters = this._parent.filters();
 
         if (this._maxItems !== undefined) {
@@ -62,9 +62,9 @@ export class HtmlLegend {
 
         const legendItemClassName = this._legendItemClass ? this._legendItemClass : defaultLegendItemCssClass;
 
-        const itemEnter: Selection<HTMLDivElement, LegendSpecs, HTMLElement, any> =
+        const itemEnter: Selection<HTMLDivElement, LegendItem, HTMLElement, any> =
             container.selectAll<HTMLDivElement, any>(`div.${legendItemClassName}`)
-                .data<LegendSpecs>(legendables).enter()
+                .data<LegendItem>(legendables).enter()
                 .append('div')
                     .classed(legendItemClassName, true)
                 .on('mouseover', d => this._parent.legendHighlight(d))

@@ -3,7 +3,7 @@ import {max, min} from 'd3-array';
 
 import {pluck, utils} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
-import {BaseAccessor, LegendSpecs, MinimalCFGroup, TitleAccessor} from '../core/types';
+import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/types';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -308,7 +308,7 @@ export class StackMixin extends CoordinateGridMixin {
         return ordered.map(this.keyAccessor());
     }
 
-    public legendables (): LegendSpecs[] {
+    public legendables (): LegendItem[] {
         return this._stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
@@ -317,12 +317,12 @@ export class StackMixin extends CoordinateGridMixin {
         }));
     }
 
-    public isLegendableHidden (d: LegendSpecs) {
+    public isLegendableHidden (d: LegendItem) {
         const layer = this._findLayerByName(d.name);
         return layer ? !this._visibility(layer) : false;
     }
 
-    public legendToggle (d: LegendSpecs) {
+    public legendToggle (d: LegendItem) {
         if (this._hidableStacks) {
             if (this.isLegendableHidden(d)) {
                 this.showStack(d.name);

@@ -1,6 +1,6 @@
 import {pluck, utils} from '../core/utils';
 import {constants} from '../core/constants';
-import {LegendSpecs, LegendTextAccessor, ParentOfLegend} from '../core/types';
+import {LegendItem, LegendTextAccessor, ParentOfLegend} from '../core/types';
 import {Selection} from 'd3-selection';
 
 const LABEL_GAP = 2;
@@ -247,7 +247,7 @@ export class Legend {
         this._g = this._parent.svg().append('g')
             .attr('class', 'dc-legend')
             .attr('transform', `translate(${this._x},${this._y})`);
-        let legendables:LegendSpecs[] = this._parent.legendables();
+        let legendables:LegendItem[] = this._parent.legendables();
         const filters = this._parent.filters();
 
         if (this._maxItems !== undefined) {
@@ -255,7 +255,7 @@ export class Legend {
         }
 
         const itemEnter: Selection<SVGGElement, any, SVGGElement, any> = this._g.selectAll<SVGGElement, any>('g.dc-legend-item')
-            .data<LegendSpecs>(legendables)
+            .data<LegendItem>(legendables)
             .enter()
             .append('g')
             .attr('class', 'dc-legend-item')

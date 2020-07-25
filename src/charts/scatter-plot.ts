@@ -7,7 +7,7 @@ import {optionalTransition, transition} from '../core/core';
 import {filters} from '../core/filters';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {BaseAccessor, ChartParentType, LegendSpecs} from '../core/types';
+import {BaseAccessor, ChartParentType, LegendItem} from '../core/types';
 
 export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
 
@@ -586,11 +586,11 @@ export class ScatterPlot extends CoordinateGridMixin {
         return this;
     }
 
-    public legendables (): LegendSpecs[] {
+    public legendables (): LegendItem[] {
         return [{chart: this, name: this._groupName, color: this.getColor()}];
     }
 
-    public legendHighlight (d: LegendSpecs): void {
+    public legendHighlight (d: LegendItem): void {
         if (this._useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
@@ -601,7 +601,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
-    public legendReset (d: LegendSpecs): void {
+    public legendReset (d: LegendItem): void {
         if (this._useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
