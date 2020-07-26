@@ -28,6 +28,10 @@ interface IUtils {
     arraysIdentical: (a, b) => (boolean);
 }
 
+export const pluck2 = function (n, f) {
+    return function (d, i) { return f.call(d, d[n], i); };
+};
+
 /**
  * @namespace utils
  * @type {{}}

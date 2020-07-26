@@ -20,7 +20,7 @@ import {
 import {select, Selection} from 'd3-selection';
 
 import {logger} from '../core/logger';
-import {utils} from '../core/utils';
+import {pluck2, utils} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {BaseAccessor, ChartParentType, LegendSpecs, SVGGElementSelection} from '../core/types';
@@ -520,7 +520,7 @@ export class LineChart extends StackMixin {
     private _doRenderTitle (dot: Selection<SVGCircleElement, any, SVGGElement, any>, d): void {
         if (this.renderTitle()) {
             dot.select('title').remove();
-            dot.append('title').text( (d, i) => this.title(d.name)(d.data, i));
+            dot.append('title').text(pluck2('data', this.title(d.name)));
         }
     }
 

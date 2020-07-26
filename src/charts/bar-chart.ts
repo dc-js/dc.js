@@ -4,7 +4,7 @@ import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
-import {utils} from '../core/utils';
+import {pluck2, utils} from '../core/utils';
 import {ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 const MIN_BAR_WIDTH = 1;
@@ -192,7 +192,7 @@ export class BarChart extends StackMixin {
         const barsEnterUpdate: Selection<SVGRectElement, unknown, SVGGElement, any> = enter.merge(bars);
 
         if (this.renderTitle()) {
-            enter.append('title').text((d, i) => this.title(d.name)(d.data, i));
+            enter.append('title').text(pluck2('data', this.title(data.name)));
         }
 
         if (this.isOrdinal()) {
@@ -213,7 +213,7 @@ export class BarChart extends StackMixin {
             .attr('width', this._barWidth)
             .attr('height', d => this._barHeight(d))
             .attr('fill', (d, i) => this.getColor(d, i))
-            .select('title').text((d, i) => this.title(d.name)(d.data, i));
+            .select('title').text(pluck2('data', this.title(data.name)));
 
         transition(bars.exit(), this.transitionDuration(), this.transitionDelay())
             .attr('x', d => this.x()(d.x))
