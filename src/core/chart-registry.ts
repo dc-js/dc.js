@@ -101,29 +101,6 @@ class ChartRegistry {
         }
         return false;
     }
-
-    /**
-     * Add given chart instance to the given group, creating the group if necessary.
-     * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
-     * @param {Object} chart dc.js chart instance
-     * @param {String} [group] Group name
-     * @return {undefined}
-     */
-    public register (chart: BaseMixin, group?: string): void {
-        this.chartGroup(group).register(chart);
-    }
-
-    /**
-     * Remove given chart instance from the given group, creating the group if necessary.
-     * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
-     * @param {Object} chart dc.js chart instance
-     * @param {String} [group] Group name
-     * @return {undefined}
-     */
-    public deregister (chart: BaseMixin, group?: string): void {
-        this.chartGroup(group).deregister(chart);
-    }
-
     /**
      * Clear given group if one is provided, otherwise clears all groups.
      * @param {String} group Group name
@@ -169,7 +146,7 @@ export const chartRegistry = new ChartRegistry();
  * @return {undefined}
  */
 export function registerChart (chart: BaseMixin, group?: string): void {
-    chartRegistry.register(chart, group);
+    chartRegistry.chartGroup(group).register(chart);
 }
 
 /**
@@ -181,7 +158,7 @@ export function registerChart (chart: BaseMixin, group?: string): void {
  * @return {undefined}
  */
 export function deregisterChart (chart: BaseMixin, group?: string): void {
-    chartRegistry.deregister(chart, group);
+    chartRegistry.chartGroup(group).deregister(chart);
 }
 
 /**
