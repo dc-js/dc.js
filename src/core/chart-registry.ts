@@ -28,6 +28,33 @@ class ChartGroup {
     public clear (): void {
         this._charts = [];
     }
+
+    public renderAll (): void {
+        for (const chart of this._charts) {
+            chart.render();
+        }
+    }
+
+    public redrawAll (): void {
+        for (const chart of this._charts) {
+            chart.redraw();
+        }
+    }
+
+    public filterAll (): void {
+        for (const chart of this._charts) {
+            chart.filterAll();
+        }
+    }
+
+    public refocusAll (): void {
+        let chart: any; // disable type checking, BaseMixin does not have focus method
+        for (chart of this._charts) {
+            if (chart.focus) {
+                chart.focus();
+            }
+        }
+    }
 }
 
 /**
@@ -185,10 +212,7 @@ export function deregisterAllCharts (group?) {
  * @return {undefined}
  */
 export function filterAll (group?: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        charts[i].filterAll();
-    }
+    chartRegistry.chartGroup(group).filterAll();
 }
 
 /**
@@ -199,14 +223,7 @@ export function filterAll (group?: string): void {
  * @return {undefined}
  */
 export function refocusAll (group?: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        // @ts-ignore
-        if (charts[i].focus) {
-            // @ts-ignore
-            charts[i].focus();
-        }
-    }
+    chartRegistry.chartGroup(group).refocusAll();
 }
 
 /**
@@ -217,10 +234,7 @@ export function refocusAll (group?: string): void {
  * @return {undefined}
  */
 export function renderAll (group?: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        charts[i].render();
-    }
+    chartRegistry.chartGroup(group).renderAll();
 
     if (config._renderlet !== null) {
         config._renderlet(group);
@@ -237,10 +251,7 @@ export function renderAll (group?: string): void {
  * @return {undefined}
  */
 export function redrawAll (group?: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        charts[i].redraw();
-    }
+    chartRegistry.chartGroup(group).redrawAll();
 
     if (config._renderlet !== null) {
         config._renderlet(group);
