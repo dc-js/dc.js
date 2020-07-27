@@ -49,16 +49,16 @@ class ChartRegistry {
         this._chartMap = {};
     }
 
-    public _initializeChartGroup (group?: string): string {
+    public chartGroup (group?: string): ChartGroup {
         if (!group) {
             group = constants.DEFAULT_CHART_GROUP;
         }
 
-        if (!(this._chartMap)[group]) {
-            (this._chartMap)[group] = new ChartGroup();
+        if (!this._chartMap[group]) {
+            this._chartMap[group] = new ChartGroup();
         }
 
-        return group;
+        return this._chartMap[group];
     }
 
     /**
@@ -67,8 +67,8 @@ class ChartRegistry {
      * @returns {Boolean}
      */
     public has (chart: BaseMixin): boolean {
-        for (const e in this._chartMap) {
-            if ((this._chartMap)[e].has(chart)) {
+        for (const chartGroupName in this._chartMap) {
+            if (this._chartMap[chartGroupName].has(chart)) {
                 return true;
             }
         }
@@ -82,9 +82,8 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @return {undefined}
      */
-    public register (chart: BaseMixin, group: string): void {
-        group = this._initializeChartGroup(group);
-        (this._chartMap)[group].register(chart);
+    public register (chart: BaseMixin, group?: string): void {
+        this.chartGroup(group).register(chart);
     }
 
     /**
@@ -94,9 +93,8 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @return {undefined}
      */
-    public deregister (chart: BaseMixin, group: string): void {
-        group = this._initializeChartGroup(group);
-        (this._chartMap)[group].deregister(chart);
+    public deregister (chart: BaseMixin, group?: string): void {
+        this.chartGroup(group).deregister(chart);
     }
 
     /**
@@ -104,11 +102,16 @@ class ChartRegistry {
      * @param {String} group Group name
      * @return {undefined}
      */
-    public clear (group: string): void {
+    public clear (group?: string): void {
         if (group) {
-            (this._chartMap)[group].clear();
-            delete (this._chartMap)[group];
+            if (this._chartMap[group]) {
+                this._chartMap[group].clear();
+                delete (this._chartMap)[group];
+            }
         } else {
+            for (const chartGroupName in this._chartMap) {
+                this._chartMap[chartGroupName].clear();
+            }
             this._chartMap = {};
         }
     }
@@ -119,9 +122,8 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @returns {Array<Object>}
      */
-    public list (group: string): BaseMixin[] {
-        group = this._initializeChartGroup(group);
-        return (this._chartMap)[group].list();
+    public list (group?: string): BaseMixin[] {
+        return this.chartGroup(group).list();
     }
 }
 
@@ -139,7 +141,7 @@ export const chartRegistry = new ChartRegistry();
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function registerChart (chart: BaseMixin, group: string): void {
+export function registerChart (chart: BaseMixin, group?: string): void {
     chartRegistry.register(chart, group);
 }
 
@@ -151,7 +153,7 @@ export function registerChart (chart: BaseMixin, group: string): void {
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function deregisterChart (chart: BaseMixin, group: string): void {
+export function deregisterChart (chart: BaseMixin, group?: string): void {
     chartRegistry.deregister(chart, group);
 }
 
@@ -171,9 +173,9 @@ export function hasChart (chart: BaseMixin): boolean {
  * @param {String} group Group name
  * @return {undefined}
  */
-export const deregisterAllCharts = function (group) {
+export function deregisterAllCharts (group?) {
     chartRegistry.clear(group);
-};
+}
 
 /**
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
@@ -182,7 +184,7 @@ export const deregisterAllCharts = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-export function filterAll (group: string): void {
+export function filterAll (group?: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
         charts[i].filterAll();
@@ -196,7 +198,7 @@ export function filterAll (group: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function refocusAll (group: string): void {
+export function refocusAll (group?: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
         // @ts-ignore
@@ -214,7 +216,7 @@ export function refocusAll (group: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function renderAll (group: string): void {
+export function renderAll (group?: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
         charts[i].render();
@@ -234,7 +236,7 @@ export function renderAll (group: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function redrawAll (group: string): void {
+export function redrawAll (group?: string): void {
     const charts = chartRegistry.list(group);
     for (let i = 0; i < charts.length; ++i) {
         charts[i].redraw();
