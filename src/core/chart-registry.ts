@@ -2,6 +2,34 @@ import {constants} from './constants';
 import {config} from './config';
 import {BaseMixin} from '../base/base-mixin';
 
+class ChartGroup {
+    private _charts: BaseMixin[];
+
+    constructor () {
+        this._charts = [];
+    }
+
+    public list (): BaseMixin[] {
+        return this._charts;
+    }
+
+    public has (chart): boolean {
+        return this._charts.indexOf(chart) >= 0;
+    }
+
+    public register (chart): void {
+        this._charts.push(chart);
+    }
+
+    public deregister (chart): void {
+        this._charts = this._charts.filter(ch => ch.anchorName() !== chart.anchorName());
+    }
+
+    public clear (): void {
+        this._charts = [];
+    }
+}
+
 /**
  * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
  * and the default group. There is a single global ChartRegistry object named `chartRegistry`
@@ -14,7 +42,7 @@ import {BaseMixin} from '../base/base-mixin';
  * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  */
 class ChartRegistry {
-    private _chartMap: {[group: string]: BaseMixin[]};
+    private _chartMap: {[group: string]: ChartGroup};
 
     constructor () {
         // chartGroup:string => charts:array
@@ -27,7 +55,7 @@ class ChartRegistry {
         }
 
         if (!(this._chartMap)[group]) {
-            (this._chartMap)[group] = [];
+            (this._chartMap)[group] = new ChartGroup();
         }
 
         return group;
@@ -40,7 +68,7 @@ class ChartRegistry {
      */
     public has (chart: BaseMixin): boolean {
         for (const e in this._chartMap) {
-            if ((this._chartMap)[e].indexOf(chart) >= 0) {
+            if ((this._chartMap)[e].has(chart)) {
                 return true;
             }
         }
@@ -55,9 +83,8 @@ class ChartRegistry {
      * @return {undefined}
      */
     public register (chart: BaseMixin, group: string): void {
-        const _chartMap = this._chartMap;
         group = this._initializeChartGroup(group);
-        _chartMap[group].push(chart);
+        (this._chartMap)[group].register(chart);
     }
 
     /**
@@ -69,12 +96,7 @@ class ChartRegistry {
      */
     public deregister (chart: BaseMixin, group: string): void {
         group = this._initializeChartGroup(group);
-        for (let i = 0; i < (this._chartMap)[group].length; i++) {
-            if ((this._chartMap)[group][i].anchorName() === chart.anchorName()) {
-                (this._chartMap)[group].splice(i, 1);
-                break;
-            }
-        }
+        (this._chartMap)[group].deregister(chart);
     }
 
     /**
@@ -84,6 +106,7 @@ class ChartRegistry {
      */
     public clear (group: string): void {
         if (group) {
+            (this._chartMap)[group].clear();
             delete (this._chartMap)[group];
         } else {
             this._chartMap = {};
@@ -98,7 +121,7 @@ class ChartRegistry {
      */
     public list (group: string): BaseMixin[] {
         group = this._initializeChartGroup(group);
-        return (this._chartMap)[group];
+        return (this._chartMap)[group].list();
     }
 }
 
