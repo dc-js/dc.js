@@ -23,12 +23,6 @@ export interface RingSizeSpecs {
     relativeRingSizesFunction: (ringCount: number) => number[];
 }
 
-export interface RingSizeSpecsExtended extends RingSizeSpecs {
-    // These two are added to this interface after it is assigned.
-    relativeRingSizes?: number[];
-    rootOffset?: number;
-}
-
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
@@ -50,12 +44,14 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     private _radius: number;
     private _givenRadius: number;
     private _innerRadius: number;
-    private _ringSizes: RingSizeSpecsExtended;
+    private _ringSizes: RingSizeSpecs;
     private _g: SVGGElementSelection;
     private _cx: number;
     private _cy: number;
     private _minAngleForLabel: number;
     private _externalLabelRadius: number;
+    private _relativeRingSizes: number[];
+    private _rootOffset: number;
 
     /**
      * Create a Sunburst Chart
@@ -116,11 +112,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         if (ringIndex === 0) {
             return this._innerRadius;
         } else {
-            const customRelativeRadius = sum(this.ringSizes().relativeRingSizes.slice(0, ringIndex));
-            const scaleFactor = (ringIndex * (1 / this.ringSizes().relativeRingSizes.length)) /
+            const customRelativeRadius = sum(this._relativeRingSizes.slice(0, ringIndex));
+            const scaleFactor = (ringIndex * (1 / this._relativeRingSizes.length)) /
                   customRelativeRadius;
-            const standardRadius = (y - this.ringSizes().rootOffset) /
-                  (1 - this.ringSizes().rootOffset) * (this._radius - this._innerRadius);
+            const standardRadius = (y - this._rootOffset) /
+                  (1 - this._rootOffset) * (this._radius - this._innerRadius);
             return this._innerRadius + standardRadius / scaleFactor;
         }
     }
@@ -161,8 +157,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             partitionedNodes = this._partitionNodes(cdata);
             this._g.classed(this._emptyCssClass, true);
         }
-        this.ringSizes().rootOffset = partitionedNodes.rootOffset;
-        this.ringSizes().relativeRingSizes = partitionedNodes.relativeRingSizes;
+        this._rootOffset = partitionedNodes.rootOffset;
+        this._relativeRingSizes = partitionedNodes.relativeRingSizes;
 
         // TODO: probably redundant check, this will always be true
         if (this._g) {
@@ -548,7 +544,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {RingSizes} ringSizes
      * @returns {Object|SunburstChart}
      */
-    public ringSizes (): RingSizeSpecsExtended;
+    public ringSizes (): RingSizeSpecs;
     public ringSizes (ringSizes: RingSizeSpecs): this;
     public ringSizes (ringSizes?) {
         if (!arguments.length) {
