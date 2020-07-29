@@ -22,7 +22,7 @@ class ChartGroup {
     }
 
     public deregister (chart): void {
-        this._charts = this._charts.filter(ch => ch.anchorName() !== chart.anchorName());
+        this._charts = this._charts.filter(ch => ch !== chart);
     }
 
     public clear (): void {
