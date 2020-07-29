@@ -2,14 +2,21 @@ import {constants} from './constants';
 import {config} from './config';
 import {BaseMixin} from '../base/base-mixin';
 
-class ChartGroup {
-    private _charts: BaseMixin[];
+export interface MinimalChart {
+    render (): void;
+    redraw (): void;
+    filterAll (): void;
+    focus? (): void;
+}
+
+export class ChartGroup {
+    private _charts: MinimalChart[];
 
     constructor () {
         this._charts = [];
     }
 
-    public list (): BaseMixin[] {
+    public list (): MinimalChart[] {
         return this._charts;
     }
 
@@ -48,8 +55,7 @@ class ChartGroup {
     }
 
     public refocusAll (): void {
-        let chart: any; // disable type checking, BaseMixin does not have focus method
-        for (chart of this._charts) {
+        for (const chart of this._charts) {
             if (chart.focus) {
                 chart.focus();
             }
@@ -127,7 +133,7 @@ class ChartRegistry {
      * @returns {Array<Object>}
      */
     public list (group?: string): BaseMixin[] {
-        return this.chartGroup(group).list();
+        return this.chartGroup(group).list() as BaseMixin[];
     }
 }
 
