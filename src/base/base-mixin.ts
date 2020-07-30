@@ -109,7 +109,7 @@ export class BaseMixin {
     private _transitionDelay: number;
     private _filterPrinter: (filters) => string;
     private _mandatoryAttributesList: string[];
-    protected _chartGroup: string;
+    private _chartGroup: string;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
     private _commitHandler; // TODO: support async functions as well

@@ -45,7 +45,6 @@ export class SeriesChart extends CompositeChart {
 
         this._charts = {};
         this._chartFunction = (p, cg) => new LineChart(p, cg);
-        this._chartGroup = chartGroup;
         this._seriesAccessor = undefined;
         this._seriesSort = ascending;
         this._valueSort = this._keySort;
@@ -77,7 +76,7 @@ export class SeriesChart extends CompositeChart {
         const nesting = nester.entries(this.data());
         const children =
             nesting.map((sub, i) => {
-                const subChart = this._charts[sub.key] || this._chartFunction(this, this._chartGroup);
+                const subChart = this._charts[sub.key] || this._chartFunction(this, this.chartGroup());
                 if (!this._charts[sub.key]) {
                     childrenChanged = true;
                 }
