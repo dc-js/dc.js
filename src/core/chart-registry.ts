@@ -1,67 +1,7 @@
 import {constants} from './constants';
 import {config} from './config';
 import {BaseMixin} from '../base/base-mixin';
-
-export interface MinimalChart {
-    render (): void;
-    redraw (): void;
-    filterAll (): void;
-    focus? (): void;
-}
-
-export class ChartGroup {
-    private _charts: MinimalChart[];
-
-    constructor () {
-        this._charts = [];
-    }
-
-    public list (): MinimalChart[] {
-        return this._charts;
-    }
-
-    public has (chart): boolean {
-        return this._charts.indexOf(chart) >= 0;
-    }
-
-    public register (chart): void {
-        this._charts.push(chart);
-    }
-
-    public deregister (chart): void {
-        this._charts = this._charts.filter(ch => ch !== chart);
-    }
-
-    public clear (): void {
-        this._charts = [];
-    }
-
-    public renderAll (): void {
-        for (const chart of this._charts) {
-            chart.render();
-        }
-    }
-
-    public redrawAll (): void {
-        for (const chart of this._charts) {
-            chart.redraw();
-        }
-    }
-
-    public filterAll (): void {
-        for (const chart of this._charts) {
-            chart.filterAll();
-        }
-    }
-
-    public refocusAll (): void {
-        for (const chart of this._charts) {
-            if (chart.focus) {
-                chart.focus();
-            }
-        }
-    }
-}
+import {ChartGroup} from './chart-group';
 
 /**
  * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
