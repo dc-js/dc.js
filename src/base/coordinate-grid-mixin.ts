@@ -12,7 +12,7 @@ import {MarginMixin} from './margin-mixin';
 import {optionalTransition, transition} from '../core/core';
 import {units} from '../core/units';
 import {constants} from '../core/constants';
-import {utils} from '../core/utils';
+import {add, appendOrSelect, arraysEqual, subtract} from '../core/utils';
 import {logger} from '../core/logger';
 import {filters} from '../core/filters';
 import {events} from '../core/events';
@@ -542,7 +542,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         // has the domain changed?
         const xdom = this._x.domain();
-        if (render || !utils.arraysEqual(this._lastXDomain, xdom)) {
+        if (render || !arraysEqual(this._lastXDomain, xdom)) {
             this.rescale();
         }
         this._lastXDomain = xdom;
@@ -897,7 +897,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public xAxisMin () { // TODO: can these be anything other than number and Date
         const m = min(this.data(), e => this.keyAccessor()(e));
-        return utils.subtract(m, this._xAxisPadding, this._xAxisPaddingUnit);
+        return subtract(m, this._xAxisPadding, this._xAxisPaddingUnit);
     }
 
     /**
@@ -906,7 +906,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public xAxisMax () { // TODO: can these be anything other than number and Date
         const m = max(this.data(), e => this.keyAccessor()(e));
-        return utils.add(m, this._xAxisPadding, this._xAxisPaddingUnit);
+        return add(m, this._xAxisPadding, this._xAxisPaddingUnit);
     }
 
     /**
@@ -915,7 +915,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public yAxisMin () { // TODO: can these be anything other than number
         const m = min(this.data(), e => this.valueAccessor()(e));
-        return utils.subtract(m, this._yAxisPadding);
+        return subtract(m, this._yAxisPadding);
     }
 
     /**
@@ -924,7 +924,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public yAxisMax () { // TODO: can these be anything other than number
         const m = max(this.data(), e => this.valueAccessor()(e));
-        return utils.add(m, this._yAxisPadding);
+        return add(m, this._yAxisPadding);
     }
 
     /**
@@ -1191,15 +1191,15 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public _generateClipPath (): void {
-        const defs = utils.appendOrSelect(this._parent, 'defs');
+        const defs = appendOrSelect(this._parent, 'defs');
         // cannot select <clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
         const id = this._getClipPathId();
-        const chartBodyClip = utils.appendOrSelect(defs, `#${id}`, 'clipPath').attr('id', id);
+        const chartBodyClip = appendOrSelect(defs, `#${id}`, 'clipPath').attr('id', id);
 
         const padding = this._clipPadding * 2;
 
-        utils.appendOrSelect(chartBodyClip, 'rect')
+        appendOrSelect(chartBodyClip, 'rect')
             .attr('width', this.xAxisLength() + padding)
             .attr('height', this.yAxisHeight() + padding)
             .attr('transform', `translate(-${this._clipPadding}, -${this._clipPadding})`);
@@ -1320,7 +1320,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.redraw();
 
         if (!noRaiseEvents) {
-            if (this._rangeChart && !utils.arraysEqual(this.filter(), this._rangeChart.filter())) {
+            if (this._rangeChart && !arraysEqual(this.filter(), this._rangeChart.filter())) {
                 events.trigger(() => {
                     this._rangeChart.replaceFilter(domFilter);
                     this._rangeChart.redraw();
@@ -1420,7 +1420,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public refocused (): boolean {
-        return !utils.arraysEqual(this.x().domain(), this._xOriginalDomain);
+        return !arraysEqual(this.x().domain(), this._xOriginalDomain);
     }
 
     public focusChart (): CoordinateGridMixin;
@@ -1435,7 +1435,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 events.trigger(() => {
                     this._focusChart.x().domain(this._focusChart.xOriginalDomain());
                 });
-            } else if (!utils.arraysEqual(chart.filter(), this._focusChart.filter())) {
+            } else if (!arraysEqual(chart.filter(), this._focusChart.filter())) {
                 events.trigger(() => {
                     this._focusChart.focus(chart.filter(), true);
                 });

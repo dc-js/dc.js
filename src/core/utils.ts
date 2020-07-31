@@ -4,56 +4,8 @@ import {format} from 'd3-format';
 import {constants} from './constants';
 import {config} from './config';
 
-// TODO: revisit all types after refactoring
-
-interface IUtils {
-    printSingleValue: any;
-    add: (l, r, t?) => (Date|number);
-    subtract: (l, r, t?) => (Date|number);
-    isNumber: (n) => boolean;
-    isFloat: (n) => boolean;
-    isInteger: (n) => boolean;
-    isNegligible: (n) => boolean;
-    constant: (x) => () => any;
-    clamp: (val, min, max) => any;
-    uniqueId: () => number;
-    nameToId: (name) => string;
-    appendOrSelect: (parent, selector, tag?) => any;
-    safeNumber: (n) => number;
-    arraysEqual: (a1, a2) => (boolean | any);
-    allChildren: (node) => any[];
-    toHierarchy: (list, accessor) => { children: any[]; key: string };
-    getAncestors: (node) => any[];
-    arraysIdentical: (a, b) => (boolean);
-}
-
 export const pluck2 = function (n, f) {
     return function (d, i) { return f.call(d, d[n], i); };
-};
-
-/**
- * @namespace utils
- * @type {{}}
- */
-export const utils: IUtils = {
-    add: add,
-    allChildren: allChildren,
-    appendOrSelect: appendOrSelect,
-    arraysEqual: arraysEqual,
-    arraysIdentical: arraysIdentical,
-    clamp: clamp,
-    constant: constant,
-    getAncestors: getAncestors,
-    isFloat: isFloat,
-    isInteger: isInteger,
-    isNegligible: isNegligible,
-    isNumber: isNumber,
-    nameToId: nameToId,
-    printSingleValue: printSingleValue,
-    safeNumber: safeNumber,
-    subtract: subtract,
-    toHierarchy: toHierarchy,
-    uniqueId: uniqueId
 };
 
 /**
@@ -63,17 +15,17 @@ export const utils: IUtils = {
  * @param {any} filter
  * @returns {String}
  */
-export function printSingleValue (filter) {
-    let s: string|number = `${filter}`;
+export function printSingleValue (filter): string {
+    let s: string = `${filter}`;
 
     if (filter instanceof Date) {
         s = config.dateFormat(filter);
     } else if (typeof (filter) === 'string') {
         s = filter;
-    } else if (utils.isFloat(filter)) {
-        s = utils.printSingleValue.fformat(filter);
-    } else if (utils.isInteger(filter)) {
-        s = Math.round(filter);
+    } else if (isFloat(filter)) {
+        s = printSingleValue.fformat(filter);
+    } else if (isInteger(filter)) {
+        s = `${Math.round(filter)}`;
     }
 
     return s;
@@ -99,11 +51,11 @@ function _toTimeFunc (t) {
  * Arbitrary add one value to another.
  *
  * If the value l is of type Date, adds r units to it. t becomes the unit.
- * For example utils.add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
+ * For example add(dt, 3, 'week') will add 3 (r = 3) weeks (t= 'week') to dt.
  *
  * If l is of type numeric, t is ignored. In this case if r is of type string,
  * it is assumed to be percentage (whether or not it includes %). For example
- * utils.add(30, 10) will give 40 and utils.add(30, '10') will give 33.
+ * add(30, 10) will give 40 and add(30, '10') will give 33.
  *
  * They also generate strange results if l is a string.
  * @method add
@@ -145,11 +97,11 @@ export function add (l, r, t?) {
  * Arbitrary subtract one value from another.
  *
  * If the value l is of type Date, subtracts r units from it. t becomes the unit.
- * For example utils.subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
+ * For example subtract(dt, 3, 'week') will subtract 3 (r = 3) weeks (t= 'week') from dt.
  *
  * If l is of type numeric, t is ignored. In this case if r is of type string,
  * it is assumed to be percentage (whether or not it includes %). For example
- * utils.subtract(30, 10) will give 20 and utils.subtract(30, '10') will give 27.
+ * subtract(30, 10) will give 20 and subtract(30, '10') will give 27.
  *
  * They also generate strange results if l is a string.
  * @method subtract
@@ -230,7 +182,7 @@ export function isInteger (n) {
  * @returns {Boolean}
  */
 export function isNegligible (n) {
-    return !utils.isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
+    return !isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
 }
 
 /**
@@ -251,7 +203,7 @@ export function clamp (val, min, max) {
  *
  * {@link https://github.com/d3/d3/blob/master/CHANGES.md#internals `d3.functor` was removed in d3 version 4}.
  * This function helps to implement the replacement,
- * `typeof x === "function" ? x : utils.constant(x)`
+ * `typeof x === "function" ? x : constant(x)`
  * @method constant
  * @memberof utils
  * @param {any} x
@@ -311,7 +263,7 @@ export function appendOrSelect (parent, selector, tag?) {
  * @returns {Number}
  */
 export function safeNumber (n) {
-    return utils.isNumber(+n) ? +n : 0;
+    return isNumber(+n) ? +n : 0;
 }
 
 /**
@@ -344,7 +296,7 @@ export function allChildren (node) {
     console.log('currentNode', node);
     if (node.children) {
         for (let i = 0; i < node.children.length; i++) {
-            paths = paths.concat(utils.allChildren(node.children[i]));
+            paths = paths.concat(allChildren(node.children[i]));
         }
     }
     return paths;

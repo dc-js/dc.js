@@ -1,7 +1,7 @@
 import {Stack, stack} from 'd3-shape';
 import {max, min} from 'd3-array';
 
-import {utils} from '../core/utils';
+import {add, constant, subtract} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
 import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/types';
 
@@ -72,7 +72,7 @@ export class StackMixin extends CoordinateGridMixin {
 
     public _domainFilter () {
         if (!this.x()) {
-            return utils.constant(true);
+            return constant(true);
         }
         const xDomain = this.x().domain();
         if (this.isOrdinal()) {
@@ -192,12 +192,12 @@ export class StackMixin extends CoordinateGridMixin {
 
     public yAxisMin () {
         const m = min(this._flattenStack(), p => (p.y < 0) ? (p.y + p.y0) : p.y0);
-        return utils.subtract(m, this.yAxisPadding());
+        return subtract(m, this.yAxisPadding());
     }
 
     public yAxisMax () {
         const m = max(this._flattenStack(), p => (p.y > 0) ? (p.y + p.y0) : p.y0);
-        return utils.add(m, this.yAxisPadding());
+        return add(m, this.yAxisPadding());
     }
 
     public _flattenStack () {
@@ -209,12 +209,12 @@ export class StackMixin extends CoordinateGridMixin {
 
     public xAxisMin () {
         const m = min(this._flattenStack(), d => d.x);
-        return utils.subtract(m, this.xAxisPadding(), this.xAxisPaddingUnit());
+        return subtract(m, this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     public xAxisMax () {
         const m = max(this._flattenStack(), d => d.x);
-        return utils.add(m, this.xAxisPadding(), this.xAxisPaddingUnit());
+        return add(m, this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     /**

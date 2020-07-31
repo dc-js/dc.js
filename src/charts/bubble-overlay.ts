@@ -4,7 +4,7 @@ import {BaseMixin} from '../base/base-mixin';
 import {BubbleMixin} from '../base/bubble-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
-import {utils} from '../core/utils';
+import {nameToId} from '../core/utils';
 import {ColorMixin} from '../base/color-mixin';
 import {ChartParentType, SVGGElementSelection} from '../core/types';
 
@@ -140,9 +140,9 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
     }
 
     public _getNodeG (point: { name: string; x: number; y: number }, data): SVGGElementSelection {
-        const bubbleNodeClass = `${BUBBLE_NODE_CLASS} ${utils.nameToId(point.name)}`;
+        const bubbleNodeClass = `${BUBBLE_NODE_CLASS} ${nameToId(point.name)}`;
 
-        let nodeG: SVGGElementSelection = this._g.select(`g.${utils.nameToId(point.name)}`);
+        let nodeG: SVGGElementSelection = this._g.select(`g.${nameToId(point.name)}`);
 
         if (nodeG.empty()) {
             nodeG = this._g.append('g')

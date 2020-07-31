@@ -3,7 +3,7 @@ import {nest} from 'd3-collection';
 
 import {CompositeChart} from './composite-chart';
 import {LineChart} from './line-chart';
-import {utils} from '../core/utils';
+import {constant} from '../core/utils';
 import {BaseAccessor, ChartParentType, CompareFn} from '../core/types';
 
 export type LineChartFunction = (parent, chartGroup) => LineChart;
@@ -86,7 +86,7 @@ export class SeriesChart extends CompositeChart {
                 return subChart
                     .dimension(this.dimension())
                     .group({
-                        all: typeof sub.values === 'function' ? sub.values : utils.constant(sub.values)
+                        all: typeof sub.values === 'function' ? sub.values : constant(sub.values)
                     }, sub.key)
                     .keyAccessor(this.keyAccessor())
                     .valueAccessor(this.valueAccessor())
