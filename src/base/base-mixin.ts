@@ -2,7 +2,7 @@ import {BaseType, select, Selection} from 'd3-selection';
 import {dispatch, Dispatch} from 'd3-dispatch';
 import {ascending} from 'd3-array';
 
-import {constant, isNumber, uniqueId} from '../core/utils';
+import {isNumber, uniqueId} from '../core/utils';
 import {instanceOfChart} from '../core/core';
 import {deregisterChart, redrawAll, registerChart, renderAll} from '../core/chart-registry';
 import {constants} from '../core/constants';
@@ -234,7 +234,7 @@ export class BaseMixin {
             }
             return this._height;
         }
-        this._heightCalc = height ? (typeof height === 'function' ? height : constant(height)) : this._defaultHeightCalc;
+        this._heightCalc = height ? (typeof height === 'function' ? height : () => height) : this._defaultHeightCalc;
         this._height = undefined;
         return this;
     }
@@ -262,7 +262,7 @@ export class BaseMixin {
             }
             return this._width;
         }
-        this._widthCalc = width ? (typeof width === 'function' ? width : constant(width)) : this._defaultWidthCalc;
+        this._widthCalc = width ? (typeof width === 'function' ? width : () => width) : this._defaultWidthCalc;
         this._width = undefined;
         return this;
     }
@@ -377,7 +377,7 @@ export class BaseMixin {
         if (!arguments.length) {
             return this._data(this._group);
         }
-        this._data = typeof callback === 'function' ? callback : constant(callback);
+        this._data = typeof callback === 'function' ? callback : () => callback;
         this.expireCache();
         return this;
     }

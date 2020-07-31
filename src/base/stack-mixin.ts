@@ -1,7 +1,7 @@
 import {Stack, stack} from 'd3-shape';
 import {max, min} from 'd3-array';
 
-import {add, constant, subtract} from '../core/utils';
+import {add, subtract} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
 import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/types';
 
@@ -72,7 +72,7 @@ export class StackMixin extends CoordinateGridMixin {
 
     public _domainFilter () {
         if (!this.x()) {
-            return constant(true);
+            return () => true;
         }
         const xDomain = this.x().domain();
         if (this.isOrdinal()) {

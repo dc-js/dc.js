@@ -199,23 +199,6 @@ export function clamp (val, min, max) {
 }
 
 /**
- * Given `x`, return a function that always returns `x`.
- *
- * {@link https://github.com/d3/d3/blob/master/CHANGES.md#internals `d3.functor` was removed in d3 version 4}.
- * This function helps to implement the replacement,
- * `typeof x === "function" ? x : constant(x)`
- * @method constant
- * @memberof utils
- * @param {any} x
- * @returns {Function}
- */
-export function constant (x) {
-    return function () {
-        return x;
-    };
-}
-
-/**
  * Using a simple static counter, provide a unique integer id.
  * @method uniqueId
  * @memberof utils

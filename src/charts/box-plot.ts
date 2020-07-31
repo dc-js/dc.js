@@ -6,7 +6,7 @@ import {d3Box} from '../base/d3.box'
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {units} from '../core/units';
-import {add, constant, subtract} from '../core/utils';
+import {add, subtract} from '../core/utils';
 import {BoxWidthFn, ChartParentType, DCBrushSelection, NumberFormatFn, SVGGElementSelection} from '../core/types';
 
 // Returns a function to compute the interquartile range.
@@ -168,7 +168,7 @@ export class BoxPlot extends CoordinateGridMixin {
         if (!arguments.length) {
             return this._boxWidth;
         }
-        this._boxWidth = typeof boxWidth === 'function' ? boxWidth : constant(boxWidth);
+        this._boxWidth = typeof boxWidth === 'function' ? boxWidth : () => boxWidth;
         return this;
     }
 

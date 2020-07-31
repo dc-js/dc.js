@@ -5,7 +5,6 @@ import {
     arraysEqual,
     arraysIdentical,
     clamp,
-    constant,
     getAncestors,
     isFloat,
     isInteger,
@@ -59,7 +58,9 @@ export const utils = {
     arraysEqual: arraysEqual,
     arraysIdentical: arraysIdentical,
     clamp: clamp,
-    constant: constant,
+    constant: function (x) {
+        return () => x;
+    },
     getAncestors: getAncestors,
     isFloat: isFloat,
     isInteger: isInteger,
