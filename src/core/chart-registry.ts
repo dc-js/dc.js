@@ -41,8 +41,10 @@ class ChartRegistry {
      */
     public has (chart: BaseMixin): boolean {
         for (const chartGroupName in this._chartMap) {
-            if (this._chartMap[chartGroupName].has(chart)) {
-                return true;
+            if (this._chartMap.hasOwnProperty(chartGroupName)) {
+                if (this._chartMap[chartGroupName].has(chart)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -60,7 +62,9 @@ class ChartRegistry {
             }
         } else {
             for (const chartGroupName in this._chartMap) {
-                this._chartMap[chartGroupName].clear();
+                if (this._chartMap.hasOwnProperty(chartGroupName)) {
+                    this._chartMap[chartGroupName].clear();
+                }
             }
             this._chartMap = {};
         }
