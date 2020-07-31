@@ -9,13 +9,13 @@ export type ChartGroupType = string | IChartGroup;
 export type ColorsList = string[];
 
 export interface MinimalCFDimension {
-    filter(value): this;
-    filterExact(value): this;
-    filterRange(value: any[]): this;
-    filterFunction(value: (k) => any): this;
+    filter (value): this;
+    filterExact (value): this;
+    filterRange (value: any[]): this;
+    filterFunction (value: (k) => any): this;
     // filterAll(): this; // unused
-    top(k: number): any[];
-    bottom(k: number): any[];
+    top (k: number): any[];
+    bottom (k: number): any[];
 }
 
 interface CFGrouping {

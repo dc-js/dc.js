@@ -1,23 +1,23 @@
 export interface IMinimalChart {
-    render(): void;
+    render (): void;
 
-    redraw(): void;
+    redraw (): void;
 
-    filterAll(): void;
+    filterAll (): void;
 
-    focus?(): void;
+    focus? (): void;
 }
 
 export interface IChartGroup {
-    register(chart: IMinimalChart): void;
+    register (chart: IMinimalChart): void;
 
-    deregister(chart: IMinimalChart): void;
+    deregister (chart: IMinimalChart): void;
 
-    renderAll(): void;
+    renderAll (): void;
 
-    redrawAll(): void;
+    redrawAll (): void;
 
-    filterAll(): void;
+    filterAll (): void;
 
-    refocusAll(): void;
+    refocusAll (): void;
 }

@@ -12,10 +12,12 @@ import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
 import {
-    BaseAccessor, ChartGroupType,
+    BaseAccessor,
+    ChartGroupType,
     ChartParentType,
     KeyAccessor,
-    LabelAccessor, LegendItem,
+    LabelAccessor,
+    LegendItem,
     MinimalCFDimension,
     MinimalCFGroup,
     TitleAccessor,
@@ -520,7 +522,7 @@ export class BaseMixin {
         return this;
     }
 
-    private _getChartGroup(chartGroup: ChartGroupType): IChartGroup {
+    private _getChartGroup (chartGroup: ChartGroupType): IChartGroup {
         return (!chartGroup || typeof chartGroup === 'string') ? chartRegistry.chartGroup(chartGroup as string) : chartGroup;
     }
 
