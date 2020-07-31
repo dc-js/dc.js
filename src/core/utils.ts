@@ -19,7 +19,6 @@ interface IUtils {
     uniqueId: () => number;
     nameToId: (name) => string;
     appendOrSelect: (parent, selector, tag?) => any;
-    _toTimeFunc: (t) => any;
     safeNumber: (n) => number;
     arraysEqual: (a1, a2) => (boolean | any);
     allChildren: (node) => any[];
@@ -37,40 +36,24 @@ export const pluck2 = function (n, f) {
  * @type {{}}
  */
 export const utils: IUtils = {
-    _toTimeFunc (t): any {
-    }, add (l, r, t?): Date {
-        return undefined;
-    }, allChildren (node): any[] {
-        return [];
-    }, appendOrSelect (parent, selector, tag?): any {
-    }, arraysEqual (a1, a2): any {
-    }, arraysIdentical (a, b): boolean {
-        return false;
-    }, clamp (val, min, max): any {
-    }, constant (x): () => any {
-        return function () {
-        };
-    }, getAncestors (node): any[] {
-        return [];
-    }, isFloat (n): boolean {
-        return false;
-    }, isInteger (n): boolean {
-        return false;
-    }, isNegligible (n): boolean {
-        return false;
-    }, isNumber (n): boolean {
-        return false;
-    }, nameToId (name): string {
-        return '';
-    }, printSingleValue: undefined, safeNumber (n): number {
-        return 0;
-    }, subtract (l, r, t?): Date {
-        return undefined;
-    }, toHierarchy (list, accessor): { children: any[]; key: string } {
-        return {children: [], key: ''};
-    }, uniqueId (): number {
-        return 0;
-    }
+    add: add,
+    allChildren: allChildren,
+    appendOrSelect: appendOrSelect,
+    arraysEqual: arraysEqual,
+    arraysIdentical: arraysIdentical,
+    clamp: clamp,
+    constant: constant,
+    getAncestors: getAncestors,
+    isFloat: isFloat,
+    isInteger: isInteger,
+    isNegligible: isNegligible,
+    isNumber: isNumber,
+    nameToId: nameToId,
+    printSingleValue: printSingleValue,
+    safeNumber: safeNumber,
+    subtract: subtract,
+    toHierarchy: toHierarchy,
+    uniqueId: uniqueId
 };
 
 /**
@@ -80,7 +63,7 @@ export const utils: IUtils = {
  * @param {any} filter
  * @returns {String}
  */
-utils.printSingleValue = function (filter) {
+export function printSingleValue (filter) {
     let s: string|number = `${filter}`;
 
     if (filter instanceof Date) {
@@ -94,11 +77,12 @@ utils.printSingleValue = function (filter) {
     }
 
     return s;
-};
-utils.printSingleValue.fformat = format('.2f');
+}
+// TODO: move it to config
+printSingleValue.fformat = format('.2f');
 
 // convert 'day' to d3.timeDay and similar
-utils._toTimeFunc = function (t) {
+function _toTimeFunc (t) {
     const mappings = {
         'second': timeSecond,
         'minute': timeMinute,
@@ -109,7 +93,7 @@ utils._toTimeFunc = function (t) {
         'year': timeYear
     };
     return mappings[t];
-};
+}
 
 /**
  * Arbitrary add one value to another.
@@ -132,7 +116,7 @@ utils._toTimeFunc = function (t) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-utils.add = function (l, r, t?) {
+export function add (l, r, t?) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -146,7 +130,7 @@ utils.add = function (l, r, t?) {
         }
         t = t || timeDay;
         if (typeof t !== 'function') {
-            t = utils._toTimeFunc(t);
+            t = _toTimeFunc(t);
         }
         return t.offset(l, r);
     } else if (typeof r === 'string') {
@@ -155,7 +139,7 @@ utils.add = function (l, r, t?) {
     } else {
         return l + r;
     }
-};
+}
 
 /**
  * Arbitrary subtract one value from another.
@@ -178,7 +162,7 @@ utils.add = function (l, r, t?) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-utils.subtract = function (l, r, t?) {
+export function subtract (l, r, t?) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -192,7 +176,7 @@ utils.subtract = function (l, r, t?) {
         }
         t = t || timeDay;
         if (typeof t !== 'function') {
-            t = utils._toTimeFunc(t);
+            t = _toTimeFunc(t);
         }
         return t.offset(l, -r);
     } else if (typeof r === 'string') {
@@ -201,7 +185,7 @@ utils.subtract = function (l, r, t?) {
     } else {
         return l - r;
     }
-};
+}
 
 /**
  * Is the value a number?
@@ -210,9 +194,9 @@ utils.subtract = function (l, r, t?) {
  * @param {any} n
  * @returns {Boolean}
  */
-utils.isNumber = function (n) {
+export function isNumber (n) {
     return n === +n;
-};
+}
 
 /**
  * Is the value a float?
@@ -221,10 +205,10 @@ utils.isNumber = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-utils.isFloat = function (n) {
+export function isFloat (n) {
     // tslint:disable-next-line:no-bitwise
     return n === +n && n !== (n | 0);
-};
+}
 
 /**
  * Is the value an integer?
@@ -233,10 +217,10 @@ utils.isFloat = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-utils.isInteger = function (n) {
+export function isInteger (n) {
     // tslint:disable-next-line:no-bitwise
     return n === +n && n === (n | 0);
-};
+}
 
 /**
  * Is the value very close to zero?
@@ -245,9 +229,9 @@ utils.isInteger = function (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-utils.isNegligible = function (n) {
+export function isNegligible (n) {
     return !utils.isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
-};
+}
 
 /**
  * Ensure the value is no greater or less than the min/max values.  If it is return the boundary value.
@@ -258,9 +242,9 @@ utils.isNegligible = function (n) {
  * @param {any} max
  * @returns {any}
  */
-utils.clamp = function (val, min, max) {
+export function clamp (val, min, max) {
     return val < min ? min : (val > max ? max : val);
-};
+}
 
 /**
  * Given `x`, return a function that always returns `x`.
@@ -273,11 +257,11 @@ utils.clamp = function (val, min, max) {
  * @param {any} x
  * @returns {Function}
  */
-utils.constant = function (x) {
+export function constant (x) {
     return function () {
         return x;
     };
-};
+}
 
 /**
  * Using a simple static counter, provide a unique integer id.
@@ -286,9 +270,9 @@ utils.constant = function (x) {
  * @returns {Number}
  */
 let _idCounter = 0;
-utils.uniqueId = function () {
+export function uniqueId () {
     return ++_idCounter;
-};
+}
 
 /**
  * Convert a name to an ID.
@@ -297,9 +281,9 @@ utils.uniqueId = function () {
  * @param {String} name
  * @returns {String}
  */
-utils.nameToId = function (name) {
+export function nameToId (name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
-};
+}
 
 /**
  * Append or select an item on a parent element.
@@ -310,14 +294,14 @@ utils.nameToId = function (name) {
  * @param {String} tag
  * @returns {d3.selection}
  */
-utils.appendOrSelect = function (parent, selector, tag?) {
+export function appendOrSelect (parent, selector, tag?) {
     tag = tag || selector;
     let element = parent.select(selector);
     if (element.empty()) {
         element = parent.append(tag);
     }
     return element;
-};
+}
 
 /**
  * Return the number if the value is a number; else 0.
@@ -326,7 +310,9 @@ utils.appendOrSelect = function (parent, selector, tag?) {
  * @param {Number|any} n
  * @returns {Number}
  */
-utils.safeNumber = function (n) { return utils.isNumber(+n) ? +n : 0;};
+export function safeNumber (n) {
+    return utils.isNumber(+n) ? +n : 0;
+}
 
 /**
  * Return true if both arrays are equal, if both array are null these are considered equal
@@ -336,7 +322,7 @@ utils.safeNumber = function (n) { return utils.isNumber(+n) ? +n : 0;};
  * @param {Array|null} a2
  * @returns {Boolean}
  */
-utils.arraysEqual = function (a1, a2) {
+export function arraysEqual (a1, a2) {
     if (!a1 && !a2) {
         return true;
     }
@@ -349,10 +335,10 @@ utils.arraysEqual = function (a1, a2) {
         // If elements are not integers/strings, we hope that it will match because of toString
         // Test cases cover dates as well.
         a1.every((elem, i) => elem.valueOf() === a2[i].valueOf());
-};
+}
 
 // ******** Sunburst Chart ********
-utils.allChildren = function (node) {
+export function allChildren (node) {
     let paths = [];
     paths.push(node.path);
     console.log('currentNode', node);
@@ -362,11 +348,11 @@ utils.allChildren = function (node) {
         }
     }
     return paths;
-};
+}
 
 // builds a d3 Hierarchy from a collection
 // TODO: turn this monster method something better.
-utils.toHierarchy = function (list, accessor) {
+export function toHierarchy (list, accessor) {
     const root = {'key': 'root', 'children': []};
     for (let i = 0; i < list.length; i++) {
         const data = list[i];
@@ -380,7 +366,7 @@ utils.toHierarchy = function (list, accessor) {
             let childNode;
             if (j + 1 < parts.length) {
                 // Not yet at the end of the sequence; move down the tree.
-                childNode = findChild(children, nodeName);
+                childNode = _findChild(children, nodeName);
 
                 // If we don't already have a child node for this branch, create it.
                 if (childNode === void 0) {
@@ -396,9 +382,9 @@ utils.toHierarchy = function (list, accessor) {
         }
     }
     return root;
-};
+}
 
-function findChild (children, nodeName) {
+function _findChild (children, nodeName) {
     for (let k = 0; k < children.length; k++) {
         if (children[k].key === nodeName) {
             return children[k];
@@ -406,7 +392,7 @@ function findChild (children, nodeName) {
     }
 }
 
-utils.getAncestors = function (node) {
+export function getAncestors (node) {
     const path = [];
     let current = node;
     while (current.parent) {
@@ -414,9 +400,9 @@ utils.getAncestors = function (node) {
         current = current.parent;
     }
     return path;
-};
+}
 
-utils.arraysIdentical = function (a, b) {
+export function arraysIdentical (a, b) {
     let i = a.length;
     if (i !== b.length) {
         return false;
@@ -427,4 +413,4 @@ utils.arraysIdentical = function (a, b) {
         }
     }
     return true;
-};
+}
