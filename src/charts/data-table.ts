@@ -3,7 +3,7 @@ import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
-import {BaseAccessor, ChartParentType, CompareFn} from '../core/types';
+import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn} from '../core/types';
 import {Selection} from 'd3-selection';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
@@ -57,7 +57,7 @@ export class DataTable extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this._size = 25;

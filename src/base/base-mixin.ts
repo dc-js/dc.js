@@ -12,7 +12,7 @@ import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
 import {
-    BaseAccessor,
+    BaseAccessor, ChartGroupType,
     ChartParentType,
     KeyAccessor,
     LabelAccessor, LegendItem,
@@ -491,7 +491,7 @@ export class BaseMixin {
      * @returns {String|node|d3.selection|BaseMixin}
      */
     public anchor (): string|Element;
-    public anchor (parent: ChartParentType, chartGroup: string|IChartGroup): this;
+    public anchor (parent: ChartParentType, chartGroup: ChartGroupType): this;
     public anchor (parent?, chartGroup?) {
         if (!arguments.length) {
             return this._anchor;
@@ -520,8 +520,8 @@ export class BaseMixin {
         return this;
     }
 
-    private _getChartGroup(chartGroup) {
-        return (!chartGroup || typeof chartGroup === 'string') ? chartRegistry.chartGroup(chartGroup) : chartGroup;
+    private _getChartGroup(chartGroup: ChartGroupType): IChartGroup {
+        return (!chartGroup || typeof chartGroup === 'string') ? chartRegistry.chartGroup(chartGroup as string) : chartGroup;
     }
 
     /**
@@ -1401,7 +1401,7 @@ export class BaseMixin {
      * @returns {String|BaseMixin}
      */
     public chartGroup (): IChartGroup;
-    public chartGroup (chartGroup: string|IChartGroup): this;
+    public chartGroup (chartGroup: ChartGroupType): this;
     public chartGroup (chartGroup?) {
         if (!arguments.length) {
             return this._chartGroup;

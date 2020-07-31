@@ -1,7 +1,7 @@
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {BaseAccessor, ChartParentType} from '../core/types';
+import {BaseAccessor, ChartGroupType, ChartParentType} from '../core/types';
 import {Selection} from 'd3-selection';
 
 const INPUT_CSS_CLASS = 'dc-text-filter-input';
@@ -42,7 +42,7 @@ export class TextFilterWidget extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this._normalize = s => s.toLowerCase();

@@ -7,7 +7,7 @@ import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {transition} from '../core/core';
-import {ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
+import {ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -55,7 +55,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this._sliceCssClass = 'pie-slice';
