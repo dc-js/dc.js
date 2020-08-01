@@ -44,7 +44,7 @@ describe('dc utils', () => {
             expect(printer(null)).toEqual('');
         });
         it('print zero', () => {
-            expect(printer(0)).toEqual(0);
+            expect(printer(0)).toEqual('0');
         });
         it('print a multi-element array', () => {
             expect(printer(['this', 'that', 'and', 'the', 'other'])).toEqual('[this -> that -> and -> the -> other]');

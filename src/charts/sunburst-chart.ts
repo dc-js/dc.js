@@ -6,7 +6,7 @@ import {interpolate} from 'd3-interpolate';
 
 import {transition} from '../core/core';
 import {filters} from '../core/filters';
-import {utils} from '../core/utils';
+import {arraysIdentical, toHierarchy} from '../core/utils';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
@@ -145,7 +145,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         // if we have data...
         if (sum(this.data(), this.valueAccessor())) {
-            cdata = utils.toHierarchy(this.data(), this.valueAccessor());
+            cdata = toHierarchy(this.data(), this.valueAccessor());
             partitionedNodes = this._partitionNodes(cdata);
             // First one is the root, which is not needed
             partitionedNodes.nodes.shift();
@@ -153,7 +153,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
-            cdata = utils.toHierarchy([], d => d.value);
+            cdata = toHierarchy([], d => d.value);
             partitionedNodes = this._partitionNodes(cdata);
             this._g.classed(this._emptyCssClass, true);
         }
@@ -662,7 +662,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         // clear out any filters that cover the path filtered.
         for (let j = filtersList.length - 1; j >= 0; j--) {
             const currentFilter = filtersList[j];
-            if (utils.arraysIdentical(currentFilter, path)) {
+            if (arraysIdentical(currentFilter, path)) {
                 exactMatch = true;
             }
             this.filter(filtersList[j]);

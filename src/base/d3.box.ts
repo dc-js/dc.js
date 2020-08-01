@@ -38,8 +38,6 @@ import {select} from 'd3-selection';
 import {scaleLinear} from 'd3-scale';
 import {timerFlush} from 'd3-timer';
 
-import {utils} from '../core/utils';
-
 export const d3Box = function () {
     let width = 1;
     let height = 1;
@@ -477,7 +475,7 @@ export const d3Box = function () {
         if (!arguments.length) {
             return domain;
         }
-        domain = x === null ? x : typeof x === 'function' ? x : utils.constant(x);
+        domain = x === null ? x : typeof x === 'function' ? x : () => x;
         return box;
     };
 

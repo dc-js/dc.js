@@ -1,4 +1,22 @@
-export * from '../../core/utils';
+import {
+    add,
+    allChildren,
+    appendOrSelect,
+    arraysEqual,
+    arraysIdentical,
+    clamp,
+    getAncestors,
+    isFloat,
+    isInteger,
+    isNegligible,
+    isNumber,
+    nameToId,
+    printSingleValue,
+    safeNumber,
+    subtract,
+    toHierarchy,
+    uniqueId
+} from '../../core/utils';
 
 /**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function
@@ -27,4 +45,31 @@ export const pluck = function (n, f?) {
         return function (d) { return d[n]; };
     }
     return function (d, i) { return f.call(d, d[n], i); };
+};
+
+/**
+ * @namespace utils
+ * @type {{}}
+ */
+export const utils = {
+    add: add,
+    allChildren: allChildren,
+    appendOrSelect: appendOrSelect,
+    arraysEqual: arraysEqual,
+    arraysIdentical: arraysIdentical,
+    clamp: clamp,
+    constant: function (x) {
+        return () => x;
+    },
+    getAncestors: getAncestors,
+    isFloat: isFloat,
+    isInteger: isInteger,
+    isNegligible: isNegligible,
+    isNumber: isNumber,
+    nameToId: nameToId,
+    printSingleValue: printSingleValue,
+    safeNumber: safeNumber,
+    subtract: subtract,
+    toHierarchy: toHierarchy,
+    uniqueId: uniqueId
 };

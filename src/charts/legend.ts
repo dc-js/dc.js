@@ -1,4 +1,4 @@
-import {utils} from '../core/utils';
+import {isNumber} from '../core/utils';
 import {constants} from '../core/constants';
 import {LegendItem, LegendTextAccessor, ParentOfLegend} from '../core/types';
 import {Selection} from 'd3-selection';
@@ -232,7 +232,7 @@ export class Legend {
         if (!arguments.length) {
             return this._maxItems;
         }
-        this._maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
+        this._maxItems = isNumber(maxItems) ? maxItems : undefined;
         return this;
     }
 

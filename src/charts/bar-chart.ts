@@ -4,7 +4,7 @@ import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
-import {pluck2, utils} from '../core/utils';
+import {pluck2, printSingleValue, safeNumber} from '../core/utils';
 import {ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 const MIN_BAR_WIDTH = 1;
@@ -51,7 +51,7 @@ export class BarChart extends StackMixin {
 
         this._barWidth = undefined;
 
-        this.label(d => utils.printSingleValue(d.y0 + d.y), false);
+        this.label(d => printSingleValue(d.y0 + d.y), false);
 
         this.anchor(parent, chartGroup);
     }
@@ -114,7 +114,7 @@ export class BarChart extends StackMixin {
     }
 
     public _barHeight (d): number {
-        return utils.safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
+        return safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
     }
 
     public _labelXPos (d): number {
@@ -125,7 +125,7 @@ export class BarChart extends StackMixin {
         if (this.isOrdinal() && this._gap !== undefined) {
             x += this._gap / 2;
         }
-        return utils.safeNumber(x);
+        return safeNumber(x);
     }
 
     public _labelYPos (d): number {
@@ -135,7 +135,7 @@ export class BarChart extends StackMixin {
             y -= this._barHeight(d);
         }
 
-        return utils.safeNumber(y - LABEL_PADDING);
+        return safeNumber(y - LABEL_PADDING);
     }
 
     public _renderLabels (layer: SVGGElementSelection, layerIndex: number, data): void {
@@ -174,7 +174,7 @@ export class BarChart extends StackMixin {
         if (this.isOrdinal() && this._gap !== undefined) {
             x += this._gap / 2;
         }
-        return utils.safeNumber(x);
+        return safeNumber(x);
     }
 
     public _renderBars (layer: SVGGElementSelection, layerIndex: number, data): void {
@@ -208,7 +208,7 @@ export class BarChart extends StackMixin {
                     y -= this._barHeight(d);
                 }
 
-                return utils.safeNumber(y);
+                return safeNumber(y);
             })
             .attr('width', this._barWidth)
             .attr('height', d => this._barHeight(d))

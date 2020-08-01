@@ -3,7 +3,6 @@ import {interpolateHcl} from 'd3-interpolate';
 import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
-import {utils} from '../core/utils';
 import {ColorCommonInstance} from 'd3-color';
 import {BaseMixin} from './base-mixin';
 import {ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
@@ -87,7 +86,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
             if (colorScale instanceof Array) {
                 this._colors = scaleQuantize<string>().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
             } else {
-                this._colors = typeof colorScale === 'function' ? colorScale : utils.constant(colorScale);
+                this._colors = typeof colorScale === 'function' ? colorScale : () => colorScale;
             }
             return this;
         }

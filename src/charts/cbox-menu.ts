@@ -2,7 +2,7 @@ import {event, select, Selection} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
-import {utils} from '../core/utils'
+import {uniqueId} from '../core/utils'
 import {ChartParentType, CompareFn} from '../core/types';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
@@ -50,7 +50,7 @@ export class CboxMenu extends BaseMixin {
         this._multiple = false;
         this._promptValue = null;
 
-        this._uniqueId = utils.uniqueId();
+        this._uniqueId = uniqueId();
 
         this.data(group => group.all().filter(this._filterDisplayed));
 

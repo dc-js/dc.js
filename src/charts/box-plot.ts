@@ -6,7 +6,7 @@ import {d3Box} from '../base/d3.box'
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {units} from '../core/units';
-import {utils} from '../core/utils';
+import {add, subtract} from '../core/utils';
 import {BoxWidthFn, ChartParentType, DCBrushSelection, NumberFormatFn, SVGGElementSelection} from '../core/types';
 
 // Returns a function to compute the interquartile range.
@@ -168,7 +168,7 @@ export class BoxPlot extends CoordinateGridMixin {
         if (!arguments.length) {
             return this._boxWidth;
         }
-        this._boxWidth = typeof boxWidth === 'function' ? boxWidth : utils.constant(boxWidth);
+        this._boxWidth = typeof boxWidth === 'function' ? boxWidth : () => boxWidth;
         return this;
     }
 
@@ -290,12 +290,12 @@ export class BoxPlot extends CoordinateGridMixin {
 
     public yAxisMin (): number {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return utils.subtract(this._minDataValue() - padding, this.yAxisPadding()) as number;
+        return subtract(this._minDataValue() - padding, this.yAxisPadding()) as number;
     }
 
     public yAxisMax (): number {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return utils.add(this._maxDataValue() + padding, this.yAxisPadding()) as number;
+        return add(this._maxDataValue() + padding, this.yAxisPadding()) as number;
     }
 
     /**
