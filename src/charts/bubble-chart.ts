@@ -133,5 +133,3 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.fadeDeselectedArea(brushSelection);
     }
 }
-
-export const bubbleChart = (parent, chartGroup) => new BubbleChart(parent, chartGroup);

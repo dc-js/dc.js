@@ -185,5 +185,3 @@ export class NumberDisplay extends BaseMixin {
     }
 
 }
-
-export const numberDisplay = (parent, chartGroup) => new NumberDisplay(parent, chartGroup);

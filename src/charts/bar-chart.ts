@@ -381,5 +381,3 @@ export class BarChart extends StackMixin {
         return max;
     }
 }
-
-export const barChart = (parent, chartGroup) => new BarChart(parent, chartGroup);

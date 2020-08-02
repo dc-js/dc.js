@@ -284,5 +284,3 @@ export class SelectMenu extends BaseMixin {
         return this.numberVisible(numberVisible);
     }
 }
-
-export const selectMenu = (parent, chartGroup) => new SelectMenu(parent, chartGroup);

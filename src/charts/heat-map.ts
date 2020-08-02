@@ -446,5 +446,3 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this.hasFilter(d.key);
     }
 }
-
-export const heatMap = (parent, chartGroup) => new HeatMap(parent, chartGroup);

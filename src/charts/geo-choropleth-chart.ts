@@ -306,5 +306,3 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         return this;
     }
 }
-
-export const geoChoroplethChart = (parent, chartGroup) => new GeoChoroplethChart(parent, chartGroup);

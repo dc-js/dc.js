@@ -429,5 +429,3 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         return this.hasFilter(this.cappedKeyAccessor(d));
     }
 }
-
-export const rowChart = (parent, chartGroup) => new RowChart(parent, chartGroup);

@@ -150,5 +150,3 @@ export class TextFilterWidget extends BaseMixin {
         return this;
     }
 }
-
-export const textFilterWidget = (parent, chartGroup) => new TextFilterWidget(parent, chartGroup);

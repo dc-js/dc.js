@@ -475,5 +475,3 @@ export class DataTable extends BaseMixin {
         return this.showSections(showSections);
     }
 }
-
-export const dataTable = (parent, chartGroup) => new DataTable(parent, chartGroup);

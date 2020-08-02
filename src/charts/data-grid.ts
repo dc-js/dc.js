@@ -303,5 +303,3 @@ export class DataGrid extends BaseMixin {
         return this;
     }
 }
-
-export const dataGrid = (parent, chartGroup) => new DataGrid(parent, chartGroup);

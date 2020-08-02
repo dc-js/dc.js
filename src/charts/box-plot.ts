@@ -433,5 +433,3 @@ export class BoxPlot extends CoordinateGridMixin {
         return this;
     }
 }
-
-export const boxPlot = (parent, chartGroup) => new BoxPlot(parent, chartGroup);

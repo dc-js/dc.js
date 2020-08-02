@@ -1205,10 +1205,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             .attr('transform', `translate(-${this._clipPadding}, -${this._clipPadding})`);
     }
 
-    public _preprocessData (): void {
+    protected _preprocessData (): void {
     }
 
-    public _doRender (): this {
+    protected _doRender (): this {
         this.resetSvg();
 
         this._preprocessData();
@@ -1223,7 +1223,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public _doRedraw (): this {
+    protected _doRedraw (): this {
         this._preprocessData();
 
         this._drawChart(false);

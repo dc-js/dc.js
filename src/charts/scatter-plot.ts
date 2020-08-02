@@ -718,5 +718,3 @@ export class ScatterPlot extends CoordinateGridMixin {
         gBrush.call(this.brush().y(this.y()));
     }
 }
-
-export const scatterPlot = (parent, chartGroup) => new ScatterPlot(parent, chartGroup);

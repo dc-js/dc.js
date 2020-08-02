@@ -612,5 +612,3 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return t => this._safeArc(i(t), 0, this._buildArcs());
     }
 }
-
-export const pieChart = (parent, chartGroup) => new PieChart(parent, chartGroup);

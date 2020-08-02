@@ -1,7 +1,8 @@
 import {DataCount as DataCountNeo} from '../../charts/data-count';
 import {logger} from '../../core/logger';
+import {BaseMixinExt} from '../base/base-mixin';
 
-export class DataCount extends DataCountNeo {
+export class DataCount extends BaseMixinExt(DataCountNeo) {
     public dimension ();
     public dimension (cf): this;
     public dimension (cf?) {

@@ -290,5 +290,3 @@ export class CboxMenu extends BaseMixin {
         return this;
     }
 }
-
-export const cboxMenu = (parent, chartGroup) => new CboxMenu(parent, chartGroup);

@@ -745,5 +745,3 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return t => this._safeArc(this._buildArcs(), Object.assign({}, d, i(t)));
     }
 }
-
-export const sunburstChart = (parent, chartGroup) => new SunburstChart(parent, chartGroup);

@@ -623,5 +623,3 @@ export class LineChart extends StackMixin {
         });
     }
 }
-
-export const lineChart = (parent, chartGroup) => new LineChart(parent, chartGroup);

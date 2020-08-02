@@ -213,5 +213,3 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
     }
 
 }
-
-export const bubbleOverlay = (parent, chartGroup) => new BubbleOverlay(parent, chartGroup);
