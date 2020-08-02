@@ -12,7 +12,7 @@ export class ChartGroup implements IChartGroup {
     }
 
     public has (chart: IMinimalChart): boolean {
-        return this._charts.indexOf(chart) >= 0;
+        return this._charts.includes(chart);
     }
 
     public register (chart: IMinimalChart): void {
