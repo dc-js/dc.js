@@ -7,7 +7,7 @@ import {MarginMixin} from '../base/margin-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {transition} from '../core/core';
 import {Selection} from 'd3-selection';
-import {ChartParentType, MinimalXYScale, SVGGElementSelection} from '../core/types';
+import {ChartGroupType, ChartParentType, MinimalXYScale, SVGGElementSelection} from '../core/types';
 
 /**
  * Concrete row chart implementation.
@@ -50,7 +50,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this._g = undefined;

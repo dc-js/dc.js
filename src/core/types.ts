@@ -1,18 +1,21 @@
 import {Selection} from 'd3-selection';
 import {BaseMixin} from '../base/base-mixin';
+import {IChartGroup} from './chart-group-types';
 
 export type ChartParentType = string | BaseMixin | Selection<Element, undefined, Element, unknown>;
+
+export type ChartGroupType = string | IChartGroup;
 
 export type ColorsList = string[];
 
 export interface MinimalCFDimension {
-    filter(value): this;
-    filterExact(value): this;
-    filterRange(value: any[]): this;
-    filterFunction(value: (k) => any): this;
+    filter (value): this;
+    filterExact (value): this;
+    filterRange (value: any[]): this;
+    filterFunction (value: (k) => any): this;
     // filterAll(): this; // unused
-    top(k: number): any[];
-    bottom(k: number): any[];
+    top (k: number): any[];
+    bottom (k: number): any[];
 }
 
 interface CFGrouping {

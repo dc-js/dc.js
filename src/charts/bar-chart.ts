@@ -5,7 +5,7 @@ import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
 import {pluck2, printSingleValue, safeNumber} from '../core/utils';
-import {ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
+import {ChartGroupType, ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 const MIN_BAR_WIDTH = 1;
 const DEFAULT_GAP_BETWEEN_BARS = 2;
@@ -42,7 +42,7 @@ export class BarChart extends StackMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this._gap = DEFAULT_GAP_BETWEEN_BARS;

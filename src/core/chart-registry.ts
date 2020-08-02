@@ -1,6 +1,7 @@
 import {constants} from './constants';
 import {config} from './config';
-import {BaseMixin} from '../base/base-mixin';
+import {ChartGroup} from './chart-group';
+import {IMinimalChart} from './chart-group-types';
 
 /**
  * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
@@ -14,23 +15,23 @@ import {BaseMixin} from '../base/base-mixin';
  * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  */
 class ChartRegistry {
-    private _chartMap: {[group: string]: BaseMixin[]};
+    private _chartMap: {[group: string]: ChartGroup};
 
     constructor () {
         // chartGroup:string => charts:array
         this._chartMap = {};
     }
 
-    public _initializeChartGroup (group?: string): string {
+    public chartGroup (group?: string): ChartGroup {
         if (!group) {
             group = constants.DEFAULT_CHART_GROUP;
         }
 
-        if (!(this._chartMap)[group]) {
-            (this._chartMap)[group] = [];
+        if (!this._chartMap[group]) {
+            this._chartMap[group] = new ChartGroup();
         }
 
-        return group;
+        return this._chartMap[group];
     }
 
     /**
@@ -38,54 +39,33 @@ class ChartRegistry {
      * @param {Object} chart dc.js chart instance
      * @returns {Boolean}
      */
-    public has (chart: BaseMixin): boolean {
-        for (const e in this._chartMap) {
-            if ((this._chartMap)[e].indexOf(chart) >= 0) {
-                return true;
+    public has (chart: IMinimalChart): boolean {
+        for (const chartGroupName in this._chartMap) {
+            if (this._chartMap.hasOwnProperty(chartGroupName)) {
+                if (this._chartMap[chartGroupName].has(chart)) {
+                    return true;
+                }
             }
         }
         return false;
     }
-
-    /**
-     * Add given chart instance to the given group, creating the group if necessary.
-     * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
-     * @param {Object} chart dc.js chart instance
-     * @param {String} [group] Group name
-     * @return {undefined}
-     */
-    public register (chart: BaseMixin, group: string): void {
-        const _chartMap = this._chartMap;
-        group = this._initializeChartGroup(group);
-        _chartMap[group].push(chart);
-    }
-
-    /**
-     * Remove given chart instance from the given group, creating the group if necessary.
-     * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
-     * @param {Object} chart dc.js chart instance
-     * @param {String} [group] Group name
-     * @return {undefined}
-     */
-    public deregister (chart: BaseMixin, group: string): void {
-        group = this._initializeChartGroup(group);
-        for (let i = 0; i < (this._chartMap)[group].length; i++) {
-            if ((this._chartMap)[group][i].anchorName() === chart.anchorName()) {
-                (this._chartMap)[group].splice(i, 1);
-                break;
-            }
-        }
-    }
-
     /**
      * Clear given group if one is provided, otherwise clears all groups.
      * @param {String} group Group name
      * @return {undefined}
      */
-    public clear (group: string): void {
+    public clear (group?: string): void {
         if (group) {
-            delete (this._chartMap)[group];
+            if (this._chartMap[group]) {
+                this._chartMap[group].clear();
+                delete (this._chartMap)[group];
+            }
         } else {
+            for (const chartGroupName in this._chartMap) {
+                if (this._chartMap.hasOwnProperty(chartGroupName)) {
+                    this._chartMap[chartGroupName].clear();
+                }
+            }
             this._chartMap = {};
         }
     }
@@ -96,9 +76,8 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @returns {Array<Object>}
      */
-    public list (group: string): BaseMixin[] {
-        group = this._initializeChartGroup(group);
-        return (this._chartMap)[group];
+    public list (group?: string): IMinimalChart[] {
+        return this.chartGroup(group).list();
     }
 }
 
@@ -116,8 +95,8 @@ export const chartRegistry = new ChartRegistry();
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function registerChart (chart: BaseMixin, group: string): void {
-    chartRegistry.register(chart, group);
+export function registerChart (chart: IMinimalChart, group?: string): void {
+    chartRegistry.chartGroup(group).register(chart);
 }
 
 /**
@@ -128,8 +107,8 @@ export function registerChart (chart: BaseMixin, group: string): void {
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function deregisterChart (chart: BaseMixin, group: string): void {
-    chartRegistry.deregister(chart, group);
+export function deregisterChart (chart: IMinimalChart, group?: string): void {
+    chartRegistry.chartGroup(group).deregister(chart);
 }
 
 /**
@@ -138,7 +117,7 @@ export function deregisterChart (chart: BaseMixin, group: string): void {
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
-export function hasChart (chart: BaseMixin): boolean {
+export function hasChart (chart: IMinimalChart): boolean {
     return chartRegistry.has(chart);
 }
 
@@ -148,9 +127,9 @@ export function hasChart (chart: BaseMixin): boolean {
  * @param {String} group Group name
  * @return {undefined}
  */
-export const deregisterAllCharts = function (group) {
+export function deregisterAllCharts (group?) {
     chartRegistry.clear(group);
-};
+}
 
 /**
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
@@ -159,11 +138,8 @@ export const deregisterAllCharts = function (group) {
  * @param {String} [group]
  * @return {undefined}
  */
-export function filterAll (group: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        charts[i].filterAll();
-    }
+export function filterAll (group?: string): void {
+    chartRegistry.chartGroup(group).filterAll();
 }
 
 /**
@@ -173,15 +149,8 @@ export function filterAll (group: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function refocusAll (group: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        // @ts-ignore
-        if (charts[i].focus) {
-            // @ts-ignore
-            charts[i].focus();
-        }
-    }
+export function refocusAll (group?: string): void {
+    chartRegistry.chartGroup(group).refocusAll();
 }
 
 /**
@@ -191,11 +160,8 @@ export function refocusAll (group: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function renderAll (group: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        charts[i].render();
-    }
+export function renderAll (group?: string): void {
+    chartRegistry.chartGroup(group).renderAll();
 
     if (config._renderlet !== null) {
         config._renderlet(group);
@@ -211,11 +177,8 @@ export function renderAll (group: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function redrawAll (group: string): void {
-    const charts = chartRegistry.list(group);
-    for (let i = 0; i < charts.length; ++i) {
-        charts[i].redraw();
-    }
+export function redrawAll (group?: string): void {
+    chartRegistry.chartGroup(group).redrawAll();
 
     if (config._renderlet !== null) {
         config._renderlet(group);

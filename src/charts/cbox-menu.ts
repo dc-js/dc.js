@@ -3,7 +3,7 @@ import {event, select, Selection} from 'd3-selection';
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {uniqueId} from '../core/utils'
-import {ChartParentType, CompareFn} from '../core/types';
+import {ChartGroupType, ChartParentType, CompareFn} from '../core/types';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -42,7 +42,7 @@ export class CboxMenu extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
      * Interaction with the widget will only trigger events and redraws within its group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this._cbox = undefined;

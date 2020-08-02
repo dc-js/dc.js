@@ -4,7 +4,7 @@ import {Axis, axisRight} from 'd3-axis';
 
 import {add, subtract} from '../core/utils';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {ChartParentType, Margins, MinimalXYScale, SVGGElementSelection} from '../core/types';
+import {ChartGroupType, ChartParentType, Margins, MinimalXYScale, SVGGElementSelection} from '../core/types';
 
 const SUB_CHART_CLASS = 'sub';
 const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
@@ -40,7 +40,7 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this._children = [];

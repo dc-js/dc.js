@@ -1,20 +1,25 @@
 //# dc.js Getting Started and How-To Guide
 'use strict';
 
+// ### Create Chart group
+
+// This allows associating all charts that are linked together and should respond to changes in other charts
+const chartGroup = new dc.ChartGroup();
+
 // ### Create Chart Objects
 
 // Create chart objects associated with the container elements identified by the css selector.
 // Note: It is often a good idea to have these objects accessible at the global scope so that they can be modified or
 // filtered by other page controls.
-const gainOrLossChart = new dc.PieChart('#gain-loss-chart');
-const fluctuationChart = new dc.BarChart('#fluctuation-chart');
-const quarterChart = new dc.PieChart('#quarter-chart');
-const dayOfWeekChart = new dc.RowChart('#day-of-week-chart');
-const moveChart = new dc.LineChart('#monthly-move-chart');
-const volumeChart = new dc.BarChart('#monthly-volume-chart');
-const yearlyBubbleChart = new dc.BubbleChart('#yearly-bubble-chart');
-const nasdaqCount = new dc.DataCount('.dc-data-count');
-const nasdaqTable = new dc.DataTable('.dc-data-table');
+const gainOrLossChart = new dc.PieChart('#gain-loss-chart', chartGroup);
+const fluctuationChart = new dc.BarChart('#fluctuation-chart', chartGroup);
+const quarterChart = new dc.PieChart('#quarter-chart', chartGroup);
+const dayOfWeekChart = new dc.RowChart('#day-of-week-chart', chartGroup);
+const moveChart = new dc.LineChart('#monthly-move-chart', chartGroup);
+const volumeChart = new dc.BarChart('#monthly-volume-chart', chartGroup);
+const yearlyBubbleChart = new dc.BubbleChart('#yearly-bubble-chart', chartGroup);
+const nasdaqCount = new dc.DataCount('.dc-data-count', chartGroup);
+const nasdaqTable = new dc.DataTable('.dc-data-table', chartGroup);
 
 // ### Anchor Div for Charts
 /*
@@ -446,7 +451,7 @@ d3.csv('ndx.csv').then(data => {
         // `%filter-count` and `%total-count` are replaced with the values obtained.
         .html({
             some: '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
-                ' | <a href=\'javascript:dc.filterAll(); dc.renderAll();\'>Reset All</a>',
+                ' | <a href=\'javascript:chartGroup.filterAll(); chartGroup.redrawAll();\'>Reset All</a>',
             all: 'All records selected. Please click on the graph to apply filters.'
         });
 
@@ -516,7 +521,7 @@ d3.csv('ndx.csv').then(data => {
     //#### Rendering
 
     //simply call `.renderAll()` to render all charts on the page
-    dc.renderAll();
+    chartGroup.renderAll();
     /*
     // Or you can render charts belonging to a specific chart group
     dc.renderAll('group');

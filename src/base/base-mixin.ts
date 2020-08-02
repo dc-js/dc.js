@@ -4,7 +4,7 @@ import {ascending} from 'd3-array';
 
 import {isNumber, uniqueId} from '../core/utils';
 import {instanceOfChart} from '../core/core';
-import {deregisterChart, redrawAll, registerChart, renderAll} from '../core/chart-registry';
+import {chartRegistry} from '../core/chart-registry';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
 import {logger} from '../core/logger';
@@ -13,6 +13,7 @@ import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
 import {
     BaseAccessor,
+    ChartGroupType,
     ChartParentType,
     KeyAccessor,
     LabelAccessor,
@@ -22,6 +23,7 @@ import {
     TitleAccessor,
     ValueAccessor
 } from '../core/types';
+import {IChartGroup} from '../core/chart-group-types';
 
 const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
     if (filters.length === 0) {
@@ -110,7 +112,7 @@ export class BaseMixin {
     private _transitionDelay: number;
     private _filterPrinter: (filters) => string;
     private _mandatoryAttributesList: string[];
-    protected _chartGroup: string;
+    private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
     private _commitHandler; // TODO: support async functions as well
@@ -171,8 +173,6 @@ export class BaseMixin {
         this._filterPrinter = printers.filters;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
-
-        this._chartGroup = constants.DEFAULT_CHART_GROUP;
 
         this._listeners = dispatch(
             'preRender',
@@ -493,11 +493,12 @@ export class BaseMixin {
      * @returns {String|node|d3.selection|BaseMixin}
      */
     public anchor (): string|Element;
-    public anchor (parent: ChartParentType, chartGroup: string): this;
+    public anchor (parent: ChartParentType, chartGroup: ChartGroupType): this;
     public anchor (parent?, chartGroup?) {
         if (!arguments.length) {
             return this._anchor;
         }
+        this._chartGroup = this._getChartGroup(chartGroup);
         if (instanceOfChart(parent)) {
             this._anchor = parent.anchor();
             if ((this._anchor as any).children) { // is _anchor a div?
@@ -513,13 +514,16 @@ export class BaseMixin {
             }
             this._root = select(this._anchor as any); // _anchor can be either string or an Element, both are valid
             this._root.classed(constants.CHART_CLASS, true);
-            registerChart(this, chartGroup);
+            this._chartGroup.register(this);
             this._isChild = false;
         } else {
             throw new BadArgumentException('parent must be defined');
         }
-        this._chartGroup = chartGroup;
         return this;
+    }
+
+    private _getChartGroup (chartGroup: ChartGroupType): IChartGroup {
+        return (!chartGroup || typeof chartGroup === 'string') ? chartRegistry.chartGroup(chartGroup as string) : chartGroup;
     }
 
     /**
@@ -834,11 +838,11 @@ export class BaseMixin {
                 if (error) {
                     console.log(error);
                 } else {
-                    redrawAll(this.chartGroup());
+                    this.chartGroup().redrawAll();
                 }
             });
         } else {
-            redrawAll(this.chartGroup());
+            this.chartGroup().redrawAll();
         }
         return this;
     }
@@ -854,11 +858,11 @@ export class BaseMixin {
                 if (error) {
                     console.log(error);
                 } else {
-                    renderAll(this.chartGroup());
+                    this.chartGroup().renderAll();
                 }
             });
         } else {
-            renderAll(this.chartGroup());
+            this.chartGroup().renderAll();
         }
         return this;
     }
@@ -1398,18 +1402,18 @@ export class BaseMixin {
      * @param {String} [chartGroup]
      * @returns {String|BaseMixin}
      */
-    public chartGroup (): string;
-    public chartGroup (chartGroup: string): this;
+    public chartGroup (): IChartGroup;
+    public chartGroup (chartGroup: ChartGroupType): this;
     public chartGroup (chartGroup?) {
         if (!arguments.length) {
             return this._chartGroup;
         }
         if (!this._isChild) {
-            deregisterChart(this, this._chartGroup);
+            this._chartGroup.deregister(this);
         }
-        this._chartGroup = chartGroup;
+        this._chartGroup =  this._getChartGroup(chartGroup);
         if (!this._isChild) {
-            registerChart(this, this._chartGroup);
+            this._chartGroup.register(this);
         }
         return this;
     }

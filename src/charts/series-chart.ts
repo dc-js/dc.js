@@ -3,7 +3,7 @@ import {nest} from 'd3-collection';
 
 import {CompositeChart} from './composite-chart';
 import {LineChart} from './line-chart';
-import {BaseAccessor, ChartParentType, CompareFn} from '../core/types';
+import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn} from '../core/types';
 
 export type LineChartFunction = (parent, chartGroup) => LineChart;
 
@@ -37,14 +37,13 @@ export class SeriesChart extends CompositeChart {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: string) {
+    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
         this._keySort = (a, b) => ascending(this.keyAccessor()(a), this.keyAccessor()(b));
 
         this._charts = {};
         this._chartFunction = (p, cg) => new LineChart(p, cg);
-        this._chartGroup = chartGroup;
         this._seriesAccessor = undefined;
         this._seriesSort = ascending;
         this._valueSort = this._keySort;
@@ -76,7 +75,7 @@ export class SeriesChart extends CompositeChart {
         const nesting = nester.entries(this.data());
         const children =
             nesting.map((sub, i) => {
-                const subChart = this._charts[sub.key] || this._chartFunction(this, this._chartGroup);
+                const subChart = this._charts[sub.key] || this._chartFunction(this, this.chartGroup());
                 if (!this._charts[sub.key]) {
                     childrenChanged = true;
                 }
