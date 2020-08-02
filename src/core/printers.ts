@@ -1,4 +1,4 @@
-import {utils} from './utils';
+import {printSingleValue} from './utils';
 
 interface IPrinters {
     filters: (filters) => string;
@@ -50,12 +50,12 @@ printers.filter = function (filter) {
     if (typeof filter !== 'undefined' && filter !== null) {
         if (filter instanceof Array) {
             if (filter.length >= 2) {
-                s = `[${filter.map(e => utils.printSingleValue(e)).join(' -> ')}]`;
+                s = `[${filter.map(e => printSingleValue(e)).join(' -> ')}]`;
             } else if (filter.length >= 1) {
-                s = utils.printSingleValue(filter[0]);
+                s = printSingleValue(filter[0]);
             }
         } else {
-            s = utils.printSingleValue(filter);
+            s = printSingleValue(filter);
         }
     }
 

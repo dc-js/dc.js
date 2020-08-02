@@ -20,7 +20,7 @@ import {
 import {select, Selection} from 'd3-selection';
 
 import {logger} from '../core/logger';
-import {pluck, utils} from '../core/utils';
+import {pluck2, printSingleValue, safeNumber} from '../core/utils';
 import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {BaseAccessor, ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
@@ -91,7 +91,7 @@ export class LineChart extends StackMixin {
         this.transitionDelay(0);
         this._rangeBandPadding(1);
 
-        this.label(d => utils.printSingleValue(d.y0 + d.y), false);
+        this.label(d => printSingleValue(d.y0 + d.y), false);
 
         this.anchor(parent, chartGroup);
     }
@@ -401,15 +401,15 @@ export class LineChart extends StackMixin {
 
                 const dots: Selection<SVGCircleElement, any, SVGGElement, any> =
                     g.selectAll<SVGCircleElement, any>(`circle.${DOT_CIRCLE_CLASS}`)
-                     .data<any>(points, pluck('x'));
+                     .data<any>(points, d => d.x);
 
                 const chart = this;
                 const dotsEnterModify = dots
                     .enter()
                     .append('circle')
                     .attr('class', DOT_CIRCLE_CLASS)
-                    .attr('cx', d => utils.safeNumber(this.x()(d.x)))
-                    .attr('cy', d => utils.safeNumber(this.y()(d.y + d.y0)))
+                    .attr('cx', d => safeNumber(this.x()(d.x)))
+                    .attr('cy', d => safeNumber(this.y()(d.y + d.y0)))
                     .attr('r', this._getDotRadius())
                     .style('fill-opacity', this._dataPointFillOpacity)
                     .style('stroke-opacity', this._dataPointStrokeOpacity)
@@ -430,8 +430,8 @@ export class LineChart extends StackMixin {
                 dotsEnterModify.call(dot => this._doRenderTitle(dot, data));
 
                 transition(dotsEnterModify, this.transitionDuration())
-                    .attr('cx', d => utils.safeNumber(this.x()(d.x)))
-                    .attr('cy', d => utils.safeNumber(this.y()(d.y + d.y0)))
+                    .attr('cx', d => safeNumber(this.x()(d.x)))
+                    .attr('cy', d => safeNumber(this.y()(d.y + d.y0)))
                     .attr('fill', (d, i) => this.getColor(d, i));
 
                 dots.exit().remove();
@@ -443,8 +443,8 @@ export class LineChart extends StackMixin {
         const chart = this;
         layers.each(function (data, layerIndex) {
             const layer = select(this);
-            const labels = layer.selectAll<SVGTextElement, unknown>('text.lineLabel')
-                .data(data.values, pluck('x'));
+            const labels = layer.selectAll<SVGTextElement, any>('text.lineLabel')
+                .data(data.values, d => d.x);
 
             const labelsEnterModify = labels
                 .enter()
@@ -454,10 +454,10 @@ export class LineChart extends StackMixin {
                 .merge(labels);
 
             transition(labelsEnterModify, chart.transitionDuration())
-                .attr('x', d => utils.safeNumber(chart.x()(d.x)))
+                .attr('x', d => safeNumber(chart.x()(d.x)))
                 .attr('y', d => {
                     const y = chart.y()(d.y + d.y0) - LABEL_PADDING;
-                    return utils.safeNumber(y);
+                    return safeNumber(y);
                 })
                 .text(d => chart.label()(d));
 
@@ -520,7 +520,7 @@ export class LineChart extends StackMixin {
     private _doRenderTitle (dot: Selection<SVGCircleElement, any, SVGGElement, any>, d): void {
         if (this.renderTitle()) {
             dot.select('title').remove();
-            dot.append('title').text(pluck('data', this.title(d.name)));
+            dot.append('title').text(pluck2('data', this.title(d.name)));
         }
     }
 

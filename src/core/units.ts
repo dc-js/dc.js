@@ -1,4 +1,4 @@
-import {utils} from './utils';
+import {isNegligible} from './utils';
 import {Units} from './types';
 
 /**
@@ -75,7 +75,7 @@ units.fp = {};
 units.fp.precision = function (precision: number): Units {
     const _f: Units = function (s: number, e:number): number {
         const d = Math.abs((e - s) / _f.resolution);
-        if (utils.isNegligible(d - Math.floor(d))) {
+        if (isNegligible(d - Math.floor(d))) {
             return Math.floor(d);
         } else {
             return Math.ceil(d);

@@ -2,7 +2,7 @@ import {max, min} from 'd3-array';
 import {scaleLinear} from 'd3-scale';
 import {Axis, axisRight} from 'd3-axis';
 
-import {utils} from '../core/utils';
+import {add, subtract} from '../core/utils';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {ChartGroupType, ChartParentType, Margins, MinimalXYScale, SVGGElementSelection} from '../core/types';
 
@@ -530,11 +530,11 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _yAxisMax () {
-        return utils.add(max(this._getYAxisMax(this._leftYAxisChildren())), this.yAxisPadding());
+        return add(max(this._getYAxisMax(this._leftYAxisChildren())), this.yAxisPadding());
     }
 
     public _rightYAxisMax () {
-        return utils.add(max(this._getYAxisMax(this._rightYAxisChildren())), this.yAxisPadding());
+        return add(max(this._getYAxisMax(this._rightYAxisChildren())), this.yAxisPadding());
     }
 
     public _getAllXAxisMinFromChildCharts () {
@@ -542,7 +542,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public xAxisMin () {
-        return utils.subtract(min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
+        return subtract(min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     public _getAllXAxisMaxFromChildCharts () {
@@ -550,7 +550,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public xAxisMax () {
-        return utils.add(max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
+        return add(max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     public legendables () {

@@ -1,6 +1,6 @@
 import {select, Selection} from 'd3-selection';
 
-import {pluck, utils} from '../core/utils';
+import {isNumber} from '../core/utils';
 import {constants} from '../core/constants';
 import {LegendItem, LegendTextAccessor, ParentOfLegend} from '../core/types';
 
@@ -78,7 +78,7 @@ export class HtmlLegend {
 
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-color')
-            .style('background-color', pluck('color'));
+            .style('background-color', d => d.color);
 
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-label')
@@ -188,7 +188,7 @@ export class HtmlLegend {
         if (!arguments.length) {
             return this._maxItems;
         }
-        this._maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
+        this._maxItems = isNumber(maxItems) ? maxItems : undefined;
         return this;
     }
 }

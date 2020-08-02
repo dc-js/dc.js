@@ -6,7 +6,7 @@ import {ColorMixin} from '../base/color-mixin';
 import {transition} from '../core/core';
 import {logger} from '../core/logger';
 import {events} from '../core/events';
-import {utils} from '../core/utils';
+import {nameToId} from '../core/utils';
 import {BaseAccessor, ChartGroupType, ChartParentType} from '../core/types';
 
 interface GeoJson {
@@ -118,7 +118,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             .classed('deselected', d => this._isDeselected(layerIndex, d))
             .attr('class', d => {
                 const layerNameClass = this._geoJson(layerIndex).name;
-                const regionClass = utils.nameToId(this._geoJson(layerIndex).keyAccessor(d));
+                const regionClass = nameToId(this._geoJson(layerIndex).keyAccessor(d));
                 let baseClasses = `${layerNameClass} ${regionClass}`;
                 if (this._isSelected(layerIndex, d)) {
                     baseClasses += ' selected';

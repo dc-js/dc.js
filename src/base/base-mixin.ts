@@ -2,7 +2,7 @@ import {BaseType, select, Selection} from 'd3-selection';
 import {dispatch, Dispatch} from 'd3-dispatch';
 import {ascending} from 'd3-array';
 
-import {pluck, utils} from '../core/utils';
+import {isNumber, uniqueId} from '../core/utils';
 import {instanceOfChart} from '../core/core';
 import {chartRegistry} from '../core/chart-registry';
 import {constants} from '../core/constants';
@@ -127,7 +127,7 @@ export class BaseMixin {
     protected _groupName: string; // StackMixin needs it
 
     constructor () {
-        this.__dcFlag__ = utils.uniqueId().toString();
+        this.__dcFlag__ = uniqueId().toString();
 
         this._dimension = undefined;
         this._group = undefined;
@@ -154,11 +154,11 @@ export class BaseMixin {
         this._height = undefined;
         this._useViewBoxResizing = false;
 
-        this._keyAccessor = pluck('key');
-        this._valueAccessor = pluck('value');
-        this._label = pluck('key');
+        this._keyAccessor = d => d.key;
+        this._valueAccessor = d => d.value;
+        this._label = d => d.key;
 
-        this._ordering = pluck('key');
+        this._ordering = d => d.key;
 
         this._renderLabel = false;
 
@@ -228,13 +228,13 @@ export class BaseMixin {
     public height (height: number|(() => number)): this;
     public height (height?) {
         if (!arguments.length) {
-            if (!utils.isNumber(this._height)) {
+            if (!isNumber(this._height)) {
                 // only calculate once
                 this._height = this._heightCalc(this._root.node());
             }
             return this._height;
         }
-        this._heightCalc = height ? (typeof height === 'function' ? height : utils.constant(height)) : this._defaultHeightCalc;
+        this._heightCalc = height ? (typeof height === 'function' ? height : () => height) : this._defaultHeightCalc;
         this._height = undefined;
         return this;
     }
@@ -256,13 +256,13 @@ export class BaseMixin {
     public width (width: number|(() => number)): this;
     public width (width?) {
         if (!arguments.length) {
-            if (!utils.isNumber(this._width)) {
+            if (!isNumber(this._width)) {
                 // only calculate once
                 this._width = this._widthCalc(this._root.node());
             }
             return this._width;
         }
-        this._widthCalc = width ? (typeof width === 'function' ? width : utils.constant(width)) : this._defaultWidthCalc;
+        this._widthCalc = width ? (typeof width === 'function' ? width : () => width) : this._defaultWidthCalc;
         this._width = undefined;
         return this;
     }
@@ -377,7 +377,7 @@ export class BaseMixin {
         if (!arguments.length) {
             return this._data(this._group);
         }
-        this._data = typeof callback === 'function' ? callback : utils.constant(callback);
+        this._data = typeof callback === 'function' ? callback : () => callback;
         this.expireCache();
         return this;
     }
@@ -622,8 +622,8 @@ export class BaseMixin {
      * });
      * // for a chart with a range brush, print the filter as start and extent
      * chart.filterPrinter(function(filters) {
-     *   return 'start ' + utils.printSingleValue(filters[0][0]) +
-     *     ' extent ' + utils.printSingleValue(filters[0][1] - filters[0][0]);
+     *   return 'start ' + printSingleValue(filters[0][0]) +
+     *     ' extent ' + printSingleValue(filters[0][1] - filters[0][0]);
      * });
      * @param {Function} [filterPrinterFunction=printers.filters]
      * @returns {Function|BaseMixin}
@@ -1550,7 +1550,7 @@ export class BaseMixin {
      */
     public renderlet (renderletFunction): this {
         logger.warnOnce('chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
-        this.on(`renderlet.${utils.uniqueId()}`, renderletFunction);
+        this.on(`renderlet.${uniqueId()}`, renderletFunction);
         return this;
     }
 }

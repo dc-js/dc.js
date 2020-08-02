@@ -6,7 +6,7 @@ import {interpolate} from 'd3-interpolate';
 
 import {transition} from '../core/core';
 import {filters} from '../core/filters';
-import {pluck, utils} from '../core/utils';
+import {arraysIdentical, toHierarchy} from '../core/utils';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
@@ -21,12 +21,6 @@ export interface RingSizeSpecs {
     scaleOuterRadius: BaseAccessor<number>;
     scaleInnerRadius: BaseAccessor<number>;
     relativeRingSizesFunction: (ringCount: number) => number[];
-}
-
-export interface RingSizeSpecsExtended extends RingSizeSpecs {
-    // These two are added to this interface after it is assigned.
-    relativeRingSizes?: number[];
-    rootOffset?: number;
 }
 
 /**
@@ -50,12 +44,14 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     private _radius: number;
     private _givenRadius: number;
     private _innerRadius: number;
-    private _ringSizes: RingSizeSpecsExtended;
+    private _ringSizes: RingSizeSpecs;
     private _g: SVGGElementSelection;
     private _cx: number;
     private _cy: number;
     private _minAngleForLabel: number;
     private _externalLabelRadius: number;
+    private _relativeRingSizes: number[];
+    private _rootOffset: number;
 
     /**
      * Create a Sunburst Chart
@@ -92,7 +88,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this.colorAccessor(d => this.keyAccessor()(d));
 
         // override cap mixin
-        this.ordering(pluck('key'));
+        this.ordering(d => d.key);
 
         this.title(d => `${this.keyAccessor()(d)}: ${this._extendedValueAccessor(d)}`);
 
@@ -116,11 +112,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         if (ringIndex === 0) {
             return this._innerRadius;
         } else {
-            const customRelativeRadius = sum(this.ringSizes().relativeRingSizes.slice(0, ringIndex));
-            const scaleFactor = (ringIndex * (1 / this.ringSizes().relativeRingSizes.length)) /
+            const customRelativeRadius = sum(this._relativeRingSizes.slice(0, ringIndex));
+            const scaleFactor = (ringIndex * (1 / this._relativeRingSizes.length)) /
                   customRelativeRadius;
-            const standardRadius = (y - this.ringSizes().rootOffset) /
-                  (1 - this.ringSizes().rootOffset) * (this._radius - this._innerRadius);
+            const standardRadius = (y - this._rootOffset) /
+                  (1 - this._rootOffset) * (this._radius - this._innerRadius);
             return this._innerRadius + standardRadius / scaleFactor;
         }
     }
@@ -149,7 +145,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         // if we have data...
         if (sum(this.data(), this.valueAccessor())) {
-            cdata = utils.toHierarchy(this.data(), this.valueAccessor());
+            cdata = toHierarchy(this.data(), this.valueAccessor());
             partitionedNodes = this._partitionNodes(cdata);
             // First one is the root, which is not needed
             partitionedNodes.nodes.shift();
@@ -157,12 +153,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
-            cdata = utils.toHierarchy([], d => d.value);
+            cdata = toHierarchy([], d => d.value);
             partitionedNodes = this._partitionNodes(cdata);
             this._g.classed(this._emptyCssClass, true);
         }
-        this.ringSizes().rootOffset = partitionedNodes.rootOffset;
-        this.ringSizes().relativeRingSizes = partitionedNodes.relativeRingSizes;
+        this._rootOffset = partitionedNodes.rootOffset;
+        this._relativeRingSizes = partitionedNodes.relativeRingSizes;
 
         // TODO: probably redundant check, this will always be true
         if (this._g) {
@@ -548,7 +544,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {RingSizes} ringSizes
      * @returns {Object|SunburstChart}
      */
-    public ringSizes (): RingSizeSpecsExtended;
+    public ringSizes (): RingSizeSpecs;
     public ringSizes (ringSizes: RingSizeSpecs): this;
     public ringSizes (ringSizes?) {
         if (!arguments.length) {
@@ -666,7 +662,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         // clear out any filters that cover the path filtered.
         for (let j = filtersList.length - 1; j >= 0; j--) {
             const currentFilter = filtersList[j];
-            if (utils.arraysIdentical(currentFilter, path)) {
+            if (arraysIdentical(currentFilter, path)) {
                 exactMatch = true;
             }
             this.filter(filtersList[j]);

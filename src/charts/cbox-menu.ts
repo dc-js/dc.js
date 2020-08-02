@@ -2,7 +2,7 @@ import {event, select, Selection} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
-import {utils} from '../core/utils'
+import {uniqueId} from '../core/utils'
 import {ChartGroupType, ChartParentType, CompareFn} from '../core/types';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
@@ -18,7 +18,6 @@ export class CboxMenu extends BaseMixin {
     private _cbox: Selection<HTMLElement, any, HTMLElement, any>;
     private _promptText: string;
     private _multiple: boolean;
-    private _inputType: string;
     private _promptValue; // TODO: figure out what is Prompt value and some use cases
     private _uniqueId: number;
     private _filterDisplayed: (d) => boolean;
@@ -49,10 +48,9 @@ export class CboxMenu extends BaseMixin {
         this._cbox = undefined;
         this._promptText = 'Select all';
         this._multiple = false;
-        this._inputType = 'radio';
         this._promptValue = null;
 
-        this._uniqueId = utils.uniqueId();
+        this._uniqueId = uniqueId();
 
         this.data(group => group.all().filter(this._filterDisplayed));
 
@@ -100,6 +98,8 @@ export class CboxMenu extends BaseMixin {
     }
 
     public _renderOptions () {
+        const inputType = this._multiple ? 'checkbox' : 'radio';
+
         let options: Selection<HTMLLIElement, unknown, HTMLElement, any> = this._cbox
             .selectAll<HTMLLIElement, any>(`li.${ITEM_CSS_CLASS}`)
             .data(this.data(), d => this.keyAccessor()(d));
@@ -113,7 +113,7 @@ export class CboxMenu extends BaseMixin {
 
         options
             .append('input')
-            .attr('type', this._inputType)
+            .attr('type', inputType)
             .attr('value', d => this.keyAccessor()(d))
             .attr('name', `domain_${this._uniqueId}`)
             .attr('id', (d, i) => `input_${this._uniqueId}_${i}`);
@@ -136,7 +136,7 @@ export class CboxMenu extends BaseMixin {
         } else {
             const li = this._cbox.append('li');
             li.append('input')
-                .attr('type', this._inputType)
+                .attr('type', inputType)
                 .attr('value', this._promptValue)
                 .attr('name', `domain_${this._uniqueId}`)
                 .attr('id', (d, i) => `input_${this._uniqueId}_all`)
@@ -268,12 +268,6 @@ export class CboxMenu extends BaseMixin {
             return this._multiple;
         }
         this._multiple = multiple;
-        if (this._multiple) {
-            this._inputType = 'checkbox'; // TODO: make this._inputType a local variable in _renderOptions()
-                                          // properties, as far as possible should not have side effects
-        } else {
-            this._inputType = 'radio';
-        }
         return this;
     }
 

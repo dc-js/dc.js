@@ -1,4 +1,4 @@
-import {pluck, utils} from '../core/utils';
+import {isNumber} from '../core/utils';
 import {constants} from '../core/constants';
 import {LegendItem, LegendTextAccessor, ParentOfLegend} from '../core/types';
 import {Selection} from 'd3-selection';
@@ -232,7 +232,7 @@ export class Legend {
         if (!arguments.length) {
             return this._maxItems;
         }
-        this._maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
+        this._maxItems = isNumber(maxItems) ? maxItems : undefined;
         return this;
     }
 
@@ -278,7 +278,7 @@ export class Legend {
         this._g.selectAll<SVGGElement, any>('g.dc-legend-item')
             .classed('fadeout', d => d.chart.isLegendableHidden(d));
 
-        if (legendables.some(pluck('dashstyle'))) {
+        if (legendables.some(d => d.dashstyle)) {
             itemEnter
                 .append('line')
                 .attr('x1', 0)
@@ -286,8 +286,8 @@ export class Legend {
                 .attr('x2', this._itemHeight)
                 .attr('y2', this._itemHeight / 2)
                 .attr('stroke-width', 2)
-                .attr('stroke-dasharray', pluck('dashstyle'))
-                .attr('stroke', pluck('color'));
+                .attr('stroke-dasharray', d => d.dashstyle)
+                .attr('stroke', d => d.color);
         } else {
             itemEnter
                 .append('rect')

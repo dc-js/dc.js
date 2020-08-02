@@ -4,7 +4,7 @@ import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
-import {pluck, utils} from '../core/utils';
+import {pluck2, printSingleValue, safeNumber} from '../core/utils';
 import {ChartGroupType, ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 const MIN_BAR_WIDTH = 1;
@@ -51,7 +51,7 @@ export class BarChart extends StackMixin {
 
         this._barWidth = undefined;
 
-        this.label(d => utils.printSingleValue(d.y0 + d.y), false);
+        this.label(d => printSingleValue(d.y0 + d.y), false);
 
         this.anchor(parent, chartGroup);
     }
@@ -114,7 +114,7 @@ export class BarChart extends StackMixin {
     }
 
     public _barHeight (d): number {
-        return utils.safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
+        return safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
     }
 
     public _labelXPos (d): number {
@@ -125,7 +125,7 @@ export class BarChart extends StackMixin {
         if (this.isOrdinal() && this._gap !== undefined) {
             x += this._gap / 2;
         }
-        return utils.safeNumber(x);
+        return safeNumber(x);
     }
 
     public _labelYPos (d): number {
@@ -135,12 +135,12 @@ export class BarChart extends StackMixin {
             y -= this._barHeight(d);
         }
 
-        return utils.safeNumber(y - LABEL_PADDING);
+        return safeNumber(y - LABEL_PADDING);
     }
 
     public _renderLabels (layer: SVGGElementSelection, layerIndex: number, data): void {
         const labels: Selection<SVGTextElement, unknown, SVGGElement, any> = layer.selectAll<SVGTextElement, any>('text.barLabel')
-            .data(data.values, pluck('x'));
+            .data(data.values, d => d.x);
 
         const labelsEnterUpdate: Selection<SVGTextElement, unknown, SVGGElement, any> = labels
             .enter()
@@ -174,14 +174,14 @@ export class BarChart extends StackMixin {
         if (this.isOrdinal() && this._gap !== undefined) {
             x += this._gap / 2;
         }
-        return utils.safeNumber(x);
+        return safeNumber(x);
     }
 
     public _renderBars (layer: SVGGElementSelection, layerIndex: number, data): void {
-        const bars: Selection<SVGRectElement, unknown, SVGGElement, any> = layer.selectAll<SVGRectElement, any>('rect.bar')
-            .data(data.values, pluck('x'));
+        const bars: Selection<SVGRectElement, any, SVGGElement, any> = layer.selectAll<SVGRectElement, any>('rect.bar')
+            .data<any>(data.values, d => d.x);
 
-        const enter: Selection<SVGRectElement, unknown, SVGGElement, any> = bars.enter()
+        const enter: Selection<SVGRectElement, any, SVGGElement, any> = bars.enter()
             .append('rect')
             .attr('class', 'bar')
             .attr('fill', (d, i) => this.getColor(d, i))
@@ -192,7 +192,7 @@ export class BarChart extends StackMixin {
         const barsEnterUpdate: Selection<SVGRectElement, unknown, SVGGElement, any> = enter.merge(bars);
 
         if (this.renderTitle()) {
-            enter.append('title').text(pluck('data', this.title(data.name)));
+            enter.append('title').text(pluck2('data', this.title(data.name)));
         }
 
         if (this.isOrdinal()) {
@@ -208,12 +208,12 @@ export class BarChart extends StackMixin {
                     y -= this._barHeight(d);
                 }
 
-                return utils.safeNumber(y);
+                return safeNumber(y);
             })
             .attr('width', this._barWidth)
             .attr('height', d => this._barHeight(d))
             .attr('fill', (d, i) => this.getColor(d, i))
-            .select('title').text(pluck('data', this.title(data.name)));
+            .select('title').text(pluck2('data', this.title(data.name)));
 
         transition(bars.exit(), this.transitionDuration(), this.transitionDelay())
             .attr('x', d => this.x()(d.x))

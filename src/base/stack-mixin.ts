@@ -1,7 +1,7 @@
 import {Stack, stack} from 'd3-shape';
 import {max, min} from 'd3-array';
 
-import {pluck, utils} from '../core/utils';
+import {add, subtract} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
 import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/types';
 
@@ -72,7 +72,7 @@ export class StackMixin extends CoordinateGridMixin {
 
     public _domainFilter () {
         if (!this.x()) {
-            return utils.constant(true);
+            return () => true;
         }
         const xDomain = this.x().domain();
         if (this.isOrdinal()) {
@@ -160,7 +160,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public _findLayerByName (n) {
-        const i = this._stack.map(pluck('name')).indexOf(n);
+        const i = this._stack.map(d => d.name).indexOf(n);
         return this._stack[i];
     }
 
@@ -192,12 +192,12 @@ export class StackMixin extends CoordinateGridMixin {
 
     public yAxisMin () {
         const m = min(this._flattenStack(), p => (p.y < 0) ? (p.y + p.y0) : p.y0);
-        return utils.subtract(m, this.yAxisPadding());
+        return subtract(m, this.yAxisPadding());
     }
 
     public yAxisMax () {
         const m = max(this._flattenStack(), p => (p.y > 0) ? (p.y + p.y0) : p.y0);
-        return utils.add(m, this.yAxisPadding());
+        return add(m, this.yAxisPadding());
     }
 
     public _flattenStack () {
@@ -208,13 +208,13 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public xAxisMin () {
-        const m = min(this._flattenStack(), pluck('x'));
-        return utils.subtract(m, this.xAxisPadding(), this.xAxisPaddingUnit());
+        const m = min(this._flattenStack(), d => d.x);
+        return subtract(m, this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     public xAxisMax () {
-        const m = max(this._flattenStack(), pluck('x'));
-        return utils.add(m, this.xAxisPadding(), this.xAxisPaddingUnit());
+        const m = max(this._flattenStack(), d => d.x);
+        return add(m, this.xAxisPadding(), this.xAxisPaddingUnit());
     }
 
     /**
@@ -303,7 +303,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public _ordinalXDomain () {
-        const flat = this._flattenStack().map(pluck('data'));
+        const flat = this._flattenStack().map(d => d.data);
         const ordered = this._computeOrderedGroups(flat);
         return ordered.map(this.keyAccessor());
     }
