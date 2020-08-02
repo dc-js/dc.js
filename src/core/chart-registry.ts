@@ -1,7 +1,7 @@
 import {constants} from './constants';
 import {config} from './config';
-import {BaseMixin} from '../base/base-mixin';
 import {ChartGroup} from './chart-group';
+import {IMinimalChart} from './chart-group-types';
 
 /**
  * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
@@ -39,7 +39,7 @@ class ChartRegistry {
      * @param {Object} chart dc.js chart instance
      * @returns {Boolean}
      */
-    public has (chart: BaseMixin): boolean {
+    public has (chart: IMinimalChart): boolean {
         for (const chartGroupName in this._chartMap) {
             if (this._chartMap.hasOwnProperty(chartGroupName)) {
                 if (this._chartMap[chartGroupName].has(chart)) {
@@ -76,8 +76,8 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @returns {Array<Object>}
      */
-    public list (group?: string): BaseMixin[] {
-        return this.chartGroup(group).list() as BaseMixin[];
+    public list (group?: string): IMinimalChart[] {
+        return this.chartGroup(group).list();
     }
 }
 
@@ -95,7 +95,7 @@ export const chartRegistry = new ChartRegistry();
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function registerChart (chart: BaseMixin, group?: string): void {
+export function registerChart (chart: IMinimalChart, group?: string): void {
     chartRegistry.chartGroup(group).register(chart);
 }
 
@@ -107,7 +107,7 @@ export function registerChart (chart: BaseMixin, group?: string): void {
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function deregisterChart (chart: BaseMixin, group?: string): void {
+export function deregisterChart (chart: IMinimalChart, group?: string): void {
     chartRegistry.chartGroup(group).deregister(chart);
 }
 
@@ -117,7 +117,7 @@ export function deregisterChart (chart: BaseMixin, group?: string): void {
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
-export function hasChart (chart: BaseMixin): boolean {
+export function hasChart (chart: IMinimalChart): boolean {
     return chartRegistry.has(chart);
 }
 
