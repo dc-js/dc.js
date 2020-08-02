@@ -205,5 +205,3 @@ export class SeriesChart extends CompositeChart {
     }
 
 }
-
-export const seriesChart = (parent, chartGroup) => new SeriesChart(parent, chartGroup);

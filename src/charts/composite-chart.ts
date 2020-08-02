@@ -619,5 +619,3 @@ export class CompositeChart extends CoordinateGridMixin {
         throw new Error('Not supported for this chart type');
     }
 }
-
-export const compositeChart = (parent, chartGroup) => new CompositeChart(parent, chartGroup);
