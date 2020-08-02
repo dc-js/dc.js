@@ -1554,5 +1554,3 @@ export class BaseMixin {
         return this;
     }
 }
-
-export const baseMixin = () => new BaseMixin();
