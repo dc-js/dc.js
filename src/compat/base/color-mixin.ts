@@ -14,7 +14,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
 }
 
 export function ColorMixin<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
-    return class extends ColorMixinExt(ColorMixinNeo(Base)) {
+    return class extends ColorMixinExt(ColorMixinNeo(BaseMixinExt(Base))) {
         constructor(...args: any[]) {
             super(...args);
         }

@@ -14,7 +14,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
 }
 
 export function CapMixin<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
-    return class extends CapMixinExt(CapMixinNeo(Base)) {
+    return class extends CapMixinExt(CapMixinNeo(BaseMixinExt(Base))) {
         constructor(...args: any[]) {
             super(...args);
         }
