@@ -8,6 +8,7 @@ import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {transition} from '../core/core';
 import {ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
+import {IPieChartConf} from './i-pie-chart-conf';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -23,13 +24,16 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes ColorMixin
  * @mixes BaseMixin
  */
-export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
+
+// TODO: currently the code does not compile if it is not done in two steps.
+class BaseMixinWithConf extends BaseMixin<IPieChartConf> {}
+
+export class PieChart extends CapMixin(ColorMixin(BaseMixinWithConf)) {
     private _sliceCssClass: string;
     private _labelCssClass: string;
     private _sliceGroupCssClass: string;
     private _labelGroupCssClass: string;
     private _emptyCssClass: string;
-    private _emptyTitle: string;
     private _radius: number;
     private _givenRadius: number;
     private _innerRadius: number;
@@ -63,7 +67,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._sliceGroupCssClass = 'pie-slice-group';
         this._labelGroupCssClass = 'pie-label-group';
         this._emptyCssClass = 'empty-chart';
-        this._emptyTitle = 'empty';
+        this._conf.emptyTitle = 'empty';
 
         this._radius = undefined;
         this._givenRadius = undefined; // specified radius, if any
@@ -89,16 +93,6 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this.transitionDelay(0);
 
         this.anchor(parent, chartGroup);
-    }
-
-    /**
-     * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
-     * value from high to low. Other slices exceeding the cap will be rolled up into one single *Others* slice.
-     * @param {Number} [cap]
-     * @returns {Number|PieChart}
-     */
-    public slicesCap (cap?: number): this|number {
-        return this.cap(cap);
     }
 
     public _doRender (): this {
@@ -133,7 +127,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         } else {
             // otherwise we'd be getting NaNs, so override
             // note: abuse others for its ignoring the value accessor
-            pieData = pieLayout([{key: this._emptyTitle, value: 1, others: [this._emptyTitle]}]);
+            pieData = pieLayout([{key: this._conf.emptyTitle, value: 1, others: [this._conf.emptyTitle]}]);
             this._g.classed(this._emptyCssClass, true);
         }
 
@@ -499,21 +493,6 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             path = 'M0,0';
         }
         return path;
-    }
-
-    /**
-     * Title to use for the only slice when there is no data.
-     * @param {String} [title]
-     * @returns {String|PieChart}
-     */
-    public emptyTitle (): string;
-    public emptyTitle (title: string): this;
-    public emptyTitle (title?) {
-        if (arguments.length === 0) {
-            return this._emptyTitle;
-        }
-        this._emptyTitle = title;
-        return this;
     }
 
     /**

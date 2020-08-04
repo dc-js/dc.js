@@ -6,6 +6,7 @@ import {config} from '../core/config';
 import {ColorCommonInstance} from 'd3-color';
 import {BaseMixin} from './base-mixin';
 import {ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
+import {IColorMixinConf} from './i-color-mixin-conf';
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
@@ -15,7 +16,7 @@ import {ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
  * @returns {ColorMixin}
  */
 // tslint:disable-next-line:variable-name
-export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
+export function ColorMixin<IConf extends IColorMixinConf, TBase extends Constructor<BaseMixin<IConf>>> (Base: TBase) {
     return class extends Base {
         public _colors: MinimalColorScale;
         public _colorAccessor: ColorAccessor;

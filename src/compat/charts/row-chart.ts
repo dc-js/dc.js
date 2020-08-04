@@ -8,6 +8,8 @@ import {MarginMixinExt} from '../base/margin-mixin';
 export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(RowChartNeo)))) {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
+
+        this.rowsCap = this.cap;
     }
 }
 

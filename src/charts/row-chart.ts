@@ -76,8 +76,6 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this._rowData = undefined;
 
-        this.rowsCap = this.cap;
-
         this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
 
         this.label(d => this.cappedKeyAccessor(d));
