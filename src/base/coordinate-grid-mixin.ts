@@ -17,6 +17,7 @@ import {logger} from '../core/logger';
 import {filters} from '../core/filters';
 import {events} from '../core/events';
 import {DCBrushSelection, MinimalXYScale, RoundFn, SVGGElementSelection, Units} from '../core/types';
+import {ICoordinateGridMixinConf} from './i-coordinate-grid-mixin-conf';
 
 const GRID_LINE_CLASS = 'grid-line';
 const HORIZONTAL_CLASS = 'horizontal';
@@ -34,6 +35,8 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * @mixes MarginMixin
  */
 export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
+    public _conf: ICoordinateGridMixinConf;
+
     private _parent: Selection<SVGElement, any, any, any>;
     private _g: SVGGElementSelection;
     private _chartBodyG: SVGGElementSelection;
@@ -134,6 +137,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._fRangeBandPadding = 0;
 
         this._useRightYAxis = false;
+    }
+
+    public configure(conf: ICoordinateGridMixinConf) {
+        super.configure(conf);
     }
 
     /**

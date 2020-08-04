@@ -81,8 +81,10 @@ export class SeriesChart extends CompositeChart {
                 }
                 this._charts[sub.key] = subChart;
                 keep.push(sub.key);
+                subChart.configure({
+                    dimension: this._conf.dimension
+                })
                 return subChart
-                    .dimension(this.dimension())
                     .group({
                         all: typeof sub.values === 'function' ? sub.values : () => sub.values
                     }, sub.key)

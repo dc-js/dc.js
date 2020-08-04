@@ -84,7 +84,7 @@ const _defaultResetFilterHandler = filters => [];
  * @mixin BaseMixin
  */
 export class BaseMixin {
-    protected _conf: IBaseMixinConf;
+    public _conf: IBaseMixinConf;
 
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
@@ -133,9 +133,10 @@ export class BaseMixin {
         this.configure({
             minWidth: 200,
             minHeight: 200,
+            useViewBoxResizing: false
         });
 
-        this._dimension = undefined;
+        this._conf.dimension = undefined;
         this._group = undefined;
 
         this._anchor = undefined;
@@ -156,7 +157,6 @@ export class BaseMixin {
         this._heightCalc = this._defaultHeightCalc;
         this._width = undefined;
         this._height = undefined;
-        this._useViewBoxResizing = false;
 
         this._keyAccessor = d => d.key;
         this._valueAccessor = d => d.value;
@@ -272,63 +272,6 @@ export class BaseMixin {
         }
         this._widthCalc = width ? (typeof width === 'function' ? width : () => width) : this._defaultWidthCalc;
         this._width = undefined;
-        return this;
-    }
-
-    /**
-     * Turn on/off using the SVG
-     * {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox `viewBox` attribute}.
-     * When enabled, `viewBox` will be set on the svg root element instead of `width` and `height`.
-     * Requires that the chart aspect ratio be defined using chart.width(w) and chart.height(h).
-     *
-     * This will maintain the aspect ratio while enabling the chart to resize responsively to the
-     * space given to the chart using CSS. For example, the chart can use `width: 100%; height:
-     * 100%` or absolute positioning to resize to its parent div.
-     *
-     * Since the text will be sized as if the chart is drawn according to the width and height, and
-     * will be resized if the chart is any other size, you need to set the chart width and height so
-     * that the text looks good. In practice, 600x400 seems to work pretty well for most charts.
-     *
-     * You can see examples of this resizing strategy in the [Chart Resizing
-     * Examples](http://dc-js.github.io/dc.js/resizing/); just add `?resize=viewbox` to any of the
-     * one-chart examples to enable `useViewBoxResizing`.
-     * @param {Boolean} [useViewBoxResizing=false]
-     * @returns {Boolean|BaseMixin}
-     */
-    public useViewBoxResizing (): boolean;
-    public useViewBoxResizing (useViewBoxResizing: boolean): this;
-    public useViewBoxResizing (useViewBoxResizing?) {
-        if (!arguments.length) {
-            return this._useViewBoxResizing;
-        }
-        this._useViewBoxResizing = useViewBoxResizing;
-        return this;
-    }
-
-    /**
-     * **mandatory**
-     *
-     * Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter dimension}
-     *
-     * If a value is given, then it will be used as the new dimension. If no value is specified then
-     * the current dimension will be returned.
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter.dimension}
-     * @example
-     * var index = crossfilter([]);
-     * var dimension = index.dimension(pluck('key'));
-     * chart.dimension(dimension);
-     * @param {crossfilter.dimension} [dimension]
-     * @returns {crossfilter.dimension|BaseMixin}
-     */
-    public dimension (): MinimalCFDimension;
-    public dimension (dimension: MinimalCFDimension): this;
-    public dimension (dimension?) {
-        if (!arguments.length) {
-            return this._dimension;
-        }
-        this._dimension = dimension;
-        this.expireCache();
         return this;
     }
 
@@ -565,7 +508,7 @@ export class BaseMixin {
 
     public sizeSvg (): void {
         if (this._svg) {
-            if (!this._useViewBoxResizing) {
+            if (!this._conf.useViewBoxResizing) {
                 this._svg
                     .attr('width', this.width())
                     .attr('height', this.height());
@@ -992,8 +935,8 @@ export class BaseMixin {
     }
 
     public applyFilters (filters) {
-        if (this.dimension() && this.dimension().filter) {
-            const fs = this._filterHandler(this.dimension(), filters);
+        if (this._conf.dimension && this._conf.dimension.filter) {
+            const fs = this._filterHandler(this._conf.dimension, filters);
             if (fs) {
                 filters = fs;
             }

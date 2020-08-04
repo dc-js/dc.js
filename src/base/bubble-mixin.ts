@@ -19,7 +19,7 @@ import {IBubbleMixinConf} from './i-bubble-mixin-conf';
 export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
-        protected _conf: IBubbleMixinConf;
+        public _conf: IBubbleMixinConf;
         private _maxBubbleRelativeSize: number;
         private _minRadiusWithLabel: number;
         private _sortBubbleSize: boolean;

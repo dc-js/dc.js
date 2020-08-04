@@ -10,7 +10,7 @@ import {IMarginMixinConf} from './i-margin-mixin-conf';
  * @returns {MarginMixin}
  */
 export class MarginMixin extends BaseMixin {
-    protected _conf: IMarginMixinConf;
+    public _conf: IMarginMixinConf;
 
     private _margins: Margins;
 

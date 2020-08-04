@@ -19,7 +19,7 @@ import {ICapMixinConf} from './i-cap-mixin-conf';
 export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
-        protected _conf: ICapMixinConf;
+        public _conf: ICapMixinConf;
 
         private _takeFront: boolean;
         private _othersLabel: string;

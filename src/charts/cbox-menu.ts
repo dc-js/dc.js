@@ -16,7 +16,7 @@ const ITEM_CSS_CLASS = 'dc-cbox-item';
  * @mixes BaseMixin
  */
 export class CboxMenu extends BaseMixin {
-    protected _conf: ICboxMenuConf;
+    public _conf: ICboxMenuConf;
 
     private _cbox: Selection<HTMLElement, any, HTMLElement, any>;
     private _promptText: string;

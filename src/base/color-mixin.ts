@@ -18,7 +18,7 @@ import {IColorMixinConf} from './i-color-mixin-conf';
 // tslint:disable-next-line:variable-name
 export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     return class extends Base {
-        protected _conf: IColorMixinConf;
+        public _conf: IColorMixinConf;
 
         public _colors: MinimalColorScale;
         public _colorAccessor: ColorAccessor;

@@ -91,7 +91,7 @@ export class DataGrid extends BaseMixin {
     }
 
     public _nestEntries () {
-        const entries = this.dimension().top(this._size);
+        const entries = this._conf.dimension.top(this._size);
 
         return nest()
             .key(this.section())

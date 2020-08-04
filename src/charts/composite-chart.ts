@@ -81,8 +81,8 @@ export class CompositeChart extends CoordinateGridMixin {
 
             this._generateChildG(child, i);
 
-            if (!child.dimension()) {
-                child.dimension(this.dimension());
+            if (!child._conf.dimension) {
+                child._conf.dimension = this._conf.dimension;
             }
             if (!child.group()) {
                 child.group(this.group());

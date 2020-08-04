@@ -22,7 +22,7 @@ import {IRowChartConf} from './i-row-chart-conf';
  */
 
 export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
-    protected _conf: IRowChartConf;
+    public _conf: IRowChartConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
     private _labelOffsetX: number;

@@ -186,9 +186,9 @@ export class DataTable extends BaseMixin {
     private _nestEntries (): { key: string; values: any }[] {
         let entries;
         if (this._order === ascending) {
-            entries = this.dimension().bottom(this._size);
+            entries = this._conf.dimension.bottom(this._size);
         } else {
-            entries = this.dimension().top(this._size);
+            entries = this._conf.dimension.top(this._size);
         }
 
         return nest()
@@ -423,7 +423,7 @@ export class DataTable extends BaseMixin {
 
     /**
      * Get or set sort order. If the order is `d3.ascending`, the data table will use
-     * `dimension().bottom()` to fetch the data; otherwise it will use `dimension().top()`
+     * `conf.dimension.bottom()` to fetch the data; otherwise it will use `conf.dimension.top()`
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
