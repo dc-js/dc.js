@@ -1,5 +1,5 @@
-import {IBaseConf} from '../base/i-base-conf';
+import {IBaseMixinConf} from '../base/i-base-mixin-conf';
 
-export interface ICboxMenuConf extends IBaseConf {
+export interface ICboxMenuConf extends IBaseMixinConf {
     multiple?: boolean
 }

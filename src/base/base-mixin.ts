@@ -24,7 +24,7 @@ import {
     ValueAccessor
 } from '../core/types';
 import {IChartGroup} from '../core/chart-group-types';
-import {IBaseConf} from './i-base-conf';
+import {IBaseMixinConf} from './i-base-mixin-conf';
 
 const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
     if (filters.length === 0) {
@@ -83,7 +83,7 @@ const _defaultResetFilterHandler = filters => [];
  * and available on all chart implementations in the `dc` library.
  * @mixin BaseMixin
  */
-export class BaseMixin<IConf extends IBaseConf = IBaseConf> {
+export class BaseMixin<IConf extends IBaseMixinConf = IBaseMixinConf> {
     protected _conf:IConf;
 
     // tslint:disable-next-line:variable-name
