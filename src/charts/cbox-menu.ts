@@ -4,6 +4,7 @@ import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {uniqueId} from '../core/utils'
 import {ChartGroupType, ChartParentType, CompareFn} from '../core/types';
+import {ICboxMenuConf} from './i-cbox-menu-conf';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -14,10 +15,9 @@ const ITEM_CSS_CLASS = 'dc-cbox-item';
  * made into a set of radio buttons (single select) or checkboxes (multiple).
  * @mixes BaseMixin
  */
-export class CboxMenu extends BaseMixin {
+export class CboxMenu extends BaseMixin<ICboxMenuConf> {
     private _cbox: Selection<HTMLElement, any, HTMLElement, any>;
     private _promptText: string;
-    private _multiple: boolean;
     private _promptValue; // TODO: figure out what is Prompt value and some use cases
     private _uniqueId: number;
     private _filterDisplayed: (d) => boolean;
@@ -45,9 +45,12 @@ export class CboxMenu extends BaseMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
+        this.configure({
+            multiple: false
+        });
+
         this._cbox = undefined;
         this._promptText = 'Select all';
-        this._multiple = false;
         this._promptValue = null;
 
         this._uniqueId = uniqueId();
@@ -81,7 +84,7 @@ export class CboxMenu extends BaseMixin {
             .classed(GROUP_CSS_CLASS, true);
         this._renderOptions();
 
-        if (this.hasFilter() && this._multiple) {
+        if (this.hasFilter() && this._conf.multiple) {
             this._cbox.selectAll('input')
             // adding `false` avoids failing test cases in phantomjs
                 .property('checked', d => d && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0 || false);
@@ -98,7 +101,7 @@ export class CboxMenu extends BaseMixin {
     }
 
     public _renderOptions () {
-        const inputType = this._multiple ? 'checkbox' : 'radio';
+        const inputType = this._conf.multiple ? 'checkbox' : 'radio';
 
         let options: Selection<HTMLLIElement, unknown, HTMLElement, any> = this._cbox
             .selectAll<HTMLLIElement, any>(`li.${ITEM_CSS_CLASS}`)
@@ -124,7 +127,7 @@ export class CboxMenu extends BaseMixin {
 
         const chart = this;
         // 'all' option
-        if (this._multiple) {
+        if (this._conf.multiple) {
             this._cbox
                 .append('li')
                 .append('input')
@@ -172,7 +175,7 @@ export class CboxMenu extends BaseMixin {
                 });
             values = options.nodes().map(option => option.value);
             // check if only prompt option is selected
-            if (!this._multiple && values.length === 1) {
+            if (!this._conf.multiple && values.length === 1) {
                 values = values[0];
             }
         }
@@ -181,7 +184,7 @@ export class CboxMenu extends BaseMixin {
 
     // TODO: come back for better typing, probably generics
     public onChange (val) {
-        if (val && this._multiple) {
+        if (val && this._conf.multiple) {
             this.replaceFilter([val]);
         } else if (val) {
             this.replaceFilter(val);
@@ -265,9 +268,9 @@ export class CboxMenu extends BaseMixin {
     public multiple (multiple: boolean): this;
     public multiple (multiple?) {
         if (!arguments.length) {
-            return this._multiple;
+            return this._conf.multiple;
         }
-        this._multiple = multiple;
+        this._conf.multiple = multiple;
         return this;
     }
 
