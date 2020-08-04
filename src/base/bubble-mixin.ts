@@ -6,6 +6,7 @@ import {transition} from '../core/core';
 import {events} from '../core/events';
 import {Constructor, MinimalRadiusScale, RValueAccessor, SVGGElementSelection} from '../core/types';
 import {BaseMixin} from './base-mixin';
+import {IBubbleMixinConf} from './i-bubble-mixin-conf';
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
@@ -18,6 +19,7 @@ import {BaseMixin} from './base-mixin';
 export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
+        protected _conf: IBubbleMixinConf;
         private _maxBubbleRelativeSize: number;
         private _minRadiusWithLabel: number;
         private _sortBubbleSize: boolean;

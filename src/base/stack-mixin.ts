@@ -4,6 +4,7 @@ import {max, min} from 'd3-array';
 import {add, subtract} from '../core/utils';
 import {CoordinateGridMixin} from './coordinate-grid-mixin';
 import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/types';
+import {IStackMixinConf} from './i-stack-mixin-conf';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -11,6 +12,8 @@ import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/t
  * @mixes CoordinateGridMixin
  */
 export class StackMixin extends CoordinateGridMixin {
+    protected _conf: IStackMixinConf;
+
     private _stackLayout: Stack<any, { [p: string]: number }, string>;
     private _stack;
     private _titles;

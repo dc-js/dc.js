@@ -16,9 +16,11 @@ import {ICapMixinConf} from './i-cap-mixin-conf';
  * @returns {CapMixin}
  */
 // tslint:disable-next-line:variable-name
-export function CapMixin<IConf extends ICapMixinConf, TBase extends Constructor<BaseMixin<IConf>>> (Base: TBase) {
+export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
+        protected _conf: ICapMixinConf;
+
         private _takeFront: boolean;
         private _othersLabel: string;
         private _othersGrouper: (topItems, restItems) => (any);

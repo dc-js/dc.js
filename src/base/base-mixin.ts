@@ -83,8 +83,8 @@ const _defaultResetFilterHandler = filters => [];
  * and available on all chart implementations in the `dc` library.
  * @mixin BaseMixin
  */
-export class BaseMixin<IConf extends IBaseMixinConf = IBaseMixinConf> {
-    protected _conf:IConf;
+export class BaseMixin {
+    protected _conf: IBaseMixinConf;
 
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
@@ -133,7 +133,7 @@ export class BaseMixin<IConf extends IBaseMixinConf = IBaseMixinConf> {
         this.configure({
             minWidth: 200,
             minHeight: 200,
-        } as IConf);
+        });
 
         this._dimension = undefined;
         this._group = undefined;
@@ -203,7 +203,7 @@ export class BaseMixin<IConf extends IBaseMixinConf = IBaseMixinConf> {
         this._resetFilterHandler = _defaultResetFilterHandler;
     }
 
-    public configure (conf: IConf) {
+    public configure (conf: IBaseMixinConf) {
         this._conf = {...(this._conf), ...conf}
     }
     

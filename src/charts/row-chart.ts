@@ -8,6 +8,7 @@ import {ColorMixin} from '../base/color-mixin';
 import {transition} from '../core/core';
 import {Selection} from 'd3-selection';
 import {ChartGroupType, ChartParentType, MinimalXYScale, SVGGElementSelection} from '../core/types';
+import {IRowChartConf} from './i-row-chart-conf';
 
 /**
  * Concrete row chart implementation.
@@ -19,7 +20,10 @@ import {ChartGroupType, ChartParentType, MinimalXYScale, SVGGElementSelection} f
  * @mixes ColorMixin
  * @mixes BaseMixin
  */
+
 export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
+    protected _conf: IRowChartConf;
+
     private _g: Selection<SVGGElement, any, any, any>;
     private _labelOffsetX: number;
     private _labelOffsetY: number;
@@ -81,6 +85,10 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this.label(d => this.cappedKeyAccessor(d));
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure(conf: IRowChartConf) {
+        super.configure(conf);
     }
 
     private _calculateAxisScale (): void {

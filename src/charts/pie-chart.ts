@@ -25,10 +25,9 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes BaseMixin
  */
 
-// TODO: currently the code does not compile if it is not done in two steps.
-class BaseMixinWithConf extends BaseMixin<IPieChartConf> {}
+export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
+    protected _conf: IPieChartConf;
 
-export class PieChart extends CapMixin(ColorMixin(BaseMixinWithConf)) {
     private _sliceCssClass: string;
     private _labelCssClass: string;
     private _sliceGroupCssClass: string;
@@ -93,6 +92,10 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixinWithConf)) {
         this.transitionDelay(0);
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure(conf: IPieChartConf) {
+        super.configure(conf);
     }
 
     public _doRender (): this {
