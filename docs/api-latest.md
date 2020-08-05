@@ -3894,6 +3894,7 @@ and available on all chart implementations in the `dc` library.
     * [.root([rootElement])](#BaseMixin+root) ⇒ <code>HTMLElement</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.svg([svgElement])](#BaseMixin+svg) ⇒ <code>SVGElement</code> \| <code>d3.selection</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.resetSvg()](#BaseMixin+resetSvg) ⇒ <code>SVGElement</code>
+    * [.svgDescription([description])](#BaseMixin+svgDescription) ⇒ <code>String</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.filterPrinter([filterPrinterFunction])](#BaseMixin+filterPrinter) ⇒ <code>function</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.controlsUseVisibility([controlsUseVisibility])](#BaseMixin+controlsUseVisibility) ⇒ <code>Boolean</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.turnOnControls()](#BaseMixin+turnOnControls) ⇒ [<code>BaseMixin</code>](#BaseMixin)
@@ -4235,6 +4236,17 @@ Remove the chart's SVGElements from the dom and recreate the container SVGElemen
 
 **Kind**: instance method of [<code>BaseMixin</code>](#BaseMixin)  
 **See**: [SVGElement](https://developer.mozilla.org/en-US/docs/Web/API/SVGElement)  
+<a name="BaseMixin+svgDescription"></a>
+
+### baseMixin.svgDescription([description]) ⇒ <code>String</code> \| [<code>BaseMixin</code>](#BaseMixin)
+Set description text for the entire SVG graphic to be read out by assistive technologies.
+
+**Kind**: instance method of [<code>BaseMixin</code>](#BaseMixin)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [description] | <code>String</code> | <code>&#x27;&#x27;</code> | 
+
 <a name="BaseMixin+filterPrinter"></a>
 
 ### baseMixin.filterPrinter([filterPrinterFunction]) ⇒ <code>function</code> \| [<code>BaseMixin</code>](#BaseMixin)

@@ -677,4 +677,22 @@ describe('dc.baseMixin', () => {
             expect(chart.filters().length).toEqual(0);
         });
     });
+
+    describe('accessibility base svg', () => {
+
+        beforeEach(() => {
+            chart
+                .svgDescription('I am a chart')
+                .resetSvg();
+        });
+
+        it('should have a tabindex', () => {
+            expect(chart.svg().attr('tabindex')).toEqual('0');
+        });
+
+        it('should have a description for AT', () => {
+            expect(chart.svg().node().firstChild.innerHTML).toEqual('I am a chart');
+        });
+
+    })
 });

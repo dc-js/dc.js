@@ -72,6 +72,7 @@ const _defaultResetFilterHandler = filters => [];
 export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
+        this._svgDescription = ''
 
         this._dimension = undefined;
         this._group = undefined;
@@ -521,8 +522,30 @@ export class BaseMixin {
 
     generateSvg () {
         this._svg = this.root().append('svg');
+
+        this._svg.append('desc')
+            .attr('id', `desc-id-${this.__dcFlag__}`)
+            .html(`${this._svgDescription}`);
+
+        this._svg
+            .attr('tabindex', '0')
+            .attr('role', 'img')
+            .attr('aria-labelledby', `desc-id-${this.__dcFlag__}`);
         this.sizeSvg();
         return this._svg;
+    }
+
+    /**
+     * Set description text for the entire SVG graphic to be read out by assistive technologies.
+     * @param {String} [description='']
+     * @returns {String|BaseMixin}
+     */
+    svgDescription (description) {
+        if (!arguments.length) {
+            return this._svgDescription;
+        }
+        this._svgDescription = description;
+        return this;
     }
 
     /**
