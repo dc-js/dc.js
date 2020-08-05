@@ -34,7 +34,7 @@ $font_sans_serif: sans-serif;
         &.bar {
             stroke: none;
             cursor: pointer;
-            &:hover {
+            &:hover,&:focus {
                 fill-opacity: .5;
             }
         }
@@ -50,7 +50,10 @@ $font_sans_serif: sans-serif;
         &.external {
             fill: $color_black;
         }
-        :hover, &.highlight {
+        &:focus {
+            fill-opacity: .8;
+        }
+        :hover &.highlight {
             fill-opacity: .8;
         }
     }
@@ -123,7 +126,7 @@ $font_sans_serif: sans-serif;
     g {
         &.state {
             cursor: pointer;
-            :hover {
+            :hover,:focus {
                 fill-opacity: .8;
             }
             path {
@@ -142,7 +145,7 @@ $font_sans_serif: sans-serif;
             rect {
                 fill-opacity: 0.8;
                 cursor: pointer;
-                &:hover {
+                &:hover,&:focus {
                     fill-opacity: 0.6;
                 }
             }
@@ -173,7 +176,7 @@ $font_sans_serif: sans-serif;
     .node {
         font-size: 0.7em;
         cursor: pointer;
-        :hover {
+        :hover,:focus {
             fill-opacity: .8;
         }
     }

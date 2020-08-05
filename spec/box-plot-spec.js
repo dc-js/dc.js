@@ -291,6 +291,37 @@ describe('dc.BoxPlot', () => {
         });
     });
 
+    describe('accessibility scatter plot', () => {
+
+        it('internal elements are focusable by keyboard', () => {
+            chart.keyboardAccessible(true);
+            chart.render();
+            chart.selectAll('circle').each(function () {
+                const circle = d3.select(this);
+                expect(circle.attr('tabindex')).toEqual('0');
+            });
+        });
+
+        it('internal elements are clickable by pressing enter', () => {
+    
+            chart.keyboardAccessible(true);
+            const clickHandlerSpy = jasmine.createSpy();
+            chart.onClick = clickHandlerSpy;
+            chart.render();
+          
+            const event = new Event('keydown');
+            event.keyCode = 13;
+            
+            // only boxes are valid targets for keydown events
+            chart.selectAll('g.box').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();      
+            });
+        });
+
+    });
+
     function box (n) {
         const nthBox = d3.select(chart.selectAll('g.box').nodes()[n]);
         nthBox.boxText = function (i) {

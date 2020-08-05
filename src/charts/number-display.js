@@ -40,6 +40,7 @@ export class NumberDisplay extends BaseMixin {
         this._formatNumber = format('.2s');
         this._html = {one: '', some: '', none: ''};
         this._lastValue = undefined;
+        this._ariaLiveRegion = false;
 
         // dimension not required
         this._mandatoryAttributes(['group']);
@@ -121,7 +122,17 @@ export class NumberDisplay extends BaseMixin {
                 .enter()
                 .append('span')
                 .attr('class', SPAN_CLASS)
+                .classed('dc-tabbable', this._keyboardAccessible)
                 .merge(span);
+
+            if (this._keyboardAccessible) {
+                span.attr('tabindex', '0');
+            }
+
+            if (this._ariaLiveRegion) {
+                this.transitionDuration(0);
+                span.attr('aria-live', 'polite');
+            }
         }
 
         {
@@ -169,6 +180,23 @@ export class NumberDisplay extends BaseMixin {
             return this._formatNumber;
         }
         this._formatNumber = formatter;
+        return this;
+    }
+
+    /**
+     * If set, the Number Display widget will have its aria-live attribute set to 'polite' which will
+     * notify screen readers when the widget changes its value. Note that setting this method will also
+     * disable the default transition between the old and the new values. This is to avoid change
+     * notifications spoken out before the new value finishes re-drawing. It is also advisable to check
+     * if the widget has appropriately set accessibility description or label. 
+     * @param {Boolean} [ariaLiveRegion=false]
+     * @returns {Boolean|NumberDisplay}
+     */
+    ariaLiveRegion (ariaLiveRegion) {
+        if (!arguments.length) {
+            return this._ariaLiveRegion;
+        }
+        this._ariaLiveRegion = ariaLiveRegion;
         return this;
     }
 

@@ -29,6 +29,7 @@ export class Legend {
         this._legendText = pluck('name');
         this._maxItems = undefined;
         this._highlightSelected = false;
+        this._keyboardAccessible = false;
 
         this._g = undefined;
     }
@@ -197,10 +198,66 @@ export class Legend {
         return this;
     }
 
+    /**
+     * If set, individual legend items will be focusable from keyboard and on pressing Enter or Space
+     * will behave as if clicked on.
+     * 
+     * If `svgDescription` on the parent chart has not been explicitly set, will also set the default 
+     * SVG description text to the class constructor name, like BarChart or HeatMap, and make the entire
+     * SVG focusable.
+     * @param {Boolean} [keyboardAccessible=false]
+     * @returns {Boolean|Legend}
+     */
+    keyboardAccessible (keyboardAccessible) {
+        if (!arguments.length) {
+            return this._keyboardAccessible;
+        }
+        this._keyboardAccessible = keyboardAccessible;
+        return this;
+    }
+
     // Implementation methods
 
     _legendItemHeight () {
         return this._gap + this._itemHeight;
+    }
+
+    _makeLegendKeyboardAccessible () {
+
+        if (!this._parent._svgDescription) {
+
+            this._parent.svg().append('desc')
+                .attr('id', `desc-id-${this._parent.__dcFlag__}`)
+                .html(`${this._parent.svgDescription()}`);
+
+            this._parent.svg()
+                .attr('tabindex', '0')
+                .attr('role', 'img')
+                .attr('aria-labelledby', `desc-id-${this._parent.__dcFlag__}`);
+        }
+
+        const tabElements = this._parent.svg()
+            .selectAll('.dc-legend .dc-tabbable')
+            .attr('tabindex', 0);
+
+        tabElements
+            .on('keydown', adaptHandler((d, event) => {
+                // trigger only if d is an object
+                if (event.keyCode === 13 && typeof d === 'object') {
+                    d.chart.legendToggle(d)
+                } 
+                // special case for space key press - prevent scrolling
+                if (event.keyCode === 32 && typeof d === 'object') {
+                    d.chart.legendToggle(d)
+                    event.preventDefault();            
+                }
+            }))
+            .on('focus', adaptHandler(d => {
+                this._parent.legendHighlight(d);
+            }))
+            .on('blur', adaptHandler(d => {
+                this._parent.legendReset(d);
+            }));
     }
 
     render () {
@@ -262,10 +319,15 @@ export class Legend {
 
             itemEnter.append('text')
                 .text(self._legendText)
+                .classed('dc-tabbable', this._keyboardAccessible)
                 .attr('x', self._itemHeight + LABEL_GAP)
                 .attr('y', function () {
                     return self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
                 });
+
+            if (this._keyboardAccessible) {
+                this._makeLegendKeyboardAccessible();
+            }
         }
 
         let cumulativeLegendTextWidth = 0;

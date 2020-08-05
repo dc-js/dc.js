@@ -750,6 +750,22 @@ describe('dc.lineChart', () => {
         });
     });
 
+    describe('accessibility bar chart', () => {
+
+        beforeEach(() => {
+            chart.keyboardAccessible(true);
+            chart.brushOn(false);
+        })
+
+        it('internal elements are focusable by keyboard', () => {
+            chart.render();
+            chart.selectAll('circle.dot').each(function () {
+                const dot = d3.select(this);
+                expect(dot.attr('tabindex')).toEqual('0');
+            });
+        });
+    });
+
     function lineLabelCount () {
         expect(chart.selectAll('text.lineLabel').size()).toBe(chart.stack().length * chart.group().all().length);
     }

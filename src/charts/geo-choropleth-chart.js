@@ -63,6 +63,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
 
             regionG
                 .append('path')
+                .classed('dc-tabbable', this._keyboardAccessible)
                 .attr('fill', 'white')
                 .attr('d', this._getGeoPath());
 
@@ -149,6 +150,10 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
                 return 'none';
             })
             .on('click', adaptHandler(d => this.onClick(d, layerIndex)));
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this.onClick, layerIndex);
+        }
 
         transition(paths, this.transitionDuration(),
                    this.transitionDelay()).attr('fill', (d, i) => this.getColor(data[this._geoJson(layerIndex).keyAccessor(d)], i));

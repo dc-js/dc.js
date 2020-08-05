@@ -379,6 +379,7 @@ export class LineChart extends StackMixin {
                     .enter()
                     .append('circle')
                     .attr('class', DOT_CIRCLE_CLASS)
+                    .classed('dc-tabbable', this._keyboardAccessible)
                     .attr('cx', d => utils.safeNumber(this.x()(d.x)))
                     .attr('cy', d => utils.safeNumber(this.y()(d.y + d.y0)))
                     .attr('r', this._getDotRadius())
@@ -397,6 +398,23 @@ export class LineChart extends StackMixin {
                         chart._hideRefLines(g);
                     })
                     .merge(dots);
+
+                // special case for on-focus for line chart and its dots
+                if (this._keyboardAccessible) {
+
+                    this._svg.selectAll('.dc-tabbable')
+                        .attr('tabindex', 0)
+                        .on('focus', function () {
+                            const dot = select(this);
+                            chart._showDot(dot);
+                            chart._showRefLines(dot, g);
+                        })
+                        .on('blur', function () {
+                            const dot = select(this);
+                            chart._hideDot(dot);
+                            chart._hideRefLines(g);
+                        });
+                }
 
                 dotsEnterModify.call(dot => this._doRenderTitle(dot, data));
 
