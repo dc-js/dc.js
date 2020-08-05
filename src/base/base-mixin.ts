@@ -88,7 +88,6 @@ export class BaseMixin {
 
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
-    private _dimension: MinimalCFDimension;
     private _group: MinimalCFGroup;
     private _anchor: string|Element;
     private _root: Selection<Element, any, any, any>; // Do not assume much, allow any HTML or SVG element
@@ -100,18 +99,12 @@ export class BaseMixin {
     private _heightCalc: (element) => number;
     private _width: number;
     private _height: number;
-    private _useViewBoxResizing: boolean;
     private _keyAccessor: KeyAccessor;
     private _valueAccessor: ValueAccessor;
     private _label: LabelAccessor;
-    private _ordering: BaseAccessor<any>; // TODO: should it be string or string|number|Date
     private _renderLabel: boolean;
     private _title: TitleAccessor;
     private _renderTitle: boolean;
-    private _controlsUseVisibility: boolean;
-    private _transitionDuration: number;
-    private _transitionDelay: number;
-    private _filterPrinter: (filters) => string;
     private _mandatoryAttributesList: string[];
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
@@ -135,7 +128,11 @@ export class BaseMixin {
             minHeight: 200,
             useViewBoxResizing: false,
             ordering: d => d.key,
-            filterPrinter: printers.filters
+            filterPrinter: printers.filters,
+            controlsUseVisibility: false,
+            transitionDuration: 750,
+            transitionDelay: 0,
+            commitHandler: undefined,
         });
 
         this._conf.dimension = undefined;
@@ -168,11 +165,6 @@ export class BaseMixin {
 
         this._title = d => `${this.keyAccessor()(d)}: ${this.valueAccessor()(d)}`;
         this._renderTitle = true;
-        this._controlsUseVisibility = false;
-
-        this._conf.transitionDuration = 750;
-
-        this._conf.transitionDelay = 0;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
@@ -187,7 +179,6 @@ export class BaseMixin {
             'pretransition');
 
         this._legend = undefined;
-        this._commitHandler = undefined;
 
         this._defaultData = group => group.all();
         this._data = this._defaultData;
@@ -503,22 +494,6 @@ export class BaseMixin {
     }
 
     /**
-     * If set, use the `visibility` attribute instead of the `display` attribute for showing/hiding
-     * chart reset and filter controls, for less disruption to the layout.
-     * @param {Boolean} [controlsUseVisibility=false]
-     * @returns {Boolean|BaseMixin}
-     */
-    public controlsUseVisibility (): boolean;
-    public controlsUseVisibility (controlsUseVisibility: boolean): this;
-    public controlsUseVisibility (controlsUseVisibility?) {
-        if (!arguments.length) {
-            return this._controlsUseVisibility;
-        }
-        this._controlsUseVisibility = controlsUseVisibility;
-        return this;
-    }
-
-    /**
      * Turn on optional control elements within the root element. dc currently supports the
      * following html control elements.
      * * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
@@ -531,7 +506,7 @@ export class BaseMixin {
      */
     public turnOnControls (): this {
         if (this._root) {
-            const attribute = this.controlsUseVisibility() ? 'visibility' : 'display';
+            const attribute = this._conf.controlsUseVisibility ? 'visibility' : 'display';
             this.selectAll('.reset').style(attribute, null);
             this.selectAll('.filter').text(this._conf.filterPrinter(this.filters())).style(attribute, null);
         }
@@ -545,8 +520,8 @@ export class BaseMixin {
      */
     public turnOffControls (): this {
         if (this._root) {
-            const attribute = this.controlsUseVisibility() ? 'visibility' : 'display';
-            const value = this.controlsUseVisibility() ? 'hidden' : 'none';
+            const attribute = this._conf.controlsUseVisibility ? 'visibility' : 'display';
+            const value = this._conf.controlsUseVisibility ? 'hidden' : 'none';
             this.selectAll('.reset').style(attribute, value);
             this.selectAll('.filter').style(attribute, value).text(this.filter());
         }
@@ -640,35 +615,14 @@ export class BaseMixin {
     }
 
     /**
-     * Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
-     * the chart's filters have changed, in order to send the filter data asynchronously to a server.
-     *
-     * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
-     * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
-     * triggered once the commit is done. The callback has the standard node.js continuation signature
-     * with error first and result second.
-     * @param {Function} commitHandler
-     * @returns {BaseMixin}
-     */
-    public commitHandler (): () => void;
-    public commitHandler (commitHandler: () => void): this;
-    public commitHandler (commitHandler?) {
-        if (!arguments.length) {
-            return this._commitHandler;
-        }
-        this._commitHandler = commitHandler;
-        return this;
-    }
-
-    /**
      * Redraws all charts in the same group as this chart, typically in reaction to a filter
      * change. If the chart has a {@link BaseMixin.commitFilter commitHandler}, it will
      * be executed and waited for.
      * @returns {BaseMixin}
      */
     public redrawGroup (): this {
-        if (this._commitHandler) {
-            this._commitHandler(false, (error, result) => {
+        if (this._conf.commitHandler) {
+            this._conf.commitHandler(false, (error, result) => {
                 if (error) {
                     console.log(error);
                 } else {
@@ -687,8 +641,8 @@ export class BaseMixin {
      * @returns {BaseMixin}
      */
     public renderGroup (): this {
-        if (this._commitHandler) {
-            this._commitHandler(false, (error, result) => {
+        if (this._conf.commitHandler) {
+            this._conf.commitHandler(false, (error, result) => {
                 if (error) {
                     console.log(error);
                 } else {

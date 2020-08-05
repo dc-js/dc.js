@@ -1,6 +1,8 @@
 import {BaseAccessor, MinimalCFDimension} from '../core/types';
 
 export interface IBaseMixinConf {
+    commitHandler?: (render: boolean, callback: (error: any, result: any) => void) => void;
+    controlsUseVisibility?: boolean;
     transitionDelay?: number;
     transitionDuration?: number;
     filterPrinter?: (filters: any) => string;

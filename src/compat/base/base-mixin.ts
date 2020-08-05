@@ -178,6 +178,43 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
             this._conf.transitionDelay = delay;
             return this;
         }
+
+        /**
+         * If set, use the `visibility` attribute instead of the `display` attribute for showing/hiding
+         * chart reset and filter controls, for less disruption to the layout.
+         * @param {Boolean} [controlsUseVisibility=false]
+         * @returns {Boolean|BaseMixin}
+         */
+        public controlsUseVisibility (): boolean;
+        public controlsUseVisibility (controlsUseVisibility: boolean): this;
+        public controlsUseVisibility (controlsUseVisibility?) {
+            if (!arguments.length) {
+                return this._conf.controlsUseVisibility;
+            }
+            this._conf.controlsUseVisibility = controlsUseVisibility;
+            return this;
+        }
+
+        /**
+         * Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
+         * the chart's filters have changed, in order to send the filter data asynchronously to a server.
+         *
+         * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
+         * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
+         * triggered once the commit is done. The callback has the standard node.js continuation signature
+         * with error first and result second.
+         * @param {Function} commitHandler
+         * @returns {BaseMixin}
+         */
+        public commitHandler (): () => void;
+        public commitHandler (commitHandler: () => void): this;
+        public commitHandler (commitHandler?) {
+            if (!arguments.length) {
+                return this._conf.commitHandler;
+            }
+            this._conf.commitHandler = commitHandler;
+            return this;
+        }
     }
 }
 
