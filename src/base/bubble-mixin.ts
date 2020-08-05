@@ -45,7 +45,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
             this.BUBBLE_CLASS = 'bubble';
             this.MIN_RADIUS = 10;
 
-            this.renderLabel(true);
+            this._conf.renderLabel = true;
 
             this.data(group => {
                 const data = group.all();
@@ -148,7 +148,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
         }
 
         public _labelFunction (d): string|number {
-            return this.label()(d);
+            return this._conf.label(d);
         }
 
         public _shouldLabel (d): boolean {
@@ -164,7 +164,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
         }
 
         public _doRenderLabel (bubbleGEnter): void {
-            if (this.renderLabel()) {
+            if (this._conf.renderLabel) {
                 let label = bubbleGEnter.select('text');
 
                 if (label.empty()) {
@@ -184,7 +184,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
         }
 
         public doUpdateLabels (bubbleGEnter): void {
-            if (this.renderLabel()) {
+            if (this._conf.renderLabel) {
                 const labels = bubbleGEnter.select('text')
                     .attr('pointer-events', d => this._labelPointerEvent(d))
                     .text(d => this._labelFunction(d));

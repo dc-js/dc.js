@@ -51,7 +51,8 @@ export class BarChart extends StackMixin {
 
         this._barWidth = undefined;
 
-        this.label(d => printSingleValue(d.y0 + d.y), false);
+        this._conf.label = d => printSingleValue(d.y0 + d.y)
+        this._conf.renderLabel = false;
 
         this.anchor(parent, chartGroup);
     }
@@ -106,7 +107,7 @@ export class BarChart extends StackMixin {
 
                 chart._renderBars(layer, i, d);
 
-                if (chart.renderLabel() && last === i) {
+                if (chart._conf.renderLabel && last === i) {
                     chart._renderLabels(layer, i, d);
                 }
             });
@@ -159,7 +160,7 @@ export class BarChart extends StackMixin {
         transition(labelsEnterUpdate, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', d => this._labelXPos(d))
             .attr('y', d => this._labelYPos(d))
-            .text(d => this.label()(d));
+            .text(d => this._conf.label(d));
 
         transition(labels.exit(), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('height', 0)

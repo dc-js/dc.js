@@ -1,6 +1,13 @@
-import {BaseAccessor, MinimalCFDimension} from '../core/types';
+import {BaseAccessor, LabelAccessor, MinimalCFDimension} from '../core/types';
 
 export interface IBaseMixinConf {
+    label?: LabelAccessor;
+    renderLabel?: boolean;
+    resetFilterHandler?: (filters: any) => any[];
+    addFilterHandler?: (filters: any, filter: any) => any;
+    removeFilterHandler?: (filters: any, filter: any) => any;
+    filterHandler?: (dimension: MinimalCFDimension, filters: any) => any;
+    hasFilterHandler?: (filters, filter) => boolean;
     commitHandler?: (render: boolean, callback: (error: any, result: any) => void) => void;
     controlsUseVisibility?: boolean;
     transitionDelay?: number;

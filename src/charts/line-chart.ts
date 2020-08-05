@@ -91,7 +91,8 @@ export class LineChart extends StackMixin {
         this._conf.transitionDelay = 0;
         this._rangeBandPadding(1);
 
-        this.label(d => printSingleValue(d.y0 + d.y), false);
+        this._conf.label = d => printSingleValue(d.y0 + d.y);
+        this._conf.renderLabel =false;
 
         this.anchor(parent, chartGroup);
     }
@@ -119,7 +120,7 @@ export class LineChart extends StackMixin {
 
         this._drawDots(chartBody, layers);
 
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             this._drawLabels(layers);
         }
     }
@@ -459,7 +460,7 @@ export class LineChart extends StackMixin {
                     const y = chart.y()(d.y + d.y0) - LABEL_PADDING;
                     return safeNumber(y);
                 })
-                .text(d => chart.label()(d));
+                .text(d => chart._conf.label(d));
 
             transition(labels.exit(), chart._conf.transitionDuration)
                 .attr('height', 0)

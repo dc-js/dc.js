@@ -92,8 +92,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this.title(d => `${this.keyAccessor()(d)}: ${this._extendedValueAccessor(d)}`);
 
-        this.label(d => this.keyAccessor()(d));
-        this.renderLabel(true);
+        this._conf.label = d => this.keyAccessor()(d);
+        this._conf.renderLabel = true;
 
         this._conf.transitionDuration = 350;
 
@@ -225,12 +225,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 if (this._sliceHasNoData(d) || this._sliceTooSmall(d)) {
                     return '';
                 }
-                return this.label()(d);
+                return this._conf.label(d);
             });
     }
 
     private _createLabels (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
                 .data<any>(sunburstData);
 
@@ -274,7 +274,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _updateLabels (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
                 .data<any>(sunburstData);
 

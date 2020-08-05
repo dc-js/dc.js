@@ -85,8 +85,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
         this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
 
-        this.label(d => this.cappedKeyAccessor(d));
-        this.renderLabel(true);
+        this._conf.label =d => this.cappedKeyAccessor(d);
+        this._conf.renderLabel = true;
 
         this._conf.transitionDuration = 350;
         this._conf.transitionDelay = 0;
@@ -205,7 +205,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                 if ((this._sliceHasNoData(data) || this._sliceTooSmall(d)) && !this._isSelectedSlice(d)) {
                     return '';
                 }
-                return this.label()(d.data);
+                return this._conf.label(d.data);
             });
     }
 
@@ -222,7 +222,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     private _createLabels (labels: Selection<SVGTextElement, any, SVGGElement, any>, pieData, arcs: Arc<any, DefaultArcObject>) {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             const labelsEnter = labels
                 .enter()
                 .append('text')
@@ -312,7 +312,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     public _updateLabels (pieData, arcs: Arc<any, DefaultArcObject>): void {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._labelCssClass}`)
                 .data(pieData);
             this._positionLabels(labels, arcs);

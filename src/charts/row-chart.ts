@@ -82,7 +82,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
 
-        this.label(d => this.cappedKeyAccessor(d));
+        this._conf.label = d => this.cappedKeyAccessor(d);
+        this._conf.renderLabel = true;
 
         this.anchor(parent, chartGroup);
     }
@@ -237,7 +238,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     private _createLabels (rowEnter: SVGGElementSelection): void {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             rowEnter.append('text')
                 .on('click', d => this._onClick(d));
         }
@@ -249,14 +250,14 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     private _updateLabels (rows: SVGGElementSelection): void {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             const lab = rows.select('text')
                 .attr('x', this._labelOffsetX)
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
                 .on('click', d => this._onClick(d))
                 .attr('class', (d, i) => `${this._rowCssClass} _${i}`)
-                .text(d => this.label()(d));
+                .text(d => this._conf.label(d));
 
             transition(lab, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('transform', d => this._translateX(d));

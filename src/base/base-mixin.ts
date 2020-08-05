@@ -16,7 +16,6 @@ import {
     ChartGroupType,
     ChartParentType,
     KeyAccessor,
-    LabelAccessor,
     LegendItem,
     MinimalCFDimension,
     MinimalCFGroup,
@@ -101,23 +100,15 @@ export class BaseMixin {
     private _height: number;
     private _keyAccessor: KeyAccessor;
     private _valueAccessor: ValueAccessor;
-    private _label: LabelAccessor;
-    private _renderLabel: boolean;
     private _title: TitleAccessor;
     private _renderTitle: boolean;
     private _mandatoryAttributesList: string[];
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
-    private _commitHandler; // TODO: support async functions as well
     private _defaultData: (group) => any; // TODO: find correct type
     private _data: (group) => any;
     private _filters: any[]; // TODO: find better types
-    private _filterHandler: (dimension: MinimalCFDimension, filters) => any;
-    private _hasFilterHandler: (filters, filter) => (boolean | any);
-    private _removeFilterHandler: (filters, filter) => any;
-    private _addFilterHandler: (filters, filter) => any;
-    private _resetFilterHandler: (filters) => any[];
     protected _groupName: string; // StackMixin needs it
 
     constructor () {
@@ -133,6 +124,13 @@ export class BaseMixin {
             transitionDuration: 750,
             transitionDelay: 0,
             commitHandler: undefined,
+            filterHandler: _defaultFilterHandler,
+            hasFilterHandler: _defaultHasFilterHandler,
+            removeFilterHandler: _defaultRemoveFilterHandler,
+            addFilterHandler: _defaultAddFilterHandler,
+            resetFilterHandler: _defaultResetFilterHandler,
+            label: d => d.key,
+            renderLabel: false,
         });
 
         this._conf.dimension = undefined;
@@ -159,9 +157,6 @@ export class BaseMixin {
 
         this._keyAccessor = d => d.key;
         this._valueAccessor = d => d.value;
-        this._label = d => d.key;
-
-        this._renderLabel = false;
 
         this._title = d => `${this.keyAccessor()(d)}: ${this.valueAccessor()(d)}`;
         this._renderTitle = true;
@@ -184,12 +179,6 @@ export class BaseMixin {
         this._data = this._defaultData;
 
         this._filters = [];
-
-        this._filterHandler = _defaultFilterHandler;
-        this._hasFilterHandler = _defaultHasFilterHandler;
-        this._removeFilterHandler = _defaultRemoveFilterHandler;
-        this._addFilterHandler = _defaultAddFilterHandler;
-        this._resetFilterHandler = _defaultResetFilterHandler;
     }
 
     public configure (conf: IBaseMixinConf) {
@@ -666,38 +655,6 @@ export class BaseMixin {
     }
 
     /**
-     * Set or get the has-filter handler. The has-filter handler is a function that checks to see if
-     * the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
-     * you to change the way filters are checked for and replaced.
-     * @example
-     * // default has-filter handler
-     * chart.hasFilterHandler(function (filters, filter) {
-     *     if (filter === null || typeof(filter) === 'undefined') {
-     *         return filters.length > 0;
-     *     }
-     *     return filters.some(function (f) {
-     *         return filter <= f && filter >= f;
-     *     });
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.hasFilterHandler(function(filters, filter) {
-     *     return false;
-     * });
-     * @param {Function} [hasFilterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public hasFilterHandler ();
-    public hasFilterHandler (hasFilterHandler): this;
-    public hasFilterHandler (hasFilterHandler?) {
-        if (!arguments.length) {
-            return this._hasFilterHandler;
-        }
-        this._hasFilterHandler = hasFilterHandler;
-        return this;
-    }
-
-    /**
      * Check whether any active filter or a specific filter is associated with particular chart instance.
      * This function is **not chainable**.
      * @see {@link BaseMixin#hasFilterHandler hasFilterHandler}
@@ -705,109 +662,12 @@ export class BaseMixin {
      * @returns {Boolean}
      */
     public hasFilter (filter?): boolean {
-        return this._hasFilterHandler(this._filters, filter);
-    }
-
-    /**
-     * Set or get the remove filter handler. The remove filter handler is a function that removes a
-     * filter from the chart's current filters. Using a custom remove filter handler allows you to
-     * change how filters are removed or perform additional work when removing a filter, e.g. when
-     * using a filter server other than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @example
-     * // default remove filter handler
-     * chart.removeFilterHandler(function (filters, filter) {
-     *     for (var i = 0; i < filters.length; i++) {
-     *         if (filters[i] <= filter && filters[i] >= filter) {
-     *             filters.splice(i, 1);
-     *             break;
-     *         }
-     *     }
-     *     return filters;
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.removeFilterHandler(function(filters, filter) {
-     *     return filters;
-     * });
-     * @param {Function} [removeFilterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public removeFilterHandler ();
-    public removeFilterHandler (removeFilterHandler): this;
-    public removeFilterHandler (removeFilterHandler?) {
-        if (!arguments.length) {
-            return this._removeFilterHandler;
-        }
-        this._removeFilterHandler = removeFilterHandler;
-        return this;
-    }
-
-    /**
-     * Set or get the add filter handler. The add filter handler is a function that adds a filter to
-     * the chart's filter list. Using a custom add filter handler allows you to change the way filters
-     * are added or perform additional work when adding a filter, e.g. when using a filter server other
-     * than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @example
-     * // default add filter handler
-     * chart.addFilterHandler(function (filters, filter) {
-     *     filters.push(filter);
-     *     return filters;
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.addFilterHandler(function(filters, filter) {
-     *     return filters;
-     * });
-     * @param {Function} [addFilterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public addFilterHandler ();
-    public addFilterHandler (addFilterHandler): this;
-    public addFilterHandler (addFilterHandler?) {
-        if (!arguments.length) {
-            return this._addFilterHandler;
-        }
-        this._addFilterHandler = addFilterHandler;
-        return this;
-    }
-
-    /**
-     * Set or get the reset filter handler. The reset filter handler is a function that resets the
-     * chart's filter list by returning a new list. Using a custom reset filter handler allows you to
-     * change the way filters are reset, or perform additional work when resetting the filters,
-     * e.g. when using a filter server other than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @example
-     * // default remove filter handler
-     * function (filters) {
-     *     return [];
-     * }
-     *
-     * // custom filter handler (no-op)
-     * chart.resetFilterHandler(function(filters) {
-     *     return filters;
-     * });
-     * @param {Function} [resetFilterHandler]
-     * @returns {BaseMixin}
-     */
-    public resetFilterHandler ();
-    public resetFilterHandler (resetFilterHandler): this;
-    public resetFilterHandler (resetFilterHandler?) {
-        if (!arguments.length) {
-            return this._resetFilterHandler;
-        }
-        this._resetFilterHandler = resetFilterHandler;
-        return this;
+        return this._conf.hasFilterHandler(this._filters, filter);
     }
 
     public applyFilters (filters) {
         if (this._conf.dimension && this._conf.dimension.filter) {
-            const fs = this._filterHandler(this._conf.dimension, filters);
+            const fs = this._conf.filterHandler(this._conf.dimension, filters);
             if (fs) {
                 filters = fs;
             }
@@ -823,7 +683,7 @@ export class BaseMixin {
      * @returns {BaseMixin}
      */
     public replaceFilter (filter): this {
-        this._filters = this._resetFilterHandler(this._filters);
+        this._filters = this._conf.resetFilterHandler(this._filters);
         this.filter(filter);
         return this;
     }
@@ -889,19 +749,19 @@ export class BaseMixin {
         if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
             // toggle each filter
             filter[0].forEach(f => {
-                if (this._hasFilterHandler(filters, f)) {
-                    filters = this._removeFilterHandler(filters, f);
+                if (this._conf.hasFilterHandler(filters, f)) {
+                    filters = this._conf.removeFilterHandler(filters, f);
                 } else {
-                    filters = this._addFilterHandler(filters, f);
+                    filters = this._conf.addFilterHandler(filters, f);
                 }
             });
         } else if (filter === null) {
-            filters = this._resetFilterHandler(filters);
+            filters = this._conf.resetFilterHandler(filters);
         } else {
-            if (this._hasFilterHandler(filters, filter)) {
-                filters = this._removeFilterHandler(filters, filter);
+            if (this._conf.hasFilterHandler(filters, filter)) {
+                filters = this._conf.removeFilterHandler(filters, filter);
             } else {
-                filters = this._addFilterHandler(filters, filter);
+                filters = this._conf.addFilterHandler(filters, filter);
             }
         }
         this._filters = this.applyFilters(filters);
@@ -959,60 +819,6 @@ export class BaseMixin {
             this.filter(filter);
             this.redrawGroup();
         });
-    }
-
-    /**
-     * Set or get the filter handler. The filter handler is a function that performs the filter action
-     * on a specific dimension. Using a custom filter handler allows you to perform additional logic
-     * before or after filtering.
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
-     * @example
-     * // the default filter handler handles all possible cases for the charts in dc.js
-     * // you can replace it with something more specialized for your own chart
-     * chart.filterHandler(function (dimension, filters) {
-     *     if (filters.length === 0) {
-     *         // the empty case (no filtering)
-     *         dimension.filter(null);
-     *     } else if (filters.length === 1 && !filters[0].isFiltered) {
-     *         // single value and not a function-based filter
-     *         dimension.filterExact(filters[0]);
-     *     } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-     *         // single range-based filter
-     *         dimension.filterRange(filters[0]);
-     *     } else {
-     *         // an array of values, or an array of filter objects
-     *         dimension.filterFunction(function (d) {
-     *             for (var i = 0; i < filters.length; i++) {
-     *                 var filter = filters[i];
-     *                 if (filter.isFiltered && filter.isFiltered(d)) {
-     *                     return true;
-     *                 } else if (filter <= d && filter >= d) {
-     *                     return true;
-     *                 }
-     *             }
-     *             return false;
-     *         });
-     *     }
-     *     return filters;
-     * });
-     *
-     * // custom filter handler
-     * chart.filterHandler(function(dimension, filter){
-     *     var newFilter = filter + 10;
-     *     dimension.filter(newFilter);
-     *     return newFilter; // set the actual filter value to the new value
-     * });
-     * @param {Function} [filterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public filterHandler ();
-    public filterHandler (filterHandler): this;
-    public filterHandler (filterHandler?) {
-        if (!arguments.length) {
-            return this._filterHandler;
-        }
-        this._filterHandler = filterHandler;
-        return this;
     }
 
     // abstract function stub
@@ -1092,49 +898,6 @@ export class BaseMixin {
             return this._valueAccessor;
         }
         this._valueAccessor = valueAccessor;
-        return this;
-    }
-
-    /**
-     * Set or get the label function. The chart class will use this function to render labels for each
-     * child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
-     * chart supports the label function, for example line chart does not use this function
-     * at all. By default, enables labels; pass false for the second parameter if this is not desired.
-     * @example
-     * // default label function just return the key
-     * chart.label(function(d) { return d.key; });
-     * // label function has access to the standard d3 data binding and can get quite complicated
-     * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
-     * @param {Function} [labelFunction]
-     * @param {Boolean} [enableLabels=true]
-     * @returns {Function|BaseMixin}
-     */
-    public label (): LabelAccessor;
-    public label (labelFunction: LabelAccessor, enableLabels?: boolean): this;
-    public label (labelFunction?, enableLabels?) {
-        if (!arguments.length) {
-            return this._label;
-        }
-        this._label = labelFunction;
-        // TODO: drop the 2nd parameter
-        if ((enableLabels === undefined) || enableLabels) {
-            this._renderLabel = true;
-        }
-        return this;
-    }
-
-    /**
-     * Turn on/off label rendering
-     * @param {Boolean} [renderLabel=false]
-     * @returns {Boolean|BaseMixin}
-     */
-    public renderLabel (): boolean;
-    public renderLabel (renderLabel: boolean): this;
-    public renderLabel (renderLabel?) {
-        if (!arguments.length) {
-            return this._renderLabel;
-        }
-        this._renderLabel = renderLabel;
         return this;
     }
 
