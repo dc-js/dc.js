@@ -1,4 +1,4 @@
-import {Constructor, MinimalCFDimension} from '../../core/types';
+import {BaseAccessor, Constructor, MinimalCFDimension} from '../../core/types';
 
 import {BaseMixin as BaseMixinNeo} from '../../base/base-mixin';
 
@@ -98,7 +98,26 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
             return this;
         }
 
-
+        /**
+         * Get or set an accessor to order ordinal dimensions.  The chart uses
+         * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.sort}
+         * to sort elements; this accessor returns the value to order on.
+         * @example
+         * // Default ordering accessor
+         * _chart.ordering(pluck('key'));
+         * @param {Function} [orderFunction]
+         * @returns {Function|BaseMixin}
+         */
+        public ordering (): BaseAccessor<any>;
+        public ordering (orderFunction: BaseAccessor<any>): this;
+        public ordering (orderFunction?) {
+            if (!arguments.length) {
+                return this._conf.ordering;
+            }
+            this._conf.ordering = orderFunction;
+            this.expireCache();
+            return this;
+        }
 
     }
 }

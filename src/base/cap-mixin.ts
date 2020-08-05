@@ -47,7 +47,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
             };
 
             // emulate old group.top(N) ordering
-            this.ordering(kv => -kv.value);
+            this._conf.ordering = kv => -kv.value;
 
             // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
             // whether top means front or back depends on takeFront

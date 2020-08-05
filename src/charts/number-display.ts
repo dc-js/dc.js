@@ -52,7 +52,7 @@ export class NumberDisplay extends BaseMixin {
         this._mandatoryAttributes(['group']);
 
         // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-        this.ordering(kv => kv.value);
+        this._conf.ordering = kv => kv.value;
 
         this.data(group => {
             const valObj = group.value ? group.value() : this._maxBin(group.all());

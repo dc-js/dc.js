@@ -133,7 +133,8 @@ export class BaseMixin {
         this.configure({
             minWidth: 200,
             minHeight: 200,
-            useViewBoxResizing: false
+            useViewBoxResizing: false,
+            ordering: d => d.key
         });
 
         this._conf.dimension = undefined;
@@ -161,8 +162,6 @@ export class BaseMixin {
         this._keyAccessor = d => d.key;
         this._valueAccessor = d => d.value;
         this._label = d => d.key;
-
-        this._ordering = d => d.key;
 
         this._renderLabel = false;
 
@@ -331,30 +330,9 @@ export class BaseMixin {
         return this;
     }
 
-    /**
-     * Get or set an accessor to order ordinal dimensions.  The chart uses
-     * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.sort}
-     * to sort elements; this accessor returns the value to order on.
-     * @example
-     * // Default ordering accessor
-     * _chart.ordering(pluck('key'));
-     * @param {Function} [orderFunction]
-     * @returns {Function|BaseMixin}
-     */
-    public ordering (): BaseAccessor<any>;
-    public ordering (orderFunction: BaseAccessor<any>): this;
-    public ordering (orderFunction?) {
-        if (!arguments.length) {
-            return this._ordering;
-        }
-        this._ordering = orderFunction;
-        this.expireCache();
-        return this;
-    }
-
     public _computeOrderedGroups (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort((a, b) => ascending(this._ordering(a), this._ordering(b)));
+        return Array.from(data).sort((a, b) => ascending(this._conf.ordering(a), this._conf.ordering(b)));
     }
 
     /**

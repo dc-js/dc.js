@@ -87,8 +87,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this.colorAccessor(d => this.keyAccessor()(d));
 
-        // override cap mixin
-        this.ordering(d => d.key);
+        // override cap mixin // TODO: not needed, does not mix CapMixin any longer
+        this._conf.ordering = d => d.key;
 
         this.title(d => `${this.keyAccessor()(d)}: ${this._extendedValueAccessor(d)}`);
 
@@ -603,7 +603,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         };
         const _hierarchy = hierarchy(data)
             .sum(d => d.children ? 0 : this._extendedValueAccessor(d))
-            .sort((a, b) => ascending(this.ordering()(getSortable(a)), this.ordering()(getSortable(b))));
+            .sort((a, b) =>
+                ascending(this._conf.ordering(getSortable(a)), this._conf.ordering(getSortable(b))));
 
         const _partition = partition()
               .size([2 * Math.PI, this.ringSizes().partitionDy()]);
