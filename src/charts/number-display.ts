@@ -59,8 +59,8 @@ export class NumberDisplay extends BaseMixin {
             return this.valueAccessor()(valObj);
         });
 
-        this.transitionDuration(250); // good default
-        this.transitionDelay(0);
+        this._conf.transitionDuration = 250; // good default
+        this._conf.transitionDelay = 0;
 
         this.anchor(parent, chartGroup);
     }
@@ -136,8 +136,8 @@ export class NumberDisplay extends BaseMixin {
         {
             const chart = this;
             span.transition()
-                .duration(chart.transitionDuration())
-                .delay(chart.transitionDelay())
+                .duration(chart._conf.transitionDuration)
+                .delay(chart._conf.transitionDelay)
                 .ease(easeQuad)
                 .tween('text', function () {
                     // [XA] don't try and interpolate from Infinity, else this breaks.

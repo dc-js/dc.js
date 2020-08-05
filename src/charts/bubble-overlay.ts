@@ -59,9 +59,9 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         this._g = undefined;
         this._points = [];
 
-        this.transitionDuration(750);
+        this._conf.transitionDuration = 750;
 
-        this.transitionDelay(0);
+        this._conf.transitionDelay = 0;
 
         this.radiusValueAccessor(d => d.value);
 
@@ -122,7 +122,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
                     .on('click', d => this.onClick(d));
             }
 
-            transition(circle, this.transitionDuration(), this.transitionDelay())
+            transition(circle, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('r', d => this.bubbleR(d));
 
             this._doRenderLabel(nodeG);
@@ -172,7 +172,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
 
             const circle = nodeG.select(`circle.${BUBBLE_CLASS}`);
 
-            transition(circle, this.transitionDuration(), this.transitionDelay())
+            transition(circle, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('r', d => this.bubbleR(d))
                 .attr('fill', (d, i) => this.getColor(d, i));
 

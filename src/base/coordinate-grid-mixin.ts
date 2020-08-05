@@ -589,10 +589,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             axisXLab.text(this.xAxisLabel());
         }
 
-        transition(axisXG, this.transitionDuration(), this.transitionDelay())
+        transition(axisXG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${this.margins().left},${this._xAxisY()})`)
             .call(this._xAxis);
-        transition(axisXLab, this.transitionDuration(), this.transitionDelay())
+        transition(axisXLab, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${
                 this.height() - this._xAxisLabelPadding})`);
     }
@@ -621,11 +621,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('x2', d => this._x(d))
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            transition(linesGEnter, this.transitionDuration(), this.transitionDelay())
+            transition(linesGEnter, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('opacity', 0.5);
 
             // update
-            transition(lines, this.transitionDuration(), this.transitionDelay())
+            transition(lines, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('x1', d => this._x(d))
                 .attr('y1', this._xAxisY() - this.margins().top)
                 .attr('x2', d => this._x(d))
@@ -706,7 +706,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        transition(axisYLab, this.transitionDuration(), this.transitionDelay())
+        transition(axisYLab, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${labelXPosition},${labelYPosition}),rotate(${rotation})`);
     }
 
@@ -718,7 +718,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('transform', `translate(${position},${this.margins().top})`);
         }
 
-        transition(axisYG, this.transitionDuration(), this.transitionDelay())
+        transition(axisYG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${position},${this.margins().top})`)
             .call(axis);
     }
@@ -756,11 +756,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('x2', this.xAxisLength())
                 .attr('y2', d => scale(d))
                 .attr('opacity', 0);
-            transition(linesGEnter, this.transitionDuration(), this.transitionDelay())
+            transition(linesGEnter, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('opacity', 0.5);
 
             // update
-            transition(lines, this.transitionDuration(), this.transitionDelay())
+            transition(lines, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('x1', 1)
                 .attr('y1', d => scale(d))
                 .attr('x2', this.xAxisLength())
@@ -1140,7 +1140,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 const scaledSelection = [this._x(brushSelection[0]), this._x(brushSelection[1])];
 
                 const gBrush =
-                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(this._gBrush);
+                    optionalTransition(doTransition, this._conf.transitionDuration, this._conf.transitionDelay)(this._gBrush);
 
                 gBrush
                     .call(this._brush.move, scaledSelection);
@@ -1291,7 +1291,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._zoom
             .scaleExtent(this._zoomScale)
             .extent(extent)
-            .duration(this.transitionDuration());
+            .duration(this._conf.transitionDuration);
 
         if (this._zoomOutRestrict) {
             // Ensure minimum zoomScale is at least 1

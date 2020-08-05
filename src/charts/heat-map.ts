@@ -277,7 +277,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             boxes.select('title').text(this.title());
         }
 
-        transition(boxes.select('rect'), this.transitionDuration(), this.transitionDelay())
+        transition(boxes.select('rect'), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
             .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
             .attr('rx', this._xBorderRadius)
@@ -305,7 +305,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .text(this.colsLabel())
             .merge(gColsText);
 
-        transition(gColsText, this.transitionDuration(), this.transitionDelay())
+        transition(gColsText, this._conf.transitionDuration, this._conf.transitionDelay)
             .text(this.colsLabel())
             .attr('x', d => cols(d) + boxWidth / 2)
             .attr('y', this.effectiveHeight());
@@ -331,7 +331,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .text(this.rowsLabel())
             .merge(gRowsText);
 
-        transition(gRowsText, this.transitionDuration(), this.transitionDelay())
+        transition(gRowsText, this._conf.transitionDuration, this._conf.transitionDelay)
             .text(this.rowsLabel())
             .attr('y', d => rows(d) + boxHeight / 2);
 

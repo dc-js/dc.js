@@ -134,7 +134,8 @@ export class BaseMixin {
             minWidth: 200,
             minHeight: 200,
             useViewBoxResizing: false,
-            ordering: d => d.key
+            ordering: d => d.key,
+            filterPrinter: printers.filters
         });
 
         this._conf.dimension = undefined;
@@ -169,11 +170,9 @@ export class BaseMixin {
         this._renderTitle = true;
         this._controlsUseVisibility = false;
 
-        this._transitionDuration = 750;
+        this._conf.transitionDuration = 750;
 
-        this._transitionDelay = 0;
-
-        this._filterPrinter = printers.filters;
+        this._conf.transitionDelay = 0;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
@@ -504,36 +503,6 @@ export class BaseMixin {
     }
 
     /**
-     * Set or get the filter printer function. The filter printer function is used to generate human
-     * friendly text for filter value(s) associated with the chart instance. The text will get shown
-     * in the `.filter element; see {@link BaseMixin#turnOnControls turnOnControls}.
-     *
-     * By default dc charts use a default filter printer {@link printers.filters printers.filters}
-     * that provides simple printing support for both single value and ranged filters.
-     * @example
-     * // for a chart with an ordinal brush, print the filters in upper case
-     * chart.filterPrinter(function(filters) {
-     *   return filters.map(function(f) { return f.toUpperCase(); }).join(', ');
-     * });
-     * // for a chart with a range brush, print the filter as start and extent
-     * chart.filterPrinter(function(filters) {
-     *   return 'start ' + printSingleValue(filters[0][0]) +
-     *     ' extent ' + printSingleValue(filters[0][1] - filters[0][0]);
-     * });
-     * @param {Function} [filterPrinterFunction=printers.filters]
-     * @returns {Function|BaseMixin}
-     */
-    public filterPrinter ();
-    public filterPrinter (filterPrinterFunction): this;
-    public filterPrinter (filterPrinterFunction?) {
-        if (!arguments.length) {
-            return this._filterPrinter;
-        }
-        this._filterPrinter = filterPrinterFunction;
-        return this;
-    }
-
-    /**
      * If set, use the `visibility` attribute instead of the `display` attribute for showing/hiding
      * chart reset and filter controls, for less disruption to the layout.
      * @param {Boolean} [controlsUseVisibility=false]
@@ -564,7 +533,7 @@ export class BaseMixin {
         if (this._root) {
             const attribute = this.controlsUseVisibility() ? 'visibility' : 'display';
             this.selectAll('.reset').style(attribute, null);
-            this.selectAll('.filter').text(this._filterPrinter(this.filters())).style(attribute, null);
+            this.selectAll('.filter').text(this._conf.filterPrinter(this.filters())).style(attribute, null);
         }
         return this;
     }
@@ -581,36 +550,6 @@ export class BaseMixin {
             this.selectAll('.reset').style(attribute, value);
             this.selectAll('.filter').style(attribute, value).text(this.filter());
         }
-        return this;
-    }
-
-    /**
-     * Set or get the animation transition duration (in milliseconds) for this chart instance.
-     * @param {Number} [duration=750]
-     * @returns {Number|BaseMixin}
-     */
-    public transitionDuration (): number;
-    public transitionDuration (duration: number): this;
-    public transitionDuration (duration?) {
-        if (!arguments.length) {
-            return this._transitionDuration;
-        }
-        this._transitionDuration = duration;
-        return this;
-    }
-
-    /**
-     * Set or get the animation transition delay (in milliseconds) for this chart instance.
-     * @param {Number} [delay=0]
-     * @returns {Number|BaseMixin}
-     */
-    public transitionDelay (): number;
-    public transitionDelay (delay: number): this;
-    public transitionDelay (delay?) {
-        if (!arguments.length) {
-            return this._transitionDelay;
-        }
-        this._transitionDelay = delay;
         return this;
     }
 
@@ -659,8 +598,8 @@ export class BaseMixin {
     // Needed by Composite Charts
     public _activateRenderlets (event?): void {
         this._listeners.call('pretransition', this, this);
-        if (this.transitionDuration() > 0 && this._svg) {
-            this._svg.transition().duration(this.transitionDuration()).delay(this.transitionDelay())
+        if (this._conf.transitionDuration > 0 && this._svg) {
+            this._svg.transition().duration(this._conf.transitionDuration).delay(this._conf.transitionDelay)
                 .on('end', () => {
                     this._listeners.call('renderlet', this, this);
                     if (event) {

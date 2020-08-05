@@ -198,7 +198,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .height(this.effectiveHeight())
             .value(this.valueAccessor())
             .domain(this.y().domain())
-            .duration(this.transitionDuration())
+            .duration(this._conf.transitionDuration)
             .tickFormat(this._tickFormat)
             .renderDataPoints(this._renderDataPoints)
             .dataOpacity(this._dataOpacity)
@@ -232,7 +232,7 @@ export class BoxPlot extends CoordinateGridMixin {
 
     public _updateBoxes (boxesG: SVGGElementSelection) {
         const chart = this;
-        transition(boxesG, this.transitionDuration(), this.transitionDelay())
+        transition(boxesG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .each(function (d) {

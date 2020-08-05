@@ -116,7 +116,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         }
         axisG.attr('transform', `translate(0, ${this.effectiveHeight()})`);
 
-        transition(axisG, this.transitionDuration(), this.transitionDelay())
+        transition(axisG, this._conf.transitionDuration, this._conf.transitionDelay)
             .call(this._xAxis);
     }
 
@@ -221,7 +221,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .classed('deselected', d => (this.hasFilter()) ? !this._isSelectedRow(d) : false)
             .classed('selected', d => (this.hasFilter()) ? this._isSelectedRow(d) : false);
 
-        transition(rect, this.transitionDuration(), this.transitionDelay())
+        transition(rect, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('width', d => Math.abs(this._rootValue() - this._x(this.cappedValueAccessor(d))))
             .attr('transform', d => this._translateX(d));
 
@@ -258,7 +258,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
                 .attr('class', (d, i) => `${this._rowCssClass} _${i}`)
                 .text(d => this.label()(d));
 
-            transition(lab, this.transitionDuration(), this.transitionDelay())
+            transition(lab, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('transform', d => this._translateX(d));
         }
 
@@ -272,7 +272,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
                 .attr('class', (d, i) => `${this._titleRowCssClass} _${i}`)
                 .text(d => this.title()(d));
 
-            transition(titlelab, this.transitionDuration(), this.transitionDelay())
+            transition(titlelab, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('transform', d => this._translateX(d));
         }
     }

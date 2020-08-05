@@ -88,8 +88,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this.label(d => this.cappedKeyAccessor(d));
         this.renderLabel(true);
 
-        this.transitionDuration(350);
-        this.transitionDelay(0);
+        this._conf.transitionDuration = 350;
+        this._conf.transitionDelay = 0;
 
         this.anchor(parent, chartGroup);
     }
@@ -151,7 +151,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
             this._highlightFilter();
 
-            transition(this._g, this.transitionDuration(), this.transitionDelay())
+            transition(this._g, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('transform', `translate(${this.cx()},${this.cy()})`);
         }
     }
@@ -183,7 +183,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .on('click', (d, i) => this._onClick(d, i))
             .attr('d', (d, i) => this._safeArc(d, i, arcs));
 
-        const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
+        const tranNodes = transition(slicePath, this._conf.transitionDuration, this._conf.transitionDelay);
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
@@ -211,7 +211,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     private _positionLabels (labels: Selection<SVGTextElement, any, SVGGElement, any>, arcs: Arc<any, DefaultArcObject>): void {
         this._applyLabelText(labels);
-        transition(labels, this.transitionDuration(), this.transitionDelay())
+        transition(labels, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle');
     }
@@ -269,7 +269,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         const arc2 = arc()
             .outerRadius(this._radius - this._externalRadiusPadding + this._externalLabelRadius)
             .innerRadius(this._radius - this._externalRadiusPadding);
-        const tranNodes = transition(polyline, this.transitionDuration(), this.transitionDelay());
+        const tranNodes = transition(polyline, this._conf.transitionDuration, this._conf.transitionDelay);
         // this is one rare case where d3.selection differs from d3.transition
         if (tranNodes.attrTween) {
             tranNodes
@@ -301,7 +301,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .data(pieData)
             .select('path')
             .attr('d', (d, i) => this._safeArc(d, i, arcs));
-        const tranNodes = transition(slicePaths, this.transitionDuration(), this.transitionDelay());
+        const tranNodes = transition(slicePaths, this._conf.transitionDuration, this._conf.transitionDelay);
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {

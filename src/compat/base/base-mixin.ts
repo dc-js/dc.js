@@ -119,6 +119,65 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
             return this;
         }
 
+        /**
+         * Set or get the filter printer function. The filter printer function is used to generate human
+         * friendly text for filter value(s) associated with the chart instance. The text will get shown
+         * in the `.filter element; see {@link BaseMixin#turnOnControls turnOnControls}.
+         *
+         * By default dc charts use a default filter printer {@link printers.filters printers.filters}
+         * that provides simple printing support for both single value and ranged filters.
+         * @example
+         * // for a chart with an ordinal brush, print the filters in upper case
+         * chart.filterPrinter(function(filters) {
+         *   return filters.map(function(f) { return f.toUpperCase(); }).join(', ');
+         * });
+         * // for a chart with a range brush, print the filter as start and extent
+         * chart.filterPrinter(function(filters) {
+         *   return 'start ' + printSingleValue(filters[0][0]) +
+         *     ' extent ' + printSingleValue(filters[0][1] - filters[0][0]);
+         * });
+         * @param {Function} [filterPrinterFunction=printers.filters]
+         * @returns {Function|BaseMixin}
+         */
+        public filterPrinter ();
+        public filterPrinter (filterPrinterFunction): this;
+        public filterPrinter (filterPrinterFunction?) {
+            if (!arguments.length) {
+                return this._conf.filterPrinter;
+            }
+            this._conf.filterPrinter = filterPrinterFunction;
+            return this;
+        }
+
+        /**
+         * Set or get the animation transition duration (in milliseconds) for this chart instance.
+         * @param {Number} [duration=750]
+         * @returns {Number|BaseMixin}
+         */
+        public transitionDuration (): number;
+        public transitionDuration (duration: number): this;
+        public transitionDuration (duration?) {
+            if (!arguments.length) {
+                return this._conf.transitionDuration;
+            }
+            this._conf.transitionDuration = duration;
+            return this;
+        }
+
+        /**
+         * Set or get the animation transition delay (in milliseconds) for this chart instance.
+         * @param {Number} [delay=0]
+         * @returns {Number|BaseMixin}
+         */
+        public transitionDelay (): number;
+        public transitionDelay (delay: number): this;
+        public transitionDelay (delay?) {
+            if (!arguments.length) {
+                return this._conf.transitionDelay;
+            }
+            this._conf.transitionDelay = delay;
+            return this;
+        }
     }
 }
 

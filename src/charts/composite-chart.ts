@@ -58,8 +58,8 @@ export class CompositeChart extends CoordinateGridMixin {
         this._rightAxisGridLines = false;
 
         this._mandatoryAttributes([]);
-        this.transitionDuration(500);
-        this.transitionDelay(0);
+        this._conf.transitionDuration = 500;
+        this._conf.transitionDelay = 0;
 
         this.on('filtered.dcjs-composite-chart', chart => {
             // Propagate the filters onto the children
@@ -91,8 +91,8 @@ export class CompositeChart extends CoordinateGridMixin {
             child.chartGroup(this.chartGroup());
             child.svg(this.svg());
             child.xUnits(this.xUnits());
-            child.transitionDuration(this.transitionDuration());
-            child.transitionDelay(this.transitionDelay());
+            child._conf.transitionDuration = this._conf.transitionDuration;
+            child._conf.transitionDelay = this._conf.transitionDelay;
             child.parentBrushOn(this.brushOn());
             child.brushOn(false);
             child.renderTitle(this.renderTitle());

@@ -163,8 +163,8 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             })
             .on('click', d => this.onClick(d, layerIndex));
 
-        transition(paths, this.transitionDuration(),
-                   this.transitionDelay()).attr('fill', (d, i) => this.getColor(data[this._geoJson(layerIndex).keyAccessor(d)], i));
+        transition(paths, this._conf.transitionDuration,
+                   this._conf.transitionDelay).attr('fill', (d, i) => this.getColor(data[this._geoJson(layerIndex).keyAccessor(d)], i));
     }
 
     public onClick (d, layerIndex) {

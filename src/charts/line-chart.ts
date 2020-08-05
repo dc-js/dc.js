@@ -87,8 +87,8 @@ export class LineChart extends StackMixin {
         this._dashStyle = undefined;
         this._xyTipsOn = true;
 
-        this.transitionDuration(500);
-        this.transitionDelay(0);
+        this._conf.transitionDuration = 500;
+        this._conf.transitionDelay = 0;
         this._rangeBandPadding(1);
 
         this.label(d => printSingleValue(d.y0 + d.y), false);
@@ -343,7 +343,7 @@ export class LineChart extends StackMixin {
             path.attr('stroke-dasharray', this._dashStyle);
         }
 
-        transition(layers.select('path.line'), this.transitionDuration(), this.transitionDelay())
+        transition(layers.select('path.line'), this._conf.transitionDuration, this._conf.transitionDelay)
         // .ease('linear')
             .attr('stroke', (d, i) => this.getColor(d, i))
             .attr('d', d => this._safeD(_line(d.values)));
@@ -366,7 +366,7 @@ export class LineChart extends StackMixin {
                 .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
 
-            transition(layers.select('path.area'), this.transitionDuration(), this.transitionDelay())
+            transition(layers.select('path.area'), this._conf.transitionDuration, this._conf.transitionDelay)
             // .ease('linear')
                 .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
@@ -429,7 +429,7 @@ export class LineChart extends StackMixin {
 
                 dotsEnterModify.call(dot => this._doRenderTitle(dot, data));
 
-                transition(dotsEnterModify, this.transitionDuration())
+                transition(dotsEnterModify, this._conf.transitionDuration)
                     .attr('cx', d => safeNumber(this.x()(d.x)))
                     .attr('cy', d => safeNumber(this.y()(d.y + d.y0)))
                     .attr('fill', (d, i) => this.getColor(d, i));
@@ -453,7 +453,7 @@ export class LineChart extends StackMixin {
                 .attr('text-anchor', 'middle')
                 .merge(labels);
 
-            transition(labelsEnterModify, chart.transitionDuration())
+            transition(labelsEnterModify, chart._conf.transitionDuration)
                 .attr('x', d => safeNumber(chart.x()(d.x)))
                 .attr('y', d => {
                     const y = chart.y()(d.y + d.y0) - LABEL_PADDING;
@@ -461,7 +461,7 @@ export class LineChart extends StackMixin {
                 })
                 .text(d => chart.label()(d));
 
-            transition(labels.exit(), chart.transitionDuration())
+            transition(labels.exit(), chart._conf.transitionDuration)
                 .attr('height', 0)
                 .remove();
         });

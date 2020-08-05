@@ -308,7 +308,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         let symbols = (this.chartBodyG() as Selection<SVGGElement, any, any, any>).selectAll<SVGPathElement, any>('path.symbol')
             .data<any>(this.data());
 
-        transition(symbols.exit(), this.transitionDuration(), this.transitionDelay())
+        transition(symbols.exit(), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('opacity', 0).remove();
 
         symbols = symbols
@@ -326,7 +326,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             this._filtered[i] = !this.filter() || this.filter().isFiltered([this.keyAccessor()(d), this.valueAccessor()(d)]);
         });
 
-        transition(symbols, this.transitionDuration(), this.transitionDelay())
+        transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('opacity', (d, i) => {
                 if (!this._existenceAccessor(d)) {
                     return this._emptyOpacity;
@@ -618,7 +618,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         });
         const oldSize = this._symbol.size();
         this._symbol.size(Math.pow(size, 2));
-        transition(symbols, this.transitionDuration(), this.transitionDelay()).attr('d', this._symbol);
+        transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay).attr('d', this._symbol);
         this._symbol.size(oldSize);
     }
 
@@ -703,7 +703,7 @@ export class ScatterPlot extends CoordinateGridMixin {
                 }));
 
                 const gBrushWithTransition =
-                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(gBrush);
+                    optionalTransition(doTransition, this._conf.transitionDuration, this._conf.transitionDelay)(gBrush);
 
                 gBrushWithTransition
                     .call(brush1.move, brushSelection);

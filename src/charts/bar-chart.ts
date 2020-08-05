@@ -156,12 +156,12 @@ export class BarChart extends StackMixin {
             labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
-        transition(labelsEnterUpdate, this.transitionDuration(), this.transitionDelay())
+        transition(labelsEnterUpdate, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', d => this._labelXPos(d))
             .attr('y', d => this._labelYPos(d))
             .text(d => this.label()(d));
 
-        transition(labels.exit(), this.transitionDuration(), this.transitionDelay())
+        transition(labels.exit(), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('height', 0)
             .remove();
     }
@@ -199,7 +199,7 @@ export class BarChart extends StackMixin {
             barsEnterUpdate.on('click', d => this.onClick(d));
         }
 
-        transition(barsEnterUpdate, this.transitionDuration(), this.transitionDelay())
+        transition(barsEnterUpdate, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', d => this._barXPos(d))
             .attr('y', d => {
                 let y = this.y()(d.y + d.y0);
@@ -215,7 +215,7 @@ export class BarChart extends StackMixin {
             .attr('fill', (d, i) => this.getColor(d, i))
             .select('title').text(pluck2('data', this.title(data.name)));
 
-        transition(bars.exit(), this.transitionDuration(), this.transitionDelay())
+        transition(bars.exit(), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', d => this.x()(d.x))
             .attr('width', this._barWidth * 0.9)
             .remove();

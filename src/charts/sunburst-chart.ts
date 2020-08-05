@@ -95,7 +95,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this.label(d => this.keyAccessor()(d));
         this.renderLabel(true);
 
-        this.transitionDuration(350);
+        this._conf.transitionDuration = 350;
 
         this.anchor(parent, chartGroup);
     }
@@ -173,7 +173,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
             this._highlightFilter();
 
-            transition(this._g, this.transitionDuration(), this.transitionDelay())
+            transition(this._g, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('transform', `translate(${this.cx()},${this.cy()})`);
         }
     }
@@ -201,7 +201,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             .on('click', (d, i) => this.onClick(d, i))
             .attr('d', d => this._safeArc(arcs, d));
 
-        const tranNodes = transition(slicePath, this.transitionDuration());
+        const tranNodes = transition(slicePath, this._conf.transitionDuration);
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
@@ -217,7 +217,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _positionLabels (labelsEnter: Selection<SVGTextElement, any, SVGGElement, any>, arcs: Arc<any, DefaultArcObject>) {
-        transition(labelsEnter, this.transitionDuration())
+        transition(labelsEnter, this._conf.transitionDuration)
             .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle')
             .text(d => {
@@ -263,7 +263,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             .data(sunburstData)
             .select('path')
             .attr('d', (d, i) => this._safeArc(arcs, d));
-        const tranNodes = transition(slicePaths, this.transitionDuration());
+        const tranNodes = transition(slicePaths, this._conf.transitionDuration);
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {

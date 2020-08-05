@@ -37,9 +37,9 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
-        this.transitionDuration(750);
+        this._conf.transitionDuration = 750;
 
-        this.transitionDelay(0);
+        this._conf.transitionDelay = 0;
 
         this._bubbleLocator = d => `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
 
@@ -80,7 +80,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 
         bubbleG = bubbleGEnter.merge(bubbleG);
 
-        transition(bubbleG, this.transitionDuration(), this.transitionDelay())
+        transition(bubbleG, this._conf.transitionDuration, this._conf.transitionDelay)
             .select(`circle.${this.BUBBLE_CLASS}`)
             .attr('r', d => this.bubbleR(d))
             .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
@@ -93,7 +93,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     }
 
     public _updateNodes (bubbleG: SVGGElementSelection): void {
-        transition(bubbleG, this.transitionDuration(), this.transitionDelay())
+        transition(bubbleG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', d => this._bubbleLocator(d))
             .select(`circle.${this.BUBBLE_CLASS}`)
             .attr('fill', (d, i) => this.getColor(d, i))
