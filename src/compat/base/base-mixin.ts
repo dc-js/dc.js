@@ -1,4 +1,11 @@
-import {BaseAccessor, Constructor, KeyAccessor, LabelAccessor, MinimalCFDimension} from '../../core/types';
+import {
+    BaseAccessor,
+    Constructor,
+    KeyAccessor,
+    LabelAccessor,
+    MinimalCFDimension,
+    ValueAccessor
+} from '../../core/types';
 
 import {BaseMixin as BaseMixinNeo} from '../../base/base-mixin';
 
@@ -476,6 +483,29 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
                 return this._conf.keyAccessor;
             }
             this._conf.keyAccessor = keyAccessor;
+            return this;
+        }
+
+        /**
+         * Set or get the value accessor function. The value accessor function is used to retrieve the
+         * value from the crossfilter group. Group values are used differently in different charts, for
+         * example values correspond to slice sizes in a pie chart and y axis positions in a grid
+         * coordinate chart.
+         * @example
+         * // default value accessor
+         * chart.valueAccessor(function(d) { return d.value; });
+         * // custom value accessor for a multi-value crossfilter reduction
+         * chart.valueAccessor(function(p) { return p.value.percentageGain; });
+         * @param {Function} [valueAccessor]
+         * @returns {Function|BaseMixin}
+         */
+        public valueAccessor (): ValueAccessor;
+        public valueAccessor (valueAccessor: ValueAccessor): this;
+        public valueAccessor (valueAccessor?) {
+            if (!arguments.length) {
+                return this._conf.valueAccessor;
+            }
+            this._conf.valueAccessor = valueAccessor;
             return this;
         }
     }

@@ -33,7 +33,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
             this._othersLabel = 'Others';
 
             this._othersGrouper = (topItems, restItems) => {
-                const restItemsSum = sum(restItems, this.valueAccessor());
+                const restItemsSum = sum(restItems, this._conf.valueAccessor);
                 const restKeys = restItems.map(this._conf.keyAccessor);
 
                 if (restItemsSum > 0) {
@@ -90,7 +90,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
             if (d.others) {
                 return d.value;
             }
-            return this.valueAccessor()(d, i);
+            return this._conf.valueAccessor(d, i);
         }
 
         /**

@@ -65,7 +65,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public _prepareValues (layer, layerIdx) {
-        const valAccessor = layer.accessor || this.valueAccessor();
+        const valAccessor = layer.accessor || this._conf.valueAccessor;
         const allValues = layer.group.all().map((d, i) => ({
             x: this._conf.keyAccessor(d, i),
             y: valAccessor(d, i),
@@ -147,7 +147,7 @@ export class StackMixin extends CoordinateGridMixin {
         this._titles = {};
         this.stack(g, n);
         if (f) {
-            this.valueAccessor(f);
+            this._conf.valueAccessor = f;
         }
         return super.group(g, n);
     }
@@ -194,7 +194,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public getValueAccessorByIndex (index) {
-        return this._stack[index].accessor || this.valueAccessor();
+        return this._stack[index].accessor || this._conf.valueAccessor;
     }
 
     public yAxisMin () {

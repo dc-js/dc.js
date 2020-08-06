@@ -51,7 +51,7 @@ export class SelectMenu extends BaseMixin {
 
         this.data(group => group.all().filter(this._filterDisplayed));
 
-        this._filterDisplayed = d => this.valueAccessor()(d) > 0;
+        this._filterDisplayed = d => this._conf.valueAccessor(d) > 0;
 
         this._order = (a, b) => {
             if (this._conf.keyAccessor(a) > this._conf.keyAccessor(b)) {

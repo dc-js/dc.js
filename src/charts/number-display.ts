@@ -56,7 +56,7 @@ export class NumberDisplay extends BaseMixin {
 
         this.data(group => {
             const valObj = group.value ? group.value() : this._maxBin(group.all());
-            return this.valueAccessor()(valObj);
+            return this._conf.valueAccessor(valObj);
         });
 
         this._conf.transitionDuration = 250; // good default

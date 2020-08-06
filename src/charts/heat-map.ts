@@ -234,7 +234,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
     public _doRedraw () {
         const data = this.data();
-        let rows = this.rows() || data.map(this.valueAccessor());
+        let rows = this.rows() || data.map(this._conf.valueAccessor);
         let cols = this.cols() || data.map(this._conf.keyAccessor);
 
         if (this._rowOrdering) {
@@ -256,7 +256,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         let boxes: Selection<SVGGElement, unknown, SVGGElement, any> = this._chartBody
             .selectAll<SVGGElement, any>('g.box-group')
-            .data(this.data(), (d, i) => `${this._conf.keyAccessor(d, i)}\0${this.valueAccessor()(d, i)}`);
+            .data(this.data(), (d, i) => `${this._conf.keyAccessor(d, i)}\0${this._conf.valueAccessor(d, i)}`);
 
         boxes.exit().remove();
 
@@ -267,7 +267,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('class', 'heat-box')
             .attr('fill', 'white')
             .attr('x', (d, i) => cols(this._conf.keyAccessor(d, i)))
-            .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
+            .attr('y', (d, i) => rows(this._conf.valueAccessor(d, i)))
             .on('click', this.boxOnClick());
 
         boxes = gEnter.merge(boxes);
@@ -279,7 +279,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         transition(boxes.select('rect'), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', (d, i) => cols(this._conf.keyAccessor(d, i)))
-            .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
+            .attr('y', (d, i) => rows(this._conf.valueAccessor(d, i)))
             .attr('rx', this._xBorderRadius)
             .attr('ry', this._yBorderRadius)
             .attr('fill', (d, i) => this.getColor(d, i))

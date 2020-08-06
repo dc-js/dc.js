@@ -83,13 +83,13 @@ export class SeriesChart extends CompositeChart {
                 keep.push(sub.key);
                 subChart.configure({
                     dimension: this._conf.dimension,
-                    keyAccessor: this._conf.keyAccessor
+                    keyAccessor: this._conf.keyAccessor,
+                    valueAccessor: this._conf.valueAccessor
                 })
                 return subChart
                     .group({
                         all: typeof sub.values === 'function' ? sub.values : () => sub.values
                     }, sub.key)
-                    .valueAccessor(this.valueAccessor())
                     .brushOn(false);
             });
         // this works around the fact compositeChart doesn't really

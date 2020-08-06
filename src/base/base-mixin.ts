@@ -15,12 +15,10 @@ import {
     BaseAccessor,
     ChartGroupType,
     ChartParentType,
-    KeyAccessor,
     LegendItem,
     MinimalCFDimension,
     MinimalCFGroup,
-    TitleAccessor,
-    ValueAccessor
+    TitleAccessor
 } from '../core/types';
 import {IChartGroup} from '../core/chart-group-types';
 import {IBaseMixinConf} from './i-base-mixin-conf';
@@ -98,7 +96,6 @@ export class BaseMixin {
     private _heightCalc: (element) => number;
     private _width: number;
     private _height: number;
-    private _valueAccessor: ValueAccessor;
     private _title: TitleAccessor;
     private _mandatoryAttributesList: string[];
     private _chartGroup: IChartGroup;
@@ -128,6 +125,7 @@ export class BaseMixin {
             addFilterHandler: _defaultAddFilterHandler,
             resetFilterHandler: _defaultResetFilterHandler,
             keyAccessor: d => d.key,
+            valueAccessor: d => d.value,
             label: d => d.key,
             renderLabel: false,
             renderTitle: true,
@@ -155,9 +153,7 @@ export class BaseMixin {
         this._width = undefined;
         this._height = undefined;
 
-        this._valueAccessor = d => d.value;
-
-        this._title = d => `${this._conf.keyAccessor(d)}: ${this.valueAccessor()(d)}`;
+        this._title = d => `${this._conf.keyAccessor(d)}: ${this._conf.valueAccessor(d)}`;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
@@ -852,29 +848,6 @@ export class BaseMixin {
     public isLegendableHidden (d?: LegendItem): boolean {
         // do nothing in base, should be overridden by sub-function
         return false;
-    }
-
-    /**
-     * Set or get the value accessor function. The value accessor function is used to retrieve the
-     * value from the crossfilter group. Group values are used differently in different charts, for
-     * example values correspond to slice sizes in a pie chart and y axis positions in a grid
-     * coordinate chart.
-     * @example
-     * // default value accessor
-     * chart.valueAccessor(function(d) { return d.value; });
-     * // custom value accessor for a multi-value crossfilter reduction
-     * chart.valueAccessor(function(p) { return p.value.percentageGain; });
-     * @param {Function} [valueAccessor]
-     * @returns {Function|BaseMixin}
-     */
-    public valueAccessor (): ValueAccessor;
-    public valueAccessor (valueAccessor: ValueAccessor): this;
-    public valueAccessor (valueAccessor?) {
-        if (!arguments.length) {
-            return this._valueAccessor;
-        }
-        this._valueAccessor = valueAccessor;
-        return this;
     }
 
     /**
