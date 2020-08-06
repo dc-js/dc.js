@@ -1278,6 +1278,18 @@ describe('dc.BarChart', () => {
         }
     });
 
+    describe('accessibility bar chart', () => {
+
+        beforeEach(() => {
+            chart.render();
+        });
+
+        it('default description should match class name', () => {
+            expect(chart.svg().node().firstChild.innerHTML).toEqual('BarChart');
+        });
+
+    });
+
     function nthStack (n) {
         const stack = d3.select(chart.selectAll('.stack').nodes()[n]);
 

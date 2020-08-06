@@ -72,7 +72,7 @@ const _defaultResetFilterHandler = filters => [];
 export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
-        this._svgDescription = ''
+        this._svgDescription = this.constructor.name || '';
 
         this._dimension = undefined;
         this._group = undefined;
