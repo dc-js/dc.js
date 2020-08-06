@@ -75,7 +75,7 @@ export class CboxMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: ICboxMenuConf) {
+    public configure (conf: ICboxMenuConf) {
         super.configure(conf);
     }
 

@@ -88,7 +88,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IRowChartConf) {
+    public configure (conf: IRowChartConf) {
         super.configure(conf);
     }
 

@@ -60,7 +60,7 @@ export class StackMixin extends CoordinateGridMixin {
         this.colorAccessor(d => d.name);
     }
 
-    public configure(conf: IStackMixinConf) {
+    public configure (conf: IStackMixinConf) {
         super.configure(conf);
     }
 

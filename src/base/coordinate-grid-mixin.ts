@@ -139,7 +139,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._useRightYAxis = false;
     }
 
-    public configure(conf: ICoordinateGridMixinConf) {
+    public configure (conf: ICoordinateGridMixinConf) {
         super.configure(conf);
     }
 

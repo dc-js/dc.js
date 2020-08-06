@@ -94,7 +94,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IPieChartConf) {
+    public configure (conf: IPieChartConf) {
         super.configure(conf);
     }
 
