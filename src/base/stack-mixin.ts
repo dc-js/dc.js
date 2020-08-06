@@ -67,7 +67,7 @@ export class StackMixin extends CoordinateGridMixin {
     public _prepareValues (layer, layerIdx) {
         const valAccessor = layer.accessor || this.valueAccessor();
         const allValues = layer.group.all().map((d, i) => ({
-            x: this.keyAccessor()(d, i),
+            x: this._conf.keyAccessor(d, i),
             y: valAccessor(d, i),
             data: d,
             name: layer.name
@@ -312,7 +312,7 @@ export class StackMixin extends CoordinateGridMixin {
     public _ordinalXDomain () {
         const flat = this._flattenStack().map(d => d.data);
         const ordered = this._computeOrderedGroups(flat);
-        return ordered.map(this.keyAccessor());
+        return ordered.map(this._conf.keyAccessor);
     }
 
     public legendables (): LegendItem[] {

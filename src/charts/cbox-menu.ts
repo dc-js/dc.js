@@ -63,10 +63,10 @@ export class CboxMenu extends BaseMixin {
         this._filterDisplayed = d => this.valueAccessor()(d) > 0;
 
         this._order = (a, b) => {
-            if (this.keyAccessor()(a) > this.keyAccessor()(b)) {
+            if (this._conf.keyAccessor(a) > this._conf.keyAccessor(b)) {
                 return 1;
             }
-            if (this.keyAccessor()(a) < this.keyAccessor()(b)) {
+            if (this._conf.keyAccessor(a) < this._conf.keyAccessor(b)) {
                 return -1;
             }
             return 0;
@@ -93,14 +93,14 @@ export class CboxMenu extends BaseMixin {
         if (this.hasFilter() && this._conf.multiple) {
             this._cbox.selectAll('input')
             // adding `false` avoids failing test cases in phantomjs
-                .property('checked', d => d && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0 || false);
+                .property('checked', d => d && this.filters().indexOf(String(this._conf.keyAccessor(d))) >= 0 || false);
         } else if (this.hasFilter()) {
             this._cbox.selectAll('input')
                 .property('checked', d => {
                     if (!d) {
                         return false;
                     }
-                    return this.keyAccessor()(d) === this.filter();
+                    return this._conf.keyAccessor(d) === this.filter();
                 });
         }
         return this;
@@ -111,7 +111,7 @@ export class CboxMenu extends BaseMixin {
 
         let options: Selection<HTMLLIElement, unknown, HTMLElement, any> = this._cbox
             .selectAll<HTMLLIElement, any>(`li.${ITEM_CSS_CLASS}`)
-            .data(this.data(), d => this.keyAccessor()(d));
+            .data(this.data(), d => this._conf.keyAccessor(d));
 
         options.exit().remove();
 
@@ -123,7 +123,7 @@ export class CboxMenu extends BaseMixin {
         options
             .append('input')
             .attr('type', inputType)
-            .attr('value', d => this.keyAccessor()(d))
+            .attr('value', d => this._conf.keyAccessor(d))
             .attr('name', `domain_${this._uniqueId}`)
             .attr('id', (d, i) => `input_${this._uniqueId}_${i}`);
         options

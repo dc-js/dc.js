@@ -40,7 +40,7 @@ export class SeriesChart extends CompositeChart {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
-        this._keySort = (a, b) => ascending(this.keyAccessor()(a), this.keyAccessor()(b));
+        this._keySort = (a, b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b));
 
         this._charts = {};
         this._chartFunction = (p, cg) => new LineChart(p, cg);
@@ -82,13 +82,13 @@ export class SeriesChart extends CompositeChart {
                 this._charts[sub.key] = subChart;
                 keep.push(sub.key);
                 subChart.configure({
-                    dimension: this._conf.dimension
+                    dimension: this._conf.dimension,
+                    keyAccessor: this._conf.keyAccessor
                 })
                 return subChart
                     .group({
                         all: typeof sub.values === 'function' ? sub.values : () => sub.values
                     }, sub.key)
-                    .keyAccessor(this.keyAccessor())
                     .valueAccessor(this.valueAccessor())
                     .brushOn(false);
             });

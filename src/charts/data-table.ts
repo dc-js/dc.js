@@ -162,7 +162,7 @@ export class DataTable extends BaseMixin {
 
         const sections: Selection<HTMLTableSectionElement, any, Element, any> =
             this.root().selectAll<HTMLTableSectionElement, any>('tbody')
-                       .data<any>(this._nestEntries(), d => this.keyAccessor()(d));
+                       .data<any>(this._nestEntries(), d => this._conf.keyAccessor(d));
 
         const rowSection = sections
             .enter()
@@ -175,7 +175,7 @@ export class DataTable extends BaseMixin {
                 .append('td')
                 .attr('class', LABEL_CSS_CLASS)
                 .attr('colspan', this._columns.length)
-                .html(d => this.keyAccessor()(d));
+                .html(d => this._conf.keyAccessor(d));
         }
 
         sections.exit().remove();

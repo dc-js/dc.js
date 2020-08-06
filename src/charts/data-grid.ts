@@ -57,7 +57,7 @@ export class DataGrid extends BaseMixin {
         this._endSlice = undefined;
 
         this._htmlSection = d => `<div class='${SECTION_CSS_CLASS}'><h1 class='${LABEL_CSS_CLASS}'>${
-            this.keyAccessor()(d)}</h1></div>`;
+            this._conf.keyAccessor(d)}</h1></div>`;
 
         this._mandatoryAttributes(['dimension', 'section']);
 
@@ -74,7 +74,7 @@ export class DataGrid extends BaseMixin {
 
     public _renderSections () {
         const sections: Selection<HTMLDivElement, any, Element, any> = this.root().selectAll<HTMLDivElement, any>(`div.${GRID_CSS_CLASS}`)
-            .data<any>(this._nestEntries(), d => this.keyAccessor()(d));
+            .data<any>(this._nestEntries(), d => this._conf.keyAccessor(d));
 
         const itemSection: Selection<HTMLDivElement, any, Element, any> = sections
             .enter()

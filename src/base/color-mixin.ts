@@ -29,7 +29,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
 
             this._colors = scaleOrdinal(config.defaultColors());
 
-            this._colorAccessor = (d, i) => this.keyAccessor()(d);
+            this._colorAccessor = (d, i) => this._conf.keyAccessor(d);
             this._colorCalculator = undefined;
         }
 

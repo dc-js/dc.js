@@ -58,14 +58,14 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this._existenceAccessor = d => d.value;
 
-        const originalKeyAccessor = this.keyAccessor();
-        this.keyAccessor(d => originalKeyAccessor(d)[0]);
+        const originalKeyAccessor = this._conf.keyAccessor;
+        this._conf.keyAccessor = d => originalKeyAccessor(d)[0];
         this.valueAccessor(d => originalKeyAccessor(d)[1]);
         this.colorAccessor(() => this._groupName);
 
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702
-        this.title(d => `${this.keyAccessor()(d)},${this.valueAccessor()(d)}: ${this.existenceAccessor()(d)}`);
+        this.title(d => `${this._conf.keyAccessor(d)},${this.valueAccessor()(d)}: ${this.existenceAccessor()(d)}`);
 
         this._highlightedSize = 7;
         this._symbolSize = 5;
@@ -112,7 +112,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     private _locator (d): string {
-        return `translate(${this.x()(this.keyAccessor()(d))},${
+        return `translate(${this.x()(this._conf.keyAccessor(d))},${
             this.y()(this.valueAccessor()(d))})`;
     }
 
@@ -293,7 +293,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             context.save();
             context.globalAlpha = cOpacity;
             context.beginPath();
-            context.arc(this.x()(this.keyAccessor()(d)), this.y()(this.valueAccessor()(d)), cSize, 0, 2 * Math.PI, true);
+            context.arc(this.x()(this._conf.keyAccessor(d)), this.y()(this.valueAccessor()(d)), cSize, 0, 2 * Math.PI, true);
             context.fillStyle = cColor;
             context.fill();
             // context.lineWidth = 0.5; // Commented out code to add stroke around scatter points if desired
@@ -323,7 +323,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         symbols.call(s => this._renderTitles(s, this.data()));
 
         symbols.each((d, i) => {
-            this._filtered[i] = !this.filter() || this.filter().isFiltered([this.keyAccessor()(d), this.valueAccessor()(d)]);
+            this._filtered[i] = !this.filter() || this.filter().isFiltered([this._conf.keyAccessor(d), this.valueAccessor()(d)]);
         });
 
         transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay)

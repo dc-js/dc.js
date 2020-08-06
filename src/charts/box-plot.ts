@@ -180,7 +180,7 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     public _boxTransform (d, i: number): string {
-        const xOffset = this.x()(this.keyAccessor()(d, i));
+        const xOffset = this.x()(this._conf.keyAccessor(d, i));
         return `translate(${xOffset}, 0)`;
     }
 
@@ -207,7 +207,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .showOutliers(this._showOutliers)
             .boldOutlier(this._boldOutlier);
 
-        const boxesG: SVGGElementSelection = this.chartBodyG().selectAll('g.box').data(this.data(), this.keyAccessor());
+        const boxesG: SVGGElementSelection = this.chartBodyG().selectAll('g.box').data(this.data(), this._conf.keyAccessor);
 
         const boxesGEnterUpdate: SVGGElementSelection = this._renderBoxes(boxesG);
         this._updateBoxes(boxesGEnterUpdate);
@@ -224,7 +224,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .on('click', d => {
-                this.filter(this.keyAccessor()(d));
+                this.filter(this._conf.keyAccessor(d));
                 this.redrawGroup();
             });
         return boxesGEnter.merge(boxesG);
@@ -276,7 +276,7 @@ export class BoxPlot extends CoordinateGridMixin {
                 const start = brushSelection[0];
                 const end = brushSelection[1];
                 this.g().selectAll('g.box').each(function (d) {
-                    const key = chart.keyAccessor()(d);
+                    const key = chart._conf.keyAccessor(d);
                     if (key < start || key >= end) {
                         chart.fadeDeselected(this);
                     } else {
@@ -292,7 +292,7 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     public isSelectedNode (d): boolean {
-        return this.hasFilter(this.keyAccessor()(d));
+        return this.hasFilter(this._conf.keyAccessor(d));
     }
 
     public yAxisMin (): number {

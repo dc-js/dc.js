@@ -134,7 +134,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
     public _mapData () {
         const data = {};
         this.data().forEach(datum => {
-            data[this.keyAccessor()(datum)] = datum;
+            data[this._conf.keyAccessor(datum)] = datum;
         });
         return data;
     }

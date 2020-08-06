@@ -102,7 +102,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         const data = {};
         const groupAll = this.data();
         for (let i = 0; i < groupAll.length; ++i) {
-            data[this.keyAccessor()(groupAll[i])] = this.valueAccessor()(groupAll[i]);
+            data[this._conf.keyAccessor(groupAll[i])] = this.valueAccessor()(groupAll[i]);
         }
         return data;
     }

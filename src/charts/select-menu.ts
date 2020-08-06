@@ -54,10 +54,10 @@ export class SelectMenu extends BaseMixin {
         this._filterDisplayed = d => this.valueAccessor()(d) > 0;
 
         this._order = (a, b) => {
-            if (this.keyAccessor()(a) > this.keyAccessor()(b)) {
+            if (this._conf.keyAccessor(a) > this._conf.keyAccessor(b)) {
                 return 1;
             }
-            if (this.keyAccessor()(a) < this.keyAccessor()(b)) {
+            if (this._conf.keyAccessor(a) < this._conf.keyAccessor(b)) {
                 return -1;
             }
             return 0;
@@ -82,7 +82,7 @@ export class SelectMenu extends BaseMixin {
         // select the option(s) corresponding to current filter(s)
         if (this.hasFilter() && this._multiple) {
             this._select.selectAll('option')
-                .property('selected', d => typeof d !== 'undefined' && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0);
+                .property('selected', d => typeof d !== 'undefined' && this.filters().indexOf(String(this._conf.keyAccessor(d))) >= 0);
         } else if (this.hasFilter()) {
             this._select.property('value', this.filter());
         } else {
@@ -93,14 +93,14 @@ export class SelectMenu extends BaseMixin {
 
     private _renderOptions () {
         const options = this._select.selectAll<HTMLOptionElement, any>(`option.${OPTION_CSS_CLASS}`)
-            .data<any>(this.data(), d => this.keyAccessor()(d));
+            .data<any>(this.data(), d => this._conf.keyAccessor(d));
 
         options.exit().remove();
 
         options.enter()
             .append('option')
             .classed(OPTION_CSS_CLASS, true)
-            .attr('value', d => this.keyAccessor()(d))
+            .attr('value', d => this._conf.keyAccessor(d))
             .merge(options)
             .text(this.title());
 

@@ -1,4 +1,4 @@
-import {BaseAccessor, Constructor, LabelAccessor, MinimalCFDimension} from '../../core/types';
+import {BaseAccessor, Constructor, KeyAccessor, LabelAccessor, MinimalCFDimension} from '../../core/types';
 
 import {BaseMixin as BaseMixinNeo} from '../../base/base-mixin';
 
@@ -454,6 +454,28 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
                 return this._conf.renderTitle;
             }
             this._conf.renderTitle = renderTitle;
+            return this;
+        }
+
+        /**
+         * Set or get the key accessor function. The key accessor function is used to retrieve the key
+         * value from the crossfilter group. Key values are used differently in different charts, for
+         * example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
+         * @example
+         * // default key accessor
+         * chart.keyAccessor(function(d) { return d.key; });
+         * // custom key accessor for a multi-value crossfilter reduction
+         * chart.keyAccessor(function(p) { return p.value.absGain; });
+         * @param {Function} [keyAccessor]
+         * @returns {Function|BaseMixin}
+         */
+        public keyAccessor (): KeyAccessor;
+        public keyAccessor (keyAccessor: KeyAccessor): this;
+        public keyAccessor (keyAccessor?) {
+            if (!arguments.length) {
+                return this._conf.keyAccessor;
+            }
+            this._conf.keyAccessor = keyAccessor;
             return this;
         }
     }

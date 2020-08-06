@@ -520,7 +520,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public _ordinalXDomain (): any[] {
         const groups = this._computeOrderedGroups(this.data());
-        return groups.map(this.keyAccessor());
+        return groups.map(this._conf.keyAccessor);
     }
 
     public _prepareXAxis (g: SVGGElementSelection, render: boolean) {
@@ -903,7 +903,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     public xAxisMin () { // TODO: can these be anything other than number and Date
-        const m = min(this.data(), e => this.keyAccessor()(e));
+        const m = min(this.data(), e => this._conf.keyAccessor(e));
         return subtract(m, this._xAxisPadding, this._xAxisPaddingUnit);
     }
 
@@ -912,7 +912,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     public xAxisMax () { // TODO: can these be anything other than number and Date
-        const m = max(this.data(), e => this.keyAccessor()(e));
+        const m = max(this.data(), e => this._conf.keyAccessor(e));
         return add(m, this._xAxisPadding, this._xAxisPaddingUnit);
     }
 

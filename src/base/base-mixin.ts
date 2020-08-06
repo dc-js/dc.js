@@ -98,10 +98,8 @@ export class BaseMixin {
     private _heightCalc: (element) => number;
     private _width: number;
     private _height: number;
-    private _keyAccessor: KeyAccessor;
     private _valueAccessor: ValueAccessor;
     private _title: TitleAccessor;
-    private _renderTitle: boolean;
     private _mandatoryAttributesList: string[];
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
@@ -129,6 +127,7 @@ export class BaseMixin {
             removeFilterHandler: _defaultRemoveFilterHandler,
             addFilterHandler: _defaultAddFilterHandler,
             resetFilterHandler: _defaultResetFilterHandler,
+            keyAccessor: d => d.key,
             label: d => d.key,
             renderLabel: false,
             renderTitle: true,
@@ -156,10 +155,9 @@ export class BaseMixin {
         this._width = undefined;
         this._height = undefined;
 
-        this._keyAccessor = d => d.key;
         this._valueAccessor = d => d.value;
 
-        this._title = d => `${this.keyAccessor()(d)}: ${this.valueAccessor()(d)}`;
+        this._title = d => `${this._conf.keyAccessor(d)}: ${this.valueAccessor()(d)}`;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
@@ -814,7 +812,7 @@ export class BaseMixin {
      * @return {undefined}
      */
     public onClick (datum: any, i?: number): void {
-        const filter = this.keyAccessor()(datum);
+        const filter = this._conf.keyAccessor(datum);
         events.trigger(() => {
             this.filter(filter);
             this.redrawGroup();
@@ -854,28 +852,6 @@ export class BaseMixin {
     public isLegendableHidden (d?: LegendItem): boolean {
         // do nothing in base, should be overridden by sub-function
         return false;
-    }
-
-    /**
-     * Set or get the key accessor function. The key accessor function is used to retrieve the key
-     * value from the crossfilter group. Key values are used differently in different charts, for
-     * example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
-     * @example
-     * // default key accessor
-     * chart.keyAccessor(function(d) { return d.key; });
-     * // custom key accessor for a multi-value crossfilter reduction
-     * chart.keyAccessor(function(p) { return p.value.absGain; });
-     * @param {Function} [keyAccessor]
-     * @returns {Function|BaseMixin}
-     */
-    public keyAccessor (): KeyAccessor;
-    public keyAccessor (keyAccessor: KeyAccessor): this;
-    public keyAccessor (keyAccessor?) {
-        if (!arguments.length) {
-            return this._keyAccessor;
-        }
-        this._keyAccessor = keyAccessor;
-        return this;
     }
 
     /**

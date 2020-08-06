@@ -1,6 +1,7 @@
-import {BaseAccessor, LabelAccessor, MinimalCFDimension} from '../core/types';
+import {BaseAccessor, KeyAccessor, LabelAccessor, MinimalCFDimension} from '../core/types';
 
 export interface IBaseMixinConf {
+    keyAccessor?: KeyAccessor;
     renderTitle?: boolean;
     label?: LabelAccessor;
     renderLabel?: boolean;
