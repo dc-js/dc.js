@@ -193,7 +193,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     private _createTitles (slicesEnter: SVGGElementSelection): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             slicesEnter.append('title').text(d => this.title()(d.data));
         }
     }
@@ -323,7 +323,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     public _updateTitles (pieData) {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             this._g.selectAll<SVGGElement, any>(`g.${this._sliceCssClass}`)
                 .data<any>(pieData)
                 .select('title')

@@ -1,6 +1,7 @@
 import {BaseAccessor, LabelAccessor, MinimalCFDimension} from '../core/types';
 
 export interface IBaseMixinConf {
+    renderTitle?: boolean;
     label?: LabelAccessor;
     renderLabel?: boolean;
     resetFilterHandler?: (filters: any) => any[];

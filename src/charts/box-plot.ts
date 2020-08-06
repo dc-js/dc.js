@@ -203,7 +203,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .renderDataPoints(this._renderDataPoints)
             .dataOpacity(this._dataOpacity)
             .dataWidthPortion(this._dataWidthPortion)
-            .renderTitle(this.renderTitle())
+            .renderTitle(this._conf.renderTitle)
             .showOutliers(this._showOutliers)
             .boldOutlier(this._boldOutlier);
 

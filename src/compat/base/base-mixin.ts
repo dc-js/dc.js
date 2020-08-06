@@ -440,6 +440,22 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
             this._conf.renderLabel = renderLabel;
             return this;
         }
+
+        /**
+         * Turn on/off title rendering, or return the state of the render title flag if no arguments are
+         * given.
+         * @param {Boolean} [renderTitle=true]
+         * @returns {Boolean|BaseMixin}
+         */
+        public renderTitle (): boolean;
+        public renderTitle (renderTitle: boolean): this;
+        public renderTitle (renderTitle?) {
+            if (!arguments.length) {
+                return this._conf.renderTitle;
+            }
+            this._conf.renderTitle = renderTitle;
+            return this;
+        }
     }
 }
 

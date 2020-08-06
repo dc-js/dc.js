@@ -272,7 +272,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         boxes = gEnter.merge(boxes);
 
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             gEnter.append('title');
             boxes.select('title').text(this.title());
         }

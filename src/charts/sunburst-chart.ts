@@ -211,7 +211,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _createTitles (slicesEnter: SVGGElementSelection): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             slicesEnter.append('title').text(d => this.title()(d));
         }
     }
@@ -283,7 +283,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _updateTitles (sunburstData): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             this._g.selectAll(`g.${this._sliceCssClass}`)
                 .data(sunburstData)
                 .select('title')

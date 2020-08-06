@@ -192,7 +192,7 @@ export class BarChart extends StackMixin {
 
         const barsEnterUpdate: Selection<SVGRectElement, unknown, SVGGElement, any> = enter.merge(bars);
 
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             enter.append('title').text(pluck2('data', this.title(data.name)));
         }
 

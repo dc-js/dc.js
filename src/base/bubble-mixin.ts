@@ -198,7 +198,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
         }
 
         public _doRenderTitles (g): void {
-            if (this.renderTitle()) {
+            if (this._conf.renderTitle) {
                 const title = g.select('title');
 
                 if (title.empty()) {
@@ -208,7 +208,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
         }
 
         public doUpdateTitles (g): void {
-            if (this.renderTitle()) {
+            if (this._conf.renderTitle) {
                 g.select('title').text(d => this._titleFunction(d));
             }
         }

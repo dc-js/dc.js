@@ -95,7 +95,7 @@ export class CompositeChart extends CoordinateGridMixin {
             child._conf.transitionDelay = this._conf.transitionDelay;
             child.parentBrushOn(this.brushOn());
             child.brushOn(false);
-            child.renderTitle(this.renderTitle());
+            child._conf.renderTitle = this._conf.renderTitle;
             child.elasticX(this.elasticX());
         }
 

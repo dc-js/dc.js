@@ -231,7 +231,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     private _createTitles (rows: SVGGElementSelection): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             rows.select('title').remove();
             rows.append('title').text(this.title());
         }

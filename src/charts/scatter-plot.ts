@@ -358,7 +358,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     private _renderTitles (_symbol: Selection<SVGPathElement, any, SVGGElement, any>, _d): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             _symbol.selectAll('title').remove();
             _symbol.append('title').text(d => this.title()(d));
         }

@@ -131,6 +131,7 @@ export class BaseMixin {
             resetFilterHandler: _defaultResetFilterHandler,
             label: d => d.key,
             renderLabel: false,
+            renderTitle: true,
         });
 
         this._conf.dimension = undefined;
@@ -159,7 +160,6 @@ export class BaseMixin {
         this._valueAccessor = d => d.value;
 
         this._title = d => `${this.keyAccessor()(d)}: ${this.valueAccessor()(d)}`;
-        this._renderTitle = true;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
@@ -928,22 +928,6 @@ export class BaseMixin {
             return this._title;
         }
         this._title = titleFunction;
-        return this;
-    }
-
-    /**
-     * Turn on/off title rendering, or return the state of the render title flag if no arguments are
-     * given.
-     * @param {Boolean} [renderTitle=true]
-     * @returns {Boolean|BaseMixin}
-     */
-    public renderTitle (): boolean;
-    public renderTitle (renderTitle: boolean): this;
-    public renderTitle (renderTitle?) {
-        if (!arguments.length) {
-            return this._renderTitle;
-        }
-        this._renderTitle = renderTitle;
         return this;
     }
 

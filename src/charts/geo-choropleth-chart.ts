@@ -176,7 +176,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     }
 
     public _renderTitles (regionG: Selection<SVGGElement, any, SVGElement, any>, layerIndex: number, data): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             regionG.selectAll('title').text(d => {
                 const key = this._getKey(layerIndex, d);
                 const value = data[key];
