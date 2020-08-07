@@ -47,7 +47,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
-        this.colorAccessor(d => d || 0);
+        this._conf.colorAccessor = d => d || 0;
 
         this._geoPath = geoPath();
         this._projectionFlag = undefined;

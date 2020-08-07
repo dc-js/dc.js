@@ -81,7 +81,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._externalLabelRadius = undefined;
         this._drawPaths = false;
 
-        this.colorAccessor(d => this.cappedKeyAccessor(d));
+        this._conf.colorAccessor = d => this.cappedKeyAccessor(d);
 
         this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
 

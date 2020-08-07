@@ -12,6 +12,30 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         }
 
         /**
+         * Set or the get color accessor function. This function will be used to map a data point in a
+         * crossfilter group to a color value on the color scale. The default function uses the key
+         * accessor.
+         * @memberof ColorMixin
+         * @instance
+         * @example
+         * // default index based color accessor
+         * .colorAccessor(function (d, i){return i;})
+         * // color accessor for a multi-value crossfilter reduction
+         * .colorAccessor(function (d){return d.value.absGain;})
+         * @param {Function} [colorAccessor]
+         * @returns {Function|ColorMixin}
+         */
+        public colorAccessor (): ColorAccessor;
+        public colorAccessor (colorAccessor: ColorAccessor): this;
+        public colorAccessor (colorAccessor?) {
+            if (!arguments.length) {
+                return this._conf.colorAccessor;
+            }
+            this._conf.colorAccessor = colorAccessor;
+            return this;
+        }
+
+        /**
          * Overrides the color selection algorithm, replacing it with a simple function.
          *
          * Normally colors will be determined by calling the `colorAccessor` to get a value, and then passing that

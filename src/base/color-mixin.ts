@@ -4,7 +4,7 @@ import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
 import {BaseMixin} from './base-mixin';
-import {BaseAccessor, ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
+import {Constructor, MinimalColorScale} from '../core/types';
 import {IColorMixinConf} from './i-color-mixin-conf';
 
 /**
@@ -20,8 +20,6 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
         public _conf: IColorMixinConf;
 
         private _colors: MinimalColorScale;
-        private _colorAccessor: ColorAccessor;
-        private _colorCalculator: BaseAccessor<string>;
 
         constructor (...args: any[]) {
             super();
@@ -32,7 +30,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
 
             this._colors = scaleOrdinal<any, string>(config.defaultColors());
 
-            this._colorAccessor = (d, i) => this._conf.keyAccessor(d);
+            this._conf.colorAccessor = (d, i?) => this._conf.keyAccessor(d);
         }
 
         public configure (conf: IColorMixinConf) {
@@ -51,7 +49,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
         public getColor (d, i?: number): string {
             return this._conf.colorCalculator ?
                 this._conf.colorCalculator(d, i) :
-                this._colors(this._colorAccessor(d, i));
+                this._colors(this._conf.colorAccessor(d, i));
         }
 
         /**
@@ -62,8 +60,9 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @returns {ColorMixin}
          */
         public calculateColorDomain (): this {
-            const newDomain = [min(this.data(), this.colorAccessor()),
-                               max(this.data(), this.colorAccessor())];
+            // TODO: use extent from d3-array which does exactly this
+            const newDomain = [min(this.data(), this._conf.colorAccessor),
+                               max(this.data(), this._conf.colorAccessor)];
             this._colors.domain(newDomain);
             return this;
         }
@@ -109,7 +108,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Array<String>} r
          * @returns {ColorMixin}
          */
-        public ordinalColors (r): this {
+        public ordinalColors (r: string[]): this {
             return this.colors(scaleOrdinal<any, string>().range(r));
         }
 
@@ -120,37 +119,11 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Array<Number>} r
          * @returns {ColorMixin}
          */
-        public linearColors (r): this {
-            // We have to hint Typescript that the scale will map colors to colors.
-            // Picked up the signature from type definition of interpolateHcl.
+        public linearColors (r: [string, string]): this {
             return this.colors(
                 scaleLinear<any, string>()
                     .range(r)
                     .interpolate(interpolateHcl));
-        }
-
-        /**
-         * Set or the get color accessor function. This function will be used to map a data point in a
-         * crossfilter group to a color value on the color scale. The default function uses the key
-         * accessor.
-         * @memberof ColorMixin
-         * @instance
-         * @example
-         * // default index based color accessor
-         * .colorAccessor(function (d, i){return i;})
-         * // color accessor for a multi-value crossfilter reduction
-         * .colorAccessor(function (d){return d.value.absGain;})
-         * @param {Function} [colorAccessor]
-         * @returns {Function|ColorMixin}
-         */
-        public colorAccessor (): ColorAccessor;
-        public colorAccessor (colorAccessor: ColorAccessor): this;
-        public colorAccessor (colorAccessor?) {
-            if (!arguments.length) {
-                return this._colorAccessor;
-            }
-            this._colorAccessor = colorAccessor;
-            return this;
         }
 
         /**

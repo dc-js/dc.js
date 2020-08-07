@@ -65,7 +65,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         this._yBorderRadius = DEFAULT_BORDER_RADIUS;
 
         this._mandatoryAttributes(['group']);
-        this.title(this.colorAccessor());
+        this.title(this._conf.colorAccessor);
 
         this._colsLabel = d => d;
         this._rowsLabel = d => d;

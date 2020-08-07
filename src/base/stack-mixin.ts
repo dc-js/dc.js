@@ -57,7 +57,7 @@ export class StackMixin extends CoordinateGridMixin {
             return layers;
         });
 
-        this.colorAccessor(d => d.name);
+        this._conf.colorAccessor = d => d.name;
     }
 
     public configure (conf: IStackMixinConf) {

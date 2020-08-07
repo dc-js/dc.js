@@ -61,7 +61,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         const originalKeyAccessor = this._conf.keyAccessor;
         this._conf.keyAccessor = d => originalKeyAccessor(d)[0];
         this._conf.valueAccessor = d => originalKeyAccessor(d)[1];
-        this.colorAccessor(() => this._groupName);
+        this._conf.colorAccessor = () => this._groupName;
 
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702
