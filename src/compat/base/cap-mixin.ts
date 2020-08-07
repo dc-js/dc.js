@@ -50,6 +50,80 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
             this._conf.cap = count;
             return this;
         }
+
+
+        /**
+         * Get or set the direction of capping. If set, the chart takes the first
+         * {@link CapMixin#cap cap} elements from the sorted array of elements; otherwise
+         * it takes the last `cap` elements.
+         * @memberof CapMixin
+         * @instance
+         * @param {Boolean} [takeFront=true]
+         * @returns {Boolean|CapMixin}
+         */
+        public takeFront ();
+        public takeFront (takeFront): this;
+        public takeFront (takeFront?) {
+            if (!arguments.length) {
+                return this._conf.takeFront;
+            }
+            this._conf.takeFront = takeFront;
+            return this;
+        }
+
+        /**
+         * Get or set the label for *Others* slice when slices cap is specified.
+         * @memberof CapMixin
+         * @instance
+         * @param {String} [label="Others"]
+         * @returns {String|CapMixin}
+         */
+        public othersLabel ();
+        public othersLabel (label): this;
+        public othersLabel (label?) {
+            if (!arguments.length) {
+                return this._conf.othersLabel;
+            }
+            this._conf.othersLabel = label;
+            return this;
+        }
+
+        /**
+         * Get or set the grouper function that will perform the insertion of data for the *Others* slice
+         * if the slices cap is specified. If set to a falsy value, no others will be added.
+         *
+         * The grouper function takes an array of included ("top") items, and an array of the rest of
+         * the items. By default the grouper function computes the sum of the rest.
+         * @memberof CapMixin
+         * @instance
+         * @example
+         * // Do not show others
+         * chart.othersGrouper(null);
+         * // Default others grouper
+         * chart.othersGrouper(function (topItems, restItems) {
+         *     var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
+         *         restKeys = restItems.map(_chart.keyAccessor());
+         *     if (restItemsSum > 0) {
+         *         return topItems.concat([{
+         *             others: restKeys,
+         *             key: _chart.othersLabel(),
+         *             value: restItemsSum
+         *         }]);
+         *     }
+         *     return topItems;
+         * });
+         * @param {Function} [grouperFunction]
+         * @returns {Function|CapMixin}
+         */
+        public othersGrouper ();
+        public othersGrouper (grouperFunction): this;
+        public othersGrouper (grouperFunction?) {
+            if (!arguments.length) {
+                return this._conf.othersGrouper;
+            }
+            this._conf.othersGrouper = grouperFunction;
+            return this;
+        }
     }
 }
 

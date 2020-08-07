@@ -21,25 +21,23 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     return class extends Base {
         public _conf: ICapMixinConf;
 
-        private _takeFront: boolean;
-        private _othersLabel: string;
-        private _othersGrouper: (topItems, restItems) => (any);
-
         constructor (...args: any[]) {
             super();
 
-            this._conf.cap = Infinity;
-            this._takeFront = true;
-            this._othersLabel = 'Others';
+            this.configure({
+                cap: Infinity,
+                takeFront: true,
+                othersLabel: 'Others'
+            });
 
-            this._othersGrouper = (topItems, restItems) => {
+            this._conf.othersGrouper = (topItems, restItems) => {
                 const restItemsSum = sum(restItems, this._conf.valueAccessor);
                 const restKeys = restItems.map(this._conf.keyAccessor);
 
                 if (restItemsSum > 0) {
                     return topItems.concat([{
                         others: restKeys,
-                        key: this.othersLabel(),
+                        key: this._conf.othersLabel,
                         value: restItemsSum
                     }]);
                 }
@@ -61,7 +59,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                     items = this._computeOrderedGroups(items); // sort by baseMixin.ordering
 
                     if (this._conf.cap) {
-                        if (this._takeFront) {
+                        if (this._conf.takeFront) {
                             rest = items.slice(this._conf.cap);
                             items = items.slice(0, this._conf.cap);
                         } else {
@@ -71,12 +69,16 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                         }
                     }
 
-                    if (this._othersGrouper) {
-                        return this._othersGrouper(items, rest);
+                    if (this._conf.othersGrouper) {
+                        return this._conf.othersGrouper(items, rest);
                     }
                     return items;
                 }
             });
+        }
+        
+        public configure (conf: ICapMixinConf) {
+            super.configure(conf);
         }
 
         public cappedKeyAccessor (d, i?) {
@@ -91,79 +93,6 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                 return d.value;
             }
             return this._conf.valueAccessor(d, i);
-        }
-
-        /**
-         * Get or set the direction of capping. If set, the chart takes the first
-         * {@link CapMixin#cap cap} elements from the sorted array of elements; otherwise
-         * it takes the last `cap` elements.
-         * @memberof CapMixin
-         * @instance
-         * @param {Boolean} [takeFront=true]
-         * @returns {Boolean|CapMixin}
-         */
-        public takeFront ();
-        public takeFront (takeFront): this;
-        public takeFront (takeFront?) {
-            if (!arguments.length) {
-                return this._takeFront;
-            }
-            this._takeFront = takeFront;
-            return this;
-        }
-
-        /**
-         * Get or set the label for *Others* slice when slices cap is specified.
-         * @memberof CapMixin
-         * @instance
-         * @param {String} [label="Others"]
-         * @returns {String|CapMixin}
-         */
-        public othersLabel ();
-        public othersLabel (label): this;
-        public othersLabel (label?) {
-            if (!arguments.length) {
-                return this._othersLabel;
-            }
-            this._othersLabel = label;
-            return this;
-        }
-
-        /**
-         * Get or set the grouper function that will perform the insertion of data for the *Others* slice
-         * if the slices cap is specified. If set to a falsy value, no others will be added.
-         *
-         * The grouper function takes an array of included ("top") items, and an array of the rest of
-         * the items. By default the grouper function computes the sum of the rest.
-         * @memberof CapMixin
-         * @instance
-         * @example
-         * // Do not show others
-         * chart.othersGrouper(null);
-         * // Default others grouper
-         * chart.othersGrouper(function (topItems, restItems) {
-         *     var restItemsSum = d3.sum(restItems, _chart.valueAccessor()),
-         *         restKeys = restItems.map(_chart.keyAccessor());
-         *     if (restItemsSum > 0) {
-         *         return topItems.concat([{
-         *             others: restKeys,
-         *             key: _chart.othersLabel(),
-         *             value: restItemsSum
-         *         }]);
-         *     }
-         *     return topItems;
-         * });
-         * @param {Function} [grouperFunction]
-         * @returns {Function|CapMixin}
-         */
-        public othersGrouper ();
-        public othersGrouper (grouperFunction): this;
-        public othersGrouper (grouperFunction?) {
-            if (!arguments.length) {
-                return this._othersGrouper;
-            }
-            this._othersGrouper = grouperFunction;
-            return this;
         }
 
         public onClick (d, i?) {
