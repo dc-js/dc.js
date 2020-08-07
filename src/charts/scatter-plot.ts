@@ -587,7 +587,8 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     public legendables (): LegendItem[] {
-        return [{chart: this, name: this._groupName, color: this.getColor()}];
+        // Argument to getColor is ignored by the default color accessor for this chart
+        return [{chart: this, name: this._groupName, color: this.getColor(this._groupName)}];
     }
 
     public legendHighlight (d: LegendItem): void {

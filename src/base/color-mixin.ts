@@ -3,7 +3,6 @@ import {interpolateHcl} from 'd3-interpolate';
 import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
-import {ColorCommonInstance} from 'd3-color';
 import {BaseMixin} from './base-mixin';
 import {ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
 import {IColorMixinConf} from './i-color-mixin-conf';
@@ -20,14 +19,14 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     return class extends Base {
         public _conf: IColorMixinConf;
 
-        public _colors: MinimalColorScale;
-        public _colorAccessor: ColorAccessor;
-        public _colorCalculator: (d?: any, i?: number) => string;
+        private _colors: MinimalColorScale;
+        private _colorAccessor: ColorAccessor;
+        private _colorCalculator: ColorAccessor;
 
         constructor (...args: any[]) {
             super();
 
-            this._colors = scaleOrdinal(config.defaultColors());
+            this._colors = scaleOrdinal<any, string>(config.defaultColors());
 
             this._colorAccessor = (d, i) => this._conf.keyAccessor(d);
             this._colorCalculator = undefined;
@@ -42,7 +41,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Number} [i]
          * @returns {String}
          */
-        public getColor (d?, i?): string {
+        public getColor (d, i?: number): string {
             return this._colorCalculator ?
                 this._colorCalculator(d, i) :
                 this._colors(this._colorAccessor(d, i));
@@ -80,8 +79,8 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
          * @returns {d3.scale|ColorMixin}
          */
-        public colors ();
-        public colors (colorScale): this;
+        public colors (): MinimalColorScale;
+        public colors (colorScale: MinimalColorScale): this;
         public colors (colorScale?) {
             if (!arguments.length) {
                 return this._colors;
@@ -104,7 +103,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @returns {ColorMixin}
          */
         public ordinalColors (r): this {
-            return this.colors(scaleOrdinal().range(r));
+            return this.colors(scaleOrdinal<any, string>().range(r));
         }
 
         /**
@@ -117,9 +116,10 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
         public linearColors (r): this {
             // We have to hint Typescript that the scale will map colors to colors.
             // Picked up the signature from type definition of interpolateHcl.
-            return this.colors(scaleLinear<string | ColorCommonInstance>()
-                .range(r)
-                .interpolate(interpolateHcl));
+            return this.colors(
+                scaleLinear<any, string>()
+                    .range(r)
+                    .interpolate(interpolateHcl));
         }
 
         /**
@@ -157,8 +157,8 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Array<String>} [domain]
          * @returns {Array<String>|ColorMixin}
          */
-        public colorDomain ();
-        public colorDomain (domain): this;
+        public colorDomain (): string[];
+        public colorDomain (domain: string[]): this;
         public colorDomain (domain?) {
             if (!arguments.length) {
                 return this._colors.domain();
