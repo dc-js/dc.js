@@ -4,7 +4,7 @@ import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
 import {BaseMixin} from './base-mixin';
-import {ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
+import {BaseAccessor, ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
 import {IColorMixinConf} from './i-color-mixin-conf';
 
 /**
@@ -21,15 +21,22 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
 
         private _colors: MinimalColorScale;
         private _colorAccessor: ColorAccessor;
-        private _colorCalculator: ColorAccessor;
+        private _colorCalculator: BaseAccessor<string>;
 
         constructor (...args: any[]) {
             super();
 
+            this.configure({
+                colorCalculator: undefined,
+            });
+
             this._colors = scaleOrdinal<any, string>(config.defaultColors());
 
             this._colorAccessor = (d, i) => this._conf.keyAccessor(d);
-            this._colorCalculator = undefined;
+        }
+
+        public configure (conf: IColorMixinConf) {
+            super.configure(conf);
         }
 
         /**
@@ -42,8 +49,8 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @returns {String}
          */
         public getColor (d, i?: number): string {
-            return this._colorCalculator ?
-                this._colorCalculator(d, i) :
+            return this._conf.colorCalculator ?
+                this._conf.colorCalculator(d, i) :
                 this._colors(this._colorAccessor(d, i));
         }
 
@@ -164,29 +171,6 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                 return this._colors.domain();
             }
             this._colors.domain(domain);
-            return this;
-        }
-
-        /**
-         * Overrides the color selection algorithm, replacing it with a simple function.
-         *
-         * Normally colors will be determined by calling the `colorAccessor` to get a value, and then passing that
-         * value through the `colorScale`.
-         *
-         * But sometimes it is difficult to get a color scale to produce the desired effect. The `colorCalculator`
-         * takes the datum and index and returns a color directly.
-         * @memberof ColorMixin
-         * @instance
-         * @param {*} [colorCalculator]
-         * @returns {Function|ColorMixin}
-         */
-        public colorCalculator (): ColorAccessor;
-        public colorCalculator (colorCalculator: ColorAccessor): this;
-        public colorCalculator (colorCalculator?) {
-            if (!arguments.length) {
-                return this._colorCalculator || this.getColor;
-            }
-            this._colorCalculator = colorCalculator;
             return this;
         }
     };
