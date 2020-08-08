@@ -90,7 +90,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
             child.chartGroup(this.chartGroup());
             child.svg(this.svg());
-            child.xUnits(this.xUnits());
+            child._conf.xUnits = this._conf.xUnits;
             child._conf.transitionDuration = this._conf.transitionDuration;
             child._conf.transitionDelay = this._conf.transitionDelay;
             child.parentBrushOn(this.brushOn());

@@ -105,7 +105,7 @@ export class BoxPlot extends CoordinateGridMixin {
 
         // default to ordinal
         this.x(scaleBand());
-        this.xUnits(units.ordinal);
+        this._conf.xUnits = units.ordinal;
 
         // valueAccessor should return an array of values that can be coerced into numbers
         // or if data is overloaded for a static array of arrays, it should be `Number`.
