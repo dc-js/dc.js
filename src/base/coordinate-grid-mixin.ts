@@ -44,7 +44,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _origX: MinimalXYScale;
     private _xOriginalDomain: [number, number];
     private _xAxis: Axis<any>; // TODO: can we do better
-    private _xAxisPaddingUnit: string | CountableTimeInterval; // it can be string as well, like 'day', 'hour' etc.
     private _xElasticity: boolean;
     private _xAxisLabel: string;
     private _xAxisLabelPadding: number;
@@ -92,7 +91,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._xAxis = axisBottom(undefined);
         this._conf.xUnits = units.integers;
         this._conf.xAxisPadding = 0;
-        this._xAxisPaddingUnit = timeDay;
+        this._conf.xAxisPaddingUnit = timeDay;
         this._xElasticity = false;
         this._xAxisLabel = undefined;
         this._xAxisLabelPadding = 0;
@@ -360,29 +359,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._xElasticity;
         }
         this._xElasticity = elasticX;
-        return this;
-    }
-
-    /**
-     * Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
-     * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
-     * otherwise it is ignored.
-     *
-     * The padding unit should be a
-     * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#self._interval).
-     * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
-     * ('day', 'hour', etc). Available arguments are the
-     * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
-     * @param {String} [unit=d3.timeDay]
-     * @returns {String|CoordinateGridMixin}
-     */
-    public xAxisPaddingUnit (): string|CountableTimeInterval;
-    public xAxisPaddingUnit (unit: string|CountableTimeInterval): this;
-    public xAxisPaddingUnit (unit?) {
-        if (!arguments.length) {
-            return this._xAxisPaddingUnit;
-        }
-        this._xAxisPaddingUnit = unit;
         return this;
     }
 
@@ -834,7 +810,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public xAxisMin () { // TODO: can these be anything other than number and Date
         const m = min(this.data(), e => this._conf.keyAccessor(e));
-        return subtract(m, this._conf.xAxisPadding, this._xAxisPaddingUnit);
+        return subtract(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
 
     /**
@@ -843,7 +819,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public xAxisMax () { // TODO: can these be anything other than number and Date
         const m = max(this.data(), e => this._conf.keyAccessor(e));
-        return add(m, this._conf.xAxisPadding, this._xAxisPaddingUnit);
+        return add(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
 
     /**

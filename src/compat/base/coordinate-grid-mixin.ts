@@ -3,6 +3,7 @@ import {BaseMixinExt} from './base-mixin';
 import {CoordinateGridMixin as CoordinateGridMixinNeo} from '../../base/coordinate-grid-mixin';
 import {MarginMixinExt} from './margin-mixin';
 import {ColorMixinExt} from './color-mixin';
+import {CountableTimeInterval} from 'd3-time';
 
 class Intermediate extends MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)) { }
 
@@ -77,6 +78,29 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
                 return this._conf.xAxisPadding;
             }
             this._conf.xAxisPadding = padding;
+            return this;
+        }
+
+        /**
+         * Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
+         * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
+         * otherwise it is ignored.
+         *
+         * The padding unit should be a
+         * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#self._interval).
+         * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
+         * ('day', 'hour', etc). Available arguments are the
+         * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
+         * @param {String} [unit=d3.timeDay]
+         * @returns {String|CoordinateGridMixin}
+         */
+        public xAxisPaddingUnit (): string|CountableTimeInterval;
+        public xAxisPaddingUnit (unit: string|CountableTimeInterval): this;
+        public xAxisPaddingUnit (unit?) {
+            if (!arguments.length) {
+                return this._conf.xAxisPaddingUnit;
+            }
+            this._conf.xAxisPaddingUnit = unit;
             return this;
         }
     }
