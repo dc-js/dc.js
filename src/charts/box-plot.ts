@@ -185,7 +185,7 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     public _preprocessData (): void {
-        if (this.elasticX()) {
+        if (this._conf.xElasticity) {
             this.x().domain([]);
         }
     }

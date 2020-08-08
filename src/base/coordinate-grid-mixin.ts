@@ -92,7 +92,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._conf.xUnits = units.integers;
         this._conf.xAxisPadding = 0;
         this._conf.xAxisPaddingUnit = timeDay;
-        this._xElasticity = false;
+        this._conf.xElasticity = false;
         this._xAxisLabel = undefined;
         this._xAxisLabelPadding = 0;
         this._lastXDomain = undefined;
@@ -347,22 +347,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
-     * attempt to recalculate the x axis range whenever a redraw event is triggered.
-     * @param {Boolean} [elasticX=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public elasticX (): boolean;
-    public elasticX (elasticX: boolean): this;
-    public elasticX (elasticX?) {
-        if (!arguments.length) {
-            return this._xElasticity;
-        }
-        this._xElasticity = elasticX;
-        return this;
-    }
-
-    /**
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
      * `units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
      * x unit count is calculated using the {@link CoordinateGridMixin#xUnits xUnits} function.
@@ -431,7 +415,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public _prepareXAxis (g: SVGGElementSelection, render: boolean) {
         if (!this.isOrdinal()) {
-            if (this.elasticX()) {
+            if (this._conf.xElasticity) {
                 this._x.domain([this.xAxisMin(), this.xAxisMax()]);
             }
         } else { // self._chart.isOrdinal()
@@ -448,7 +432,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 this._x = scaleBand().domain(this._x.domain());
             }
 
-            if (this.elasticX() || this._x.domain().length === 0) {
+            if (this._conf.xElasticity || this._x.domain().length === 0) {
                 this._x.domain(this._ordinalXDomain());
             }
         }
@@ -1155,7 +1139,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         this.plotData();
 
-        if (this.elasticX() || this._resizing || render) {
+        if (this._conf.xElasticity || this._resizing || render) {
             this.renderXAxis(this.g());
         }
 

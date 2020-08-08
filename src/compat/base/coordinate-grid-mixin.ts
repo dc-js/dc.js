@@ -103,6 +103,22 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             this._conf.xAxisPaddingUnit = unit;
             return this;
         }
+
+        /**
+         * Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
+         * attempt to recalculate the x axis range whenever a redraw event is triggered.
+         * @param {Boolean} [elasticX=false]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public elasticX (): boolean;
+        public elasticX (elasticX: boolean): this;
+        public elasticX (elasticX?) {
+            if (!arguments.length) {
+                return this._conf.xElasticity;
+            }
+            this._conf.xElasticity = elasticX;
+            return this;
+        }
     }
 }
 

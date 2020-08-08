@@ -96,7 +96,7 @@ export class CompositeChart extends CoordinateGridMixin {
             child.parentBrushOn(this.brushOn());
             child.brushOn(false);
             child._conf.renderTitle = this._conf.renderTitle;
-            child.elasticX(this.elasticX());
+            child._conf.xElasticity = this._conf.xElasticity;
         }
 
         return g;
