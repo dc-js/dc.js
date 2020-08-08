@@ -44,8 +44,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _origX: MinimalXYScale;
     private _xOriginalDomain: [number, number];
     private _xAxis: Axis<any>; // TODO: can we do better
-    private _xUnits: Units;
-    private _xAxisPadding: number;
     private _xAxisPaddingUnit: string | CountableTimeInterval; // it can be string as well, like 'day', 'hour' etc.
     private _xElasticity: boolean;
     private _xAxisLabel: string;
@@ -93,7 +91,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._xOriginalDomain = undefined;
         this._xAxis = axisBottom(undefined);
         this._conf.xUnits = units.integers;
-        this._xAxisPadding = 0;
+        this._conf.xAxisPadding = 0;
         this._xAxisPaddingUnit = timeDay;
         this._xElasticity = false;
         this._xAxisLabel = undefined;
@@ -362,27 +360,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._xElasticity;
         }
         this._xElasticity = elasticX;
-        return this;
-    }
-
-    /**
-     * Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
-     * axis if elasticX is turned on; otherwise it is ignored.
-     *
-     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-     * number or date x axes.  When padding a date axis, an integer represents number of units being padded
-     * and a percentage string will be treated the same as an integer. The unit will be determined by the
-     * xAxisPaddingUnit variable.
-     * @param {Number|String} [padding=0]
-     * @returns {Number|String|CoordinateGridMixin}
-     */
-    public xAxisPadding (): number;
-    public xAxisPadding (padding: number): this;
-    public xAxisPadding (padding?) {
-        if (!arguments.length) {
-            return this._xAxisPadding;
-        }
-        this._xAxisPadding = padding;
         return this;
     }
 
@@ -857,7 +834,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public xAxisMin () { // TODO: can these be anything other than number and Date
         const m = min(this.data(), e => this._conf.keyAccessor(e));
-        return subtract(m, this._xAxisPadding, this._xAxisPaddingUnit);
+        return subtract(m, this._conf.xAxisPadding, this._xAxisPaddingUnit);
     }
 
     /**
@@ -866,7 +843,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public xAxisMax () { // TODO: can these be anything other than number and Date
         const m = max(this.data(), e => this._conf.keyAccessor(e));
-        return add(m, this._xAxisPadding, this._xAxisPaddingUnit);
+        return add(m, this._conf.xAxisPadding, this._xAxisPaddingUnit);
     }
 
     /**

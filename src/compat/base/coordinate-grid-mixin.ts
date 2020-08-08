@@ -58,6 +58,27 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             this._conf.xUnits = xUnits;
             return this;
         }
+
+        /**
+         * Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
+         * axis if elasticX is turned on; otherwise it is ignored.
+         *
+         * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
+         * number or date x axes.  When padding a date axis, an integer represents number of units being padded
+         * and a percentage string will be treated the same as an integer. The unit will be determined by the
+         * xAxisPaddingUnit variable.
+         * @param {Number|String} [padding=0]
+         * @returns {Number|String|CoordinateGridMixin}
+         */
+        public xAxisPadding (): number;
+        public xAxisPadding (padding: number): this;
+        public xAxisPadding (padding?) {
+            if (!arguments.length) {
+                return this._conf.xAxisPadding;
+            }
+            this._conf.xAxisPadding = padding;
+            return this;
+        }
     }
 }
 

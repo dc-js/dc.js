@@ -542,7 +542,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public xAxisMin () {
-        return subtract(min(this._getAllXAxisMinFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
+        return subtract(min(this._getAllXAxisMinFromChildCharts()), this._conf.xAxisPadding, this.xAxisPaddingUnit());
     }
 
     public _getAllXAxisMaxFromChildCharts () {
@@ -550,7 +550,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public xAxisMax () {
-        return add(max(this._getAllXAxisMaxFromChildCharts()), this.xAxisPadding(), this.xAxisPaddingUnit());
+        return add(max(this._getAllXAxisMaxFromChildCharts()), this._conf.xAxisPadding, this.xAxisPaddingUnit());
     }
 
     public legendables () {

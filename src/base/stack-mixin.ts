@@ -216,12 +216,12 @@ export class StackMixin extends CoordinateGridMixin {
 
     public xAxisMin () {
         const m = min(this._flattenStack(), d => d.x);
-        return subtract(m, this.xAxisPadding(), this.xAxisPaddingUnit());
+        return subtract(m, this._conf.xAxisPadding, this.xAxisPaddingUnit());
     }
 
     public xAxisMax () {
         const m = max(this._flattenStack(), d => d.x);
-        return add(m, this.xAxisPadding(), this.xAxisPaddingUnit());
+        return add(m, this._conf.xAxisPadding, this.xAxisPaddingUnit());
     }
 
     /**
