@@ -57,8 +57,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _parentBrushOn: boolean;
     private _resizing: boolean;
     private _unitCount: number;
-    private _zoomScale: [number, number];
-    private _zoomOutRestrict: boolean;
     private _zoom: ZoomBehavior<Element, unknown>;
     private _nullZoom: ZoomBehavior<Element, unknown>;
     private _hasBeenMouseZoomable: boolean;
@@ -89,6 +87,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             round: undefined,
             renderHorizontalGridLine: false,
             renderVerticalGridLines: false,
+            zoomScale: [1, Infinity],
+            zoomOutRestrict: true,
         });
 
         this._x = undefined;
@@ -117,9 +117,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         this._resizing = false;
         this._unitCount = undefined;
-
-        this._zoomScale = [1, Infinity];
-        this._zoomOutRestrict = true;
 
         this._zoom = zoom().on('zoom', () => this._onZoom());
         this._nullZoom = zoom().on('zoom', null);
@@ -186,36 +183,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
         this._rangeChart = rangeChart;
         this._rangeChart.focusChart(this);
-        return this;
-    }
-
-    /**
-     * Get or set the scale extent for mouse zooms. See https://github.com/d3/d3-zoom#zoom_scaleExtent.
-     *
-     * @returns {Array<Number>|CoordinateGridMixin}
-     */
-    public zoomScale (): [number, number];
-    public zoomScale (extent: [number, number]): this;
-    public zoomScale (extent?) {
-        if (!arguments.length) {
-            return this._zoomScale;
-        }
-        this._zoomScale = extent;
-        return this;
-    }
-
-    /**
-     * Get or set the zoom restriction for the chart. If true limits the zoom to original domain of the chart.
-     * @param {Boolean} [zoomOutRestrict=true]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public zoomOutRestrict (): boolean;
-    public zoomOutRestrict (zoomOutRestrict: boolean): this;
-    public zoomOutRestrict (zoomOutRestrict?) {
-        if (!arguments.length) {
-            return this._zoomOutRestrict;
-        }
-        this._zoomOutRestrict = zoomOutRestrict;
         return this;
     }
 
@@ -1095,16 +1062,16 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         const extent: [[number, number], [number, number]] = [[0, 0], [this.effectiveWidth(), this.effectiveHeight()]];
 
         this._zoom
-            .scaleExtent(this._zoomScale)
+            .scaleExtent(this._conf.zoomScale)
             .extent(extent)
             .duration(this._conf.transitionDuration);
 
-        if (this._zoomOutRestrict) {
+        if (this._conf.zoomOutRestrict) {
             // Ensure minimum zoomScale is at least 1
-            const zoomScaleMin = Math.max(this._zoomScale[0], 1);
+            const zoomScaleMin = Math.max(this._conf.zoomScale[0], 1);
             this._zoom
                 .translateExtent(extent)
-                .scaleExtent([zoomScaleMin, this._zoomScale[1]]);
+                .scaleExtent([zoomScaleMin, this._conf.zoomScale[1]]);
         }
 
         this.root().call(this._zoom);
@@ -1218,7 +1185,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @return {undefined}
      */
     public focus (range: DCBrushSelection, noRaiseEvents: boolean): void {
-        if (this._zoomOutRestrict) {
+        if (this._conf.zoomOutRestrict) {
             // ensure range is within self._xOriginalDomain
             range = this._checkExtents(range, this._xOriginalDomain);
 

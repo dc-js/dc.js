@@ -204,6 +204,36 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             this.configure({renderVerticalGridLines: renderVerticalGridLines});
             return this;
         }
+
+        /**
+         * Get or set the scale extent for mouse zooms. See https://github.com/d3/d3-zoom#zoom_scaleExtent.
+         *
+         * @returns {Array<Number>|CoordinateGridMixin}
+         */
+        public zoomScale (): [number, number];
+        public zoomScale (extent: [number, number]): this;
+        public zoomScale (extent?) {
+            if (!arguments.length) {
+                return this._conf.zoomScale;
+            }
+            this.configure({zoomScale: extent});
+            return this;
+        }
+
+        /**
+         * Get or set the zoom restriction for the chart. If true limits the zoom to original domain of the chart.
+         * @param {Boolean} [zoomOutRestrict=true]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public zoomOutRestrict (): boolean;
+        public zoomOutRestrict (zoomOutRestrict: boolean): this;
+        public zoomOutRestrict (zoomOutRestrict?) {
+            if (!arguments.length) {
+                return this._conf.zoomOutRestrict;
+            }
+            this.configure({zoomOutRestrict: zoomOutRestrict});
+            return this;
+        }
     }
 }
 
