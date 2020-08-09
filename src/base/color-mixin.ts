@@ -26,11 +26,10 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
 
             this.configure({
                 colorCalculator: undefined,
+                colorAccessor: (d, i?) => this._conf.keyAccessor(d),
             });
 
             this._colors = scaleOrdinal<any, string>(config.defaultColors());
-
-            this._conf.colorAccessor = (d, i?) => this._conf.keyAccessor(d);
         }
 
         public configure (conf: IColorMixinConf) {

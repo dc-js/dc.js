@@ -24,14 +24,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
         constructor (...args: any[]) {
             super();
 
-            this.configure({
-                cap: Infinity,
-                ordering: kv => -kv.value, // emulate old group.top(N) ordering
-                takeFront: true,
-                othersLabel: 'Others'
-            });
-
-            this._conf.othersGrouper = (topItems, restItems) => {
+            const defaultOthersGrouper = (topItems, restItems) => {
                 const restItemsSum = sum(restItems, this._conf.valueAccessor);
                 const restKeys = restItems.map(this._conf.keyAccessor);
 
@@ -44,6 +37,14 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                 }
                 return topItems;
             };
+
+            this.configure({
+                cap: Infinity,
+                ordering: kv => -kv.value, // emulate old group.top(N) ordering
+                takeFront: true,
+                othersLabel: 'Others',
+                othersGrouper: defaultOthersGrouper
+            });
 
             // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
             // whether top means front or back depends on takeFront

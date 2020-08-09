@@ -24,6 +24,10 @@ export class StackMixin extends CoordinateGridMixin {
     constructor () {
         super();
 
+        this.configure({
+            colorAccessor: d => d.name,
+        });
+
         this._stackLayout = stack();
 
         this._stack = [];
@@ -56,8 +60,6 @@ export class StackMixin extends CoordinateGridMixin {
             });
             return layers;
         });
-
-        this._conf.colorAccessor = d => d.name;
     }
 
     public configure (conf: IStackMixinConf) {

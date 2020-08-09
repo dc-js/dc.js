@@ -47,7 +47,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
             if (!arguments.length) {
                 return this._conf.cap;
             }
-            this._conf.cap = count;
+            this.configure({cap: count});
             return this;
         }
 
@@ -67,7 +67,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
             if (!arguments.length) {
                 return this._conf.takeFront;
             }
-            this._conf.takeFront = takeFront;
+            this.configure({takeFront: takeFront});
             return this;
         }
 
@@ -84,7 +84,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
             if (!arguments.length) {
                 return this._conf.othersLabel;
             }
-            this._conf.othersLabel = label;
+            this.configure({othersLabel: label});
             return this;
         }
 
@@ -121,7 +121,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
             if (!arguments.length) {
                 return this._conf.othersGrouper;
             }
-            this._conf.othersGrouper = grouperFunction;
+            this.configure({othersGrouper: grouperFunction});
             return this;
         }
     }

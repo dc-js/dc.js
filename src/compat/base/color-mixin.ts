@@ -31,7 +31,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
             if (!arguments.length) {
                 return this._conf.colorAccessor;
             }
-            this._conf.colorAccessor = colorAccessor;
+            this.configure({colorAccessor: colorAccessor});
             return this;
         }
 
@@ -54,7 +54,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
             if (!arguments.length) {
                 return this._conf.colorCalculator || this.getColor;
             }
-            this._conf.colorCalculator = colorCalculator;
+            this.configure({colorCalculator: colorCalculator});
             return this;
         }
     }
