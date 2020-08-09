@@ -17,15 +17,15 @@ export class StackMixin extends CoordinateGridMixin {
     private _stackLayout: Stack<any, { [p: string]: number }, string>;
     private _stack;
     private _titles;
-    private _hidableStacks: boolean;
     private _hiddenStacks;
-    private _evadeDomainFilter: boolean;
 
     constructor () {
         super();
 
         this.configure({
             colorAccessor: d => d.name,
+            hidableStacks: false,
+            evadeDomainFilter: false
         });
 
         this._stackLayout = stack();
@@ -33,9 +33,7 @@ export class StackMixin extends CoordinateGridMixin {
         this._stack = [];
         this._titles = {};
 
-        this._hidableStacks = false;
         this._hiddenStacks = {};
-        this._evadeDomainFilter = false;
 
         this.data(() => {
             const layers = this._stack.filter(l => this._visibility(l));
@@ -76,7 +74,7 @@ export class StackMixin extends CoordinateGridMixin {
         }));
 
         layer.domainValues = allValues.filter(l => this._domainFilter()(l));
-        layer.values = this.evadeDomainFilter() ? allValues : layer.domainValues;
+        layer.values = this._conf.evadeDomainFilter ? allValues : layer.domainValues;
     }
 
     public _domainFilter () {
@@ -152,20 +150,6 @@ export class StackMixin extends CoordinateGridMixin {
             this.configure({valueAccessor: f});
         }
         return super.group(g, n);
-    }
-
-    /**
-     * Allow named stacks to be hidden or shown by clicking on legend items.
-     * This does not affect the behavior of hideStack or showStack.
-     * @param {Boolean} [hidableStacks=false]
-     * @returns {Boolean|StackMixin}
-     */
-    public hidableStacks (hidableStacks) {
-        if (!arguments.length) {
-            return this._hidableStacks;
-        }
-        this._hidableStacks = hidableStacks;
-        return this;
     }
 
     public _findLayerByName (n) {
@@ -284,29 +268,6 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    /**
-     * Since dc.js 2.0, there has been {@link https://github.com/dc-js/dc.js/issues/949 an issue}
-     * where points are filtered to the current domain. While this is a useful optimization, it is
-     * incorrectly implemented: the next point outside the domain is required in order to draw lines
-     * that are clipped to the bounds, as well as bars that are partly clipped.
-     *
-     * A fix will be included in dc.js 2.1.x, but a workaround is needed for dc.js 2.0 and until
-     * that fix is published, so set this flag to skip any filtering of points.
-     *
-     * Once the bug is fixed, this flag will have no effect, and it will be deprecated.
-     * @param {Boolean} [evadeDomainFilter=false]
-     * @returns {Boolean|StackMixin}
-     */
-    public evadeDomainFilter ();
-    public evadeDomainFilter (evadeDomainFilter): this;
-    public evadeDomainFilter (evadeDomainFilter?) {
-        if (!arguments.length) {
-            return this._evadeDomainFilter;
-        }
-        this._evadeDomainFilter = evadeDomainFilter;
-        return this;
-    }
-
     public _visibility (l) {
         return !this._hiddenStacks[l.name];
     }
@@ -332,7 +293,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public legendToggle (d: LegendItem) {
-        if (this._hidableStacks) {
+        if (this._conf.hidableStacks) {
             if (this.isLegendableHidden(d)) {
                 this.showStack(d.name);
             } else {
