@@ -234,6 +234,40 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             this.configure({zoomOutRestrict: zoomOutRestrict});
             return this;
         }
+
+        /**
+         * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
+         * zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
+         * the range selection brush on the associated range selector chart.
+         * @param {Boolean} [mouseZoomable=false]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public mouseZoomable (): boolean;
+        public mouseZoomable (mouseZoomable: boolean): this;
+        public mouseZoomable (mouseZoomable?) {
+            if (!arguments.length) {
+                return this._conf.mouseZoomable;
+            }
+            this.configure({mouseZoomable: mouseZoomable});
+            return this;
+        }
+
+        /**
+         * Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
+         * the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
+         * will be exactly the chart body area minus the margins.
+         * @param {Number} [padding=5]
+         * @returns {Number|CoordinateGridMixin}
+         */
+        public clipPadding (): number;
+        public clipPadding (padding: number): this;
+        public clipPadding (padding?) {
+            if (!arguments.length) {
+                return this._conf.clipPadding;
+            }
+            this.configure({clipPadding: padding});
+            return this;
+        }
     }
 }
 

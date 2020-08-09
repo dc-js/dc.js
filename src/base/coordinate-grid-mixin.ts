@@ -62,8 +62,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _hasBeenMouseZoomable: boolean;
     private _rangeChart: CoordinateGridMixin;
     private _focusChart: CoordinateGridMixin;
-    private _mouseZoomable: boolean;
-    private _clipPadding: number;
     private _fOuterRangeBandPadding: number;
     private _fRangeBandPadding: number;
     private _useRightYAxis: boolean;
@@ -89,6 +87,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             renderVerticalGridLines: false,
             zoomScale: [1, Infinity],
             zoomOutRestrict: true,
+            mouseZoomable: false,
+            clipPadding: 0,
         });
 
         this._x = undefined;
@@ -124,9 +124,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         this._rangeChart = undefined;
         this._focusChart = undefined;
-
-        this._mouseZoomable = false;
-        this._clipPadding = 0;
 
         this._fOuterRangeBandPadding = 0.5;
         this._fRangeBandPadding = 0;
@@ -218,23 +215,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._g;
         }
         this._g = gElement;
-        return this;
-    }
-
-    /**
-     * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
-     * zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
-     * the range selection brush on the associated range selector chart.
-     * @param {Boolean} [mouseZoomable=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public mouseZoomable (): boolean;
-    public mouseZoomable (mouseZoomable: boolean): this;
-    public mouseZoomable (mouseZoomable?) {
-        if (!arguments.length) {
-            return this._mouseZoomable;
-        }
-        this._mouseZoomable = mouseZoomable;
         return this;
     }
 
@@ -953,23 +933,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return `${this.anchorName().replace(/[ .#=\[\]"]/g, '-')}-clip`;
     }
 
-    /**
-     * Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
-     * the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
-     * will be exactly the chart body area minus the margins.
-     * @param {Number} [padding=5]
-     * @returns {Number|CoordinateGridMixin}
-     */
-    public clipPadding (): number;
-    public clipPadding (padding: number): this;
-    public clipPadding (padding?) {
-        if (!arguments.length) {
-            return this._clipPadding;
-        }
-        this._clipPadding = padding;
-        return this;
-    }
-
     public _generateClipPath (): void {
         const defs = appendOrSelect(this._parent, 'defs');
         // cannot select <clippath> elements; bug in WebKit, must select by id
@@ -977,12 +940,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         const id = this._getClipPathId();
         const chartBodyClip = appendOrSelect(defs, `#${id}`, 'clipPath').attr('id', id);
 
-        const padding = this._clipPadding * 2;
+        const padding = this._conf.clipPadding * 2;
 
         appendOrSelect(chartBodyClip, 'rect')
             .attr('width', this.xAxisLength() + padding)
             .attr('height', this.yAxisHeight() + padding)
-            .attr('transform', `translate(-${this._clipPadding}, -${this._clipPadding})`);
+            .attr('transform', `translate(-${this._conf.clipPadding}, -${this._conf.clipPadding})`);
     }
 
     protected _preprocessData (): void {
@@ -1049,7 +1012,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         // Save a copy of original x scale
         this._origX = this._x.copy();
 
-        if (this._mouseZoomable) {
+        if (this._conf.mouseZoomable) {
             this._enableMouseZoom();
         } else if (this._hasBeenMouseZoomable) {
             this._disableMouseZoom();
