@@ -4,6 +4,8 @@ import {RoundFn, Units} from '../core/types';
 import {CountableTimeInterval} from 'd3-time';
 
 export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinConf {
+    readonly renderHorizontalGridLine?: boolean;
+    readonly renderVerticalGridLines?: boolean;
     readonly round?: RoundFn;
     readonly yElasticity?: boolean;
     readonly yAxisPadding?: number;

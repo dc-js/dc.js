@@ -174,6 +174,36 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             this.configure({round: round});
             return this;
         }
+
+        /**
+         * Turn on/off horizontal grid lines.
+         * @param {Boolean} [renderHorizontalGridLines=false]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public renderHorizontalGridLines (): boolean;
+        public renderHorizontalGridLines (renderHorizontalGridLines: boolean): this;
+        public renderHorizontalGridLines (renderHorizontalGridLines?) {
+            if (!arguments.length) {
+                return this._conf.renderHorizontalGridLine;
+            }
+            this.configure({renderHorizontalGridLine: renderHorizontalGridLines});
+            return this;
+        }
+
+        /**
+         * Turn on/off vertical grid lines.
+         * @param {Boolean} [renderVerticalGridLines=false]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public renderVerticalGridLines (): boolean;
+        public renderVerticalGridLines (renderVerticalGridLines: boolean): this;
+        public renderVerticalGridLines (renderVerticalGridLines?) {
+            if (!arguments.length) {
+                return this._conf.renderVerticalGridLines;
+            }
+            this.configure({renderVerticalGridLines: renderVerticalGridLines});
+            return this;
+        }
     }
 }
 

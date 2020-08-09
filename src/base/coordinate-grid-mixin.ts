@@ -55,8 +55,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _gBrush: SVGGElementSelection;
     private _brushOn: boolean;
     private _parentBrushOn: boolean;
-    private _renderHorizontalGridLine: boolean;
-    private _renderVerticalGridLine: boolean;
     private _resizing: boolean;
     private _unitCount: number;
     private _zoomScale: [number, number];
@@ -89,6 +87,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             yAxisPadding: 0,
             yElasticity: false,
             round: undefined,
+            renderHorizontalGridLine: false,
+            renderVerticalGridLines: false,
         });
 
         this._x = undefined;
@@ -114,9 +114,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._gBrush = undefined;
         this._brushOn = true; // Can not be moved to conf, gets reassigned within dc code
         this._parentBrushOn = false;
-
-        this._renderHorizontalGridLine = false;
-        this._renderVerticalGridLine = false;
 
         this._resizing = false;
         this._unitCount = undefined;
@@ -494,7 +491,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     public _renderVerticalGridLines (g: SVGGElementSelection) {
         let gridLineG = g.select(`g.${VERTICAL_CLASS}`);
 
-        if (this._renderVerticalGridLine) {
+        if (this._conf.renderVerticalGridLines) {
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
                     .attr('class', `${GRID_LINE_CLASS} ${VERTICAL_CLASS}`)
@@ -628,7 +625,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     public _renderHorizontalGridLinesForAxis (g: SVGGElementSelection, scale: MinimalXYScale, axis: Axis<any>) {
         let gridLineG: SVGGElementSelection = g.select(`g.${HORIZONTAL_CLASS}`);
 
-        if (this._renderHorizontalGridLine) {
+        if (this._conf.renderHorizontalGridLine) {
             // see https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
             const ticks = axis.tickValues() ? axis.tickValues() :
                 (scale.ticks ? scale.ticks.apply(scale, axis.tickArguments()) : scale.domain());
@@ -743,36 +740,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._yAxis;
         }
         this._yAxis = yAxis;
-        return this;
-    }
-
-    /**
-     * Turn on/off horizontal grid lines.
-     * @param {Boolean} [renderHorizontalGridLines=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public renderHorizontalGridLines (): boolean;
-    public renderHorizontalGridLines (renderHorizontalGridLines: boolean): this;
-    public renderHorizontalGridLines (renderHorizontalGridLines?) {
-        if (!arguments.length) {
-            return this._renderHorizontalGridLine;
-        }
-        this._renderHorizontalGridLine = renderHorizontalGridLines;
-        return this;
-    }
-
-    /**
-     * Turn on/off vertical grid lines.
-     * @param {Boolean} [renderVerticalGridLines=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public renderVerticalGridLines (): boolean;
-    public renderVerticalGridLines (renderVerticalGridLines: boolean): this;
-    public renderVerticalGridLines (renderVerticalGridLines?) {
-        if (!arguments.length) {
-            return this._renderVerticalGridLine;
-        }
-        this._renderVerticalGridLine = renderVerticalGridLines;
         return this;
     }
 
