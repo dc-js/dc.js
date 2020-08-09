@@ -64,7 +64,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _focusChart: CoordinateGridMixin;
     private _fOuterRangeBandPadding: number;
     private _fRangeBandPadding: number;
-    private _useRightYAxis: boolean;
 
     constructor () {
         super();
@@ -89,6 +88,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             zoomOutRestrict: true,
             mouseZoomable: false,
             clipPadding: 0,
+            useRightYAxis: false
         });
 
         this._x = undefined;
@@ -125,10 +125,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._rangeChart = undefined;
         this._focusChart = undefined;
 
+        // TODO: These two parameters have been exposed differently in BarChart and BoxPlot. In addition _gap in BoxPlot
+        // TODO: also interact with these. Need to change consistently
         this._fOuterRangeBandPadding = 0.5;
         this._fRangeBandPadding = 0;
-
-        this._useRightYAxis = false;
     }
 
     public configure (conf: ICoordinateGridMixinConf) {
@@ -318,31 +318,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
-     * used with a chart in a composite chart, allows both left and right Y axes to be shown on a
-     * chart.
-     * @param {Boolean} [useRightYAxis=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public useRightYAxis (): boolean;
-    public useRightYAxis (useRightYAxis: boolean): this;
-    public useRightYAxis (useRightYAxis?) {
-        if (!arguments.length) {
-            return this._useRightYAxis;
-        }
-
-        // We need to warn if value is changing after self._yAxis was created
-        if (this._useRightYAxis !== useRightYAxis && this._yAxis) {
-            logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
-                'You might get unexpected yAxis behavior. ' +
-                'Make calls to useRightYAxis sooner in your chart creation process.');
-        }
-
-        this._useRightYAxis = useRightYAxis;
-        return this;
-    }
-
-    /**
      * Returns true if the chart is using ordinal xUnits ({@link units.ordinal units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
@@ -505,7 +480,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public _createYAxis (): Axis<undefined> {
-        return this._useRightYAxis ? axisRight(undefined) : axisLeft(undefined);
+        return this._conf.useRightYAxis ? axisRight(undefined) : axisLeft(undefined);
     }
 
     public _prepareYAxis (g: SVGGElementSelection) {
@@ -562,10 +537,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public renderYAxis () {
-        const axisPosition: number = this._useRightYAxis ? (this.width() - this.margins().right) : this._yAxisX();
+        const axisPosition: number = this._conf.useRightYAxis ? (this.width() - this.margins().right) : this._yAxisX();
         this.renderYAxisAt('y', this._yAxis, axisPosition);
-        const labelPosition: number = this._useRightYAxis ? (this.width() - this._yAxisLabelPadding) : this._yAxisLabelPadding;
-        const rotation: number = this._useRightYAxis ? 90 : -90;
+        const labelPosition: number = this._conf.useRightYAxis ? (this.width() - this._yAxisLabelPadding) : this._yAxisLabelPadding;
+        const rotation: number = this._conf.useRightYAxis ? 90 : -90;
         this.renderYAxisLabel('y', this.yAxisLabel(), rotation, labelPosition);
     }
 
@@ -612,7 +587,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public _yAxisX (): number {
-        return this.useRightYAxis() ? this.width() - this.margins().right : this.margins().left;
+        return this._conf.useRightYAxis ? this.width() - this.margins().right : this.margins().left;
     }
 
     /**

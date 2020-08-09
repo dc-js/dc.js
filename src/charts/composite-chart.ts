@@ -267,7 +267,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
             child.xAxis(this.xAxis());
 
-            if (child.useRightYAxis()) {
+            if (child._conf.useRightYAxis) {
                 child.y(this.rightY());
                 child.yAxis(this.rightYAxis());
             } else {
@@ -507,11 +507,11 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _leftYAxisChildren () {
-        return this._children.filter(child => !child.useRightYAxis());
+        return this._children.filter(child => !child._conf.useRightYAxis);
     }
 
     public _rightYAxisChildren () {
-        return this._children.filter(child => child.useRightYAxis());
+        return this._children.filter(child => child._conf.useRightYAxis);
     }
 
     // TODO: revisit all min/max functions after making charts to use Generics

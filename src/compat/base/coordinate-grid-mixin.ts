@@ -4,6 +4,7 @@ import {CoordinateGridMixin as CoordinateGridMixinNeo} from '../../base/coordina
 import {MarginMixinExt} from './margin-mixin';
 import {ColorMixinExt} from './color-mixin';
 import {CountableTimeInterval} from 'd3-time';
+import {logger} from '../core/logger';
 
 class Intermediate extends MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)) { }
 
@@ -266,6 +267,32 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
                 return this._conf.clipPadding;
             }
             this.configure({clipPadding: padding});
+            return this;
+        }
+
+        /**
+         * Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
+         * used with a chart in a composite chart, allows both left and right Y axes to be shown on a
+         * chart.
+         * @param {Boolean} [useRightYAxis=false]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public useRightYAxis (): boolean;
+        public useRightYAxis (useRightYAxis: boolean): this;
+        public useRightYAxis (useRightYAxis?) {
+            if (!arguments.length) {
+                return this._conf.useRightYAxis;
+            }
+
+            // We need to warn if value is changing after self._yAxis was created
+            // @ts-ignore, _yAxis is private in CoordinateGridMixin
+            if (this._conf.useRightYAxis !== useRightYAxis && this._yAxis) {
+                logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
+                    'You might get unexpected yAxis behavior. ' +
+                    'Make calls to useRightYAxis sooner in your chart creation process.');
+            }
+
+            this.configure({useRightYAxis: useRightYAxis});
             return this;
         }
     }
