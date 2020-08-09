@@ -6,6 +6,7 @@ import {constants} from '../core/constants';
 import {logger} from '../core/logger';
 import {pluck2, printSingleValue, safeNumber} from '../core/utils';
 import {ChartGroupType, ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
+import {IBarChartConf} from './i-bar-chart-conf';
 
 const MIN_BAR_WIDTH = 1;
 const DEFAULT_GAP_BETWEEN_BARS = 2;
@@ -20,9 +21,9 @@ const LABEL_PADDING = 3;
  * @mixes StackMixin
  */
 export class BarChart extends StackMixin {
+    public _conf: IBarChartConf;
+
     private _gap: number;
-    private _centerBar: boolean;
-    private _alwaysUseRounding: boolean;
     private _barWidth: number;
 
     /**
@@ -48,15 +49,19 @@ export class BarChart extends StackMixin {
         this.configure({
             label: d => printSingleValue(d.y0 + d.y),
             renderLabel: false,
+            centerBar: false,
+            alwaysUseRounding: false,
         });
 
-        this._gap = DEFAULT_GAP_BETWEEN_BARS;
-        this._centerBar = false;
-        this._alwaysUseRounding = false;
+        this._gap = DEFAULT_GAP_BETWEEN_BARS; // TODO: after untangling it with outer/inner paddings try to move to conf
 
         this._barWidth = undefined;
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure(conf: IBarChartConf) {
+        super.configure(conf);
     }
 
     /**
@@ -81,7 +86,7 @@ export class BarChart extends StackMixin {
     }
 
     public render (): this {
-        if (this._conf.round && this._centerBar && !this._alwaysUseRounding) {
+        if (this._conf.round && this._conf.centerBar && !this._conf.alwaysUseRounding) {
             logger.warn('By default, brush rounding is disabled if bars are centered. ' +
                 'See dc.js bar chart API documentation for details.');
         }
@@ -122,7 +127,7 @@ export class BarChart extends StackMixin {
 
     public _labelXPos (d): number {
         let x = this.x()(d.x);
-        if (!this._centerBar) {
+        if (!this._conf.centerBar) {
             x += this._barWidth / 2;
         }
         if (this.isOrdinal() && this._gap !== undefined) {
@@ -171,7 +176,7 @@ export class BarChart extends StackMixin {
 
     public _barXPos (d): number {
         let x: number = this.x()(d.x);
-        if (this._centerBar) {
+        if (this._conf.centerBar) {
             x -= this._barWidth / 2;
         }
         if (this.isOrdinal() && this._gap !== undefined) {
@@ -266,21 +271,6 @@ export class BarChart extends StackMixin {
         }
     }
 
-    /**
-     * Whether the bar chart will render each bar centered around the data position on the x-axis.
-     * @param {Boolean} [centerBar=false]
-     * @returns {Boolean|BarChart}
-     */
-    public centerBar (): boolean;
-    public centerBar (centerBar: boolean): this;
-    public centerBar (centerBar?) {
-        if (!arguments.length) {
-            return this._centerBar;
-        }
-        this._centerBar = centerBar;
-        return this;
-    }
-
     public onClick (d, i?): void {
         super.onClick(d.data, i);
     }
@@ -326,33 +316,11 @@ export class BarChart extends StackMixin {
     }
 
     public extendBrush (brushSelection) {
-        if (brushSelection && this._conf.round && (!this._centerBar || this._alwaysUseRounding)) {
+        if (brushSelection && this._conf.round && (!this._conf.centerBar || this._conf.alwaysUseRounding)) {
             brushSelection[0] = this._conf.round(brushSelection[0]);
             brushSelection[1] = this._conf.round(brushSelection[1]);
         }
         return brushSelection;
-    }
-
-    /**
-     * Set or get whether rounding is enabled when bars are centered. If false, using
-     * rounding with centered bars will result in a warning and rounding will be ignored.  This flag
-     * has no effect if bars are not {@link BarChart#centerBar centered}.
-     * When using standard d3.js rounding methods, the brush often doesn't align correctly with
-     * centered bars since the bars are offset.  The rounding function must add an offset to
-     * compensate, such as in the following example.
-     * @example
-     * chart.round(function(n) { return Math.floor(n) + 0.5; });
-     * @param {Boolean} [alwaysUseRounding=false]
-     * @returns {Boolean|BarChart}
-     */
-    public alwaysUseRounding (): boolean;
-    public alwaysUseRounding (alwaysUseRounding: boolean): this;
-    public alwaysUseRounding (alwaysUseRounding?) {
-        if (!arguments.length) {
-            return this._alwaysUseRounding;
-        }
-        this._alwaysUseRounding = alwaysUseRounding;
-        return this;
     }
 
     public legendHighlight (d): void {
