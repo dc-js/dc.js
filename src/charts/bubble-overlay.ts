@@ -62,10 +62,9 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         this.configure({
             // TODO: move following two to Mixin, BubbleChart has exactly same setup
             transitionDuration: 750,
-            transitionDelay: 0
+            transitionDelay: 0,
+            radiusValueAccessor: d => d.value
         });
-
-        this.radiusValueAccessor(d => d.value);
 
         this.anchor(parent, chartGroup);
     }
@@ -90,7 +89,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
     public _doRender (): this {
         this._g = this._initOverlayG();
 
-        this.r().range([this.MIN_RADIUS, this.width() * this.maxBubbleRelativeSize()]);
+        this.r().range([this.MIN_RADIUS, this.width() * this._conf.maxBubbleRelativeSize]);
 
         this._initializeBubbles();
 

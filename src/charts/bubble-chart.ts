@@ -50,12 +50,12 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 
     public plotData (): void {
         this.calculateRadiusDomain();
-        this.r().range([this.MIN_RADIUS, this.xAxisLength() * this.maxBubbleRelativeSize()]);
+        this.r().range([this.MIN_RADIUS, this.xAxisLength() * this._conf.maxBubbleRelativeSize]);
 
         const data = this.data();
         let bubbleG: SVGGElementSelection = this.chartBodyG().selectAll(`g.${this.BUBBLE_NODE_CLASS}`)
             .data(data, d => d.key);
-        if (this.sortBubbleSize()) {
+        if (this._conf.sortBubbleSize) {
             // update dom order based on sort
             bubbleG.order();
         }
