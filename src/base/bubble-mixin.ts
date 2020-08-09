@@ -20,6 +20,7 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
     // @ts-ignore
     return class extends Base {
         public _conf: IBubbleMixinConf;
+
         private _maxBubbleRelativeSize: number;
         private _minRadiusWithLabel: number;
         private _sortBubbleSize: boolean;
@@ -34,6 +35,10 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
         constructor (...args: any[]) {
             super();
 
+            this.configure({
+                renderLabel: true
+            });
+
             this._maxBubbleRelativeSize = 0.3;
             this._minRadiusWithLabel = 10;
             this._sortBubbleSize = false;
@@ -44,8 +49,6 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
             this.BUBBLE_NODE_CLASS = 'node';
             this.BUBBLE_CLASS = 'bubble';
             this.MIN_RADIUS = 10;
-
-            this._conf.renderLabel = true;
 
             this.data(group => {
                 const data = group.all();
@@ -60,6 +63,10 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
             this._r = scaleLinear().domain([0, 100]);
 
             this._rValueAccessor = d => d.r;
+        }
+
+        public configure (conf: IBubbleMixinConf) {
+            super.configure(conf);
         }
 
         /**

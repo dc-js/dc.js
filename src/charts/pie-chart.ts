@@ -60,13 +60,21 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      */
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
+        
+        this.configure({
+            colorAccessor: d => this.cappedKeyAccessor(d),
+            emptyTitle: 'empty',
+            label: d => this.cappedKeyAccessor(d),
+            renderLabel: true,
+            transitionDuration: 350,
+            transitionDelay: 0,
+        });
 
         this._sliceCssClass = 'pie-slice';
         this._labelCssClass = 'pie-label';
         this._sliceGroupCssClass = 'pie-slice-group';
         this._labelGroupCssClass = 'pie-label-group';
         this._emptyCssClass = 'empty-chart';
-        this._conf.emptyTitle = 'empty';
 
         this._radius = undefined;
         this._givenRadius = undefined; // specified radius, if any
@@ -81,15 +89,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._externalLabelRadius = undefined;
         this._drawPaths = false;
 
-        this._conf.colorAccessor = d => this.cappedKeyAccessor(d);
-
         this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
-
-        this._conf.label =d => this.cappedKeyAccessor(d);
-        this._conf.renderLabel = true;
-
-        this._conf.transitionDuration = 350;
-        this._conf.transitionDelay = 0;
 
         this.anchor(parent, chartGroup);
     }

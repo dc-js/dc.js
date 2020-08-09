@@ -44,15 +44,17 @@ export class BarChart extends StackMixin {
      */
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
+        
+        this.configure({
+            label: d => printSingleValue(d.y0 + d.y),
+            renderLabel: false,
+        });
 
         this._gap = DEFAULT_GAP_BETWEEN_BARS;
         this._centerBar = false;
         this._alwaysUseRounding = false;
 
         this._barWidth = undefined;
-
-        this._conf.label = d => printSingleValue(d.y0 + d.y)
-        this._conf.renderLabel = false;
 
         this.anchor(parent, chartGroup);
     }

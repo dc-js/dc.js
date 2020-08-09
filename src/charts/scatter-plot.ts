@@ -54,14 +54,17 @@ export class ScatterPlot extends CoordinateGridMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
+        const originalKeyAccessor = this._conf.keyAccessor;
+
+        this.configure({
+            keyAccessor: d => originalKeyAccessor(d)[0],
+            valueAccessor: d => originalKeyAccessor(d)[1],
+            colorAccessor: () => this._groupName,
+        });
+        
         this._symbol = symbol();
 
         this._existenceAccessor = d => d.value;
-
-        const originalKeyAccessor = this._conf.keyAccessor;
-        this._conf.keyAccessor = d => originalKeyAccessor(d)[0];
-        this._conf.valueAccessor = d => originalKeyAccessor(d)[1];
-        this._conf.colorAccessor = () => this._groupName;
 
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702

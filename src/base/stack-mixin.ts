@@ -147,7 +147,7 @@ export class StackMixin extends CoordinateGridMixin {
         this._titles = {};
         this.stack(g, n);
         if (f) {
-            this._conf.valueAccessor = f;
+            this.configure({valueAccessor: f});
         }
         return super.group(g, n);
     }

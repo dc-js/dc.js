@@ -44,6 +44,12 @@ export class NumberDisplay extends BaseMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
+        this.configure({
+            ordering: kv => kv.value, // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
+            transitionDuration: 250, // good default
+            transitionDelay: 0,
+        });
+
         this._formatNumber = format('.2s');
         this._html = {one: '', some: '', none: ''};
         this._lastValue = undefined;
@@ -51,16 +57,10 @@ export class NumberDisplay extends BaseMixin {
         // dimension not required
         this._mandatoryAttributes(['group']);
 
-        // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-        this._conf.ordering = kv => kv.value;
-
         this.data(group => {
             const valObj = group.value ? group.value() : this._maxBin(group.all());
             return this._conf.valueAccessor(valObj);
         });
-
-        this._conf.transitionDuration = 250; // good default
-        this._conf.transitionDelay = 0;
 
         this.anchor(parent, chartGroup);
     }

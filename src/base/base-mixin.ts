@@ -119,6 +119,7 @@ export class BaseMixin {
             transitionDuration: 750,
             transitionDelay: 0,
             commitHandler: undefined,
+            dimension: undefined,
             filterHandler: _defaultFilterHandler,
             hasFilterHandler: _defaultHasFilterHandler,
             removeFilterHandler: _defaultRemoveFilterHandler,
@@ -131,7 +132,6 @@ export class BaseMixin {
             renderTitle: true,
         });
 
-        this._conf.dimension = undefined;
         this._group = undefined;
 
         this._anchor = undefined;

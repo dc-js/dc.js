@@ -75,6 +75,13 @@ export class LineChart extends StackMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
+        this.configure({
+            transitionDuration: 500,
+            transitionDelay: 0,
+            label: d => printSingleValue(d.y0 + d.y),
+            renderLabel: false
+        });
+
         this._renderArea = false;
         this._dotRadius = DEFAULT_DOT_RADIUS;
         this._dataPointRadius = null;
@@ -87,12 +94,7 @@ export class LineChart extends StackMixin {
         this._dashStyle = undefined;
         this._xyTipsOn = true;
 
-        this._conf.transitionDuration = 500;
-        this._conf.transitionDelay = 0;
         this._rangeBandPadding(1);
-
-        this._conf.label = d => printSingleValue(d.y0 + d.y);
-        this._conf.renderLabel =false;
 
         this.anchor(parent, chartGroup);
     }

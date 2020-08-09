@@ -59,9 +59,11 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         this._g = undefined;
         this._points = [];
 
-        this._conf.transitionDuration = 750;
-
-        this._conf.transitionDelay = 0;
+        this.configure({
+            // TODO: move following two to Mixin, BubbleChart has exactly same setup
+            transitionDuration: 750,
+            transitionDelay: 0
+        });
 
         this.radiusValueAccessor(d => d.value);
 

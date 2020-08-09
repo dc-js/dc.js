@@ -56,6 +56,11 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      */
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
+        
+        this.configure({
+            label: d => this.cappedKeyAccessor(d),
+            renderLabel: true,
+        });
 
         this._g = undefined;
 
@@ -81,9 +86,6 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._rowData = undefined;
 
         this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
-
-        this._conf.label = d => this.cappedKeyAccessor(d);
-        this._conf.renderLabel = true;
 
         this.anchor(parent, chartGroup);
     }
