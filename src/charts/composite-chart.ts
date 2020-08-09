@@ -202,7 +202,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _prepareRightYAxis (ranges) {
-        const needDomain = this.rightY() === undefined || this.elasticY();
+        const needDomain = this.rightY() === undefined || this._conf.yElasticity;
         const needRange = needDomain || this.resizing();
 
         if (this.rightY() === undefined) {
@@ -223,7 +223,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _prepareLeftYAxis (ranges) {
-        const needDomain = this.y() === undefined || this.elasticY();
+        const needDomain = this.y() === undefined || this._conf.yElasticity;
         const needRange = needDomain || this.resizing();
 
         if (this.y() === undefined) {

@@ -4,6 +4,7 @@ import {Units} from '../core/types';
 import {CountableTimeInterval} from 'd3-time';
 
 export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinConf {
+    yElasticity?: boolean;
     yAxisPadding?: number;
     xElasticity?: boolean;
     xAxisPaddingUnit?: string | CountableTimeInterval;

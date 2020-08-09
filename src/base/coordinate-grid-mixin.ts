@@ -103,7 +103,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._y = undefined;
         this._yAxis = null;
         this._conf.yAxisPadding = 0;
-        this._yElasticity = false;
+        this._conf.yElasticity = false;
 
         // TODO: see remarks for xAxisLabel and xAxisLabelPadding
         this._yAxisLabel = undefined;
@@ -566,7 +566,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public _prepareYAxis (g: SVGGElementSelection) {
-        if (this._y === undefined || this.elasticY()) {
+        if (this._y === undefined || this._conf.yElasticity) {
             if (this._y === undefined) {
                 this._y = scaleLinear();
             }
@@ -744,22 +744,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._yAxis;
         }
         this._yAxis = yAxis;
-        return this;
-    }
-
-    /**
-     * Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
-     * attempt to recalculate the y axis range whenever a redraw event is triggered.
-     * @param {Boolean} [elasticY=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public elasticY (): boolean;
-    public elasticY (elasticY:boolean): this;
-    public elasticY (elasticY?) {
-        if (!arguments.length) {
-            return this._yElasticity;
-        }
-        this._yElasticity = elasticY;
         return this;
     }
 
@@ -1128,7 +1112,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             this.renderXAxis(this.g());
         }
 
-        if (this.elasticY() || this._resizing || render) {
+        if (this._conf.yElasticity || this._resizing || render) {
             this.renderYAxis();
         }
 
