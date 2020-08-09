@@ -628,9 +628,9 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     public extendBrush (brushSelection) {
-        if (this.round()) {
-            brushSelection[0] = brushSelection[0].map(this.round());
-            brushSelection[1] = brushSelection[1].map(this.round());
+        if (this._conf.round) {
+            brushSelection[0] = brushSelection[0].map(this._conf.round);
+            brushSelection[1] = brushSelection[1].map(this._conf.round);
         }
         return brushSelection;
     }

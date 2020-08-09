@@ -79,7 +79,7 @@ export class BarChart extends StackMixin {
     }
 
     public render (): this {
-        if (this.round() && this._centerBar && !this._alwaysUseRounding) {
+        if (this._conf.round && this._centerBar && !this._alwaysUseRounding) {
             logger.warn('By default, brush rounding is disabled if bars are centered. ' +
                 'See dc.js bar chart API documentation for details.');
         }
@@ -324,9 +324,9 @@ export class BarChart extends StackMixin {
     }
 
     public extendBrush (brushSelection) {
-        if (brushSelection && this.round() && (!this._centerBar || this._alwaysUseRounding)) {
-            brushSelection[0] = this.round()(brushSelection[0]);
-            brushSelection[1] = this.round()(brushSelection[1]);
+        if (brushSelection && this._conf.round && (!this._centerBar || this._alwaysUseRounding)) {
+            brushSelection[0] = this._conf.round(brushSelection[0]);
+            brushSelection[1] = this._conf.round(brushSelection[1]);
         }
         return brushSelection;
     }

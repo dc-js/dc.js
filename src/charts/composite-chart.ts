@@ -82,21 +82,24 @@ export class CompositeChart extends CoordinateGridMixin {
             this._generateChildG(child, i);
 
             if (!child._conf.dimension) {
-                child._conf.dimension = this._conf.dimension;
+                child.configure({dimension: this._conf.dimension});
             }
             if (!child.group()) {
                 child.group(this.group());
             }
 
+            child.configure({
+                xUnits: this._conf.xUnits,
+                transitionDuration: this._conf.transitionDuration,
+                transitionDelay: this._conf.transitionDelay,
+                renderTitle: this._conf.renderTitle,
+                xElasticity: this._conf.xElasticity,
+            });
+
             child.chartGroup(this.chartGroup());
             child.svg(this.svg());
-            child._conf.xUnits = this._conf.xUnits;
-            child._conf.transitionDuration = this._conf.transitionDuration;
-            child._conf.transitionDelay = this._conf.transitionDelay;
             child.parentBrushOn(this.brushOn());
             child.brushOn(false);
-            child._conf.renderTitle = this._conf.renderTitle;
-            child._conf.xElasticity = this._conf.xElasticity;
         }
 
         return g;

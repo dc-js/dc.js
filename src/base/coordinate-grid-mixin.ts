@@ -44,21 +44,17 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _origX: MinimalXYScale;
     private _xOriginalDomain: [number, number];
     private _xAxis: Axis<any>; // TODO: can we do better
-    private _xElasticity: boolean;
     private _xAxisLabel: string;
     private _xAxisLabelPadding: number;
     private _lastXDomain: [number, number];
     private _y: MinimalXYScale;
     private _yAxis: Axis<any>;  // TODO: can we do better
-    private _yAxisPadding: number;
-    private _yElasticity: boolean;
     private _yAxisLabel: string;
     private _yAxisLabelPadding: number;
     private _brush: BrushBehavior<unknown>;
     private _gBrush: SVGGElementSelection;
     private _brushOn: boolean;
     private _parentBrushOn: boolean;
-    private _round: RoundFn;
     private _renderHorizontalGridLine: boolean;
     private _renderVerticalGridLine: boolean;
     private _resizing: boolean;
@@ -84,15 +80,21 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._parent = undefined;
         this._g = undefined;
         this._chartBodyG = undefined;
+        
+        this.configure({
+            xUnits: units.integers,
+            xAxisPadding: 0,
+            xAxisPaddingUnit: timeDay,
+            xElasticity: false,
+            yAxisPadding: 0,
+            yElasticity: false,
+            round: undefined,
+        });
 
         this._x = undefined;
         this._origX = undefined; // Will hold original scale in case of zoom
         this._xOriginalDomain = undefined;
         this._xAxis = axisBottom(undefined);
-        this._conf.xUnits = units.integers;
-        this._conf.xAxisPadding = 0;
-        this._conf.xAxisPaddingUnit = timeDay;
-        this._conf.xElasticity = false;
         // TODO: xAxisLabel and xAxisLabelPadding are linked to the same function, in addition the call updates margins
         // TODO: recheck in next iteration
         this._xAxisLabel = undefined;
@@ -102,8 +104,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         this._y = undefined;
         this._yAxis = null;
-        this._conf.yAxisPadding = 0;
-        this._conf.yElasticity = false;
 
         // TODO: see remarks for xAxisLabel and xAxisLabelPadding
         this._yAxisLabel = undefined;
@@ -112,9 +112,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._brush = brushX();
 
         this._gBrush = undefined;
-        this._brushOn = true;
+        this._brushOn = true; // Can not be moved to conf, gets reassigned within dc code
         this._parentBrushOn = false;
-        this._round = undefined;
 
         this._renderHorizontalGridLine = false;
         this._renderVerticalGridLine = false;
@@ -817,25 +816,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this.effectiveHeight();
     }
 
-    /**
-     * Set or get the rounding function used to quantize the selection when brushing is enabled.
-     * @example
-     * // set x unit round to by month, this will make sure range selection brush will
-     * // select whole months
-     * chart.round(d3.timeMonth.round);
-     * @param {Function} [round]
-     * @returns {Function|CoordinateGridMixin}
-     */
-    public round (): RoundFn;
-    public round (round: RoundFn): this;
-    public round (round?) {
-        if (!arguments.length) {
-            return this._round;
-        }
-        this._round = round;
-        return this;
-    }
-
     public _rangeBandPadding (): number;
     public _rangeBandPadding (_: number): this;
     public _rangeBandPadding (_?) {
@@ -925,9 +905,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public extendBrush (brushSelection: DCBrushSelection) {
-        if (brushSelection && this.round()) {
-            brushSelection[0] = this.round()(brushSelection[0]);
-            brushSelection[1] = this.round()(brushSelection[1]);
+        if (brushSelection && this._conf.round) {
+            brushSelection[0] = this._conf.round(brushSelection[0]);
+            brushSelection[1] = this._conf.round(brushSelection[1]);
         }
         return brushSelection;
     }

@@ -1,4 +1,4 @@
-import {Constructor, Units} from '../../core/types';
+import {Constructor, RoundFn, Units} from '../../core/types';
 import {BaseMixinExt} from './base-mixin';
 import {CoordinateGridMixin as CoordinateGridMixinNeo} from '../../base/coordinate-grid-mixin';
 import {MarginMixinExt} from './margin-mixin';
@@ -56,7 +56,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             if (!arguments.length) {
                 return this._conf.xUnits;
             }
-            this._conf.xUnits = xUnits;
+            this.configure({xUnits: xUnits});
             return this;
         }
 
@@ -77,7 +77,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             if (!arguments.length) {
                 return this._conf.xAxisPadding;
             }
-            this._conf.xAxisPadding = padding;
+            this.configure({xAxisPadding: padding});
             return this;
         }
 
@@ -100,7 +100,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             if (!arguments.length) {
                 return this._conf.xAxisPaddingUnit;
             }
-            this._conf.xAxisPaddingUnit = unit;
+            this.configure({xAxisPaddingUnit: unit});
             return this;
         }
 
@@ -116,7 +116,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             if (!arguments.length) {
                 return this._conf.xElasticity;
             }
-            this._conf.xElasticity = elasticX;
+            this.configure({xElasticity: elasticX});
             return this;
         }
 
@@ -136,7 +136,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             if (!arguments.length) {
                 return this._conf.yAxisPadding;
             }
-            this._conf.yAxisPadding = padding;
+            this.configure({yAxisPadding: padding});
             return this;
         }
 
@@ -152,7 +152,26 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             if (!arguments.length) {
                 return this._conf.yElasticity;
             }
-            this._conf.yElasticity = elasticY;
+            this.configure({yElasticity: elasticY});
+            return this;
+        }
+
+        /**
+         * Set or get the rounding function used to quantize the selection when brushing is enabled.
+         * @example
+         * // set x unit round to by month, this will make sure range selection brush will
+         * // select whole months
+         * chart.round(d3.timeMonth.round);
+         * @param {Function} [round]
+         * @returns {Function|CoordinateGridMixin}
+         */
+        public round (): RoundFn;
+        public round (round: RoundFn): this;
+        public round (round?) {
+            if (!arguments.length) {
+                return this._conf.round;
+            }
+            this.configure({round: round});
             return this;
         }
     }
