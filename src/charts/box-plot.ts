@@ -297,12 +297,12 @@ export class BoxPlot extends CoordinateGridMixin {
 
     public yAxisMin (): number {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return subtract(this._minDataValue() - padding, this.yAxisPadding()) as number;
+        return subtract(this._minDataValue() - padding, this._conf.yAxisPadding) as number;
     }
 
     public yAxisMax (): number {
         const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return add(this._maxDataValue() + padding, this.yAxisPadding()) as number;
+        return add(this._maxDataValue() + padding, this._conf.yAxisPadding) as number;
     }
 
     /**

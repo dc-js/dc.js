@@ -93,14 +93,19 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._conf.xAxisPadding = 0;
         this._conf.xAxisPaddingUnit = timeDay;
         this._conf.xElasticity = false;
+        // TODO: xAxisLabel and xAxisLabelPadding are linked to the same function, in addition the call updates margins
+        // TODO: recheck in next iteration
         this._xAxisLabel = undefined;
         this._xAxisLabelPadding = 0;
+
         this._lastXDomain = undefined;
 
         this._y = undefined;
         this._yAxis = null;
-        this._yAxisPadding = 0;
+        this._conf.yAxisPadding = 0;
         this._yElasticity = false;
+
+        // TODO: see remarks for xAxisLabel and xAxisLabelPadding
         this._yAxisLabel = undefined;
         this._yAxisLabelPadding = 0;
 
@@ -812,7 +817,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public yAxisMin () { // TODO: can these be anything other than number
         const m = min(this.data(), e => this._conf.valueAccessor(e));
-        return subtract(m, this._yAxisPadding);
+        return subtract(m, this._conf.yAxisPadding);
     }
 
     /**
@@ -821,27 +826,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public yAxisMax () { // TODO: can these be anything other than number
         const m = max(this.data(), e => this._conf.valueAccessor(e));
-        return add(m, this._yAxisPadding);
-    }
-
-    /**
-     * Set or get y axis padding for the elastic y axis. The padding will be added to the top and
-     * bottom of the y axis if elasticY is turned on; otherwise it is ignored.
-     *
-     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-     * number or date axes. When padding a date axis, an integer represents number of days being padded
-     * and a percentage string will be treated the same as an integer.
-     * @param {Number|String} [padding=0]
-     * @returns {Number|CoordinateGridMixin}
-     */
-    public yAxisPadding (): number;
-    public yAxisPadding (padding: number): this;
-    public yAxisPadding (padding?) {
-        if (!arguments.length) {
-            return this._yAxisPadding;
-        }
-        this._yAxisPadding = padding;
-        return this;
+        return add(m, this._conf.yAxisPadding);
     }
 
     public yAxisHeight () {

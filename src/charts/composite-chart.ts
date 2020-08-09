@@ -530,11 +530,11 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _yAxisMax () {
-        return add(max(this._getYAxisMax(this._leftYAxisChildren())), this.yAxisPadding());
+        return add(max(this._getYAxisMax(this._leftYAxisChildren())), this._conf.yAxisPadding);
     }
 
     public _rightYAxisMax () {
-        return add(max(this._getYAxisMax(this._rightYAxisChildren())), this.yAxisPadding());
+        return add(max(this._getYAxisMax(this._rightYAxisChildren())), this._conf.yAxisPadding);
     }
 
     public _getAllXAxisMinFromChildCharts () {
