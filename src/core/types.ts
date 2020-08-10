@@ -131,3 +131,6 @@ export interface LegendItem {
 }
 
 export type LegendTextAccessor = (d: LegendItem) => string;
+
+// BubbleOverlay
+export type BubblePoint = { name: string; x: number; y: number; };

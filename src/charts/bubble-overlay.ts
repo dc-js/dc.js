@@ -7,6 +7,7 @@ import {constants} from '../core/constants';
 import {nameToId} from '../core/utils';
 import {ColorMixin} from '../base/color-mixin';
 import {ChartGroupType, ChartParentType, SVGGElementSelection} from '../core/types';
+import {IBubbleOverlayConf} from './i-bubble-overlay-conf';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -24,8 +25,9 @@ const BUBBLE_CLASS = 'bubble';
  * @mixes BaseMixin
  */
 export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
+    public _conf: IBubbleOverlayConf;
+
     private _g: Selection<SVGGElement, any, any, any>;
-    private _points: { name: string; x: number; y: number; }[];
 
     /**
      * Create a Bubble Overlay.
@@ -44,6 +46,10 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
+        this.configure({
+            points: []
+        });
+
         /**
          * **mandatory**
          *
@@ -57,7 +63,6 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
          * @returns {BubbleOverlay}
          */
         this._g = undefined;
-        this._points = [];
 
         this.configure({
             // TODO: move following two to Mixin, BubbleChart has exactly same setup
@@ -69,21 +74,8 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    /**
-     * **mandatory**
-     *
-     * Set up a data point on the overlay. The name of a data point should match a specific 'key' among
-     * data groups generated using keyAccessor.  If a match is found (point name <-> data group key)
-     * then a bubble will be generated at the position specified by the function. x and y
-     * value specified here are relative to the underlying svg.
-     * @param {String} name
-     * @param {Number} x
-     * @param {Number} y
-     * @returns {BubbleOverlay}
-     */
-    public point (name: string, x: number, y: number): this {
-        this._points.push({name, x, y});
-        return this;
+    public configure(conf: IBubbleOverlayConf) {
+        super.configure(conf);
     }
 
     public _doRender (): this {
@@ -110,7 +102,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
-        this._points.forEach(point => {
+        this._conf.points.forEach(point => {
             const nodeG = this._getNodeG(point, data);
 
             let circle = nodeG.select(`circle.${BUBBLE_CLASS}`);
@@ -168,7 +160,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
-        this._points.forEach(point => {
+        this._conf.points.forEach(point => {
             const nodeG = this._getNodeG(point, data);
 
             const circle = nodeG.select(`circle.${BUBBLE_CLASS}`);

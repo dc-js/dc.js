@@ -1,7 +1,7 @@
 import {BubbleMixin} from '../base/bubble-mixin';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
-import {ChartGroupType, ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
+import {BaseAccessor, ChartGroupType, ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
 
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
@@ -18,7 +18,7 @@ import {ChartGroupType, ChartParentType, DCBrushSelection, SVGGElementSelection}
  * @mixes CoordinateGridMixin
  */
 export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
-    private _bubbleLocator: (d) => string;
+    private _bubbleLocator: BaseAccessor<string>;
 
     /**
      * Create a Bubble Chart.
