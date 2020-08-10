@@ -1,7 +1,8 @@
 import {format} from 'd3-format';
 
 import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType, NumberFormatFn} from '../core/types';
+import {ChartGroupType, ChartParentType, DataCountHTMLOptions, NumberFormatFn} from '../core/types';
+import {IDataCountConf} from './i-data-count-conf';
 
 // Keeping these here for now, check if any other charts need same entities
 interface CF {
@@ -10,11 +11,6 @@ interface CF {
 
 interface MinimalGroupAll {
     value (): number;
-}
-
-interface HTMLOptions {
-    all: string;
-    some: string;
 }
 
 /**
@@ -34,10 +30,10 @@ interface HTMLOptions {
  * @mixes BaseMixin
  */
 export class DataCount extends BaseMixin {
-    private _formatNumber: NumberFormatFn;
+    public _conf: IDataCountConf;
+    
     private _crossfilter: CF;
     private _groupAll: MinimalGroupAll;
-    private _html: HTMLOptions;
 
     /**
      * Create a Data Count widget.
@@ -57,73 +53,33 @@ export class DataCount extends BaseMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
-        this._formatNumber = format(',d');
+        this.configure({
+            formatNumber: format(',d'),
+            html: {some: '', all: ''}
+        });
+
         this._crossfilter = null;
         this._groupAll = null;
-        this._html = {some: '', all: ''};
 
         this._mandatoryAttributes(['crossfilter', 'groupAll']);
 
         this.anchor(parent, chartGroup);
     }
-
-    /**
-     * Gets or sets an optional object specifying HTML templates to use depending how many items are
-     * selected. The text `%total-count` will replaced with the total number of records, and the text
-     * `%filter-count` will be replaced with the number of selected records.
-     * - all: HTML template to use if all items are selected
-     * - some: HTML template to use if not all items are selected
-     * @example
-     * counter.html({
-     *      some: '%filter-count out of %total-count records selected',
-     *      all: 'All records selected. Click on charts to apply filters'
-     * })
-     * @param {{some:String, all: String}} [options]
-     * @returns {{some:String, all: String}|DataCount}
-     */
-    public html (): HTMLOptions;
-    public html (options: HTMLOptions): this;
-    public html (options?) {
-        if (!arguments.length) {
-            return this._html;
-        }
-        if (options.all) {
-            this._html.all = options.all;
-        }
-        if (options.some) {
-            this._html.some = options.some;
-        }
-        return this;
-    }
-
-    /**
-     * Gets or sets an optional function to format the filter count and total count.
-     * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
-     * @example
-     * counter.formatNumber(d3.format('.2g'))
-     * @param {Function} [formatter=d3.format('.2g')]
-     * @returns {Function|DataCount}
-     */
-    public formatNumber (): NumberFormatFn;
-    public formatNumber (formatter: NumberFormatFn): this;
-    public formatNumber (formatter?) {
-        if (!arguments.length) {
-            return this._formatNumber;
-        }
-        this._formatNumber = formatter;
-        return this;
+    
+    public configure(conf: IDataCountConf) {
+        super.configure(conf);
     }
 
     public _doRender () {
         const tot: number = this.crossfilter().size();
         const val: number = this.groupAll().value();
-        const all: string = this._formatNumber(tot);
-        const selected: string = this._formatNumber(val);
+        const all: string = this._conf.formatNumber(tot);
+        const selected: string = this._conf.formatNumber(val);
 
-        if ((tot === val) && (this._html.all !== '')) {
-            this.root().html(this._html.all.replace('%total-count', all).replace('%filter-count', selected));
-        } else if (this._html.some !== '') {
-            this.root().html(this._html.some.replace('%total-count', all).replace('%filter-count', selected));
+        if ((tot === val) && (this._conf.html.all !== '')) {
+            this.root().html(this._conf.html.all.replace('%total-count', all).replace('%filter-count', selected));
+        } else if (this._conf.html.some !== '') {
+            this.root().html(this._conf.html.some.replace('%total-count', all).replace('%filter-count', selected));
         } else {
             this.selectAll('.total-count').text(all);
             this.selectAll('.filter-count').text(selected);
