@@ -4,6 +4,7 @@ import {nest} from 'd3-collection';
 import {CompositeChart} from './composite-chart';
 import {LineChart} from './line-chart';
 import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn} from '../core/types';
+import {ISeriesChartConf} from './i-series-chart-conf';
 
 export type LineChartFunction = (parent, chartGroup) => LineChart;
 
@@ -17,6 +18,8 @@ export type LineChartFunction = (parent, chartGroup) => LineChart;
  * @mixes CompositeChart
  */
 export class SeriesChart extends CompositeChart {
+    public _conf:ISeriesChartConf;
+
     private _keySort: CompareFn;
     private _charts: {[key: string]: LineChart};
     private _chartFunction: LineChartFunction;
@@ -40,6 +43,10 @@ export class SeriesChart extends CompositeChart {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
+        this.configure({
+            shareColors: true
+        });
+
         this._keySort = (a, b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b));
 
         this._charts = {};
@@ -49,7 +56,10 @@ export class SeriesChart extends CompositeChart {
         this._valueSort = this._keySort;
 
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
-        this.shareColors(true);
+    }
+
+    public configure(conf: ISeriesChartConf) {
+        super.configure(conf);
     }
 
     private _compose (subChartArray: LineChart[]): void {

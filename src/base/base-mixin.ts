@@ -153,7 +153,7 @@ export class BaseMixin {
         this._width = undefined;
         this._height = undefined;
 
-        this._title = d => `${this._conf.keyAccessor(d)}: ${this._conf.valueAccessor(d)}`;
+        this._title = d => `${this._conf.keyAccessor(d)}: ${this._conf.valueAccessor(d)}`; // TODO: move to conf
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 

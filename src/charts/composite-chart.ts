@@ -5,6 +5,7 @@ import {Axis, axisRight} from 'd3-axis';
 import {add, subtract} from '../core/utils';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {ChartGroupType, ChartParentType, Margins, MinimalXYScale, SVGGElementSelection} from '../core/types';
+import {ICompositeChartConf} from './i-composite-chart-conf';
 
 const SUB_CHART_CLASS = 'sub';
 const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
@@ -16,10 +17,10 @@ const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
  * @mixes CoordinateGridMixin
  */
 export class CompositeChart extends CoordinateGridMixin {
+    public _conf: ICompositeChartConf;
+
     private _children: CoordinateGridMixin[];
     private _childOptions; // TODO: it is conf for children, revisit after creating concept of conf
-    private _shareColors: boolean;
-    private _shareTitle: boolean;
     private _alignYAxes: boolean;
     private _rightYAxis: Axis<any>;
     private _rightYAxisLabel: string;
@@ -45,16 +46,16 @@ export class CompositeChart extends CoordinateGridMixin {
 
         this.configure({
             transitionDuration: 500,
-            transitionDelay: 0
+            transitionDelay: 0,
+            shareColors: false,
+            shareTitle: true,
         });
 
         this._children = [];
 
         this._childOptions = {};
 
-        this._shareColors = false;
-        this._shareTitle = true;
-        this._alignYAxes = false;
+        this._alignYAxes = false; // TODO: the setter calls rescale, check in detail later
 
         this._rightYAxis = axisRight(undefined);
         this._rightYAxisLabel = undefined;
@@ -74,6 +75,10 @@ export class CompositeChart extends CoordinateGridMixin {
         });
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure(conf: ICompositeChartConf) {
+        super.configure(conf);
     }
 
     public _generateG (): SVGGElementSelection {
@@ -262,7 +267,7 @@ export class CompositeChart extends CoordinateGridMixin {
                 this._generateChildG(child, i);
             }
 
-            if (this._shareColors) {
+            if (this._conf.shareColors) {
                 child.colors(this.colors());
             }
 
@@ -379,7 +384,7 @@ export class CompositeChart extends CoordinateGridMixin {
             child.width(this.width());
             child.margins(this.margins());
 
-            if (this._shareTitle) {
+            if (this._conf.shareTitle) {
                 child.title(this.title());
             }
 
@@ -435,43 +440,6 @@ export class CompositeChart extends CoordinateGridMixin {
      */
     public children (): CoordinateGridMixin[] {
         return this._children;
-    }
-
-    /**
-     * Get or set color sharing for the chart. If set, the {@link ColorMixin#colors .colors()} value from this chart
-     * will be shared with composed children. Additionally if the child chart implements
-     * Stackable and has not set a custom .colorAccessor, then it will generate a color
-     * specific to its order in the composition.
-     * @param {Boolean} [shareColors=false]
-     * @returns {Boolean|CompositeChart}
-     */
-    public shareColors (): boolean;
-    public shareColors (shareColors: boolean): this;
-    public shareColors (shareColors?) {
-        if (!arguments.length) {
-            return this._shareColors;
-        }
-        this._shareColors = shareColors;
-        return this;
-    }
-
-    /**
-     * Get or set title sharing for the chart. If set, the {@link BaseMixin#title .title()} value from
-     * this chart will be shared with composed children.
-     *
-     * Note: currently you must call this before `compose` or the child will still get the parent's
-     * `title` function!
-     * @param {Boolean} [shareTitle=true]
-     * @returns {Boolean|CompositeChart}
-     */
-    public shareTitle (): boolean;
-    public shareTitle (shareTitle: boolean): this;
-    public shareTitle (shareTitle?) {
-        if (!arguments.length) {
-            return this._shareTitle;
-        }
-        this._shareTitle = shareTitle;
-        return this;
     }
 
     /**
@@ -561,7 +529,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
     public legendables () {
         return this._children.reduce((items, child) => {
-            if (this._shareColors) {
+            if (this._conf.shareColors) {
                 child.colors(this.colors());
             }
             items.push.apply(items, child.legendables());
