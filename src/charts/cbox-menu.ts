@@ -5,6 +5,7 @@ import {BaseMixin} from '../base/base-mixin';
 import {uniqueId} from '../core/utils'
 import {ChartGroupType, ChartParentType, CompareFn} from '../core/types';
 import {ICboxMenuConf} from './i-cbox-menu-conf';
+import {ascending} from 'd3-array';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -19,11 +20,7 @@ export class CboxMenu extends BaseMixin {
     public _conf: ICboxMenuConf;
 
     private _cbox: Selection<HTMLElement, any, HTMLElement, any>;
-    private _promptText: string;
-    private _promptValue; // TODO: figure out what is Prompt value and some use cases
     private _uniqueId: number;
-    private _filterDisplayed: (d) => boolean;
-    private _order: CompareFn;
 
     /**
      * Create a Cbox Menu.
@@ -48,29 +45,18 @@ export class CboxMenu extends BaseMixin {
         super();
 
         this.configure({
-            multiple: false
+            multiple: false,
+            promptText: 'Select all',
+            promptValue: null,
+            filterDisplayed: d => this._conf.valueAccessor(d) > 0,
+            order: (a,b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b))
         });
 
         this._cbox = undefined;
-        this._promptText = 'Select all';
-        this._promptValue = null;
 
         this._uniqueId = uniqueId();
 
-        this.data(group => group.all().filter(this._filterDisplayed));
-
-        // There is an accessor for this attribute, initialized with default value
-        this._filterDisplayed = d => this._conf.valueAccessor(d) > 0;
-
-        this._order = (a, b) => {
-            if (this._conf.keyAccessor(a) > this._conf.keyAccessor(b)) {
-                return 1;
-            }
-            if (this._conf.keyAccessor(a) < this._conf.keyAccessor(b)) {
-                return -1;
-            }
-            return 0;
-        };
+        this.data(group => group.all().filter(this._conf.filterDisplayed));
 
         this.anchor(parent, chartGroup);
     }
@@ -138,7 +124,7 @@ export class CboxMenu extends BaseMixin {
                 .append('li')
                 .append('input')
                 .attr('type', 'reset')
-                .text(this._promptText)
+                .text(this._conf.promptText)
                 .on('click', function (d, i) {
                     return chart._onChange(d, i, this);
                 });
@@ -146,18 +132,18 @@ export class CboxMenu extends BaseMixin {
             const li = this._cbox.append('li');
             li.append('input')
                 .attr('type', inputType)
-                .attr('value', this._promptValue)
+                .attr('value', this._conf.promptValue)
                 .attr('name', `domain_${this._uniqueId}`)
                 .attr('id', (d, i) => `input_${this._uniqueId}_all`)
                 .property('checked', true);
             li.append('label')
                 .attr('for', (d, i) => `input_${this._uniqueId}_all`)
-                .text(this._promptText);
+                .text(this._conf.promptText);
         }
 
         this._cbox
             .selectAll(`li.${ITEM_CSS_CLASS}`)
-            .sort(this._order);
+            .sort(this._conf.order);
 
         this._cbox.on('change', function (d, i) {
             return chart._onChange(d, i, this);
@@ -171,7 +157,7 @@ export class CboxMenu extends BaseMixin {
         let options: Selection<HTMLInputElement, unknown, HTMLElement, unknown>;
 
         if (!target.datum()) {
-            values = this._promptValue || null;
+            values = this._conf.promptValue || null;
         } else {
             options = select(element).selectAll<HTMLInputElement, any>('input')
                 .filter(function (o) {
@@ -200,102 +186,5 @@ export class CboxMenu extends BaseMixin {
         events.trigger(() => {
             this.redrawGroup();
         });
-    }
-
-    /**
-     * Get or set the function that controls the ordering of option tags in the
-     * cbox menu. By default options are ordered by the group key in ascending
-     * order.
-     * @param {Function} [order]
-     * @returns {Function|CboxMenu}
-     * @example
-     * // order by the group's value
-     * chart.order(function (a,b) {
-     *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
-     * });
-     */
-    public order (): CompareFn;
-    public order (order: CompareFn): this;
-    public order (order?) {
-        if (!arguments.length) {
-            return this._order;
-        }
-        this._order = order;
-        return this;
-    }
-
-    /**
-     * Get or set the text displayed in the options used to prompt selection.
-     * @param {String} [promptText='Select all']
-     * @returns {String|CboxMenu}
-     * @example
-     * chart.promptText('All states');
-     */
-    public promptText (): string;
-    public promptText (promptText: string): this;
-    public promptText (promptText?) {
-        if (!arguments.length) {
-            return this._promptText;
-        }
-        this._promptText = promptText;
-        return this;
-    }
-
-    /**
-     * Get or set the function that filters options prior to display. By default only options
-     * with a value > 0 are displayed.
-     * @param {function} [filterDisplayed]
-     * @returns {Function|CboxMenu}
-     * @example
-     * // display all options override the `filterDisplayed` function:
-     * chart.filterDisplayed(function () {
-     *     return true;
-     * });
-     */
-    public filterDisplayed (): (d) => boolean;
-    public filterDisplayed (filterDisplayed: (d) => boolean): this;
-    public filterDisplayed (filterDisplayed?) {
-        if (!arguments.length) {
-            return this._filterDisplayed;
-        }
-        this._filterDisplayed = filterDisplayed;
-        return this;
-    }
-
-    /**
-     * Controls the type of input element. Setting it to true converts
-     * the HTML `input` tags from radio buttons to checkboxes.
-     * @param {boolean} [multiple=false]
-     * @returns {Boolean|CboxMenu}
-     * @example
-     * chart.multiple(true);
-     */
-    public multiple (): boolean;
-    public multiple (multiple: boolean): this;
-    public multiple (multiple?) {
-        if (!arguments.length) {
-            return this._conf.multiple;
-        }
-        this._conf.multiple = multiple;
-        return this;
-    }
-
-    /**
-     * Controls the default value to be used for
-     * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
-     * when only the prompt value is selected. If `null` (the default), no filtering will occur when
-     * just the prompt is selected.
-     * @param {?*} [promptValue=null]
-     * @returns {*|CboxMenu}
-     */
-    public promptValue ();
-    public promptValue (promptValue): this;
-    public promptValue (promptValue?) {
-        if (!arguments.length) {
-            return this._promptValue;
-        }
-        this._promptValue = promptValue;
-
-        return this;
     }
 }
