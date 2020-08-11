@@ -140,3 +140,6 @@ export interface DataCountHTMLOptions {
     all: string;
     some: string;
 }
+
+// DataTable
+export type DataTableColumnSpec = ((d) => string) | string | {label: string; format: (d) => string};
