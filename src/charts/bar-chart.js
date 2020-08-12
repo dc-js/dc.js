@@ -176,7 +176,7 @@ export class BarChart extends StackMixin {
 
         const enter = bars.enter()
             .append('rect')
-            .attr('class', 'bar')
+            .attr('class', `bar ${this._keyboardAccessible ? 'dc-tabbable' : ''}`)
             .attr('fill', pluck('data', this.getColor))
             .attr('x', d => this._barXPos(d))
             .attr('y', this.yAxisHeight())

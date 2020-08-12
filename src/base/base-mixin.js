@@ -1,4 +1,4 @@
-import {select} from 'd3-selection';
+import {select, event as d3Event} from 'd3-selection';
 import {dispatch} from 'd3-dispatch';
 import {ascending} from 'd3-array';
 
@@ -73,6 +73,7 @@ export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
         this._svgDescription = this.constructor.name || '';
+        this._keyboardAccessible = false;
 
         this._dimension = undefined;
         this._group = undefined;
@@ -549,6 +550,19 @@ export class BaseMixin {
     }
 
     /**
+     * Whether interactive chart elements will be accessible by keyboard using tabindex.
+     * @param {Boolean} [keyboardAccessible=false]
+     * @returns {Boolean|BarChart}
+     */
+    keyboardAccessible (keyboardAccessible) {
+        if (!arguments.length) {
+            return this._keyboardAccessible;
+        }
+        this._keyboardAccessible = keyboardAccessible;
+        return this;
+    }
+
+    /**
      * Set or get the filter printer function. The filter printer function is used to generate human
      * friendly text for filter value(s) associated with the chart instance. The text will get shown
      * in the `.filter element; see {@link BaseMixin#turnOnControls turnOnControls}.
@@ -686,9 +700,32 @@ export class BaseMixin {
             this._legend.render();
         }
 
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible();
+        }
+
         this._activateRenderlets('postRender');
 
         return result;
+    }
+
+    _makeKeyboardAccessible () {
+        this._svg.selectAll('.dc-tabbable')
+                .attr('tabindex', 0)
+                .on('keydown', d => {
+
+                    if (d3Event.keyCode === 13) {
+                        console.log('clicked!');
+                        this.onClick(d);
+                    } 
+                    // special case for space key press - prevent scrolling
+                    if (d3Event.keyCode === 32) {
+                        console.log('clicked!');
+                        this.onClick(d);
+                        d3Event.preventDefault();
+                    }
+                
+                })
     }
 
     _activateRenderlets (event) {
@@ -727,6 +764,10 @@ export class BaseMixin {
 
         if (this._legend) {
             this._legend.render();
+        }
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible();
         }
 
         this._activateRenderlets('postRedraw');
