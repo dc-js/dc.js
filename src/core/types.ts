@@ -143,3 +143,10 @@ export interface DataCountHTMLOptions {
 
 // DataTable
 export type DataTableColumnSpec = ((d) => string) | string | {label: string; format: (d) => string};
+
+// GeoChoroplethChart
+export interface IGeoJson {
+    data;
+    name: string;
+    keyAccessor: BaseAccessor<any>;
+}
