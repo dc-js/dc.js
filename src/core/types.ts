@@ -150,3 +150,6 @@ export interface IGeoJson {
     name: string;
     keyAccessor: BaseAccessor<any>;
 }
+
+// HeatMap
+export type HeatMapClickHandler = (d: any) => void;
