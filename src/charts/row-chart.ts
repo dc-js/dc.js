@@ -25,17 +25,11 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     public _conf: IRowChartConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
-    private _labelOffsetX: number;
     private _labelOffsetY: number;
     private _dyOffset: string;
-    private _titleLabelOffsetX: number;
-    private _gap: number;
-    private _fixedBarHeight: boolean|number;
     private _rowCssClass: string;
     private _titleRowCssClass: string;
-    private _renderTitleLabel: boolean;
     private _x: MinimalXYScale;
-    private _elasticX: boolean;
     private _xAxis: Axis<any>;
     private _rowData; // This is chart data
     public rowsCap; // Alias for this.cap
@@ -59,25 +53,22 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this.configure({
             label: d => this.cappedKeyAccessor(d),
             renderLabel: true,
+            labelOffsetX: 10,
+            labelOffsetY: undefined,
+            titleLabelOffsetX: 2,
+            gap: 5,
+            fixedBarHeight: undefined,
+            renderTitleLabel: false,
+            elasticX: undefined,
         });
 
         this._g = undefined;
 
-        this._labelOffsetX = 10;
-        this._labelOffsetY = undefined;
         this._dyOffset = '0.35em'; // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
-        this._titleLabelOffsetX = 2;
-
-        this._gap = 5;
-
-        this._fixedBarHeight = false;
         this._rowCssClass = 'row';
         this._titleRowCssClass = 'titlerow';
-        this._renderTitleLabel = false;
 
         this._x = undefined;
-
-        this._elasticX = undefined;
 
         this._xAxis = axisBottom(undefined);
 
@@ -93,7 +84,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     private _calculateAxisScale (): void {
-        if (!this._x || this._elasticX) {
+        if (!this._x || this._conf.elasticX) {
             const _extent = extent<any, number>(this._rowData, d => this.cappedValueAccessor(d));
             if (_extent[0] > 0) {
                 _extent[0] = 0;
@@ -204,18 +195,12 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         const n = this._rowData.length;
 
         let height: number;
-        if (!this._fixedBarHeight) { // It is either false or number
-            height = (this.effectiveHeight() - (n + 1) * this._gap) / n;
-        } else {
-            height = this._fixedBarHeight as number;
-        }
+        height = this._conf.fixedBarHeight ? this._conf.fixedBarHeight : (this.effectiveHeight() - (n + 1) * this._conf.gap) / n;
 
         // vertically align label in center unless they override the value via property setter
-        if (this._labelOffsetY === undefined) {
-            this._labelOffsetY = height / 2;
-        }
+        this._labelOffsetY = this._conf.labelOffsetY === undefined ? height / 2 : this._conf.labelOffsetY;
 
-        const rect = rows.attr('transform', (d, i) => `translate(0,${(i + 1) * this._gap + i * height})`).select('rect')
+        const rect = rows.attr('transform', (d, i) => `translate(0,${(i + 1) * this._conf.gap + i * height})`).select('rect')
             .attr('height', height)
             .attr('fill', (d, i) => this.getColor(d, i))
             .on('click', d => this._onClick(d))
@@ -242,7 +227,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             rowEnter.append('text')
                 .on('click', d => this._onClick(d));
         }
-        if (this.renderTitleLabel()) {
+        if (this._conf.renderTitleLabel) {
             rowEnter.append('text')
                 .attr('class', this._titleRowCssClass)
                 .on('click', d => this._onClick(d));
@@ -252,7 +237,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     private _updateLabels (rows: SVGGElementSelection): void {
         if (this._conf.renderLabel) {
             const lab = rows.select('text')
-                .attr('x', this._labelOffsetX)
+                .attr('x', this._conf.labelOffsetX)
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
                 .on('click', d => this._onClick(d))
@@ -263,9 +248,9 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
                 .attr('transform', d => this._translateX(d));
         }
 
-        if (this.renderTitleLabel()) {
+        if (this._conf.renderTitleLabel) {
             const titlelab = rows.select<SVGTextElement>(`.${this._titleRowCssClass}`)
-                .attr('x', this.effectiveWidth() - this._titleLabelOffsetX)
+                .attr('x', this.effectiveWidth() - this._conf.titleLabelOffsetX)
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
                 .attr('text-anchor', 'end')
@@ -276,21 +261,6 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             transition(titlelab, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('transform', d => this._translateX(d));
         }
-    }
-
-    /**
-     * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
-     * @param {Boolean} [renderTitleLabel=false]
-     * @returns {Boolean|RowChart}
-     */
-    public renderTitleLabel (): boolean;
-    public renderTitleLabel (renderTitleLabel: boolean): this;
-    public renderTitleLabel (renderTitleLabel?) {
-        if (!arguments.length) {
-            return this._renderTitleLabel;
-        }
-        this._renderTitleLabel = renderTitleLabel;
-        return this;
     }
 
     private _onClick (d, i?: number) {
@@ -332,102 +302,6 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             return this._xAxis;
         }
         this._xAxis = xAxis;
-        return this;
-    }
-
-    /**
-     * Get or set the fixed bar height. Default is [false] which will auto-scale bars.
-     * For example, if you want to fix the height for a specific number of bars (useful in TopN charts)
-     * you could fix height as follows (where count = total number of bars in your TopN and gap is
-     * your vertical gap space).
-     * @example
-     * chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
-     * @param {Boolean|Number} [fixedBarHeight=false]
-     * @returns {Boolean|Number|RowChart}
-     */
-    public fixedBarHeight (): boolean|number;
-    public fixedBarHeight (fixedBarHeight: boolean|number): this;
-    public fixedBarHeight (fixedBarHeight?) {
-        if (!arguments.length) {
-            return this._fixedBarHeight;
-        }
-        this._fixedBarHeight = fixedBarHeight;
-        return this;
-    }
-
-    /**
-     * Get or set the vertical gap space between rows on a particular row chart instance.
-     * @param {Number} [gap=5]
-     * @returns {Number|RowChart}
-     */
-    public gap (): number;
-    public gap (gap: number): this;
-    public gap (gap?) {
-        if (!arguments.length) {
-            return this._gap;
-        }
-        this._gap = gap;
-        return this;
-    }
-
-    /**
-     * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescale to auto-fit the
-     * data range when filtered.
-     * @param {Boolean} [elasticX]
-     * @returns {Boolean|RowChart}
-     */
-    public elasticX (): boolean;
-    public elasticX (elasticX: boolean): this;
-    public elasticX (elasticX?) {
-        if (!arguments.length) {
-            return this._elasticX;
-        }
-        this._elasticX = elasticX;
-        return this;
-    }
-
-    /**
-     * Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
-     * @param {Number} [labelOffsetX=10]
-     * @returns {Number|RowChart}
-     */
-    public labelOffsetX (): number;
-    public labelOffsetX (labelOffsetX: number): this;
-    public labelOffsetX (labelOffsetX?) {
-        if (!arguments.length) {
-            return this._labelOffsetX;
-        }
-        this._labelOffsetX = labelOffsetX;
-        return this;
-    }
-
-    /**
-     * Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
-     * @param {Number} [labelOffsety]
-     * @returns {Number|RowChart}
-     */
-    public labelOffsetY (): number;
-    public labelOffsetY (labelOffsety: number): this;
-    public labelOffsetY (labelOffsety?) {
-        if (!arguments.length) {
-            return this._labelOffsetY;
-        }
-        this._labelOffsetY = labelOffsety;
-        return this;
-    }
-
-    /**
-     * Get of set the x offset (horizontal space between right edge of row and right edge or text.
-     * @param {Number} [titleLabelOffsetX=2]
-     * @returns {Number|RowChart}
-     */
-    public titleLabelOffsetX (): number;
-    public titleLabelOffsetX (titleLabelOffsetX: number): this;
-    public titleLabelOffsetX (titleLabelOffsetX?) {
-        if (!arguments.length) {
-            return this._titleLabelOffsetX;
-        }
-        this._titleLabelOffsetX = titleLabelOffsetX;
         return this;
     }
 
