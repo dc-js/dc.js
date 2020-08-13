@@ -107,7 +107,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _drawChart (): void {
+    private _drawChart (): void {
         // set radius from chart size if none given, or if given radius is too large
         const maxRadius = min([this.width(), this.height()]) / 2;
         this._computedRadius = this._conf.radius && this._conf.radius < maxRadius ? this._conf.radius : maxRadius;
@@ -150,7 +150,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    public _createElements (slices: SVGGElementSelection,
+    private _createElements (slices: SVGGElementSelection,
                             labels: Selection<SVGTextElement, any, SVGGElement, any>,
                             arcs: Arc<any, DefaultArcObject>,
                             pieData) {
@@ -164,14 +164,14 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._createLabels(labels, pieData, arcs);
     }
 
-    public _createSliceNodes (slices: SVGGElementSelection): SVGGElementSelection {
+    private _createSliceNodes (slices: SVGGElementSelection): SVGGElementSelection {
         return slices
             .enter()
             .append('g')
             .attr('class', (d, i) => `${this._sliceCssClass} _${i}`);
     }
 
-    public _createSlicePath (slicesEnter: SVGGElementSelection, arcs: Arc<any, DefaultArcObject>): void {
+    private _createSlicePath (slicesEnter: SVGGElementSelection, arcs: Arc<any, DefaultArcObject>): void {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', (d, i) => this._onClick(d, i))
@@ -305,7 +305,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
 
-    public _updateLabels (pieData, arcs: Arc<any, DefaultArcObject>): void {
+    private _updateLabels (pieData, arcs: Arc<any, DefaultArcObject>): void {
         if (this._conf.renderLabel) {
             const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._labelCssClass}`)
                 .data(pieData);
@@ -316,7 +316,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    public _updateTitles (pieData) {
+    private _updateTitles (pieData) {
         if (this._conf.renderTitle) {
             this._g.selectAll<SVGGElement, any>(`g.${this._sliceCssClass}`)
                 .data<any>(pieData)
@@ -325,7 +325,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         }
     }
 
-    public _removeElements (slices: SVGGElementSelection, labels: Selection<SVGTextElement, any, SVGGElement, any>) {
+    private _removeElements (slices: SVGGElementSelection, labels: Selection<SVGTextElement, any, SVGGElement, any>) {
         slices.exit().remove();
         labels.exit().remove();
     }
@@ -377,13 +377,13 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _buildArcs (): Arc<any, DefaultArcObject> {
+    private _buildArcs (): Arc<any, DefaultArcObject> {
         return arc()
             .outerRadius(this._computedRadius - this._conf.externalRadiusPadding)
             .innerRadius(this._conf.innerRadius);
     }
 
-    public _isSelectedSlice (d): boolean {
+    private _isSelectedSlice (d): boolean {
         return this.hasFilter(this.cappedKeyAccessor(d.data));
     }
 
@@ -392,35 +392,35 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _pieLayout (): Pie<any, any> {
+    private _pieLayout (): Pie<any, any> {
         // The 2nd argument is type of datum that will be used. TODO: revisit after refactoring.
         return pie().sort(null).value(d => this.cappedValueAccessor(d)) as Pie<any, any>;
     }
 
-    public _sliceTooSmall (d): boolean {
+    private _sliceTooSmall (d): boolean {
         const angle = (d.endAngle - d.startAngle);
         return isNaN(angle) || angle < this._conf.minAngleForLabel;
     }
 
-    public _sliceHasNoData (d): boolean {
+    private _sliceHasNoData (d): boolean {
         return this.cappedValueAccessor(d) === 0;
     }
 
-    public _isOffCanvas (current): boolean {
+    private _isOffCanvas (current): boolean {
         return !current || isNaN(current.startAngle) || isNaN(current.endAngle);
     }
 
-    public _fill (d, i: number): string {
+    private _fill (d, i: number): string {
         return this.getColor(d.data, i);
     }
 
-    public _onClick (d, i: number): void {
+    private _onClick (d, i: number): void {
         if (this._g.attr('class') !== this._emptyCssClass) {
             this.onClick(d.data, i);
         }
     }
 
-    public _safeArc (d, i: number, _arc: Arc<any, DefaultArcObject>): string {
+    private _safeArc (d, i: number, _arc: Arc<any, DefaultArcObject>): string {
         let path = _arc(d, i);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
