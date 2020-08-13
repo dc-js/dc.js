@@ -8,6 +8,7 @@ import {filters} from '../core/filters';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
 import {BaseAccessor, ChartGroupType, ChartParentType, LegendItem} from '../core/types';
+import {IScatterPlotConf} from './i-scatter-plot-conf';
 
 export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
 
@@ -20,21 +21,12 @@ export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
  * @mixes CoordinateGridMixin
  */
 export class ScatterPlot extends CoordinateGridMixin {
+    public _conf: IScatterPlotConf;
+
     private _symbol: Symbol<any, any>;
-    private _existenceAccessor: BaseAccessor<any>; // It is used as truthy/falsy, which can't be expressed in Typescript
-    private _highlightedSize: number;
-    private _symbolSize: number;
-    private _excludedSize: number;
-    private _excludedColor: string;
-    private _excludedOpacity: number;
-    private _emptySize: number;
-    private _emptyOpacity: number;
-    private _nonemptyOpacity: number;
-    private _emptyColor: string;
     private _filtered;
     private _canvas: Selection<HTMLCanvasElement, any, any, any>;
     private _context: CanvasRenderingContext2D;
-    private _useCanvas: boolean;
 
     /**
      * Create a Scatter Plot.
@@ -60,29 +52,28 @@ export class ScatterPlot extends CoordinateGridMixin {
             keyAccessor: d => originalKeyAccessor(d)[0],
             valueAccessor: d => originalKeyAccessor(d)[1],
             colorAccessor: () => this._groupName,
+            existenceAccessor: d => d.value,
+            highlightedSize: 7,
+            symbolSize: 5,
+            excludedSize: 3,
+            excludedColor: null,
+            excludedOpacity: 1.0,
+            emptySize: 0,
+            emptyOpacity: 0,
+            nonemptyOpacity: 1,
+            emptyColor: null,
+            useCanvas: false,
         });
         
         this._symbol = symbol();
 
-        this._existenceAccessor = d => d.value;
-
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702
-        this.title(d => `${this._conf.keyAccessor(d)},${this._conf.valueAccessor(d)}: ${this.existenceAccessor()(d)}`);
+        this.title(d => `${this._conf.keyAccessor(d)},${this._conf.valueAccessor(d)}: ${this._conf.existenceAccessor(d)}`);
 
-        this._highlightedSize = 7;
-        this._symbolSize = 5;
-        this._excludedSize = 3;
-        this._excludedColor = null;
-        this._excludedOpacity = 1.0;
-        this._emptySize = 0;
-        this._emptyOpacity = 0;
-        this._nonemptyOpacity = 1;
-        this._emptyColor = null;
         this._filtered = [];
         this._canvas = null;
         this._context = null;
-        this._useCanvas = false;
 
 
         // Use a 2 dimensional brush
@@ -93,24 +84,28 @@ export class ScatterPlot extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
+    public configure(conf: IScatterPlotConf) {
+        super.configure(conf);
+    }
+
     // Calculates element radius for canvas plot to be comparable to D3 area based symbol sizes
     private _canvasElementSize (d, isFiltered): number {
-        if (!this._existenceAccessor(d)) {
-            return this._emptySize / Math.sqrt(Math.PI);
+        if (!this._conf.existenceAccessor(d)) {
+            return this._conf.emptySize / Math.sqrt(Math.PI);
         } else if (isFiltered) {
-            return this._symbolSize / Math.sqrt(Math.PI);
+            return this._conf.symbolSize / Math.sqrt(Math.PI);
         } else {
-            return this._excludedSize / Math.sqrt(Math.PI);
+            return this._conf.excludedSize / Math.sqrt(Math.PI);
         }
     }
 
     private _elementSize (d, i): number {
-        if (!this._existenceAccessor(d)) {
-            return Math.pow(this._emptySize, 2);
+        if (!this._conf.existenceAccessor(d)) {
+            return Math.pow(this._conf.emptySize, 2);
         } else if (this._filtered[i]) {
-            return Math.pow(this._symbolSize, 2);
+            return Math.pow(this._conf.symbolSize, 2);
         } else {
-            return Math.pow(this._excludedSize, 2);
+            return Math.pow(this._conf.excludedSize, 2);
         }
     }
 
@@ -138,7 +133,7 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @returns {SVGElement}
      */
     public resetSvg () {
-        if (!this._useCanvas) {
+        if (!this._conf.useCanvas) {
             return super.resetSvg();
         } else {
             super.resetSvg(); // Perform original svgReset inherited from baseMixin
@@ -197,28 +192,6 @@ export class ScatterPlot extends CoordinateGridMixin {
         this._context.scale(devicePixelRatio, devicePixelRatio);
     }
 
-
-    /**
-     * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
-     * canvas backend does not currently support
-     * {@link ScatterPlot#customSymbol customSymbol} or
-     * {@link ScatterPlot#symbol symbol} methods and is limited to always plotting
-     * with filled circles. Symbols are drawn with
-     * {@link ScatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
-     * is used when `useCanvas` is set to `false`.
-     * @param {Boolean} [useCanvas=false]
-     * @return {Boolean|d3.selection}
-     */
-    public useCanvas (): boolean;
-    public useCanvas (useCanvas: boolean): this;
-    public useCanvas (useCanvas?) {
-        if (!arguments.length) {
-            return this._useCanvas;
-        }
-        this._useCanvas = useCanvas;
-        return this;
-    }
-
     /**
      * Set or get canvas element. You should usually only ever use the get method as
      * dc.js will handle canvas element generation.  Provides valid canvas only when
@@ -260,19 +233,19 @@ export class ScatterPlot extends CoordinateGridMixin {
             const isFiltered = !this.filter() || this.filter().isFiltered([d.key[0], d.key[1]]);
             // Calculate opacity for current data point
             let cOpacity: number = 1;
-            if (!this._existenceAccessor(d)) {
-                cOpacity = this._emptyOpacity;
+            if (!this._conf.existenceAccessor(d)) {
+                cOpacity = this._conf.emptyOpacity;
             } else if (isFiltered) {
-                cOpacity = this._nonemptyOpacity;
+                cOpacity = this._conf.nonemptyOpacity;
             } else {
-                cOpacity = this.excludedOpacity();
+                cOpacity = this._conf.excludedOpacity;
             }
             // Calculate color for current data point
             let cColor: string = null;
-            if (this._emptyColor && !this._existenceAccessor(d)) {
-                cColor = this._emptyColor;
-            } else if (this.excludedColor() && !isFiltered) {
-                cColor = this.excludedColor();
+            if (this._conf.emptyColor && !this._conf.existenceAccessor(d)) {
+                cColor = this._conf.emptyColor;
+            } else if (this._conf.excludedColor && !isFiltered) {
+                cColor = this._conf.excludedColor;
             } else {
                 cColor = this.getColor(d);
             }
@@ -288,7 +261,7 @@ export class ScatterPlot extends CoordinateGridMixin {
                     cOpacity = fadeOutOpacity;
                 }
                 if (isHighlighted) { // Set size for highlighted color data points
-                    cSize = this._highlightedSize / Math.sqrt(Math.PI);
+                    cSize = this._conf.highlightedSize / Math.sqrt(Math.PI);
                 }
             }
 
@@ -331,19 +304,19 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('opacity', (d, i) => {
-                if (!this._existenceAccessor(d)) {
-                    return this._emptyOpacity;
+                if (!this._conf.existenceAccessor(d)) {
+                    return this._conf.emptyOpacity;
                 } else if (this._filtered[i]) {
-                    return this._nonemptyOpacity;
+                    return this._conf.nonemptyOpacity;
                 } else {
-                    return this.excludedOpacity();
+                    return this._conf.excludedOpacity;
                 }
             })
             .attr('fill', (d, i) => {
-                if (this._emptyColor && !this._existenceAccessor(d)) {
-                    return this._emptyColor;
-                } else if (this.excludedColor() && !this._filtered[i]) {
-                    return this.excludedColor();
+                if (this._conf.emptyColor && !this._conf.existenceAccessor(d)) {
+                    return this._conf.emptyColor;
+                } else if (this._conf.excludedColor && !this._filtered[i]) {
+                    return this._conf.excludedColor;
                 } else {
                     return this.getColor(d);
                 }
@@ -353,7 +326,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     public plotData (): void {
-        if (this._useCanvas) {
+        if (this._conf.useCanvas) {
             this._plotOnCanvas();
         } else {
             this._plotOnSVG();
@@ -365,30 +338,6 @@ export class ScatterPlot extends CoordinateGridMixin {
             _symbol.selectAll('title').remove();
             _symbol.append('title').text(d => this.title()(d));
         }
-    }
-
-    /**
-     * Get or set the existence accessor.  If a point exists, it is drawn with
-     * {@link ScatterPlot#symbolSize symbolSize} radius and
-     * opacity 1; if it does not exist, it is drawn with
-     * {@link ScatterPlot#emptySize emptySize} radius and opacity 0. By default,
-     * the existence accessor checks if the reduced value is truthy.
-     * @see {@link ScatterPlot#symbolSize symbolSize}
-     * @see {@link ScatterPlot#emptySize emptySize}
-     * @example
-     * // default accessor
-     * chart.existenceAccessor(function (d) { return d.value; });
-     * @param {Function} [accessor]
-     * @returns {Function|ScatterPlot}
-     */
-    public existenceAccessor (): BaseAccessor<any>;
-    public existenceAccessor (accessor: BaseAccessor<any>): this;
-    public existenceAccessor (accessor?) {
-        if (!arguments.length) {
-            return this._existenceAccessor;
-        }
-        this._existenceAccessor = accessor;
-        return this;
     }
 
     /**
@@ -435,170 +384,16 @@ export class ScatterPlot extends CoordinateGridMixin {
         return this;
     }
 
-    /**
-     * Set or get radius for symbols.
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [symbolSize=3]
-     * @returns {Number|ScatterPlot}
-     */
-    public symbolSize (): number;
-    public symbolSize (symbolSize: number): this;
-    public symbolSize (symbolSize?) {
-        if (!arguments.length) {
-            return this._symbolSize;
-        }
-        this._symbolSize = symbolSize;
-        return this;
-    }
-
-    /**
-     * Set or get radius for highlighted symbols.
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [highlightedSize=5]
-     * @returns {Number|ScatterPlot}
-     */
-    public highlightedSize (): number;
-    public highlightedSize (highlightedSize: number): this;
-    public highlightedSize (highlightedSize?) {
-        if (!arguments.length) {
-            return this._highlightedSize;
-        }
-        this._highlightedSize = highlightedSize;
-        return this;
-    }
-
-    /**
-     * Set or get size for symbols excluded from this chart's filter. If null, no
-     * special size is applied for symbols based on their filter status.
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [excludedSize=null]
-     * @returns {Number|ScatterPlot}
-     */
-    public excludedSize (): number;
-    public excludedSize (excludedSize: number): this;
-    public excludedSize (excludedSize?) {
-        if (!arguments.length) {
-            return this._excludedSize;
-        }
-        this._excludedSize = excludedSize;
-        return this;
-    }
-
-    /**
-     * Set or get color for symbols excluded from this chart's filter. If null, no
-     * special color is applied for symbols based on their filter status.
-     * @param {string} [excludedColor=null]
-     * @returns {string|ScatterPlot}
-     */
-    public excludedColor (): string;
-    public excludedColor (excludedColor: string): this;
-    public excludedColor (excludedColor?) {
-        if (!arguments.length) {
-            return this._excludedColor;
-        }
-        this._excludedColor = excludedColor;
-        return this;
-    }
-
-    /**
-     * Set or get opacity for symbols excluded from this chart's filter.
-     * @param {Number} [excludedOpacity=1.0]
-     * @returns {Number|ScatterPlot}
-     */
-    public excludedOpacity (): number;
-    public excludedOpacity (excludedOpacity: number): this;
-    public excludedOpacity (excludedOpacity?) {
-        if (!arguments.length) {
-            return this._excludedOpacity;
-        }
-        this._excludedOpacity = excludedOpacity;
-        return this;
-    }
-
-    /**
-     * Set or get radius for symbols when the group is empty.
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [emptySize=0]
-     * @returns {Number|ScatterPlot}
-     */
-    public emptySize (): number;
-    public emptySize (emptySize: number): this;
-    public emptySize (emptySize?) {
-        if (!arguments.length) {
-            return this._emptySize;
-        }
-        this._emptySize = emptySize;
-        return this;
-    }
-
-    public hiddenSize (): number;
-    public hiddenSize (emptySize: number): this;
-    public hiddenSize (emptySize?) {
-        if (!arguments.length) {
-            return this.emptySize();
-        }
-        return this.emptySize(emptySize);
-    }
-
-    /**
-     * Set or get color for symbols when the group is empty. If null, just use the
-     * {@link ColorMixin#colors colorMixin.colors} color scale zero value.
-     * @param {String} [emptyColor=null]
-     * @return {String}
-     * @return {ScatterPlot}/
-     */
-    public emptyColor (): string;
-    public emptyColor (emptyColor: string): this;
-    public emptyColor (emptyColor?) {
-        if (!arguments.length) {
-            return this._emptyColor;
-        }
-        this._emptyColor = emptyColor;
-        return this;
-    }
-
-    /**
-     * Set or get opacity for symbols when the group is empty.
-     * @param {Number} [emptyOpacity=0]
-     * @return {Number}
-     * @return {ScatterPlot}
-     */
-    public emptyOpacity (): number;
-    public emptyOpacity (emptyOpacity: number): this;
-    public emptyOpacity (emptyOpacity?) {
-        if (!arguments.length) {
-            return this._emptyOpacity;
-        }
-        this._emptyOpacity = emptyOpacity;
-        return this;
-    }
-
-    /**
-     * Set or get opacity for symbols when the group is not empty.
-     * @param {Number} [nonemptyOpacity=1]
-     * @return {Number}
-     * @return {ScatterPlot}
-     */
-    public nonemptyOpacity (): number;
-    public nonemptyOpacity (nonemptyOpacity: number): this;
-    public nonemptyOpacity (nonemptyOpacity?) {
-        if (!arguments.length) {
-            return this._emptyOpacity;
-        }
-        this._nonemptyOpacity = nonemptyOpacity;
-        return this;
-    }
-
     public legendables (): LegendItem[] {
         // Argument to getColor is ignored by the default color accessor for this chart
         return [{chart: this, name: this._groupName, color: this.getColor(this._groupName)}];
     }
 
     public legendHighlight (d: LegendItem): void {
-        if (this._useCanvas) {
+        if (this._conf.useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
-            this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._highlightedSize);
+            this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._conf.highlightedSize);
             this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
                 return select(this).attr('fill') !== d.color;
             }).classed('fadeout', true);
@@ -606,10 +401,10 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     public legendReset (d: LegendItem): void {
-        if (this._useCanvas) {
+        if (this._conf.useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
-            this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._symbolSize);
+            this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._conf.symbolSize);
             this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
                 return select(this).attr('fill') !== d.color;
             }).classed('fadeout', false);
