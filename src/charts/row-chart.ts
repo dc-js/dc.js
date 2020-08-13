@@ -27,7 +27,6 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     private _g: Selection<SVGGElement, any, any, any>;
     private _labelOffsetX: number;
     private _labelOffsetY: number;
-    private _hasLabelOffsetY: boolean;
     private _dyOffset: string;
     private _titleLabelOffsetX: number;
     private _gap: number;
@@ -65,8 +64,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._g = undefined;
 
         this._labelOffsetX = 10;
-        this._labelOffsetY = 15;
-        this._hasLabelOffsetY = false;
+        this._labelOffsetY = undefined;
         this._dyOffset = '0.35em'; // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
         this._titleLabelOffsetX = 2;
 
@@ -213,7 +211,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         }
 
         // vertically align label in center unless they override the value via property setter
-        if (!this._hasLabelOffsetY) {
+        if (this._labelOffsetY === undefined) {
             this._labelOffsetY = height / 2;
         }
 
@@ -405,7 +403,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     /**
      * Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
-     * @param {Number} [labelOffsety=15]
+     * @param {Number} [labelOffsety]
      * @returns {Number|RowChart}
      */
     public labelOffsetY (): number;
@@ -415,7 +413,6 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             return this._labelOffsetY;
         }
         this._labelOffsetY = labelOffsety;
-        this._hasLabelOffsetY = true;
         return this;
     }
 
