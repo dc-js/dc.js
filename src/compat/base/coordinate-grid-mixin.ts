@@ -115,9 +115,9 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
         public elasticX (elasticX: boolean): this;
         public elasticX (elasticX?) {
             if (!arguments.length) {
-                return this._conf.xElasticity;
+                return this._conf.elasticX;
             }
-            this.configure({xElasticity: elasticX});
+            this.configure({elasticX});
             return this;
         }
 
@@ -151,9 +151,9 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
         public elasticY (elasticY:boolean): this;
         public elasticY (elasticY?) {
             if (!arguments.length) {
-                return this._conf.yElasticity;
+                return this._conf.elasticY;
             }
-            this.configure({yElasticity: elasticY});
+            this.configure({elasticY});
             return this;
         }
 

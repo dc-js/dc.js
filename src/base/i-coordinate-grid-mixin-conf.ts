@@ -12,9 +12,9 @@ export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinC
     readonly renderHorizontalGridLine?: boolean;
     readonly renderVerticalGridLines?: boolean;
     readonly round?: RoundFn;
-    readonly yElasticity?: boolean;
+    readonly elasticY?: boolean;
     readonly yAxisPadding?: number;
-    readonly xElasticity?: boolean;
+    readonly elasticX?: boolean;
     readonly xAxisPaddingUnit?: string | CountableTimeInterval;
     readonly xAxisPadding?: number;
     readonly xUnits?: Units;

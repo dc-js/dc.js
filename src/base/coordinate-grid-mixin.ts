@@ -78,9 +78,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             xUnits: units.integers,
             xAxisPadding: 0,
             xAxisPaddingUnit: timeDay,
-            xElasticity: false,
+            elasticX: false,
             yAxisPadding: 0,
-            yElasticity: false,
+            elasticY: false,
             round: undefined,
             renderHorizontalGridLine: false,
             renderVerticalGridLines: false,
@@ -338,7 +338,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public _prepareXAxis (g: SVGGElementSelection, render: boolean) {
         if (!this.isOrdinal()) {
-            if (this._conf.xElasticity) {
+            if (this._conf.elasticX) {
                 this._x.domain([this.xAxisMin(), this.xAxisMax()]);
             }
         } else { // self._chart.isOrdinal()
@@ -355,7 +355,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 this._x = scaleBand().domain(this._x.domain());
             }
 
-            if (this._conf.xElasticity || this._x.domain().length === 0) {
+            if (this._conf.elasticX || this._x.domain().length === 0) {
                 this._x.domain(this._ordinalXDomain());
             }
         }
@@ -484,7 +484,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public _prepareYAxis (g: SVGGElementSelection) {
-        if (this._y === undefined || this._conf.yElasticity) {
+        if (this._y === undefined || this._conf.elasticY) {
             if (this._y === undefined) {
                 this._y = scaleLinear();
             }
@@ -960,11 +960,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         this.plotData();
 
-        if (this._conf.xElasticity || this._resizing || render) {
+        if (this._conf.elasticX || this._resizing || render) {
             this.renderXAxis(this.g());
         }
 
-        if (this._conf.yElasticity || this._resizing || render) {
+        if (this._conf.elasticY || this._resizing || render) {
             this.renderYAxis();
         }
 

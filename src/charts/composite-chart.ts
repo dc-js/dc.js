@@ -101,7 +101,7 @@ export class CompositeChart extends CoordinateGridMixin {
                 transitionDuration: this._conf.transitionDuration,
                 transitionDelay: this._conf.transitionDelay,
                 renderTitle: this._conf.renderTitle,
-                xElasticity: this._conf.xElasticity,
+                elasticX: this._conf.elasticX,
             });
 
             child.chartGroup(this.chartGroup());
@@ -213,7 +213,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _prepareRightYAxis (ranges) {
-        const needDomain = this.rightY() === undefined || this._conf.yElasticity;
+        const needDomain = this.rightY() === undefined || this._conf.elasticY;
         const needRange = needDomain || this.resizing();
 
         if (this.rightY() === undefined) {
@@ -234,7 +234,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _prepareLeftYAxis (ranges) {
-        const needDomain = this.y() === undefined || this._conf.yElasticity;
+        const needDomain = this.y() === undefined || this._conf.elasticY;
         const needRange = needDomain || this.resizing();
 
         if (this.y() === undefined) {
