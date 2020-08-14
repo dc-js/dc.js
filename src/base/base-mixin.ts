@@ -153,7 +153,8 @@ export class BaseMixin {
         this._width = undefined;
         this._height = undefined;
 
-        this._title = d => `${this._conf.keyAccessor(d)}: ${this._conf.valueAccessor(d)}`; // TODO: move to conf
+        // TODO: StackMixin uses it differently, so, need refactoring before it can be moved to conf
+        this._title = d => `${this._conf.keyAccessor(d)}: ${this._conf.valueAccessor(d)}`;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
