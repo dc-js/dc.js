@@ -36,7 +36,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
      */
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
-        
+
         this.configure({
             // TODO: move following two to Mixin, BubbleOverlay has exactly same setup
             transitionDuration: 750,

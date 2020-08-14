@@ -64,7 +64,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             emptyColor: null,
             useCanvas: false,
         });
-        
+
         this._symbol = symbol();
 
         // this basically just counteracts the setting of its own key/value accessors
@@ -84,7 +84,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IScatterPlotConf) {
+    public configure (conf: IScatterPlotConf) {
         super.configure(conf);
     }
 

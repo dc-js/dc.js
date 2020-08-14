@@ -67,7 +67,7 @@ export class DataTable extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IDataTableConf) {
+    public configure (conf: IDataTableConf) {
         super.configure(conf);
     }
 

@@ -75,7 +75,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                 }
             });
         }
-        
+
         public configure (conf: ICapMixinConf) {
             super.configure(conf);
         }

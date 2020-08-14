@@ -67,7 +67,7 @@ export class NumberDisplay extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: INumberDisplayConf) {
+    public configure (conf: INumberDisplayConf) {
         super.configure(conf);
     }
 

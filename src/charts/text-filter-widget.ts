@@ -62,7 +62,7 @@ export class TextFilterWidget extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: ITextFilterWidgetConf) {
+    public configure (conf: ITextFilterWidgetConf) {
         super.configure(conf);
     }
 

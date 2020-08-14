@@ -73,7 +73,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             minAngleForLabel: DEFAULT_MIN_ANGLE_FOR_LABEL,
             externalLabelRadius: undefined,
         });
-        
+
         this._sliceCssClass = 'pie-slice';
         this._emptyCssClass = 'empty-chart';
         this._computedRadius = undefined;
@@ -87,7 +87,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: ISunburstChartConf) {
+    public configure (conf: ISunburstChartConf) {
         super.configure(conf);
     }
 

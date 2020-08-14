@@ -49,7 +49,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
      */
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
-        
+
         this.configure({
             label: d => this.cappedKeyAccessor(d),
             renderLabel: true,

@@ -77,7 +77,7 @@ export class CompositeChart extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: ICompositeChartConf) {
+    public configure (conf: ICompositeChartConf) {
         super.configure(conf);
     }
 

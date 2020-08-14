@@ -50,7 +50,7 @@ export class SeriesChart extends CompositeChart {
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
     }
 
-    public configure(conf: ISeriesChartConf) {
+    public configure (conf: ISeriesChartConf) {
         super.configure(conf);
 
         // TODO: This is defensive, looking at the code - 'seriesAccessor', 'seriesSort', 'valueSort' do not need it

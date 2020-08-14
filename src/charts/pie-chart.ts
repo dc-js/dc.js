@@ -54,7 +54,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
      */
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
-        
+
         this.configure({
             colorAccessor: d => this.cappedKeyAccessor(d),
             emptyTitle: 'empty',

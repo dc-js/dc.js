@@ -31,7 +31,7 @@ interface MinimalGroupAll {
  */
 export class DataCount extends BaseMixin {
     public _conf: IDataCountConf;
-    
+
     private _crossfilter: CF;
     private _groupAll: MinimalGroupAll;
 
@@ -65,8 +65,8 @@ export class DataCount extends BaseMixin {
 
         this.anchor(parent, chartGroup);
     }
-    
-    public configure(conf: IDataCountConf) {
+
+    public configure (conf: IDataCountConf) {
         super.configure(conf);
     }
 

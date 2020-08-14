@@ -112,7 +112,7 @@ export class BoxPlot extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IBoxPlotConf) {
+    public configure (conf: IBoxPlotConf) {
         super.configure(conf);
     }
 

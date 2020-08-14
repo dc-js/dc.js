@@ -74,7 +74,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IBubbleOverlayConf) {
+    public configure (conf: IBubbleOverlayConf) {
         super.configure(conf);
     }
 

@@ -79,7 +79,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IHeatMapConf) {
+    public configure (conf: IHeatMapConf) {
         super.configure(conf);
     }
 

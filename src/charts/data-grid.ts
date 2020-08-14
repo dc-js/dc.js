@@ -47,13 +47,13 @@ export class DataGrid extends BaseMixin {
             endSlice: undefined,
             htmlSection: d => `<div class='${SECTION_CSS_CLASS}'><h1 class='${LABEL_CSS_CLASS}'>${this._conf.keyAccessor(d)}</h1></div>`,
         });
-        
+
         this._mandatoryAttributes(['dimension', 'section']);
 
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IDataGridConf) {
+    public configure (conf: IDataGridConf) {
         super.configure(conf);
     }
 

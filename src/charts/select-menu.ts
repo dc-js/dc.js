@@ -56,7 +56,7 @@ export class SelectMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: ISelectMenuConf) {
+    public configure (conf: ISelectMenuConf) {
         super.configure(conf);
     }
 

@@ -73,7 +73,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._parent = undefined;
         this._g = undefined;
         this._chartBodyG = undefined;
-        
+
         this.configure({
             xUnits: units.integers,
             xAxisPadding: 0,

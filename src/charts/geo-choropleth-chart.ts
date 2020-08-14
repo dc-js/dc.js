@@ -55,7 +55,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IGeoChoroplethChartConf) {
+    public configure (conf: IGeoChoroplethChartConf) {
         super.configure(conf);
     }
 

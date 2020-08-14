@@ -45,7 +45,7 @@ export class BarChart extends StackMixin {
      */
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
-        
+
         this.configure({
             label: d => printSingleValue(d.y0 + d.y),
             renderLabel: false,
@@ -60,7 +60,7 @@ export class BarChart extends StackMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure(conf: IBarChartConf) {
+    public configure (conf: IBarChartConf) {
         super.configure(conf);
     }
 
