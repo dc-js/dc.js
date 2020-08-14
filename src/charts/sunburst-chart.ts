@@ -41,8 +41,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     private _sliceCssClass: string;
     private _emptyCssClass: string;
     private _emptyTitle: string;
+    private _computedRadius: number;
     private _radius: number;
-    private _givenRadius: number;
     private _innerRadius: number;
     private _ringSizes: RingSizeSpecs;
     private _g: SVGGElementSelection;
@@ -82,10 +82,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this._emptyCssClass = 'empty-chart';
         this._emptyTitle = 'empty';
 
-        this._radius = undefined;
-        this._givenRadius = undefined; // given radius, if any
+        this._computedRadius = undefined;
+        this._radius = undefined; // given radius, if any
         this._innerRadius = 0;
-        this._ringSizes = null;
+        this._ringSizes = this.defaultRingSizes();
 
         this._g = undefined;
         this._cx = undefined;
@@ -114,7 +114,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             const scaleFactor = (ringIndex * (1 / this._relativeRingSizes.length)) /
                   customRelativeRadius;
             const standardRadius = (y - this._rootOffset) /
-                  (1 - this._rootOffset) * (this._radius - this._innerRadius);
+                  (1 - this._rootOffset) * (this._computedRadius - this._innerRadius);
             return this._innerRadius + standardRadius / scaleFactor;
         }
     }
@@ -134,7 +134,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     private _drawChart (): void {
         // set radius from chart size if none given, or if given radius is too large
         const maxRadius: number = min([this.width(), this.height()]) / 2;
-        this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
+        this._computedRadius = this._radius && this._radius < maxRadius ? this._radius : maxRadius;
 
         const arcs: Arc<any, DefaultArcObject> = this._buildArcs();
 
@@ -336,9 +336,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     public radius (radius: number): this;
     public radius (radius?) {
         if (!arguments.length) {
-            return this._givenRadius;
+            return this._radius;
         }
-        this._givenRadius = radius;
+        this._radius = radius;
         return this;
     }
 
@@ -437,7 +437,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      */
     public defaultRingSizes (): RingSizeSpecs {
         return {
-            partitionDy: () => this._radius * this._radius,
+            partitionDy: () => this._computedRadius * this._computedRadius,
             scaleInnerRadius: d => d.data.path && d.data.path.length === 1 ?
                 this._innerRadius :
                 Math.sqrt(d.y0),
@@ -546,9 +546,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     public ringSizes (ringSizes: RingSizeSpecs): this;
     public ringSizes (ringSizes?) {
         if (!arguments.length) {
-            if (!this._ringSizes) {
-                this._ringSizes = this.defaultRingSizes();
-            }
             return this._ringSizes;
         }
         this._ringSizes = ringSizes;
@@ -687,8 +684,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         let centroid;
         if (this._externalLabelRadius) {
             centroid = arc()
-                .outerRadius(this._radius + this._externalLabelRadius)
-                .innerRadius(this._radius + this._externalLabelRadius)
+                .outerRadius(this._computedRadius + this._externalLabelRadius)
+                .innerRadius(this._computedRadius + this._externalLabelRadius)
                 .centroid(d);
         } else {
             centroid = _arc.centroid(d);
