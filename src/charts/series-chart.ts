@@ -3,10 +3,8 @@ import {nest} from 'd3-collection';
 
 import {CompositeChart} from './composite-chart';
 import {LineChart} from './line-chart';
-import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn} from '../core/types';
+import {ChartGroupType, ChartParentType} from '../core/types';
 import {ISeriesChartConf} from './i-series-chart-conf';
-
-export type LineChartFunction = (parent, chartGroup) => LineChart;
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -20,12 +18,7 @@ export type LineChartFunction = (parent, chartGroup) => LineChart;
 export class SeriesChart extends CompositeChart {
     public _conf:ISeriesChartConf;
 
-    private _keySort: CompareFn;
     private _charts: {[key: string]: LineChart};
-    private _chartFunction: LineChartFunction;
-    private _seriesAccessor: BaseAccessor<string>;
-    private _seriesSort: CompareFn;
-    private _valueSort: CompareFn;
 
     /**
      * Create a Series Chart.
@@ -43,23 +36,27 @@ export class SeriesChart extends CompositeChart {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
-        this.configure({
-            shareColors: true
-        });
-
-        this._keySort = (a, b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b));
-
+        // This must precede the call to configure as that trigger _resetChildren which needs _charts to be a hash
         this._charts = {};
-        this._chartFunction = (p, cg) => new LineChart(p, cg);
-        this._seriesAccessor = undefined;
-        this._seriesSort = ascending;
-        this._valueSort = this._keySort;
+
+        this.configure({
+            shareColors: true,
+            chartFunction: (p, cg) => new LineChart(p, cg),
+            seriesAccessor: undefined,
+            seriesSort: ascending,
+            valueSort: (a, b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b)),
+        });
 
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
     }
 
     public configure(conf: ISeriesChartConf) {
         super.configure(conf);
+
+        // TODO: This is defensive, looking at the code - 'seriesAccessor', 'seriesSort', 'valueSort' do not need it
+        if (['chartFunction', 'seriesAccessor', 'seriesSort', 'valueSort'].some(opt => opt in conf)) {
+            this._resetChildren();
+        }
     }
 
     private _compose (subChartArray: LineChart[]): void {
@@ -75,17 +72,17 @@ export class SeriesChart extends CompositeChart {
         let childrenChanged: boolean;
 
         // TODO: nest is deprecated, change as per their instructions
-        const nester = nest().key(this._seriesAccessor);
-        if (this._seriesSort) {
-            nester.sortKeys(this._seriesSort);
+        const nester = nest().key(this._conf.seriesAccessor);
+        if (this._conf.seriesSort) {
+            nester.sortKeys(this._conf.seriesSort);
         }
-        if (this._valueSort) {
-            nester.sortValues(this._valueSort);
+        if (this._conf.valueSort) {
+            nester.sortValues(this._conf.valueSort);
         }
         const nesting = nester.entries(this.data());
         const children =
             nesting.map((sub, i) => {
-                const subChart = this._charts[sub.key] || this._chartFunction(this, this.chartGroup());
+                const subChart = this._charts[sub.key] || this._conf.chartFunction(this, this.chartGroup());
                 if (!this._charts[sub.key]) {
                     childrenChanged = true;
                 }
@@ -127,93 +124,4 @@ export class SeriesChart extends CompositeChart {
         Object.keys(this._charts).map(this._clearChart);
         this._charts = {};
     }
-
-    /**
-     * Get or set the chart function, which generates the child charts.
-     * @example
-     * // put curve on the line charts used for the series
-     * chart.chart(function(c) { return new LineChart(c).curve(d3.curveBasis); })
-     * // do a scatter series chart
-     * chart.chart(anchor => new ScatterPlot(anchor))
-     * @param {Function} [chartFunction= (anchor) =>  new LineChart(anchor)]
-     * @returns {Function|SeriesChart}
-     */
-    public chart (): LineChartFunction;
-    public chart (chartFunction: LineChartFunction): this;
-    public chart (chartFunction?) {
-        if (!arguments.length) {
-            return this._chartFunction;
-        }
-        this._chartFunction = chartFunction;
-        this._resetChildren();
-        return this;
-    }
-
-    /**
-     * **mandatory**
-     *
-     * Get or set accessor function for the displayed series. Given a datum, this function
-     * should return the series that datum belongs to.
-     * @example
-     * // simple series accessor
-     * chart.seriesAccessor(function(d) { return "Expt: " + d.key[0]; })
-     * @param {Function} [accessor]
-     * @returns {Function|SeriesChart}
-     */
-    public seriesAccessor (): BaseAccessor<string>;
-    public seriesAccessor (accessor: BaseAccessor<string>): this;
-    public seriesAccessor (accessor?) {
-        if (!arguments.length) {
-            return this._seriesAccessor;
-        }
-        this._seriesAccessor = accessor;
-        this._resetChildren();
-        return this;
-    }
-
-    /**
-     * Get or set a function to sort the list of series by, given series values.
-     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
-     * @example
-     * chart.seriesSort(d3.descending);
-     * @param {Function} [sortFunction=d3.ascending]
-     * @returns {Function|SeriesChart}
-     */
-    public seriesSort (): CompareFn;
-    public seriesSort (sortFunction: CompareFn): this;
-    public seriesSort (sortFunction?) {
-        if (!arguments.length) {
-            return this._seriesSort;
-        }
-        this._seriesSort = sortFunction;
-        this._resetChildren();
-        return this;
-    }
-
-    /**
-     * Get or set a function to sort each series values by. By default this is the key accessor which,
-     * for example, will ensure a lineChart series connects its points in increasing key/x order,
-     * rather than haphazardly.
-     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#ascending d3.ascending}
-     * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
-     * @example
-     * // Default value sort
-     * _chart.valueSort(function keySort (a, b) {
-     *     return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
-     * });
-     * @param {Function} [sortFunction]
-     * @returns {Function|SeriesChart}
-     */
-    public valueSort (): CompareFn;
-    public valueSort (sortFunction: CompareFn): this;
-    public valueSort (sortFunction?) {
-        if (!arguments.length) {
-            return this._valueSort;
-        }
-        this._valueSort = sortFunction;
-        this._resetChildren();
-        return this;
-    }
-
 }
