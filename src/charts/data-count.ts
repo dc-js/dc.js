@@ -1,7 +1,7 @@
 import {format} from 'd3-format';
 
 import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType, DataCountHTMLOptions, NumberFormatFn} from '../core/types';
+import {ChartGroupType, ChartParentType} from '../core/types';
 import {IDataCountConf} from './i-data-count-conf';
 
 // Keeping these here for now, check if any other charts need same entities

@@ -3,7 +3,7 @@ import {event, select, Selection} from 'd3-selection';
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {uniqueId} from '../core/utils'
-import {ChartGroupType, ChartParentType, CompareFn} from '../core/types';
+import {ChartGroupType, ChartParentType} from '../core/types';
 import {ICboxMenuConf} from './i-cbox-menu-conf';
 import {ascending} from 'd3-array';
 

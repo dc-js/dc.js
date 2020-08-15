@@ -1,6 +1,6 @@
 import {DataTable as DataTableNeo} from '../../charts/data-table';
 import {BaseMixinExt} from '../base/base-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType, DataTableColumnSpec, CompareFn} from '../../core/types';
+import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn, DataTableColumnSpec} from '../../core/types';
 import {logger} from '../core/logger';
 
 // @ts-ignore, remove after group method is moved here

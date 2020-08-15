@@ -1,5 +1,5 @@
 import {schemeCategory10} from 'd3-scale-chromatic';
-import {CountableTimeInterval, timeDay} from 'd3-time';
+import {timeDay} from 'd3-time';
 import {max, min} from 'd3-array';
 import {scaleBand, scaleLinear, scaleOrdinal} from 'd3-scale';
 import {Axis, axisBottom, axisLeft, axisRight} from 'd3-axis';
@@ -16,7 +16,7 @@ import {add, appendOrSelect, arraysEqual, subtract} from '../core/utils';
 import {logger} from '../core/logger';
 import {filters} from '../core/filters';
 import {events} from '../core/events';
-import {DCBrushSelection, MinimalXYScale, RoundFn, SVGGElementSelection, Units} from '../core/types';
+import {DCBrushSelection, MinimalXYScale, SVGGElementSelection} from '../core/types';
 import {ICoordinateGridMixinConf} from './i-coordinate-grid-mixin-conf';
 
 const GRID_LINE_CLASS = 'grid-line';

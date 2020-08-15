@@ -4,7 +4,7 @@ import {scaleLinear} from 'd3-scale';
 import {ColorMixin} from './color-mixin';
 import {transition} from '../core/core';
 import {events} from '../core/events';
-import {Constructor, MinimalRadiusScale, RValueAccessor, SVGGElementSelection} from '../core/types';
+import {Constructor, MinimalRadiusScale, SVGGElementSelection} from '../core/types';
 import {BaseMixin} from './base-mixin';
 import {IBubbleMixinConf} from './i-bubble-mixin-conf';
 

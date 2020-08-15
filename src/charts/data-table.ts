@@ -3,7 +3,7 @@ import {nest} from 'd3-collection';
 import {Selection} from 'd3-selection';
 
 import {BaseMixin} from '../base/base-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn, DataTableColumnSpec} from '../core/types';
+import {ChartGroupType, ChartParentType, DataTableColumnSpec} from '../core/types';
 import {IDataTableConf} from './i-data-table-conf';
 
 const LABEL_CSS_CLASS = 'dc-table-label';

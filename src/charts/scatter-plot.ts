@@ -7,7 +7,7 @@ import {optionalTransition, transition} from '../core/core';
 import {filters} from '../core/filters';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {BaseAccessor, ChartGroupType, ChartParentType, LegendItem} from '../core/types';
+import {ChartGroupType, ChartParentType, LegendItem} from '../core/types';
 import {IScatterPlotConf} from './i-scatter-plot-conf';
 
 export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;

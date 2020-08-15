@@ -12,7 +12,7 @@ import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {BaseAccessor, ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
+import {ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
 import {ISunburstChartConf, RingSizeSpecs} from './i-sunburst-chart-conf';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
