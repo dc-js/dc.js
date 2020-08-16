@@ -18,9 +18,11 @@ module.exports = function (config) {
             'spec/*spec.js'
         ],
         exclude: [],
-        preprocessors: {},
+        preprocessors: {
+            'dist/dc.js': ['coverage']
+        },
         // possible values: 'dots', 'progress'
-        reporters: ['progress', 'summary'],
+        reporters: ['progress', 'summary', 'coverage'],
         summaryReporter: {
             // 'failed', 'skipped' or 'all'
             show: 'failed',
