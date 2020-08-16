@@ -83,6 +83,7 @@
     "karma-summary-reporter": "^1.7.2",
     "load-grunt-tasks": "~4",
     "node-sass": "^4.13.1",
+    "prettier": "2.0.5",
     "reductio": "0.6.x",
     "regression": "^2.0.1",
     "rollup": "^1.32.1",
