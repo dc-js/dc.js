@@ -1,6 +1,6 @@
-import {Selection} from 'd3-selection';
-import {BaseMixin} from '../base/base-mixin';
-import {IChartGroup} from './chart-group-types';
+import { Selection } from 'd3-selection';
+import { BaseMixin } from '../base/base-mixin';
+import { IChartGroup } from './chart-group-types';
 
 export type ChartParentType = string | BaseMixin | Selection<Element, undefined, Element, unknown>;
 
@@ -9,13 +9,13 @@ export type ChartGroupType = string | IChartGroup;
 export type ColorsList = string[];
 
 export interface MinimalCFDimension {
-    filter (value): this;
-    filterExact (value): this;
-    filterRange (value: any[]): this;
-    filterFunction (value: (k) => any): this;
+    filter(value): this;
+    filterExact(value): this;
+    filterRange(value: any[]): this;
+    filterFunction(value: (k) => any): this;
     // filterAll(): this; // unused
-    top (k: number): any[];
-    bottom (k: number): any[];
+    top(k: number): any[];
+    bottom(k: number): any[];
 }
 
 interface CFGrouping {
@@ -49,19 +49,19 @@ export type KeyAccessor = BaseAccessor<any>; // TODO: check if using generics gi
 export type ValueAccessor = BaseAccessor<any>; // TODO: check if using generics gives better type safety
 export type ColorAccessor = BaseAccessor<any>;
 export type RValueAccessor = BaseAccessor<number>;
-export type LabelAccessor = BaseAccessor<string|number>;
-export type TitleAccessor = BaseAccessor<string|number>;
+export type LabelAccessor = BaseAccessor<string | number>;
+export type TitleAccessor = BaseAccessor<string | number>;
 
 // Scales
 
 export interface MinimalScaleWithRange<DomainType, RangeType> {
     (x: DomainType): RangeType;
 
-    domain (): DomainType;
-    domain (newDomain: DomainType): this;
+    domain(): DomainType;
+    domain(newDomain: DomainType): this;
 
-    range (): RangeType[];
-    range (newRange: [RangeType, RangeType]): this;
+    range(): RangeType[];
+    range(newRange: [RangeType, RangeType]): this;
 }
 
 export type MinimalColorScale = MinimalScaleWithRange<any, string>;
@@ -70,25 +70,25 @@ export type MinimalRadiusScale = MinimalScaleWithRange<any, number>;
 
 // Specifically created for scales in Coordinate Grid charts
 export interface MinimalXYScale extends MinimalScaleWithRange<any, number> {
-    rangeRound (range: [number | { valueOf (): number }, number | { valueOf (): number }]): this;
+    rangeRound(range: [number | { valueOf(): number }, number | { valueOf(): number }]): this;
 
-    bandwidth? (): number;
-    paddingInner? (): number;
-    paddingInner? (padding: number): this;
-    paddingOuter? (): number;
-    paddingOuter? (padding: number): this;
+    bandwidth?(): number;
+    paddingInner?(): number;
+    paddingInner?(padding: number): this;
+    paddingOuter?(): number;
+    paddingOuter?(padding: number): this;
 
-    invert? (value: number | { valueOf (): number }): any;
+    invert?(value: number | { valueOf(): number }): any;
 
-    ticks? (count?: number): number[];
+    ticks?(count?: number): number[];
 
-    copy (): this;
+    copy(): this;
 }
 
 // Units, used by Coordinate Grid Charts
 export interface Units {
     // Sometimes it returns an array
-    (start: any, end: any): number|any[];
+    (start: any, end: any): number | any[];
 
     // Used by floating point units
     resolution?: number;
@@ -100,15 +100,15 @@ export type SVGGElementSelection = Selection<SVGGElement, any, SVGGElement, any>
 // Used by Coordinate Grid charts
 
 // TODO: convert to two alternate signatures for Date and number
-export type RoundFn = (inp:Date|number) => Date|number;
+export type RoundFn = (inp: Date | number) => Date | number;
 
 // TODO: handle 2D brush selection as well - as in ScatterPlot
-export type DCBrushSelection = [Date, Date]|[number, number];
+export type DCBrushSelection = [Date, Date] | [number, number];
 
 // Used by BoxPlot
 export type BoxWidthFn = (effectiveWitdh: number, noOfBoxes: number) => number;
 
-export type NumberFormatFn = (n: number | { valueOf (): number }) => string;
+export type NumberFormatFn = (n: number | { valueOf(): number }) => string;
 
 // Legends
 export interface ParentOfLegend {
@@ -118,7 +118,7 @@ export interface ParentOfLegend {
     filters; // function, TODO: signature
     legendables: () => LegendItem[];
 
-    svg (): Selection<SVGElement, any, any, any>;
+    svg(): Selection<SVGElement, any, any, any>;
 }
 
 export interface LegendItem {
@@ -133,7 +133,7 @@ export interface LegendItem {
 export type LegendTextAccessor = (d: LegendItem) => string;
 
 // BubbleOverlay
-export type BubblePoint = { name: string; x: number; y: number; };
+export type BubblePoint = { name: string; x: number; y: number };
 
 // DataCount
 export interface DataCountHTMLOptions {
@@ -142,7 +142,10 @@ export interface DataCountHTMLOptions {
 }
 
 // DataTable
-export type DataTableColumnSpec = ((d) => string) | string | {label: string; format: (d) => string};
+export type DataTableColumnSpec =
+    | ((d) => string)
+    | string
+    | { label: string; format: (d) => string };
 
 // GeoChoroplethChart
 export interface IGeoJson {

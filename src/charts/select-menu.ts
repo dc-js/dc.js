@@ -1,10 +1,10 @@
-import {event, Selection} from 'd3-selection';
+import { event, Selection } from 'd3-selection';
 
-import {events} from '../core/events';
-import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType} from '../core/types';
-import {ascending} from 'd3-array';
-import {ISelectMenuConf} from './i-select-menu-conf';
+import { events } from '../core/events';
+import { BaseMixin } from '../base/base-mixin';
+import { ChartGroupType, ChartParentType } from '../core/types';
+import { ascending } from 'd3-array';
+import { ISelectMenuConf } from './i-select-menu-conf';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -37,7 +37,7 @@ export class SelectMenu extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
      * Interaction with the widget will only trigger events and redraws within its group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -45,8 +45,8 @@ export class SelectMenu extends BaseMixin {
             promptText: 'Select all',
             promptValue: null,
             filterDisplayed: d => this._conf.valueAccessor(d) > 0,
-            order: (a,b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b)),
-            numberVisible: null
+            order: (a, b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b)),
+            numberVisible: null,
         });
 
         this._select = undefined;
@@ -56,7 +56,7 @@ export class SelectMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ISelectMenuConf): this {
+    public configure(conf: ISelectMenuConf): this {
         super.configure(conf);
         return this;
     }
@@ -65,23 +65,28 @@ export class SelectMenu extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender () {
+    public _doRender() {
         this.select('select').remove();
-        this._select = this.root().append('select')
-            .classed(SELECT_CSS_CLASS, true);
+        this._select = this.root().append('select').classed(SELECT_CSS_CLASS, true);
         this._select.append('option').text(this._conf.promptText).attr('value', '');
 
         this._doRedraw();
         return this;
     }
 
-    public _doRedraw () {
+    public _doRedraw() {
         this._setAttributes();
         this._renderOptions();
         // select the option(s) corresponding to current filter(s)
         if (this.hasFilter() && this._conf.multiple) {
-            this._select.selectAll('option')
-                .property('selected', d => typeof d !== 'undefined' && this.filters().indexOf(String(this._conf.keyAccessor(d))) >= 0);
+            this._select
+                .selectAll('option')
+                .property(
+                    'selected',
+                    d =>
+                        typeof d !== 'undefined' &&
+                        this.filters().indexOf(String(this._conf.keyAccessor(d))) >= 0
+                );
         } else if (this.hasFilter()) {
             this._select.property('value', this.filter());
         } else {
@@ -90,13 +95,15 @@ export class SelectMenu extends BaseMixin {
         return this;
     }
 
-    private _renderOptions () {
-        const options = this._select.selectAll<HTMLOptionElement, any>(`option.${OPTION_CSS_CLASS}`)
+    private _renderOptions() {
+        const options = this._select
+            .selectAll<HTMLOptionElement, any>(`option.${OPTION_CSS_CLASS}`)
             .data<any>(this.data(), d => this._conf.keyAccessor(d));
 
         options.exit().remove();
 
-        options.enter()
+        options
+            .enter()
             .append('option')
             .classed(OPTION_CSS_CLASS, true)
             .attr('value', d => this._conf.keyAccessor(d))
@@ -108,13 +115,14 @@ export class SelectMenu extends BaseMixin {
         this._select.on('change', (d, i) => this._onChange(d, i));
     }
 
-    private _onChange (_d, i: number): void {
+    private _onChange(_d, i: number): void {
         let values;
         const target = event.target;
         if (target.selectedOptions) {
             const selectedOptions = Array.prototype.slice.call(target.selectedOptions);
             values = selectedOptions.map(d => d.value);
-        } else { // IE and other browsers do not support selectedOptions
+        } else {
+            // IE and other browsers do not support selectedOptions
             // adapted from this polyfill: https://gist.github.com/brettz9/4212217
             const options = [].slice.call(event.target.options);
             values = options.filter(option => option.selected).map(option => option.value);
@@ -129,7 +137,7 @@ export class SelectMenu extends BaseMixin {
         this.onChange(values);
     }
 
-    public onChange (val): void {
+    public onChange(val): void {
         if (val && this._conf.multiple) {
             this.replaceFilter([val]);
         } else if (val) {
@@ -142,7 +150,7 @@ export class SelectMenu extends BaseMixin {
         });
     }
 
-    private _setAttributes (): void {
+    private _setAttributes(): void {
         if (this._conf.multiple) {
             this._select.attr('multiple', true);
         } else {

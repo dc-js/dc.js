@@ -1,11 +1,17 @@
-import {HeatMap as HeatMapNeo} from '../../charts/heat-map';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn, HeatMapClickHandler} from '../../core/types';
-import {MarginMixinExt} from '../base/margin-mixin';
+import { HeatMap as HeatMapNeo } from '../../charts/heat-map';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import {
+    BaseAccessor,
+    ChartGroupType,
+    ChartParentType,
+    CompareFn,
+    HeatMapClickHandler,
+} from '../../core/types';
+import { MarginMixinExt } from '../base/margin-mixin';
 
 export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNeo))) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -18,13 +24,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Function} [labelFunction=function(d) { return d; }]
      * @returns {Function|HeatMap}
      */
-    public colsLabel (): BaseAccessor<any>;
-    public colsLabel (labelFunction: BaseAccessor<any>): this;
-    public colsLabel (labelFunction?) {
+    public colsLabel(): BaseAccessor<any>;
+    public colsLabel(labelFunction: BaseAccessor<any>): this;
+    public colsLabel(labelFunction?) {
         if (!arguments.length) {
             return this._conf.colsLabel;
         }
-        this.configure({colsLabel: labelFunction});
+        this.configure({ colsLabel: labelFunction });
         return this;
     }
 
@@ -37,13 +43,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Function} [labelFunction=function(d) { return d; }]
      * @returns {Function|HeatMap}
      */
-    public rowsLabel (): BaseAccessor<any>;
-    public rowsLabel (labelFunction: BaseAccessor<any>): this;
-    public rowsLabel (labelFunction?) {
+    public rowsLabel(): BaseAccessor<any>;
+    public rowsLabel(labelFunction: BaseAccessor<any>): this;
+    public rowsLabel(labelFunction?) {
         if (!arguments.length) {
             return this._conf.rowsLabel;
         }
-        this.configure({rowsLabel: labelFunction});
+        this.configure({ rowsLabel: labelFunction });
         return this;
     }
 
@@ -53,13 +59,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Array<String|Number>} [rows]
      * @returns {Array<String|Number>|HeatMap}
      */
-    public rows ();
-    public rows (rows): this;
-    public rows (rows?) {
+    public rows();
+    public rows(rows): this;
+    public rows(rows?) {
         if (!arguments.length) {
             return this._conf.rows;
         }
-        this.configure({rows: rows});
+        this.configure({ rows: rows });
         return this;
     }
 
@@ -69,13 +75,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Function} [rowOrdering]
      * @returns {Function|HeatMap}
      */
-    public rowOrdering (): CompareFn;
-    public rowOrdering (rowOrdering: CompareFn): this;
-    public rowOrdering (rowOrdering?) {
+    public rowOrdering(): CompareFn;
+    public rowOrdering(rowOrdering: CompareFn): this;
+    public rowOrdering(rowOrdering?) {
         if (!arguments.length) {
             return this._conf.rowOrdering;
         }
-        this.configure({rowOrdering: rowOrdering});
+        this.configure({ rowOrdering: rowOrdering });
         return this;
     }
 
@@ -85,13 +91,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Array<String|Number>} [cols]
      * @returns {Array<String|Number>|HeatMap}
      */
-    public cols ();
-    public cols (cols): this;
-    public cols (cols?) {
+    public cols();
+    public cols(cols): this;
+    public cols(cols?) {
         if (!arguments.length) {
             return this._conf.cols;
         }
-        this.configure({cols: cols});
+        this.configure({ cols: cols });
         return this;
     }
 
@@ -101,13 +107,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Function} [colOrdering]
      * @returns {Function|HeatMap}
      */
-    public colOrdering (): CompareFn;
-    public colOrdering (colOrdering: CompareFn): this;
-    public colOrdering (colOrdering?) {
+    public colOrdering(): CompareFn;
+    public colOrdering(colOrdering: CompareFn): this;
+    public colOrdering(colOrdering?) {
         if (!arguments.length) {
             return this._conf.colOrdering;
         }
-        this.configure({colOrdering: colOrdering});
+        this.configure({ colOrdering: colOrdering });
         return this;
     }
 
@@ -126,13 +132,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    public boxOnClick (): HeatMapClickHandler;
-    public boxOnClick (handler: HeatMapClickHandler): this;
-    public boxOnClick (handler?) {
+    public boxOnClick(): HeatMapClickHandler;
+    public boxOnClick(handler: HeatMapClickHandler): this;
+    public boxOnClick(handler?) {
         if (!arguments.length) {
             return this._conf.boxOnClick;
         }
-        this.configure({boxOnClick: handler});
+        this.configure({ boxOnClick: handler });
         return this;
     }
 
@@ -143,13 +149,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    public xAxisOnClick (): HeatMapClickHandler;
-    public xAxisOnClick (handler: HeatMapClickHandler): this;
-    public xAxisOnClick (handler?) {
+    public xAxisOnClick(): HeatMapClickHandler;
+    public xAxisOnClick(handler: HeatMapClickHandler): this;
+    public xAxisOnClick(handler?) {
         if (!arguments.length) {
             return this._conf.xAxisOnClick;
         }
-        this.configure({xAxisOnClick: handler});
+        this.configure({ xAxisOnClick: handler });
         return this;
     }
 
@@ -160,13 +166,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Function} [handler]
      * @returns {Function|HeatMap}
      */
-    public yAxisOnClick (): HeatMapClickHandler;
-    public yAxisOnClick (handler: HeatMapClickHandler): this;
-    public yAxisOnClick (handler?) {
+    public yAxisOnClick(): HeatMapClickHandler;
+    public yAxisOnClick(handler: HeatMapClickHandler): this;
+    public yAxisOnClick(handler?) {
         if (!arguments.length) {
             return this._conf.yAxisOnClick;
         }
-        this.configure({yAxisOnClick: handler});
+        this.configure({ yAxisOnClick: handler });
         return this;
     }
 
@@ -175,13 +181,13 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Number} [xBorderRadius=6.75]
      * @returns {Number|HeatMap}
      */
-    public xBorderRadius (): number;
-    public xBorderRadius (xBorderRadius: number): this;
-    public xBorderRadius (xBorderRadius?) {
+    public xBorderRadius(): number;
+    public xBorderRadius(xBorderRadius: number): this;
+    public xBorderRadius(xBorderRadius?) {
         if (!arguments.length) {
             return this._conf.xBorderRadius;
         }
-        this.configure({xBorderRadius: xBorderRadius});
+        this.configure({ xBorderRadius: xBorderRadius });
         return this;
     }
 
@@ -190,15 +196,16 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @param  {Number} [yBorderRadius=6.75]
      * @returns {Number|HeatMap}
      */
-    public yBorderRadius (): number;
-    public yBorderRadius (yBorderRadius: number): this;
-    public yBorderRadius (yBorderRadius?) {
+    public yBorderRadius(): number;
+    public yBorderRadius(yBorderRadius: number): this;
+    public yBorderRadius(yBorderRadius?) {
         if (!arguments.length) {
             return this._conf.yBorderRadius;
         }
-        this.configure({yBorderRadius: yBorderRadius});
+        this.configure({ yBorderRadius: yBorderRadius });
         return this;
     }
 }
 
-export const heatMap = (parent: ChartParentType, chartGroup: ChartGroupType) => new HeatMap(parent, chartGroup);
+export const heatMap = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new HeatMap(parent, chartGroup);

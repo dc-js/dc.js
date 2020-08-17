@@ -1,11 +1,11 @@
-import {Constructor} from '../../core/types';
-import {BaseMixinExt} from './base-mixin';
-import {StackMixin as StackMixinNeo} from '../../base/stack-mixin';
-import {MarginMixinExt} from './margin-mixin';
-import {ColorMixinExt} from './color-mixin';
-import {CoordinateGridMixinExt} from './coordinate-grid-mixin';
+import { Constructor } from '../../core/types';
+import { BaseMixinExt } from './base-mixin';
+import { StackMixin as StackMixinNeo } from '../../base/stack-mixin';
+import { MarginMixinExt } from './margin-mixin';
+import { ColorMixinExt } from './color-mixin';
+import { CoordinateGridMixinExt } from './coordinate-grid-mixin';
 
-class Intermediate extends CoordinateGridMixinExt(MarginMixinExt(BaseMixinExt(StackMixinNeo))) { }
+class Intermediate extends CoordinateGridMixinExt(MarginMixinExt(BaseMixinExt(StackMixinNeo))) {}
 
 export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
@@ -19,11 +19,11 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * @param {Boolean} [hidableStacks=false]
          * @returns {Boolean|StackMixin}
          */
-        public hidableStacks (hidableStacks) {
+        public hidableStacks(hidableStacks) {
             if (!arguments.length) {
                 return this._conf.hidableStacks;
             }
-            this.configure({hidableStacks: hidableStacks});
+            this.configure({ hidableStacks: hidableStacks });
             return this;
         }
 
@@ -40,16 +40,18 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * @param {Boolean} [evadeDomainFilter=false]
          * @returns {Boolean|StackMixin}
          */
-        public evadeDomainFilter ();
-        public evadeDomainFilter (evadeDomainFilter): this;
-        public evadeDomainFilter (evadeDomainFilter?) {
+        public evadeDomainFilter();
+        public evadeDomainFilter(evadeDomainFilter): this;
+        public evadeDomainFilter(evadeDomainFilter?) {
             if (!arguments.length) {
                 return this._conf.evadeDomainFilter;
             }
-            this.configure({evadeDomainFilter: evadeDomainFilter});
+            this.configure({ evadeDomainFilter: evadeDomainFilter });
             return this;
         }
-    }
+    };
 }
 
-export const StackMixin = StackMixinExt(CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(StackMixinNeo)))));
+export const StackMixin = StackMixinExt(
+    CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(StackMixinNeo))))
+);

@@ -1,10 +1,10 @@
-import {format} from 'd3-format';
-import {easeQuad} from 'd3-ease';
-import {interpolateNumber} from 'd3-interpolate';
+import { format } from 'd3-format';
+import { easeQuad } from 'd3-ease';
+import { interpolateNumber } from 'd3-interpolate';
 
-import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType} from '../core/types';
-import {INumberDisplayConf} from './i-number-display-conf';
+import { BaseMixin } from '../base/base-mixin';
+import { ChartGroupType, ChartParentType } from '../core/types';
+import { INumberDisplayConf } from './i-number-display-conf';
 
 const SPAN_CLASS = 'number-display';
 
@@ -43,17 +43,17 @@ export class NumberDisplay extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
             ordering: kv => kv.value, // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
             transitionDuration: 250, // good default
             transitionDelay: 0,
-            formatNumber: format('.2s')
+            formatNumber: format('.2s'),
         });
 
-        this._html = {one: '', some: '', none: ''};
+        this._html = { one: '', some: '', none: '' };
         this._lastValue = undefined;
 
         // dimension not required
@@ -67,7 +67,7 @@ export class NumberDisplay extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: INumberDisplayConf): this {
+    public configure(conf: INumberDisplayConf): this {
         super.configure(conf);
         return this;
     }
@@ -90,28 +90,28 @@ export class NumberDisplay extends BaseMixin {
      * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
      * @returns {{one:String, some:String, none:String}|NumberDisplay}
      */
-    public html (): HTMLSpec;
-    public html (html): this;
-    public html (html?) {
+    public html(): HTMLSpec;
+    public html(html): this;
+    public html(html?) {
         if (!arguments.length) {
             return this._html;
         }
         if (html.none) {
-            this._html.none = html.none;// if none available
+            this._html.none = html.none; // if none available
         } else if (html.one) {
-            this._html.none = html.one;// if none not available use one
+            this._html.none = html.one; // if none not available use one
         } else if (html.some) {
-            this._html.none = html.some;// if none and one not available use some
+            this._html.none = html.some; // if none and one not available use some
         }
         if (html.one) {
-            this._html.one = html.one;// if one available
+            this._html.one = html.one; // if one available
         } else if (html.some) {
-            this._html.one = html.some;// if one not available use some
+            this._html.one = html.some; // if one not available use some
         }
         if (html.some) {
-            this._html.some = html.some;// if some available
+            this._html.some = html.some; // if some available
         } else if (html.one) {
-            this._html.some = html.one;// if some not available use one
+            this._html.some = html.one; // if some not available use one
         }
         return this;
     }
@@ -120,11 +120,11 @@ export class NumberDisplay extends BaseMixin {
      * Calculate and return the underlying value of the display.
      * @returns {Number}
      */
-    public value (): number {
+    public value(): number {
         return this.data();
     }
 
-    private _maxBin (all) {
+    private _maxBin(all) {
         if (!all.length) {
             return null;
         }
@@ -132,16 +132,12 @@ export class NumberDisplay extends BaseMixin {
         return sorted[sorted.length - 1];
     }
 
-    public _doRender (): this {
+    public _doRender(): this {
         const newValue: number = this.value();
         let span = this.selectAll<HTMLSpanElement, any>(`.${SPAN_CLASS}`);
 
         if (span.empty()) {
-            span = span.data([0])
-                .enter()
-                .append('span')
-                .attr('class', SPAN_CLASS)
-                .merge(span);
+            span = span.data([0]).enter().append('span').attr('class', SPAN_CLASS).merge(span);
         }
 
         {
@@ -161,9 +157,9 @@ export class NumberDisplay extends BaseMixin {
                     return t => {
                         let html = null;
                         const num = chart._conf.formatNumber(interp(t));
-                        if (newValue === 0 && (chart._html.none !== '')) {
+                        if (newValue === 0 && chart._html.none !== '') {
                             html = chart._html.none;
-                        } else if (newValue === 1 && (chart._html.one !== '')) {
+                        } else if (newValue === 1 && chart._html.one !== '') {
                             html = chart._html.one;
                         } else if (chart._html.some !== '') {
                             html = chart._html.some;
@@ -175,7 +171,7 @@ export class NumberDisplay extends BaseMixin {
         return this;
     }
 
-    public _doRedraw (): this {
+    public _doRedraw(): this {
         return this._doRender();
     }
 }

@@ -1,13 +1,13 @@
-import {mouse, Selection} from 'd3-selection';
+import { mouse, Selection } from 'd3-selection';
 
-import {BaseMixin} from '../base/base-mixin';
-import {BubbleMixin} from '../base/bubble-mixin';
-import {transition} from '../core/core';
-import {constants} from '../core/constants';
-import {nameToId} from '../core/utils';
-import {ColorMixin} from '../base/color-mixin';
-import {ChartGroupType, ChartParentType, SVGGElementSelection} from '../core/types';
-import {IBubbleOverlayConf} from './i-bubble-overlay-conf';
+import { BaseMixin } from '../base/base-mixin';
+import { BubbleMixin } from '../base/bubble-mixin';
+import { transition } from '../core/core';
+import { constants } from '../core/constants';
+import { nameToId } from '../core/utils';
+import { ColorMixin } from '../base/color-mixin';
+import { ChartGroupType, ChartParentType, SVGGElementSelection } from '../core/types';
+import { IBubbleOverlayConf } from './i-bubble-overlay-conf';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -43,11 +43,11 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
-            points: []
+            points: [],
         });
 
         /**
@@ -68,13 +68,13 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
             // TODO: move following two to Mixin, BubbleChart has exactly same setup
             transitionDuration: 750,
             transitionDelay: 0,
-            radiusValueAccessor: d => d.value
+            radiusValueAccessor: d => d.value,
         });
 
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IBubbleOverlayConf): this {
+    public configure(conf: IBubbleOverlayConf): this {
         super.configure(conf);
         return this;
     }
@@ -83,7 +83,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this._conf;
     }
 
-    public _doRender (): this {
+    public _doRender(): this {
         this._g = this._initOverlayG();
 
         this.r().range([this.MIN_RADIUS, this.width() * this._conf.maxBubbleRelativeSize]);
@@ -95,7 +95,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _initOverlayG (): Selection<SVGGElement, any, any, any> {
+    public _initOverlayG(): Selection<SVGGElement, any, any, any> {
         this._g = this.select<SVGGElement>(`g.${BUBBLE_OVERLAY_CLASS}`);
         if (this._g.empty()) {
             this._g = this.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
@@ -103,7 +103,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this._g;
     }
 
-    public _initializeBubbles () {
+    public _initializeBubbles() {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
@@ -113,15 +113,18 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
             let circle = nodeG.select(`circle.${BUBBLE_CLASS}`);
 
             if (circle.empty()) {
-                circle = nodeG.append('circle')
+                circle = nodeG
+                    .append('circle')
                     .attr('class', BUBBLE_CLASS)
                     .attr('r', 0)
                     .attr('fill', (d, i) => this.getColor(d, i))
                     .on('click', d => this.onClick(d));
             }
 
-            transition(circle, this._conf.transitionDuration, this._conf.transitionDelay)
-                .attr('r', d => this.bubbleR(d));
+            transition(circle, this._conf.transitionDuration, this._conf.transitionDelay).attr(
+                'r',
+                d => this.bubbleR(d)
+            );
 
             this._doRenderLabel(nodeG);
 
@@ -129,7 +132,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    public _mapData () {
+    public _mapData() {
         const data = {};
         this.data().forEach(datum => {
             data[this._conf.keyAccessor(datum)] = datum;
@@ -137,13 +140,14 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return data;
     }
 
-    public _getNodeG (point: { name: string; x: number; y: number }, data): SVGGElementSelection {
+    public _getNodeG(point: { name: string; x: number; y: number }, data): SVGGElementSelection {
         const bubbleNodeClass = `${BUBBLE_NODE_CLASS} ${nameToId(point.name)}`;
 
         let nodeG: SVGGElementSelection = this._g.select(`g.${nameToId(point.name)}`);
 
         if (nodeG.empty()) {
-            nodeG = this._g.append('g')
+            nodeG = this._g
+                .append('g')
                 .attr('class', bubbleNodeClass)
                 .attr('transform', `translate(${point.x},${point.y})`);
         }
@@ -153,7 +157,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return nodeG;
     }
 
-    public _doRedraw (): this {
+    public _doRedraw(): this {
         this._updateBubbles();
 
         this.fadeDeselectedArea(this.filter());
@@ -161,7 +165,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _updateBubbles (): void {
+    public _updateBubbles(): void {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
@@ -180,19 +184,15 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    public debug (flag: boolean): this {
+    public debug(flag: boolean): this {
         if (flag) {
             let debugG: SVGGElementSelection = this.select(`g.${constants.DEBUG_GROUP_CLASS}`);
 
             if (debugG.empty()) {
-                debugG = this.svg()
-                    .append('g')
-                    .attr('class', constants.DEBUG_GROUP_CLASS);
+                debugG = this.svg().append('g').attr('class', constants.DEBUG_GROUP_CLASS);
             }
 
-            const debugText = debugG.append('text')
-                .attr('x', 10)
-                .attr('y', 20);
+            const debugText = debugG.append('text').attr('x', 10).attr('y', 20);
 
             debugG
                 .append('rect')
@@ -209,5 +209,4 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
 
         return this;
     }
-
 }

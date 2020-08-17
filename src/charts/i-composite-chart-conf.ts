@@ -1,4 +1,4 @@
-import {ICoordinateGridMixinConf} from '../base/i-coordinate-grid-mixin-conf';
+import { ICoordinateGridMixinConf } from '../base/i-coordinate-grid-mixin-conf';
 
 export interface ICompositeChartConf extends ICoordinateGridMixinConf {
     readonly shareTitle?: boolean;

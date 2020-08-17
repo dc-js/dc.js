@@ -1,11 +1,13 @@
-import {timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear} from 'd3-time';
-import {format} from 'd3-format';
+import { timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear } from 'd3-time';
+import { format } from 'd3-format';
 
-import {constants} from './constants';
-import {config} from './config';
+import { constants } from './constants';
+import { config } from './config';
 
 export const pluck2 = function (n, f) {
-    return function (d, i) { return f.call(d, d[n], i); };
+    return function (d, i) {
+        return f.call(d, d[n], i);
+    };
 };
 
 /**
@@ -15,12 +17,12 @@ export const pluck2 = function (n, f) {
  * @param {any} filter
  * @returns {String}
  */
-export function printSingleValue (filter): string {
+export function printSingleValue(filter): string {
     let s: string = `${filter}`;
 
     if (filter instanceof Date) {
         s = config.dateFormat(filter);
-    } else if (typeof (filter) === 'string') {
+    } else if (typeof filter === 'string') {
         s = filter;
     } else if (isFloat(filter)) {
         s = printSingleValue.fformat(filter);
@@ -34,15 +36,15 @@ export function printSingleValue (filter): string {
 printSingleValue.fformat = format('.2f');
 
 // convert 'day' to d3.timeDay and similar
-function _toTimeFunc (t) {
+function _toTimeFunc(t) {
     const mappings = {
-        'second': timeSecond,
-        'minute': timeMinute,
-        'hour': timeHour,
-        'day': timeDay,
-        'week': timeWeek,
-        'month': timeMonth,
-        'year': timeYear
+        second: timeSecond,
+        minute: timeMinute,
+        hour: timeHour,
+        day: timeDay,
+        week: timeWeek,
+        month: timeMonth,
+        year: timeYear,
     };
     return mappings[t];
 }
@@ -68,7 +70,7 @@ function _toTimeFunc (t) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-export function add (l, r, t?) {
+export function add(l, r, t?) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -86,7 +88,7 @@ export function add (l, r, t?) {
         }
         return t.offset(l, r);
     } else if (typeof r === 'string') {
-        const percentage = (+r / 100);
+        const percentage = +r / 100;
         return l > 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l + r;
@@ -114,7 +116,7 @@ export function add (l, r, t?) {
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
  * @returns {Date|Number}
  */
-export function subtract (l, r, t?) {
+export function subtract(l, r, t?) {
     if (typeof r === 'string') {
         r = r.replace('%', '');
     }
@@ -132,7 +134,7 @@ export function subtract (l, r, t?) {
         }
         return t.offset(l, -r);
     } else if (typeof r === 'string') {
-        const percentage = (+r / 100);
+        const percentage = +r / 100;
         return l < 0 ? l * (1 + percentage) : l * (1 - percentage);
     } else {
         return l - r;
@@ -146,7 +148,7 @@ export function subtract (l, r, t?) {
  * @param {any} n
  * @returns {Boolean}
  */
-export function isNumber (n) {
+export function isNumber(n) {
     return n === +n;
 }
 
@@ -157,7 +159,7 @@ export function isNumber (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-export function isFloat (n) {
+export function isFloat(n) {
     // tslint:disable-next-line:no-bitwise
     return n === +n && n !== (n | 0);
 }
@@ -169,7 +171,7 @@ export function isFloat (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-export function isInteger (n) {
+export function isInteger(n) {
     // tslint:disable-next-line:no-bitwise
     return n === +n && n === (n | 0);
 }
@@ -181,7 +183,7 @@ export function isInteger (n) {
  * @param {any} n
  * @returns {Boolean}
  */
-export function isNegligible (n) {
+export function isNegligible(n) {
     return !isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
 }
 
@@ -194,8 +196,8 @@ export function isNegligible (n) {
  * @param {any} max
  * @returns {any}
  */
-export function clamp (val, min, max) {
-    return val < min ? min : (val > max ? max : val);
+export function clamp(val, min, max) {
+    return val < min ? min : val > max ? max : val;
 }
 
 /**
@@ -205,7 +207,7 @@ export function clamp (val, min, max) {
  * @returns {Number}
  */
 let _idCounter = 0;
-export function uniqueId () {
+export function uniqueId() {
     return ++_idCounter;
 }
 
@@ -216,7 +218,7 @@ export function uniqueId () {
  * @param {String} name
  * @returns {String}
  */
-export function nameToId (name) {
+export function nameToId(name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
 }
 
@@ -229,7 +231,7 @@ export function nameToId (name) {
  * @param {String} tag
  * @returns {d3.selection}
  */
-export function appendOrSelect (parent, selector, tag?) {
+export function appendOrSelect(parent, selector, tag?) {
     tag = tag || selector;
     let element = parent.select(selector);
     if (element.empty()) {
@@ -245,7 +247,7 @@ export function appendOrSelect (parent, selector, tag?) {
  * @param {Number|any} n
  * @returns {Number}
  */
-export function safeNumber (n) {
+export function safeNumber(n) {
     return isNumber(+n) ? +n : 0;
 }
 
@@ -257,7 +259,7 @@ export function safeNumber (n) {
  * @param {Array|null} a2
  * @returns {Boolean}
  */
-export function arraysEqual (a1, a2) {
+export function arraysEqual(a1, a2) {
     if (!a1 && !a2) {
         return true;
     }
@@ -266,14 +268,16 @@ export function arraysEqual (a1, a2) {
         return false;
     }
 
-    return a1.length === a2.length &&
+    return (
+        a1.length === a2.length &&
         // If elements are not integers/strings, we hope that it will match because of toString
         // Test cases cover dates as well.
-        a1.every((elem, i) => elem.valueOf() === a2[i].valueOf());
+        a1.every((elem, i) => elem.valueOf() === a2[i].valueOf())
+    );
 }
 
 // ******** Sunburst Chart ********
-export function allChildren (node) {
+export function allChildren(node) {
     let paths = [];
     paths.push(node.path);
     console.log('currentNode', node);
@@ -287,8 +291,8 @@ export function allChildren (node) {
 
 // builds a d3 Hierarchy from a collection
 // TODO: turn this monster method something better.
-export function toHierarchy (list, accessor) {
-    const root = {'key': 'root', 'children': []};
+export function toHierarchy(list, accessor) {
+    const root = { key: 'root', children: [] };
     for (let i = 0; i < list.length; i++) {
         const data = list[i];
         const parts = data.key;
@@ -305,13 +309,13 @@ export function toHierarchy (list, accessor) {
 
                 // If we don't already have a child node for this branch, create it.
                 if (childNode === void 0) {
-                    childNode = {'key': nodeName, 'children': [], 'path': currentPath};
+                    childNode = { key: nodeName, children: [], path: currentPath };
                     children.push(childNode);
                 }
                 currentNode = childNode;
             } else {
                 // Reached the end of the sequence; create a leaf node.
-                childNode = {'key': nodeName, 'value': value, 'data': data, 'path': currentPath};
+                childNode = { key: nodeName, value, data, path: currentPath };
                 children.push(childNode);
             }
         }
@@ -319,7 +323,7 @@ export function toHierarchy (list, accessor) {
     return root;
 }
 
-function _findChild (children, nodeName) {
+function _findChild(children, nodeName) {
     for (let k = 0; k < children.length; k++) {
         if (children[k].key === nodeName) {
             return children[k];
@@ -327,7 +331,7 @@ function _findChild (children, nodeName) {
     }
 }
 
-export function getAncestors (node) {
+export function getAncestors(node) {
     const path = [];
     let current = node;
     while (current.parent) {
@@ -337,7 +341,7 @@ export function getAncestors (node) {
     return path;
 }
 
-export function arraysIdentical (a, b) {
+export function arraysIdentical(a, b) {
     let i = a.length;
     if (i !== b.length) {
         return false;

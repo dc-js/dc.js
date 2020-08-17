@@ -1,11 +1,11 @@
-import {PieChart as PieChartNeo} from '../../charts/pie-chart';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {CapMixinExt} from '../base/cap-mixin';
-import {ChartGroupType, ChartParentType} from '../../core/types';
+import { PieChart as PieChartNeo } from '../../charts/pie-chart';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { CapMixinExt } from '../base/cap-mixin';
+import { ChartGroupType, ChartParentType } from '../../core/types';
 
 export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo))) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -14,13 +14,13 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {String} [title]
      * @returns {String|PieChart}
      */
-    public emptyTitle (): string;
-    public emptyTitle (title: string): this;
-    public emptyTitle (title?) {
+    public emptyTitle(): string;
+    public emptyTitle(title: string): this;
+    public emptyTitle(title?) {
         if (arguments.length === 0) {
             return this._conf.emptyTitle;
         }
-        this.configure({emptyTitle: title});
+        this.configure({ emptyTitle: title });
         return this;
     }
 
@@ -30,7 +30,7 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {Number} [cap]
      * @returns {Number|PieChart}
      */
-    public slicesCap (cap?: number): this|number {
+    public slicesCap(cap?: number): this | number {
         return this.cap(cap);
     }
 
@@ -40,13 +40,13 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {Number} [externalRadiusPadding=0]
      * @returns {Number|PieChart}
      */
-    public externalRadiusPadding (): number;
-    public externalRadiusPadding (externalRadiusPadding: number): this;
-    public externalRadiusPadding (externalRadiusPadding?) {
+    public externalRadiusPadding(): number;
+    public externalRadiusPadding(externalRadiusPadding: number): this;
+    public externalRadiusPadding(externalRadiusPadding?) {
         if (!arguments.length) {
             return this._conf.externalRadiusPadding;
         }
-        this.configure({externalRadiusPadding: externalRadiusPadding});
+        this.configure({ externalRadiusPadding: externalRadiusPadding });
         return this;
     }
 
@@ -56,13 +56,13 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {Number} [innerRadius=0]
      * @returns {Number|PieChart}
      */
-    public innerRadius (): number;
-    public innerRadius (innerRadius: number): this;
-    public innerRadius (innerRadius?) {
+    public innerRadius(): number;
+    public innerRadius(innerRadius: number): this;
+    public innerRadius(innerRadius?) {
         if (!arguments.length) {
             return this._conf.innerRadius;
         }
-        this.configure({innerRadius: innerRadius});
+        this.configure({ innerRadius: innerRadius });
         return this;
     }
 
@@ -72,13 +72,13 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {Number} [radius]
      * @returns {Number|PieChart}
      */
-    public radius (): number;
-    public radius (radius: number): this;
-    public radius (radius?) {
+    public radius(): number;
+    public radius(radius: number): this;
+    public radius(radius?) {
         if (!arguments.length) {
             return this._conf.radius;
         }
-        this.configure({radius: radius});
+        this.configure({ radius: radius });
         return this;
     }
 
@@ -88,13 +88,13 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {Number} [minAngleForLabel=0.5]
      * @returns {Number|PieChart}
      */
-    public minAngleForLabel (): number;
-    public minAngleForLabel (minAngleForLabel: number): this;
-    public minAngleForLabel (minAngleForLabel?) {
+    public minAngleForLabel(): number;
+    public minAngleForLabel(minAngleForLabel: number): this;
+    public minAngleForLabel(minAngleForLabel?) {
         if (!arguments.length) {
             return this._conf.minAngleForLabel;
         }
-        this.configure({minAngleForLabel: minAngleForLabel});
+        this.configure({ minAngleForLabel: minAngleForLabel });
         return this;
     }
 
@@ -105,15 +105,16 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {Number} [externalLabelRadius]
      * @returns {Number|PieChart}
      */
-    public externalLabels (): number;
-    public externalLabels (externalLabelRadius: number): this;
-    public externalLabels (externalLabelRadius?) {
+    public externalLabels(): number;
+    public externalLabels(externalLabelRadius: number): this;
+    public externalLabels(externalLabelRadius?) {
         if (arguments.length === 0) {
             return this._conf.externalLabelRadius;
-        } else if (externalLabelRadius) { // TODO: figure out why there is special handling, do we need it?
-            this.configure({externalLabelRadius: externalLabelRadius});
+        } else if (externalLabelRadius) {
+            // TODO: figure out why there is special handling, do we need it?
+            this.configure({ externalLabelRadius: externalLabelRadius });
         } else {
-            this.configure({externalLabelRadius: undefined});
+            this.configure({ externalLabelRadius: undefined });
         }
 
         return this;
@@ -125,15 +126,16 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * @param {Boolean} [drawPaths]
      * @returns {Boolean|PieChart}
      */
-    public drawPaths (): boolean;
-    public drawPaths (drawPaths: boolean): this;
-    public drawPaths (drawPaths?) {
+    public drawPaths(): boolean;
+    public drawPaths(drawPaths: boolean): this;
+    public drawPaths(drawPaths?) {
         if (arguments.length === 0) {
             return this._conf.drawPaths;
         }
-        this.configure({drawPaths: drawPaths});
+        this.configure({ drawPaths: drawPaths });
         return this;
     }
 }
 
-export const pieChart = (parent: ChartParentType, chartGroup: ChartGroupType) => new PieChart(parent, chartGroup);
+export const pieChart = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new PieChart(parent, chartGroup);

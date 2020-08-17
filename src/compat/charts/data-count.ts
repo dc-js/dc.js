@@ -1,22 +1,24 @@
-import {DataCount as DataCountNeo} from '../../charts/data-count';
-import {logger} from '../../core/logger';
-import {BaseMixinExt} from '../base/base-mixin';
-import {DataCountHTMLOptions, NumberFormatFn} from '../../core/types';
+import { DataCount as DataCountNeo } from '../../charts/data-count';
+import { logger } from '../../core/logger';
+import { BaseMixinExt } from '../base/base-mixin';
+import { DataCountHTMLOptions, NumberFormatFn } from '../../core/types';
 
 export class DataCount extends BaseMixinExt(DataCountNeo) {
-    public dimension ();
-    public dimension (cf): this;
-    public dimension (cf?) {
-        logger.warnOnce('consider using dataCount.crossfilter instead of dataCount.dimension for clarity');
+    public dimension();
+    public dimension(cf): this;
+    public dimension(cf?) {
+        logger.warnOnce(
+            'consider using dataCount.crossfilter instead of dataCount.dimension for clarity'
+        );
         if (!arguments.length) {
             return this.crossfilter();
         }
         return this.crossfilter(cf);
     }
 
-    public group ();
-    public group (groupAll): this;
-    public group (groupAll?) {
+    public group();
+    public group(groupAll): this;
+    public group(groupAll?) {
         logger.warnOnce('consider using dataCount.groupAll instead of dataCount.group for clarity');
         if (!arguments.length) {
             return this.groupAll();
@@ -38,9 +40,9 @@ export class DataCount extends BaseMixinExt(DataCountNeo) {
      * @param {{some:String, all: String}} [options]
      * @returns {{some:String, all: String}|DataCount}
      */
-    public html (): DataCountHTMLOptions;
-    public html (options: DataCountHTMLOptions): this;
-    public html (options?) {
+    public html(): DataCountHTMLOptions;
+    public html(options: DataCountHTMLOptions): this;
+    public html(options?) {
         if (!arguments.length) {
             return this._conf.html;
         }
@@ -61,13 +63,13 @@ export class DataCount extends BaseMixinExt(DataCountNeo) {
      * @param {Function} [formatter=d3.format('.2g')]
      * @returns {Function|DataCount}
      */
-    public formatNumber (): NumberFormatFn;
-    public formatNumber (formatter: NumberFormatFn): this;
-    public formatNumber (formatter?) {
+    public formatNumber(): NumberFormatFn;
+    public formatNumber(formatter: NumberFormatFn): this;
+    public formatNumber(formatter?) {
         if (!arguments.length) {
             return this._conf.formatNumber;
         }
-        this.configure({formatNumber: formatter});
+        this.configure({ formatNumber: formatter });
         return this;
     }
 }

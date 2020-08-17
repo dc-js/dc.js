@@ -1,7 +1,7 @@
-import {constants} from './constants';
-import {config} from './config';
-import {ChartGroup} from './chart-group';
-import {IMinimalChart} from './chart-group-types';
+import { constants } from './constants';
+import { config } from './config';
+import { ChartGroup } from './chart-group';
+import { IMinimalChart } from './chart-group-types';
 
 /**
  * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups
@@ -15,14 +15,14 @@ import {IMinimalChart} from './chart-group-types';
  * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
  */
 class ChartRegistry {
-    private _chartMap: {[group: string]: ChartGroup};
+    private _chartMap: { [group: string]: ChartGroup };
 
-    constructor () {
+    constructor() {
         // chartGroup:string => charts:array
         this._chartMap = {};
     }
 
-    public chartGroup (group?: string): ChartGroup {
+    public chartGroup(group?: string): ChartGroup {
         if (!group) {
             group = constants.DEFAULT_CHART_GROUP;
         }
@@ -39,7 +39,7 @@ class ChartRegistry {
      * @param {Object} chart dc.js chart instance
      * @returns {Boolean}
      */
-    public has (chart: IMinimalChart): boolean {
+    public has(chart: IMinimalChart): boolean {
         for (const chartGroupName in this._chartMap) {
             if (this._chartMap.hasOwnProperty(chartGroupName)) {
                 if (this._chartMap[chartGroupName].has(chart)) {
@@ -54,11 +54,11 @@ class ChartRegistry {
      * @param {String} group Group name
      * @return {undefined}
      */
-    public clear (group?: string): void {
+    public clear(group?: string): void {
         if (group) {
             if (this._chartMap[group]) {
                 this._chartMap[group].clear();
-                delete (this._chartMap)[group];
+                delete this._chartMap[group];
             }
         } else {
             for (const chartGroupName in this._chartMap) {
@@ -76,7 +76,7 @@ class ChartRegistry {
      * @param {String} [group] Group name
      * @returns {Array<Object>}
      */
-    public list (group?: string): IMinimalChart[] {
+    public list(group?: string): IMinimalChart[] {
         return this.chartGroup(group).list();
     }
 }
@@ -95,7 +95,7 @@ export const chartRegistry = new ChartRegistry();
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function registerChart (chart: IMinimalChart, group?: string): void {
+export function registerChart(chart: IMinimalChart, group?: string): void {
     chartRegistry.chartGroup(group).register(chart);
 }
 
@@ -107,7 +107,7 @@ export function registerChart (chart: IMinimalChart, group?: string): void {
  * @param {String} [group] Group name
  * @return {undefined}
  */
-export function deregisterChart (chart: IMinimalChart, group?: string): void {
+export function deregisterChart(chart: IMinimalChart, group?: string): void {
     chartRegistry.chartGroup(group).deregister(chart);
 }
 
@@ -117,7 +117,7 @@ export function deregisterChart (chart: IMinimalChart, group?: string): void {
  * @param {Object} chart dc.js chart instance
  * @returns {Boolean}
  */
-export function hasChart (chart: IMinimalChart): boolean {
+export function hasChart(chart: IMinimalChart): boolean {
     return chartRegistry.has(chart);
 }
 
@@ -127,7 +127,7 @@ export function hasChart (chart: IMinimalChart): boolean {
  * @param {String} group Group name
  * @return {undefined}
  */
-export function deregisterAllCharts (group?) {
+export function deregisterAllCharts(group?) {
     chartRegistry.clear(group);
 }
 
@@ -138,7 +138,7 @@ export function deregisterAllCharts (group?) {
  * @param {String} [group]
  * @return {undefined}
  */
-export function filterAll (group?: string): void {
+export function filterAll(group?: string): void {
     chartRegistry.chartGroup(group).filterAll();
 }
 
@@ -149,7 +149,7 @@ export function filterAll (group?: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function refocusAll (group?: string): void {
+export function refocusAll(group?: string): void {
     chartRegistry.chartGroup(group).refocusAll();
 }
 
@@ -160,7 +160,7 @@ export function refocusAll (group?: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function renderAll (group?: string): void {
+export function renderAll(group?: string): void {
     chartRegistry.chartGroup(group).renderAll();
 
     if (config._renderlet !== null) {
@@ -177,7 +177,7 @@ export function renderAll (group?: string): void {
  * @param {String} [group]
  * @return {undefined}
  */
-export function redrawAll (group?: string): void {
+export function redrawAll(group?: string): void {
     chartRegistry.chartGroup(group).redrawAll();
 
     if (config._renderlet !== null) {

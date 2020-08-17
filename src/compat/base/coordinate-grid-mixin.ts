@@ -1,12 +1,12 @@
-import {Constructor, RoundFn, Units} from '../../core/types';
-import {BaseMixinExt} from './base-mixin';
-import {CoordinateGridMixin as CoordinateGridMixinNeo} from '../../base/coordinate-grid-mixin';
-import {MarginMixinExt} from './margin-mixin';
-import {ColorMixinExt} from './color-mixin';
-import {CountableTimeInterval} from 'd3-time';
-import {logger} from '../core/logger';
+import { Constructor, RoundFn, Units } from '../../core/types';
+import { BaseMixinExt } from './base-mixin';
+import { CoordinateGridMixin as CoordinateGridMixinNeo } from '../../base/coordinate-grid-mixin';
+import { MarginMixinExt } from './margin-mixin';
+import { ColorMixinExt } from './color-mixin';
+import { CountableTimeInterval } from 'd3-time';
+import { logger } from '../core/logger';
 
-class Intermediate extends MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)) { }
+class Intermediate extends MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)) {}
 
 export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
@@ -51,13 +51,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Function} [xUnits=units.integers]
          * @returns {Function|CoordinateGridMixin}
          */
-        public xUnits (): Units;
-        public xUnits (xUnits: Units): this;
-        public xUnits (xUnits?) {
+        public xUnits(): Units;
+        public xUnits(xUnits: Units): this;
+        public xUnits(xUnits?) {
             if (!arguments.length) {
                 return this._conf.xUnits;
             }
-            this.configure({xUnits: xUnits});
+            this.configure({ xUnits: xUnits });
             return this;
         }
 
@@ -72,13 +72,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Number|String} [padding=0]
          * @returns {Number|String|CoordinateGridMixin}
          */
-        public xAxisPadding (): number;
-        public xAxisPadding (padding: number): this;
-        public xAxisPadding (padding?) {
+        public xAxisPadding(): number;
+        public xAxisPadding(padding: number): this;
+        public xAxisPadding(padding?) {
             if (!arguments.length) {
                 return this._conf.xAxisPadding;
             }
-            this.configure({xAxisPadding: padding});
+            this.configure({ xAxisPadding: padding });
             return this;
         }
 
@@ -95,13 +95,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {String} [unit=d3.timeDay]
          * @returns {String|CoordinateGridMixin}
          */
-        public xAxisPaddingUnit (): string|CountableTimeInterval;
-        public xAxisPaddingUnit (unit: string|CountableTimeInterval): this;
-        public xAxisPaddingUnit (unit?) {
+        public xAxisPaddingUnit(): string | CountableTimeInterval;
+        public xAxisPaddingUnit(unit: string | CountableTimeInterval): this;
+        public xAxisPaddingUnit(unit?) {
             if (!arguments.length) {
                 return this._conf.xAxisPaddingUnit;
             }
-            this.configure({xAxisPaddingUnit: unit});
+            this.configure({ xAxisPaddingUnit: unit });
             return this;
         }
 
@@ -111,13 +111,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Boolean} [elasticX=false]
          * @returns {Boolean|CoordinateGridMixin}
          */
-        public elasticX (): boolean;
-        public elasticX (elasticX: boolean): this;
-        public elasticX (elasticX?) {
+        public elasticX(): boolean;
+        public elasticX(elasticX: boolean): this;
+        public elasticX(elasticX?) {
             if (!arguments.length) {
                 return this._conf.elasticX;
             }
-            this.configure({elasticX});
+            this.configure({ elasticX });
             return this;
         }
 
@@ -131,13 +131,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Number|String} [padding=0]
          * @returns {Number|CoordinateGridMixin}
          */
-        public yAxisPadding (): number;
-        public yAxisPadding (padding: number): this;
-        public yAxisPadding (padding?) {
+        public yAxisPadding(): number;
+        public yAxisPadding(padding: number): this;
+        public yAxisPadding(padding?) {
             if (!arguments.length) {
                 return this._conf.yAxisPadding;
             }
-            this.configure({yAxisPadding: padding});
+            this.configure({ yAxisPadding: padding });
             return this;
         }
 
@@ -147,13 +147,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Boolean} [elasticY=false]
          * @returns {Boolean|CoordinateGridMixin}
          */
-        public elasticY (): boolean;
-        public elasticY (elasticY:boolean): this;
-        public elasticY (elasticY?) {
+        public elasticY(): boolean;
+        public elasticY(elasticY: boolean): this;
+        public elasticY(elasticY?) {
             if (!arguments.length) {
                 return this._conf.elasticY;
             }
-            this.configure({elasticY});
+            this.configure({ elasticY });
             return this;
         }
 
@@ -166,13 +166,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Function} [round]
          * @returns {Function|CoordinateGridMixin}
          */
-        public round (): RoundFn;
-        public round (round: RoundFn): this;
-        public round (round?) {
+        public round(): RoundFn;
+        public round(round: RoundFn): this;
+        public round(round?) {
             if (!arguments.length) {
                 return this._conf.round;
             }
-            this.configure({round: round});
+            this.configure({ round: round });
             return this;
         }
 
@@ -181,13 +181,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Boolean} [renderHorizontalGridLines=false]
          * @returns {Boolean|CoordinateGridMixin}
          */
-        public renderHorizontalGridLines (): boolean;
-        public renderHorizontalGridLines (renderHorizontalGridLines: boolean): this;
-        public renderHorizontalGridLines (renderHorizontalGridLines?) {
+        public renderHorizontalGridLines(): boolean;
+        public renderHorizontalGridLines(renderHorizontalGridLines: boolean): this;
+        public renderHorizontalGridLines(renderHorizontalGridLines?) {
             if (!arguments.length) {
                 return this._conf.renderHorizontalGridLine;
             }
-            this.configure({renderHorizontalGridLine: renderHorizontalGridLines});
+            this.configure({ renderHorizontalGridLine: renderHorizontalGridLines });
             return this;
         }
 
@@ -196,13 +196,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Boolean} [renderVerticalGridLines=false]
          * @returns {Boolean|CoordinateGridMixin}
          */
-        public renderVerticalGridLines (): boolean;
-        public renderVerticalGridLines (renderVerticalGridLines: boolean): this;
-        public renderVerticalGridLines (renderVerticalGridLines?) {
+        public renderVerticalGridLines(): boolean;
+        public renderVerticalGridLines(renderVerticalGridLines: boolean): this;
+        public renderVerticalGridLines(renderVerticalGridLines?) {
             if (!arguments.length) {
                 return this._conf.renderVerticalGridLines;
             }
-            this.configure({renderVerticalGridLines: renderVerticalGridLines});
+            this.configure({ renderVerticalGridLines: renderVerticalGridLines });
             return this;
         }
 
@@ -211,13 +211,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          *
          * @returns {Array<Number>|CoordinateGridMixin}
          */
-        public zoomScale (): [number, number];
-        public zoomScale (extent: [number, number]): this;
-        public zoomScale (extent?) {
+        public zoomScale(): [number, number];
+        public zoomScale(extent: [number, number]): this;
+        public zoomScale(extent?) {
             if (!arguments.length) {
                 return this._conf.zoomScale;
             }
-            this.configure({zoomScale: extent});
+            this.configure({ zoomScale: extent });
             return this;
         }
 
@@ -226,13 +226,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Boolean} [zoomOutRestrict=true]
          * @returns {Boolean|CoordinateGridMixin}
          */
-        public zoomOutRestrict (): boolean;
-        public zoomOutRestrict (zoomOutRestrict: boolean): this;
-        public zoomOutRestrict (zoomOutRestrict?) {
+        public zoomOutRestrict(): boolean;
+        public zoomOutRestrict(zoomOutRestrict: boolean): this;
+        public zoomOutRestrict(zoomOutRestrict?) {
             if (!arguments.length) {
                 return this._conf.zoomOutRestrict;
             }
-            this.configure({zoomOutRestrict: zoomOutRestrict});
+            this.configure({ zoomOutRestrict: zoomOutRestrict });
             return this;
         }
 
@@ -243,13 +243,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Boolean} [mouseZoomable=false]
          * @returns {Boolean|CoordinateGridMixin}
          */
-        public mouseZoomable (): boolean;
-        public mouseZoomable (mouseZoomable: boolean): this;
-        public mouseZoomable (mouseZoomable?) {
+        public mouseZoomable(): boolean;
+        public mouseZoomable(mouseZoomable: boolean): this;
+        public mouseZoomable(mouseZoomable?) {
             if (!arguments.length) {
                 return this._conf.mouseZoomable;
             }
-            this.configure({mouseZoomable: mouseZoomable});
+            this.configure({ mouseZoomable: mouseZoomable });
             return this;
         }
 
@@ -260,13 +260,13 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Number} [padding=5]
          * @returns {Number|CoordinateGridMixin}
          */
-        public clipPadding (): number;
-        public clipPadding (padding: number): this;
-        public clipPadding (padding?) {
+        public clipPadding(): number;
+        public clipPadding(padding: number): this;
+        public clipPadding(padding?) {
             if (!arguments.length) {
                 return this._conf.clipPadding;
             }
-            this.configure({clipPadding: padding});
+            this.configure({ clipPadding: padding });
             return this;
         }
 
@@ -277,9 +277,9 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * @param {Boolean} [useRightYAxis=false]
          * @returns {Boolean|CoordinateGridMixin}
          */
-        public useRightYAxis (): boolean;
-        public useRightYAxis (useRightYAxis: boolean): this;
-        public useRightYAxis (useRightYAxis?) {
+        public useRightYAxis(): boolean;
+        public useRightYAxis(useRightYAxis: boolean): this;
+        public useRightYAxis(useRightYAxis?) {
             if (!arguments.length) {
                 return this._conf.useRightYAxis;
             }
@@ -287,15 +287,19 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             // We need to warn if value is changing after self._yAxis was created
             // @ts-ignore, _yAxis is private in CoordinateGridMixin
             if (this._conf.useRightYAxis !== useRightYAxis && this._yAxis) {
-                logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
-                    'You might get unexpected yAxis behavior. ' +
-                    'Make calls to useRightYAxis sooner in your chart creation process.');
+                logger.warn(
+                    'Value of useRightYAxis has been altered, after yAxis was created. ' +
+                        'You might get unexpected yAxis behavior. ' +
+                        'Make calls to useRightYAxis sooner in your chart creation process.'
+                );
             }
 
-            this.configure({useRightYAxis: useRightYAxis});
+            this.configure({ useRightYAxis: useRightYAxis });
             return this;
         }
-    }
+    };
 }
 
-export const CoordinateGridMixin = CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo))));
+export const CoordinateGridMixin = CoordinateGridMixinExt(
+    ColorMixinExt(MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)))
+);

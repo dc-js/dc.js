@@ -1,9 +1,9 @@
-import {CboxMenu as CboxMenuNeo} from '../../charts/cbox-menu';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType, CompareFn} from '../../core/types';
+import { CboxMenu as CboxMenuNeo } from '../../charts/cbox-menu';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ChartGroupType, ChartParentType, CompareFn } from '../../core/types';
 
 export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -19,13 +19,13 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
      */
-    public order (): CompareFn;
-    public order (order: CompareFn): this;
-    public order (order?) {
+    public order(): CompareFn;
+    public order(order: CompareFn): this;
+    public order(order?) {
         if (!arguments.length) {
             return this._conf.order;
         }
-        this.configure({order: order});
+        this.configure({ order: order });
         return this;
     }
 
@@ -36,13 +36,13 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
      * @example
      * chart.promptText('All states');
      */
-    public promptText (): string;
-    public promptText (promptText: string): this;
-    public promptText (promptText?) {
+    public promptText(): string;
+    public promptText(promptText: string): this;
+    public promptText(promptText?) {
         if (!arguments.length) {
             return this._conf.promptText;
         }
-        this.configure({promptText: promptText});
+        this.configure({ promptText: promptText });
         return this;
     }
 
@@ -57,13 +57,13 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
      *     return true;
      * });
      */
-    public filterDisplayed (): (d) => boolean;
-    public filterDisplayed (filterDisplayed: (d) => boolean): this;
-    public filterDisplayed (filterDisplayed?) {
+    public filterDisplayed(): (d) => boolean;
+    public filterDisplayed(filterDisplayed: (d) => boolean): this;
+    public filterDisplayed(filterDisplayed?) {
         if (!arguments.length) {
             return this._conf.filterDisplayed;
         }
-        this.configure({filterDisplayed: filterDisplayed});
+        this.configure({ filterDisplayed: filterDisplayed });
         return this;
     }
 
@@ -75,13 +75,13 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
      * @example
      * chart.multiple(true);
      */
-    public multiple (): boolean;
-    public multiple (multiple: boolean): this;
-    public multiple (multiple?) {
+    public multiple(): boolean;
+    public multiple(multiple: boolean): this;
+    public multiple(multiple?) {
         if (!arguments.length) {
             return this._conf.multiple;
         }
-        this.configure({multiple: multiple});
+        this.configure({ multiple: multiple });
         return this;
     }
 
@@ -93,16 +93,17 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
      * @param {?*} [promptValue=null]
      * @returns {*|CboxMenu}
      */
-    public promptValue ();
-    public promptValue (promptValue): this;
-    public promptValue (promptValue?) {
+    public promptValue();
+    public promptValue(promptValue): this;
+    public promptValue(promptValue?) {
         if (!arguments.length) {
             return this._conf.promptValue;
         }
-        this.configure({promptValue: promptValue});
+        this.configure({ promptValue: promptValue });
 
         return this;
     }
 }
 
-export const cboxMenu = (parent: ChartParentType, chartGroup: ChartGroupType) => new CboxMenu(parent, chartGroup);
+export const cboxMenu = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new CboxMenu(parent, chartGroup);

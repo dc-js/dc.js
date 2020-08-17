@@ -1,16 +1,16 @@
-import {format} from 'd3-format';
+import { format } from 'd3-format';
 
-import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType} from '../core/types';
-import {IDataCountConf} from './i-data-count-conf';
+import { BaseMixin } from '../base/base-mixin';
+import { ChartGroupType, ChartParentType } from '../core/types';
+import { IDataCountConf } from './i-data-count-conf';
 
 // Keeping these here for now, check if any other charts need same entities
 interface CF {
-    size (): number;
+    size(): number;
 }
 
 interface MinimalGroupAll {
-    value (): number;
+    value(): number;
 }
 
 /**
@@ -50,12 +50,12 @@ export class DataCount extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
             formatNumber: format(',d'),
-            html: {some: '', all: ''}
+            html: { some: '', all: '' },
         });
 
         this._crossfilter = null;
@@ -66,7 +66,7 @@ export class DataCount extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IDataCountConf): this {
+    public configure(conf: IDataCountConf): this {
         super.configure(conf);
         return this;
     }
@@ -75,16 +75,20 @@ export class DataCount extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender () {
+    public _doRender() {
         const tot: number = this.crossfilter().size();
         const val: number = this.groupAll().value();
         const all: string = this._conf.formatNumber(tot);
         const selected: string = this._conf.formatNumber(val);
 
-        if ((tot === val) && (this._conf.html.all !== '')) {
-            this.root().html(this._conf.html.all.replace('%total-count', all).replace('%filter-count', selected));
+        if (tot === val && this._conf.html.all !== '') {
+            this.root().html(
+                this._conf.html.all.replace('%total-count', all).replace('%filter-count', selected)
+            );
         } else if (this._conf.html.some !== '') {
-            this.root().html(this._conf.html.some.replace('%total-count', all).replace('%filter-count', selected));
+            this.root().html(
+                this._conf.html.some.replace('%total-count', all).replace('%filter-count', selected)
+            );
         } else {
             this.selectAll('.total-count').text(all);
             this.selectAll('.filter-count').text(selected);
@@ -92,13 +96,13 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    public _doRedraw () {
+    public _doRedraw() {
         return this._doRender();
     }
 
-    public crossfilter (): CF;
-    public crossfilter (cf: CF): this;
-    public crossfilter (cf?) {
+    public crossfilter(): CF;
+    public crossfilter(cf: CF): this;
+    public crossfilter(cf?) {
         if (!arguments.length) {
             return this._crossfilter;
         }
@@ -106,9 +110,9 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    public groupAll ():MinimalGroupAll;
-    public groupAll (groupAll:MinimalGroupAll): this;
-    public groupAll (groupAll?) {
+    public groupAll(): MinimalGroupAll;
+    public groupAll(groupAll: MinimalGroupAll): this;
+    public groupAll(groupAll?) {
         if (!arguments.length) {
             return this._groupAll;
         }

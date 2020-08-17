@@ -1,7 +1,7 @@
-import {sum} from 'd3-array';
-import {Constructor} from '../core/types';
-import {BaseMixin} from './base-mixin';
-import {ICapMixinConf} from './i-cap-mixin-conf';
+import { sum } from 'd3-array';
+import { Constructor } from '../core/types';
+import { BaseMixin } from './base-mixin';
+import { ICapMixinConf } from './i-cap-mixin-conf';
 
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
@@ -16,12 +16,12 @@ import {ICapMixinConf} from './i-cap-mixin-conf';
  * @returns {CapMixin}
  */
 // tslint:disable-next-line:variable-name
-export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
+export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
     // @ts-ignore
     return class extends Base {
         protected _conf: ICapMixinConf;
 
-        constructor (...args: any[]) {
+        constructor(...args: any[]) {
             super();
 
             const defaultOthersGrouper = (topItems, restItems) => {
@@ -29,11 +29,13 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                 const restKeys = restItems.map(this._conf.keyAccessor);
 
                 if (restItemsSum > 0) {
-                    return topItems.concat([{
-                        others: restKeys,
-                        key: this._conf.othersLabel,
-                        value: restItemsSum
-                    }]);
+                    return topItems.concat([
+                        {
+                            others: restKeys,
+                            key: this._conf.othersLabel,
+                            value: restItemsSum,
+                        },
+                    ]);
                 }
                 return topItems;
             };
@@ -43,7 +45,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
                 ordering: kv => -kv.value, // emulate old group.top(N) ordering
                 takeFront: true,
                 othersLabel: 'Others',
-                othersGrouper: defaultOthersGrouper
+                othersGrouper: defaultOthersGrouper,
             });
 
             // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
@@ -76,7 +78,7 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
             });
         }
 
-        public configure (conf: ICapMixinConf):this {
+        public configure(conf: ICapMixinConf): this {
             super.configure(conf);
             return this;
         }
@@ -85,25 +87,25 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
             return this._conf;
         }
 
-        public cappedKeyAccessor (d, i?) {
+        public cappedKeyAccessor(d, i?) {
             if (d.others) {
                 return d.key;
             }
             return this._conf.keyAccessor(d, i);
         }
 
-        public cappedValueAccessor (d, i?) {
+        public cappedValueAccessor(d, i?) {
             if (d.others) {
                 return d.value;
             }
             return this._conf.valueAccessor(d, i);
         }
 
-        public onClick (d, i?) {
+        public onClick(d, i?) {
             if (d.others) {
                 this.filter([d.others]);
             }
             super.onClick(d);
         }
-    }
+    };
 }

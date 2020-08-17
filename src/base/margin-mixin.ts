@@ -1,6 +1,6 @@
-import {BaseMixin} from './base-mixin';
-import {Margins} from '../core/types';
-import {IMarginMixinConf} from './i-margin-mixin-conf';
+import { BaseMixin } from './base-mixin';
+import { Margins } from '../core/types';
+import { IMarginMixinConf } from './i-margin-mixin-conf';
 
 /**
  * Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
@@ -14,13 +14,13 @@ export class MarginMixin extends BaseMixin {
 
     private _margins: Margins;
 
-    constructor () {
+    constructor() {
         super();
 
-        this._margins = {top: 10, right: 50, bottom: 30, left: 30};
+        this._margins = { top: 10, right: 50, bottom: 30, left: 30 };
     }
 
-    public configure (conf: IMarginMixinConf): this {
+    public configure(conf: IMarginMixinConf): this {
         super.configure(conf);
         return this;
     }
@@ -41,9 +41,9 @@ export class MarginMixin extends BaseMixin {
      * @param {{top: Number, right: Number, left: Number, bottom: Number}} [margins={top: 10, right: 50, bottom: 30, left: 30}]
      * @returns {{top: Number, right: Number, left: Number, bottom: Number}|MarginMixin}
      */
-    public margins (): Margins;
-    public margins (margins: Margins): this;
-    public margins (margins?) {
+    public margins(): Margins;
+    public margins(margins: Margins): this;
+    public margins(margins?) {
         if (!arguments.length) {
             return this._margins;
         }
@@ -56,7 +56,7 @@ export class MarginMixin extends BaseMixin {
      *
      * @returns {number}
      */
-    public effectiveWidth (): number {
+    public effectiveWidth(): number {
         return this.width() - this.margins().left - this.margins().right;
     }
 
@@ -65,7 +65,7 @@ export class MarginMixin extends BaseMixin {
      *
      * @returns {number}
      */
-    public effectiveHeight (): number {
+    public effectiveHeight(): number {
         return this.height() - this.margins().top - this.margins().bottom;
     }
 }

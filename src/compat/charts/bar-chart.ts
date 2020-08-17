@@ -1,13 +1,15 @@
-import {BarChart as BarChartNeo} from '../../charts/bar-chart';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {ChartGroupType, ChartParentType} from '../../core/types';
-import {MarginMixinExt} from '../base/margin-mixin';
-import {CoordinateGridMixinExt} from '../base/coordinate-grid-mixin';
-import {StackMixinExt} from '../base/stack-mixin';
+import { BarChart as BarChartNeo } from '../../charts/bar-chart';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { ChartGroupType, ChartParentType } from '../../core/types';
+import { MarginMixinExt } from '../base/margin-mixin';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
+import { StackMixinExt } from '../base/stack-mixin';
 
-export class BarChart extends StackMixinExt(CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt((BarChartNeo)))))) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+export class BarChart extends StackMixinExt(
+    CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(BarChartNeo))))
+) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -16,13 +18,13 @@ export class BarChart extends StackMixinExt(CoordinateGridMixinExt(ColorMixinExt
      * @param {Boolean} [centerBar=false]
      * @returns {Boolean|BarChart}
      */
-    public centerBar (): boolean;
-    public centerBar (centerBar: boolean): this;
-    public centerBar (centerBar?) {
+    public centerBar(): boolean;
+    public centerBar(centerBar: boolean): this;
+    public centerBar(centerBar?) {
         if (!arguments.length) {
             return this._conf.centerBar;
         }
-        this.configure({centerBar: centerBar});
+        this.configure({ centerBar: centerBar });
         return this;
     }
 
@@ -38,15 +40,16 @@ export class BarChart extends StackMixinExt(CoordinateGridMixinExt(ColorMixinExt
      * @param {Boolean} [alwaysUseRounding=false]
      * @returns {Boolean|BarChart}
      */
-    public alwaysUseRounding (): boolean;
-    public alwaysUseRounding (alwaysUseRounding: boolean): this;
-    public alwaysUseRounding (alwaysUseRounding?) {
+    public alwaysUseRounding(): boolean;
+    public alwaysUseRounding(alwaysUseRounding: boolean): this;
+    public alwaysUseRounding(alwaysUseRounding?) {
         if (!arguments.length) {
             return this._conf.alwaysUseRounding;
         }
-        this.configure({alwaysUseRounding: alwaysUseRounding});
+        this.configure({ alwaysUseRounding: alwaysUseRounding });
         return this;
     }
 }
 
-export const barChart = (parent: ChartParentType, chartGroup: ChartGroupType) => new BarChart(parent, chartGroup);
+export const barChart = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new BarChart(parent, chartGroup);

@@ -1,10 +1,10 @@
-import {ascending} from 'd3-array';
-import {nest} from 'd3-collection';
-import {Selection} from 'd3-selection';
+import { ascending } from 'd3-array';
+import { nest } from 'd3-collection';
+import { Selection } from 'd3-selection';
 
-import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType, DataTableColumnSpec} from '../core/types';
-import {IDataTableConf} from './i-data-table-conf';
+import { BaseMixin } from '../base/base-mixin';
+import { ChartGroupType, ChartParentType, DataTableColumnSpec } from '../core/types';
+import { IDataTableConf } from './i-data-table-conf';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
 const ROW_CSS_CLASS = 'dc-table-row';
@@ -48,7 +48,7 @@ export class DataTable extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -67,7 +67,7 @@ export class DataTable extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IDataTableConf): this {
+    public configure(conf: IDataTableConf): this {
         super.configure(conf);
         return this;
     }
@@ -76,7 +76,7 @@ export class DataTable extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender () {
+    public _doRender() {
         this.selectAll('tbody').remove();
 
         this._renderRows(this._renderSections());
@@ -84,28 +84,39 @@ export class DataTable extends BaseMixin {
         return this;
     }
 
-    private _doColumnValueFormat (v, d) {
-        return (typeof v === 'function') ? v(d) :  // v as function
-            (typeof v === 'string') ? d[v] :       // v is field name string
-            v.format(d);                           // v is Object, use fn (element 2)
+    private _doColumnValueFormat(v, d) {
+        if (typeof v === 'function') {
+            // v is function
+            return v(d);
+        }
+        if (typeof v === 'string') {
+            // v is field name string
+            return d[v];
+        }
+        // v is Object, use fn (element 2)
+        return v.format(d);
     }
 
-    private _doColumnHeaderFormat (d: DataTableColumnSpec): string {
+    private _doColumnHeaderFormat(d: DataTableColumnSpec): string {
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
-        return (typeof d === 'function') ? this._doColumnHeaderFnToString(d) :
-            (typeof d === 'string') ? this._doColumnHeaderCapitalize(d) :
-            String(d.label);
+        if (typeof d === 'function') {
+            return this._doColumnHeaderFnToString(d);
+        }
+        if (typeof d === 'string') {
+            return this._doColumnHeaderCapitalize(d);
+        }
+        return String(d.label);
     }
 
-    private _doColumnHeaderCapitalize (s: string): string {
+    private _doColumnHeaderCapitalize(s: string): string {
         // capitalize
         return s.charAt(0).toUpperCase() + s.slice(1);
     }
 
     // TODO: This looks really peculiar, investigate, code is quite fragile
-    private _doColumnHeaderFnToString (f: (...args) => any): string {
+    private _doColumnHeaderFnToString(f: (...args) => any): string {
         // columnString(f) {
         let s = String(f);
         const i1 = s.indexOf('return ');
@@ -122,7 +133,7 @@ export class DataTable extends BaseMixin {
         return s;
     }
 
-    private _renderSections (): Selection<HTMLTableSectionElement, any, Element, any> {
+    private _renderSections(): Selection<HTMLTableSectionElement, any, Element, any> {
         // The 'original' example uses all 'functions'.
         // If all 'functions' are used, then don't remove/add a header, and leave
         // the html alone. This preserves the functionality of earlier releases.
@@ -132,43 +143,41 @@ export class DataTable extends BaseMixin {
         // create what you need.
         let bAllFunctions = true;
         this._conf.columns.forEach(f => {
-            bAllFunctions = bAllFunctions && (typeof f === 'function');
+            bAllFunctions = bAllFunctions && typeof f === 'function';
         });
 
         if (!bAllFunctions) {
             // ensure one thead
+            // prettier-ignore
             let thead: Selection<HTMLTableSectionElement, any, Element, any> =
                 this.selectAll<HTMLTableSectionElement, any>('thead').data([0]);
 
             thead.exit().remove();
-            thead = thead.enter()
-                .append('thead')
-                .merge(thead);
+            thead = thead.enter().append('thead').merge(thead);
 
             // with one tr
             let headrow = thead.selectAll<HTMLTableRowElement, any>('tr').data([0]);
             headrow.exit().remove();
-            headrow = headrow.enter()
-                .append('tr')
-                .merge(headrow);
+            headrow = headrow.enter().append('tr').merge(headrow);
 
             // with a th for each column
-            const headcols = headrow.selectAll<HTMLTableHeaderCellElement, any>('th')
+            const headcols = headrow
+                .selectAll<HTMLTableHeaderCellElement, any>('th')
                 .data(this._conf.columns);
             headcols.exit().remove();
-            headcols.enter().append('th')
+            headcols
+                .enter()
+                .append('th')
                 .merge(headcols)
                 .attr('class', HEAD_CSS_CLASS)
-                .html(d => (this._doColumnHeaderFormat(d)));
+                .html(d => this._doColumnHeaderFormat(d));
         }
 
-        const sections: Selection<HTMLTableSectionElement, any, Element, any> =
-            this.root().selectAll<HTMLTableSectionElement, any>('tbody')
-                       .data<any>(this._nestEntries(), d => this._conf.keyAccessor(d));
+        const sections: Selection<HTMLTableSectionElement, any, Element, any> = this.root()
+            .selectAll<HTMLTableSectionElement, any>('tbody')
+            .data<any>(this._nestEntries(), d => this._conf.keyAccessor(d));
 
-        const rowSection = sections
-            .enter()
-            .append('tbody');
+        const rowSection = sections.enter().append('tbody');
 
         if (this._conf.showSections === true) {
             rowSection
@@ -185,7 +194,7 @@ export class DataTable extends BaseMixin {
         return rowSection;
     }
 
-    private _nestEntries (): { key: string; values: any }[] {
+    private _nestEntries(): { key: string; values: any }[] {
         let entries;
         if (this._conf.order === ascending) {
             entries = this._conf.dimension.bottom(this._conf.size);
@@ -196,20 +205,29 @@ export class DataTable extends BaseMixin {
         return nest()
             .key(this._conf.section)
             .sortKeys(this._conf.order)
-            .entries(entries.sort((a, b) => this._conf.order(this._conf.sortBy(a), this._conf.sortBy(b))).slice(this._conf.beginSlice, this._conf.endSlice));
+            .entries(
+                entries
+                    .sort((a, b) => this._conf.order(this._conf.sortBy(a), this._conf.sortBy(b)))
+                    .slice(this._conf.beginSlice, this._conf.endSlice)
+            );
     }
 
-    private _renderRows (sections: Selection<HTMLTableSectionElement, any, Element, any>) {
-        const rows: Selection<HTMLTableRowElement, unknown, HTMLTableSectionElement, any> = sections.order()
+    private _renderRows(sections: Selection<HTMLTableSectionElement, any, Element, any>) {
+        const rows: Selection<HTMLTableRowElement, unknown, HTMLTableSectionElement, any> = sections
+            .order()
             .selectAll<HTMLTableRowElement, any>(`tr.${ROW_CSS_CLASS}`)
             .data(d => d.values);
 
-        const rowEnter: Selection<HTMLTableRowElement, unknown, HTMLTableSectionElement, any> = rows.enter()
-            .append('tr')
-            .attr('class', ROW_CSS_CLASS);
+        const rowEnter: Selection<
+            HTMLTableRowElement,
+            unknown,
+            HTMLTableSectionElement,
+            any
+        > = rows.enter().append('tr').attr('class', ROW_CSS_CLASS);
 
         this._conf.columns.forEach((v, i) => {
-            rowEnter.append('td')
+            rowEnter
+                .append('td')
                 .attr('class', `${COLUMN_CSS_CLASS} _${i}`)
                 .html(d => this._doColumnValueFormat(v, d));
         });
@@ -219,7 +237,7 @@ export class DataTable extends BaseMixin {
         return rows;
     }
 
-    public _doRedraw (): this {
+    public _doRedraw(): this {
         return this._doRender();
     }
 }

@@ -1,8 +1,8 @@
-import {select, Selection} from 'd3-selection';
+import { select, Selection } from 'd3-selection';
 
-import {isNumber} from '../core/utils';
-import {constants} from '../core/constants';
-import {LegendItem, LegendTextAccessor, ParentOfLegend} from '../core/types';
+import { isNumber } from '../core/utils';
+import { constants } from '../core/constants';
+import { LegendItem, LegendTextAccessor, ParentOfLegend } from '../core/types';
 
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
@@ -23,7 +23,7 @@ export class HtmlLegend {
     private _legendItemClass: string;
     private _highlightSelected: boolean;
 
-    constructor () {
+    constructor() {
         this._htmlLegendDivCssClass = 'dc-html-legend';
         this._legendItemCssClassHorizontal = 'dc-legend-item-horizontal';
         this._legendItemCssClassVertical = 'dc-legend-item-vertical';
@@ -36,9 +36,9 @@ export class HtmlLegend {
         this._highlightSelected = false;
     }
 
-    public parent (): ParentOfLegend;
-    public parent (p: ParentOfLegend): this;
-    public parent (p?) {
+    public parent(): ParentOfLegend;
+    public parent(p: ParentOfLegend): this;
+    public parent(p?) {
         if (!arguments.length) {
             return this._parent;
         }
@@ -46,8 +46,10 @@ export class HtmlLegend {
         return this;
     }
 
-    public render () {
-        const defaultLegendItemCssClass = this._horizontal ? this._legendItemCssClassHorizontal : this._legendItemCssClassVertical;
+    public render() {
+        const defaultLegendItemCssClass = this._horizontal
+            ? this._legendItemCssClassHorizontal
+            : this._legendItemCssClassVertical;
         this._container.select(`div.${this._htmlLegendDivCssClass}`).remove();
 
         const container = this._container.append('div').attr('class', this._htmlLegendDivCssClass);
@@ -60,27 +62,32 @@ export class HtmlLegend {
             legendables = legendables.slice(0, this._maxItems);
         }
 
-        const legendItemClassName = this._legendItemClass ? this._legendItemClass : defaultLegendItemCssClass;
+        const legendItemClassName = this._legendItemClass
+            ? this._legendItemClass
+            : defaultLegendItemCssClass;
 
-        const itemEnter: Selection<HTMLDivElement, LegendItem, HTMLElement, any> =
-            container.selectAll<HTMLDivElement, any>(`div.${legendItemClassName}`)
-                .data<LegendItem>(legendables).enter()
-                .append('div')
-                    .classed(legendItemClassName, true)
-                .on('mouseover', d => this._parent.legendHighlight(d))
-                .on('mouseout', d => this._parent.legendReset(d))
-                .on('click', d => this._parent.legendToggle(d));
+        const itemEnter: Selection<HTMLDivElement, LegendItem, HTMLElement, any> = container
+            .selectAll<HTMLDivElement, any>(`div.${legendItemClassName}`)
+            .data<LegendItem>(legendables)
+            .enter()
+            .append('div')
+            .classed(legendItemClassName, true)
+            .on('mouseover', d => this._parent.legendHighlight(d))
+            .on('mouseout', d => this._parent.legendReset(d))
+            .on('click', d => this._parent.legendToggle(d));
 
         if (this._highlightSelected) {
             // TODO: fragile code - there may be other types of filters
             itemEnter.classed(constants.SELECTED_CLASS, d => filters.indexOf(d.name) !== -1);
         }
 
-        itemEnter.append('span')
+        itemEnter
+            .append('span')
             .attr('class', 'dc-legend-item-color')
             .style('background-color', d => d.color);
 
-        itemEnter.append('span')
+        itemEnter
+            .append('span')
             .attr('class', 'dc-legend-item-label')
             .attr('title', this._legendText)
             .text(this._legendText);
@@ -91,9 +98,9 @@ export class HtmlLegend {
      * @param {String} [container]
      * @return {String|HtmlLegend}
      */
-    public container (): Selection<HTMLElement, any, any, any>;
-    public container (container: string|Selection<HTMLElement, any, any, any>): this;
-    public container (container?) {
+    public container(): Selection<HTMLElement, any, any, any>;
+    public container(container: string | Selection<HTMLElement, any, any, any>): this;
+    public container(container?) {
         if (!arguments.length) {
             return this._container;
         }
@@ -110,9 +117,9 @@ export class HtmlLegend {
      * @param {String} [legendItemClass]
      * @return {String|HtmlLegend}
      */
-    public legendItemClass (): string;
-    public legendItemClass (legendItemClass: string): this;
-    public legendItemClass (legendItemClass?) {
+    public legendItemClass(): string;
+    public legendItemClass(legendItemClass: string): this;
+    public legendItemClass(legendItemClass?) {
         if (!arguments.length) {
             return this._legendItemClass;
         }
@@ -126,9 +133,9 @@ export class HtmlLegend {
      * @param {boolean} [highlightSelected]
      * @return {boolean|HtmlLegend}
      */
-    public highlightSelected (): boolean;
-    public highlightSelected (highlightSelected: boolean): this;
-    public highlightSelected (highlightSelected?) {
+    public highlightSelected(): boolean;
+    public highlightSelected(highlightSelected: boolean): this;
+    public highlightSelected(highlightSelected?) {
         if (!arguments.length) {
             return this._highlightSelected;
         }
@@ -141,9 +148,9 @@ export class HtmlLegend {
      * @param {boolean} [horizontal]
      * @return {boolean|HtmlLegend}
      */
-    public horizontal (): boolean;
-    public horizontal (horizontal: boolean): this;
-    public horizontal (horizontal?) {
+    public horizontal(): boolean;
+    public horizontal(horizontal: boolean): this;
+    public horizontal(horizontal?) {
         if (!arguments.length) {
             return this._horizontal;
         }
@@ -167,9 +174,9 @@ export class HtmlLegend {
      * // create legend displaying group counts
      * chart.legend(new HtmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
-    public legendText (): LegendTextAccessor;
-    public legendText (legendText: LegendTextAccessor): this;
-    public legendText (legendText?) {
+    public legendText(): LegendTextAccessor;
+    public legendText(legendText: LegendTextAccessor): this;
+    public legendText(legendText?) {
         if (!arguments.length) {
             return this._legendText;
         }
@@ -182,9 +189,9 @@ export class HtmlLegend {
      * @param  {Number} [maxItems]
      * @return {HtmlLegend}
      */
-    public maxItems (): number;
-    public maxItems (maxItems: number): this;
-    public maxItems (maxItems?) {
+    public maxItems(): number;
+    public maxItems(maxItems: number): this;
+    public maxItems(maxItems?) {
         if (!arguments.length) {
             return this._maxItems;
         }

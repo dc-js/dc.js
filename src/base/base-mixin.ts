@@ -1,16 +1,16 @@
-import {BaseType, select, Selection} from 'd3-selection';
-import {dispatch, Dispatch} from 'd3-dispatch';
-import {ascending} from 'd3-array';
+import { BaseType, select, Selection } from 'd3-selection';
+import { dispatch, Dispatch } from 'd3-dispatch';
+import { ascending } from 'd3-array';
 
-import {isNumber, uniqueId} from '../core/utils';
-import {instanceOfChart} from '../core/core';
-import {chartRegistry} from '../core/chart-registry';
-import {constants} from '../core/constants';
-import {events} from '../core/events';
-import {logger} from '../core/logger';
-import {printers} from '../core/printers';
-import {InvalidStateException} from '../core/invalid-state-exception';
-import {BadArgumentException} from '../core/bad-argument-exception';
+import { isNumber, uniqueId } from '../core/utils';
+import { instanceOfChart } from '../core/core';
+import { chartRegistry } from '../core/chart-registry';
+import { constants } from '../core/constants';
+import { events } from '../core/events';
+import { logger } from '../core/logger';
+import { printers } from '../core/printers';
+import { InvalidStateException } from '../core/invalid-state-exception';
+import { BadArgumentException } from '../core/bad-argument-exception';
 import {
     BaseAccessor,
     ChartGroupType,
@@ -18,10 +18,10 @@ import {
     LegendItem,
     MinimalCFDimension,
     MinimalCFGroup,
-    TitleAccessor
+    TitleAccessor,
 } from '../core/types';
-import {IChartGroup} from '../core/chart-group-types';
-import {IBaseMixinConf} from './i-base-mixin-conf';
+import { IChartGroup } from '../core/chart-group-types';
+import { IBaseMixinConf } from './i-base-mixin-conf';
 
 const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
     if (filters.length === 0) {
@@ -51,7 +51,7 @@ const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
 };
 
 const _defaultHasFilterHandler = (filters, filter) => {
-    if (filter === null || typeof (filter) === 'undefined') {
+    if (filter === null || typeof filter === 'undefined') {
         return filters.length > 0;
     }
     return filters.some(f => filter <= f && filter >= f);
@@ -86,7 +86,7 @@ export class BaseMixin {
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
     private _group: MinimalCFGroup;
-    private _anchor: string|Element;
+    private _anchor: string | Element;
     private _root: Selection<Element, any, any, any>; // Do not assume much, allow any HTML or SVG element
     private _svg: Selection<SVGElement, any, any, any>; // from d3-selection
     private _isChild: boolean;
@@ -106,7 +106,7 @@ export class BaseMixin {
     private _filters: any[]; // TODO: find better types
     protected _groupName: string; // StackMixin needs it
 
-    constructor () {
+    constructor() {
         this.__dcFlag__ = uniqueId().toString();
 
         this.configure({
@@ -140,14 +140,16 @@ export class BaseMixin {
         this._isChild = undefined;
 
         this._defaultWidthCalc = element => {
-            const width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
-            return (width && width > this._conf.minWidth) ? width : this._conf.minWidth;
+            const width =
+                element && element.getBoundingClientRect && element.getBoundingClientRect().width;
+            return width && width > this._conf.minWidth ? width : this._conf.minWidth;
         };
         this._widthCalc = this._defaultWidthCalc;
 
         this._defaultHeightCalc = element => {
-            const height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
-            return (height && height > this._conf.minHeight) ? height : this._conf.minHeight;
+            const height =
+                element && element.getBoundingClientRect && element.getBoundingClientRect().height;
+            return height && height > this._conf.minHeight ? height : this._conf.minHeight;
         };
         this._heightCalc = this._defaultHeightCalc;
         this._width = undefined;
@@ -166,7 +168,8 @@ export class BaseMixin {
             'filtered',
             'zoomed',
             'renderlet',
-            'pretransition');
+            'pretransition'
+        );
 
         this._legend = undefined;
 
@@ -176,8 +179,8 @@ export class BaseMixin {
         this._filters = [];
     }
 
-    public configure (conf: IBaseMixinConf): this {
-        this._conf = {...(this._conf), ...conf};
+    public configure(conf: IBaseMixinConf): this {
+        this._conf = { ...this._conf, ...conf };
         return this;
     }
 
@@ -210,9 +213,9 @@ export class BaseMixin {
      * @param {Number|Function} [height]
      * @returns {Number|BaseMixin}
      */
-    public height (): number;
-    public height (height: number|(() => number)): this;
-    public height (height?) {
+    public height(): number;
+    public height(height: number | (() => number)): this;
+    public height(height?) {
         if (!arguments.length) {
             if (!isNumber(this._height)) {
                 // only calculate once
@@ -220,7 +223,11 @@ export class BaseMixin {
             }
             return this._height;
         }
-        this._heightCalc = height ? (typeof height === 'function' ? height : () => height) : this._defaultHeightCalc;
+        this._heightCalc = height
+            ? typeof height === 'function'
+                ? height
+                : () => height
+            : this._defaultHeightCalc;
         this._height = undefined;
         return this;
     }
@@ -238,9 +245,9 @@ export class BaseMixin {
      * @param {Number|Function} [width]
      * @returns {Number|BaseMixin}
      */
-    public width (): number;
-    public width (width: number|(() => number)): this;
-    public width (width?) {
+    public width(): number;
+    public width(width: number | (() => number)): this;
+    public width(width?) {
         if (!arguments.length) {
             if (!isNumber(this._width)) {
                 // only calculate once
@@ -248,7 +255,11 @@ export class BaseMixin {
             }
             return this._width;
         }
-        this._widthCalc = width ? (typeof width === 'function' ? width : () => width) : this._defaultWidthCalc;
+        this._widthCalc = width
+            ? typeof width === 'function'
+                ? width
+                : () => width
+            : this._defaultWidthCalc;
         this._width = undefined;
         return this;
     }
@@ -266,9 +277,9 @@ export class BaseMixin {
      * @param {Function} [callback]
      * @returns {*|BaseMixin}
      */
-    public data ();
-    public data (callback): this;
-    public data (callback?) {
+    public data();
+    public data(callback): this;
+    public data(callback?) {
         if (!arguments.length) {
             return this._data(this._group);
         }
@@ -297,9 +308,9 @@ export class BaseMixin {
      * @param {String} [name]
      * @returns {crossfilter.group|BaseMixin}
      */
-    public group (): MinimalCFGroup;
-    public group (group: MinimalCFGroup, name?: string, accessor?: BaseAccessor<any>): this;
-    public group (group?, name?, accessor?) {
+    public group(): MinimalCFGroup;
+    public group(group: MinimalCFGroup, name?: string, accessor?: BaseAccessor<any>): this;
+    public group(group?, name?, accessor?) {
         if (!arguments.length) {
             return this._group;
         }
@@ -309,9 +320,11 @@ export class BaseMixin {
         return this;
     }
 
-    public _computeOrderedGroups (data) {
+    public _computeOrderedGroups(data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort((a, b) => ascending(this._conf.ordering(a), this._conf.ordering(b)));
+        return Array.from(data).sort((a, b) =>
+            ascending(this._conf.ordering(a), this._conf.ordering(b))
+        );
     }
 
     /**
@@ -319,7 +332,7 @@ export class BaseMixin {
      * {@link BaseMixin#filter chart.filter(null)}.
      * @returns {BaseMixin}
      */
-    public filterAll () {
+    public filterAll() {
         return this.filter(null);
     }
 
@@ -336,7 +349,7 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    public select<DescElement extends BaseType> (sel) {
+    public select<DescElement extends BaseType>(sel) {
         return this._root.select<DescElement>(sel);
     }
 
@@ -352,7 +365,7 @@ export class BaseMixin {
      * @param {String} sel CSS selector string
      * @returns {d3.selection}
      */
-    public selectAll<DescElement extends BaseType, OldDatum> (sel) {
+    public selectAll<DescElement extends BaseType, OldDatum>(sel) {
         return this._root ? this._root.selectAll<DescElement, OldDatum>(sel) : null;
     }
 
@@ -366,22 +379,24 @@ export class BaseMixin {
      * @param {String} [chartGroup]
      * @returns {String|node|d3.selection|BaseMixin}
      */
-    public anchor (): string|Element;
-    public anchor (parent: ChartParentType, chartGroup: ChartGroupType): this;
-    public anchor (parent?, chartGroup?) {
+    public anchor(): string | Element;
+    public anchor(parent: ChartParentType, chartGroup: ChartGroupType): this;
+    public anchor(parent?, chartGroup?) {
         if (!arguments.length) {
             return this._anchor;
         }
         this._chartGroup = this._getChartGroup(chartGroup);
         if (instanceOfChart(parent)) {
             this._anchor = parent.anchor();
-            if ((this._anchor as any).children) { // is _anchor a div?
+            if ((this._anchor as any).children) {
+                // is _anchor a div?
                 this._anchor = `#${parent.anchorName()}`;
             }
             this._root = parent.root();
             this._isChild = true;
         } else if (parent) {
-            if (parent.select && parent.classed) { // detect d3 selection
+            if (parent.select && parent.classed) {
+                // detect d3 selection
                 this._anchor = parent.node();
             } else {
                 this._anchor = parent;
@@ -396,18 +411,20 @@ export class BaseMixin {
         return this;
     }
 
-    private _getChartGroup (chartGroup: ChartGroupType): IChartGroup {
-        return (!chartGroup || typeof chartGroup === 'string') ? chartRegistry.chartGroup(chartGroup as string) : chartGroup;
+    private _getChartGroup(chartGroup: ChartGroupType): IChartGroup {
+        return !chartGroup || typeof chartGroup === 'string'
+            ? chartRegistry.chartGroup(chartGroup as string)
+            : chartGroup;
     }
 
     /**
      * Returns the DOM id for the chart's anchored location.
      * @returns {String}
      */
-    public anchorName (): string {
+    public anchorName(): string {
         const a: string | Element = this.anchor();
         if (a) {
-            if ( typeof a === 'string') {
+            if (typeof a === 'string') {
                 return a.replace('#', '');
             } else if (a.id) {
                 return a.id;
@@ -425,9 +442,9 @@ export class BaseMixin {
      * @param {HTMLElement} [rootElement]
      * @returns {HTMLElement|BaseMixin}
      */
-    public root (): Selection<Element, any, any, any>;
-    public root (rootElement: Selection<Element, any, any, any>): this;
-    public root (rootElement?) {
+    public root(): Selection<Element, any, any, any>;
+    public root(rootElement: Selection<Element, any, any, any>): this;
+    public root(rootElement?) {
         if (!arguments.length) {
             return this._root;
         }
@@ -443,9 +460,9 @@ export class BaseMixin {
      * @param {SVGElement|d3.selection} [svgElement]
      * @returns {SVGElement|d3.selection|BaseMixin}
      */
-    public svg (): Selection<SVGElement, any, any, any>;
-    public svg (svgElement): this;
-    public svg (svgElement?) {
+    public svg(): Selection<SVGElement, any, any, any>;
+    public svg(svgElement): this;
+    public svg(svgElement?) {
         if (!arguments.length) {
             return this._svg;
         }
@@ -458,25 +475,22 @@ export class BaseMixin {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
      * @returns {SVGElement}
      */
-    public resetSvg (): Selection<SVGElement, any, any, any> {
+    public resetSvg(): Selection<SVGElement, any, any, any> {
         this.select('svg').remove();
         return this.generateSvg();
     }
 
-    public sizeSvg (): void {
+    public sizeSvg(): void {
         if (this._svg) {
             if (!this._conf.useViewBoxResizing) {
-                this._svg
-                    .attr('width', this.width())
-                    .attr('height', this.height());
+                this._svg.attr('width', this.width()).attr('height', this.height());
             } else if (!this._svg.attr('viewBox')) {
-                this._svg
-                    .attr('viewBox', `0 0 ${this.width()} ${this.height()}`);
+                this._svg.attr('viewBox', `0 0 ${this.width()} ${this.height()}`);
             }
         }
     }
 
-    public generateSvg (): Selection<SVGElement, any, any, any> {
+    public generateSvg(): Selection<SVGElement, any, any, any> {
         this._svg = this.root().append('svg');
         this.sizeSvg();
         return this._svg;
@@ -493,11 +507,13 @@ export class BaseMixin {
      * function. This type of element will be turned off automatically if the filter is cleared.
      * @returns {BaseMixin}
      */
-    public turnOnControls (): this {
+    public turnOnControls(): this {
         if (this._root) {
             const attribute = this._conf.controlsUseVisibility ? 'visibility' : 'display';
             this.selectAll('.reset').style(attribute, null);
-            this.selectAll('.filter').text(this._conf.filterPrinter(this.filters())).style(attribute, null);
+            this.selectAll('.filter')
+                .text(this._conf.filterPrinter(this.filters()))
+                .style(attribute, null);
         }
         return this;
     }
@@ -507,7 +523,7 @@ export class BaseMixin {
      * @see {@link BaseMixin#turnOnControls turnOnControls}
      * @returns {BaseMixin}
      */
-    public turnOffControls (): this {
+    public turnOffControls(): this {
         if (this._root) {
             const attribute = this._conf.controlsUseVisibility ? 'visibility' : 'display';
             const value = this._conf.controlsUseVisibility ? 'hidden' : 'none';
@@ -517,9 +533,9 @@ export class BaseMixin {
         return this;
     }
 
-    protected _mandatoryAttributes (): string[];
-    protected _mandatoryAttributes (_: string[]): this;
-    protected _mandatoryAttributes (_?) {
+    protected _mandatoryAttributes(): string[];
+    protected _mandatoryAttributes(_: string[]): this;
+    protected _mandatoryAttributes(_?) {
         if (!arguments.length) {
             return this._mandatoryAttributesList;
         }
@@ -527,9 +543,11 @@ export class BaseMixin {
         return this;
     }
 
-    public checkForMandatoryAttributes (a): void {
+    public checkForMandatoryAttributes(a): void {
         if (!this[a] || !this[a]()) {
-            throw new InvalidStateException(`Mandatory attribute chart.${a} is missing on chart[#${this.anchorName()}]`);
+            throw new InvalidStateException(
+                `Mandatory attribute chart.${a} is missing on chart[#${this.anchorName()}]`
+            );
         }
     }
 
@@ -540,7 +558,7 @@ export class BaseMixin {
      * behaviour.
      * @returns {BaseMixin}
      */
-    public render (): this {
+    public render(): this {
         this._height = this._width = undefined; // force recalculate
         this._listeners.call('preRender', this, this);
 
@@ -560,10 +578,13 @@ export class BaseMixin {
     }
 
     // Needed by Composite Charts
-    public _activateRenderlets (event?): void {
+    public _activateRenderlets(event?): void {
         this._listeners.call('pretransition', this, this);
         if (this._conf.transitionDuration > 0 && this._svg) {
-            this._svg.transition().duration(this._conf.transitionDuration).delay(this._conf.transitionDelay)
+            this._svg
+                .transition()
+                .duration(this._conf.transitionDuration)
+                .delay(this._conf.transitionDelay)
                 .on('end', () => {
                     this._listeners.call('renderlet', this, this);
                     if (event) {
@@ -588,7 +609,7 @@ export class BaseMixin {
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}).
      * @returns {BaseMixin}
      */
-    public redraw (): this {
+    public redraw(): this {
         this.sizeSvg();
         this._listeners.call('preRedraw', this, this);
 
@@ -609,7 +630,7 @@ export class BaseMixin {
      * be executed and waited for.
      * @returns {BaseMixin}
      */
-    public redrawGroup (): this {
+    public redrawGroup(): this {
         if (this._conf.commitHandler) {
             this._conf.commitHandler(false, (error, result) => {
                 if (error) {
@@ -629,7 +650,7 @@ export class BaseMixin {
      * {@link BaseMixin.commitFilter commitHandler}, it will be executed and waited for
      * @returns {BaseMixin}
      */
-    public renderGroup (): this {
+    public renderGroup(): this {
         if (this._conf.commitHandler) {
             this._conf.commitHandler(false, (error, result) => {
                 if (error) {
@@ -644,13 +665,13 @@ export class BaseMixin {
         return this;
     }
 
-    protected _invokeFilteredListener (f): void {
+    protected _invokeFilteredListener(f): void {
         if (f !== undefined) {
             this._listeners.call('filtered', this, this, f);
         }
     }
 
-    protected _invokeZoomedListener (): void {
+    protected _invokeZoomedListener(): void {
         this._listeners.call('zoomed', this, this);
     }
 
@@ -661,11 +682,11 @@ export class BaseMixin {
      * @param {*} [filter]
      * @returns {Boolean}
      */
-    public hasFilter (filter?): boolean {
+    public hasFilter(filter?): boolean {
         return this._conf.hasFilterHandler(this._filters, filter);
     }
 
-    public applyFilters (filters) {
+    public applyFilters(filters) {
         if (this._conf.dimension && this._conf.dimension.filter) {
             const fs = this._conf.filterHandler(this._conf.dimension, filters);
             if (fs) {
@@ -682,7 +703,7 @@ export class BaseMixin {
      * @param {*} [filter]
      * @returns {BaseMixin}
      */
-    public replaceFilter (filter): this {
+    public replaceFilter(filter): this {
         this._filters = this._conf.resetFilterHandler(this._filters);
         this.filter(filter);
         return this;
@@ -738,9 +759,9 @@ export class BaseMixin {
      * @param {*} [filter]
      * @returns {BaseMixin}
      */
-    public filter ();
-    public filter (filter): this;
-    public filter (filter?) {
+    public filter();
+    public filter(filter): this;
+    public filter(filter?) {
         if (!arguments.length) {
             return this._filters.length > 0 ? this._filters[0] : null;
         }
@@ -782,21 +803,21 @@ export class BaseMixin {
      * chart's internal filter storage.
      * @returns {Array<*>}
      */
-    public filters () {
+    public filters() {
         return this._filters;
     }
 
-    public highlightSelected (e): void {
+    public highlightSelected(e): void {
         select(e).classed(constants.SELECTED_CLASS, true);
         select(e).classed(constants.DESELECTED_CLASS, false);
     }
 
-    public fadeDeselected (e): void {
+    public fadeDeselected(e): void {
         select(e).classed(constants.SELECTED_CLASS, false);
         select(e).classed(constants.DESELECTED_CLASS, true);
     }
 
-    public resetHighlight (e): void {
+    public resetHighlight(e): void {
         select(e).classed(constants.SELECTED_CLASS, false);
         select(e).classed(constants.DESELECTED_CLASS, false);
     }
@@ -813,7 +834,7 @@ export class BaseMixin {
      * @param {*} datum
      * @return {undefined}
      */
-    public onClick (datum: any, i?: number): void {
+    public onClick(datum: any, i?: number): void {
         const filter = this._conf.keyAccessor(datum);
         events.trigger(() => {
             this.filter(filter);
@@ -822,36 +843,36 @@ export class BaseMixin {
     }
 
     // abstract function stub
-    protected _doRender (): this {
+    protected _doRender(): this {
         // do nothing in base, should be overridden by sub-function
         return this;
     }
 
-    protected _doRedraw (): this {
+    protected _doRedraw(): this {
         // do nothing in base, should be overridden by sub-function
         return this;
     }
 
     // Legend methods are used by Composite Charts
 
-    public legendables (): LegendItem[] {
+    public legendables(): LegendItem[] {
         // do nothing in base, should be overridden by sub-function
         return [];
     }
 
-    public legendHighlight (d?: LegendItem) {
+    public legendHighlight(d?: LegendItem) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    public legendReset (d?: LegendItem) {
+    public legendReset(d?: LegendItem) {
         // do nothing in base, should be overridden by sub-function
     }
 
-    public legendToggle (d?: LegendItem) {
+    public legendToggle(d?: LegendItem) {
         // do nothing in base, should be overriden by sub-function
     }
 
-    public isLegendableHidden (d?: LegendItem): boolean {
+    public isLegendableHidden(d?: LegendItem): boolean {
         // do nothing in base, should be overridden by sub-function
         return false;
     }
@@ -876,9 +897,9 @@ export class BaseMixin {
      * @param {Function} [titleFunction]
      * @returns {Function|BaseMixin}
      */
-    public title (): TitleAccessor;
-    public title (titleFunction: TitleAccessor): this;
-    public title (titleFunction?) {
+    public title(): TitleAccessor;
+    public title(titleFunction: TitleAccessor): this;
+    public title(titleFunction?) {
         if (!arguments.length) {
             return this._title;
         }
@@ -892,16 +913,16 @@ export class BaseMixin {
      * @param {String} [chartGroup]
      * @returns {String|BaseMixin}
      */
-    public chartGroup (): IChartGroup;
-    public chartGroup (chartGroup: ChartGroupType): this;
-    public chartGroup (chartGroup?) {
+    public chartGroup(): IChartGroup;
+    public chartGroup(chartGroup: ChartGroupType): this;
+    public chartGroup(chartGroup?) {
         if (!arguments.length) {
             return this._chartGroup;
         }
         if (!this._isChild) {
             this._chartGroup.deregister(this);
         }
-        this._chartGroup =  this._getChartGroup(chartGroup);
+        this._chartGroup = this._getChartGroup(chartGroup);
         if (!this._isChild) {
             this._chartGroup.register(this);
         }
@@ -917,7 +938,7 @@ export class BaseMixin {
      * clear the cache to make sure charts are rendered properly.
      * @returns {BaseMixin}
      */
-    protected expireCache (): this {
+    protected expireCache(): this {
         // do nothing in base, should be overridden by sub-function
         return this;
     }
@@ -930,9 +951,9 @@ export class BaseMixin {
      * @param {Legend} [legend]
      * @returns {Legend|BaseMixin}
      */
-    public legend ();
-    public legend (legend): this;
-    public legend (legend?) {
+    public legend();
+    public legend(legend): this;
+    public legend(legend?) {
         if (!arguments.length) {
             return this._legend;
         }
@@ -945,7 +966,7 @@ export class BaseMixin {
      * Returns the internal numeric ID of the chart.
      * @returns {String}
      */
-    public chartID (): string {
+    public chartID(): string {
         return this.__dcFlag__;
     }
 
@@ -957,7 +978,7 @@ export class BaseMixin {
      * @param {{}} opts
      * @returns {BaseMixin}
      */
-    public options (opts) {
+    public options(opts) {
         const applyOptions = [
             'anchor',
             'group',
@@ -967,11 +988,11 @@ export class BaseMixin {
             'title',
             'point',
             'getColor',
-            'overlayGeoJson'
+            'overlayGeoJson',
         ];
 
         for (const o in opts) {
-            if (typeof (this[o]) === 'function') {
+            if (typeof this[o] === 'function') {
                 if (opts[o] instanceof Array && applyOptions.indexOf(o) !== -1) {
                     this[o].apply(this, opts[o]);
                 } else {
@@ -1012,7 +1033,7 @@ export class BaseMixin {
      * @param {Function} listener
      * @returns {BaseMixin}
      */
-    public on (event, listener): this {
+    public on(event, listener): this {
         this._listeners.on(event, listener);
         return this;
     }
@@ -1038,8 +1059,10 @@ export class BaseMixin {
      * @param {Function} renderletFunction
      * @returns {BaseMixin}
      */
-    public renderlet (renderletFunction): this {
-        logger.warnOnce('chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)');
+    public renderlet(renderletFunction): this {
+        logger.warnOnce(
+            'chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)'
+        );
         this.on(`renderlet.${uniqueId()}`, renderletFunction);
         return this;
     }

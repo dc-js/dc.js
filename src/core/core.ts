@@ -1,4 +1,4 @@
-import {config} from './config';
+import { config } from './config';
 
 /**
  * Start a transition on a selection if transitions are globally enabled
@@ -15,7 +15,7 @@ import {config} from './config';
  * elements are needed)
  * @returns {d3.transition|d3.selection}
  */
-export function transition (selection, duration?: number, delay?: number, name?: string) {
+export function transition(selection, duration?: number, delay?: number, name?: string) {
     // TODO: can we do typing for selection here
     if (config.disableTransitions || duration <= 0) {
         return selection;
@@ -34,7 +34,12 @@ export function transition (selection, duration?: number, delay?: number, name?:
 }
 
 /* somewhat silly, but to avoid duplicating logic */
-export function optionalTransition (enable: boolean, duration?: number, delay?: number, name?: string) {
+export function optionalTransition(
+    enable: boolean,
+    duration?: number,
+    delay?: number,
+    name?: string
+) {
     if (enable) {
         return function (selection) {
             return transition(selection, duration, delay, name);
@@ -47,13 +52,15 @@ export function optionalTransition (enable: boolean, duration?: number, delay?: 
 }
 
 // See http://stackoverflow.com/a/20773846
-export function afterTransition (_transition, callback) {
+export function afterTransition(_transition, callback) {
     if (_transition.empty() || !_transition.duration) {
         callback.call(_transition);
     } else {
         let n = 0;
         _transition
-            .each(() => { ++n; })
+            .each(() => {
+                ++n;
+            })
             .on('end', () => {
                 if (!--n) {
                     callback.call(_transition);
@@ -62,7 +69,7 @@ export function afterTransition (_transition, callback) {
     }
 }
 
-export function renderlet (_?: (arg0?) => void): (arg0) => void {
+export function renderlet(_?: (arg0?) => void): (arg0) => void {
     if (!arguments.length) {
         return config._renderlet;
     }
@@ -70,6 +77,6 @@ export function renderlet (_?: (arg0?) => void): (arg0) => void {
     return null;
 }
 
-export function instanceOfChart (o: any): boolean {
+export function instanceOfChart(o: any): boolean {
     return o instanceof Object && o.__dcFlag__ && true;
 }

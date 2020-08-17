@@ -1,9 +1,9 @@
-import {ColorAccessor, Constructor} from '../../core/types';
-import {BaseMixinExt} from './base-mixin';
-import {ColorMixin as ColorMixinNeo} from '../../base/color-mixin';
-import {BaseMixin as BaseMixinNeo} from '../../base/base-mixin';
+import { ColorAccessor, Constructor } from '../../core/types';
+import { BaseMixinExt } from './base-mixin';
+import { ColorMixin as ColorMixinNeo } from '../../base/color-mixin';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
 
-class Intermediate extends BaseMixinExt(ColorMixinNeo(BaseMixinNeo)) { }
+class Intermediate extends BaseMixinExt(ColorMixinNeo(BaseMixinNeo)) {}
 
 export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
@@ -25,13 +25,13 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * @param {Function} [colorAccessor]
          * @returns {Function|ColorMixin}
          */
-        public colorAccessor (): ColorAccessor;
-        public colorAccessor (colorAccessor: ColorAccessor): this;
-        public colorAccessor (colorAccessor?) {
+        public colorAccessor(): ColorAccessor;
+        public colorAccessor(colorAccessor: ColorAccessor): this;
+        public colorAccessor(colorAccessor?) {
             if (!arguments.length) {
                 return this._conf.colorAccessor;
             }
-            this.configure({colorAccessor: colorAccessor});
+            this.configure({ colorAccessor: colorAccessor });
             return this;
         }
 
@@ -48,16 +48,16 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * @param {*} [colorCalculator]
          * @returns {Function|ColorMixin}
          */
-        public colorCalculator (): ColorAccessor;
-        public colorCalculator (colorCalculator: ColorAccessor): this;
-        public colorCalculator (colorCalculator?) {
+        public colorCalculator(): ColorAccessor;
+        public colorCalculator(colorCalculator: ColorAccessor): this;
+        public colorCalculator(colorCalculator?) {
             if (!arguments.length) {
                 return this._conf.colorCalculator || this.getColor;
             }
-            this.configure({colorCalculator: colorCalculator});
+            this.configure({ colorCalculator: colorCalculator });
             return this;
         }
-    }
+    };
 }
 
 export function ColorMixin<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
@@ -65,5 +65,5 @@ export function ColorMixin<TBase extends Constructor<BaseMixinNeo>>(Base: TBase)
         constructor(...args: any[]) {
             super(...args);
         }
-    }
+    };
 }

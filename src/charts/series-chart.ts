@@ -1,10 +1,10 @@
-import {ascending} from 'd3-array';
-import {nest} from 'd3-collection';
+import { ascending } from 'd3-array';
+import { nest } from 'd3-collection';
 
-import {CompositeChart} from './composite-chart';
-import {LineChart} from './line-chart';
-import {ChartGroupType, ChartParentType} from '../core/types';
-import {ISeriesChartConf} from './i-series-chart-conf';
+import { CompositeChart } from './composite-chart';
+import { LineChart } from './line-chart';
+import { ChartGroupType, ChartParentType } from '../core/types';
+import { ISeriesChartConf } from './i-series-chart-conf';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -16,9 +16,9 @@ import {ISeriesChartConf} from './i-series-chart-conf';
  * @mixes CompositeChart
  */
 export class SeriesChart extends CompositeChart {
-    protected _conf:ISeriesChartConf;
+    protected _conf: ISeriesChartConf;
 
-    private _charts: {[key: string]: LineChart};
+    private _charts: { [key: string]: LineChart };
 
     /**
      * Create a Series Chart.
@@ -33,7 +33,7 @@ export class SeriesChart extends CompositeChart {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
         // This must precede the call to configure as that trigger _resetChildren which needs _charts to be a hash
@@ -50,11 +50,13 @@ export class SeriesChart extends CompositeChart {
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
     }
 
-    public configure (conf: ISeriesChartConf): this {
+    public configure(conf: ISeriesChartConf): this {
         super.configure(conf);
 
         // TODO: This is defensive, looking at the code - 'seriesAccessor', 'seriesSort', 'valueSort' do not need it
-        if (['chartFunction', 'seriesAccessor', 'seriesSort', 'valueSort'].some(opt => opt in conf)) {
+        if (
+            ['chartFunction', 'seriesAccessor', 'seriesSort', 'valueSort'].some(opt => opt in conf)
+        ) {
             this._resetChildren();
         }
 
@@ -65,15 +67,15 @@ export class SeriesChart extends CompositeChart {
         return this._conf;
     }
 
-    private _compose (subChartArray: LineChart[]): void {
+    private _compose(subChartArray: LineChart[]): void {
         super.compose(subChartArray);
     }
 
-    public compose (subChartArray): this {
+    public compose(subChartArray): this {
         throw new Error('Not supported for this chart type');
     }
 
-    public _preprocessData () {
+    public _preprocessData() {
         const keep: string[] = [];
         let childrenChanged: boolean;
 
@@ -86,25 +88,28 @@ export class SeriesChart extends CompositeChart {
             nester.sortValues(this._conf.valueSort);
         }
         const nesting = nester.entries(this.data());
-        const children =
-            nesting.map((sub, i) => {
-                const subChart = this._charts[sub.key] || this._conf.chartFunction(this, this.chartGroup());
-                if (!this._charts[sub.key]) {
-                    childrenChanged = true;
-                }
-                this._charts[sub.key] = subChart;
-                keep.push(sub.key);
-                subChart.configure({
-                    dimension: this._conf.dimension,
-                    keyAccessor: this._conf.keyAccessor,
-                    valueAccessor: this._conf.valueAccessor
-                })
-                return subChart
-                    .group({
-                        all: typeof sub.values === 'function' ? sub.values : () => sub.values
-                    }, sub.key)
-                    .brushOn(false);
+        const children = nesting.map((sub, i) => {
+            const subChart =
+                this._charts[sub.key] || this._conf.chartFunction(this, this.chartGroup());
+            if (!this._charts[sub.key]) {
+                childrenChanged = true;
+            }
+            this._charts[sub.key] = subChart;
+            keep.push(sub.key);
+            subChart.configure({
+                dimension: this._conf.dimension,
+                keyAccessor: this._conf.keyAccessor,
+                valueAccessor: this._conf.valueAccessor,
             });
+            return subChart
+                .group(
+                    {
+                        all: typeof sub.values === 'function' ? sub.values : () => sub.values,
+                    },
+                    sub.key
+                )
+                .brushOn(false);
+        });
         // this works around the fact compositeChart doesn't really
         // have a removal interface
         Object.keys(this._charts)
@@ -119,14 +124,14 @@ export class SeriesChart extends CompositeChart {
         }
     }
 
-    private _clearChart (c: string): void {
+    private _clearChart(c: string): void {
         if (this._charts[c].g()) {
             this._charts[c].g().remove();
         }
         delete this._charts[c];
     }
 
-    private _resetChildren (): void {
+    private _resetChildren(): void {
         Object.keys(this._charts).map(this._clearChart);
         this._charts = {};
     }

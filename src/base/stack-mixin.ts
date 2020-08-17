@@ -1,10 +1,10 @@
-import {Stack, stack} from 'd3-shape';
-import {max, min} from 'd3-array';
+import { Stack, stack } from 'd3-shape';
+import { max, min } from 'd3-array';
 
-import {add, subtract} from '../core/utils';
-import {CoordinateGridMixin} from './coordinate-grid-mixin';
-import {BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor} from '../core/types';
-import {IStackMixinConf} from './i-stack-mixin-conf';
+import { add, subtract } from '../core/utils';
+import { CoordinateGridMixin } from './coordinate-grid-mixin';
+import { BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor } from '../core/types';
+import { IStackMixinConf } from './i-stack-mixin-conf';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -19,13 +19,13 @@ export class StackMixin extends CoordinateGridMixin {
     private _titles;
     private _hiddenStacks;
 
-    constructor () {
+    constructor() {
         super();
 
         this.configure({
             colorAccessor: d => d.name,
             hidableStacks: false,
-            evadeDomainFilter: false
+            evadeDomainFilter: false,
         });
 
         this._stackLayout = stack();
@@ -42,7 +42,7 @@ export class StackMixin extends CoordinateGridMixin {
             }
             layers.forEach((l, i) => this._prepareValues(l, i));
             const v4data = layers[0].values.map((v, i) => {
-                const col = {x: v.x};
+                const col = { x: v.x };
                 layers.forEach(layer => {
                     col[layer.name] = layer.values[i].y;
                 });
@@ -60,7 +60,7 @@ export class StackMixin extends CoordinateGridMixin {
         });
     }
 
-    public configure (conf: IStackMixinConf): this {
+    public configure(conf: IStackMixinConf): this {
         super.configure(conf);
         return this;
     }
@@ -69,20 +69,20 @@ export class StackMixin extends CoordinateGridMixin {
         return this._conf;
     }
 
-    public _prepareValues (layer, layerIdx) {
+    public _prepareValues(layer, layerIdx) {
         const valAccessor = layer.accessor || this._conf.valueAccessor;
         const allValues = layer.group.all().map((d, i) => ({
             x: this._conf.keyAccessor(d, i),
             y: valAccessor(d, i),
             data: d,
-            name: layer.name
+            name: layer.name,
         }));
 
         layer.domainValues = allValues.filter(l => this._domainFilter()(l));
         layer.values = this._conf.evadeDomainFilter ? allValues : layer.domainValues;
     }
 
-    public _domainFilter () {
+    public _domainFilter() {
         if (!this.x()) {
             return () => true;
         }
@@ -90,8 +90,7 @@ export class StackMixin extends CoordinateGridMixin {
         if (this.isOrdinal()) {
             // TODO #416
             // var domainSet = d3.set(xDomain);
-            return () => true // domainSet.has(p.x);
-            ;
+            return () => true; // domainSet.has(p.x);
         }
         if (this._conf.elasticX) {
             return () => true;
@@ -117,9 +116,9 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Function} [accessor]
      * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|StackMixin}
      */
-    public stack ();
-    public stack (group, name?, accessor?): this;
-    public stack (group?, name?, accessor?) {
+    public stack();
+    public stack(group, name?, accessor?): this;
+    public stack(group?, name?, accessor?) {
         if (!arguments.length) {
             return this._stack;
         }
@@ -128,7 +127,7 @@ export class StackMixin extends CoordinateGridMixin {
             accessor = name;
         }
 
-        const layer: {[key: string]: any} = {group};
+        const layer: { [key: string]: any } = { group };
         if (typeof name === 'string') {
             layer.name = name;
         } else {
@@ -142,9 +141,9 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    public group (): MinimalCFGroup;
-    public group (g: MinimalCFGroup, n?: string, f?: BaseAccessor<any>): this;
-    public group (g?, n?, f?) {
+    public group(): MinimalCFGroup;
+    public group(g: MinimalCFGroup, n?: string, f?: BaseAccessor<any>): this;
+    public group(g?, n?, f?) {
         if (!arguments.length) {
             return super.group();
         }
@@ -152,12 +151,12 @@ export class StackMixin extends CoordinateGridMixin {
         this._titles = {};
         this.stack(g, n);
         if (f) {
-            this.configure({valueAccessor: f});
+            this.configure({ valueAccessor: f });
         }
         return super.group(g, n);
     }
 
-    public _findLayerByName (n) {
+    public _findLayerByName(n) {
         const i = this._stack.map(d => d.name).indexOf(n);
         return this._stack[i];
     }
@@ -168,7 +167,7 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {String} stackName
      * @returns {StackMixin}
      */
-    public hideStack (stackName) {
+    public hideStack(stackName) {
         this._hiddenStacks[stackName] = true;
         return this;
     }
@@ -179,38 +178,38 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {String} stackName
      * @returns {StackMixin}
      */
-    public showStack (stackName) {
+    public showStack(stackName) {
         this._hiddenStacks[stackName] = false;
         return this;
     }
 
-    public getValueAccessorByIndex (index) {
+    public getValueAccessorByIndex(index) {
         return this._stack[index].accessor || this._conf.valueAccessor;
     }
 
-    public yAxisMin () {
-        const m = min(this._flattenStack(), p => (p.y < 0) ? (p.y + p.y0) : p.y0);
+    public yAxisMin() {
+        const m = min(this._flattenStack(), p => (p.y < 0 ? p.y + p.y0 : p.y0));
         return subtract(m, this._conf.yAxisPadding);
     }
 
-    public yAxisMax () {
-        const m = max(this._flattenStack(), p => (p.y > 0) ? (p.y + p.y0) : p.y0);
+    public yAxisMax() {
+        const m = max(this._flattenStack(), p => (p.y > 0 ? p.y + p.y0 : p.y0));
         return add(m, this._conf.yAxisPadding);
     }
 
-    public _flattenStack () {
+    public _flattenStack() {
         // A round about way to achieve flatMap
         // When target browsers support flatMap, just replace map -> flatMap, no concat needed
         const values = this.data().map(layer => layer.domainValues);
         return [].concat(...values);
     }
 
-    public xAxisMin () {
+    public xAxisMin() {
         const m = min(this._flattenStack(), d => d.x);
         return subtract(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
 
-    public xAxisMax () {
+    public xAxisMax() {
         const m = max(this._flattenStack(), d => d.x);
         return add(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
@@ -232,10 +231,10 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Function} [titleAccessor]
      * @returns {String|StackMixin}
      */
-    public title (): TitleAccessor;
-    public title (stackName); // TODO: actually TitleAccessor, however conflicts with base class signature
-    public title (stackName, titleAccessor): this;
-    public title (stackName?, titleAccessor?) {
+    public title(): TitleAccessor;
+    public title(stackName); // TODO: actually TitleAccessor, however conflicts with base class signature
+    public title(stackName, titleAccessor): this;
+    public title(stackName?, titleAccessor?) {
         if (!stackName) {
             return super.title();
         }
@@ -263,9 +262,9 @@ export class StackMixin extends CoordinateGridMixin {
      * @param {Function} [_stack=d3.stackD3v3]
      * @returns {Function|StackMixin}
      */
-    public stackLayout ();
-    public stackLayout (_stack): this;
-    public stackLayout (_stack?) {
+    public stackLayout();
+    public stackLayout(_stack): this;
+    public stackLayout(_stack?) {
         if (!arguments.length) {
             return this._stackLayout;
         }
@@ -273,31 +272,31 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    public _visibility (l) {
+    public _visibility(l) {
         return !this._hiddenStacks[l.name];
     }
 
-    public _ordinalXDomain () {
+    public _ordinalXDomain() {
         const flat = this._flattenStack().map(d => d.data);
         const ordered = this._computeOrderedGroups(flat);
         return ordered.map(this._conf.keyAccessor);
     }
 
-    public legendables (): LegendItem[] {
+    public legendables(): LegendItem[] {
         return this._stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
             hidden: !this._visibility(layer),
-            color: this.getColor(layer, i)
+            color: this.getColor(layer, i),
         }));
     }
 
-    public isLegendableHidden (d: LegendItem) {
+    public isLegendableHidden(d: LegendItem) {
         const layer = this._findLayerByName(d.name);
         return layer ? !this._visibility(layer) : false;
     }
 
-    public legendToggle (d: LegendItem) {
+    public legendToggle(d: LegendItem) {
         if (this._conf.hidableStacks) {
             if (this.isLegendableHidden(d)) {
                 this.showStack(d.name);

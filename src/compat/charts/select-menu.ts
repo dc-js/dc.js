@@ -1,10 +1,10 @@
-import {SelectMenu as SelectMenuNeo} from '../../charts/select-menu';
-import {BaseMixinExt} from '../base/base-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn} from '../../core/types';
-import {logger} from '../core/logger';
+import { SelectMenu as SelectMenuNeo } from '../../charts/select-menu';
+import { BaseMixinExt } from '../base/base-mixin';
+import { BaseAccessor, ChartGroupType, ChartParentType, CompareFn } from '../../core/types';
+import { logger } from '../core/logger';
 
 export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -20,13 +20,13 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
      * });
      */
-    public order (): CompareFn;
-    public order (order: CompareFn): this;
-    public order (order?) {
+    public order(): CompareFn;
+    public order(order: CompareFn): this;
+    public order(order?) {
         if (!arguments.length) {
             return this._conf.order;
         }
-        this.configure({order: order});
+        this.configure({ order: order });
         return this;
     }
 
@@ -37,13 +37,13 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      * @example
      * chart.promptText('All states');
      */
-    public promptText (): string;
-    public promptText (promptText: string): this;
-    public promptText (promptText?) {
+    public promptText(): string;
+    public promptText(promptText: string): this;
+    public promptText(promptText?) {
         if (!arguments.length) {
             return this._conf.promptText;
         }
-        this.configure({promptText: promptText});
+        this.configure({ promptText: promptText });
         return this;
     }
 
@@ -58,13 +58,13 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      *     return true;
      * });
      */
-    public filterDisplayed (): BaseAccessor<boolean>;
-    public filterDisplayed (filterDisplayed: BaseAccessor<boolean>): this;
-    public filterDisplayed (filterDisplayed?) {
+    public filterDisplayed(): BaseAccessor<boolean>;
+    public filterDisplayed(filterDisplayed: BaseAccessor<boolean>): this;
+    public filterDisplayed(filterDisplayed?) {
         if (!arguments.length) {
             return this._conf.filterDisplayed;
         }
-        this.configure({filterDisplayed: filterDisplayed});
+        this.configure({ filterDisplayed: filterDisplayed });
         return this;
     }
 
@@ -76,13 +76,13 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      * @example
      * chart.multiple(true);
      */
-    public multiple (): boolean;
-    public multiple (multiple: boolean): this;
-    public multiple (multiple?) {
+    public multiple(): boolean;
+    public multiple(multiple: boolean): this;
+    public multiple(multiple?) {
         if (!arguments.length) {
             return this._conf.multiple;
         }
-        this.configure({multiple: multiple});
+        this.configure({ multiple: multiple });
 
         return this;
     }
@@ -95,13 +95,13 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      * @param {?*} [promptValue=null]
      * @returns {*|SelectMenu}
      */
-    public promptValue (): string;
-    public promptValue (promptValue: string): this;
-    public promptValue (promptValue?) {
+    public promptValue(): string;
+    public promptValue(promptValue: string): this;
+    public promptValue(promptValue?) {
         if (!arguments.length) {
             return this._conf.promptValue;
         }
-        this.configure({promptValue: promptValue});
+        this.configure({ promptValue: promptValue });
 
         return this;
     }
@@ -115,20 +115,20 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      * @example
      * chart.numberVisible(10);
      */
-    public numberVisible (): number;
-    public numberVisible (numberVisible: number): this;
-    public numberVisible (numberVisible?) {
+    public numberVisible(): number;
+    public numberVisible(numberVisible: number): this;
+    public numberVisible(numberVisible?) {
         if (!arguments.length) {
             return this._conf.numberVisible;
         }
-        this.configure({numberVisible: numberVisible});
+        this.configure({ numberVisible: numberVisible });
 
         return this;
     }
 
-    public size (): number;
-    public size (numberVisible: number): this;
-    public size (numberVisible?) {
+    public size(): number;
+    public size(numberVisible: number): this;
+    public size(numberVisible?) {
         logger.warnOnce('selectMenu.size is ambiguous - use selectMenu.numberVisible instead');
         if (!arguments.length) {
             return this.numberVisible();
@@ -137,4 +137,5 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
     }
 }
 
-export const selectMenu = (parent: ChartParentType, chartGroup: ChartGroupType) => new SelectMenu(parent, chartGroup);
+export const selectMenu = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new SelectMenu(parent, chartGroup);

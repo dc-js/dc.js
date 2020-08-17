@@ -1,14 +1,14 @@
-import {symbol, Symbol, SymbolType} from 'd3-shape';
-import {event, select, Selection} from 'd3-selection';
-import {brush} from 'd3-brush';
+import { symbol, Symbol, SymbolType } from 'd3-shape';
+import { event, select, Selection } from 'd3-selection';
+import { brush } from 'd3-brush';
 
-import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {optionalTransition, transition} from '../core/core';
-import {filters} from '../core/filters';
-import {constants} from '../core/constants';
-import {events} from '../core/events';
-import {ChartGroupType, ChartParentType, LegendItem} from '../core/types';
-import {IScatterPlotConf} from './i-scatter-plot-conf';
+import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
+import { optionalTransition, transition } from '../core/core';
+import { filters } from '../core/filters';
+import { constants } from '../core/constants';
+import { events } from '../core/events';
+import { ChartGroupType, ChartParentType, LegendItem } from '../core/types';
+import { IScatterPlotConf } from './i-scatter-plot-conf';
 
 export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
 
@@ -43,7 +43,7 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         const originalKeyAccessor = this._conf.keyAccessor;
@@ -69,12 +69,16 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702
-        this.title(d => `${this._conf.keyAccessor(d)},${this._conf.valueAccessor(d)}: ${this._conf.existenceAccessor(d)}`);
+        this.title(
+            d =>
+                `${this._conf.keyAccessor(d)},${this._conf.valueAccessor(
+                    d
+                )}: ${this._conf.existenceAccessor(d)}`
+        );
 
         this._filtered = [];
         this._canvas = null;
         this._context = null;
-
 
         // Use a 2 dimensional brush
         this.brush(brush());
@@ -84,7 +88,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IScatterPlotConf): this {
+    public configure(conf: IScatterPlotConf): this {
         super.configure(conf);
         return this;
     }
@@ -94,7 +98,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     // Calculates element radius for canvas plot to be comparable to D3 area based symbol sizes
-    private _canvasElementSize (d, isFiltered): number {
+    private _canvasElementSize(d, isFiltered): number {
         if (!this._conf.existenceAccessor(d)) {
             return this._conf.emptySize / Math.sqrt(Math.PI);
         } else if (isFiltered) {
@@ -104,7 +108,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
-    private _elementSize (d, i): number {
+    private _elementSize(d, i): number {
         if (!this._conf.existenceAccessor(d)) {
             return Math.pow(this._conf.emptySize, 2);
         } else if (this._filtered[i]) {
@@ -114,14 +118,15 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
-    private _locator (d): string {
-        return `translate(${this.x()(this._conf.keyAccessor(d))},${
-            this.y()(this._conf.valueAccessor(d))})`;
+    private _locator(d): string {
+        return `translate(${this.x()(this._conf.keyAccessor(d))},${this.y()(
+            this._conf.valueAccessor(d)
+        )})`;
     }
 
-    public filter ();
-    public filter (filter): this;
-    public filter (filter?) {
+    public filter();
+    public filter(filter): this;
+    public filter(filter?) {
         if (!arguments.length) {
             return super.filter();
         }
@@ -137,7 +142,7 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
      * @returns {SVGElement}
      */
-    public resetSvg () {
+    public resetSvg() {
         if (!this._conf.useCanvas) {
             return super.resetSvg();
         } else {
@@ -152,19 +157,24 @@ export class ScatterPlot extends CoordinateGridMixin {
             svgSel.style('position', 'relative');
 
             // Check if SVG element already has any extra top/left CSS offsets
-            const svgLeft = isNaN(parseInt(svgSel.style('left'), 10)) ? 0 : parseInt(svgSel.style('left'), 10);
-            const svgTop = isNaN(parseInt(svgSel.style('top'), 10)) ? 0 : parseInt(svgSel.style('top'), 10);
+            const svgLeft = isNaN(parseInt(svgSel.style('left'), 10))
+                ? 0
+                : parseInt(svgSel.style('left'), 10);
+            const svgTop = isNaN(parseInt(svgSel.style('top'), 10))
+                ? 0
+                : parseInt(svgSel.style('top'), 10);
             const width = this.effectiveWidth();
             const height = this.effectiveHeight();
             const margins = this.margins(); // {top: 10, right: 130, bottom: 42, left: 42}
 
             // Add the canvas element such that it perfectly overlaps the plot area of the scatter plot SVG
             const devicePixelRatio = window.devicePixelRatio || 1;
-            this._canvas = this.root().append('canvas')
+            this._canvas = this.root()
+                .append('canvas')
                 .attr('x', 0)
                 .attr('y', 0)
-                .attr('width', (width) * devicePixelRatio)
-                .attr('height', (height) * devicePixelRatio)
+                .attr('width', width * devicePixelRatio)
+                .attr('height', height * devicePixelRatio)
                 .style('width', `${width}px`)
                 .style('height', `${height}px`)
                 .style('position', 'absolute')
@@ -184,14 +194,14 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
-    public _resizeCanvas () {
+    public _resizeCanvas() {
         const width = this.effectiveWidth();
         const height = this.effectiveHeight();
 
         const devicePixelRatio = window.devicePixelRatio || 1;
         this._canvas
-            .attr('width', (width) * devicePixelRatio)
-            .attr('height', (height) * devicePixelRatio)
+            .attr('width', width * devicePixelRatio)
+            .attr('height', height * devicePixelRatio)
             .style('width', `${width}px`)
             .style('height', `${height}px`);
         this._context.scale(devicePixelRatio, devicePixelRatio);
@@ -204,9 +214,9 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @param {CanvasElement|d3.selection} [canvasElement]
      * @return {CanvasElement|d3.selection}
      */
-    public canvas (): Selection<HTMLCanvasElement, any, any, any>;
-    public canvas (canvasElement: Selection<HTMLCanvasElement, any, any, any>): this;
-    public canvas (canvasElement?) {
+    public canvas(): Selection<HTMLCanvasElement, any, any, any>;
+    public canvas(canvasElement: Selection<HTMLCanvasElement, any, any, any>): this;
+    public canvas(canvasElement?) {
         if (!arguments.length) {
             return this._canvas;
         }
@@ -219,7 +229,7 @@ export class ScatterPlot extends CoordinateGridMixin {
      * {@link ScatterPlot#useCanvas useCanvas} is set to `true`
      * @return {CanvasContext}
      */
-    public context (): CanvasRenderingContext2D {
+    public context(): CanvasRenderingContext2D {
         return this._context;
     }
 
@@ -227,7 +237,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     // Plots data on canvas element. If argument provided, assumes legend is
     // currently being highlighted and modifies opacity/size of symbols accordingly
     // @param {Object} [legendHighlightDatum] - Datum provided to legendHighlight method
-    private _plotOnCanvas (legendHighlightDatum?) {
+    private _plotOnCanvas(legendHighlightDatum?) {
         this._resizeCanvas();
         const context = this.context();
         context.clearRect(0, 0, context.canvas.width + 2, context.canvas.height + 2);
@@ -259,13 +269,15 @@ export class ScatterPlot extends CoordinateGridMixin {
 
             // Adjust params for data points if legend is highlighted
             if (legendHighlightDatum) {
-                const isHighlighted = (cColor === legendHighlightDatum.color);
+                const isHighlighted = cColor === legendHighlightDatum.color;
                 // Calculate opacity for current data point
                 const fadeOutOpacity = 0.1; // TODO: Make this programmatically settable
-                if (!isHighlighted) { // Fade out non-highlighted colors + highlighted colors outside filter
+                if (!isHighlighted) {
+                    // Fade out non-highlighted colors + highlighted colors outside filter
                     cOpacity = fadeOutOpacity;
                 }
-                if (isHighlighted) { // Set size for highlighted color data points
+                if (isHighlighted) {
+                    // Set size for highlighted color data points
                     cSize = this._conf.highlightedSize / Math.sqrt(Math.PI);
                 }
             }
@@ -274,7 +286,14 @@ export class ScatterPlot extends CoordinateGridMixin {
             context.save();
             context.globalAlpha = cOpacity;
             context.beginPath();
-            context.arc(this.x()(this._conf.keyAccessor(d)), this.y()(this._conf.valueAccessor(d)), cSize, 0, 2 * Math.PI, true);
+            context.arc(
+                this.x()(this._conf.keyAccessor(d)),
+                this.y()(this._conf.valueAccessor(d)),
+                cSize,
+                0,
+                2 * Math.PI,
+                true
+            );
             context.fillStyle = cColor;
             context.fill();
             // context.lineWidth = 0.5; // Commented out code to add stroke around scatter points if desired
@@ -284,13 +303,15 @@ export class ScatterPlot extends CoordinateGridMixin {
         });
     }
 
-    private _plotOnSVG (): void {
+    private _plotOnSVG(): void {
         // TODO: come back after fixing the type for this.chartBodyG()
-        let symbols = (this.chartBodyG() as Selection<SVGGElement, any, any, any>).selectAll<SVGPathElement, any>('path.symbol')
+        let symbols = (this.chartBodyG() as Selection<SVGGElement, any, any, any>)
+            .selectAll<SVGPathElement, any>('path.symbol')
             .data<any>(this.data());
 
         transition(symbols.exit(), this._conf.transitionDuration, this._conf.transitionDelay)
-            .attr('opacity', 0).remove();
+            .attr('opacity', 0)
+            .remove();
 
         symbols = symbols
             .enter()
@@ -304,7 +325,9 @@ export class ScatterPlot extends CoordinateGridMixin {
         symbols.call(s => this._renderTitles(s, this.data()));
 
         symbols.each((d, i) => {
-            this._filtered[i] = !this.filter() || this.filter().isFiltered([this._conf.keyAccessor(d), this._conf.valueAccessor(d)]);
+            this._filtered[i] =
+                !this.filter() ||
+                this.filter().isFiltered([this._conf.keyAccessor(d), this._conf.valueAccessor(d)]);
         });
 
         transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay)
@@ -330,7 +353,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             .attr('d', this._symbol);
     }
 
-    public plotData (): void {
+    public plotData(): void {
         if (this._conf.useCanvas) {
             this._plotOnCanvas();
         } else {
@@ -338,7 +361,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
-    private _renderTitles (_symbol: Selection<SVGPathElement, any, SVGGElement, any>, _d): void {
+    private _renderTitles(_symbol: Selection<SVGPathElement, any, SVGGElement, any>, _d): void {
         if (this._conf.renderTitle) {
             _symbol.selectAll('title').remove();
             _symbol.append('title').text(d => this.title()(d));
@@ -357,9 +380,9 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @param {Function} [type=d3.symbolCircle]
      * @returns {Function|ScatterPlot}
      */
-    public symbol (): SymbolTypeGenerator;
-    public symbol (type: SymbolTypeGenerator): this;
-    public symbol (type?) {
+    public symbol(): SymbolTypeGenerator;
+    public symbol(type: SymbolTypeGenerator): this;
+    public symbol(type?) {
         if (!arguments.length) {
             return this._symbol.type();
         }
@@ -378,9 +401,9 @@ export class ScatterPlot extends CoordinateGridMixin {
      * @param {String|Function} [customSymbol=d3.symbol()]
      * @returns {String|Function|ScatterPlot}
      */
-    public customSymbol (): Symbol<any, any>;
-    public customSymbol (customSymbol: Symbol<any, any>): this;
-    public customSymbol (customSymbol?) {
+    public customSymbol(): Symbol<any, any>;
+    public customSymbol(customSymbol: Symbol<any, any>): this;
+    public customSymbol(customSymbol?) {
         if (!arguments.length) {
             return this._symbol;
         }
@@ -389,48 +412,59 @@ export class ScatterPlot extends CoordinateGridMixin {
         return this;
     }
 
-    public legendables (): LegendItem[] {
+    public legendables(): LegendItem[] {
         // Argument to getColor is ignored by the default color accessor for this chart
-        return [{chart: this, name: this._groupName, color: this.getColor(this._groupName)}];
+        return [{ chart: this, name: this._groupName, color: this.getColor(this._groupName) }];
     }
 
-    public legendHighlight (d: LegendItem): void {
+    public legendHighlight(d: LegendItem): void {
         if (this._conf.useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
             this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._conf.highlightedSize);
-            this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-                return select(this).attr('fill') !== d.color;
-            }).classed('fadeout', true);
+            this.chartBodyG()
+                .selectAll('.chart-body path.symbol')
+                .filter(function () {
+                    return select(this).attr('fill') !== d.color;
+                })
+                .classed('fadeout', true);
         }
     }
 
-    public legendReset (d: LegendItem): void {
+    public legendReset(d: LegendItem): void {
         if (this._conf.useCanvas) {
             this._plotOnCanvas(d); // Supply legend datum to plotOnCanvas
         } else {
             this._resizeSymbolsWhere(s => s.attr('fill') === d.color, this._conf.symbolSize);
-            this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-                return select(this).attr('fill') !== d.color;
-            }).classed('fadeout', false);
+            this.chartBodyG()
+                .selectAll('.chart-body path.symbol')
+                .filter(function () {
+                    return select(this).attr('fill') !== d.color;
+                })
+                .classed('fadeout', false);
         }
     }
 
-    private _resizeSymbolsWhere (condition, size): void {
-        const symbols = this.chartBodyG().selectAll('.chart-body path.symbol').filter(function () {
-            return condition(select(this));
-        });
+    private _resizeSymbolsWhere(condition, size): void {
+        const symbols = this.chartBodyG()
+            .selectAll('.chart-body path.symbol')
+            .filter(function () {
+                return condition(select(this));
+            });
         const oldSize = this._symbol.size();
         this._symbol.size(Math.pow(size, 2));
-        transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay).attr('d', this._symbol);
+        transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay).attr(
+            'd',
+            this._symbol
+        );
         this._symbol.size(oldSize);
     }
 
-    public createBrushHandlePaths (): void {
+    public createBrushHandlePaths(): void {
         // no handle paths for poly-brushes
     }
 
-    public extendBrush (brushSelection) {
+    public extendBrush(brushSelection) {
         if (this._conf.round) {
             brushSelection[0] = brushSelection[0].map(this._conf.round);
             brushSelection[1] = brushSelection[1].map(this._conf.round);
@@ -438,11 +472,15 @@ export class ScatterPlot extends CoordinateGridMixin {
         return brushSelection;
     }
 
-    public brushIsEmpty (brushSelection) {
-        return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
+    public brushIsEmpty(brushSelection) {
+        return (
+            !brushSelection ||
+            brushSelection[0][0] >= brushSelection[1][0] ||
+            brushSelection[0][1] >= brushSelection[1][1]
+        );
     }
 
-    public _brushing () {
+    public _brushing() {
         // Avoids infinite recursion (mutual recursion between range and focus operations)
         // Source Event will be null when brush.move is called programmatically (see below as well).
         if (!event.sourceEvent) {
@@ -453,7 +491,10 @@ export class ScatterPlot extends CoordinateGridMixin {
         // In this case we are more worried about this handler causing brush move programmatically which will
         // cause this handler to be invoked again with a new d3.event (and current event set as sourceEvent)
         // This check avoids recursive calls
-        if (event.sourceEvent.type && ['start', 'brush', 'end'].indexOf(event.sourceEvent.type) !== -1) {
+        if (
+            event.sourceEvent.type &&
+            ['start', 'brush', 'end'].indexOf(event.sourceEvent.type) !== -1
+        ) {
             return;
         }
 
@@ -465,10 +506,12 @@ export class ScatterPlot extends CoordinateGridMixin {
         let brushIsEmpty = this.brushIsEmpty(brushSelection);
 
         if (brushSelection) {
-            brushSelection = brushSelection.map(point => point.map((coord, i) => {
-                const scale = i === 0 ? this.x() : this.y();
-                return scale.invert(coord);
-            }));
+            brushSelection = brushSelection.map(point =>
+                point.map((coord, i) => {
+                    const scale = i === 0 ? this.x() : this.y();
+                    return scale.invert(coord);
+                })
+            );
 
             brushSelection = this.extendBrush(brushSelection);
 
@@ -478,7 +521,9 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this.redrawBrush(brushSelection, false);
 
-        const ranged2DFilter = brushIsEmpty ? null : filters.RangedTwoDimensionalFilter(brushSelection);
+        const ranged2DFilter = brushIsEmpty
+            ? null
+            : filters.RangedTwoDimensionalFilter(brushSelection);
 
         events.trigger(() => {
             this.replaceFilter(ranged2DFilter);
@@ -486,7 +531,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         }, constants.EVENT_DELAY);
     }
 
-    public redrawBrush (brushSelection, doTransition) {
+    public redrawBrush(brushSelection, doTransition) {
         // override default x axis brush from parent chart
         const brush1 = this.brush(); // TODO: figure out why the linter complained about shadowing with name `brush`
         const gBrush = this.gBrush();
@@ -497,28 +542,29 @@ export class ScatterPlot extends CoordinateGridMixin {
             }
 
             if (!brushSelection) {
-                gBrush
-                    .call(brush1.move, brushSelection);
-
+                gBrush.call(brush1.move, brushSelection);
             } else {
-                brushSelection = brushSelection.map(point => point.map((coord, i) => {
-                    const scale = i === 0 ? this.x() : this.y();
-                    return scale(coord);
-                }));
+                brushSelection = brushSelection.map(point =>
+                    point.map((coord, i) => {
+                        const scale = i === 0 ? this.x() : this.y();
+                        return scale(coord);
+                    })
+                );
 
-                const gBrushWithTransition =
-                    optionalTransition(doTransition, this._conf.transitionDuration, this._conf.transitionDelay)(gBrush);
+                const gBrushWithTransition = optionalTransition(
+                    doTransition,
+                    this._conf.transitionDuration,
+                    this._conf.transitionDelay
+                )(gBrush);
 
-                gBrushWithTransition
-                    .call(brush1.move, brushSelection);
-
+                gBrushWithTransition.call(brush1.move, brushSelection);
             }
         }
 
         this.fadeDeselectedArea(brushSelection);
     }
 
-    public setBrushY (gBrush): void {
+    public setBrushY(gBrush): void {
         gBrush.call(this.brush().y(this.y()));
     }
 }

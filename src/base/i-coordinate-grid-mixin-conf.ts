@@ -1,7 +1,7 @@
-import {IMarginMixinConf} from './i-margin-mixin-conf';
-import {IColorMixinConf} from './i-color-mixin-conf';
-import {RoundFn, Units} from '../core/types';
-import {CountableTimeInterval} from 'd3-time';
+import { IMarginMixinConf } from './i-margin-mixin-conf';
+import { IColorMixinConf } from './i-color-mixin-conf';
+import { RoundFn, Units } from '../core/types';
+import { CountableTimeInterval } from 'd3-time';
 
 export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinConf {
     readonly useRightYAxis?: boolean;

@@ -1,9 +1,9 @@
-import {Constructor} from '../../core/types';
-import {BaseMixinExt} from './base-mixin';
-import {CapMixin as CapMixinNeo} from '../../base/cap-mixin';
-import {BaseMixin as BaseMixinNeo} from '../../base/base-mixin';
+import { Constructor } from '../../core/types';
+import { BaseMixinExt } from './base-mixin';
+import { CapMixin as CapMixinNeo } from '../../base/cap-mixin';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
 
-class Intermediate extends BaseMixinExt(CapMixinNeo(BaseMixinNeo)) { }
+class Intermediate extends BaseMixinExt(CapMixinNeo(BaseMixinNeo)) {}
 
 export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
@@ -41,16 +41,15 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          * @param {Number} [count=Infinity]
          * @returns {Number|CapMixin}
          */
-        public cap ();
-        public cap (count): this;
-        public cap (count?) {
+        public cap();
+        public cap(count): this;
+        public cap(count?) {
             if (!arguments.length) {
                 return this._conf.cap;
             }
-            this.configure({cap: count});
+            this.configure({ cap: count });
             return this;
         }
-
 
         /**
          * Get or set the direction of capping. If set, the chart takes the first
@@ -61,13 +60,13 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          * @param {Boolean} [takeFront=true]
          * @returns {Boolean|CapMixin}
          */
-        public takeFront ();
-        public takeFront (takeFront): this;
-        public takeFront (takeFront?) {
+        public takeFront();
+        public takeFront(takeFront): this;
+        public takeFront(takeFront?) {
             if (!arguments.length) {
                 return this._conf.takeFront;
             }
-            this.configure({takeFront: takeFront});
+            this.configure({ takeFront: takeFront });
             return this;
         }
 
@@ -78,13 +77,13 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          * @param {String} [label="Others"]
          * @returns {String|CapMixin}
          */
-        public othersLabel ();
-        public othersLabel (label): this;
-        public othersLabel (label?) {
+        public othersLabel();
+        public othersLabel(label): this;
+        public othersLabel(label?) {
             if (!arguments.length) {
                 return this._conf.othersLabel;
             }
-            this.configure({othersLabel: label});
+            this.configure({ othersLabel: label });
             return this;
         }
 
@@ -115,16 +114,16 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          * @param {Function} [grouperFunction]
          * @returns {Function|CapMixin}
          */
-        public othersGrouper ();
-        public othersGrouper (grouperFunction): this;
-        public othersGrouper (grouperFunction?) {
+        public othersGrouper();
+        public othersGrouper(grouperFunction): this;
+        public othersGrouper(grouperFunction?) {
             if (!arguments.length) {
                 return this._conf.othersGrouper;
             }
-            this.configure({othersGrouper: grouperFunction});
+            this.configure({ othersGrouper: grouperFunction });
             return this;
         }
-    }
+    };
 }
 
 export function CapMixin<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
@@ -132,5 +131,5 @@ export function CapMixin<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
         constructor(...args: any[]) {
             super(...args);
         }
-    }
+    };
 }

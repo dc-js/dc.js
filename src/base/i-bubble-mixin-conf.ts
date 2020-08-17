@@ -1,5 +1,5 @@
-import {IColorMixinConf} from './i-color-mixin-conf';
-import {RValueAccessor} from '../core/types';
+import { IColorMixinConf } from './i-color-mixin-conf';
+import { RValueAccessor } from '../core/types';
 
 export interface IBubbleMixinConf extends IColorMixinConf {
     readonly radiusValueAccessor?: RValueAccessor;
