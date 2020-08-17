@@ -15,15 +15,21 @@ import {
     curveStep,
     curveStepAfter,
     curveStepBefore,
-    line
+    line,
 } from 'd3-shape';
-import {select, Selection} from 'd3-selection';
+import { select, Selection } from 'd3-selection';
 
-import {logger} from '../core/logger';
-import {pluck2, printSingleValue, safeNumber} from '../core/utils';
-import {StackMixin} from '../base/stack-mixin';
-import {transition} from '../core/core';
-import {BaseAccessor, ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
+import { logger } from '../core/logger';
+import { pluck2, printSingleValue, safeNumber } from '../core/utils';
+import { StackMixin } from '../base/stack-mixin';
+import { transition } from '../core/core';
+import {
+    BaseAccessor,
+    ChartGroupType,
+    ChartParentType,
+    LegendItem,
+    SVGGElementSelection,
+} from '../core/types';
 
 const DEFAULT_DOT_RADIUS = 5;
 const TOOLTIP_G_CLASS = 'dc-tooltip';
@@ -53,7 +59,7 @@ export class LineChart extends StackMixin {
     private _tension: number;
     private _defined: BaseAccessor<boolean>;
     private _dashStyle: number[];
-    private _xyTipsOn: boolean|'always';
+    private _xyTipsOn: boolean | 'always';
 
     /**
      * Create a Line Chart.
@@ -72,14 +78,14 @@ export class LineChart extends StackMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
             transitionDuration: 500,
             transitionDelay: 0,
             label: d => printSingleValue(d.y0 + d.y),
-            renderLabel: false
+            renderLabel: false,
         });
 
         this._renderArea = false;
@@ -89,7 +95,7 @@ export class LineChart extends StackMixin {
         this._dataPointStrokeOpacity = DEFAULT_DOT_OPACITY;
         this._curve = null;
         this._interpolate = null; // d3.curveLinear;  // deprecated in 3.0
-        this._tension = null;  // deprecated in 3.0
+        this._tension = null; // deprecated in 3.0
         this._defined = undefined;
         this._dashStyle = undefined;
         this._xyTipsOn = true;
@@ -99,7 +105,7 @@ export class LineChart extends StackMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public plotData () {
+    public plotData() {
         const chartBody: SVGGElementSelection = this.chartBodyG();
         let layersList = chartBody.select<SVGGElement>('g.stack-list');
 
@@ -154,9 +160,9 @@ export class LineChart extends StackMixin {
      * @param  {d3.curve} [curve=d3.curveLinear]
      * @returns {d3.curve|LineChart}
      */
-    public curve (): CurveFactory | CurveFactoryLineOnly;
-    public curve (curve: CurveFactory | CurveFactoryLineOnly): this;
-    public curve (curve?) {
+    public curve(): CurveFactory | CurveFactoryLineOnly;
+    public curve(curve: CurveFactory | CurveFactoryLineOnly): this;
+    public curve(curve?) {
         if (!arguments.length) {
             return this._curve;
         }
@@ -180,10 +186,12 @@ export class LineChart extends StackMixin {
      * @param  {d3.curve} [interpolate=d3.curveLinear]
      * @returns {d3.curve|LineChart}
      */
-    public interpolate (): CurveFactory | CurveFactoryLineOnly | string;
-    public interpolate (interpolate: CurveFactory | CurveFactoryLineOnly | string): this;
-    public interpolate (interpolate?) {
-        logger.warnOnce('dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead');
+    public interpolate(): CurveFactory | CurveFactoryLineOnly | string;
+    public interpolate(interpolate: CurveFactory | CurveFactoryLineOnly | string): this;
+    public interpolate(interpolate?) {
+        logger.warnOnce(
+            'dc.lineChart.interpolate has been deprecated since version 3.0 use dc.lineChart.curve instead'
+        );
         if (!arguments.length) {
             return this._interpolate;
         }
@@ -206,10 +214,12 @@ export class LineChart extends StackMixin {
      * @param  {Number} [tension=0]
      * @returns {Number|LineChart}
      */
-    public tension (): number;
-    public tension (tension: number): this;
-    public tension (tension?) {
-        logger.warnOnce('dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead');
+    public tension(): number;
+    public tension(tension: number): this;
+    public tension(tension?) {
+        logger.warnOnce(
+            'dc.lineChart.tension has been deprecated since version 3.0 use dc.lineChart.curve instead'
+        );
         if (!arguments.length) {
             return this._tension;
         }
@@ -231,9 +241,9 @@ export class LineChart extends StackMixin {
      * @param  {Function} [defined]
      * @returns {Function|LineChart}
      */
-    public defined (): BaseAccessor<boolean>;
-    public defined (defined: BaseAccessor<boolean>): this;
-    public defined (defined?) {
+    public defined(): BaseAccessor<boolean>;
+    public defined(defined: BaseAccessor<boolean>): this;
+    public defined(defined?) {
         if (!arguments.length) {
             return this._defined;
         }
@@ -251,9 +261,9 @@ export class LineChart extends StackMixin {
      * @param  {Array<Number>} [dashStyle=[]]
      * @returns {Array<Number>|LineChart}
      */
-    public dashStyle (): number[];
-    public dashStyle (dashStyle: number[]): this;
-    public dashStyle (dashStyle?) {
+    public dashStyle(): number[];
+    public dashStyle(dashStyle: number[]): this;
+    public dashStyle(dashStyle?) {
         if (!arguments.length) {
             return this._dashStyle;
         }
@@ -267,9 +277,9 @@ export class LineChart extends StackMixin {
      * @param  {Boolean} [renderArea=false]
      * @returns {Boolean|LineChart}
      */
-    public renderArea (): boolean;
-    public renderArea (renderArea: boolean): this;
-    public renderArea (renderArea?) {
+    public renderArea(): boolean;
+    public renderArea(renderArea: boolean): this;
+    public renderArea(renderArea?) {
         if (!arguments.length) {
             return this._renderArea;
         }
@@ -280,7 +290,7 @@ export class LineChart extends StackMixin {
     // To keep it backward compatible, this covers multiple cases
     // See https://github.com/dc-js/dc.js/issues/1376
     // It will be removed when interpolate and tension are removed.
-    private _getCurveFactory (): CurveFactory | CurveFactoryLineOnly {
+    private _getCurveFactory(): CurveFactory | CurveFactoryLineOnly {
         let curve = null;
 
         // _curve takes precedence
@@ -294,19 +304,19 @@ export class LineChart extends StackMixin {
         } else {
             // If _interpolate is string
             const mapping = {
-                'linear': curveLinear,
+                linear: curveLinear,
                 'linear-closed': curveLinearClosed,
-                'step': curveStep,
+                step: curveStep,
                 'step-before': curveStepBefore,
                 'step-after': curveStepAfter,
-                'basis': curveBasis,
+                basis: curveBasis,
                 'basis-open': curveBasisOpen,
                 'basis-closed': curveBasisClosed,
-                'bundle': curveBundle,
-                'cardinal': curveCardinal,
+                bundle: curveBundle,
+                cardinal: curveCardinal,
                 'cardinal-open': curveCardinalOpen,
                 'cardinal-closed': curveCardinalClosed,
-                'monotone': curveMonotoneX
+                monotone: curveMonotoneX,
             };
             curve = mapping[this._interpolate];
         }
@@ -326,7 +336,7 @@ export class LineChart extends StackMixin {
         return curve;
     }
 
-    private _drawLine (layersEnter: SVGGElementSelection, layers: SVGGElementSelection) {
+    private _drawLine(layersEnter: SVGGElementSelection, layers: SVGGElementSelection) {
         const _line = line()
             .x((d: any) => this.x()(d.x)) // TODO: revisit later to put proper type
             .y((d: any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
@@ -336,7 +346,8 @@ export class LineChart extends StackMixin {
             _line.defined(this._defined);
         }
 
-        const path = layersEnter.append<SVGPathElement>('path')
+        const path = layersEnter
+            .append<SVGPathElement>('path')
             .attr('class', 'line')
             .attr('stroke', (d, i) => this.getColor(d, i));
 
@@ -346,42 +357,54 @@ export class LineChart extends StackMixin {
             path.attr('stroke-dasharray', this._dashStyle);
         }
 
-        transition(layers.select('path.line'), this._conf.transitionDuration, this._conf.transitionDelay)
-        // .ease('linear')
+        transition(
+            layers.select('path.line'),
+            this._conf.transitionDuration,
+            this._conf.transitionDelay
+        )
+            // .ease('linear')
             .attr('stroke', (d, i) => this.getColor(d, i))
             .attr('d', d => this._safeD(_line(d.values)));
     }
 
-    private _drawArea (layersEnter: SVGGElementSelection, layers: SVGGElementSelection): void {
+    private _drawArea(layersEnter: SVGGElementSelection, layers: SVGGElementSelection): void {
         if (this._renderArea) {
             const _area = area()
-                .x((d:any) => this.x()(d.x)) // TODO: revisit later to put proper type
-                .y1((d:any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
-                .y0((d:any) => this.y()(d.y0)) // TODO: revisit later to put proper type
+                .x((d: any) => this.x()(d.x)) // TODO: revisit later to put proper type
+                .y1((d: any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
+                .y0((d: any) => this.y()(d.y0)) // TODO: revisit later to put proper type
                 .curve(this._getCurveFactory() as CurveFactory); // the types slightly differ for area and line
 
             if (this._defined) {
                 _area.defined(this._defined);
             }
 
-            layersEnter.append('path')
+            layersEnter
+                .append('path')
                 .attr('class', 'area')
                 .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
 
-            transition(layers.select('path.area'), this._conf.transitionDuration, this._conf.transitionDelay)
-            // .ease('linear')
+            transition(
+                layers.select('path.area'),
+                this._conf.transitionDuration,
+                this._conf.transitionDelay
+            )
+                // .ease('linear')
                 .attr('fill', (d, i) => this.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
         }
     }
 
-    private _safeD (d: string): string {
-        return (!d || d.indexOf('NaN') >= 0) ? 'M0,0' : d;
+    private _safeD(d: string): string {
+        return !d || d.indexOf('NaN') >= 0 ? 'M0,0' : d;
     }
 
-    private _drawDots (chartBody: SVGGElementSelection, layers: SVGGElementSelection) {
-        if (this.xyTipsOn() === 'always' || (!(this.brushOn() || this.parentBrushOn()) && this.xyTipsOn())) {
+    private _drawDots(chartBody: SVGGElementSelection, layers: SVGGElementSelection) {
+        if (
+            this.xyTipsOn() === 'always' ||
+            (!(this.brushOn() || this.parentBrushOn()) && this.xyTipsOn())
+        ) {
             const tooltipListClass = `${TOOLTIP_G_CLASS}-list`;
             let tooltips = chartBody.select<SVGGElement>(`g.${tooltipListClass}`);
 
@@ -402,9 +425,9 @@ export class LineChart extends StackMixin {
 
                 this._createRefLines(g);
 
-                const dots: Selection<SVGCircleElement, any, SVGGElement, any> =
-                    g.selectAll<SVGCircleElement, any>(`circle.${DOT_CIRCLE_CLASS}`)
-                     .data<any>(points, d => d.x);
+                const dots: Selection<SVGCircleElement, any, SVGGElement, any> = g
+                    .selectAll<SVGCircleElement, any>(`circle.${DOT_CIRCLE_CLASS}`)
+                    .data<any>(points, d => d.x);
 
                 const chart = this;
                 const dotsEnterModify = dots
@@ -442,11 +465,12 @@ export class LineChart extends StackMixin {
         }
     }
 
-    private _drawLabels (layers: SVGGElementSelection): void {
+    private _drawLabels(layers: SVGGElementSelection): void {
         const chart = this;
         layers.each(function (data, layerIndex) {
             const layer = select(this);
-            const labels = layer.selectAll<SVGTextElement, any>('text.lineLabel')
+            const labels = layer
+                .selectAll<SVGTextElement, any>('text.lineLabel')
                 .data(data.values, d => d.x);
 
             const labelsEnterModify = labels
@@ -464,13 +488,11 @@ export class LineChart extends StackMixin {
                 })
                 .text(d => chart._conf.label(d));
 
-            transition(labels.exit(), chart._conf.transitionDuration)
-                .attr('height', 0)
-                .remove();
+            transition(labels.exit(), chart._conf.transitionDuration).attr('height', 0).remove();
         });
     }
 
-    private _createRefLines (g: SVGGElementSelection): void {
+    private _createRefLines(g: SVGGElementSelection): void {
         let yRefLine = g.select<SVGPathElement>(`path.${Y_AXIS_REF_LINE_CLASS}`);
 
         if (yRefLine.empty()) {
@@ -488,39 +510,44 @@ export class LineChart extends StackMixin {
         xRefLine.style('display', 'none').attr('stroke-dasharray', '5,5');
     }
 
-    private _showDot (dot: Selection<SVGCircleElement, unknown, null, undefined>): Selection<SVGCircleElement, unknown, null, undefined> {
+    private _showDot(
+        dot: Selection<SVGCircleElement, unknown, null, undefined>
+    ): Selection<SVGCircleElement, unknown, null, undefined> {
         dot.style('fill-opacity', 0.8);
         dot.style('stroke-opacity', 0.8);
         dot.attr('r', this._dotRadius);
         return dot;
     }
 
-    private _showRefLines (dot: Selection<SVGCircleElement, unknown, null, undefined>, g: SVGGElementSelection): void {
+    private _showRefLines(
+        dot: Selection<SVGCircleElement, unknown, null, undefined>,
+        g: SVGGElementSelection
+    ): void {
         const x = dot.attr('cx');
         const y = dot.attr('cy');
-        const yAxisX = (this._yAxisX() - this.margins().left);
+        const yAxisX = this._yAxisX() - this.margins().left;
         const yAxisRefPathD = `M${yAxisX} ${y}L${x} ${y}`;
         const xAxisRefPathD = `M${x} ${this.yAxisHeight()}L${x} ${y}`;
         g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', yAxisRefPathD);
         g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', xAxisRefPathD);
     }
 
-    private _getDotRadius () {
+    private _getDotRadius() {
         return this._dataPointRadius || this._dotRadius;
     }
 
-    private _hideDot (dot: Selection<SVGCircleElement, unknown, null, undefined>): void {
+    private _hideDot(dot: Selection<SVGCircleElement, unknown, null, undefined>): void {
         dot.style('fill-opacity', this._dataPointFillOpacity)
             .style('stroke-opacity', this._dataPointStrokeOpacity)
             .attr('r', this._getDotRadius());
     }
 
-    private _hideRefLines (g: SVGGElementSelection): void {
+    private _hideRefLines(g: SVGGElementSelection): void {
         g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', 'none');
         g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', 'none');
     }
 
-    private _doRenderTitle (dot: Selection<SVGCircleElement, any, SVGGElement, any>, d): void {
+    private _doRenderTitle(dot: Selection<SVGCircleElement, any, SVGGElement, any>, d): void {
         if (this._conf.renderTitle) {
             dot.select('title').remove();
             dot.append('title').text(pluck2('data', this.title(d.name)));
@@ -535,9 +562,9 @@ export class LineChart extends StackMixin {
      * @param  {Boolean} [xyTipsOn=false]
      * @returns {Boolean|LineChart}
      */
-    public xyTipsOn (): boolean|'always';
-    public xyTipsOn (xyTipsOn: |'always'): this;
-    public xyTipsOn (xyTipsOn?) {
+    public xyTipsOn(): boolean | 'always';
+    public xyTipsOn(xyTipsOn: 'always'): this;
+    public xyTipsOn(xyTipsOn?) {
         if (!arguments.length) {
             return this._xyTipsOn;
         }
@@ -550,9 +577,9 @@ export class LineChart extends StackMixin {
      * @param  {Number} [dotRadius=5]
      * @returns {Number|LineChart}
      */
-    public dotRadius (): number;
-    public dotRadius (dotRadius: number): this;
-    public dotRadius (dotRadius?) {
+    public dotRadius(): number;
+    public dotRadius(dotRadius: number): this;
+    public dotRadius(dotRadius?) {
         if (!arguments.length) {
             return this._dotRadius;
         }
@@ -570,14 +597,14 @@ export class LineChart extends StackMixin {
      * @param  {{fillOpacity: Number, strokeOpacity: Number, radius: Number}} [options={fillOpacity: 0.8, strokeOpacity: 0.0, radius: 2}]
      * @returns {{fillOpacity: Number, strokeOpacity: Number, radius: Number}|LineChart}
      */
-    public renderDataPoints ();
-    public renderDataPoints (options): this;
-    public renderDataPoints (options?) {
+    public renderDataPoints();
+    public renderDataPoints(options): this;
+    public renderDataPoints(options?) {
         if (!arguments.length) {
             return {
                 fillOpacity: this._dataPointFillOpacity,
                 strokeOpacity: this._dataPointStrokeOpacity,
-                radius: this._dataPointRadius
+                radius: this._dataPointRadius,
             };
         } else if (!options) {
             this._dataPointFillOpacity = DEFAULT_DOT_OPACITY;
@@ -591,31 +618,35 @@ export class LineChart extends StackMixin {
         return this;
     }
 
-    public _colorFilter (color, dashstyle, inv?) {
+    public _colorFilter(color, dashstyle, inv?) {
         return function () {
             const item = select(this);
-            const match = (item.attr('stroke') === color &&
-                item.attr('stroke-dasharray') === ((dashstyle instanceof Array) ?
-                    dashstyle.join(',') : null)) || item.attr('fill') === color;
+            const match =
+                (item.attr('stroke') === color &&
+                    item.attr('stroke-dasharray') ===
+                        (dashstyle instanceof Array ? dashstyle.join(',') : null)) ||
+                item.attr('fill') === color;
             return inv ? !match : match;
         };
     }
 
-    public legendHighlight (d: LegendItem) {
+    public legendHighlight(d: LegendItem) {
         if (!this.isLegendableHidden(d)) {
-            this.g().selectAll('path.line, path.area')
+            this.g()
+                .selectAll('path.line, path.area')
                 .classed('highlight', this._colorFilter(d.color, d.dashstyle))
                 .classed('fadeout', this._colorFilter(d.color, d.dashstyle, true));
         }
     }
 
-    public legendReset () {
-        this.g().selectAll('path.line, path.area')
+    public legendReset() {
+        this.g()
+            .selectAll('path.line, path.area')
             .classed('highlight', false)
             .classed('fadeout', false);
     }
 
-    public legendables (): LegendItem[] {
+    public legendables(): LegendItem[] {
         const legendables = super.legendables();
         if (!this._dashStyle) {
             return legendables;

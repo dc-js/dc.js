@@ -1,11 +1,17 @@
-import {max, min} from 'd3-array';
-import {scaleLinear} from 'd3-scale';
-import {Axis, axisRight} from 'd3-axis';
+import { max, min } from 'd3-array';
+import { scaleLinear } from 'd3-scale';
+import { Axis, axisRight } from 'd3-axis';
 
-import {add, subtract} from '../core/utils';
-import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
-import {ChartGroupType, ChartParentType, Margins, MinimalXYScale, SVGGElementSelection} from '../core/types';
-import {ICompositeChartConf} from './i-composite-chart-conf';
+import { add, subtract } from '../core/utils';
+import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
+import {
+    ChartGroupType,
+    ChartParentType,
+    Margins,
+    MinimalXYScale,
+    SVGGElementSelection,
+} from '../core/types';
+import { ICompositeChartConf } from './i-composite-chart-conf';
 
 const SUB_CHART_CLASS = 'sub';
 const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
@@ -41,7 +47,7 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -77,7 +83,7 @@ export class CompositeChart extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ICompositeChartConf): this {
+    public configure(conf: ICompositeChartConf): this {
         super.configure(conf);
         return this;
     }
@@ -86,7 +92,7 @@ export class CompositeChart extends CoordinateGridMixin {
         return this._conf;
     }
 
-    public _generateG (): SVGGElementSelection {
+    public _generateG(): SVGGElementSelection {
         const g = super._generateG();
 
         for (let i = 0; i < this._children.length; ++i) {
@@ -95,7 +101,7 @@ export class CompositeChart extends CoordinateGridMixin {
             this._generateChildG(child, i);
 
             if (!child.conf().dimension) {
-                child.configure({dimension: this._conf.dimension});
+                child.configure({ dimension: this._conf.dimension });
             }
             if (!child.group()) {
                 child.group(this.group());
@@ -118,7 +124,7 @@ export class CompositeChart extends CoordinateGridMixin {
         return g;
     }
 
-    public rescale () {
+    public rescale() {
         super.rescale();
 
         this._children.forEach(child => {
@@ -128,9 +134,9 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public resizing (): boolean;
-    public resizing (resizing: boolean): this;
-    public resizing (resizing?) {
+    public resizing(): boolean;
+    public resizing(resizing: boolean): this;
+    public resizing(resizing?) {
         if (!arguments.length) {
             return super.resizing();
         }
@@ -143,9 +149,9 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public _prepareYAxis (): void {
-        const left = (this._leftYAxisChildren().length !== 0);
-        const right = (this._rightYAxisChildren().length !== 0);
+    public _prepareYAxis(): void {
+        const left = this._leftYAxisChildren().length !== 0;
+        const right = this._rightYAxisChildren().length !== 0;
         const ranges = this._calculateYAxisRanges(left, right);
 
         if (left) {
@@ -162,7 +168,7 @@ export class CompositeChart extends CoordinateGridMixin {
         }
     }
 
-    public renderYAxis () {
+    public renderYAxis() {
         if (this._leftYAxisChildren().length !== 0) {
             this.renderYAxisAt('y', this.yAxis(), this.margins().left);
             this.renderYAxisLabel('y', this.yAxisLabel(), -90);
@@ -170,11 +176,16 @@ export class CompositeChart extends CoordinateGridMixin {
 
         if (this._rightYAxisChildren().length !== 0) {
             this.renderYAxisAt('yr', this.rightYAxis(), this.width() - this.margins().right);
-            this.renderYAxisLabel('yr', this.rightYAxisLabel(), 90, this.width() - this._rightYAxisLabelPadding);
+            this.renderYAxisLabel(
+                'yr',
+                this.rightYAxisLabel(),
+                90,
+                this.width() - this._rightYAxisLabelPadding
+            );
         }
     }
 
-    public _calculateYAxisRanges (left: boolean, right: boolean) {
+    public _calculateYAxisRanges(left: boolean, right: boolean) {
         let lyAxisMin;
         let lyAxisMax;
         let ryAxisMin;
@@ -195,10 +206,10 @@ export class CompositeChart extends CoordinateGridMixin {
             ranges = this._alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax);
         }
 
-        return ranges || {lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax};
+        return ranges || { lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax };
     }
 
-    public _alignYAxisRanges (lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
+    public _alignYAxisRanges(lyAxisMin, lyAxisMax, ryAxisMin, ryAxisMax) {
         // since the two series will share a zero, each Y is just a multiple
         // of the other. and the ratio should be the ratio of the ranges of the
         // input data, so that they come out the same height. so we just min/max
@@ -213,11 +224,11 @@ export class CompositeChart extends CoordinateGridMixin {
             lyAxisMin: Math.min(lyAxisMin, ryAxisMin / extentRatio),
             lyAxisMax: Math.max(lyAxisMax, ryAxisMax / extentRatio),
             ryAxisMin: Math.min(ryAxisMin, lyAxisMin * extentRatio),
-            ryAxisMax: Math.max(ryAxisMax, lyAxisMax * extentRatio)
+            ryAxisMax: Math.max(ryAxisMax, lyAxisMax * extentRatio),
         };
     }
 
-    public _prepareRightYAxis (ranges) {
+    public _prepareRightYAxis(ranges) {
         const needDomain = this.rightY() === undefined || this._conf.elasticY;
         const needRange = needDomain || this.resizing();
 
@@ -238,7 +249,7 @@ export class CompositeChart extends CoordinateGridMixin {
         // _chart.rightYAxis().orient('right');
     }
 
-    public _prepareLeftYAxis (ranges) {
+    public _prepareLeftYAxis(ranges) {
         const needDomain = this.y() === undefined || this._conf.elasticY;
         const needRange = needDomain || this.resizing();
 
@@ -259,12 +270,12 @@ export class CompositeChart extends CoordinateGridMixin {
         // _chart.yAxis().orient('left');
     }
 
-    public _generateChildG (child, i) {
+    public _generateChildG(child, i) {
         child._generateG(this.g());
         child.g().attr('class', `${SUB_CHART_CLASS} _${i}`);
     }
 
-    public plotData () {
+    public plotData() {
         for (let i = 0; i < this._children.length; ++i) {
             const child = this._children[i];
 
@@ -301,9 +312,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Boolean} [useRightAxisGridLines=false]
      * @returns {Boolean|CompositeChart}
      */
-    public useRightAxisGridLines ();
-    public useRightAxisGridLines (useRightAxisGridLines): this;
-    public useRightAxisGridLines (useRightAxisGridLines?) {
+    public useRightAxisGridLines();
+    public useRightAxisGridLines(useRightAxisGridLines): this;
+    public useRightAxisGridLines(useRightAxisGridLines?) {
         if (!arguments) {
             return this._rightAxisGridLines;
         }
@@ -318,9 +329,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Object} [childOptions]
      * @returns {Object|CompositeChart}
      */
-    public childOptions ();
-    public childOptions (childOptions): this;
-    public childOptions (childOptions?) {
+    public childOptions();
+    public childOptions(childOptions): this;
+    public childOptions(childOptions?) {
         if (!arguments.length) {
             return this._childOptions;
         }
@@ -331,7 +342,7 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public fadeDeselectedArea (brushSelection) {
+    public fadeDeselectedArea(brushSelection) {
         if (this.brushOn()) {
             for (let i = 0; i < this._children.length; ++i) {
                 const child = this._children[i];
@@ -346,15 +357,16 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Number} [padding]
      * @returns {String|CompositeChart}
      */
-    public rightYAxisLabel (): string;
-    public rightYAxisLabel (rightYAxisLabel: string, padding?: number): this;
-    public rightYAxisLabel (rightYAxisLabel?, padding?) {
+    public rightYAxisLabel(): string;
+    public rightYAxisLabel(rightYAxisLabel: string, padding?: number): this;
+    public rightYAxisLabel(rightYAxisLabel?, padding?) {
         if (!arguments.length) {
             return this._rightYAxisLabel;
         }
         this._rightYAxisLabel = rightYAxisLabel;
         this.margins().right -= this._rightYAxisLabelPadding;
-        this._rightYAxisLabelPadding = (padding === undefined) ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
+        this._rightYAxisLabelPadding =
+            padding === undefined ? DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING : padding;
         this.margins().right += this._rightYAxisLabelPadding;
         return this;
     }
@@ -382,7 +394,7 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Array<Chart>} [subChartArray]
      * @returns {CompositeChart}
      */
-    public compose (subChartArray: CoordinateGridMixin[]) {
+    public compose(subChartArray: CoordinateGridMixin[]) {
         this._children = subChartArray;
         this._children.forEach(child => {
             child.height(this.height());
@@ -399,17 +411,17 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public _setChildrenProperty (prop, value) {
+    public _setChildrenProperty(prop, value) {
         this._children.forEach(child => {
             child[prop](value);
         });
     }
 
     // properties passed through in compose()
-    public height (): number;
-    public height (height: number | (() => number)): this;
-    public height (height?) {
-        if(!arguments.length) {
+    public height(): number;
+    public height(height: number | (() => number)): this;
+    public height(height?) {
+        if (!arguments.length) {
             return super.height();
         }
         super.height(height);
@@ -417,10 +429,10 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public width (): number;
-    public width (width: number | (() => number)): this;
-    public width (width?) {
-        if(!arguments.length) {
+    public width(): number;
+    public width(width: number | (() => number)): this;
+    public width(width?) {
+        if (!arguments.length) {
             return super.width();
         }
         super.width(width);
@@ -428,10 +440,10 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public margins (): Margins;
-    public margins (margins: Margins): this;
-    public margins (margins?) {
-        if(!arguments.length) {
+    public margins(): Margins;
+    public margins(margins: Margins): this;
+    public margins(margins?) {
+        if (!arguments.length) {
             return super.margins();
         }
         super.margins(margins);
@@ -443,7 +455,7 @@ export class CompositeChart extends CoordinateGridMixin {
      * Returns the child charts which are composed into the composite chart.
      * @returns {Array<BaseMixin>}
      */
-    public children (): CoordinateGridMixin[] {
+    public children(): CoordinateGridMixin[] {
         return this._children;
     }
 
@@ -454,9 +466,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {d3.scale} [yScale]
      * @returns {d3.scale|CompositeChart}
      */
-    public rightY (): MinimalXYScale;
-    public rightY (yScale: MinimalXYScale): this;
-    public rightY (yScale?) {
+    public rightY(): MinimalXYScale;
+    public rightY(yScale: MinimalXYScale): this;
+    public rightY(yScale?) {
         if (!arguments.length) {
             return this._rightY;
         }
@@ -471,9 +483,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {Boolean} [alignYAxes=false]
      * @returns {Chart}
      */
-    public alignYAxes (): boolean;
-    public alignYAxes (alignYAxes: boolean): this;
-    public alignYAxes (alignYAxes?) {
+    public alignYAxes(): boolean;
+    public alignYAxes(alignYAxes: boolean): this;
+    public alignYAxes(alignYAxes?) {
         if (!arguments.length) {
             return this._alignYAxes;
         }
@@ -482,57 +494,65 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public _leftYAxisChildren () {
+    public _leftYAxisChildren() {
         return this._children.filter(child => !child.conf().useRightYAxis);
     }
 
-    public _rightYAxisChildren () {
+    public _rightYAxisChildren() {
         return this._children.filter(child => child.conf().useRightYAxis);
     }
 
     // TODO: revisit all min/max functions after making charts to use Generics
 
-    public _getYAxisMin (charts) {
+    public _getYAxisMin(charts) {
         return charts.map(c => c.yAxisMin());
     }
 
-    public _yAxisMin () {
+    public _yAxisMin() {
         return min(this._getYAxisMin(this._leftYAxisChildren()));
     }
 
-    public _rightYAxisMin () {
+    public _rightYAxisMin() {
         return min(this._getYAxisMin(this._rightYAxisChildren()));
     }
 
-    public _getYAxisMax (charts) {
+    public _getYAxisMax(charts) {
         return charts.map(c => c.yAxisMax());
     }
 
-    public _yAxisMax () {
+    public _yAxisMax() {
         return add(max(this._getYAxisMax(this._leftYAxisChildren())), this._conf.yAxisPadding);
     }
 
-    public _rightYAxisMax () {
+    public _rightYAxisMax() {
         return add(max(this._getYAxisMax(this._rightYAxisChildren())), this._conf.yAxisPadding);
     }
 
-    public _getAllXAxisMinFromChildCharts () {
+    public _getAllXAxisMinFromChildCharts() {
         return this._children.map(c => c.xAxisMin());
     }
 
-    public xAxisMin () {
-        return subtract(min(this._getAllXAxisMinFromChildCharts()), this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
+    public xAxisMin() {
+        return subtract(
+            min(this._getAllXAxisMinFromChildCharts()),
+            this._conf.xAxisPadding,
+            this._conf.xAxisPaddingUnit
+        );
     }
 
-    public _getAllXAxisMaxFromChildCharts () {
+    public _getAllXAxisMaxFromChildCharts() {
         return this._children.map(c => c.xAxisMax());
     }
 
-    public xAxisMax () {
-        return add(max(this._getAllXAxisMaxFromChildCharts()), this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
+    public xAxisMax() {
+        return add(
+            max(this._getAllXAxisMaxFromChildCharts()),
+            this._conf.xAxisPadding,
+            this._conf.xAxisPaddingUnit
+        );
     }
 
-    public legendables () {
+    public legendables() {
         return this._children.reduce((items, child) => {
             if (this._conf.shareColors) {
                 child.colors(this.colors());
@@ -542,21 +562,21 @@ export class CompositeChart extends CoordinateGridMixin {
         }, []);
     }
 
-    public legendHighlight (d): void {
+    public legendHighlight(d): void {
         for (let j = 0; j < this._children.length; ++j) {
             const child = this._children[j];
             child.legendHighlight(d);
         }
     }
 
-    public legendReset (d): void {
+    public legendReset(d): void {
         for (let j = 0; j < this._children.length; ++j) {
             const child = this._children[j];
             child.legendReset(d);
         }
     }
 
-    public legendToggle (): void {
+    public legendToggle(): void {
         console.log('composite should not be getting legendToggle itself');
     }
 
@@ -580,9 +600,9 @@ export class CompositeChart extends CoordinateGridMixin {
      * @param {d3.axisRight} [rightYAxis]
      * @returns {d3.axisRight|CompositeChart}
      */
-    public rightYAxis (): Axis<any>;
-    public rightYAxis (rightYAxis: Axis<any>): this;
-    public rightYAxis (rightYAxis?) {
+    public rightYAxis(): Axis<any>;
+    public rightYAxis(rightYAxis: Axis<any>): this;
+    public rightYAxis(rightYAxis?) {
         if (!arguments.length) {
             return this._rightYAxis;
         }
@@ -590,11 +610,11 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public yAxisMin (): number {
+    public yAxisMin(): number {
         throw new Error('Not supported for this chart type');
     }
 
-    public yAxisMax (): number {
+    public yAxisMax(): number {
         throw new Error('Not supported for this chart type');
     }
 }

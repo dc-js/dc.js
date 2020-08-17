@@ -1,5 +1,3 @@
-import {IBaseMixinConf} from './i-base-mixin-conf';
+import { IBaseMixinConf } from './i-base-mixin-conf';
 
-export interface IMarginMixinConf extends IBaseMixinConf {
-
-}
+export interface IMarginMixinConf extends IBaseMixinConf {}

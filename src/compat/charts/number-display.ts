@@ -1,9 +1,9 @@
-import {NumberDisplay as NumberDisplayNeo} from '../../charts/number-display';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType, NumberFormatFn} from '../../core/types';
+import { NumberDisplay as NumberDisplayNeo } from '../../charts/number-display';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ChartGroupType, ChartParentType, NumberFormatFn } from '../../core/types';
 
 export class NumberDisplay extends BaseMixinExt(NumberDisplayNeo) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -13,15 +13,16 @@ export class NumberDisplay extends BaseMixinExt(NumberDisplayNeo) {
      * @param {Function} [formatter=d3.format('.2s')]
      * @returns {Function|NumberDisplay}
      */
-    public formatNumber (): NumberFormatFn;
-    public formatNumber (formatter: NumberFormatFn): this;
-    public formatNumber (formatter?) {
+    public formatNumber(): NumberFormatFn;
+    public formatNumber(formatter: NumberFormatFn): this;
+    public formatNumber(formatter?) {
         if (!arguments.length) {
             return this._conf.formatNumber;
         }
-        this.configure({formatNumber: formatter});
+        this.configure({ formatNumber: formatter });
         return this;
     }
 }
 
-export const numberDisplay = (parent: ChartParentType, chartGroup: ChartGroupType) => new NumberDisplay(parent, chartGroup);
+export const numberDisplay = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new NumberDisplay(parent, chartGroup);

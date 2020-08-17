@@ -1,7 +1,7 @@
-import {isNumber} from '../core/utils';
-import {constants} from '../core/constants';
-import {LegendItem, LegendTextAccessor, ParentOfLegend} from '../core/types';
-import {Selection} from 'd3-selection';
+import { isNumber } from '../core/utils';
+import { constants } from '../core/constants';
+import { LegendItem, LegendTextAccessor, ParentOfLegend } from '../core/types';
+import { Selection } from 'd3-selection';
 
 const LABEL_GAP = 2;
 
@@ -31,7 +31,7 @@ export class Legend {
     private _highlightSelected: boolean;
     private _g: Selection<SVGGElement, any, SVGElement, any>;
 
-    constructor () {
+    constructor() {
         this._parent = undefined;
         this._x = 0;
         this._y = 0;
@@ -48,9 +48,9 @@ export class Legend {
         this._g = undefined;
     }
 
-    public parent (): ParentOfLegend;
-    public parent (p: ParentOfLegend): this;
-    public parent (p?) {
+    public parent(): ParentOfLegend;
+    public parent(p: ParentOfLegend): this;
+    public parent(p?) {
         if (!arguments.length) {
             return this._parent;
         }
@@ -63,9 +63,9 @@ export class Legend {
      * @param  {Number} [x=0]
      * @returns {Number|Legend}
      */
-    public x (): number;
-    public x (x: number): this;
-    public x (x?) {
+    public x(): number;
+    public x(x: number): this;
+    public x(x?) {
         if (!arguments.length) {
             return this._x;
         }
@@ -78,9 +78,9 @@ export class Legend {
      * @param  {Number} [y=0]
      * @returns {Number|Legend}
      */
-    public y (): number;
-    public y (y: number): this;
-    public y (y?) {
+    public y(): number;
+    public y(y: number): this;
+    public y(y?) {
         if (!arguments.length) {
             return this._y;
         }
@@ -93,9 +93,9 @@ export class Legend {
      * @param  {Number} [gap=5]
      * @returns {Number|Legend}
      */
-    public gap (): number;
-    public gap (gap: number): this;
-    public gap (gap?) {
+    public gap(): number;
+    public gap(gap: number): this;
+    public gap(gap?) {
         if (!arguments.length) {
             return this._gap;
         }
@@ -109,9 +109,9 @@ export class Legend {
      * @param {boolean} [highlightSelected]
      * @return {boolean|dc.legend}
      */
-    public highlightSelected (): boolean;
-    public highlightSelected (highlightSelected: boolean): this;
-    public highlightSelected (highlightSelected?) {
+    public highlightSelected(): boolean;
+    public highlightSelected(highlightSelected: boolean): this;
+    public highlightSelected(highlightSelected?) {
         if (!arguments.length) {
             return this._highlightSelected;
         }
@@ -124,9 +124,9 @@ export class Legend {
      * @param  {Number} [itemHeight=12]
      * @returns {Number|Legend}
      */
-    public itemHeight (): number;
-    public itemHeight (itemHeight: number): this;
-    public itemHeight (itemHeight?) {
+    public itemHeight(): number;
+    public itemHeight(itemHeight: number): this;
+    public itemHeight(itemHeight?) {
         if (!arguments.length) {
             return this._itemHeight;
         }
@@ -139,9 +139,9 @@ export class Legend {
      * @param  {Boolean} [horizontal=false]
      * @returns {Boolean|Legend}
      */
-    public horizontal (): boolean;
-    public horizontal (horizontal: boolean): this;
-    public horizontal (horizontal?) {
+    public horizontal(): boolean;
+    public horizontal(horizontal: boolean): this;
+    public horizontal(horizontal?) {
         if (!arguments.length) {
             return this._horizontal;
         }
@@ -154,9 +154,9 @@ export class Legend {
      * @param  {Number} [legendWidth=500]
      * @returns {Number|Legend}
      */
-    public legendWidth (): number;
-    public legendWidth (legendWidth: number): this;
-    public legendWidth (legendWidth?) {
+    public legendWidth(): number;
+    public legendWidth(legendWidth: number): this;
+    public legendWidth(legendWidth?) {
         if (!arguments.length) {
             return this._legendWidth;
         }
@@ -169,9 +169,9 @@ export class Legend {
      * @param  {Number} [itemWidth=70]
      * @returns {Number|Legend}
      */
-    public itemWidth (): number;
-    public itemWidth (itemWidth: number): this;
-    public itemWidth (itemWidth?) {
+    public itemWidth(): number;
+    public itemWidth(itemWidth: number): this;
+    public itemWidth(itemWidth?) {
         if (!arguments.length) {
             return this._itemWidth;
         }
@@ -185,9 +185,9 @@ export class Legend {
      * @param  {Boolean} [autoItemWidth=false]
      * @returns {Boolean|Legend}
      */
-    public autoItemWidth (): boolean;
-    public autoItemWidth (autoItemWidth: boolean): this;
-    public autoItemWidth (autoItemWidth?) {
+    public autoItemWidth(): boolean;
+    public autoItemWidth(autoItemWidth: boolean): this;
+    public autoItemWidth(autoItemWidth?) {
         if (!arguments.length) {
             return this._autoItemWidth;
         }
@@ -211,9 +211,9 @@ export class Legend {
      * // create legend displaying group counts
      * chart.legend(new Legend().legendText(function(d) { return d.name + ': ' d.data; }))
      */
-    public legendText (): LegendTextAccessor;
-    public legendText (legendText: LegendTextAccessor): this;
-    public legendText (legendText?) {
+    public legendText(): LegendTextAccessor;
+    public legendText(legendText: LegendTextAccessor): this;
+    public legendText(legendText?) {
         if (!arguments.length) {
             return this._legendText;
         }
@@ -226,9 +226,9 @@ export class Legend {
      * @param  {Number} [maxItems]
      * @return {Legend}
      */
-    public maxItems (): number;
-    public maxItems (maxItems: number): this;
-    public maxItems (maxItems?) {
+    public maxItems(): number;
+    public maxItems(maxItems: number): this;
+    public maxItems(maxItems?) {
         if (!arguments.length) {
             return this._maxItems;
         }
@@ -238,23 +238,26 @@ export class Legend {
 
     // Implementation methods
 
-    public _legendItemHeight (): number {
+    public _legendItemHeight(): number {
         return this._gap + this._itemHeight;
     }
 
-    public render (): void {
+    public render(): void {
         this._parent.svg().select('g.dc-legend').remove();
-        this._g = this._parent.svg().append('g')
+        this._g = this._parent
+            .svg()
+            .append('g')
             .attr('class', 'dc-legend')
             .attr('transform', `translate(${this._x},${this._y})`);
-        let legendables:LegendItem[] = this._parent.legendables();
+        let legendables: LegendItem[] = this._parent.legendables();
         const filters = this._parent.filters();
 
         if (this._maxItems !== undefined) {
             legendables = legendables.slice(0, this._maxItems);
         }
 
-        const itemEnter: Selection<SVGGElement, any, SVGGElement, any> = this._g.selectAll<SVGGElement, any>('g.dc-legend-item')
+        const itemEnter: Selection<SVGGElement, any, SVGGElement, any> = this._g
+            .selectAll<SVGGElement, any>('g.dc-legend-item')
             .data<LegendItem>(legendables)
             .enter()
             .append('g')
@@ -271,11 +274,11 @@ export class Legend {
 
         if (this._highlightSelected) {
             // TODO: fragile code - there may be other types of filters
-            itemEnter.classed(constants.SELECTED_CLASS,
-                              d => filters.indexOf(d.name) !== -1);
+            itemEnter.classed(constants.SELECTED_CLASS, d => filters.indexOf(d.name) !== -1);
         }
 
-        this._g.selectAll<SVGGElement, any>('g.dc-legend-item')
+        this._g
+            .selectAll<SVGGElement, any>('g.dc-legend-item')
             .classed('fadeout', d => d.chart.isLegendableHidden(d));
 
         if (legendables.some(d => d.dashstyle)) {
@@ -293,17 +296,20 @@ export class Legend {
                 .append('rect')
                 .attr('width', this._itemHeight)
                 .attr('height', this._itemHeight)
-                .attr('fill', d => d ? d.color : 'blue');
+                .attr('fill', d => (d ? d.color : 'blue'));
         }
 
         {
             const self = this;
 
-            itemEnter.append('text')
+            itemEnter
+                .append('text')
                 .text(self._legendText)
                 .attr('x', self._itemHeight + LABEL_GAP)
                 .attr('y', function () {
-                    return self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
+                    return (
+                        self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2
+                    );
                 });
         }
 
@@ -315,12 +321,20 @@ export class Legend {
 
             itemEnter.attr('transform', function (d, i) {
                 if (self._horizontal) {
-                    const itemWidth = self._autoItemWidth === true ? this.getBBox().width + self._gap : self._itemWidth;
-                    if ((cumulativeLegendTextWidth + itemWidth) > self._legendWidth && cumulativeLegendTextWidth > 0) {
+                    const itemWidth =
+                        self._autoItemWidth === true
+                            ? this.getBBox().width + self._gap
+                            : self._itemWidth;
+                    if (
+                        cumulativeLegendTextWidth + itemWidth > self._legendWidth &&
+                        cumulativeLegendTextWidth > 0
+                    ) {
                         ++row;
                         cumulativeLegendTextWidth = 0;
                     }
-                    const translateBy = `translate(${cumulativeLegendTextWidth},${row * self._legendItemHeight()})`;
+                    const translateBy = `translate(${cumulativeLegendTextWidth},${
+                        row * self._legendItemHeight()
+                    })`;
                     cumulativeLegendTextWidth += itemWidth;
                     return translateBy;
                 } else {
@@ -329,5 +343,4 @@ export class Legend {
             });
         }
     }
-
 }

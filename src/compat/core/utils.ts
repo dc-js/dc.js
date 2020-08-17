@@ -15,7 +15,7 @@ import {
     safeNumber,
     subtract,
     toHierarchy,
-    uniqueId
+    uniqueId,
 } from '../../core/utils';
 
 /**
@@ -42,9 +42,13 @@ import {
  */
 export const pluck = function (n, f?) {
     if (!f) {
-        return function (d) { return d[n]; };
+        return function (d) {
+            return d[n];
+        };
     }
-    return function (d, i) { return f.call(d, d[n], i); };
+    return function (d, i) {
+        return f.call(d, d[n], i);
+    };
 };
 
 /**
@@ -71,5 +75,5 @@ export const utils = {
     safeNumber: safeNumber,
     subtract: subtract,
     toHierarchy: toHierarchy,
-    uniqueId: uniqueId
+    uniqueId: uniqueId,
 };

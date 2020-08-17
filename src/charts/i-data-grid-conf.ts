@@ -1,5 +1,5 @@
-import {IBaseMixinConf} from '../base/i-base-mixin-conf';
-import {BaseAccessor, CompareFn, GroupingFn} from '../core/types';
+import { IBaseMixinConf } from '../base/i-base-mixin-conf';
+import { BaseAccessor, CompareFn, GroupingFn } from '../core/types';
 
 export interface IDataGridConf extends IBaseMixinConf {
     readonly order?: CompareFn;

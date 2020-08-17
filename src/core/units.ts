@@ -1,5 +1,5 @@
-import {isNegligible} from './utils';
-import {Units} from './types';
+import { isNegligible } from './utils';
+import { Units } from './types';
 
 /**
  * @namespace units
@@ -73,7 +73,7 @@ units.fp = {};
  * @returns {Function} start-end unit function
  */
 units.fp.precision = function (precision: number): Units {
-    const _f: Units = function (s: number, e:number): number {
+    const _f: Units = function (s: number, e: number): number {
         const d = Math.abs((e - s) / _f.resolution);
         if (isNegligible(d - Math.floor(d))) {
             return Math.floor(d);

@@ -4,10 +4,10 @@ import {
     KeyAccessor,
     LabelAccessor,
     MinimalCFDimension,
-    ValueAccessor
+    ValueAccessor,
 } from '../../core/types';
 
-import {BaseMixin as BaseMixinNeo} from '../../base/base-mixin';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
 
 export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
     return class extends Base {
@@ -21,13 +21,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Number} [minWidth=200]
          * @returns {Number|BaseMixin}
          */
-        public minWidth (): number;
-        public minWidth (minWidth: number): this;
-        public minWidth (minWidth?) {
+        public minWidth(): number;
+        public minWidth(minWidth: number): this;
+        public minWidth(minWidth?) {
             if (!arguments.length) {
                 return this._conf.minWidth;
             }
-            this.configure({minWidth: minWidth});
+            this.configure({ minWidth: minWidth });
             return this;
         }
 
@@ -38,13 +38,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Number} [minHeight=200]
          * @returns {Number|BaseMixin}
          */
-        public minHeight (): number;
-        public minHeight (minHeight: number): this;
-        public minHeight (minHeight?) {
+        public minHeight(): number;
+        public minHeight(minHeight: number): this;
+        public minHeight(minHeight?) {
             if (!arguments.length) {
                 return this._conf.minHeight;
             }
-            this.configure({minHeight: minHeight});
+            this.configure({ minHeight: minHeight });
             return this;
         }
 
@@ -68,13 +68,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Boolean} [useViewBoxResizing=false]
          * @returns {Boolean|BaseMixin}
          */
-        public useViewBoxResizing (): boolean;
-        public useViewBoxResizing (useViewBoxResizing: boolean): this;
-        public useViewBoxResizing (useViewBoxResizing?) {
+        public useViewBoxResizing(): boolean;
+        public useViewBoxResizing(useViewBoxResizing: boolean): this;
+        public useViewBoxResizing(useViewBoxResizing?) {
             if (!arguments.length) {
                 return this._conf.useViewBoxResizing;
             }
-            this.configure({useViewBoxResizing: useViewBoxResizing});
+            this.configure({ useViewBoxResizing: useViewBoxResizing });
             return this;
         }
 
@@ -94,13 +94,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {crossfilter.dimension} [dimension]
          * @returns {crossfilter.dimension|BaseMixin}
          */
-        public dimension (): MinimalCFDimension;
-        public dimension (dimension: MinimalCFDimension): this;
-        public dimension (dimension?) {
+        public dimension(): MinimalCFDimension;
+        public dimension(dimension: MinimalCFDimension): this;
+        public dimension(dimension?) {
             if (!arguments.length) {
                 return this._conf.dimension;
             }
-            this.configure({dimension: dimension});
+            this.configure({ dimension: dimension });
             this.expireCache();
             return this;
         }
@@ -115,13 +115,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [orderFunction]
          * @returns {Function|BaseMixin}
          */
-        public ordering (): BaseAccessor<any>;
-        public ordering (orderFunction: BaseAccessor<any>): this;
-        public ordering (orderFunction?) {
+        public ordering(): BaseAccessor<any>;
+        public ordering(orderFunction: BaseAccessor<any>): this;
+        public ordering(orderFunction?) {
             if (!arguments.length) {
                 return this._conf.ordering;
             }
-            this.configure({ordering: orderFunction});
+            this.configure({ ordering: orderFunction });
             this.expireCache();
             return this;
         }
@@ -146,13 +146,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [filterPrinterFunction=printers.filters]
          * @returns {Function|BaseMixin}
          */
-        public filterPrinter ();
-        public filterPrinter (filterPrinterFunction): this;
-        public filterPrinter (filterPrinterFunction?) {
+        public filterPrinter();
+        public filterPrinter(filterPrinterFunction): this;
+        public filterPrinter(filterPrinterFunction?) {
             if (!arguments.length) {
                 return this._conf.filterPrinter;
             }
-            this.configure({filterPrinter: filterPrinterFunction});
+            this.configure({ filterPrinter: filterPrinterFunction });
             return this;
         }
 
@@ -161,13 +161,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Number} [duration=750]
          * @returns {Number|BaseMixin}
          */
-        public transitionDuration (): number;
-        public transitionDuration (duration: number): this;
-        public transitionDuration (duration?) {
+        public transitionDuration(): number;
+        public transitionDuration(duration: number): this;
+        public transitionDuration(duration?) {
             if (!arguments.length) {
                 return this._conf.transitionDuration;
             }
-            this.configure({transitionDuration: duration});
+            this.configure({ transitionDuration: duration });
             return this;
         }
 
@@ -176,13 +176,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Number} [delay=0]
          * @returns {Number|BaseMixin}
          */
-        public transitionDelay (): number;
-        public transitionDelay (delay: number): this;
-        public transitionDelay (delay?) {
+        public transitionDelay(): number;
+        public transitionDelay(delay: number): this;
+        public transitionDelay(delay?) {
             if (!arguments.length) {
                 return this._conf.transitionDelay;
             }
-            this.configure({transitionDelay: delay});
+            this.configure({ transitionDelay: delay });
             return this;
         }
 
@@ -192,13 +192,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Boolean} [controlsUseVisibility=false]
          * @returns {Boolean|BaseMixin}
          */
-        public controlsUseVisibility (): boolean;
-        public controlsUseVisibility (controlsUseVisibility: boolean): this;
-        public controlsUseVisibility (controlsUseVisibility?) {
+        public controlsUseVisibility(): boolean;
+        public controlsUseVisibility(controlsUseVisibility: boolean): this;
+        public controlsUseVisibility(controlsUseVisibility?) {
             if (!arguments.length) {
                 return this._conf.controlsUseVisibility;
             }
-            this.configure({controlsUseVisibility: controlsUseVisibility});
+            this.configure({ controlsUseVisibility: controlsUseVisibility });
             return this;
         }
 
@@ -213,13 +213,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} commitHandler
          * @returns {BaseMixin}
          */
-        public commitHandler (): () => void;
-        public commitHandler (commitHandler: () => void): this;
-        public commitHandler (commitHandler?) {
+        public commitHandler(): () => void;
+        public commitHandler(commitHandler: () => void): this;
+        public commitHandler(commitHandler?) {
             if (!arguments.length) {
                 return this._conf.commitHandler;
             }
-            this.configure({commitHandler: commitHandler});
+            this.configure({ commitHandler: commitHandler });
             return this;
         }
 
@@ -267,13 +267,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [filterHandler]
          * @returns {Function|BaseMixin}
          */
-        public filterHandler ();
-        public filterHandler (filterHandler): this;
-        public filterHandler (filterHandler?) {
+        public filterHandler();
+        public filterHandler(filterHandler): this;
+        public filterHandler(filterHandler?) {
             if (!arguments.length) {
                 return this._conf.filterHandler;
             }
-            this.configure({filterHandler: filterHandler});
+            this.configure({ filterHandler: filterHandler });
             return this;
         }
 
@@ -299,13 +299,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [hasFilterHandler]
          * @returns {Function|BaseMixin}
          */
-        public hasFilterHandler ();
-        public hasFilterHandler (hasFilterHandler): this;
-        public hasFilterHandler (hasFilterHandler?) {
+        public hasFilterHandler();
+        public hasFilterHandler(hasFilterHandler): this;
+        public hasFilterHandler(hasFilterHandler?) {
             if (!arguments.length) {
                 return this._conf.hasFilterHandler;
             }
-            this.configure({hasFilterHandler: hasFilterHandler});
+            this.configure({ hasFilterHandler: hasFilterHandler });
             return this;
         }
 
@@ -335,13 +335,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [removeFilterHandler]
          * @returns {Function|BaseMixin}
          */
-        public removeFilterHandler ();
-        public removeFilterHandler (removeFilterHandler): this;
-        public removeFilterHandler (removeFilterHandler?) {
+        public removeFilterHandler();
+        public removeFilterHandler(removeFilterHandler): this;
+        public removeFilterHandler(removeFilterHandler?) {
             if (!arguments.length) {
                 return this._conf.removeFilterHandler;
             }
-            this.configure({removeFilterHandler: removeFilterHandler});
+            this.configure({ removeFilterHandler: removeFilterHandler });
             return this;
         }
 
@@ -366,13 +366,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [addFilterHandler]
          * @returns {Function|BaseMixin}
          */
-        public addFilterHandler ();
-        public addFilterHandler (addFilterHandler): this;
-        public addFilterHandler (addFilterHandler?) {
+        public addFilterHandler();
+        public addFilterHandler(addFilterHandler): this;
+        public addFilterHandler(addFilterHandler?) {
             if (!arguments.length) {
                 return this._conf.addFilterHandler;
             }
-            this.configure({addFilterHandler: addFilterHandler});
+            this.configure({ addFilterHandler: addFilterHandler });
             return this;
         }
 
@@ -396,13 +396,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [resetFilterHandler]
          * @returns {BaseMixin}
          */
-        public resetFilterHandler ();
-        public resetFilterHandler (resetFilterHandler): this;
-        public resetFilterHandler (resetFilterHandler?) {
+        public resetFilterHandler();
+        public resetFilterHandler(resetFilterHandler): this;
+        public resetFilterHandler(resetFilterHandler?) {
             if (!arguments.length) {
                 return this._conf.resetFilterHandler;
             }
-            this.configure({resetFilterHandler: resetFilterHandler});
+            this.configure({ resetFilterHandler: resetFilterHandler });
             return this;
         }
 
@@ -420,15 +420,15 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Boolean} [enableLabels=true]
          * @returns {Function|BaseMixin}
          */
-        public label (): LabelAccessor;
-        public label (labelFunction: LabelAccessor, enableLabels?: boolean): this;
-        public label (labelFunction?, enableLabels?) {
+        public label(): LabelAccessor;
+        public label(labelFunction: LabelAccessor, enableLabels?: boolean): this;
+        public label(labelFunction?, enableLabels?) {
             if (!arguments.length) {
                 return this._conf.label;
             }
-            this.configure({label: labelFunction});
-            if ((enableLabels === undefined) || enableLabels) {
-                this.configure({renderLabel: true});
+            this.configure({ label: labelFunction });
+            if (enableLabels === undefined || enableLabels) {
+                this.configure({ renderLabel: true });
             }
             return this;
         }
@@ -438,13 +438,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Boolean} [renderLabel=false]
          * @returns {Boolean|BaseMixin}
          */
-        public renderLabel (): boolean;
-        public renderLabel (renderLabel: boolean): this;
-        public renderLabel (renderLabel?) {
+        public renderLabel(): boolean;
+        public renderLabel(renderLabel: boolean): this;
+        public renderLabel(renderLabel?) {
             if (!arguments.length) {
                 return this._conf.renderLabel;
             }
-            this.configure({renderLabel: renderLabel});
+            this.configure({ renderLabel: renderLabel });
             return this;
         }
 
@@ -454,13 +454,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Boolean} [renderTitle=true]
          * @returns {Boolean|BaseMixin}
          */
-        public renderTitle (): boolean;
-        public renderTitle (renderTitle: boolean): this;
-        public renderTitle (renderTitle?) {
+        public renderTitle(): boolean;
+        public renderTitle(renderTitle: boolean): this;
+        public renderTitle(renderTitle?) {
             if (!arguments.length) {
                 return this._conf.renderTitle;
             }
-            this.configure({renderTitle: renderTitle});
+            this.configure({ renderTitle: renderTitle });
             return this;
         }
 
@@ -476,13 +476,13 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [keyAccessor]
          * @returns {Function|BaseMixin}
          */
-        public keyAccessor (): KeyAccessor;
-        public keyAccessor (keyAccessor: KeyAccessor): this;
-        public keyAccessor (keyAccessor?) {
+        public keyAccessor(): KeyAccessor;
+        public keyAccessor(keyAccessor: KeyAccessor): this;
+        public keyAccessor(keyAccessor?) {
             if (!arguments.length) {
                 return this._conf.keyAccessor;
             }
-            this.configure({keyAccessor: keyAccessor});
+            this.configure({ keyAccessor: keyAccessor });
             return this;
         }
 
@@ -499,16 +499,16 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @param {Function} [valueAccessor]
          * @returns {Function|BaseMixin}
          */
-        public valueAccessor (): ValueAccessor;
-        public valueAccessor (valueAccessor: ValueAccessor): this;
-        public valueAccessor (valueAccessor?) {
+        public valueAccessor(): ValueAccessor;
+        public valueAccessor(valueAccessor: ValueAccessor): this;
+        public valueAccessor(valueAccessor?) {
             if (!arguments.length) {
                 return this._conf.valueAccessor;
             }
-            this.configure({valueAccessor: valueAccessor});
+            this.configure({ valueAccessor: valueAccessor });
             return this;
         }
-    }
+    };
 }
 
 export const BaseMixin = BaseMixinExt(BaseMixinNeo);

@@ -1,11 +1,17 @@
-import {DataTable as DataTableNeo} from '../../charts/data-table';
-import {BaseMixinExt} from '../base/base-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn, DataTableColumnSpec} from '../../core/types';
-import {logger} from '../core/logger';
+import { DataTable as DataTableNeo } from '../../charts/data-table';
+import { BaseMixinExt } from '../base/base-mixin';
+import {
+    BaseAccessor,
+    ChartGroupType,
+    ChartParentType,
+    CompareFn,
+    DataTableColumnSpec,
+} from '../../core/types';
+import { logger } from '../core/logger';
 
 // @ts-ignore, remove after group method is moved here
 export class DataTable extends BaseMixinExt(DataTableNeo) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -23,13 +29,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataTable}
      */
-    public section (): BaseAccessor<string>;
-    public section (section: BaseAccessor<string>): this;
-    public section (section?) {
+    public section(): BaseAccessor<string>;
+    public section(section: BaseAccessor<string>): this;
+    public section(section?) {
         if (!arguments.length) {
             return this._conf.section;
         }
-        this.configure({section: section});
+        this.configure({ section: section });
         return this;
     }
 
@@ -40,11 +46,11 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @returns {Function|DataTable}
      */
     // @ts-ignore, signature is different in BaseMixin
-    public group (): BaseAccessor<string>;
+    public group(): BaseAccessor<string>;
     // @ts-ignore, signature is different in BaseMixin
-    public group (section: BaseAccessor<string>): this;
+    public group(section: BaseAccessor<string>): this;
     // @ts-ignore, signature is different in BaseMixin
-    public group (section?) {
+    public group(section?) {
         logger.warnOnce('consider using dataTable.section instead of dataTable.group for clarity');
         if (!arguments.length) {
             return this.section();
@@ -57,13 +63,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Number} [size=25]
      * @returns {Number|DataTable}
      */
-    public size (): number;
-    public size (size: number): this;
-    public size (size?) {
+    public size(): number;
+    public size(size: number): this;
+    public size(size?) {
         if (!arguments.length) {
             return this._conf.size;
         }
-        this.configure({size: size});
+        this.configure({ size: size });
         return this;
     }
 
@@ -77,13 +83,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Number} [beginSlice=0]
      * @returns {Number|DataTable}
      */
-    public beginSlice (): number;
-    public beginSlice (beginSlice: number): this;
-    public beginSlice (beginSlice?) {
+    public beginSlice(): number;
+    public beginSlice(beginSlice: number): this;
+    public beginSlice(beginSlice?) {
         if (!arguments.length) {
             return this._conf.beginSlice;
         }
-        this.configure({beginSlice: beginSlice});
+        this.configure({ beginSlice: beginSlice });
         return this;
     }
 
@@ -93,13 +99,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Number|undefined} [endSlice=undefined]
      * @returns {Number|DataTable}
      */
-    public endSlice (): number;
-    public endSlice (endSlice: number): this;
-    public endSlice (endSlice?) {
+    public endSlice(): number;
+    public endSlice(endSlice: number): this;
+    public endSlice(endSlice?) {
         if (!arguments.length) {
             return this._conf.endSlice;
         }
-        this.configure({endSlice: endSlice});
+        this.configure({ endSlice: endSlice });
         return this;
     }
 
@@ -179,13 +185,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Array<Function>} [columns=[]]
      * @returns {Array<Function>}|DataTable}
      */
-    public columns (): DataTableColumnSpec[];
-    public columns (columns: DataTableColumnSpec[]): this;
-    public columns (columns?) {
+    public columns(): DataTableColumnSpec[];
+    public columns(columns: DataTableColumnSpec[]): this;
+    public columns(columns?) {
         if (!arguments.length) {
             return this._conf.columns;
         }
-        this.configure({columns: columns});
+        this.configure({ columns: columns });
         return this;
     }
 
@@ -199,13 +205,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Function} [sortBy=identity function]
      * @returns {Function|DataTable}
      */
-    public sortBy (): BaseAccessor<any>;
-    public sortBy (sortBy: BaseAccessor<any>): this;
-    public sortBy (sortBy?) {
+    public sortBy(): BaseAccessor<any>;
+    public sortBy(sortBy: BaseAccessor<any>): this;
+    public sortBy(sortBy?) {
         if (!arguments.length) {
             return this._conf.sortBy;
         }
-        this.configure({sortBy: sortBy});
+        this.configure({ sortBy: sortBy });
         return this;
     }
 
@@ -219,13 +225,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Function} [order=d3.ascending]
      * @returns {Function|DataTable}
      */
-    public order (): CompareFn;
-    public order (order: CompareFn): this;
-    public order (order?) {
+    public order(): CompareFn;
+    public order(order: CompareFn): this;
+    public order(order?) {
         if (!arguments.length) {
             return this._conf.order;
         }
-        this.configure({order: order});
+        this.configure({ order: order });
         return this;
     }
 
@@ -238,13 +244,13 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Boolean} [showSections=true]
      * @returns {Boolean|DataTable}
      */
-    public showSections (): boolean;
-    public showSections (showSections: boolean): this;
-    public showSections (showSections?) {
+    public showSections(): boolean;
+    public showSections(showSections: boolean): this;
+    public showSections(showSections?) {
         if (!arguments.length) {
             return this._conf.showSections;
         }
-        this.configure({showSections: showSections});
+        this.configure({ showSections: showSections });
         return this;
     }
 
@@ -253,10 +259,12 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @param {Boolean} [showSections=true]
      * @returns {Boolean|DataTable}
      */
-    public showGroups (): boolean;
-    public showGroups (showSections: boolean): this;
-    public showGroups (showSections?) {
-        logger.warnOnce('consider using dataTable.showSections instead of dataTable.showGroups for clarity');
+    public showGroups(): boolean;
+    public showGroups(showSections: boolean): this;
+    public showGroups(showSections?) {
+        logger.warnOnce(
+            'consider using dataTable.showSections instead of dataTable.showGroups for clarity'
+        );
         if (!arguments.length) {
             return this.showSections();
         }
@@ -264,4 +272,5 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
     }
 }
 
-export const dataTable = (parent: ChartParentType, chartGroup: ChartGroupType) => new DataTable(parent, chartGroup);
+export const dataTable = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new DataTable(parent, chartGroup);

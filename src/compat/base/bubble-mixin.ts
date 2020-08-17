@@ -1,9 +1,9 @@
-import {Constructor, RValueAccessor} from '../../core/types';
-import {BaseMixinExt} from './base-mixin';
-import {BubbleMixin as BubbleMixinNeo} from '../../base/bubble-mixin';
-import {BaseMixin as BaseMixinNeo} from '../../base/base-mixin';
+import { Constructor, RValueAccessor } from '../../core/types';
+import { BaseMixinExt } from './base-mixin';
+import { BubbleMixin as BubbleMixinNeo } from '../../base/bubble-mixin';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
 
-class Intermediate extends BaseMixinExt(BubbleMixinNeo(BaseMixinNeo)) { }
+class Intermediate extends BaseMixinExt(BubbleMixinNeo(BaseMixinNeo)) {}
 
 export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
@@ -19,13 +19,13 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
          * @param {Boolean} [sortBubbleSize=false]
          * @returns {Boolean|BubbleChart}
          */
-        public sortBubbleSize (): boolean;
-        public sortBubbleSize (sortBubbleSize: boolean);
-        public sortBubbleSize (sortBubbleSize?) {
+        public sortBubbleSize(): boolean;
+        public sortBubbleSize(sortBubbleSize: boolean);
+        public sortBubbleSize(sortBubbleSize?) {
             if (!arguments.length) {
                 return this._conf.sortBubbleSize;
             }
-            this.configure({sortBubbleSize: sortBubbleSize});
+            this.configure({ sortBubbleSize: sortBubbleSize });
             return this;
         }
 
@@ -39,13 +39,13 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
          * @param {Function} [radiusValueAccessor]
          * @returns {Function|BubbleMixin}
          */
-        public radiusValueAccessor (): RValueAccessor;
-        public radiusValueAccessor (radiusValueAccessor: RValueAccessor);
-        public radiusValueAccessor (radiusValueAccessor?) {
+        public radiusValueAccessor(): RValueAccessor;
+        public radiusValueAccessor(radiusValueAccessor: RValueAccessor);
+        public radiusValueAccessor(radiusValueAccessor?) {
             if (!arguments.length) {
                 return this._conf.radiusValueAccessor;
             }
-            this.configure({radiusValueAccessor: radiusValueAccessor});
+            this.configure({ radiusValueAccessor: radiusValueAccessor });
             return this;
         }
 
@@ -57,13 +57,13 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
          * @param {Number} [radius=10]
          * @returns {Number|BubbleMixin}
          */
-        public minRadiusWithLabel (): number;
-        public minRadiusWithLabel (radius: number);
-        public minRadiusWithLabel (radius?) {
+        public minRadiusWithLabel(): number;
+        public minRadiusWithLabel(radius: number);
+        public minRadiusWithLabel(radius?) {
             if (!arguments.length) {
                 return this._conf.minRadiusWithLabel;
             }
-            this.configure({minRadiusWithLabel: radius});
+            this.configure({ minRadiusWithLabel: radius });
             return this;
         }
 
@@ -75,13 +75,13 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
          * @param {Number} [relativeSize=0.3]
          * @returns {Number|BubbleMixin}
          */
-        public maxBubbleRelativeSize (): number;
-        public maxBubbleRelativeSize (relativeSize: number);
-        public maxBubbleRelativeSize (relativeSize?) {
+        public maxBubbleRelativeSize(): number;
+        public maxBubbleRelativeSize(relativeSize: number);
+        public maxBubbleRelativeSize(relativeSize?) {
             if (!arguments.length) {
                 return this._conf.maxBubbleRelativeSize;
             }
-            this.configure({maxBubbleRelativeSize: relativeSize});
+            this.configure({ maxBubbleRelativeSize: relativeSize });
             return this;
         }
 
@@ -93,13 +93,13 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
          * @param {Boolean} [elasticRadius=false]
          * @returns {Boolean|BubbleChart}
          */
-        public elasticRadius (): boolean;
-        public elasticRadius (elasticRadius: boolean);
-        public elasticRadius (elasticRadius?) {
+        public elasticRadius(): boolean;
+        public elasticRadius(elasticRadius: boolean);
+        public elasticRadius(elasticRadius?) {
             if (!arguments.length) {
                 return this._conf.elasticRadius;
             }
-            this.configure({elasticRadius: elasticRadius});
+            this.configure({ elasticRadius: elasticRadius });
             return this;
         }
 
@@ -110,14 +110,14 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
          * @param  {Boolean} [excludeZero=true]
          * @returns {Boolean|BubbleMixin}
          */
-        public excludeElasticZero (): boolean;
-        public excludeElasticZero (excludeZero: boolean);
-        public excludeElasticZero (excludeZero?) {
+        public excludeElasticZero(): boolean;
+        public excludeElasticZero(excludeZero: boolean);
+        public excludeElasticZero(excludeZero?) {
             if (!arguments.length) {
                 return this._conf.excludeElasticZero;
             }
-            this.configure({excludeElasticZero: excludeZero});
+            this.configure({ excludeElasticZero: excludeZero });
             return this;
         }
-    }
+    };
 }

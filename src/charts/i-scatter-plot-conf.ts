@@ -1,5 +1,5 @@
-import {ICoordinateGridMixinConf} from '../base/i-coordinate-grid-mixin-conf';
-import {BaseAccessor} from '../core/types';
+import { ICoordinateGridMixinConf } from '../base/i-coordinate-grid-mixin-conf';
+import { BaseAccessor } from '../core/types';
 
 export interface IScatterPlotConf extends ICoordinateGridMixinConf {
     readonly useCanvas?: boolean;

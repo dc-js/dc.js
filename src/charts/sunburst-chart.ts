@@ -1,19 +1,19 @@
-import {hierarchy, partition} from 'd3-hierarchy';
-import {ascending, min, sum} from 'd3-array';
-import {Arc, arc, DefaultArcObject} from 'd3-shape';
-import {select, Selection} from 'd3-selection';
-import {interpolate} from 'd3-interpolate';
+import { hierarchy, partition } from 'd3-hierarchy';
+import { ascending, min, sum } from 'd3-array';
+import { Arc, arc, DefaultArcObject } from 'd3-shape';
+import { select, Selection } from 'd3-selection';
+import { interpolate } from 'd3-interpolate';
 
-import {transition} from '../core/core';
-import {filters} from '../core/filters';
-import {arraysIdentical, toHierarchy} from '../core/utils';
-import {events} from '../core/events';
-import {ColorMixin} from '../base/color-mixin';
-import {BaseMixin} from '../base/base-mixin';
-import {constants} from '../core/constants';
-import {BadArgumentException} from '../core/bad-argument-exception';
-import {ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
-import {ISunburstChartConf, RingSizeSpecs} from './i-sunburst-chart-conf';
+import { transition } from '../core/core';
+import { filters } from '../core/filters';
+import { arraysIdentical, toHierarchy } from '../core/utils';
+import { events } from '../core/events';
+import { ColorMixin } from '../base/color-mixin';
+import { BaseMixin } from '../base/base-mixin';
+import { constants } from '../core/constants';
+import { BadArgumentException } from '../core/bad-argument-exception';
+import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
+import { ISunburstChartConf, RingSizeSpecs } from './i-sunburst-chart-conf';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -57,7 +57,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -87,7 +87,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ISunburstChartConf): this {
+    public configure(conf: ISunburstChartConf): this {
         super.configure(conf);
         return this;
     }
@@ -97,42 +97,42 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     // Handle cases if value corresponds to generated parent nodes
-    private _extendedValueAccessor (d) {
+    private _extendedValueAccessor(d) {
         if (d.path) {
             return d.value;
         }
         return this._conf.valueAccessor(d);
     }
 
-    private _scaleRadius (ringIndex: number, y: number): number {
+    private _scaleRadius(ringIndex: number, y: number): number {
         if (ringIndex === 0) {
             return this._conf.innerRadius;
         } else {
             const customRelativeRadius = sum(this._relativeRingSizes.slice(0, ringIndex));
-            const scaleFactor = (ringIndex * (1 / this._relativeRingSizes.length)) /
-                  customRelativeRadius;
-            const standardRadius = (y - this._rootOffset) /
-                  (1 - this._rootOffset) * (this._computedRadius - this._conf.innerRadius);
+            const scaleFactor =
+                (ringIndex * (1 / this._relativeRingSizes.length)) / customRelativeRadius;
+            const standardRadius =
+                ((y - this._rootOffset) / (1 - this._rootOffset)) *
+                (this._computedRadius - this._conf.innerRadius);
             return this._conf.innerRadius + standardRadius / scaleFactor;
         }
     }
 
-    public _doRender (): this {
+    public _doRender(): this {
         this.resetSvg();
 
-        this._g = this.svg()
-            .append('g')
-            .attr('transform', `translate(${this.cx()},${this.cy()})`);
+        this._g = this.svg().append('g').attr('transform', `translate(${this.cx()},${this.cy()})`);
 
         this._drawChart();
 
         return this;
     }
 
-    private _drawChart (): void {
+    private _drawChart(): void {
         // set radius from chart size if none given, or if given radius is too large
         const maxRadius: number = min([this.width(), this.height()]) / 2;
-        this._computedRadius = this._conf.radius && this._conf.radius < maxRadius ? this._conf.radius : maxRadius;
+        this._computedRadius =
+            this._conf.radius && this._conf.radius < maxRadius ? this._conf.radius : maxRadius;
 
         const arcs: Arc<any, DefaultArcObject> = this._buildArcs();
 
@@ -158,7 +158,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         // TODO: probably redundant check, this will always be true
         if (this._g) {
-            const slices: SVGGElementSelection = this._g.selectAll<SVGGElement, any>(`g.${this._sliceCssClass}`)
+            const slices: SVGGElementSelection = this._g
+                .selectAll<SVGGElement, any>(`g.${this._sliceCssClass}`)
                 .data<any>(partitionedNodes.nodes);
 
             this._createElements(slices, arcs, partitionedNodes.nodes);
@@ -169,12 +170,18 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
             this._highlightFilter();
 
-            transition(this._g, this._conf.transitionDuration, this._conf.transitionDelay)
-                .attr('transform', `translate(${this.cx()},${this.cy()})`);
+            transition(this._g, this._conf.transitionDuration, this._conf.transitionDelay).attr(
+                'transform',
+                `translate(${this.cx()},${this.cy()})`
+            );
         }
     }
 
-    private _createElements (slices: SVGGElementSelection, arcs: Arc<any, DefaultArcObject>, sunburstData): void {
+    private _createElements(
+        slices: SVGGElementSelection,
+        arcs: Arc<any, DefaultArcObject>,
+        sunburstData
+    ): void {
         const slicesEnter = this._createSliceNodes(slices);
 
         this._createSlicePath(slicesEnter, arcs);
@@ -182,17 +189,22 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this._createLabels(sunburstData, arcs);
     }
 
-    private _createSliceNodes (slices: SVGGElementSelection): SVGGElementSelection {
+    private _createSliceNodes(slices: SVGGElementSelection): SVGGElementSelection {
         return slices
             .enter()
             .append('g')
-            .attr('class', (d, i) => `${this._sliceCssClass
-            } _${i} ${
-                this._sliceCssClass}-level-${d.depth}`);
+            .attr(
+                'class',
+                (d, i) => `${this._sliceCssClass} _${i} ${this._sliceCssClass}-level-${d.depth}`
+            );
     }
 
-    private _createSlicePath (slicesEnter: SVGGElementSelection, arcs: Arc<any, DefaultArcObject>): void {
-        const slicePath = slicesEnter.append('path')
+    private _createSlicePath(
+        slicesEnter: SVGGElementSelection,
+        arcs: Arc<any, DefaultArcObject>
+    ): void {
+        const slicePath = slicesEnter
+            .append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', (d, i) => this.onClick(d, i))
             .attr('d', d => this._safeArc(arcs, d));
@@ -206,13 +218,16 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    private _createTitles (slicesEnter: SVGGElementSelection): void {
+    private _createTitles(slicesEnter: SVGGElementSelection): void {
         if (this._conf.renderTitle) {
             slicesEnter.append('title').text(d => this.title()(d));
         }
     }
 
-    private _positionLabels (labelsEnter: Selection<SVGTextElement, any, SVGGElement, any>, arcs: Arc<any, DefaultArcObject>) {
+    private _positionLabels(
+        labelsEnter: Selection<SVGTextElement, any, SVGGElement, any>,
+        arcs: Arc<any, DefaultArcObject>
+    ) {
         transition(labelsEnter, this._conf.transitionDuration)
             .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle')
@@ -225,9 +240,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             });
     }
 
-    private _createLabels (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
+    private _createLabels(sunburstData, arcs: Arc<any, DefaultArcObject>): void {
         if (this._conf.renderLabel) {
-            const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
+            const labels = this._g
+                .selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
                 .data<any>(sunburstData);
 
             labels.exit().remove();
@@ -248,14 +264,15 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    private _updateElements (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
+    private _updateElements(sunburstData, arcs: Arc<any, DefaultArcObject>): void {
         this._updateSlicePaths(sunburstData, arcs);
         this._updateLabels(sunburstData, arcs);
         this._updateTitles(sunburstData);
     }
 
-    private _updateSlicePaths (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
-        const slicePaths = this._g.selectAll(`g.${this._sliceCssClass}`)
+    private _updateSlicePaths(sunburstData, arcs: Arc<any, DefaultArcObject>): void {
+        const slicePaths = this._g
+            .selectAll(`g.${this._sliceCssClass}`)
             .data(sunburstData)
             .select('path')
             .attr('d', (d, i) => this._safeArc(arcs, d));
@@ -269,29 +286,31 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         tranNodes.attr('fill', (d, i) => this._fill(d, i));
     }
 
-    private _updateLabels (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
+    private _updateLabels(sunburstData, arcs: Arc<any, DefaultArcObject>): void {
         if (this._conf.renderLabel) {
-            const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
+            const labels = this._g
+                .selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
                 .data<any>(sunburstData);
 
             this._positionLabels(labels, arcs);
         }
     }
 
-    private _updateTitles (sunburstData): void {
+    private _updateTitles(sunburstData): void {
         if (this._conf.renderTitle) {
-            this._g.selectAll(`g.${this._sliceCssClass}`)
+            this._g
+                .selectAll(`g.${this._sliceCssClass}`)
                 .data(sunburstData)
                 .select('title')
                 .text(d => this.title()(d));
         }
     }
 
-    private _removeElements (slices: SVGGElementSelection): void {
+    private _removeElements(slices: SVGGElementSelection): void {
         slices.exit().remove();
     }
 
-    private _highlightFilter () {
+    private _highlightFilter() {
         const chart = this;
         if (chart.hasFilter()) {
             chart.selectAll(`g.${chart._sliceCssClass}`).each(function (d) {
@@ -313,11 +332,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [cx]
      * @returns {Number|SunburstChart}
      */
-    public cx (): number;
-    public cx (cx: number): this;
-    public cx (cx?) {
+    public cx(): number;
+    public cx(cx: number): this;
+    public cx(cx?) {
         if (!arguments.length) {
-            return (this._cx || this.width() / 2);
+            return this._cx || this.width() / 2;
         }
         this._cx = cx;
         return this;
@@ -328,11 +347,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Number} [cy]
      * @returns {Number|SunburstChart}
      */
-    public cy (): number;
-    public cy (cy: number): this;
-    public cy (cy?) {
+    public cy(): number;
+    public cy(cy: number): this;
+    public cy(cy?) {
         if (!arguments.length) {
-            return (this._cy || this.height() / 2);
+            return this._cy || this.height() / 2;
         }
         this._cy = cy;
         return this;
@@ -349,14 +368,13 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      *   chart.ringSizes(chart.defaultRingSizes())
      * @returns {RingSizes}
      */
-    public defaultRingSizes (): RingSizeSpecs {
+    public defaultRingSizes(): RingSizeSpecs {
         return {
             partitionDy: () => this._computedRadius * this._computedRadius,
-            scaleInnerRadius: d => d.data.path && d.data.path.length === 1 ?
-                this._conf.innerRadius :
-                Math.sqrt(d.y0),
+            scaleInnerRadius: d =>
+                d.data.path && d.data.path.length === 1 ? this._conf.innerRadius : Math.sqrt(d.y0),
             scaleOuterRadius: d => Math.sqrt(d.y1),
-            relativeRingSizesFunction: () => []
+            relativeRingSizesFunction: () => [],
         };
     }
 
@@ -369,16 +387,14 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      *   chart.ringSizes(chart.equalRingSizes())
      * @returns {RingSizes}
      */
-    public equalRingSizes (): RingSizeSpecs {
-        return this.relativeRingSizes(
-            ringCount => {
-                const result = [];
-                for (let i = 0; i < ringCount; i++) {
-                    result.push(1 / ringCount);
-                }
-                return result;
+    public equalRingSizes(): RingSizeSpecs {
+        return this.relativeRingSizes(ringCount => {
+            const result = [];
+            for (let i = 0; i < ringCount; i++) {
+                result.push(1 / ringCount);
             }
-        );
+            return result;
+        });
     }
 
     /**
@@ -398,8 +414,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @param {Function} [relativeRingSizesFunction]
      * @returns {RingSizes}
      */
-    public relativeRingSizes (relativeRingSizesFunction: (ringCount: number) => number[]): RingSizeSpecs {
-        function assertPortionsArray (relativeSizes, numberOfRings) {
+    public relativeRingSizes(
+        relativeRingSizesFunction: (ringCount: number) => number[]
+    ): RingSizeSpecs {
+        function assertPortionsArray(relativeSizes, numberOfRings) {
             if (!Array.isArray(relativeSizes)) {
                 throw new BadArgumentException('relativeRingSizes function must return an array');
             }
@@ -407,13 +425,14 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             const portionsSum = sum(relativeSizes);
             if (Math.abs(portionsSum - 1) > constants.NEGLIGIBLE_NUMBER) {
                 throw new BadArgumentException(
-                    `relativeRingSizes : portions must add up to 1, but sum was ${portionsSum}`);
+                    `relativeRingSizes : portions must add up to 1, but sum was ${portionsSum}`
+                );
             }
 
             if (relativeSizes.length !== numberOfRings) {
                 throw new BadArgumentException(
-                    `relativeRingSizes : number of values must match number of rings (${
-                        numberOfRings}) but was ${relativeSizes.length}`);
+                    `relativeRingSizes : number of values must match number of rings (${numberOfRings}) but was ${relativeSizes.length}`
+                );
             }
         }
         return {
@@ -424,23 +443,23 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 const result = relativeRingSizesFunction(ringCount);
                 assertPortionsArray(result, ringCount);
                 return result;
-            }
+            },
         };
     }
 
-    private _buildArcs (): Arc<any, DefaultArcObject> {
+    private _buildArcs(): Arc<any, DefaultArcObject> {
         return arc()
-            .startAngle((d:any) => d.x0) // TODO: revisit and look for proper typing
-            .endAngle((d:any) => d.x1) // TODO: revisit and look for proper typing
+            .startAngle((d: any) => d.x0) // TODO: revisit and look for proper typing
+            .endAngle((d: any) => d.x1) // TODO: revisit and look for proper typing
             .innerRadius(d => this._conf.ringSizes.scaleInnerRadius(d))
             .outerRadius(d => this._conf.ringSizes.scaleOuterRadius(d));
     }
 
-    private _isSelectedSlice (d): boolean {
+    private _isSelectedSlice(d): boolean {
         return this._isPathFiltered(d.path);
     }
 
-    private _isPathFiltered (path): boolean {
+    private _isPathFiltered(path): boolean {
         for (let i = 0; i < this.filters().length; i++) {
             const currentFilter = this.filters()[i];
             if (currentFilter.isFiltered(path)) {
@@ -451,7 +470,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     // returns all filters that are a parent or child of the path
-    private _filtersForPath (path) {
+    private _filtersForPath(path) {
         const pathFilter = filters.HierarchyFilter(path);
         const filtersList = [];
         for (let i = 0; i < this.filters().length; i++) {
@@ -463,22 +482,22 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return filtersList;
     }
 
-    public _doRedraw (): this {
+    public _doRedraw(): this {
         this._drawChart();
         return this;
     }
 
-    private _partitionNodes (data) {
+    private _partitionNodes(data) {
         const getSortable = function (d) {
-            return {'key': d.data.key, 'value': d.value};
+            return { key: d.data.key, value: d.value };
         };
         const _hierarchy = hierarchy(data)
-            .sum(d => d.children ? 0 : this._extendedValueAccessor(d))
+            .sum(d => (d.children ? 0 : this._extendedValueAccessor(d)))
             .sort((a, b) =>
-                ascending(this._conf.ordering(getSortable(a)), this._conf.ordering(getSortable(b))));
+                ascending(this._conf.ordering(getSortable(a)), this._conf.ordering(getSortable(b)))
+            );
 
-        const _partition = partition()
-              .size([2 * Math.PI, this._conf.ringSizes.partitionDy()]);
+        const _partition = partition().size([2 * Math.PI, this._conf.ringSizes.partitionDy()]);
 
         _partition(_hierarchy);
 
@@ -498,28 +517,28 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             // TODO: find a better way to augment `.y1`; which is not part of the current type (HierarchyNode)
             // @ts-ignore
             rootOffset: _hierarchy.y1,
-            relativeRingSizes: relativeSizes
+            relativeRingSizes: relativeSizes,
         };
     }
 
-    private _sliceTooSmall (d): boolean {
+    private _sliceTooSmall(d): boolean {
         const angle = d.x1 - d.x0;
         return isNaN(angle) || angle < this._conf.minAngleForLabel;
     }
 
-    private _sliceHasNoData (d): boolean {
+    private _sliceHasNoData(d): boolean {
         return this._extendedValueAccessor(d) === 0;
     }
 
-    private _isOffCanvas (d): boolean {
+    private _isOffCanvas(d): boolean {
         return !d || isNaN(d.x0) || isNaN(d.y0);
     }
 
-    private _fill (d, i?: number): string {
+    private _fill(d, i?: number): string {
         return this.getColor(d.data, i);
     }
 
-    public onClick (d, i?): void {
+    public onClick(d, i?): void {
         if (this._g.attr('class') === this._emptyCssClass) {
             return;
         }
@@ -548,7 +567,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    private _safeArc (_arc, d) {
+    private _safeArc(_arc, d) {
         let path = _arc(d);
         if (path.indexOf('NaN') >= 0) {
             path = 'M0,0';
@@ -556,7 +575,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return path;
     }
 
-    private _labelPosition (d, _arc) {
+    private _labelPosition(d, _arc) {
         let centroid;
         if (this._conf.externalLabelRadius) {
             centroid = arc()
@@ -573,27 +592,32 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    public legendables (): LegendItem[] {
+    public legendables(): LegendItem[] {
         return this.data().map((d, i) => {
-            const legendable: LegendItem = {name: d.key, data: d.value, others: d.others, chart: this};
+            const legendable: LegendItem = {
+                name: d.key,
+                data: d.value,
+                others: d.others,
+                chart: this,
+            };
             legendable.color = this.getColor(d, i);
             return legendable;
         });
     }
 
-    public legendHighlight (d: LegendItem) {
+    public legendHighlight(d: LegendItem) {
         this._highlightSliceFromLegendable(d, true);
     }
 
-    public legendReset (d: LegendItem) {
+    public legendReset(d: LegendItem) {
         this._highlightSliceFromLegendable(d, false);
     }
 
-    public legendToggle (d: LegendItem) {
-        this.onClick({key: d.name, others: d.others});
+    public legendToggle(d: LegendItem) {
+        this.onClick({ key: d.name, others: d.others });
     }
 
-    private _highlightSliceFromLegendable (legendable: LegendItem, highlighted: boolean): void {
+    private _highlightSliceFromLegendable(legendable: LegendItem, highlighted: boolean): void {
         this.selectAll<SVGGElement, any>('g.pie-slice').each(function (d) {
             if (legendable.name === d.key) {
                 select(this).classed('highlight', highlighted);
@@ -601,16 +625,16 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         });
     }
 
-    private _tweenSlice (d, element) {
+    private _tweenSlice(d, element) {
         let current = element._current;
         if (this._isOffCanvas(current)) {
-            current = {x0: 0, x1: 0, y0: 0, y1: 0};
+            current = { x0: 0, x1: 0, y0: 0, y1: 0 };
         }
         const tweenTarget = {
             x0: d.x0,
             x1: d.x1,
             y0: d.y0,
-            y1: d.y1
+            y1: d.y1,
         };
         const i = interpolate(current, tweenTarget);
         element._current = i(0);

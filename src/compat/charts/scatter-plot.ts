@@ -1,12 +1,14 @@
-import {ScatterPlot as ScatterPlotNeo} from '../../charts/scatter-plot';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType} from '../../core/types';
-import {MarginMixinExt} from '../base/margin-mixin';
-import {CoordinateGridMixinExt} from '../base/coordinate-grid-mixin';
+import { ScatterPlot as ScatterPlotNeo } from '../../charts/scatter-plot';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { BaseAccessor, ChartGroupType, ChartParentType } from '../../core/types';
+import { MarginMixinExt } from '../base/margin-mixin';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
 
-export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt((ScatterPlotNeo))))) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+export class ScatterPlot extends CoordinateGridMixinExt(
+    ColorMixinExt(MarginMixinExt(BaseMixinExt(ScatterPlotNeo)))
+) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -21,13 +23,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {Boolean} [useCanvas=false]
      * @return {Boolean|d3.selection}
      */
-    public useCanvas (): boolean;
-    public useCanvas (useCanvas: boolean): this;
-    public useCanvas (useCanvas?) {
+    public useCanvas(): boolean;
+    public useCanvas(useCanvas: boolean): this;
+    public useCanvas(useCanvas?) {
         if (!arguments.length) {
             return this._conf.useCanvas;
         }
-        this.configure({useCanvas: useCanvas});
+        this.configure({ useCanvas: useCanvas });
         return this;
     }
 
@@ -45,13 +47,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {Function} [accessor]
      * @returns {Function|ScatterPlot}
      */
-    public existenceAccessor (): BaseAccessor<any>;
-    public existenceAccessor (accessor: BaseAccessor<any>): this;
-    public existenceAccessor (accessor?) {
+    public existenceAccessor(): BaseAccessor<any>;
+    public existenceAccessor(accessor: BaseAccessor<any>): this;
+    public existenceAccessor(accessor?) {
         if (!arguments.length) {
             return this._conf.existenceAccessor;
         }
-        this.configure({existenceAccessor: accessor});
+        this.configure({ existenceAccessor: accessor });
         return this;
     }
 
@@ -61,13 +63,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {Number} [highlightedSize=5]
      * @returns {Number|ScatterPlot}
      */
-    public highlightedSize (): number;
-    public highlightedSize (highlightedSize: number): this;
-    public highlightedSize (highlightedSize?) {
+    public highlightedSize(): number;
+    public highlightedSize(highlightedSize: number): this;
+    public highlightedSize(highlightedSize?) {
         if (!arguments.length) {
             return this._conf.highlightedSize;
         }
-        this.configure({highlightedSize: highlightedSize});
+        this.configure({ highlightedSize: highlightedSize });
         return this;
     }
 
@@ -78,13 +80,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {Number} [excludedSize=null]
      * @returns {Number|ScatterPlot}
      */
-    public excludedSize (): number;
-    public excludedSize (excludedSize: number): this;
-    public excludedSize (excludedSize?) {
+    public excludedSize(): number;
+    public excludedSize(excludedSize: number): this;
+    public excludedSize(excludedSize?) {
         if (!arguments.length) {
             return this._conf.excludedSize;
         }
-        this.configure({excludedSize: excludedSize});
+        this.configure({ excludedSize: excludedSize });
         return this;
     }
 
@@ -94,13 +96,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {string} [excludedColor=null]
      * @returns {string|ScatterPlot}
      */
-    public excludedColor (): string;
-    public excludedColor (excludedColor: string): this;
-    public excludedColor (excludedColor?) {
+    public excludedColor(): string;
+    public excludedColor(excludedColor: string): this;
+    public excludedColor(excludedColor?) {
         if (!arguments.length) {
             return this._conf.excludedColor;
         }
-        this.configure({excludedColor: excludedColor});
+        this.configure({ excludedColor: excludedColor });
         return this;
     }
 
@@ -109,13 +111,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {Number} [excludedOpacity=1.0]
      * @returns {Number|ScatterPlot}
      */
-    public excludedOpacity (): number;
-    public excludedOpacity (excludedOpacity: number): this;
-    public excludedOpacity (excludedOpacity?) {
+    public excludedOpacity(): number;
+    public excludedOpacity(excludedOpacity: number): this;
+    public excludedOpacity(excludedOpacity?) {
         if (!arguments.length) {
             return this._conf.excludedOpacity;
         }
-        this.configure({excludedOpacity: excludedOpacity});
+        this.configure({ excludedOpacity: excludedOpacity });
         return this;
     }
 
@@ -125,19 +127,19 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {Number} [emptySize=0]
      * @returns {Number|ScatterPlot}
      */
-    public emptySize (): number;
-    public emptySize (emptySize: number): this;
-    public emptySize (emptySize?) {
+    public emptySize(): number;
+    public emptySize(emptySize: number): this;
+    public emptySize(emptySize?) {
         if (!arguments.length) {
             return this._conf.emptySize;
         }
-        this.configure({emptySize: emptySize});
+        this.configure({ emptySize: emptySize });
         return this;
     }
 
-    public hiddenSize (): number;
-    public hiddenSize (emptySize: number): this;
-    public hiddenSize (emptySize?) {
+    public hiddenSize(): number;
+    public hiddenSize(emptySize: number): this;
+    public hiddenSize(emptySize?) {
         if (!arguments.length) {
             return this.emptySize();
         }
@@ -151,13 +153,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @return {String}
      * @return {ScatterPlot}/
      */
-    public emptyColor (): string;
-    public emptyColor (emptyColor: string): this;
-    public emptyColor (emptyColor?) {
+    public emptyColor(): string;
+    public emptyColor(emptyColor: string): this;
+    public emptyColor(emptyColor?) {
         if (!arguments.length) {
             return this._conf.emptyColor;
         }
-        this.configure({emptyColor: emptyColor});
+        this.configure({ emptyColor: emptyColor });
         return this;
     }
 
@@ -167,13 +169,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @return {Number}
      * @return {ScatterPlot}
      */
-    public emptyOpacity (): number;
-    public emptyOpacity (emptyOpacity: number): this;
-    public emptyOpacity (emptyOpacity?) {
+    public emptyOpacity(): number;
+    public emptyOpacity(emptyOpacity: number): this;
+    public emptyOpacity(emptyOpacity?) {
         if (!arguments.length) {
             return this._conf.emptyOpacity;
         }
-        this.configure({emptyOpacity: emptyOpacity});
+        this.configure({ emptyOpacity: emptyOpacity });
         return this;
     }
 
@@ -183,13 +185,13 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @return {Number}
      * @return {ScatterPlot}
      */
-    public nonemptyOpacity (): number;
-    public nonemptyOpacity (nonemptyOpacity: number): this;
-    public nonemptyOpacity (nonemptyOpacity?) {
+    public nonemptyOpacity(): number;
+    public nonemptyOpacity(nonemptyOpacity: number): this;
+    public nonemptyOpacity(nonemptyOpacity?) {
         if (!arguments.length) {
             return this._conf.emptyOpacity;
         }
-        this.configure({nonemptyOpacity: nonemptyOpacity});
+        this.configure({ nonemptyOpacity: nonemptyOpacity });
         return this;
     }
 
@@ -199,17 +201,15 @@ export class ScatterPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixi
      * @param {Number} [symbolSize=3]
      * @returns {Number|ScatterPlot}
      */
-    public symbolSize (): number;
-    public symbolSize (symbolSize: number): this;
-    public symbolSize (symbolSize?) {
+    public symbolSize(): number;
+    public symbolSize(symbolSize: number): this;
+    public symbolSize(symbolSize?) {
         if (!arguments.length) {
             return this._conf.symbolSize;
         }
-        this.configure({symbolSize: symbolSize});
+        this.configure({ symbolSize: symbolSize });
         return this;
     }
-
-
 }
 
 export const scatterPlot = (parent, chartGroup) => new ScatterPlot(parent, chartGroup);

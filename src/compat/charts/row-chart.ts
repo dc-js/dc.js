@@ -1,12 +1,14 @@
-import {RowChart as RowChartNeo} from '../../charts/row-chart';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {CapMixinExt} from '../base/cap-mixin';
-import {ChartGroupType, ChartParentType} from '../../core/types';
-import {MarginMixinExt} from '../base/margin-mixin';
+import { RowChart as RowChartNeo } from '../../charts/row-chart';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { CapMixinExt } from '../base/cap-mixin';
+import { ChartGroupType, ChartParentType } from '../../core/types';
+import { MarginMixinExt } from '../base/margin-mixin';
 
-export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(RowChartNeo)))) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+export class RowChart extends CapMixinExt(
+    ColorMixinExt(MarginMixinExt(BaseMixinExt(RowChartNeo)))
+) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
         this.rowsCap = this.cap;
@@ -17,13 +19,13 @@ export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixin
      * @param {Boolean} [renderTitleLabel=false]
      * @returns {Boolean|RowChart}
      */
-    public renderTitleLabel (): boolean;
-    public renderTitleLabel (renderTitleLabel: boolean): this;
-    public renderTitleLabel (renderTitleLabel?) {
+    public renderTitleLabel(): boolean;
+    public renderTitleLabel(renderTitleLabel: boolean): this;
+    public renderTitleLabel(renderTitleLabel?) {
         if (!arguments.length) {
             return this._conf.renderTitleLabel;
         }
-        this.configure({renderTitleLabel: renderTitleLabel});
+        this.configure({ renderTitleLabel: renderTitleLabel });
         return this;
     }
 
@@ -37,13 +39,13 @@ export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixin
      * @param {Boolean|Number} [fixedBarHeight=false]
      * @returns {Boolean|Number|RowChart}
      */
-    public fixedBarHeight (): number;
-    public fixedBarHeight (fixedBarHeight: number): this;
-    public fixedBarHeight (fixedBarHeight?) {
+    public fixedBarHeight(): number;
+    public fixedBarHeight(fixedBarHeight: number): this;
+    public fixedBarHeight(fixedBarHeight?) {
         if (!arguments.length) {
             return this._conf.fixedBarHeight;
         }
-        this.configure({fixedBarHeight: fixedBarHeight});
+        this.configure({ fixedBarHeight: fixedBarHeight });
         return this;
     }
 
@@ -52,13 +54,13 @@ export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixin
      * @param {Number} [gap=5]
      * @returns {Number|RowChart}
      */
-    public gap (): number;
-    public gap (gap: number): this;
-    public gap (gap?) {
+    public gap(): number;
+    public gap(gap: number): this;
+    public gap(gap?) {
         if (!arguments.length) {
             return this._conf.gap;
         }
-        this.configure({gap: gap});
+        this.configure({ gap: gap });
         return this;
     }
 
@@ -68,13 +70,13 @@ export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixin
      * @param {Boolean} [elasticX]
      * @returns {Boolean|RowChart}
      */
-    public elasticX (): boolean;
-    public elasticX (elasticX: boolean): this;
-    public elasticX (elasticX?) {
+    public elasticX(): boolean;
+    public elasticX(elasticX: boolean): this;
+    public elasticX(elasticX?) {
         if (!arguments.length) {
             return this._conf.elasticX;
         }
-        this.configure({elasticX: elasticX});
+        this.configure({ elasticX: elasticX });
         return this;
     }
 
@@ -83,13 +85,13 @@ export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixin
      * @param {Number} [labelOffsetX=10]
      * @returns {Number|RowChart}
      */
-    public labelOffsetX (): number;
-    public labelOffsetX (labelOffsetX: number): this;
-    public labelOffsetX (labelOffsetX?) {
+    public labelOffsetX(): number;
+    public labelOffsetX(labelOffsetX: number): this;
+    public labelOffsetX(labelOffsetX?) {
         if (!arguments.length) {
             return this._conf.labelOffsetX;
         }
-        this.configure({labelOffsetX: labelOffsetX});
+        this.configure({ labelOffsetX: labelOffsetX });
         return this;
     }
 
@@ -98,13 +100,13 @@ export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixin
      * @param {Number} [labelOffsety]
      * @returns {Number|RowChart}
      */
-    public labelOffsetY (): number;
-    public labelOffsetY (labelOffsety: number): this;
-    public labelOffsetY (labelOffsety?) {
+    public labelOffsetY(): number;
+    public labelOffsetY(labelOffsety: number): this;
+    public labelOffsetY(labelOffsety?) {
         if (!arguments.length) {
             return this._conf.labelOffsetY;
         }
-        this.configure({labelOffsetY: labelOffsety});
+        this.configure({ labelOffsetY: labelOffsety });
         return this;
     }
 
@@ -113,15 +115,16 @@ export class RowChart extends CapMixinExt(ColorMixinExt(MarginMixinExt(BaseMixin
      * @param {Number} [titleLabelOffsetX=2]
      * @returns {Number|RowChart}
      */
-    public titleLabelOffsetX (): number;
-    public titleLabelOffsetX (titleLabelOffsetX: number): this;
-    public titleLabelOffsetX (titleLabelOffsetX?) {
+    public titleLabelOffsetX(): number;
+    public titleLabelOffsetX(titleLabelOffsetX: number): this;
+    public titleLabelOffsetX(titleLabelOffsetX?) {
         if (!arguments.length) {
             return this._conf.titleLabelOffsetX;
         }
-        this.configure({titleLabelOffsetX: titleLabelOffsetX});
+        this.configure({ titleLabelOffsetX: titleLabelOffsetX });
         return this;
     }
 }
 
-export const rowChart = (parent: ChartParentType, chartGroup: ChartGroupType) => new RowChart(parent, chartGroup);
+export const rowChart = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new RowChart(parent, chartGroup);

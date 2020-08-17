@@ -1,9 +1,9 @@
-import {BaseMixin} from '../base/base-mixin';
-import {constants} from '../core/constants';
-import {events} from '../core/events';
-import {ChartGroupType, ChartParentType} from '../core/types';
-import {Selection} from 'd3-selection';
-import {ITextFilterWidgetConf} from './i-text-filter-widget-conf';
+import { BaseMixin } from '../base/base-mixin';
+import { constants } from '../core/constants';
+import { events } from '../core/events';
+import { ChartGroupType, ChartParentType } from '../core/types';
+import { Selection } from 'd3-selection';
+import { ITextFilterWidgetConf } from './i-text-filter-widget-conf';
 
 const INPUT_CSS_CLASS = 'dc-text-filter-input';
 
@@ -42,7 +42,7 @@ export class TextFilterWidget extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -56,13 +56,15 @@ export class TextFilterWidget extends BaseMixin {
 
         // @ts-ignore, signature is different in BaseMixin
         this.group(() => {
-            throw new Error('the group function on textFilterWidget should never be called, please report the issue');
+            throw new Error(
+                'the group function on textFilterWidget should never be called, please report the issue'
+            );
         });
 
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ITextFilterWidgetConf): this {
+    public configure(conf: ITextFilterWidgetConf): this {
         super.configure(conf);
         return this;
     }
@@ -71,11 +73,10 @@ export class TextFilterWidget extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender (): this {
+    public _doRender(): this {
         this.select('input').remove();
 
-        this._input = this.root().append('input')
-            .classed(INPUT_CSS_CLASS, true);
+        this._input = this.root().append('input').classed(INPUT_CSS_CLASS, true);
 
         const chart = this;
         this._input.on('input', function () {
@@ -90,9 +91,8 @@ export class TextFilterWidget extends BaseMixin {
         return this;
     }
 
-    public _doRedraw (): this {
-        this.root().selectAll('input')
-            .attr('placeholder', this._conf.placeHolder);
+    public _doRedraw(): this {
+        this.root().selectAll('input').attr('placeholder', this._conf.placeHolder);
 
         return this;
     }

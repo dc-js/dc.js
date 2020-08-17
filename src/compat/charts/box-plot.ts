@@ -1,12 +1,14 @@
-import {BoxPlot as BoxPlotNeo} from '../../charts/box-plot';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {ChartGroupType, ChartParentType, NumberFormatFn} from '../../core/types';
-import {MarginMixinExt} from '../base/margin-mixin';
-import {CoordinateGridMixinExt} from '../base/coordinate-grid-mixin';
+import { BoxPlot as BoxPlotNeo } from '../../charts/box-plot';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { ChartGroupType, ChartParentType, NumberFormatFn } from '../../core/types';
+import { MarginMixinExt } from '../base/margin-mixin';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
 
-export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt((BoxPlotNeo))))) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+export class BoxPlot extends CoordinateGridMixinExt(
+    ColorMixinExt(MarginMixinExt(BaseMixinExt(BoxPlotNeo)))
+) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -19,13 +21,13 @@ export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt
      * @param {Function} [tickFormat]
      * @returns {Number|Function|BoxPlot}
      */
-    public tickFormat (): NumberFormatFn;
-    public tickFormat (tickFormat: NumberFormatFn): this;
-    public tickFormat (tickFormat?) {
+    public tickFormat(): NumberFormatFn;
+    public tickFormat(tickFormat: NumberFormatFn): this;
+    public tickFormat(tickFormat?) {
         if (!arguments.length) {
             return this._conf.tickFormat;
         }
-        this.configure({tickFormat: tickFormat});
+        this.configure({ tickFormat: tickFormat });
         return this;
     }
 
@@ -37,13 +39,13 @@ export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt
      * @param {Boolean} [show=false]
      * @returns {Boolean|BoxPlot}
      */
-    public renderDataPoints (): boolean;
-    public renderDataPoints (show: boolean): this;
-    public renderDataPoints (show?) {
+    public renderDataPoints(): boolean;
+    public renderDataPoints(show: boolean): this;
+    public renderDataPoints(show?) {
         if (!arguments.length) {
             return this._conf.renderDataPoints;
         }
-        this.configure({renderDataPoints: show});
+        this.configure({ renderDataPoints: show });
         return this;
     }
 
@@ -55,13 +57,13 @@ export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt
      * @param {Number} [opacity=0.3]
      * @returns {Number|BoxPlot}
      */
-    public dataOpacity (): number;
-    public dataOpacity (opacity: number): this;
-    public dataOpacity (opacity?) {
+    public dataOpacity(): number;
+    public dataOpacity(opacity: number): this;
+    public dataOpacity(opacity?) {
         if (!arguments.length) {
             return this._conf.dataOpacity;
         }
-        this.configure({dataOpacity: opacity});
+        this.configure({ dataOpacity: opacity });
         return this;
     }
 
@@ -74,13 +76,13 @@ export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt
      * @param {Function} [yRangePadding = 8]
      * @returns {Number|Function|BoxPlot}
      */
-    public yRangePadding (): number;
-    public yRangePadding (yRangePadding: number): this;
-    public yRangePadding (yRangePadding?) {
+    public yRangePadding(): number;
+    public yRangePadding(yRangePadding: number): this;
+    public yRangePadding(yRangePadding?) {
         if (!arguments.length) {
             return this._conf.yRangePadding;
         }
-        this.configure({yRangePadding: yRangePadding});
+        this.configure({ yRangePadding: yRangePadding });
         return this;
     }
 
@@ -92,13 +94,13 @@ export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt
      * @param {Number} [percentage=0.8]
      * @returns {Number|BoxPlot}
      */
-    public dataWidthPortion (): number;
-    public dataWidthPortion (percentage: number): this;
-    public dataWidthPortion (percentage?) {
+    public dataWidthPortion(): number;
+    public dataWidthPortion(percentage: number): this;
+    public dataWidthPortion(percentage?) {
         if (!arguments.length) {
             return this._conf.dataWidthPortion;
         }
-        this.configure({dataWidthPortion: percentage});
+        this.configure({ dataWidthPortion: percentage });
         return this;
     }
 
@@ -110,13 +112,13 @@ export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt
      * @param {Boolean} [show=true]
      * @returns {Boolean|BoxPlot}
      */
-    public showOutliers (): boolean;
-    public showOutliers (show: boolean): this;
-    public showOutliers (show?) {
+    public showOutliers(): boolean;
+    public showOutliers(show: boolean): this;
+    public showOutliers(show?) {
         if (!arguments.length) {
             return this._conf.showOutliers;
         }
-        this.configure({showOutliers: show});
+        this.configure({ showOutliers: show });
         return this;
     }
 
@@ -128,13 +130,13 @@ export class BoxPlot extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt
      * @param {Boolean} [show=false]
      * @returns {Boolean|BoxPlot}
      */
-    public boldOutlier (): boolean;
-    public boldOutlier (show: boolean): this;
-    public boldOutlier (show?) {
+    public boldOutlier(): boolean;
+    public boldOutlier(show: boolean): this;
+    public boldOutlier(show?) {
         if (!arguments.length) {
             return this._conf.boldOutlier;
         }
-        this.configure({boldOutlier: show});
+        this.configure({ boldOutlier: show });
         return this;
     }
 }

@@ -1,11 +1,11 @@
-import {SunburstChart as SunburstChartNeo} from '../../charts/sunburst-chart';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {ChartGroupType, ChartParentType} from '../../core/types';
-import {RingSizeSpecs} from '../../charts/i-sunburst-chart-conf';
+import { SunburstChart as SunburstChartNeo } from '../../charts/sunburst-chart';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { ChartGroupType, ChartParentType } from '../../core/types';
+import { RingSizeSpecs } from '../../charts/i-sunburst-chart-conf';
 
 export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo)) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -15,13 +15,13 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * @param {Number} [innerRadius=0]
      * @returns {Number|SunburstChart}
      */
-    public innerRadius (): number;
-    public innerRadius (innerRadius: number): this;
-    public innerRadius (innerRadius?) {
+    public innerRadius(): number;
+    public innerRadius(innerRadius: number): this;
+    public innerRadius(innerRadius?) {
         if (!arguments.length) {
             return this._conf.innerRadius;
         }
-        this.configure({innerRadius: innerRadius});
+        this.configure({ innerRadius: innerRadius });
         return this;
     }
 
@@ -31,13 +31,13 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * @param {Number} [radius]
      * @returns {Number|SunburstChart}
      */
-    public radius (): number;
-    public radius (radius: number): this;
-    public radius (radius?) {
+    public radius(): number;
+    public radius(radius: number): this;
+    public radius(radius?) {
         if (!arguments.length) {
             return this._conf.radius;
         }
-        this.configure({radius: radius});
+        this.configure({ radius: radius });
         return this;
     }
 
@@ -47,13 +47,13 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * @param {Number} [minAngleForLabel=0.5]
      * @returns {Number|SunburstChart}
      */
-    public minAngleForLabel (): number;
-    public minAngleForLabel (minAngleForLabel: number): this;
-    public minAngleForLabel (minAngleForLabel?) {
+    public minAngleForLabel(): number;
+    public minAngleForLabel(minAngleForLabel: number): this;
+    public minAngleForLabel(minAngleForLabel?) {
         if (!arguments.length) {
             return this._conf.minAngleForLabel;
         }
-        this.configure({minAngleForLabel: minAngleForLabel});
+        this.configure({ minAngleForLabel: minAngleForLabel });
         return this;
     }
 
@@ -62,13 +62,13 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * @param {String} [title]
      * @returns {String|SunburstChart}
      */
-    public emptyTitle (): string;
-    public emptyTitle (title: string): this;
-    public emptyTitle (title?) {
+    public emptyTitle(): string;
+    public emptyTitle(title: string): this;
+    public emptyTitle(title?) {
         if (arguments.length === 0) {
             return this._conf.emptyTitle;
         }
-        this.configure({emptyTitle: title});
+        this.configure({ emptyTitle: title });
         return this;
     }
 
@@ -79,20 +79,19 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * @param {Number} [externalLabelRadius]
      * @returns {Number|SunburstChart}
      */
-    public externalLabels (): number;
-    public externalLabels (externalLabelRadius: number): this;
-    public externalLabels (externalLabelRadius?) {
+    public externalLabels(): number;
+    public externalLabels(externalLabelRadius: number): this;
+    public externalLabels(externalLabelRadius?) {
         if (arguments.length === 0) {
             return this._conf.externalLabelRadius;
         } else if (externalLabelRadius) {
-            this.configure({externalLabelRadius: externalLabelRadius});
+            this.configure({ externalLabelRadius: externalLabelRadius });
         } else {
-            this.configure({externalLabelRadius: undefined});
+            this.configure({ externalLabelRadius: undefined });
         }
 
         return this;
     }
-
 
     /**
      * Get or set the strategy to use for sizing the charts rings.
@@ -122,15 +121,16 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * @param {RingSizes} ringSizes
      * @returns {Object|SunburstChart}
      */
-    public ringSizes (): RingSizeSpecs;
-    public ringSizes (ringSizes: RingSizeSpecs): this;
-    public ringSizes (ringSizes?) {
+    public ringSizes(): RingSizeSpecs;
+    public ringSizes(ringSizes: RingSizeSpecs): this;
+    public ringSizes(ringSizes?) {
         if (!arguments.length) {
             return this._conf.ringSizes;
         }
-        this.configure({ringSizes: ringSizes});
+        this.configure({ ringSizes: ringSizes });
         return this;
     }
 }
 
-export const sunburstChart = (parent: ChartParentType, chartGroup: ChartGroupType) => new SunburstChart(parent, chartGroup);
+export const sunburstChart = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new SunburstChart(parent, chartGroup);

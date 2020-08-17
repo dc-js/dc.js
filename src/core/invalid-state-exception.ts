@@ -1,2 +1,1 @@
-
-export class InvalidStateException extends Error { }
+export class InvalidStateException extends Error {}

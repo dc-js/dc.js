@@ -1,10 +1,10 @@
-import {ascending} from 'd3-array';
-import {nest} from 'd3-collection';
+import { ascending } from 'd3-array';
+import { nest } from 'd3-collection';
 
-import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType} from '../core/types';
-import {Selection} from 'd3-selection';
-import {IDataGridConf} from './i-data-grid-conf';
+import { BaseMixin } from '../base/base-mixin';
+import { ChartGroupType, ChartParentType } from '../core/types';
+import { Selection } from 'd3-selection';
+import { IDataGridConf } from './i-data-grid-conf';
 
 const LABEL_CSS_CLASS = 'dc-grid-label';
 const ITEM_CSS_CLASS = 'dc-grid-item';
@@ -34,7 +34,7 @@ export class DataGrid extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -45,7 +45,10 @@ export class DataGrid extends BaseMixin {
             order: ascending,
             beginSlice: 0,
             endSlice: undefined,
-            htmlSection: d => `<div class='${SECTION_CSS_CLASS}'><h1 class='${LABEL_CSS_CLASS}'>${this._conf.keyAccessor(d)}</h1></div>`,
+            htmlSection: d =>
+                `<div class='${SECTION_CSS_CLASS}'><h1 class='${LABEL_CSS_CLASS}'>${this._conf.keyAccessor(
+                    d
+                )}</h1></div>`,
         });
 
         this._mandatoryAttributes(['dimension', 'section']);
@@ -53,7 +56,7 @@ export class DataGrid extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IDataGridConf): this {
+    public configure(conf: IDataGridConf): this {
         super.configure(conf);
         return this;
     }
@@ -62,7 +65,7 @@ export class DataGrid extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender () {
+    public _doRender() {
         this.selectAll(`div.${GRID_CSS_CLASS}`).remove();
 
         this._renderItems(this._renderSections());
@@ -70,8 +73,9 @@ export class DataGrid extends BaseMixin {
         return this;
     }
 
-    public _renderSections () {
-        const sections: Selection<HTMLDivElement, any, Element, any> = this.root().selectAll<HTMLDivElement, any>(`div.${GRID_CSS_CLASS}`)
+    public _renderSections() {
+        const sections: Selection<HTMLDivElement, any, Element, any> = this.root()
+            .selectAll<HTMLDivElement, any>(`div.${GRID_CSS_CLASS}`)
             .data<any>(this._nestEntries(), d => this._conf.keyAccessor(d));
 
         const itemSection: Selection<HTMLDivElement, any, Element, any> = sections
@@ -80,15 +84,14 @@ export class DataGrid extends BaseMixin {
             .attr('class', GRID_CSS_CLASS);
 
         if (this._conf.htmlSection) {
-            itemSection
-                .html(d => this._conf.htmlSection(d));
+            itemSection.html(d => this._conf.htmlSection(d));
         }
 
         sections.exit().remove();
         return itemSection;
     }
 
-    public _nestEntries () {
+    public _nestEntries() {
         const entries = this._conf.dimension.top(this._conf.size);
 
         return nest()
@@ -101,8 +104,9 @@ export class DataGrid extends BaseMixin {
             );
     }
 
-    public _renderItems (sections: Selection<HTMLDivElement, any, Element, any>) {
-        let items: Selection<HTMLDivElement, unknown, HTMLDivElement, any> = sections.order()
+    public _renderItems(sections: Selection<HTMLDivElement, any, Element, any>) {
+        let items: Selection<HTMLDivElement, unknown, HTMLDivElement, any> = sections
+            .order()
             .selectAll<HTMLDivElement, any>(`div.${ITEM_CSS_CLASS}`)
             .data(d => d.values);
 
@@ -118,7 +122,7 @@ export class DataGrid extends BaseMixin {
         return items;
     }
 
-    public _doRedraw () {
+    public _doRedraw() {
         return this._doRender();
     }
 }

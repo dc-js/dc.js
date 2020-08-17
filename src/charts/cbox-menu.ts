@@ -1,11 +1,11 @@
-import {event, select, Selection} from 'd3-selection';
+import { event, select, Selection } from 'd3-selection';
 
-import {events} from '../core/events';
-import {BaseMixin} from '../base/base-mixin';
-import {uniqueId} from '../core/utils'
-import {ChartGroupType, ChartParentType} from '../core/types';
-import {ICboxMenuConf} from './i-cbox-menu-conf';
-import {ascending} from 'd3-array';
+import { events } from '../core/events';
+import { BaseMixin } from '../base/base-mixin';
+import { uniqueId } from '../core/utils';
+import { ChartGroupType, ChartParentType } from '../core/types';
+import { ICboxMenuConf } from './i-cbox-menu-conf';
+import { ascending } from 'd3-array';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -41,7 +41,7 @@ export class CboxMenu extends BaseMixin {
      * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
      * Interaction with the widget will only trigger events and redraws within its group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -49,7 +49,7 @@ export class CboxMenu extends BaseMixin {
             promptText: 'Select all',
             promptValue: null,
             filterDisplayed: d => this._conf.valueAccessor(d) > 0,
-            order: (a,b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b))
+            order: (a, b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b)),
         });
 
         this._cbox = undefined;
@@ -61,7 +61,7 @@ export class CboxMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ICboxMenuConf): this {
+    public configure(conf: ICboxMenuConf): this {
         super.configure(conf);
         return this;
     }
@@ -70,34 +70,37 @@ export class CboxMenu extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender (): this {
+    public _doRender(): this {
         return this._doRedraw();
     }
 
-    public _doRedraw (): this {
+    public _doRedraw(): this {
         this.select('ul').remove();
-        this._cbox = this.root()
-            .append('ul')
-            .classed(GROUP_CSS_CLASS, true);
+        this._cbox = this.root().append('ul').classed(GROUP_CSS_CLASS, true);
         this._renderOptions();
 
         if (this.hasFilter() && this._conf.multiple) {
-            this._cbox.selectAll('input')
-            // adding `false` avoids failing test cases in phantomjs
-                .property('checked', d => d && this.filters().indexOf(String(this._conf.keyAccessor(d))) >= 0 || false);
+            this._cbox
+                .selectAll('input')
+                // adding `false` avoids failing test cases in phantomjs
+                .property(
+                    'checked',
+                    d =>
+                        (d && this.filters().indexOf(String(this._conf.keyAccessor(d))) >= 0) ||
+                        false
+                );
         } else if (this.hasFilter()) {
-            this._cbox.selectAll('input')
-                .property('checked', d => {
-                    if (!d) {
-                        return false;
-                    }
-                    return this._conf.keyAccessor(d) === this.filter();
-                });
+            this._cbox.selectAll('input').property('checked', d => {
+                if (!d) {
+                    return false;
+                }
+                return this._conf.keyAccessor(d) === this.filter();
+            });
         }
         return this;
     }
 
-    public _renderOptions () {
+    public _renderOptions() {
         const inputType = this._conf.multiple ? 'checkbox' : 'radio';
 
         let options: Selection<HTMLLIElement, unknown, HTMLElement, any> = this._cbox
@@ -106,10 +109,7 @@ export class CboxMenu extends BaseMixin {
 
         options.exit().remove();
 
-        options = options.enter()
-            .append('li')
-            .classed(ITEM_CSS_CLASS, true)
-            .merge(options);
+        options = options.enter().append('li').classed(ITEM_CSS_CLASS, true).merge(options);
 
         options
             .append('input')
@@ -146,9 +146,7 @@ export class CboxMenu extends BaseMixin {
                 .text(this._conf.promptText);
         }
 
-        this._cbox
-            .selectAll(`li.${ITEM_CSS_CLASS}`)
-            .sort(this._conf.order);
+        this._cbox.selectAll(`li.${ITEM_CSS_CLASS}`).sort(this._conf.order);
 
         this._cbox.on('change', function (d, i) {
             return chart._onChange(d, i, this);
@@ -156,7 +154,7 @@ export class CboxMenu extends BaseMixin {
         return options;
     }
 
-    private _onChange (d, i: number, element: HTMLElement) {
+    private _onChange(d, i: number, element: HTMLElement) {
         let values;
         const target = select(event.target);
         let options: Selection<HTMLInputElement, unknown, HTMLElement, unknown>;
@@ -164,7 +162,8 @@ export class CboxMenu extends BaseMixin {
         if (!target.datum()) {
             values = this._conf.promptValue || null;
         } else {
-            options = select(element).selectAll<HTMLInputElement, any>('input')
+            options = select(element)
+                .selectAll<HTMLInputElement, any>('input')
                 .filter(function (o) {
                     if (o) {
                         return this.checked;
@@ -180,7 +179,7 @@ export class CboxMenu extends BaseMixin {
     }
 
     // TODO: come back for better typing, probably generics
-    public onChange (val) {
+    public onChange(val) {
         if (val && this._conf.multiple) {
             this.replaceFilter([val]);
         } else if (val) {

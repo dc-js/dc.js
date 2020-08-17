@@ -1,10 +1,10 @@
-import {GeoChoroplethChart as GeoChoroplethChartNeo} from '../../charts/geo-choropleth-chart';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType, IGeoJson} from '../../core/types';
+import { GeoChoroplethChart as GeoChoroplethChartNeo } from '../../charts/geo-choropleth-chart';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { BaseAccessor, ChartGroupType, ChartParentType, IGeoJson } from '../../core/types';
 
 export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoroplethChartNeo)) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -14,7 +14,7 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
      * modify this chart's internal registration.
      * @returns {Array<{name:String, data: Object, accessor: Function}>}
      */
-    public geoJsons (): IGeoJson[] {
+    public geoJsons(): IGeoJson[] {
         return this._conf.geoJsons;
     }
 
@@ -38,7 +38,7 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
      * this function should match the keys returned by the crossfilter groups.
      * @returns {GeoChoroplethChart}
      */
-    public overlayGeoJson (json, name: string, keyAccessor: BaseAccessor<any>) {
+    public overlayGeoJson(json, name: string, keyAccessor: BaseAccessor<any>) {
         for (let i = 0; i < this._conf.geoJsons.length; ++i) {
             if (this._conf.geoJsons[i].name === name) {
                 this._conf.geoJsons[i].data = json;
@@ -46,7 +46,7 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
                 return this;
             }
         }
-        this._conf.geoJsons.push({name, data: json, keyAccessor});
+        this._conf.geoJsons.push({ name, data: json, keyAccessor });
         return this;
     }
 
@@ -55,7 +55,7 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
      * @param {String} name
      * @returns {GeoChoroplethChart}
      */
-    public removeGeoJson (name: string): this {
+    public removeGeoJson(name: string): this {
         const geoJsons = [];
 
         for (let i = 0; i < this._conf.geoJsons.length; ++i) {
@@ -65,10 +65,11 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
             }
         }
 
-        this.configure({geoJsons: geoJsons});
+        this.configure({ geoJsons: geoJsons });
 
         return this;
     }
 }
 
-export const geoChoroplethChart = (parent: ChartParentType, chartGroup: ChartGroupType) => new GeoChoroplethChart(parent, chartGroup);
+export const geoChoroplethChart = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new GeoChoroplethChart(parent, chartGroup);

@@ -1,8 +1,8 @@
 interface IFilters {
     RangedFilter: (low, high) => any[];
-    TwoDimensionalFilter: (filter) => (null | any);
-    RangedTwoDimensionalFilter: (filter) => (null | any);
-    HierarchyFilter: (path) => (null | any);
+    TwoDimensionalFilter: (filter) => null | any;
+    RangedTwoDimensionalFilter: (filter) => null | any;
+    HierarchyFilter: (path) => null | any;
 }
 
 /**
@@ -25,12 +25,12 @@ interface IFilters {
  * @type {{}}
  */
 export const filters: IFilters = {
-    HierarchyFilter (path): any {
-    }, RangedFilter (low, high): any[] {
+    HierarchyFilter(path): any {},
+    RangedFilter(low, high): any[] {
         return [];
-    }, RangedTwoDimensionalFilter (filter): any {
-    }, TwoDimensionalFilter (filter): any {
-    }
+    },
+    RangedTwoDimensionalFilter(filter): any {},
+    TwoDimensionalFilter(filter): any {},
 };
 
 /**
@@ -68,12 +68,13 @@ filters.RangedFilter = function (low, high) {
  * @constructor
  */
 filters.TwoDimensionalFilter = function (filter) {
-    if (filter === null) { return null; }
+    if (filter === null) {
+        return null;
+    }
 
     const f = filter;
     f.isFiltered = function (value) {
-        return value.length && value.length === f.length &&
-               value[0] === f[0] && value[1] === f[1];
+        return value.length && value.length === f.length && value[0] === f[0] && value[1] === f[1];
     };
     f.filterType = 'TwoDimensionalFilter';
 
@@ -100,7 +101,9 @@ filters.TwoDimensionalFilter = function (filter) {
  * @constructor
  */
 filters.RangedTwoDimensionalFilter = function (filter) {
-    if (filter === null) { return null; }
+    if (filter === null) {
+        return null;
+    }
 
     const f = filter;
     let fromBottomLeft;
@@ -108,10 +111,13 @@ filters.RangedTwoDimensionalFilter = function (filter) {
     if (f[0] instanceof Array) {
         fromBottomLeft = [
             [Math.min(filter[0][0], filter[1][0]), Math.min(filter[0][1], filter[1][1])],
-            [Math.max(filter[0][0], filter[1][0]), Math.max(filter[0][1], filter[1][1])]
+            [Math.max(filter[0][0], filter[1][0]), Math.max(filter[0][1], filter[1][1])],
         ];
     } else {
-        fromBottomLeft = [[filter[0], -Infinity], [filter[1], Infinity]];
+        fromBottomLeft = [
+            [filter[0], -Infinity],
+            [filter[1], Infinity],
+        ];
     }
 
     f.isFiltered = function (value) {
@@ -126,8 +132,12 @@ filters.RangedTwoDimensionalFilter = function (filter) {
             y = fromBottomLeft[0][1];
         }
 
-        return x >= fromBottomLeft[0][0] && x < fromBottomLeft[1][0] &&
-               y >= fromBottomLeft[0][1] && y < fromBottomLeft[1][1];
+        return (
+            x >= fromBottomLeft[0][0] &&
+            x < fromBottomLeft[1][0] &&
+            y >= fromBottomLeft[0][1] &&
+            y < fromBottomLeft[1][1]
+        );
     };
     f.filterType = 'RangedTwoDimensionalFilter';
 

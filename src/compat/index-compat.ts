@@ -43,4 +43,4 @@ export * from './charts/series-chart';
 export * from './charts/sunburst-chart';
 export * from './charts/text-filter-widget';
 
-export {version} from '../index-with-version';
+export { version } from '../index-with-version';

@@ -1,11 +1,11 @@
-import {BubbleOverlay as BubbleOverlayNeo} from '../../charts/bubble-overlay';
-import {BaseMixinExt} from '../base/base-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {ChartGroupType, ChartParentType} from '../../core/types';
-import {BubbleMixinExt} from '../base/bubble-mixin';
+import { BubbleOverlay as BubbleOverlayNeo } from '../../charts/bubble-overlay';
+import { BaseMixinExt } from '../base/base-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { ChartGroupType, ChartParentType } from '../../core/types';
+import { BubbleMixinExt } from '../base/bubble-mixin';
 
 export class BubbleOverlay extends BubbleMixinExt(ColorMixinExt(BaseMixinExt(BubbleOverlayNeo))) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -21,8 +21,8 @@ export class BubbleOverlay extends BubbleMixinExt(ColorMixinExt(BaseMixinExt(Bub
      * @param {Number} y
      * @returns {BubbleOverlay}
      */
-    public point (name: string, x: number, y: number): this {
-        this._conf.points.push({name, x, y});
+    public point(name: string, x: number, y: number): this {
+        this._conf.points.push({ name, x, y });
         return this;
     }
 }

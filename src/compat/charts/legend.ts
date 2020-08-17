@@ -1,4 +1,4 @@
-import {Legend as LegendNeo} from '../../charts/legend';
+import { Legend as LegendNeo } from '../../charts/legend';
 
 export class Legend extends LegendNeo {
     constructor() {

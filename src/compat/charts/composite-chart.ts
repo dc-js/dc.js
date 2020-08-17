@@ -1,11 +1,13 @@
-import {Constructor} from '../../core/types';
-import {CompositeChart as CompositeChartNeo} from '../../charts/composite-chart';
-import {BaseMixinExt} from '../base/base-mixin';
-import {MarginMixinExt} from '../base/margin-mixin';
-import {ColorMixinExt} from '../base/color-mixin';
-import {CoordinateGridMixinExt} from '../base/coordinate-grid-mixin';
+import { Constructor } from '../../core/types';
+import { CompositeChart as CompositeChartNeo } from '../../charts/composite-chart';
+import { BaseMixinExt } from '../base/base-mixin';
+import { MarginMixinExt } from '../base/margin-mixin';
+import { ColorMixinExt } from '../base/color-mixin';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
 
-class Intermediate extends CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(CompositeChartNeo)))) { }
+class Intermediate extends CoordinateGridMixinExt(
+    ColorMixinExt(MarginMixinExt(BaseMixinExt(CompositeChartNeo)))
+) {}
 
 export function CompositeChartExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
@@ -21,13 +23,13 @@ export function CompositeChartExt<TBase extends Constructor<Intermediate>>(Base:
          * @param {Boolean} [shareColors=false]
          * @returns {Boolean|CompositeChart}
          */
-        public shareColors (): boolean;
-        public shareColors (shareColors: boolean): this;
-        public shareColors (shareColors?) {
+        public shareColors(): boolean;
+        public shareColors(shareColors: boolean): this;
+        public shareColors(shareColors?) {
             if (!arguments.length) {
                 return this._conf.shareColors;
             }
-            this.configure({shareColors: shareColors});
+            this.configure({ shareColors: shareColors });
             return this;
         }
 
@@ -40,18 +42,20 @@ export function CompositeChartExt<TBase extends Constructor<Intermediate>>(Base:
          * @param {Boolean} [shareTitle=true]
          * @returns {Boolean|CompositeChart}
          */
-        public shareTitle (): boolean;
-        public shareTitle (shareTitle: boolean): this;
-        public shareTitle (shareTitle?) {
+        public shareTitle(): boolean;
+        public shareTitle(shareTitle: boolean): this;
+        public shareTitle(shareTitle?) {
             if (!arguments.length) {
                 return this._conf.shareTitle;
             }
-            this.configure({shareTitle: shareTitle});
+            this.configure({ shareTitle: shareTitle });
             return this;
         }
-    }
+    };
 }
 
-export const CompositeChart = CompositeChartExt(CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(CompositeChartNeo)))));
+export const CompositeChart = CompositeChartExt(
+    CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(CompositeChartNeo))))
+);
 
 export const compositeChart = (parent, chartGroup) => new CompositeChart(parent, chartGroup);

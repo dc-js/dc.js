@@ -1,11 +1,17 @@
-import {DataGrid as DataGridNeo} from '../../charts/data-grid';
-import {BaseMixinExt} from '../base/base-mixin';
-import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn, GroupingFn} from '../../core/types';
-import {logger} from '../core/logger';
+import { DataGrid as DataGridNeo } from '../../charts/data-grid';
+import { BaseMixinExt } from '../base/base-mixin';
+import {
+    BaseAccessor,
+    ChartGroupType,
+    ChartParentType,
+    CompareFn,
+    GroupingFn,
+} from '../../core/types';
+import { logger } from '../core/logger';
 
 // @ts-ignore, remove after group method is moved here
 export class DataGrid extends BaseMixinExt(DataGridNeo) {
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
     }
 
@@ -22,13 +28,13 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Function} section Function taking a row of data and returning the nest key.
      * @returns {Function|DataGrid}
      */
-    public section (): GroupingFn;
-    public section (section: GroupingFn): this;
-    public section (section?) {
+    public section(): GroupingFn;
+    public section(section: GroupingFn): this;
+    public section(section?) {
         if (!arguments.length) {
             return this._conf.section;
         }
-        this.configure({section: section});
+        this.configure({ section: section });
         return this;
     }
 
@@ -39,11 +45,11 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @returns {Function|DataGrid}
      */
     // @ts-ignore, signature is different in BaseMixin
-    public group (): GroupingFn;
+    public group(): GroupingFn;
     // @ts-ignore, signature is different in BaseMixin
-    public group (section: GroupingFn): this;
+    public group(section: GroupingFn): this;
     // @ts-ignore, signature is different in BaseMixin
-    public group (section?) {
+    public group(section?) {
         logger.warnOnce('consider using dataGrid.section instead of dataGrid.group for clarity');
         if (!arguments.length) {
             return this.section();
@@ -57,13 +63,13 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Number} [beginSlice=0]
      * @returns {Number|DataGrid}
      */
-    public beginSlice (): number;
-    public beginSlice (beginSlice: number): this;
-    public beginSlice (beginSlice?) {
+    public beginSlice(): number;
+    public beginSlice(beginSlice: number): this;
+    public beginSlice(beginSlice?) {
         if (!arguments.length) {
             return this._conf.beginSlice;
         }
-        this.configure({beginSlice: beginSlice});
+        this.configure({ beginSlice: beginSlice });
         return this;
     }
 
@@ -73,13 +79,13 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Number} [endSlice]
      * @returns {Number|DataGrid}
      */
-    public endSlice (): number;
-    public endSlice (endSlice: number): this;
-    public endSlice (endSlice?) {
+    public endSlice(): number;
+    public endSlice(endSlice: number): this;
+    public endSlice(endSlice?) {
         if (!arguments.length) {
             return this._conf.endSlice;
         }
-        this.configure({endSlice: endSlice});
+        this.configure({ endSlice: endSlice });
         return this;
     }
 
@@ -88,13 +94,13 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Number} [size=999]
      * @returns {Number|DataGrid}
      */
-    public size (): number;
-    public size (size: number): this;
-    public size (size?) {
+    public size(): number;
+    public size(size: number): this;
+    public size(size?) {
         if (!arguments.length) {
             return this._conf.size;
         }
-        this.configure({size: size});
+        this.configure({ size: size });
         return this;
     }
 
@@ -107,13 +113,13 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Function} [html]
      * @returns {Function|DataGrid}
      */
-    public html (): BaseAccessor<string>;
-    public html (html: BaseAccessor<string>): this;
-    public html (html?) {
+    public html(): BaseAccessor<string>;
+    public html(html: BaseAccessor<string>): this;
+    public html(html?) {
         if (!arguments.length) {
             return this._conf.html;
         }
-        this.configure({html: html});
+        this.configure({ html: html });
         return this;
     }
 
@@ -124,13 +130,13 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Function} [htmlSection]
      * @returns {Function|DataGrid}
      */
-    public htmlSection (): BaseAccessor<string>;
-    public htmlSection (htmlSection: BaseAccessor<string>): this;
-    public htmlSection (htmlSection?) {
+    public htmlSection(): BaseAccessor<string>;
+    public htmlSection(htmlSection: BaseAccessor<string>): this;
+    public htmlSection(htmlSection?) {
         if (!arguments.length) {
             return this._conf.htmlSection;
         }
-        this.configure({htmlSection: htmlSection});
+        this.configure({ htmlSection: htmlSection });
         return this;
     }
 
@@ -139,10 +145,12 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Function} [htmlSection]
      * @returns {Function|DataGrid}
      */
-    public htmlGroup (): BaseAccessor<string>;
-    public htmlGroup (htmlSection: BaseAccessor<string>): this;
-    public htmlGroup (htmlSection?) {
-        logger.warnOnce('consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity');
+    public htmlGroup(): BaseAccessor<string>;
+    public htmlGroup(htmlSection: BaseAccessor<string>): this;
+    public htmlGroup(htmlSection?) {
+        logger.warnOnce(
+            'consider using dataGrid.htmlSection instead of dataGrid.htmlGroup for clarity'
+        );
         if (!arguments.length) {
             return this.htmlSection();
         }
@@ -159,13 +167,13 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Function} [sortByFunction]
      * @returns {Function|DataGrid}
      */
-    public sortBy (): BaseAccessor<any>;
-    public sortBy (sortByFunction: BaseAccessor<any>): this;
-    public sortBy (sortByFunction?) {
+    public sortBy(): BaseAccessor<any>;
+    public sortBy(sortByFunction: BaseAccessor<any>): this;
+    public sortBy(sortByFunction?) {
         if (!arguments.length) {
             return this._conf.sortBy;
         }
-        this.configure({sortBy: sortByFunction});
+        this.configure({ sortBy: sortByFunction });
         return this;
     }
 
@@ -178,15 +186,16 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @param {Function} [order=d3.ascending]
      * @returns {Function|DataGrid}
      */
-    public order (): CompareFn;
-    public order (order: CompareFn): this;
-    public order (order?) {
+    public order(): CompareFn;
+    public order(order: CompareFn): this;
+    public order(order?) {
         if (!arguments.length) {
             return this._conf.order;
         }
-        this.configure({order: order});
+        this.configure({ order: order });
         return this;
     }
 }
 
-export const dataGrid = (parent: ChartParentType, chartGroup: ChartGroupType) => new DataGrid(parent, chartGroup);
+export const dataGrid = (parent: ChartParentType, chartGroup: ChartGroupType) =>
+    new DataGrid(parent, chartGroup);

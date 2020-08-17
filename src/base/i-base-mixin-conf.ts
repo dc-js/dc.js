@@ -1,4 +1,10 @@
-import {BaseAccessor, KeyAccessor, LabelAccessor, MinimalCFDimension, ValueAccessor} from '../core/types';
+import {
+    BaseAccessor,
+    KeyAccessor,
+    LabelAccessor,
+    MinimalCFDimension,
+    ValueAccessor,
+} from '../core/types';
 
 export interface IBaseMixinConf {
     readonly valueAccessor?: ValueAccessor;

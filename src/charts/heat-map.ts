@@ -1,15 +1,15 @@
-import {ascending} from 'd3-array';
-import {scaleBand} from 'd3-scale';
+import { ascending } from 'd3-array';
+import { scaleBand } from 'd3-scale';
 
-import {transition} from '../core/core';
-import {logger} from '../core/logger';
-import {filters} from '../core/filters';
-import {events} from '../core/events';
-import {ColorMixin} from '../base/color-mixin';
-import {MarginMixin} from '../base/margin-mixin';
-import {ChartGroupType, ChartParentType, MinimalXYScale} from '../core/types';
-import {Selection} from 'd3-selection';
-import {IHeatMapConf} from './i-heat-map-conf';
+import { transition } from '../core/core';
+import { logger } from '../core/logger';
+import { filters } from '../core/filters';
+import { events } from '../core/events';
+import { ColorMixin } from '../base/color-mixin';
+import { MarginMixin } from '../base/margin-mixin';
+import { ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types';
+import { Selection } from 'd3-selection';
+import { IHeatMapConf } from './i-heat-map-conf';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 
@@ -40,7 +40,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
-    constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
         this.configure({
@@ -79,7 +79,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IHeatMapConf): this {
+    public configure(conf: IHeatMapConf): this {
         super.configure(conf);
         return this;
     }
@@ -88,8 +88,10 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this._conf;
     }
 
-    public _filterAxis (axis: number, value): void {
-        const cellsOnAxis = this.selectAll<SVGElement, any>('.box-group').filter(d => d.key[axis] === value);
+    public _filterAxis(axis: number, value): void {
+        const cellsOnAxis = this.selectAll<SVGElement, any>('.box-group').filter(
+            d => d.key[axis] === value
+        );
 
         const unfilteredCellsOnAxis = cellsOnAxis.filter(d => !this.hasFilter(d.key));
 
@@ -101,25 +103,34 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         });
     }
 
-    public filter ();
-    public filter (filter): this;
-    public filter (filter?) {
+    public filter();
+    public filter(filter): this;
+    public filter(filter?) {
         const nonstandardFilter = f => {
-            logger.warnOnce('heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead');
+            logger.warnOnce(
+                'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead'
+            );
             return this.filter(filters.TwoDimensionalFilter(f));
         };
 
         if (!arguments.length) {
             return super.filter();
         }
-        if (filter !== null && filter.filterType !== 'TwoDimensionalFilter' &&
-            !(Array.isArray(filter) && Array.isArray(filter[0]) && filter[0][0].filterType === 'TwoDimensionalFilter')) {
+        if (
+            filter !== null &&
+            filter.filterType !== 'TwoDimensionalFilter' &&
+            !(
+                Array.isArray(filter) &&
+                Array.isArray(filter[0]) &&
+                filter[0][0].filterType === 'TwoDimensionalFilter'
+            )
+        ) {
             return nonstandardFilter(filter);
         }
         return super.filter(filter);
     }
 
-    public _doRender (): this {
+    public _doRender(): this {
         this.resetSvg();
 
         this._chartBody = this.svg()
@@ -130,7 +141,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this._doRedraw();
     }
 
-    public _doRedraw () {
+    public _doRedraw() {
         const data = this.data();
         let rows = this._conf.rows || data.map(this._conf.valueAccessor);
         let cols = this._conf.cols || data.map(this._conf.keyAccessor);
@@ -154,14 +165,17 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         let boxes: Selection<SVGGElement, unknown, SVGGElement, any> = this._chartBody
             .selectAll<SVGGElement, any>('g.box-group')
-            .data(this.data(), (d, i) => `${this._conf.keyAccessor(d, i)}\0${this._conf.valueAccessor(d, i)}`);
+            .data(
+                this.data(),
+                (d, i) => `${this._conf.keyAccessor(d, i)}\0${this._conf.valueAccessor(d, i)}`
+            );
 
         boxes.exit().remove();
 
-        const gEnter = boxes.enter().append('g')
-            .attr('class', 'box-group');
+        const gEnter = boxes.enter().append('g').attr('class', 'box-group');
 
-        gEnter.append('rect')
+        gEnter
+            .append('rect')
             .attr('class', 'heat-box')
             .attr('fill', 'white')
             .attr('x', (d, i) => cols(this._conf.keyAccessor(d, i)))
@@ -251,7 +265,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    private _isSelectedNode (d): boolean {
+    private _isSelectedNode(d): boolean {
         return this.hasFilter(d.key);
     }
 }
