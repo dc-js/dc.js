@@ -537,7 +537,8 @@ export class BaseMixin {
     }
 
     /**
-     * Set description text for the entire SVG graphic to be read out by assistive technologies.
+     * Set description text for the entire SVG graphic to be read out by assistive technologies. By default
+     * will try to set the description to the parent chart's class constructor name: BarChart, HeatMap, etc.
      * @param {String} [description='']
      * @returns {String|BaseMixin}
      */
@@ -713,19 +714,17 @@ export class BaseMixin {
         this._svg.selectAll('.dc-tabbable')
                 .attr('tabindex', 0)
                 .on('keydown', d => {
-
-                    if (d3Event.keyCode === 13) {
-                        console.log('clicked!');
-                        this.onClick(d);
+                    // trigger only if d is an object undestood by KeyAccessor()
+                    if (d3Event.keyCode === 13 && typeof d === 'object') {
+                        this.onClick(d)
                     } 
                     // special case for space key press - prevent scrolling
-                    if (d3Event.keyCode === 32) {
-                        console.log('clicked!');
-                        this.onClick(d);
-                        d3Event.preventDefault();
+                    if (d3Event.keyCode === 32 && typeof d === 'object') {
+                        this.onClick(d)
+                        d3Event.preventDefault();                
                     }
                 
-                })
+                });
     }
 
     _activateRenderlets (event) {

@@ -43,7 +43,7 @@ function defaultWhiskersIQR (k) {
  */
 export class BoxPlot extends CoordinateGridMixin {
     /**
-     * Create a BoxP lot.
+     * Create a Box Plot.
      *
      * @example
      * // create a box plot under #chart-container1 element using the default global chart group
@@ -194,13 +194,16 @@ export class BoxPlot extends CoordinateGridMixin {
         const boxesGEnter = boxesG.enter().append('g');
 
         boxesGEnter
-            .attr('class', 'box')
+            .attr('class', `box ${this._keyboardAccessible ? 'dc-tabbable' : ''}`)
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .on('click', adaptHandler(d => {
                 this.filter(this.keyAccessor()(d));
                 this.redrawGroup();
-            }));
+            }))
+            .selectAll('circle')
+            .classed('dc-tabbable', this._keyboardAccessible);
+
         return boxesGEnter.merge(boxesG);
     }
 
