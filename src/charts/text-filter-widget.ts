@@ -1,8 +1,9 @@
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {BaseAccessor, ChartGroupType, ChartParentType} from '../core/types';
+import {ChartGroupType, ChartParentType} from '../core/types';
 import {Selection} from 'd3-selection';
+import {ITextFilterWidgetConf} from './i-text-filter-widget-conf';
 
 const INPUT_CSS_CLASS = 'dc-text-filter-input';
 
@@ -17,9 +18,8 @@ const INPUT_CSS_CLASS = 'dc-text-filter-input';
  * @mixes BaseMixin
  */
 export class TextFilterWidget extends BaseMixin {
-    private _normalize: (s) => string;
-    private _filterFunctionFactory: (query) => BaseAccessor<boolean>;
-    private _placeHolder: string;
+    protected _conf: ITextFilterWidgetConf;
+
     private _input: Selection<HTMLInputElement, any, any, any>;
 
     /**
@@ -45,14 +45,14 @@ export class TextFilterWidget extends BaseMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
-        this._normalize = s => s.toLowerCase();
-
-        this._filterFunctionFactory = query => {
-            query = this._normalize(query);
-            return d => this._normalize(d).indexOf(query) !== -1;
-        };
-
-        this._placeHolder = 'search';
+        this.configure({
+            placeHolder: 'search',
+            normalize: s => s.toLowerCase(),
+            filterFunctionFactory: query => {
+                query = this._conf.normalize(query);
+                return d => this._conf.normalize(d).indexOf(query) !== -1;
+            },
+        });
 
         // @ts-ignore, signature is different in BaseMixin
         this.group(() => {
@@ -60,6 +60,15 @@ export class TextFilterWidget extends BaseMixin {
         });
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure (conf: ITextFilterWidgetConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): ITextFilterWidgetConf {
+        return this._conf;
     }
 
     public _doRender (): this {
@@ -70,7 +79,7 @@ export class TextFilterWidget extends BaseMixin {
 
         const chart = this;
         this._input.on('input', function () {
-            chart.dimension().filterFunction(chart._filterFunctionFactory(this.value));
+            chart._conf.dimension.filterFunction(chart._conf.filterFunctionFactory(this.value));
             events.trigger(() => {
                 chart.redrawGroup();
             }, constants.EVENT_DELAY);
@@ -83,72 +92,8 @@ export class TextFilterWidget extends BaseMixin {
 
     public _doRedraw (): this {
         this.root().selectAll('input')
-            .attr('placeholder', this._placeHolder);
+            .attr('placeholder', this._conf.placeHolder);
 
-        return this;
-    }
-
-    /**
-     * This function will be called on values before calling the filter function.
-     * @example
-     * // This is the default
-     * chart.normalize(function (s) {
-     *   return s.toLowerCase();
-     * });
-     * @param {function} [normalize]
-     * @returns {TextFilterWidget|function}
-     */
-    public normalize (): (s) => string;
-    public normalize (normalize: (s) => string): this;
-    public normalize (normalize?) {
-        if (!arguments.length) {
-            return this._normalize;
-        }
-        this._normalize = normalize;
-        return this;
-    }
-
-    /**
-     * Placeholder text in the search box.
-     * @example
-     * // This is the default
-     * chart.placeHolder('type to filter');
-     * @param {function} [placeHolder='search']
-     * @returns {TextFilterWidget|string}
-     */
-    public placeHolder (): string;
-    public placeHolder (placeHolder: string): this;
-    public placeHolder (placeHolder?) {
-        if (!arguments.length) {
-            return this._placeHolder;
-        }
-        this._placeHolder = placeHolder;
-        return this;
-    }
-
-    /**
-     * This function will be called with the search text, it needs to return a function that will be used to
-     * filter the data. The default function checks presence of the search text.
-     * @example
-     * // This is the default
-     * function (query) {
-     *     query = _normalize(query);
-     *     return function (d) {
-     *         return _normalize(d).indexOf(query) !== -1;
-     *     };
-     * };
-     * @param {function} [filterFunctionFactory]
-     * @returns {TextFilterWidget|function}
-     */
-    public filterFunctionFactory (): (query) => BaseAccessor<boolean>;
-    public filterFunctionFactory (filterFunctionFactory: (query) => BaseAccessor<boolean>): this;
-    public filterFunctionFactory (filterFunctionFactory?) {
-        if (!arguments.length) {
-            return this._filterFunctionFactory;
-        }
-        this._filterFunctionFactory = filterFunctionFactory;
         return this;
     }
 }
-
-export const textFilterWidget = (parent, chartGroup) => new TextFilterWidget(parent, chartGroup);

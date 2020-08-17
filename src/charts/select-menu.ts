@@ -2,8 +2,9 @@ import {event, Selection} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
-import {logger} from '../core/logger';
-import {BaseAccessor, ChartGroupType, ChartParentType, CompareFn} from '../core/types';
+import {ChartGroupType, ChartParentType} from '../core/types';
+import {ascending} from 'd3-array';
+import {ISelectMenuConf} from './i-select-menu-conf';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -14,13 +15,9 @@ const OPTION_CSS_CLASS = 'dc-select-option';
  * @mixes BaseMixin
  */
 export class SelectMenu extends BaseMixin {
+    protected _conf: ISelectMenuConf;
+
     private _select: Selection<HTMLSelectElement, any, any, any>;
-    private _promptText: string;
-    private _multiple: boolean;
-    private _promptValue: string;
-    private _numberVisible: number;
-    private _filterDisplayed: BaseAccessor<boolean>;
-    private _order: CompareFn;
 
     /**
      * Create a Select Menu.
@@ -43,34 +40,36 @@ export class SelectMenu extends BaseMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
+        this.configure({
+            multiple: false,
+            promptText: 'Select all',
+            promptValue: null,
+            filterDisplayed: d => this._conf.valueAccessor(d) > 0,
+            order: (a,b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b)),
+            numberVisible: null
+        });
+
         this._select = undefined;
-        this._promptText = 'Select all';
-        this._multiple = false;
-        this._promptValue = null;
-        this._numberVisible = null;
 
-        this.data(group => group.all().filter(this._filterDisplayed));
-
-        this._filterDisplayed = d => this.valueAccessor()(d) > 0;
-
-        this._order = (a, b) => {
-            if (this.keyAccessor()(a) > this.keyAccessor()(b)) {
-                return 1;
-            }
-            if (this.keyAccessor()(a) < this.keyAccessor()(b)) {
-                return -1;
-            }
-            return 0;
-        };
+        this.data(group => group.all().filter(this._conf.filterDisplayed));
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure (conf: ISelectMenuConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): ISelectMenuConf {
+        return this._conf;
     }
 
     public _doRender () {
         this.select('select').remove();
         this._select = this.root().append('select')
             .classed(SELECT_CSS_CLASS, true);
-        this._select.append('option').text(this._promptText).attr('value', '');
+        this._select.append('option').text(this._conf.promptText).attr('value', '');
 
         this._doRedraw();
         return this;
@@ -80,9 +79,9 @@ export class SelectMenu extends BaseMixin {
         this._setAttributes();
         this._renderOptions();
         // select the option(s) corresponding to current filter(s)
-        if (this.hasFilter() && this._multiple) {
+        if (this.hasFilter() && this._conf.multiple) {
             this._select.selectAll('option')
-                .property('selected', d => typeof d !== 'undefined' && this.filters().indexOf(String(this.keyAccessor()(d))) >= 0);
+                .property('selected', d => typeof d !== 'undefined' && this.filters().indexOf(String(this._conf.keyAccessor(d))) >= 0);
         } else if (this.hasFilter()) {
             this._select.property('value', this.filter());
         } else {
@@ -93,18 +92,18 @@ export class SelectMenu extends BaseMixin {
 
     private _renderOptions () {
         const options = this._select.selectAll<HTMLOptionElement, any>(`option.${OPTION_CSS_CLASS}`)
-            .data<any>(this.data(), d => this.keyAccessor()(d));
+            .data<any>(this.data(), d => this._conf.keyAccessor(d));
 
         options.exit().remove();
 
         options.enter()
             .append('option')
             .classed(OPTION_CSS_CLASS, true)
-            .attr('value', d => this.keyAccessor()(d))
+            .attr('value', d => this._conf.keyAccessor(d))
             .merge(options)
             .text(this.title());
 
-        this._select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(this._order);
+        this._select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(this._conf.order);
 
         this._select.on('change', (d, i) => this._onChange(d, i));
     }
@@ -123,15 +122,15 @@ export class SelectMenu extends BaseMixin {
         // console.log(values);
         // check if only prompt option is selected
         if (values.length === 1 && values[0] === '') {
-            values = this._promptValue || null;
-        } else if (!this._multiple && values.length === 1) {
+            values = this._conf.promptValue || null;
+        } else if (!this._conf.multiple && values.length === 1) {
             values = values[0];
         }
         this.onChange(values);
     }
 
     public onChange (val): void {
-        if (val && this._multiple) {
+        if (val && this._conf.multiple) {
             this.replaceFilter([val]);
         } else if (val) {
             this.replaceFilter(val);
@@ -144,145 +143,15 @@ export class SelectMenu extends BaseMixin {
     }
 
     private _setAttributes (): void {
-        if (this._multiple) {
+        if (this._conf.multiple) {
             this._select.attr('multiple', true);
         } else {
             this._select.attr('multiple', null);
         }
-        if (this._numberVisible !== null) {
-            this._select.attr('size', this._numberVisible);
+        if (this._conf.numberVisible !== null) {
+            this._select.attr('size', this._conf.numberVisible);
         } else {
             this._select.attr('size', null);
         }
     }
-
-    /**
-     * Get or set the function that controls the ordering of option tags in the
-     * select menu. By default options are ordered by the group key in ascending
-     * order.
-     * @param {Function} [order]
-     * @returns {Function|SelectMenu}
-     * @example
-     * // order by the group's value
-     * chart.order(function (a,b) {
-     *     return a.value > b.value ? 1 : b.value > a.value ? -1 : 0;
-     * });
-     */
-    public order (): CompareFn;
-    public order (order: CompareFn): this;
-    public order (order?) {
-        if (!arguments.length) {
-            return this._order;
-        }
-        this._order = order;
-        return this;
-    }
-
-    /**
-     * Get or set the text displayed in the options used to prompt selection.
-     * @param {String} [promptText='Select all']
-     * @returns {String|SelectMenu}
-     * @example
-     * chart.promptText('All states');
-     */
-    public promptText (): string;
-    public promptText (promptText: string): this;
-    public promptText (promptText?) {
-        if (!arguments.length) {
-            return this._promptText;
-        }
-        this._promptText = promptText;
-        return this;
-    }
-
-    /**
-     * Get or set the function that filters option tags prior to display. By default options
-     * with a value of < 1 are not displayed.
-     * @param {function} [filterDisplayed]
-     * @returns {Function|SelectMenu}
-     * @example
-     * // display all options override the `filterDisplayed` function:
-     * chart.filterDisplayed(function () {
-     *     return true;
-     * });
-     */
-    public filterDisplayed (): BaseAccessor<boolean>;
-    public filterDisplayed (filterDisplayed: BaseAccessor<boolean>): this;
-    public filterDisplayed (filterDisplayed?) {
-        if (!arguments.length) {
-            return this._filterDisplayed;
-        }
-        this._filterDisplayed = filterDisplayed;
-        return this;
-    }
-
-    /**
-     * Controls the type of select menu. Setting it to true converts the underlying
-     * HTML tag into a multiple select.
-     * @param {boolean} [multiple=false]
-     * @returns {boolean|SelectMenu}
-     * @example
-     * chart.multiple(true);
-     */
-    public multiple (): boolean;
-    public multiple (multiple: boolean): this;
-    public multiple (multiple?) {
-        if (!arguments.length) {
-            return this._multiple;
-        }
-        this._multiple = multiple;
-
-        return this;
-    }
-
-    /**
-     * Controls the default value to be used for
-     * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
-     * when only the prompt value is selected. If `null` (the default), no filtering will occur when
-     * just the prompt is selected.
-     * @param {?*} [promptValue=null]
-     * @returns {*|SelectMenu}
-     */
-    public promptValue (): string;
-    public promptValue (promptValue: string): this;
-    public promptValue (promptValue?) {
-        if (!arguments.length) {
-            return this._promptValue;
-        }
-        this._promptValue = promptValue;
-
-        return this;
-    }
-
-    /**
-     * Controls the number of items to show in the select menu, when `.multiple()` is true. This
-     * controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
-     * the `select` element. If `null` (the default), uses the browser's default height.
-     * @param {?number} [numberVisible=null]
-     * @returns {number|SelectMenu}
-     * @example
-     * chart.numberVisible(10);
-     */
-    public numberVisible (): number;
-    public numberVisible (numberVisible: number): this;
-    public numberVisible (numberVisible?) {
-        if (!arguments.length) {
-            return this._numberVisible;
-        }
-        this._numberVisible = numberVisible;
-
-        return this;
-    }
-
-    public size (): number;
-    public size (numberVisible: number): this;
-    public size (numberVisible?) {
-        logger.warnOnce('selectMenu.size is ambiguous - use selectMenu.numberVisible instead');
-        if (!arguments.length) {
-            return this.numberVisible();
-        }
-        return this.numberVisible(numberVisible);
-    }
 }
-
-export const selectMenu = (parent, chartGroup) => new SelectMenu(parent, chartGroup);

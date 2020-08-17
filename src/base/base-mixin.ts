@@ -15,15 +15,13 @@ import {
     BaseAccessor,
     ChartGroupType,
     ChartParentType,
-    KeyAccessor,
-    LabelAccessor,
     LegendItem,
     MinimalCFDimension,
     MinimalCFGroup,
-    TitleAccessor,
-    ValueAccessor
+    TitleAccessor
 } from '../core/types';
 import {IChartGroup} from '../core/chart-group-types';
+import {IBaseMixinConf} from './i-base-mixin-conf';
 
 const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
     if (filters.length === 0) {
@@ -83,53 +81,57 @@ const _defaultResetFilterHandler = filters => [];
  * @mixin BaseMixin
  */
 export class BaseMixin {
+    protected _conf: IBaseMixinConf;
+
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
-    private _dimension: MinimalCFDimension;
     private _group: MinimalCFGroup;
     private _anchor: string|Element;
     private _root: Selection<Element, any, any, any>; // Do not assume much, allow any HTML or SVG element
     private _svg: Selection<SVGElement, any, any, any>; // from d3-selection
     private _isChild: boolean;
-    private _minWidth: number;
     private _defaultWidthCalc: (element) => number;
     private _widthCalc: (element) => number;
-    private _minHeight: number;
     private _defaultHeightCalc: (element) => number;
     private _heightCalc: (element) => number;
     private _width: number;
     private _height: number;
-    private _useViewBoxResizing: boolean;
-    private _keyAccessor: KeyAccessor;
-    private _valueAccessor: ValueAccessor;
-    private _label: LabelAccessor;
-    private _ordering: BaseAccessor<any>; // TODO: should it be string or string|number|Date
-    private _renderLabel: boolean;
     private _title: TitleAccessor;
-    private _renderTitle: boolean;
-    private _controlsUseVisibility: boolean;
-    private _transitionDuration: number;
-    private _transitionDelay: number;
-    private _filterPrinter: (filters) => string;
     private _mandatoryAttributesList: string[];
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
-    private _commitHandler; // TODO: support async functions as well
     private _defaultData: (group) => any; // TODO: find correct type
     private _data: (group) => any;
     private _filters: any[]; // TODO: find better types
-    private _filterHandler: (dimension: MinimalCFDimension, filters) => any;
-    private _hasFilterHandler: (filters, filter) => (boolean | any);
-    private _removeFilterHandler: (filters, filter) => any;
-    private _addFilterHandler: (filters, filter) => any;
-    private _resetFilterHandler: (filters) => any[];
     protected _groupName: string; // StackMixin needs it
 
     constructor () {
         this.__dcFlag__ = uniqueId().toString();
 
-        this._dimension = undefined;
+        this.configure({
+            minWidth: 200,
+            minHeight: 200,
+            useViewBoxResizing: false,
+            ordering: d => d.key,
+            filterPrinter: printers.filters,
+            controlsUseVisibility: false,
+            transitionDuration: 750,
+            transitionDelay: 0,
+            commitHandler: undefined,
+            dimension: undefined,
+            filterHandler: _defaultFilterHandler,
+            hasFilterHandler: _defaultHasFilterHandler,
+            removeFilterHandler: _defaultRemoveFilterHandler,
+            addFilterHandler: _defaultAddFilterHandler,
+            resetFilterHandler: _defaultResetFilterHandler,
+            keyAccessor: d => d.key,
+            valueAccessor: d => d.value,
+            label: d => d.key,
+            renderLabel: false,
+            renderTitle: true,
+        });
+
         this._group = undefined;
 
         this._anchor = undefined;
@@ -137,40 +139,22 @@ export class BaseMixin {
         this._svg = undefined;
         this._isChild = undefined;
 
-        this._minWidth = 200;
         this._defaultWidthCalc = element => {
             const width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
-            return (width && width > this._minWidth) ? width : this._minWidth;
+            return (width && width > this._conf.minWidth) ? width : this._conf.minWidth;
         };
         this._widthCalc = this._defaultWidthCalc;
 
-        this._minHeight = 200;
         this._defaultHeightCalc = element => {
             const height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
-            return (height && height > this._minHeight) ? height : this._minHeight;
+            return (height && height > this._conf.minHeight) ? height : this._conf.minHeight;
         };
         this._heightCalc = this._defaultHeightCalc;
         this._width = undefined;
         this._height = undefined;
-        this._useViewBoxResizing = false;
 
-        this._keyAccessor = d => d.key;
-        this._valueAccessor = d => d.value;
-        this._label = d => d.key;
-
-        this._ordering = d => d.key;
-
-        this._renderLabel = false;
-
-        this._title = d => `${this.keyAccessor()(d)}: ${this.valueAccessor()(d)}`;
-        this._renderTitle = true;
-        this._controlsUseVisibility = false;
-
-        this._transitionDuration = 750;
-
-        this._transitionDelay = 0;
-
-        this._filterPrinter = printers.filters;
+        // TODO: StackMixin uses it differently, so, need refactoring before it can be moved to conf
+        this._title = d => `${this._conf.keyAccessor(d)}: ${this._conf.valueAccessor(d)}`;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
@@ -185,18 +169,20 @@ export class BaseMixin {
             'pretransition');
 
         this._legend = undefined;
-        this._commitHandler = undefined;
 
         this._defaultData = group => group.all();
         this._data = this._defaultData;
 
         this._filters = [];
+    }
 
-        this._filterHandler = _defaultFilterHandler;
-        this._hasFilterHandler = _defaultHasFilterHandler;
-        this._removeFilterHandler = _defaultRemoveFilterHandler;
-        this._addFilterHandler = _defaultAddFilterHandler;
-        this._resetFilterHandler = _defaultResetFilterHandler;
+    public configure (conf: IBaseMixinConf): this {
+        this._conf = {...(this._conf), ...conf};
+        return this;
+    }
+
+    public conf(): IBaseMixinConf {
+        return this._conf;
     }
 
     /**
@@ -268,97 +254,6 @@ export class BaseMixin {
     }
 
     /**
-     * Set or get the minimum width attribute of a chart. This only has effect when used with the default
-     * {@link BaseMixin#width width} function.
-     * @see {@link BaseMixin#width width}
-     * @param {Number} [minWidth=200]
-     * @returns {Number|BaseMixin}
-     */
-    public minWidth (): number;
-    public minWidth (minWidth: number): this;
-    public minWidth (minWidth?) {
-        if (!arguments.length) {
-            return this._minWidth;
-        }
-        this._minWidth = minWidth;
-        return this;
-    }
-
-    /**
-     * Set or get the minimum height attribute of a chart. This only has effect when used with the default
-     * {@link BaseMixin#height height} function.
-     * @see {@link BaseMixin#height height}
-     * @param {Number} [minHeight=200]
-     * @returns {Number|BaseMixin}
-     */
-    public minHeight (): number;
-    public minHeight (minHeight: number): this;
-    public minHeight (minHeight?) {
-        if (!arguments.length) {
-            return this._minHeight;
-        }
-        this._minHeight = minHeight;
-        return this;
-    }
-
-    /**
-     * Turn on/off using the SVG
-     * {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/viewBox `viewBox` attribute}.
-     * When enabled, `viewBox` will be set on the svg root element instead of `width` and `height`.
-     * Requires that the chart aspect ratio be defined using chart.width(w) and chart.height(h).
-     *
-     * This will maintain the aspect ratio while enabling the chart to resize responsively to the
-     * space given to the chart using CSS. For example, the chart can use `width: 100%; height:
-     * 100%` or absolute positioning to resize to its parent div.
-     *
-     * Since the text will be sized as if the chart is drawn according to the width and height, and
-     * will be resized if the chart is any other size, you need to set the chart width and height so
-     * that the text looks good. In practice, 600x400 seems to work pretty well for most charts.
-     *
-     * You can see examples of this resizing strategy in the [Chart Resizing
-     * Examples](http://dc-js.github.io/dc.js/resizing/); just add `?resize=viewbox` to any of the
-     * one-chart examples to enable `useViewBoxResizing`.
-     * @param {Boolean} [useViewBoxResizing=false]
-     * @returns {Boolean|BaseMixin}
-     */
-    public useViewBoxResizing (): boolean;
-    public useViewBoxResizing (useViewBoxResizing: boolean): this;
-    public useViewBoxResizing (useViewBoxResizing?) {
-        if (!arguments.length) {
-            return this._useViewBoxResizing;
-        }
-        this._useViewBoxResizing = useViewBoxResizing;
-        return this;
-    }
-
-    /**
-     * **mandatory**
-     *
-     * Set or get the dimension attribute of a chart. In `dc`, a dimension can be any valid
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter dimension}
-     *
-     * If a value is given, then it will be used as the new dimension. If no value is specified then
-     * the current dimension will be returned.
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension crossfilter.dimension}
-     * @example
-     * var index = crossfilter([]);
-     * var dimension = index.dimension(pluck('key'));
-     * chart.dimension(dimension);
-     * @param {crossfilter.dimension} [dimension]
-     * @returns {crossfilter.dimension|BaseMixin}
-     */
-    public dimension (): MinimalCFDimension;
-    public dimension (dimension: MinimalCFDimension): this;
-    public dimension (dimension?) {
-        if (!arguments.length) {
-            return this._dimension;
-        }
-        this._dimension = dimension;
-        this.expireCache();
-        return this;
-    }
-
-    /**
      * Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
      * group and by default will return
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all}.
@@ -414,30 +309,9 @@ export class BaseMixin {
         return this;
     }
 
-    /**
-     * Get or set an accessor to order ordinal dimensions.  The chart uses
-     * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort Array.sort}
-     * to sort elements; this accessor returns the value to order on.
-     * @example
-     * // Default ordering accessor
-     * _chart.ordering(pluck('key'));
-     * @param {Function} [orderFunction]
-     * @returns {Function|BaseMixin}
-     */
-    public ordering (): BaseAccessor<any>;
-    public ordering (orderFunction: BaseAccessor<any>): this;
-    public ordering (orderFunction?) {
-        if (!arguments.length) {
-            return this._ordering;
-        }
-        this._ordering = orderFunction;
-        this.expireCache();
-        return this;
-    }
-
     public _computeOrderedGroups (data) {
         // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort((a, b) => ascending(this._ordering(a), this._ordering(b)));
+        return Array.from(data).sort((a, b) => ascending(this._conf.ordering(a), this._conf.ordering(b)));
     }
 
     /**
@@ -591,7 +465,7 @@ export class BaseMixin {
 
     public sizeSvg (): void {
         if (this._svg) {
-            if (!this._useViewBoxResizing) {
+            if (!this._conf.useViewBoxResizing) {
                 this._svg
                     .attr('width', this.width())
                     .attr('height', this.height());
@@ -609,52 +483,6 @@ export class BaseMixin {
     }
 
     /**
-     * Set or get the filter printer function. The filter printer function is used to generate human
-     * friendly text for filter value(s) associated with the chart instance. The text will get shown
-     * in the `.filter element; see {@link BaseMixin#turnOnControls turnOnControls}.
-     *
-     * By default dc charts use a default filter printer {@link printers.filters printers.filters}
-     * that provides simple printing support for both single value and ranged filters.
-     * @example
-     * // for a chart with an ordinal brush, print the filters in upper case
-     * chart.filterPrinter(function(filters) {
-     *   return filters.map(function(f) { return f.toUpperCase(); }).join(', ');
-     * });
-     * // for a chart with a range brush, print the filter as start and extent
-     * chart.filterPrinter(function(filters) {
-     *   return 'start ' + printSingleValue(filters[0][0]) +
-     *     ' extent ' + printSingleValue(filters[0][1] - filters[0][0]);
-     * });
-     * @param {Function} [filterPrinterFunction=printers.filters]
-     * @returns {Function|BaseMixin}
-     */
-    public filterPrinter ();
-    public filterPrinter (filterPrinterFunction): this;
-    public filterPrinter (filterPrinterFunction?) {
-        if (!arguments.length) {
-            return this._filterPrinter;
-        }
-        this._filterPrinter = filterPrinterFunction;
-        return this;
-    }
-
-    /**
-     * If set, use the `visibility` attribute instead of the `display` attribute for showing/hiding
-     * chart reset and filter controls, for less disruption to the layout.
-     * @param {Boolean} [controlsUseVisibility=false]
-     * @returns {Boolean|BaseMixin}
-     */
-    public controlsUseVisibility (): boolean;
-    public controlsUseVisibility (controlsUseVisibility: boolean): this;
-    public controlsUseVisibility (controlsUseVisibility?) {
-        if (!arguments.length) {
-            return this._controlsUseVisibility;
-        }
-        this._controlsUseVisibility = controlsUseVisibility;
-        return this;
-    }
-
-    /**
      * Turn on optional control elements within the root element. dc currently supports the
      * following html control elements.
      * * root.selectAll('.reset') - elements are turned on if the chart has an active filter. This type
@@ -667,9 +495,9 @@ export class BaseMixin {
      */
     public turnOnControls (): this {
         if (this._root) {
-            const attribute = this.controlsUseVisibility() ? 'visibility' : 'display';
+            const attribute = this._conf.controlsUseVisibility ? 'visibility' : 'display';
             this.selectAll('.reset').style(attribute, null);
-            this.selectAll('.filter').text(this._filterPrinter(this.filters())).style(attribute, null);
+            this.selectAll('.filter').text(this._conf.filterPrinter(this.filters())).style(attribute, null);
         }
         return this;
     }
@@ -681,41 +509,11 @@ export class BaseMixin {
      */
     public turnOffControls (): this {
         if (this._root) {
-            const attribute = this.controlsUseVisibility() ? 'visibility' : 'display';
-            const value = this.controlsUseVisibility() ? 'hidden' : 'none';
+            const attribute = this._conf.controlsUseVisibility ? 'visibility' : 'display';
+            const value = this._conf.controlsUseVisibility ? 'hidden' : 'none';
             this.selectAll('.reset').style(attribute, value);
             this.selectAll('.filter').style(attribute, value).text(this.filter());
         }
-        return this;
-    }
-
-    /**
-     * Set or get the animation transition duration (in milliseconds) for this chart instance.
-     * @param {Number} [duration=750]
-     * @returns {Number|BaseMixin}
-     */
-    public transitionDuration (): number;
-    public transitionDuration (duration: number): this;
-    public transitionDuration (duration?) {
-        if (!arguments.length) {
-            return this._transitionDuration;
-        }
-        this._transitionDuration = duration;
-        return this;
-    }
-
-    /**
-     * Set or get the animation transition delay (in milliseconds) for this chart instance.
-     * @param {Number} [delay=0]
-     * @returns {Number|BaseMixin}
-     */
-    public transitionDelay (): number;
-    public transitionDelay (delay: number): this;
-    public transitionDelay (delay?) {
-        if (!arguments.length) {
-            return this._transitionDelay;
-        }
-        this._transitionDelay = delay;
         return this;
     }
 
@@ -764,8 +562,8 @@ export class BaseMixin {
     // Needed by Composite Charts
     public _activateRenderlets (event?): void {
         this._listeners.call('pretransition', this, this);
-        if (this.transitionDuration() > 0 && this._svg) {
-            this._svg.transition().duration(this.transitionDuration()).delay(this.transitionDelay())
+        if (this._conf.transitionDuration > 0 && this._svg) {
+            this._svg.transition().duration(this._conf.transitionDuration).delay(this._conf.transitionDelay)
                 .on('end', () => {
                     this._listeners.call('renderlet', this, this);
                     if (event) {
@@ -806,35 +604,14 @@ export class BaseMixin {
     }
 
     /**
-     * Gets/sets the commit handler. If the chart has a commit handler, the handler will be called when
-     * the chart's filters have changed, in order to send the filter data asynchronously to a server.
-     *
-     * Unlike other functions in dc.js, the commit handler is asynchronous. It takes two arguments:
-     * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
-     * triggered once the commit is done. The callback has the standard node.js continuation signature
-     * with error first and result second.
-     * @param {Function} commitHandler
-     * @returns {BaseMixin}
-     */
-    public commitHandler (): () => void;
-    public commitHandler (commitHandler: () => void): this;
-    public commitHandler (commitHandler?) {
-        if (!arguments.length) {
-            return this._commitHandler;
-        }
-        this._commitHandler = commitHandler;
-        return this;
-    }
-
-    /**
      * Redraws all charts in the same group as this chart, typically in reaction to a filter
      * change. If the chart has a {@link BaseMixin.commitFilter commitHandler}, it will
      * be executed and waited for.
      * @returns {BaseMixin}
      */
     public redrawGroup (): this {
-        if (this._commitHandler) {
-            this._commitHandler(false, (error, result) => {
+        if (this._conf.commitHandler) {
+            this._conf.commitHandler(false, (error, result) => {
                 if (error) {
                     console.log(error);
                 } else {
@@ -853,8 +630,8 @@ export class BaseMixin {
      * @returns {BaseMixin}
      */
     public renderGroup (): this {
-        if (this._commitHandler) {
-            this._commitHandler(false, (error, result) => {
+        if (this._conf.commitHandler) {
+            this._conf.commitHandler(false, (error, result) => {
                 if (error) {
                     console.log(error);
                 } else {
@@ -878,38 +655,6 @@ export class BaseMixin {
     }
 
     /**
-     * Set or get the has-filter handler. The has-filter handler is a function that checks to see if
-     * the chart's current filters (first argument) include a specific filter (second argument).  Using a custom has-filter handler allows
-     * you to change the way filters are checked for and replaced.
-     * @example
-     * // default has-filter handler
-     * chart.hasFilterHandler(function (filters, filter) {
-     *     if (filter === null || typeof(filter) === 'undefined') {
-     *         return filters.length > 0;
-     *     }
-     *     return filters.some(function (f) {
-     *         return filter <= f && filter >= f;
-     *     });
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.hasFilterHandler(function(filters, filter) {
-     *     return false;
-     * });
-     * @param {Function} [hasFilterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public hasFilterHandler ();
-    public hasFilterHandler (hasFilterHandler): this;
-    public hasFilterHandler (hasFilterHandler?) {
-        if (!arguments.length) {
-            return this._hasFilterHandler;
-        }
-        this._hasFilterHandler = hasFilterHandler;
-        return this;
-    }
-
-    /**
      * Check whether any active filter or a specific filter is associated with particular chart instance.
      * This function is **not chainable**.
      * @see {@link BaseMixin#hasFilterHandler hasFilterHandler}
@@ -917,109 +662,12 @@ export class BaseMixin {
      * @returns {Boolean}
      */
     public hasFilter (filter?): boolean {
-        return this._hasFilterHandler(this._filters, filter);
-    }
-
-    /**
-     * Set or get the remove filter handler. The remove filter handler is a function that removes a
-     * filter from the chart's current filters. Using a custom remove filter handler allows you to
-     * change how filters are removed or perform additional work when removing a filter, e.g. when
-     * using a filter server other than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @example
-     * // default remove filter handler
-     * chart.removeFilterHandler(function (filters, filter) {
-     *     for (var i = 0; i < filters.length; i++) {
-     *         if (filters[i] <= filter && filters[i] >= filter) {
-     *             filters.splice(i, 1);
-     *             break;
-     *         }
-     *     }
-     *     return filters;
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.removeFilterHandler(function(filters, filter) {
-     *     return filters;
-     * });
-     * @param {Function} [removeFilterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public removeFilterHandler ();
-    public removeFilterHandler (removeFilterHandler): this;
-    public removeFilterHandler (removeFilterHandler?) {
-        if (!arguments.length) {
-            return this._removeFilterHandler;
-        }
-        this._removeFilterHandler = removeFilterHandler;
-        return this;
-    }
-
-    /**
-     * Set or get the add filter handler. The add filter handler is a function that adds a filter to
-     * the chart's filter list. Using a custom add filter handler allows you to change the way filters
-     * are added or perform additional work when adding a filter, e.g. when using a filter server other
-     * than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @example
-     * // default add filter handler
-     * chart.addFilterHandler(function (filters, filter) {
-     *     filters.push(filter);
-     *     return filters;
-     * });
-     *
-     * // custom filter handler (no-op)
-     * chart.addFilterHandler(function(filters, filter) {
-     *     return filters;
-     * });
-     * @param {Function} [addFilterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public addFilterHandler ();
-    public addFilterHandler (addFilterHandler): this;
-    public addFilterHandler (addFilterHandler?) {
-        if (!arguments.length) {
-            return this._addFilterHandler;
-        }
-        this._addFilterHandler = addFilterHandler;
-        return this;
-    }
-
-    /**
-     * Set or get the reset filter handler. The reset filter handler is a function that resets the
-     * chart's filter list by returning a new list. Using a custom reset filter handler allows you to
-     * change the way filters are reset, or perform additional work when resetting the filters,
-     * e.g. when using a filter server other than crossfilter.
-     *
-     * The handler should return a new or modified array as the result.
-     * @example
-     * // default remove filter handler
-     * function (filters) {
-     *     return [];
-     * }
-     *
-     * // custom filter handler (no-op)
-     * chart.resetFilterHandler(function(filters) {
-     *     return filters;
-     * });
-     * @param {Function} [resetFilterHandler]
-     * @returns {BaseMixin}
-     */
-    public resetFilterHandler ();
-    public resetFilterHandler (resetFilterHandler): this;
-    public resetFilterHandler (resetFilterHandler?) {
-        if (!arguments.length) {
-            return this._resetFilterHandler;
-        }
-        this._resetFilterHandler = resetFilterHandler;
-        return this;
+        return this._conf.hasFilterHandler(this._filters, filter);
     }
 
     public applyFilters (filters) {
-        if (this.dimension() && this.dimension().filter) {
-            const fs = this._filterHandler(this.dimension(), filters);
+        if (this._conf.dimension && this._conf.dimension.filter) {
+            const fs = this._conf.filterHandler(this._conf.dimension, filters);
             if (fs) {
                 filters = fs;
             }
@@ -1035,7 +683,7 @@ export class BaseMixin {
      * @returns {BaseMixin}
      */
     public replaceFilter (filter): this {
-        this._filters = this._resetFilterHandler(this._filters);
+        this._filters = this._conf.resetFilterHandler(this._filters);
         this.filter(filter);
         return this;
     }
@@ -1101,19 +749,19 @@ export class BaseMixin {
         if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
             // toggle each filter
             filter[0].forEach(f => {
-                if (this._hasFilterHandler(filters, f)) {
-                    filters = this._removeFilterHandler(filters, f);
+                if (this._conf.hasFilterHandler(filters, f)) {
+                    filters = this._conf.removeFilterHandler(filters, f);
                 } else {
-                    filters = this._addFilterHandler(filters, f);
+                    filters = this._conf.addFilterHandler(filters, f);
                 }
             });
         } else if (filter === null) {
-            filters = this._resetFilterHandler(filters);
+            filters = this._conf.resetFilterHandler(filters);
         } else {
-            if (this._hasFilterHandler(filters, filter)) {
-                filters = this._removeFilterHandler(filters, filter);
+            if (this._conf.hasFilterHandler(filters, filter)) {
+                filters = this._conf.removeFilterHandler(filters, filter);
             } else {
-                filters = this._addFilterHandler(filters, filter);
+                filters = this._conf.addFilterHandler(filters, filter);
             }
         }
         this._filters = this.applyFilters(filters);
@@ -1166,65 +814,11 @@ export class BaseMixin {
      * @return {undefined}
      */
     public onClick (datum: any, i?: number): void {
-        const filter = this.keyAccessor()(datum);
+        const filter = this._conf.keyAccessor(datum);
         events.trigger(() => {
             this.filter(filter);
             this.redrawGroup();
         });
-    }
-
-    /**
-     * Set or get the filter handler. The filter handler is a function that performs the filter action
-     * on a specific dimension. Using a custom filter handler allows you to perform additional logic
-     * before or after filtering.
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter crossfilter.dimension.filter}
-     * @example
-     * // the default filter handler handles all possible cases for the charts in dc.js
-     * // you can replace it with something more specialized for your own chart
-     * chart.filterHandler(function (dimension, filters) {
-     *     if (filters.length === 0) {
-     *         // the empty case (no filtering)
-     *         dimension.filter(null);
-     *     } else if (filters.length === 1 && !filters[0].isFiltered) {
-     *         // single value and not a function-based filter
-     *         dimension.filterExact(filters[0]);
-     *     } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-     *         // single range-based filter
-     *         dimension.filterRange(filters[0]);
-     *     } else {
-     *         // an array of values, or an array of filter objects
-     *         dimension.filterFunction(function (d) {
-     *             for (var i = 0; i < filters.length; i++) {
-     *                 var filter = filters[i];
-     *                 if (filter.isFiltered && filter.isFiltered(d)) {
-     *                     return true;
-     *                 } else if (filter <= d && filter >= d) {
-     *                     return true;
-     *                 }
-     *             }
-     *             return false;
-     *         });
-     *     }
-     *     return filters;
-     * });
-     *
-     * // custom filter handler
-     * chart.filterHandler(function(dimension, filter){
-     *     var newFilter = filter + 10;
-     *     dimension.filter(newFilter);
-     *     return newFilter; // set the actual filter value to the new value
-     * });
-     * @param {Function} [filterHandler]
-     * @returns {Function|BaseMixin}
-     */
-    public filterHandler ();
-    public filterHandler (filterHandler): this;
-    public filterHandler (filterHandler?) {
-        if (!arguments.length) {
-            return this._filterHandler;
-        }
-        this._filterHandler = filterHandler;
-        return this;
     }
 
     // abstract function stub
@@ -1263,94 +857,6 @@ export class BaseMixin {
     }
 
     /**
-     * Set or get the key accessor function. The key accessor function is used to retrieve the key
-     * value from the crossfilter group. Key values are used differently in different charts, for
-     * example keys correspond to slices in a pie chart and x axis positions in a grid coordinate chart.
-     * @example
-     * // default key accessor
-     * chart.keyAccessor(function(d) { return d.key; });
-     * // custom key accessor for a multi-value crossfilter reduction
-     * chart.keyAccessor(function(p) { return p.value.absGain; });
-     * @param {Function} [keyAccessor]
-     * @returns {Function|BaseMixin}
-     */
-    public keyAccessor (): KeyAccessor;
-    public keyAccessor (keyAccessor: KeyAccessor): this;
-    public keyAccessor (keyAccessor?) {
-        if (!arguments.length) {
-            return this._keyAccessor;
-        }
-        this._keyAccessor = keyAccessor;
-        return this;
-    }
-
-    /**
-     * Set or get the value accessor function. The value accessor function is used to retrieve the
-     * value from the crossfilter group. Group values are used differently in different charts, for
-     * example values correspond to slice sizes in a pie chart and y axis positions in a grid
-     * coordinate chart.
-     * @example
-     * // default value accessor
-     * chart.valueAccessor(function(d) { return d.value; });
-     * // custom value accessor for a multi-value crossfilter reduction
-     * chart.valueAccessor(function(p) { return p.value.percentageGain; });
-     * @param {Function} [valueAccessor]
-     * @returns {Function|BaseMixin}
-     */
-    public valueAccessor (): ValueAccessor;
-    public valueAccessor (valueAccessor: ValueAccessor): this;
-    public valueAccessor (valueAccessor?) {
-        if (!arguments.length) {
-            return this._valueAccessor;
-        }
-        this._valueAccessor = valueAccessor;
-        return this;
-    }
-
-    /**
-     * Set or get the label function. The chart class will use this function to render labels for each
-     * child element in the chart, e.g. slices in a pie chart or bubbles in a bubble chart. Not every
-     * chart supports the label function, for example line chart does not use this function
-     * at all. By default, enables labels; pass false for the second parameter if this is not desired.
-     * @example
-     * // default label function just return the key
-     * chart.label(function(d) { return d.key; });
-     * // label function has access to the standard d3 data binding and can get quite complicated
-     * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
-     * @param {Function} [labelFunction]
-     * @param {Boolean} [enableLabels=true]
-     * @returns {Function|BaseMixin}
-     */
-    public label (): LabelAccessor;
-    public label (labelFunction: LabelAccessor, enableLabels?: boolean): this;
-    public label (labelFunction?, enableLabels?) {
-        if (!arguments.length) {
-            return this._label;
-        }
-        this._label = labelFunction;
-        // TODO: drop the 2nd parameter
-        if ((enableLabels === undefined) || enableLabels) {
-            this._renderLabel = true;
-        }
-        return this;
-    }
-
-    /**
-     * Turn on/off label rendering
-     * @param {Boolean} [renderLabel=false]
-     * @returns {Boolean|BaseMixin}
-     */
-    public renderLabel (): boolean;
-    public renderLabel (renderLabel: boolean): this;
-    public renderLabel (renderLabel?) {
-        if (!arguments.length) {
-            return this._renderLabel;
-        }
-        this._renderLabel = renderLabel;
-        return this;
-    }
-
-    /**
      * Set or get the title function. The chart class will use this function to render the SVGElement title
      * (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
      * in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
@@ -1377,22 +883,6 @@ export class BaseMixin {
             return this._title;
         }
         this._title = titleFunction;
-        return this;
-    }
-
-    /**
-     * Turn on/off title rendering, or return the state of the render title flag if no arguments are
-     * given.
-     * @param {Boolean} [renderTitle=true]
-     * @returns {Boolean|BaseMixin}
-     */
-    public renderTitle (): boolean;
-    public renderTitle (renderTitle: boolean): this;
-    public renderTitle (renderTitle?) {
-        if (!arguments.length) {
-            return this._renderTitle;
-        }
-        this._renderTitle = renderTitle;
         return this;
     }
 
@@ -1554,5 +1044,3 @@ export class BaseMixin {
         return this;
     }
 }
-
-export const baseMixin = () => new BaseMixin();

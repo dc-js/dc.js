@@ -14,6 +14,7 @@
       "allow-empty-catch",
       "allow-empty-functions"
     ],
+    "no-empty-interface": false,
     "object-literal-sort-keys": false,
     "only-arrow-functions": false, // TODO: switch and manual fix
     "prefer-for-of": false,

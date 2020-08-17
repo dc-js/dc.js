@@ -7,14 +7,8 @@ import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {units} from '../core/units';
 import {add, subtract} from '../core/utils';
-import {
-    BoxWidthFn,
-    ChartGroupType,
-    ChartParentType,
-    DCBrushSelection,
-    NumberFormatFn,
-    SVGGElementSelection
-} from '../core/types';
+import {BoxWidthFn, ChartGroupType, ChartParentType, DCBrushSelection, SVGGElementSelection} from '../core/types';
+import {IBoxPlotConf} from './i-box-plot-conf';
 
 // Returns a function to compute the interquartile range.
 function defaultWhiskersIQR (k: number): (d) => [number, number] {
@@ -49,17 +43,10 @@ function defaultWhiskersIQR (k: number): (d) => [number, number] {
  * @mixes CoordinateGridMixin
  */
 export class BoxPlot extends CoordinateGridMixin {
-    private _whiskerIqrFactor: number;
-    private _whiskersIqr: (k: number) => ((d) => [number, number]);
-    private _whiskers: (d) => [number, number];
-    private _box;
-    private _tickFormat: NumberFormatFn;
-    private _renderDataPoints: boolean;
-    private _dataOpacity: number;
-    private _dataWidthPortion: number;
-    private _showOutliers: boolean;
-    private _boldOutlier: boolean;
-    private _yRangePadding: number;
+    protected _conf: IBoxPlotConf;
+
+    private readonly _whiskers: (d) => [number, number];
+    private readonly _box;
     private _boxWidth: BoxWidthFn;
 
     /**
@@ -79,21 +66,23 @@ export class BoxPlot extends CoordinateGridMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
-        this._whiskerIqrFactor = 1.5;
-        this._whiskersIqr = defaultWhiskersIQR;
-        this._whiskers = this._whiskersIqr(this._whiskerIqrFactor);
+        const whiskerIqrFactor = 1.5;
+        this._whiskers = defaultWhiskersIQR(whiskerIqrFactor);
 
         this._box = d3Box();
-        this._tickFormat = null;
-        this._renderDataPoints = false;
-        this._dataOpacity = 0.3;
-        this._dataWidthPortion = 0.8;
-        this._showOutliers = true;
-        this._boldOutlier = false;
+        this.configure({
+            xUnits: units.ordinal,
+            tickFormat: null,
+            renderDataPoints: false,
+            dataOpacity: 0.3,
+            dataWidthPortion: 0.8,
+            showOutliers: true,
+            boldOutlier: false,
 
-        // Used in yAxisMin and yAxisMax to add padding in pixel coordinates
-        // so the min and max data points/whiskers are within the chart
-        this._yRangePadding = 8;
+            // Used in yAxisMin and yAxisMax to add padding in pixel coordinates
+            // so the min and max data points/whiskers are within the chart
+            yRangePadding: 8,
+        });
 
         this._boxWidth = (innerChartWidth, xUnits) => {
             if (this.isOrdinal()) {
@@ -105,7 +94,6 @@ export class BoxPlot extends CoordinateGridMixin {
 
         // default to ordinal
         this.x(scaleBand());
-        this.xUnits(units.ordinal);
 
         // valueAccessor should return an array of values that can be coerced into numbers
         // or if data is overloaded for a static array of arrays, it should be `Number`.
@@ -114,7 +102,7 @@ export class BoxPlot extends CoordinateGridMixin {
             d.map = accessor => accessor.call(d, d);
             return d;
         }).filter(d => {
-            const values = this.valueAccessor()(d);
+            const values = this._conf.valueAccessor(d);
             return values.length !== 0;
         }));
 
@@ -122,6 +110,15 @@ export class BoxPlot extends CoordinateGridMixin {
         this.outerPadding(0.5);
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure (conf: IBoxPlotConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): IBoxPlotConf {
+        return this._conf;
     }
 
     /**
@@ -180,12 +177,12 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     public _boxTransform (d, i: number): string {
-        const xOffset = this.x()(this.keyAccessor()(d, i));
+        const xOffset = this.x()(this._conf.keyAccessor(d, i));
         return `translate(${xOffset}, 0)`;
     }
 
     public _preprocessData (): void {
-        if (this.elasticX()) {
+        if (this._conf.elasticX) {
             this.x().domain([]);
         }
     }
@@ -196,18 +193,18 @@ export class BoxPlot extends CoordinateGridMixin {
         this._box.whiskers(this._whiskers)
             .width(calculatedBoxWidth)
             .height(this.effectiveHeight())
-            .value(this.valueAccessor())
+            .value(this._conf.valueAccessor)
             .domain(this.y().domain())
-            .duration(this.transitionDuration())
-            .tickFormat(this._tickFormat)
-            .renderDataPoints(this._renderDataPoints)
-            .dataOpacity(this._dataOpacity)
-            .dataWidthPortion(this._dataWidthPortion)
-            .renderTitle(this.renderTitle())
-            .showOutliers(this._showOutliers)
-            .boldOutlier(this._boldOutlier);
+            .duration(this._conf.transitionDuration)
+            .tickFormat(this._conf.tickFormat)
+            .renderDataPoints(this._conf.renderDataPoints)
+            .dataOpacity(this._conf.dataOpacity)
+            .dataWidthPortion(this._conf.dataWidthPortion)
+            .renderTitle(this._conf.renderTitle)
+            .showOutliers(this._conf.showOutliers)
+            .boldOutlier(this._conf.boldOutlier);
 
-        const boxesG: SVGGElementSelection = this.chartBodyG().selectAll('g.box').data(this.data(), this.keyAccessor());
+        const boxesG: SVGGElementSelection = this.chartBodyG().selectAll('g.box').data(this.data(), this._conf.keyAccessor);
 
         const boxesGEnterUpdate: SVGGElementSelection = this._renderBoxes(boxesG);
         this._updateBoxes(boxesGEnterUpdate);
@@ -224,7 +221,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .on('click', d => {
-                this.filter(this.keyAccessor()(d));
+                this.filter(this._conf.keyAccessor(d));
                 this.redrawGroup();
             });
         return boxesGEnter.merge(boxesG);
@@ -232,7 +229,7 @@ export class BoxPlot extends CoordinateGridMixin {
 
     public _updateBoxes (boxesG: SVGGElementSelection) {
         const chart = this;
-        transition(boxesG, this.transitionDuration(), this.transitionDelay())
+        transition(boxesG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .each(function (d) {
@@ -247,11 +244,11 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     public _minDataValue (): number {
-        return min(this.data(), e => min<number>(this.valueAccessor()(e)));
+        return min(this.data(), e => min<number>(this._conf.valueAccessor(e)));
     }
 
     public _maxDataValue (): number {
-        return max(this.data(), e => max<number>(this.valueAccessor()(e)));
+        return max(this.data(), e => max<number>(this._conf.valueAccessor(e)));
     }
 
     public _yAxisRangeRatio (): number {
@@ -276,7 +273,7 @@ export class BoxPlot extends CoordinateGridMixin {
                 const start = brushSelection[0];
                 const end = brushSelection[1];
                 this.g().selectAll('g.box').each(function (d) {
-                    const key = chart.keyAccessor()(d);
+                    const key = chart._conf.keyAccessor(d);
                     if (key < start || key >= end) {
                         chart.fadeDeselected(this);
                     } else {
@@ -292,146 +289,16 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     public isSelectedNode (d): boolean {
-        return this.hasFilter(this.keyAccessor()(d));
+        return this.hasFilter(this._conf.keyAccessor(d));
     }
 
     public yAxisMin (): number {
-        const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return subtract(this._minDataValue() - padding, this.yAxisPadding()) as number;
+        const padding = this._conf.yRangePadding * this._yAxisRangeRatio();
+        return subtract(this._minDataValue() - padding, this._conf.yAxisPadding) as number;
     }
 
     public yAxisMax (): number {
-        const padding = this._yRangePadding * this._yAxisRangeRatio();
-        return add(this._maxDataValue() + padding, this.yAxisPadding()) as number;
-    }
-
-    /**
-     * Get or set the numerical format of the boxplot median, whiskers and quartile labels. Defaults
-     * to integer formatting.
-     * @example
-     * // format ticks to 2 decimal places
-     * chart.tickFormat(d3.format('.2f'));
-     * @param {Function} [tickFormat]
-     * @returns {Number|Function|BoxPlot}
-     */
-    public tickFormat (): NumberFormatFn;
-    public tickFormat (tickFormat: NumberFormatFn): this;
-    public tickFormat (tickFormat?) {
-        if (!arguments.length) {
-            return this._tickFormat;
-        }
-        this._tickFormat = tickFormat;
-        return this;
-    }
-
-    /**
-     * Get or set the amount of padding to add, in pixel coordinates, to the top and
-     * bottom of the chart to accommodate box/whisker labels.
-     * @example
-     * // allow more space for a bigger whisker font
-     * chart.yRangePadding(12);
-     * @param {Function} [yRangePadding = 8]
-     * @returns {Number|Function|BoxPlot}
-     */
-    public yRangePadding (): number;
-    public yRangePadding (yRangePadding: number): this;
-    public yRangePadding (yRangePadding?) {
-        if (!arguments.length) {
-            return this._yRangePadding;
-        }
-        this._yRangePadding = yRangePadding;
-        return this;
-    }
-
-    /**
-     * Get or set whether individual data points will be rendered.
-     * @example
-     * // Enable rendering of individual data points
-     * chart.renderDataPoints(true);
-     * @param {Boolean} [show=false]
-     * @returns {Boolean|BoxPlot}
-     */
-    public renderDataPoints (): boolean;
-    public renderDataPoints (show: boolean): this;
-    public renderDataPoints (show?) {
-        if (!arguments.length) {
-            return this._renderDataPoints;
-        }
-        this._renderDataPoints = show;
-        return this;
-    }
-
-    /**
-     * Get or set the opacity when rendering data.
-     * @example
-     * // If individual data points are rendered increase the opacity.
-     * chart.dataOpacity(0.7);
-     * @param {Number} [opacity=0.3]
-     * @returns {Number|BoxPlot}
-     */
-    public dataOpacity (): number;
-    public dataOpacity (opacity: number): this;
-    public dataOpacity (opacity?) {
-        if (!arguments.length) {
-            return this._dataOpacity;
-        }
-        this._dataOpacity = opacity;
-        return this;
-    }
-
-    /**
-     * Get or set the portion of the width of the box to show data points.
-     * @example
-     * // If individual data points are rendered increase the data box.
-     * chart.dataWidthPortion(0.9);
-     * @param {Number} [percentage=0.8]
-     * @returns {Number|BoxPlot}
-     */
-    public dataWidthPortion (): number;
-    public dataWidthPortion (percentage: number): this;
-    public dataWidthPortion (percentage?) {
-        if (!arguments.length) {
-            return this._dataWidthPortion;
-        }
-        this._dataWidthPortion = percentage;
-        return this;
-    }
-
-    /**
-     * Get or set whether outliers will be rendered.
-     * @example
-     * // Disable rendering of outliers
-     * chart.showOutliers(false);
-     * @param {Boolean} [show=true]
-     * @returns {Boolean|BoxPlot}
-     */
-    public showOutliers (): boolean;
-    public showOutliers (show: boolean): this;
-    public showOutliers (show?) {
-        if (!arguments.length) {
-            return this._showOutliers;
-        }
-        this._showOutliers = show;
-        return this;
-    }
-
-    /**
-     * Get or set whether outliers will be drawn bold.
-     * @example
-     * // If outliers are rendered display as bold
-     * chart.boldOutlier(true);
-     * @param {Boolean} [show=false]
-     * @returns {Boolean|BoxPlot}
-     */
-    public boldOutlier (): boolean;
-    public boldOutlier (show: boolean): this;
-    public boldOutlier (show?) {
-        if (!arguments.length) {
-            return this._boldOutlier;
-        }
-        this._boldOutlier = show;
-        return this;
+        const padding = this._conf.yRangePadding * this._yAxisRangeRatio();
+        return add(this._maxDataValue() + padding, this._conf.yAxisPadding) as number;
     }
 }
-
-export const boxPlot = (parent, chartGroup) => new BoxPlot(parent, chartGroup);

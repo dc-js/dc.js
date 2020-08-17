@@ -192,5 +192,3 @@ export class HtmlLegend {
         return this;
     }
 }
-
-export const htmlLegend = () => new HtmlLegend();

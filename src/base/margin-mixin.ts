@@ -1,5 +1,6 @@
 import {BaseMixin} from './base-mixin';
 import {Margins} from '../core/types';
+import {IMarginMixinConf} from './i-margin-mixin-conf';
 
 /**
  * Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid
@@ -9,12 +10,23 @@ import {Margins} from '../core/types';
  * @returns {MarginMixin}
  */
 export class MarginMixin extends BaseMixin {
+    protected _conf: IMarginMixinConf;
+
     private _margins: Margins;
 
     constructor () {
         super();
 
         this._margins = {top: 10, right: 50, bottom: 30, left: 30};
+    }
+
+    public configure (conf: IMarginMixinConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): IMarginMixinConf {
+        return this._conf;
     }
 
     /**

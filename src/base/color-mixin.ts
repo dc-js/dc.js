@@ -3,9 +3,9 @@ import {interpolateHcl} from 'd3-interpolate';
 import {max, min} from 'd3-array';
 
 import {config} from '../core/config';
-import {ColorCommonInstance} from 'd3-color';
 import {BaseMixin} from './base-mixin';
-import {ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
+import {Constructor, MinimalColorScale} from '../core/types';
+import {IColorMixinConf} from './i-color-mixin-conf';
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
@@ -17,17 +17,28 @@ import {ColorAccessor, Constructor, MinimalColorScale} from '../core/types';
 // tslint:disable-next-line:variable-name
 export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     return class extends Base {
-        public _colors: MinimalColorScale;
-        public _colorAccessor: ColorAccessor;
-        public _colorCalculator: (d?: any, i?: number) => string;
+        protected _conf: IColorMixinConf;
+
+        private _colors: MinimalColorScale;
 
         constructor (...args: any[]) {
             super();
 
-            this._colors = scaleOrdinal(config.defaultColors());
+            this.configure({
+                colorCalculator: undefined,
+                colorAccessor: (d, i?) => this._conf.keyAccessor(d),
+            });
 
-            this._colorAccessor = (d, i) => this.keyAccessor()(d);
-            this._colorCalculator = undefined;
+            this._colors = scaleOrdinal<any, string>(config.defaultColors());
+        }
+
+        public configure (conf: IColorMixinConf): this {
+            super.configure(conf);
+            return this;
+        }
+
+        public conf(): IColorMixinConf {
+            return this._conf;
         }
 
         /**
@@ -39,10 +50,10 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Number} [i]
          * @returns {String}
          */
-        public getColor (d?, i?): string {
-            return this._colorCalculator ?
-                this._colorCalculator(d, i) :
-                this._colors(this._colorAccessor(d, i));
+        public getColor (d, i?: number): string {
+            return this._conf.colorCalculator ?
+                this._conf.colorCalculator(d, i) :
+                this._colors(this._conf.colorAccessor(d, i));
         }
 
         /**
@@ -53,8 +64,9 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @returns {ColorMixin}
          */
         public calculateColorDomain (): this {
-            const newDomain = [min(this.data(), this.colorAccessor()),
-                               max(this.data(), this.colorAccessor())];
+            // TODO: use extent from d3-array which does exactly this
+            const newDomain = [min(this.data(), this._conf.colorAccessor),
+                               max(this.data(), this._conf.colorAccessor)];
             this._colors.domain(newDomain);
             return this;
         }
@@ -77,8 +89,8 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
          * @returns {d3.scale|ColorMixin}
          */
-        public colors ();
-        public colors (colorScale): this;
+        public colors (): MinimalColorScale;
+        public colors (colorScale: MinimalColorScale): this;
         public colors (colorScale?) {
             if (!arguments.length) {
                 return this._colors;
@@ -100,8 +112,8 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Array<String>} r
          * @returns {ColorMixin}
          */
-        public ordinalColors (r): this {
-            return this.colors(scaleOrdinal().range(r));
+        public ordinalColors (r: string[]): this {
+            return this.colors(scaleOrdinal<any, string>().range(r));
         }
 
         /**
@@ -111,36 +123,11 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Array<Number>} r
          * @returns {ColorMixin}
          */
-        public linearColors (r): this {
-            // We have to hint Typescript that the scale will map colors to colors.
-            // Picked up the signature from type definition of interpolateHcl.
-            return this.colors(scaleLinear<string | ColorCommonInstance>()
-                .range(r)
-                .interpolate(interpolateHcl));
-        }
-
-        /**
-         * Set or the get color accessor function. This function will be used to map a data point in a
-         * crossfilter group to a color value on the color scale. The default function uses the key
-         * accessor.
-         * @memberof ColorMixin
-         * @instance
-         * @example
-         * // default index based color accessor
-         * .colorAccessor(function (d, i){return i;})
-         * // color accessor for a multi-value crossfilter reduction
-         * .colorAccessor(function (d){return d.value.absGain;})
-         * @param {Function} [colorAccessor]
-         * @returns {Function|ColorMixin}
-         */
-        public colorAccessor (): ColorAccessor;
-        public colorAccessor (colorAccessor: ColorAccessor): this;
-        public colorAccessor (colorAccessor?) {
-            if (!arguments.length) {
-                return this._colorAccessor;
-            }
-            this._colorAccessor = colorAccessor;
-            return this;
+        public linearColors (r: [string, string]): this {
+            return this.colors(
+                scaleLinear<any, string>()
+                    .range(r)
+                    .interpolate(interpolateHcl));
         }
 
         /**
@@ -154,36 +141,13 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
          * @param {Array<String>} [domain]
          * @returns {Array<String>|ColorMixin}
          */
-        public colorDomain ();
-        public colorDomain (domain): this;
+        public colorDomain (): string[];
+        public colorDomain (domain: string[]): this;
         public colorDomain (domain?) {
             if (!arguments.length) {
                 return this._colors.domain();
             }
             this._colors.domain(domain);
-            return this;
-        }
-
-        /**
-         * Overrides the color selection algorithm, replacing it with a simple function.
-         *
-         * Normally colors will be determined by calling the `colorAccessor` to get a value, and then passing that
-         * value through the `colorScale`.
-         *
-         * But sometimes it is difficult to get a color scale to produce the desired effect. The `colorCalculator`
-         * takes the datum and index and returns a color directly.
-         * @memberof ColorMixin
-         * @instance
-         * @param {*} [colorCalculator]
-         * @returns {Function|ColorMixin}
-         */
-        public colorCalculator (): ColorAccessor;
-        public colorCalculator (colorCalculator: ColorAccessor): this;
-        public colorCalculator (colorCalculator?) {
-            if (!arguments.length) {
-                return this._colorCalculator || this.getColor;
-            }
-            this._colorCalculator = colorCalculator;
             return this;
         }
     };

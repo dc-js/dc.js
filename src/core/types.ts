@@ -131,3 +131,25 @@ export interface LegendItem {
 }
 
 export type LegendTextAccessor = (d: LegendItem) => string;
+
+// BubbleOverlay
+export type BubblePoint = { name: string; x: number; y: number; };
+
+// DataCount
+export interface DataCountHTMLOptions {
+    all: string;
+    some: string;
+}
+
+// DataTable
+export type DataTableColumnSpec = ((d) => string) | string | {label: string; format: (d) => string};
+
+// GeoChoroplethChart
+export interface IGeoJson {
+    data;
+    name: string;
+    keyAccessor: BaseAccessor<any>;
+}
+
+// HeatMap
+export type HeatMapClickHandler = (d: any) => void;

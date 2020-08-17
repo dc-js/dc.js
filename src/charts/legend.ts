@@ -331,5 +331,3 @@ export class Legend {
     }
 
 }
-
-export const legend = () => new Legend();

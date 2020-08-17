@@ -12,16 +12,10 @@ import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {BaseAccessor, ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
+import {ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection} from '../core/types';
+import {ISunburstChartConf, RingSizeSpecs} from './i-sunburst-chart-conf';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
-
-export interface RingSizeSpecs {
-    partitionDy: () => number;
-    scaleOuterRadius: BaseAccessor<number>;
-    scaleInnerRadius: BaseAccessor<number>;
-    relativeRingSizesFunction: (ringCount: number) => number[];
-}
 
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
@@ -38,18 +32,14 @@ export interface RingSizeSpecs {
  * @mixes BaseMixin
  */
 export class SunburstChart extends ColorMixin(BaseMixin) {
+    protected _conf: ISunburstChartConf;
+
     private _sliceCssClass: string;
     private _emptyCssClass: string;
-    private _emptyTitle: string;
-    private _radius: number;
-    private _givenRadius: number;
-    private _innerRadius: number;
-    private _ringSizes: RingSizeSpecs;
+    private _computedRadius: number;
     private _g: SVGGElementSelection;
     private _cx: number;
     private _cy: number;
-    private _minAngleForLabel: number;
-    private _externalLabelRadius: number;
     private _relativeRingSizes: number[];
     private _rootOffset: number;
 
@@ -70,34 +60,40 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
+        this.configure({
+            colorAccessor: d => this._conf.keyAccessor(d),
+            ordering: d => d.key, // override cap mixin // TODO: not needed, does not mix CapMixin any longer
+            label: d => this._conf.keyAccessor(d),
+            renderLabel: true,
+            transitionDuration: 350,
+            emptyTitle: 'empty',
+            radius: undefined, // given radius, if any
+            innerRadius: 0,
+            ringSizes: this.defaultRingSizes(),
+            minAngleForLabel: DEFAULT_MIN_ANGLE_FOR_LABEL,
+            externalLabelRadius: undefined,
+        });
+
         this._sliceCssClass = 'pie-slice';
         this._emptyCssClass = 'empty-chart';
-        this._emptyTitle = 'empty';
-
-        this._radius = undefined;
-        this._givenRadius = undefined; // given radius, if any
-        this._innerRadius = 0;
-        this._ringSizes = null;
+        this._computedRadius = undefined;
 
         this._g = undefined;
         this._cx = undefined;
         this._cy = undefined;
-        this._minAngleForLabel = DEFAULT_MIN_ANGLE_FOR_LABEL;
-        this._externalLabelRadius = undefined;
 
-        this.colorAccessor(d => this.keyAccessor()(d));
-
-        // override cap mixin
-        this.ordering(d => d.key);
-
-        this.title(d => `${this.keyAccessor()(d)}: ${this._extendedValueAccessor(d)}`);
-
-        this.label(d => this.keyAccessor()(d));
-        this.renderLabel(true);
-
-        this.transitionDuration(350);
+        this.title(d => `${this._conf.keyAccessor(d)}: ${this._extendedValueAccessor(d)}`);
 
         this.anchor(parent, chartGroup);
+    }
+
+    public configure (conf: ISunburstChartConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): ISunburstChartConf {
+        return this._conf;
     }
 
     // Handle cases if value corresponds to generated parent nodes
@@ -105,19 +101,19 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         if (d.path) {
             return d.value;
         }
-        return this.valueAccessor()(d);
+        return this._conf.valueAccessor(d);
     }
 
     private _scaleRadius (ringIndex: number, y: number): number {
         if (ringIndex === 0) {
-            return this._innerRadius;
+            return this._conf.innerRadius;
         } else {
             const customRelativeRadius = sum(this._relativeRingSizes.slice(0, ringIndex));
             const scaleFactor = (ringIndex * (1 / this._relativeRingSizes.length)) /
                   customRelativeRadius;
             const standardRadius = (y - this._rootOffset) /
-                  (1 - this._rootOffset) * (this._radius - this._innerRadius);
-            return this._innerRadius + standardRadius / scaleFactor;
+                  (1 - this._rootOffset) * (this._computedRadius - this._conf.innerRadius);
+            return this._conf.innerRadius + standardRadius / scaleFactor;
         }
     }
 
@@ -136,7 +132,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     private _drawChart (): void {
         // set radius from chart size if none given, or if given radius is too large
         const maxRadius: number = min([this.width(), this.height()]) / 2;
-        this._radius = this._givenRadius && this._givenRadius < maxRadius ? this._givenRadius : maxRadius;
+        this._computedRadius = this._conf.radius && this._conf.radius < maxRadius ? this._conf.radius : maxRadius;
 
         const arcs: Arc<any, DefaultArcObject> = this._buildArcs();
 
@@ -144,8 +140,8 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         let cdata;
 
         // if we have data...
-        if (sum(this.data(), this.valueAccessor())) {
-            cdata = toHierarchy(this.data(), this.valueAccessor());
+        if (sum(this.data(), this._conf.valueAccessor)) {
+            cdata = toHierarchy(this.data(), this._conf.valueAccessor);
             partitionedNodes = this._partitionNodes(cdata);
             // First one is the root, which is not needed
             partitionedNodes.nodes.shift();
@@ -173,7 +169,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
             this._highlightFilter();
 
-            transition(this._g, this.transitionDuration(), this.transitionDelay())
+            transition(this._g, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('transform', `translate(${this.cx()},${this.cy()})`);
         }
     }
@@ -201,7 +197,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             .on('click', (d, i) => this.onClick(d, i))
             .attr('d', d => this._safeArc(arcs, d));
 
-        const tranNodes = transition(slicePath, this.transitionDuration());
+        const tranNodes = transition(slicePath, this._conf.transitionDuration);
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
@@ -211,13 +207,13 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _createTitles (slicesEnter: SVGGElementSelection): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             slicesEnter.append('title').text(d => this.title()(d));
         }
     }
 
     private _positionLabels (labelsEnter: Selection<SVGTextElement, any, SVGGElement, any>, arcs: Arc<any, DefaultArcObject>) {
-        transition(labelsEnter, this.transitionDuration())
+        transition(labelsEnter, this._conf.transitionDuration)
             .attr('transform', d => this._labelPosition(d, arcs))
             .attr('text-anchor', 'middle')
             .text(d => {
@@ -225,12 +221,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 if (this._sliceHasNoData(d) || this._sliceTooSmall(d)) {
                     return '';
                 }
-                return this.label()(d);
+                return this._conf.label(d);
             });
     }
 
     private _createLabels (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
                 .data<any>(sunburstData);
 
@@ -241,7 +237,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 .append('text')
                 .attr('class', (d, i) => {
                     let classes = `${this._sliceCssClass} _${i}`;
-                    if (this._externalLabelRadius) {
+                    if (this._conf.externalLabelRadius) {
                         classes += ' external';
                     }
                     return classes;
@@ -263,7 +259,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             .data(sunburstData)
             .select('path')
             .attr('d', (d, i) => this._safeArc(arcs, d));
-        const tranNodes = transition(slicePaths, this.transitionDuration());
+        const tranNodes = transition(slicePaths, this._conf.transitionDuration);
         if (tranNodes.attrTween) {
             const chart = this;
             tranNodes.attrTween('d', function (d) {
@@ -274,7 +270,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _updateLabels (sunburstData, arcs: Arc<any, DefaultArcObject>): void {
-        if (this.renderLabel()) {
+        if (this._conf.renderLabel) {
             const labels = this._g.selectAll<SVGTextElement, any>(`text.${this._sliceCssClass}`)
                 .data<any>(sunburstData);
 
@@ -283,7 +279,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _updateTitles (sunburstData): void {
-        if (this.renderTitle()) {
+        if (this._conf.renderTitle) {
             this._g.selectAll(`g.${this._sliceCssClass}`)
                 .data(sunburstData)
                 .select('title')
@@ -310,38 +306,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 chart.resetHighlight(this);
             });
         }
-    }
-
-    /**
-     * Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
-     * sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
-     * @param {Number} [innerRadius=0]
-     * @returns {Number|SunburstChart}
-     */
-    public innerRadius (): number;
-    public innerRadius (innerRadius: number): this;
-    public innerRadius (innerRadius?) {
-        if (!arguments.length) {
-            return this._innerRadius;
-        }
-        this._innerRadius = innerRadius;
-        return this;
-    }
-
-    /**
-     * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
-     * chart width and height.
-     * @param {Number} [radius]
-     * @returns {Number|SunburstChart}
-     */
-    public radius (): number;
-    public radius (radius: number): this;
-    public radius (radius?) {
-        if (!arguments.length) {
-            return this._givenRadius;
-        }
-        this._givenRadius = radius;
-        return this;
     }
 
     /**
@@ -375,58 +339,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     /**
-     * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
-     * display a slice label.
-     * @param {Number} [minAngleForLabel=0.5]
-     * @returns {Number|SunburstChart}
-     */
-    public minAngleForLabel (): number;
-    public minAngleForLabel (minAngleForLabel: number): this;
-    public minAngleForLabel (minAngleForLabel?) {
-        if (!arguments.length) {
-            return this._minAngleForLabel;
-        }
-        this._minAngleForLabel = minAngleForLabel;
-        return this;
-    }
-
-    /**
-     * Title to use for the only slice when there is no data.
-     * @param {String} [title]
-     * @returns {String|SunburstChart}
-     */
-    public emptyTitle (): string;
-    public emptyTitle (title: string): this;
-    public emptyTitle (title?) {
-        if (arguments.length === 0) {
-            return this._emptyTitle;
-        }
-        this._emptyTitle = title;
-        return this;
-    }
-
-    /**
-     * Position slice labels offset from the outer edge of the chart.
-     *
-     * The argument specifies the extra radius to be added for slice labels.
-     * @param {Number} [externalLabelRadius]
-     * @returns {Number|SunburstChart}
-     */
-    public externalLabels (): number;
-    public externalLabels (externalLabelRadius: number): this;
-    public externalLabels (externalLabelRadius?) {
-        if (arguments.length === 0) {
-            return this._externalLabelRadius;
-        } else if (externalLabelRadius) {
-            this._externalLabelRadius = externalLabelRadius;
-        } else {
-            this._externalLabelRadius = undefined;
-        }
-
-        return this;
-    }
-
-    /**
      * Constructs the default RingSizes parameter for {@link SunburstChart#ringSizes ringSizes()},
      * which makes the rings narrower as they get farther away from the center.
      *
@@ -439,9 +351,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      */
     public defaultRingSizes (): RingSizeSpecs {
         return {
-            partitionDy: () => this._radius * this._radius,
+            partitionDy: () => this._computedRadius * this._computedRadius,
             scaleInnerRadius: d => d.data.path && d.data.path.length === 1 ?
-                this._innerRadius :
+                this._conf.innerRadius :
                 Math.sqrt(d.y0),
             scaleOuterRadius: d => Math.sqrt(d.y1),
             relativeRingSizesFunction: () => []
@@ -516,53 +428,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         };
     }
 
-    /**
-     * Get or set the strategy to use for sizing the charts rings.
-     *
-     * There are three strategies available
-     * * {@link SunburstChart#defaultRingSizes `defaultRingSizes`}: the rings get narrower farther away from the center
-     * * {@link SunburstChart#relativeRingSizes `relativeRingSizes`}: set the ring sizes as portions of 1
-     * * {@link SunburstChart#equalRingSizes `equalRingSizes`}: the rings are equally wide
-     *
-     * You can modify the returned strategy, or create your own, for custom ring sizing.
-     *
-     * RingSizes is a duck-typed interface that must support the following methods:
-     * * `partitionDy()`: used for
-     *   {@link https://github.com/d3/d3-hierarchy/blob/v1.1.9/README.md#partition_size `d3.partition.size`}
-     * * `scaleInnerRadius(d)`: takes datum and returns radius for
-     *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_innerRadius `d3.arc.innerRadius`}
-     * * `scaleOuterRadius(d)`: takes datum and returns radius for
-     *    {@link https://github.com/d3/d3-shape/blob/v1.3.7/README.md#arc_outerRadius `d3.arc.outerRadius`}
-     * * `relativeRingSizesFunction(ringCount)`: takes ring count and returns an array of portions that
-     *   must add up to 1
-     *
-     * @example
-     * // make rings equally wide
-     * chart.ringSizes(chart.equalRingSizes())
-     * // reset to default behavior
-     * chart.ringSizes(chart.defaultRingSizes()))
-     * @param {RingSizes} ringSizes
-     * @returns {Object|SunburstChart}
-     */
-    public ringSizes (): RingSizeSpecs;
-    public ringSizes (ringSizes: RingSizeSpecs): this;
-    public ringSizes (ringSizes?) {
-        if (!arguments.length) {
-            if (!this._ringSizes) {
-                this._ringSizes = this.defaultRingSizes();
-            }
-            return this._ringSizes;
-        }
-        this._ringSizes = ringSizes;
-        return this;
-    }
-
     private _buildArcs (): Arc<any, DefaultArcObject> {
         return arc()
             .startAngle((d:any) => d.x0) // TODO: revisit and look for proper typing
             .endAngle((d:any) => d.x1) // TODO: revisit and look for proper typing
-            .innerRadius(d => this.ringSizes().scaleInnerRadius(d))
-            .outerRadius(d => this.ringSizes().scaleOuterRadius(d));
+            .innerRadius(d => this._conf.ringSizes.scaleInnerRadius(d))
+            .outerRadius(d => this._conf.ringSizes.scaleOuterRadius(d));
     }
 
     private _isSelectedSlice (d): boolean {
@@ -603,10 +474,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         };
         const _hierarchy = hierarchy(data)
             .sum(d => d.children ? 0 : this._extendedValueAccessor(d))
-            .sort((a, b) => ascending(this.ordering()(getSortable(a)), this.ordering()(getSortable(b))));
+            .sort((a, b) =>
+                ascending(this._conf.ordering(getSortable(a)), this._conf.ordering(getSortable(b))));
 
         const _partition = partition()
-              .size([2 * Math.PI, this.ringSizes().partitionDy()]);
+              .size([2 * Math.PI, this._conf.ringSizes.partitionDy()]);
 
         _partition(_hierarchy);
 
@@ -619,7 +491,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             return d;
         });
 
-        const relativeSizes = this.ringSizes().relativeRingSizesFunction(_hierarchy.height);
+        const relativeSizes = this._conf.ringSizes.relativeRingSizesFunction(_hierarchy.height);
 
         return {
             nodes,
@@ -632,7 +504,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     private _sliceTooSmall (d): boolean {
         const angle = d.x1 - d.x0;
-        return isNaN(angle) || angle < this._minAngleForLabel;
+        return isNaN(angle) || angle < this._conf.minAngleForLabel;
     }
 
     private _sliceHasNoData (d): boolean {
@@ -686,10 +558,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     private _labelPosition (d, _arc) {
         let centroid;
-        if (this._externalLabelRadius) {
+        if (this._conf.externalLabelRadius) {
             centroid = arc()
-                .outerRadius(this._radius + this._externalLabelRadius)
-                .innerRadius(this._radius + this._externalLabelRadius)
+                .outerRadius(this._computedRadius + this._conf.externalLabelRadius)
+                .innerRadius(this._computedRadius + this._conf.externalLabelRadius)
                 .centroid(d);
         } else {
             centroid = _arc.centroid(d);
@@ -745,5 +617,3 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return t => this._safeArc(this._buildArcs(), Object.assign({}, d, i(t)));
     }
 }
-
-export const sunburstChart = (parent, chartGroup) => new SunburstChart(parent, chartGroup);

@@ -1,5 +1,5 @@
 import {schemeCategory10} from 'd3-scale-chromatic';
-import {CountableTimeInterval, timeDay} from 'd3-time';
+import {timeDay} from 'd3-time';
 import {max, min} from 'd3-array';
 import {scaleBand, scaleLinear, scaleOrdinal} from 'd3-scale';
 import {Axis, axisBottom, axisLeft, axisRight} from 'd3-axis';
@@ -16,7 +16,8 @@ import {add, appendOrSelect, arraysEqual, subtract} from '../core/utils';
 import {logger} from '../core/logger';
 import {filters} from '../core/filters';
 import {events} from '../core/events';
-import {DCBrushSelection, MinimalXYScale, RoundFn, SVGGElementSelection, Units} from '../core/types';
+import {DCBrushSelection, MinimalXYScale, SVGGElementSelection} from '../core/types';
+import {ICoordinateGridMixinConf} from './i-coordinate-grid-mixin-conf';
 
 const GRID_LINE_CLASS = 'grid-line';
 const HORIZONTAL_CLASS = 'horizontal';
@@ -34,6 +35,8 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * @mixes MarginMixin
  */
 export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
+    protected _conf: ICoordinateGridMixinConf;
+
     private _parent: Selection<SVGElement, any, any, any>;
     private _g: SVGGElementSelection;
     private _chartBodyG: SVGGElementSelection;
@@ -41,40 +44,26 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _origX: MinimalXYScale;
     private _xOriginalDomain: [number, number];
     private _xAxis: Axis<any>; // TODO: can we do better
-    private _xUnits: Units;
-    private _xAxisPadding: number;
-    private _xAxisPaddingUnit: string | CountableTimeInterval; // it can be string as well, like 'day', 'hour' etc.
-    private _xElasticity: boolean;
     private _xAxisLabel: string;
     private _xAxisLabelPadding: number;
     private _lastXDomain: [number, number];
     private _y: MinimalXYScale;
     private _yAxis: Axis<any>;  // TODO: can we do better
-    private _yAxisPadding: number;
-    private _yElasticity: boolean;
     private _yAxisLabel: string;
     private _yAxisLabelPadding: number;
     private _brush: BrushBehavior<unknown>;
     private _gBrush: SVGGElementSelection;
     private _brushOn: boolean;
     private _parentBrushOn: boolean;
-    private _round: RoundFn;
-    private _renderHorizontalGridLine: boolean;
-    private _renderVerticalGridLine: boolean;
     private _resizing: boolean;
     private _unitCount: number;
-    private _zoomScale: [number, number];
-    private _zoomOutRestrict: boolean;
     private _zoom: ZoomBehavior<Element, unknown>;
     private _nullZoom: ZoomBehavior<Element, unknown>;
     private _hasBeenMouseZoomable: boolean;
     private _rangeChart: CoordinateGridMixin;
     private _focusChart: CoordinateGridMixin;
-    private _mouseZoomable: boolean;
-    private _clipPadding: number;
     private _fOuterRangeBandPadding: number;
     private _fRangeBandPadding: number;
-    private _useRightYAxis: boolean;
 
     constructor () {
         super();
@@ -85,40 +74,49 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._g = undefined;
         this._chartBodyG = undefined;
 
+        this.configure({
+            xUnits: units.integers,
+            xAxisPadding: 0,
+            xAxisPaddingUnit: timeDay,
+            elasticX: false,
+            yAxisPadding: 0,
+            elasticY: false,
+            round: undefined,
+            renderHorizontalGridLine: false,
+            renderVerticalGridLines: false,
+            zoomScale: [1, Infinity],
+            zoomOutRestrict: true,
+            mouseZoomable: false,
+            clipPadding: 0,
+            useRightYAxis: false
+        });
+
         this._x = undefined;
         this._origX = undefined; // Will hold original scale in case of zoom
         this._xOriginalDomain = undefined;
         this._xAxis = axisBottom(undefined);
-        this._xUnits = units.integers;
-        this._xAxisPadding = 0;
-        this._xAxisPaddingUnit = timeDay;
-        this._xElasticity = false;
+        // TODO: xAxisLabel and xAxisLabelPadding are linked to the same function, in addition the call updates margins
+        // TODO: recheck in next iteration
         this._xAxisLabel = undefined;
         this._xAxisLabelPadding = 0;
+
         this._lastXDomain = undefined;
 
         this._y = undefined;
         this._yAxis = null;
-        this._yAxisPadding = 0;
-        this._yElasticity = false;
+
+        // TODO: see remarks for xAxisLabel and xAxisLabelPadding
         this._yAxisLabel = undefined;
         this._yAxisLabelPadding = 0;
 
         this._brush = brushX();
 
         this._gBrush = undefined;
-        this._brushOn = true;
+        this._brushOn = true; // Can not be moved to conf, gets reassigned within dc code
         this._parentBrushOn = false;
-        this._round = undefined;
-
-        this._renderHorizontalGridLine = false;
-        this._renderVerticalGridLine = false;
 
         this._resizing = false;
         this._unitCount = undefined;
-
-        this._zoomScale = [1, Infinity];
-        this._zoomOutRestrict = true;
 
         this._zoom = zoom().on('zoom', () => this._onZoom());
         this._nullZoom = zoom().on('zoom', null);
@@ -127,13 +125,19 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._rangeChart = undefined;
         this._focusChart = undefined;
 
-        this._mouseZoomable = false;
-        this._clipPadding = 0;
-
+        // TODO: These two parameters have been exposed differently in BarChart and BoxPlot. In addition _gap in BoxPlot
+        // TODO: also interact with these. Need to change consistently
         this._fOuterRangeBandPadding = 0.5;
         this._fRangeBandPadding = 0;
+    }
 
-        this._useRightYAxis = false;
+    public configure (conf: ICoordinateGridMixinConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): ICoordinateGridMixinConf {
+        return this._conf;
     }
 
     /**
@@ -184,36 +188,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    /**
-     * Get or set the scale extent for mouse zooms. See https://github.com/d3/d3-zoom#zoom_scaleExtent.
-     *
-     * @returns {Array<Number>|CoordinateGridMixin}
-     */
-    public zoomScale (): [number, number];
-    public zoomScale (extent: [number, number]): this;
-    public zoomScale (extent?) {
-        if (!arguments.length) {
-            return this._zoomScale;
-        }
-        this._zoomScale = extent;
-        return this;
-    }
-
-    /**
-     * Get or set the zoom restriction for the chart. If true limits the zoom to original domain of the chart.
-     * @param {Boolean} [zoomOutRestrict=true]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public zoomOutRestrict (): boolean;
-    public zoomOutRestrict (zoomOutRestrict: boolean): this;
-    public zoomOutRestrict (zoomOutRestrict?) {
-        if (!arguments.length) {
-            return this._zoomOutRestrict;
-        }
-        this._zoomOutRestrict = zoomOutRestrict;
-        return this;
-    }
-
     public _generateG (parent?: Selection<SVGElement, any, any, any>): SVGGElementSelection {
         if (parent === undefined) {
             this._parent = this.svg();
@@ -246,23 +220,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._g;
         }
         this._g = gElement;
-        return this;
-    }
-
-    /**
-     * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
-     * zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
-     * the range selection brush on the associated range selector chart.
-     * @param {Boolean} [mouseZoomable=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public mouseZoomable (): boolean;
-    public mouseZoomable (mouseZoomable: boolean): this;
-    public mouseZoomable (mouseZoomable?) {
-        if (!arguments.length) {
-            return this._mouseZoomable;
-        }
-        this._mouseZoomable = mouseZoomable;
         return this;
     }
 
@@ -313,53 +270,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Set or get the xUnits function. The coordinate grid chart uses the xUnits function to calculate
-     * the number of data projections on the x axis such as the number of bars for a bar chart or the
-     * number of dots for a line chart.
-     *
-     * This function is expected to return a Javascript array of all data points on the x axis, or
-     * the number of points on the axis. d3 time range functions [d3.timeDays, d3.timeMonths, and
-     * d3.timeYears](https://github.com/d3/d3-time/blob/master/README.md#intervals) are all valid
-     * xUnits functions.
-     *
-     * dc.js also provides a few units function, see the {@link units Units Namespace} for
-     * a list of built-in units functions.
-     *
-     * Note that as of dc.js 3.0, `units.ordinal` is not a real function, because it is not
-     * possible to define this function compliant with the d3 range functions. It was already a
-     * magic value which caused charts to behave differently, and now it is completely so.
-     * @example
-     * // set x units to count days
-     * chart.xUnits(d3.timeDays);
-     * // set x units to count months
-     * chart.xUnits(d3.timeMonths);
-     *
-     * // A custom xUnits function can be used as long as it follows the following interface:
-     * // units in integer
-     * function(start, end) {
-     *      // simply calculates how many integers in the domain
-     *      return Math.abs(end - start);
-     * }
-     *
-     * // fixed units
-     * function(start, end) {
-     *      // be aware using fixed units will disable the focus/zoom ability on the chart
-     *      return 1000;
-     * }
-     * @param {Function} [xUnits=units.integers]
-     * @returns {Function|CoordinateGridMixin}
-     */
-    public xUnits (): Units;
-    public xUnits (xUnits: Units): this;
-    public xUnits (xUnits?) {
-        if (!arguments.length) {
-            return this._xUnits;
-        }
-        this._xUnits = xUnits;
-        return this;
-    }
-
-    /**
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
      * useful when x axis customization is required. The x axis in dc.js is an instance of a
      * {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3 bottom axis object};
@@ -390,66 +300,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
-     * attempt to recalculate the x axis range whenever a redraw event is triggered.
-     * @param {Boolean} [elasticX=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public elasticX (): boolean;
-    public elasticX (elasticX: boolean): this;
-    public elasticX (elasticX?) {
-        if (!arguments.length) {
-            return this._xElasticity;
-        }
-        this._xElasticity = elasticX;
-        return this;
-    }
-
-    /**
-     * Set or get x axis padding for the elastic x axis. The padding will be added to both end of the x
-     * axis if elasticX is turned on; otherwise it is ignored.
-     *
-     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-     * number or date x axes.  When padding a date axis, an integer represents number of units being padded
-     * and a percentage string will be treated the same as an integer. The unit will be determined by the
-     * xAxisPaddingUnit variable.
-     * @param {Number|String} [padding=0]
-     * @returns {Number|String|CoordinateGridMixin}
-     */
-    public xAxisPadding (): number;
-    public xAxisPadding (padding: number): this;
-    public xAxisPadding (padding?) {
-        if (!arguments.length) {
-            return this._xAxisPadding;
-        }
-        this._xAxisPadding = padding;
-        return this;
-    }
-
-    /**
-     * Set or get x axis padding unit for the elastic x axis. The padding unit will determine which unit to
-     * use when applying xAxis padding if elasticX is turned on and if x-axis uses a time dimension;
-     * otherwise it is ignored.
-     *
-     * The padding unit should be a
-     * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#self._interval).
-     * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
-     * ('day', 'hour', etc). Available arguments are the
-     * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
-     * @param {String} [unit=d3.timeDay]
-     * @returns {String|CoordinateGridMixin}
-     */
-    public xAxisPaddingUnit (): string|CountableTimeInterval;
-    public xAxisPaddingUnit (unit: string|CountableTimeInterval): this;
-    public xAxisPaddingUnit (unit?) {
-        if (!arguments.length) {
-            return this._xAxisPaddingUnit;
-        }
-        this._xAxisPaddingUnit = unit;
-        return this;
-    }
-
-    /**
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
      * `units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
      * x unit count is calculated using the {@link CoordinateGridMixin#xUnits xUnits} function.
@@ -462,7 +312,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 this._unitCount = this.x().domain().length;
             } else {
                 const [first, second] = this.x().domain();
-                const unitCount = this.xUnits()(first, second);
+                const unitCount = this._conf.xUnits(first, second);
 
                 // Sometimes xUnits() may return an array while sometimes directly the count
                 this._unitCount = unitCount instanceof Array ? unitCount.length : unitCount;
@@ -473,38 +323,13 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
-     * used with a chart in a composite chart, allows both left and right Y axes to be shown on a
-     * chart.
-     * @param {Boolean} [useRightYAxis=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public useRightYAxis (): boolean;
-    public useRightYAxis (useRightYAxis: boolean): this;
-    public useRightYAxis (useRightYAxis?) {
-        if (!arguments.length) {
-            return this._useRightYAxis;
-        }
-
-        // We need to warn if value is changing after self._yAxis was created
-        if (this._useRightYAxis !== useRightYAxis && this._yAxis) {
-            logger.warn('Value of useRightYAxis has been altered, after yAxis was created. ' +
-                'You might get unexpected yAxis behavior. ' +
-                'Make calls to useRightYAxis sooner in your chart creation process.');
-        }
-
-        this._useRightYAxis = useRightYAxis;
-        return this;
-    }
-
-    /**
      * Returns true if the chart is using ordinal xUnits ({@link units.ordinal units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
      * @returns {Boolean}
      */
     public isOrdinal (): boolean {
-        return this.xUnits() === units.ordinal;
+        return this._conf.xUnits === units.ordinal;
     }
 
     public _useOuterPadding (): boolean {
@@ -513,12 +338,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public _ordinalXDomain (): any[] {
         const groups = this._computeOrderedGroups(this.data());
-        return groups.map(this.keyAccessor());
+        return groups.map(this._conf.keyAccessor);
     }
 
     public _prepareXAxis (g: SVGGElementSelection, render: boolean) {
         if (!this.isOrdinal()) {
-            if (this.elasticX()) {
+            if (this._conf.elasticX) {
                 this._x.domain([this.xAxisMin(), this.xAxisMax()]);
             }
         } else { // self._chart.isOrdinal()
@@ -535,7 +360,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 this._x = scaleBand().domain(this._x.domain());
             }
 
-            if (this.elasticX() || this._x.domain().length === 0) {
+            if (this._conf.elasticX || this._x.domain().length === 0) {
                 this._x.domain(this._ordinalXDomain());
             }
         }
@@ -582,10 +407,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             axisXLab.text(this.xAxisLabel());
         }
 
-        transition(axisXG, this.transitionDuration(), this.transitionDelay())
+        transition(axisXG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${this.margins().left},${this._xAxisY()})`)
             .call(this._xAxis);
-        transition(axisXLab, this.transitionDuration(), this.transitionDelay())
+        transition(axisXLab, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${
                 this.height() - this._xAxisLabelPadding})`);
     }
@@ -593,7 +418,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     public _renderVerticalGridLines (g: SVGGElementSelection) {
         let gridLineG = g.select(`g.${VERTICAL_CLASS}`);
 
-        if (this._renderVerticalGridLine) {
+        if (this._conf.renderVerticalGridLines) {
             if (gridLineG.empty()) {
                 gridLineG = g.insert('g', ':first-child')
                     .attr('class', `${GRID_LINE_CLASS} ${VERTICAL_CLASS}`)
@@ -614,11 +439,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('x2', d => this._x(d))
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            transition(linesGEnter, this.transitionDuration(), this.transitionDelay())
+            transition(linesGEnter, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('opacity', 0.5);
 
             // update
-            transition(lines, this.transitionDuration(), this.transitionDelay())
+            transition(lines, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('x1', d => this._x(d))
                 .attr('y1', this._xAxisY() - this.margins().top)
                 .attr('x2', d => this._x(d))
@@ -660,11 +485,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public _createYAxis (): Axis<undefined> {
-        return this._useRightYAxis ? axisRight(undefined) : axisLeft(undefined);
+        return this._conf.useRightYAxis ? axisRight(undefined) : axisLeft(undefined);
     }
 
     public _prepareYAxis (g: SVGGElementSelection) {
-        if (this._y === undefined || this.elasticY()) {
+        if (this._y === undefined || this._conf.elasticY) {
             if (this._y === undefined) {
                 this._y = scaleLinear();
             }
@@ -699,7 +524,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         if (text && axisYLab.text() !== text) {
             axisYLab.text(text);
         }
-        transition(axisYLab, this.transitionDuration(), this.transitionDelay())
+        transition(axisYLab, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${labelXPosition},${labelYPosition}),rotate(${rotation})`);
     }
 
@@ -711,23 +536,23 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('transform', `translate(${position},${this.margins().top})`);
         }
 
-        transition(axisYG, this.transitionDuration(), this.transitionDelay())
+        transition(axisYG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', `translate(${position},${this.margins().top})`)
             .call(axis);
     }
 
     public renderYAxis () {
-        const axisPosition: number = this._useRightYAxis ? (this.width() - this.margins().right) : this._yAxisX();
+        const axisPosition: number = this._conf.useRightYAxis ? (this.width() - this.margins().right) : this._yAxisX();
         this.renderYAxisAt('y', this._yAxis, axisPosition);
-        const labelPosition: number = this._useRightYAxis ? (this.width() - this._yAxisLabelPadding) : this._yAxisLabelPadding;
-        const rotation: number = this._useRightYAxis ? 90 : -90;
+        const labelPosition: number = this._conf.useRightYAxis ? (this.width() - this._yAxisLabelPadding) : this._yAxisLabelPadding;
+        const rotation: number = this._conf.useRightYAxis ? 90 : -90;
         this.renderYAxisLabel('y', this.yAxisLabel(), rotation, labelPosition);
     }
 
     public _renderHorizontalGridLinesForAxis (g: SVGGElementSelection, scale: MinimalXYScale, axis: Axis<any>) {
         let gridLineG: SVGGElementSelection = g.select(`g.${HORIZONTAL_CLASS}`);
 
-        if (this._renderHorizontalGridLine) {
+        if (this._conf.renderHorizontalGridLine) {
             // see https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
             const ticks = axis.tickValues() ? axis.tickValues() :
                 (scale.ticks ? scale.ticks.apply(scale, axis.tickArguments()) : scale.domain());
@@ -749,11 +574,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('x2', this.xAxisLength())
                 .attr('y2', d => scale(d))
                 .attr('opacity', 0);
-            transition(linesGEnter, this.transitionDuration(), this.transitionDelay())
+            transition(linesGEnter, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('opacity', 0.5);
 
             // update
-            transition(lines, this.transitionDuration(), this.transitionDelay())
+            transition(lines, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('x1', 1)
                 .attr('y1', d => scale(d))
                 .attr('x2', this.xAxisLength())
@@ -767,7 +592,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public _yAxisX (): number {
-        return this.useRightYAxis() ? this.width() - this.margins().right : this.margins().left;
+        return this._conf.useRightYAxis ? this.width() - this.margins().right : this.margins().left;
     }
 
     /**
@@ -846,58 +671,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
-     * attempt to recalculate the y axis range whenever a redraw event is triggered.
-     * @param {Boolean} [elasticY=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public elasticY (): boolean;
-    public elasticY (elasticY:boolean): this;
-    public elasticY (elasticY?) {
-        if (!arguments.length) {
-            return this._yElasticity;
-        }
-        this._yElasticity = elasticY;
-        return this;
-    }
-
-    /**
-     * Turn on/off horizontal grid lines.
-     * @param {Boolean} [renderHorizontalGridLines=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public renderHorizontalGridLines (): boolean;
-    public renderHorizontalGridLines (renderHorizontalGridLines: boolean): this;
-    public renderHorizontalGridLines (renderHorizontalGridLines?) {
-        if (!arguments.length) {
-            return this._renderHorizontalGridLine;
-        }
-        this._renderHorizontalGridLine = renderHorizontalGridLines;
-        return this;
-    }
-
-    /**
-     * Turn on/off vertical grid lines.
-     * @param {Boolean} [renderVerticalGridLines=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public renderVerticalGridLines (): boolean;
-    public renderVerticalGridLines (renderVerticalGridLines: boolean): this;
-    public renderVerticalGridLines (renderVerticalGridLines?) {
-        if (!arguments.length) {
-            return this._renderVerticalGridLine;
-        }
-        this._renderVerticalGridLine = renderVerticalGridLines;
-        return this;
-    }
-
-    /**
      * Calculates the minimum x value to display in the chart. Includes xAxisPadding if set.
      * @returns {*}
      */
     public xAxisMin () { // TODO: can these be anything other than number and Date
-        const m = min(this.data(), e => this.keyAccessor()(e));
-        return subtract(m, this._xAxisPadding, this._xAxisPaddingUnit);
+        const m = min(this.data(), e => this._conf.keyAccessor(e));
+        return subtract(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
 
     /**
@@ -905,8 +684,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     public xAxisMax () { // TODO: can these be anything other than number and Date
-        const m = max(this.data(), e => this.keyAccessor()(e));
-        return add(m, this._xAxisPadding, this._xAxisPaddingUnit);
+        const m = max(this.data(), e => this._conf.keyAccessor(e));
+        return add(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
 
     /**
@@ -914,8 +693,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     public yAxisMin () { // TODO: can these be anything other than number
-        const m = min(this.data(), e => this.valueAccessor()(e));
-        return subtract(m, this._yAxisPadding);
+        const m = min(this.data(), e => this._conf.valueAccessor(e));
+        return subtract(m, this._conf.yAxisPadding);
     }
 
     /**
@@ -923,51 +702,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @returns {*}
      */
     public yAxisMax () { // TODO: can these be anything other than number
-        const m = max(this.data(), e => this.valueAccessor()(e));
-        return add(m, this._yAxisPadding);
-    }
-
-    /**
-     * Set or get y axis padding for the elastic y axis. The padding will be added to the top and
-     * bottom of the y axis if elasticY is turned on; otherwise it is ignored.
-     *
-     * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
-     * number or date axes. When padding a date axis, an integer represents number of days being padded
-     * and a percentage string will be treated the same as an integer.
-     * @param {Number|String} [padding=0]
-     * @returns {Number|CoordinateGridMixin}
-     */
-    public yAxisPadding (): number;
-    public yAxisPadding (padding: number): this;
-    public yAxisPadding (padding?) {
-        if (!arguments.length) {
-            return this._yAxisPadding;
-        }
-        this._yAxisPadding = padding;
-        return this;
+        const m = max(this.data(), e => this._conf.valueAccessor(e));
+        return add(m, this._conf.yAxisPadding);
     }
 
     public yAxisHeight () {
         return this.effectiveHeight();
-    }
-
-    /**
-     * Set or get the rounding function used to quantize the selection when brushing is enabled.
-     * @example
-     * // set x unit round to by month, this will make sure range selection brush will
-     * // select whole months
-     * chart.round(d3.timeMonth.round);
-     * @param {Function} [round]
-     * @returns {Function|CoordinateGridMixin}
-     */
-    public round (): RoundFn;
-    public round (round: RoundFn): this;
-    public round (round?) {
-        if (!arguments.length) {
-            return this._round;
-        }
-        this._round = round;
-        return this;
     }
 
     public _rangeBandPadding (): number;
@@ -1059,9 +799,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public extendBrush (brushSelection: DCBrushSelection) {
-        if (brushSelection && this.round()) {
-            brushSelection[0] = this.round()(brushSelection[0]);
-            brushSelection[1] = this.round()(brushSelection[1]);
+        if (brushSelection && this._conf.round) {
+            brushSelection[0] = this._conf.round(brushSelection[0]);
+            brushSelection[1] = this._conf.round(brushSelection[1]);
         }
         return brushSelection;
     }
@@ -1133,7 +873,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 const scaledSelection = [this._x(brushSelection[0]), this._x(brushSelection[1])];
 
                 const gBrush =
-                    optionalTransition(doTransition, this.transitionDuration(), this.transitionDelay())(this._gBrush);
+                    optionalTransition(doTransition, this._conf.transitionDuration, this._conf.transitionDelay)(this._gBrush);
 
                 gBrush
                     .call(this._brush.move, scaledSelection);
@@ -1173,23 +913,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return `${this.anchorName().replace(/[ .#=\[\]"]/g, '-')}-clip`;
     }
 
-    /**
-     * Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
-     * the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
-     * will be exactly the chart body area minus the margins.
-     * @param {Number} [padding=5]
-     * @returns {Number|CoordinateGridMixin}
-     */
-    public clipPadding (): number;
-    public clipPadding (padding: number): this;
-    public clipPadding (padding?) {
-        if (!arguments.length) {
-            return this._clipPadding;
-        }
-        this._clipPadding = padding;
-        return this;
-    }
-
     public _generateClipPath (): void {
         const defs = appendOrSelect(this._parent, 'defs');
         // cannot select <clippath> elements; bug in WebKit, must select by id
@@ -1197,18 +920,18 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         const id = this._getClipPathId();
         const chartBodyClip = appendOrSelect(defs, `#${id}`, 'clipPath').attr('id', id);
 
-        const padding = this._clipPadding * 2;
+        const padding = this._conf.clipPadding * 2;
 
         appendOrSelect(chartBodyClip, 'rect')
             .attr('width', this.xAxisLength() + padding)
             .attr('height', this.yAxisHeight() + padding)
-            .attr('transform', `translate(-${this._clipPadding}, -${this._clipPadding})`);
+            .attr('transform', `translate(-${this._conf.clipPadding}, -${this._conf.clipPadding})`);
     }
 
-    public _preprocessData (): void {
+    protected _preprocessData (): void {
     }
 
-    public _doRender (): this {
+    protected _doRender (): this {
         this.resetSvg();
 
         this._preprocessData();
@@ -1223,7 +946,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public _doRedraw (): this {
+    protected _doRedraw (): this {
         this._preprocessData();
 
         this._drawChart(false);
@@ -1242,11 +965,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         this.plotData();
 
-        if (this.elasticX() || this._resizing || render) {
+        if (this._conf.elasticX || this._resizing || render) {
             this.renderXAxis(this.g());
         }
 
-        if (this.elasticY() || this._resizing || render) {
+        if (this._conf.elasticY || this._resizing || render) {
             this.renderYAxis();
         }
 
@@ -1269,7 +992,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         // Save a copy of original x scale
         this._origX = this._x.copy();
 
-        if (this._mouseZoomable) {
+        if (this._conf.mouseZoomable) {
             this._enableMouseZoom();
         } else if (this._hasBeenMouseZoomable) {
             this._disableMouseZoom();
@@ -1282,16 +1005,16 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         const extent: [[number, number], [number, number]] = [[0, 0], [this.effectiveWidth(), this.effectiveHeight()]];
 
         this._zoom
-            .scaleExtent(this._zoomScale)
+            .scaleExtent(this._conf.zoomScale)
             .extent(extent)
-            .duration(this.transitionDuration());
+            .duration(this._conf.transitionDuration);
 
-        if (this._zoomOutRestrict) {
+        if (this._conf.zoomOutRestrict) {
             // Ensure minimum zoomScale is at least 1
-            const zoomScaleMin = Math.max(this._zoomScale[0], 1);
+            const zoomScaleMin = Math.max(this._conf.zoomScale[0], 1);
             this._zoom
                 .translateExtent(extent)
-                .scaleExtent([zoomScaleMin, this._zoomScale[1]]);
+                .scaleExtent([zoomScaleMin, this._conf.zoomScale[1]]);
         }
 
         this.root().call(this._zoom);
@@ -1405,7 +1128,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * @return {undefined}
      */
     public focus (range: DCBrushSelection, noRaiseEvents: boolean): void {
-        if (this._zoomOutRestrict) {
+        if (this._conf.zoomOutRestrict) {
             // ensure range is within self._xOriginalDomain
             range = this._checkExtents(range, this._xOriginalDomain);
 

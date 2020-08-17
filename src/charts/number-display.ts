@@ -3,7 +3,8 @@ import {easeQuad} from 'd3-ease';
 import {interpolateNumber} from 'd3-interpolate';
 
 import {BaseMixin} from '../base/base-mixin';
-import {ChartGroupType, ChartParentType, NumberFormatFn} from '../core/types';
+import {ChartGroupType, ChartParentType} from '../core/types';
+import {INumberDisplayConf} from './i-number-display-conf';
 
 const SPAN_CLASS = 'number-display';
 
@@ -25,7 +26,8 @@ type HTMLSpec = { some: string; one: string; none: string };
  * @mixes BaseMixin
  */
 export class NumberDisplay extends BaseMixin {
-    private _formatNumber: NumberFormatFn;
+    protected _conf: INumberDisplayConf;
+
     private _html: HTMLSpec;
     private _lastValue: number;
 
@@ -44,25 +46,34 @@ export class NumberDisplay extends BaseMixin {
     constructor (parent: ChartParentType, chartGroup: ChartGroupType) {
         super();
 
-        this._formatNumber = format('.2s');
+        this.configure({
+            ordering: kv => kv.value, // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
+            transitionDuration: 250, // good default
+            transitionDelay: 0,
+            formatNumber: format('.2s')
+        });
+
         this._html = {one: '', some: '', none: ''};
         this._lastValue = undefined;
 
         // dimension not required
         this._mandatoryAttributes(['group']);
 
-        // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
-        this.ordering(kv => kv.value);
-
         this.data(group => {
             const valObj = group.value ? group.value() : this._maxBin(group.all());
-            return this.valueAccessor()(valObj);
+            return this._conf.valueAccessor(valObj);
         });
 
-        this.transitionDuration(250); // good default
-        this.transitionDelay(0);
-
         this.anchor(parent, chartGroup);
+    }
+
+    public configure (conf: INumberDisplayConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): INumberDisplayConf {
+        return this._conf;
     }
 
     /**
@@ -136,8 +147,8 @@ export class NumberDisplay extends BaseMixin {
         {
             const chart = this;
             span.transition()
-                .duration(chart.transitionDuration())
-                .delay(chart.transitionDelay())
+                .duration(chart._conf.transitionDuration)
+                .delay(chart._conf.transitionDelay)
                 .ease(easeQuad)
                 .tween('text', function () {
                     // [XA] don't try and interpolate from Infinity, else this breaks.
@@ -149,7 +160,7 @@ export class NumberDisplay extends BaseMixin {
                     const node = this;
                     return t => {
                         let html = null;
-                        const num = chart.formatNumber()(interp(t));
+                        const num = chart._conf.formatNumber(interp(t));
                         if (newValue === 0 && (chart._html.none !== '')) {
                             html = chart._html.none;
                         } else if (newValue === 1 && (chart._html.one !== '')) {
@@ -167,23 +178,4 @@ export class NumberDisplay extends BaseMixin {
     public _doRedraw (): this {
         return this._doRender();
     }
-
-    /**
-     * Get or set a function to format the value for the display.
-     * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
-     * @param {Function} [formatter=d3.format('.2s')]
-     * @returns {Function|NumberDisplay}
-     */
-    public formatNumber (): NumberFormatFn;
-    public formatNumber (formatter: NumberFormatFn): this;
-    public formatNumber (formatter?) {
-        if (!arguments.length) {
-            return this._formatNumber;
-        }
-        this._formatNumber = formatter;
-        return this;
-    }
-
 }
-
-export const numberDisplay = (parent, chartGroup) => new NumberDisplay(parent, chartGroup);
