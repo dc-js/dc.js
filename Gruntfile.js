@@ -406,6 +406,12 @@ module.exports = function (grunt) {
             },
             tsc: {
                 command: 'tsc'
+            },
+            'prettier-check': {
+                command: 'prettier --check src'
+            },
+            prettier: {
+                command: 'prettier --write src'
             }
         }
     });
@@ -451,8 +457,8 @@ module.exports = function (grunt) {
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
-    grunt.registerTask('lint', ['shell:tslint', 'shell:eslint']);
-    grunt.registerTask('lint-fix', ['shell:tslint-fix', 'shell:eslint-fix']);
+    grunt.registerTask('lint', ['shell:tslint', 'shell:eslint', 'shell:prettier-check']);
+    grunt.registerTask('lint-fix', ['shell:tslint-fix', 'shell:eslint-fix', 'shell:prettier']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
     grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
 };

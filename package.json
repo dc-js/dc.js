@@ -83,13 +83,15 @@
     "karma-summary-reporter": "^1.7.2",
     "load-grunt-tasks": "~4",
     "node-sass": "^4.13.1",
+    "prettier": "2.0.5",
     "reductio": "0.6.x",
     "regression": "^2.0.1",
     "rollup": "^1.32.1",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-license": "^2.0.0",
     "rollup-plugin-terser": "^5.3.0",
-    "time-grunt": "~1.4"
+    "time-grunt": "~1.4",
+    "tslint-config-prettier": "^1.18.0"
   },
   "scripts": {
     "test": "grunt test"
