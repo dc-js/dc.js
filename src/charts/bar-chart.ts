@@ -211,6 +211,7 @@ export class BarChart extends StackMixin {
             .attr('y', this.yAxisHeight())
             .attr('height', 0);
 
+        // prettier-ignore
         const barsEnterUpdate: Selection<SVGRectElement, unknown, SVGGElement, any> = enter.merge(bars);
 
         if (this._conf.renderTitle) {
@@ -272,6 +273,7 @@ export class BarChart extends StackMixin {
     }
 
     public fadeDeselectedArea(brushSelection: DCBrushSelection): void {
+        // prettier-ignore
         const bars: Selection<SVGRectElement, any, SVGGElement, any> = this.chartBodyG().selectAll('rect.bar');
 
         if (this.isOrdinal()) {

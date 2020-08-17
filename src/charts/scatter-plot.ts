@@ -157,8 +157,12 @@ export class ScatterPlot extends CoordinateGridMixin {
             svgSel.style('position', 'relative');
 
             // Check if SVG element already has any extra top/left CSS offsets
-            const svgLeft = isNaN(parseInt(svgSel.style('left'), 10)) ? 0 : parseInt(svgSel.style('left'), 10);
-            const svgTop = isNaN(parseInt(svgSel.style('top'), 10)) ? 0 : parseInt(svgSel.style('top'), 10);
+            const svgLeft = isNaN(parseInt(svgSel.style('left'), 10))
+                ? 0
+                : parseInt(svgSel.style('left'), 10);
+            const svgTop = isNaN(parseInt(svgSel.style('top'), 10))
+                ? 0
+                : parseInt(svgSel.style('top'), 10);
             const width = this.effectiveWidth();
             const height = this.effectiveHeight();
             const margins = this.margins(); // {top: 10, right: 130, bottom: 42, left: 42}

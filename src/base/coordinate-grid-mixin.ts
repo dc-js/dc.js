@@ -424,7 +424,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             .call(this._xAxis);
         transition(axisXLab, this._conf.transitionDuration, this._conf.transitionDelay).attr(
             'transform',
-            `translate(${this.margins().left + this.xAxisLength() / 2},${this.height() - this._xAxisLabelPadding})`
+            `translate(${this.margins().left + this.xAxisLength() / 2},${
+                this.height() - this._xAxisLabelPadding
+            })`
         );
     }
 
@@ -439,6 +441,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                     .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
             }
 
+            // XXX
             const ticks = this._xAxis.tickValues() ? this._xAxis.tickValues() :
                 (typeof this._x.ticks === 'function' ? this._x.ticks.apply(this._x, this._xAxis.tickArguments()) : this._x.domain());
 
@@ -453,8 +456,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('x2', d => this._x(d))
                 .attr('y2', 0)
                 .attr('opacity', 0);
-            transition(linesGEnter, this._conf.transitionDuration, this._conf.transitionDelay)
-                .attr('opacity', 0.5);
+            transition(linesGEnter, this._conf.transitionDuration, this._conf.transitionDelay).attr(
+                'opacity',
+                0.5
+            );
 
             // update
             transition(lines, this._conf.transitionDuration, this._conf.transitionDelay)
@@ -523,7 +528,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._renderHorizontalGridLinesForAxis(g, this._y, this._yAxis);
     }
 
-    public renderYAxisLabel(axisClass: string, text: string, rotation: number, labelXPosition?: number): void {
+    public renderYAxisLabel(
+        axisClass: string,
+        text: string,
+        rotation: number,
+        labelXPosition?: number
+    ): void {
         labelXPosition = labelXPosition || this._yAxisLabelPadding;
 
         let axisYLab = this.g().select(`text.${Y_AXIS_LABEL_CLASS}.${axisClass}-label`);
@@ -574,11 +584,16 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.renderYAxisLabel('y', this.yAxisLabel(), rotation, labelPosition);
     }
 
-    public _renderHorizontalGridLinesForAxis(g: SVGGElementSelection, scale: MinimalXYScale, axis: Axis<any>) {
+    public _renderHorizontalGridLinesForAxis(
+        g: SVGGElementSelection,
+        scale: MinimalXYScale,
+        axis: Axis<any>
+    ) {
         let gridLineG: SVGGElementSelection = g.select(`g.${HORIZONTAL_CLASS}`);
 
         if (this._conf.renderHorizontalGridLine) {
             // see https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
+            // XXX
             const ticks = axis.tickValues() ? axis.tickValues() :
                 (scale.ticks ? scale.ticks.apply(scale, axis.tickArguments()) : scale.domain());
 

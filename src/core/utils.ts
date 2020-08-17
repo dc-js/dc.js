@@ -315,7 +315,7 @@ export function toHierarchy(list, accessor) {
                 currentNode = childNode;
             } else {
                 // Reached the end of the sequence; create a leaf node.
-                childNode = { key: nodeName, value: value, data: data, path: currentPath };
+                childNode = { key: nodeName, value, data, path: currentPath };
                 children.push(childNode);
             }
         }

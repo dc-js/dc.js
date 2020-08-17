@@ -85,12 +85,14 @@ export class DataTable extends BaseMixin {
     }
 
     private _doColumnValueFormat (v, d) {
+        // XXX
         return (typeof v === 'function') ? v(d) :  // v as function
             (typeof v === 'string') ? d[v] :       // v is field name string
             v.format(d);                           // v is Object, use fn (element 2)
     }
 
     private _doColumnHeaderFormat(d: DataTableColumnSpec): string {
+        // XXX
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
@@ -137,6 +139,7 @@ export class DataTable extends BaseMixin {
 
         if (!bAllFunctions) {
             // ensure one thead
+            // prettier-ignore
             let thead: Selection<HTMLTableSectionElement, any, Element, any> =
                 this.selectAll<HTMLTableSectionElement, any>('thead').data([0]);
 

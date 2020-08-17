@@ -70,6 +70,7 @@ export class Config {
     }
 
     // D3v5 has removed schemeCategory20c, copied here for backward compatibility
+    // prettier-ignore
     public static _schemeCategory20c: ColorsList = [
         '#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#e6550d',
         '#fd8d3c', '#fdae6b', '#fdd0a2', '#31a354', '#74c476',
