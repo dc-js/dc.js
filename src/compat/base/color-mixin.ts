@@ -1,6 +1,6 @@
 import { ColorAccessor, Constructor } from '../../core/types';
 import { BaseMixinExt } from './base-mixin';
-import { ColorMixin as ColorMixinNeo } from '../../base/color-mixin';
+import { ColorCalculator, ColorMixin as ColorMixinNeo } from '../../base/color-mixin';
 import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
 
 class Intermediate extends BaseMixinExt(ColorMixinNeo(BaseMixinNeo)) {}
@@ -52,9 +52,9 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         public colorCalculator(colorCalculator: ColorAccessor): this;
         public colorCalculator(colorCalculator?) {
             if (!arguments.length) {
-                return this._conf.colorCalculator || this.getColor;
+                return this.colorHelper().getColor;
             }
-            this.configure({ colorCalculator: colorCalculator });
+            this.colorHelper(new ColorCalculator(colorCalculator));
             return this;
         }
     };

@@ -4,8 +4,68 @@ import { max, min } from 'd3-array';
 
 import { config } from '../core/config';
 import { BaseMixin } from './base-mixin';
-import { Constructor, MinimalColorScale } from '../core/types';
+import { BaseAccessor, Constructor, MinimalColorScale } from '../core/types';
 import { IColorMixinConf } from './i-color-mixin-conf';
+
+export interface IColorHelper {
+    getColor(d, i?: number): string;
+    colorAccessor: BaseAccessor<string>;
+}
+
+export class ColorCalculator implements IColorHelper {
+    public colorAccessor: BaseAccessor<string>;
+    public getColor: BaseAccessor<string>;
+
+    constructor(colorCalculator: BaseAccessor<string>) {
+        this.getColor = colorCalculator;
+    }
+}
+
+export class ColorScaleHelper implements IColorHelper {
+    public colorAccessor: BaseAccessor<string>;
+    public scale: BaseAccessor<string>;
+
+    constructor({
+        scale,
+        colorAccessor,
+    }: {
+        scale: BaseAccessor<string>;
+        colorAccessor?: BaseAccessor<string>;
+    }) {
+        this.colorAccessor = colorAccessor;
+        this.scale = scale;
+    }
+
+    getColor(d, i?: number): string {
+        return this.scale(this.colorAccessor(d, i));
+    }
+}
+
+export class OrdinalColors extends ColorScaleHelper {
+    constructor({
+        colors,
+        colorAccessor,
+    }: {
+        colors: string[];
+        colorAccessor?: BaseAccessor<string>;
+    }) {
+        const scale = scaleOrdinal<any, string>().range(colors);
+        super({ scale, colorAccessor });
+    }
+}
+
+export class LinearColors extends ColorScaleHelper {
+    constructor({
+        range,
+        colorAccessor,
+    }: {
+        range: [string, string];
+        colorAccessor?: BaseAccessor<string>;
+    }) {
+        const scale = scaleLinear<any, string>().range(range).interpolate(interpolateHcl);
+        super({ scale, colorAccessor });
+    }
+}
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
@@ -19,26 +79,41 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
     return class extends Base {
         protected _conf: IColorMixinConf;
 
-        private _colors: MinimalColorScale;
+        private _colorHelper: IColorHelper;
 
         constructor(...args: any[]) {
             super();
 
             this.configure({
-                colorCalculator: undefined,
                 colorAccessor: (d, i?) => this._conf.keyAccessor(d),
             });
 
-            this._colors = scaleOrdinal<any, string>(config.defaultColors());
+            this._colorHelper = new OrdinalColors({
+                colors: config.defaultColors(),
+                colorAccessor: this._conf.colorAccessor,
+            });
         }
 
         public configure(conf: IColorMixinConf): this {
             super.configure(conf);
+            if ('colorAccessor' in conf && this._colorHelper) {
+                this._colorHelper.colorAccessor = conf.colorAccessor;
+            }
             return this;
         }
 
         public conf(): IColorMixinConf {
             return this._conf;
+        }
+
+        public colorHelper(): IColorHelper;
+        public colorHelper(colorHelper: IColorHelper): this;
+        public colorHelper(colorHelper?) {
+            if (!arguments.length) {
+                return this._colorHelper;
+            }
+            this._colorHelper = colorHelper;
+            return this;
         }
 
         /**
@@ -51,9 +126,7 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @returns {String}
          */
         public getColor(d, i?: number): string {
-            return this._conf.colorCalculator
-                ? this._conf.colorCalculator(d, i)
-                : this._colors(this._conf.colorAccessor(d, i));
+            return this._colorHelper.getColor(d, i);
         }
 
         /**
@@ -69,7 +142,11 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
                 min(this.data(), this._conf.colorAccessor),
                 max(this.data(), this._conf.colorAccessor),
             ];
-            this._colors.domain(newDomain);
+
+            // @ts-ignore
+            const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper).scale;
+            scale && scale.domain && scale.domain(newDomain);
+
             return this;
         }
 
@@ -91,17 +168,23 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
          * @returns {d3.scale|ColorMixin}
          */
-        public colors(): MinimalColorScale;
-        public colors(colorScale: MinimalColorScale): this;
+        public colors(): BaseAccessor<string>;
+        public colors(colorScale: BaseAccessor<string>): this;
         public colors(colorScale?) {
             if (!arguments.length) {
-                return this._colors;
+                return (this._colorHelper as ColorScaleHelper).scale;
             }
+            let newScale;
             if (colorScale instanceof Array) {
-                this._colors = scaleQuantize<string>().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
+                newScale = scaleQuantize<string>().range(colorScale); // deprecated legacy support, note: this fails for ordinal domains
             } else {
-                this._colors = typeof colorScale === 'function' ? colorScale : () => colorScale;
+                newScale = typeof colorScale === 'function' ? colorScale : () => colorScale;
             }
+
+            this._colorHelper = new ColorScaleHelper({
+                scale: newScale,
+                colorAccessor: this._conf.colorAccessor,
+            });
             return this;
         }
 
@@ -115,7 +198,11 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @returns {ColorMixin}
          */
         public ordinalColors(r: string[]): this {
-            return this.colors(scaleOrdinal<any, string>().range(r));
+            this._colorHelper = new OrdinalColors({
+                colors: r,
+                colorAccessor: this._conf.colorAccessor,
+            });
+            return this;
         }
 
         /**
@@ -126,7 +213,11 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @returns {ColorMixin}
          */
         public linearColors(r: [string, string]): this {
-            return this.colors(scaleLinear<any, string>().range(r).interpolate(interpolateHcl));
+            this._colorHelper = new LinearColors({
+                range: r,
+                colorAccessor: this._conf.colorAccessor,
+            });
+            return this;
         }
 
         /**
@@ -143,10 +234,11 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
         public colorDomain(): string[];
         public colorDomain(domain: string[]): this;
         public colorDomain(domain?) {
+            const scale = (this._colorHelper as ColorScaleHelper).scale as MinimalColorScale;
             if (!arguments.length) {
-                return this._colors.domain();
+                return scale.domain();
             }
-            this._colors.domain(domain);
+            scale.domain(domain);
             return this;
         }
     };
