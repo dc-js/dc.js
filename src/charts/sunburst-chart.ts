@@ -32,7 +32,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes BaseMixin
  */
 export class SunburstChart extends ColorMixin(BaseMixin) {
-    public _conf: ISunburstChartConf;
+    protected _conf: ISunburstChartConf;
 
     private _sliceCssClass: string;
     private _emptyCssClass: string;
@@ -87,8 +87,13 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ISunburstChartConf) {
+    public configure (conf: ISunburstChartConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): ISunburstChartConf {
+        return this._conf;
     }
 
     // Handle cases if value corresponds to generated parent nodes

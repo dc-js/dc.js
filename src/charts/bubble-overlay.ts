@@ -25,7 +25,7 @@ const BUBBLE_CLASS = 'bubble';
  * @mixes BaseMixin
  */
 export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
-    public _conf: IBubbleOverlayConf;
+    protected _conf: IBubbleOverlayConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
 
@@ -74,8 +74,13 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IBubbleOverlayConf) {
+    public configure (conf: IBubbleOverlayConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): IBubbleOverlayConf {
+        return this._conf;
     }
 
     public _doRender (): this {

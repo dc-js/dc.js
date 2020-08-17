@@ -10,7 +10,7 @@ import {IMarginMixinConf} from './i-margin-mixin-conf';
  * @returns {MarginMixin}
  */
 export class MarginMixin extends BaseMixin {
-    public _conf: IMarginMixinConf;
+    protected _conf: IMarginMixinConf;
 
     private _margins: Margins;
 
@@ -18,6 +18,15 @@ export class MarginMixin extends BaseMixin {
         super();
 
         this._margins = {top: 10, right: 50, bottom: 30, left: 30};
+    }
+
+    public configure (conf: IMarginMixinConf): this {
+        super.configure(conf);
+        return this;
+    }
+
+    public conf(): IMarginMixinConf {
+        return this._conf;
     }
 
     /**

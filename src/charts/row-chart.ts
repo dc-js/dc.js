@@ -22,7 +22,7 @@ import {IRowChartConf} from './i-row-chart-conf';
  */
 
 export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
-    public _conf: IRowChartConf;
+    protected _conf: IRowChartConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
     private _labelOffsetY: number;
@@ -79,8 +79,13 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IRowChartConf) {
+    public configure (conf: IRowChartConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): IRowChartConf {
+        return this._conf;
     }
 
     private _calculateAxisScale (): void {

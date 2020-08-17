@@ -37,7 +37,7 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  * @mixes BaseMixin
  */
 export class DataTable extends BaseMixin {
-    public _conf: IDataTableConf;
+    protected _conf: IDataTableConf;
 
     /**
      * Create a Data Table.
@@ -67,8 +67,13 @@ export class DataTable extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IDataTableConf) {
+    public configure (conf: IDataTableConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): IDataTableConf {
+        return this._conf;
     }
 
     public _doRender () {

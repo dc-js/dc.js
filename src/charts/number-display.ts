@@ -26,7 +26,7 @@ type HTMLSpec = { some: string; one: string; none: string };
  * @mixes BaseMixin
  */
 export class NumberDisplay extends BaseMixin {
-    public _conf: INumberDisplayConf;
+    protected _conf: INumberDisplayConf;
 
     private _html: HTMLSpec;
     private _lastValue: number;
@@ -67,8 +67,13 @@ export class NumberDisplay extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: INumberDisplayConf) {
+    public configure (conf: INumberDisplayConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): INumberDisplayConf {
+        return this._conf;
     }
 
     /**

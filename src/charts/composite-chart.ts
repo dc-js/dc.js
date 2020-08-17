@@ -17,7 +17,7 @@ const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
  * @mixes CoordinateGridMixin
  */
 export class CompositeChart extends CoordinateGridMixin {
-    public _conf: ICompositeChartConf;
+    protected _conf: ICompositeChartConf;
 
     private _children: CoordinateGridMixin[];
     private _childOptions; // TODO: it is conf for children, revisit after creating concept of conf
@@ -77,8 +77,13 @@ export class CompositeChart extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ICompositeChartConf) {
+    public configure (conf: ICompositeChartConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): ICompositeChartConf {
+        return this._conf;
     }
 
     public _generateG (): SVGGElementSelection {
@@ -89,7 +94,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
             this._generateChildG(child, i);
 
-            if (!child._conf.dimension) {
+            if (!child.conf().dimension) {
                 child.configure({dimension: this._conf.dimension});
             }
             if (!child.group()) {
@@ -275,7 +280,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
             child.xAxis(this.xAxis());
 
-            if (child._conf.useRightYAxis) {
+            if (child.conf().useRightYAxis) {
                 child.y(this.rightY());
                 child.yAxis(this.rightYAxis());
             } else {
@@ -478,11 +483,11 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public _leftYAxisChildren () {
-        return this._children.filter(child => !child._conf.useRightYAxis);
+        return this._children.filter(child => !child.conf().useRightYAxis);
     }
 
     public _rightYAxisChildren () {
-        return this._children.filter(child => child._conf.useRightYAxis);
+        return this._children.filter(child => child.conf().useRightYAxis);
     }
 
     // TODO: revisit all min/max functions after making charts to use Generics

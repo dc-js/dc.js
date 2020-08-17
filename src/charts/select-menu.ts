@@ -15,7 +15,7 @@ const OPTION_CSS_CLASS = 'dc-select-option';
  * @mixes BaseMixin
  */
 export class SelectMenu extends BaseMixin {
-    public _conf: ISelectMenuConf;
+    protected _conf: ISelectMenuConf;
 
     private _select: Selection<HTMLSelectElement, any, any, any>;
 
@@ -56,8 +56,13 @@ export class SelectMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ISelectMenuConf) {
+    public configure (conf: ISelectMenuConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): ISelectMenuConf {
+        return this._conf;
     }
 
     public _doRender () {

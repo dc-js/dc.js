@@ -43,7 +43,7 @@ function defaultWhiskersIQR (k: number): (d) => [number, number] {
  * @mixes CoordinateGridMixin
  */
 export class BoxPlot extends CoordinateGridMixin {
-    public _conf: IBoxPlotConf;
+    protected _conf: IBoxPlotConf;
 
     private readonly _whiskers: (d) => [number, number];
     private readonly _box;
@@ -112,8 +112,13 @@ export class BoxPlot extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IBoxPlotConf) {
+    public configure (conf: IBoxPlotConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): IBoxPlotConf {
+        return this._conf;
     }
 
     /**

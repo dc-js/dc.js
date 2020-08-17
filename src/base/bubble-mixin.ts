@@ -19,7 +19,7 @@ import {IBubbleMixinConf} from './i-bubble-mixin-conf';
 export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
-        public _conf: IBubbleMixinConf;
+        protected _conf: IBubbleMixinConf;
 
         protected BUBBLE_NODE_CLASS: string;
         protected BUBBLE_CLASS: string;
@@ -57,8 +57,13 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) 
             this._r = scaleLinear().domain([0, 100]);
         }
 
-        public configure (conf: IBubbleMixinConf) {
+        public configure (conf: IBubbleMixinConf):this {
             super.configure(conf);
+            return this;
+        }
+
+        public conf(): IBubbleMixinConf {
+            return this._conf;
         }
 
         /**

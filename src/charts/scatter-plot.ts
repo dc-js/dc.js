@@ -21,7 +21,7 @@ export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
  * @mixes CoordinateGridMixin
  */
 export class ScatterPlot extends CoordinateGridMixin {
-    public _conf: IScatterPlotConf;
+    protected _conf: IScatterPlotConf;
 
     private _symbol: Symbol<any, any>;
     private _filtered;
@@ -84,8 +84,13 @@ export class ScatterPlot extends CoordinateGridMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IScatterPlotConf) {
+    public configure (conf: IScatterPlotConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): IScatterPlotConf {
+        return this._conf;
     }
 
     // Calculates element radius for canvas plot to be comparable to D3 area based symbol sizes

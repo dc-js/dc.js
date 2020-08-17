@@ -21,7 +21,7 @@ import {IGeoChoroplethChartConf} from './i-geo-choropleth-chart-conf';
  * @mixes BaseMixin
  */
 export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
-    public _conf: IGeoChoroplethChartConf;
+    protected _conf: IGeoChoroplethChartConf;
 
     private _geoPath: GeoPath;
     private _projectionFlag: boolean;
@@ -55,8 +55,13 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IGeoChoroplethChartConf) {
+    public configure (conf: IGeoChoroplethChartConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): IGeoChoroplethChartConf {
+        return this._conf;
     }
 
     public _doRender () {

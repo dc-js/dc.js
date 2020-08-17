@@ -19,7 +19,7 @@ import {ICapMixinConf} from './i-cap-mixin-conf';
 export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
     // @ts-ignore
     return class extends Base {
-        public _conf: ICapMixinConf;
+        protected _conf: ICapMixinConf;
 
         constructor (...args: any[]) {
             super();
@@ -76,8 +76,13 @@ export function CapMixin<TBase extends Constructor<BaseMixin>> (Base: TBase) {
             });
         }
 
-        public configure (conf: ICapMixinConf) {
+        public configure (conf: ICapMixinConf):this {
             super.configure(conf);
+            return this;
+        }
+
+        public conf(): ICapMixinConf {
+            return this._conf;
         }
 
         public cappedKeyAccessor (d, i?) {

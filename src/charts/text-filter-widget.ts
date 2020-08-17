@@ -18,7 +18,7 @@ const INPUT_CSS_CLASS = 'dc-text-filter-input';
  * @mixes BaseMixin
  */
 export class TextFilterWidget extends BaseMixin {
-    public _conf: ITextFilterWidgetConf;
+    protected _conf: ITextFilterWidgetConf;
 
     private _input: Selection<HTMLInputElement, any, any, any>;
 
@@ -62,8 +62,13 @@ export class TextFilterWidget extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ITextFilterWidgetConf) {
+    public configure (conf: ITextFilterWidgetConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): ITextFilterWidgetConf {
+        return this._conf;
     }
 
     public _doRender (): this {

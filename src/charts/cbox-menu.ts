@@ -17,7 +17,7 @@ const ITEM_CSS_CLASS = 'dc-cbox-item';
  * @mixes BaseMixin
  */
 export class CboxMenu extends BaseMixin {
-    public _conf: ICboxMenuConf;
+    protected _conf: ICboxMenuConf;
 
     private _cbox: Selection<HTMLElement, any, HTMLElement, any>;
     private _uniqueId: number;
@@ -61,8 +61,13 @@ export class CboxMenu extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: ICboxMenuConf) {
+    public configure (conf: ICboxMenuConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): ICboxMenuConf {
+        return this._conf;
     }
 
     public _doRender (): this {

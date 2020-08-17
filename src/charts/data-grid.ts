@@ -24,7 +24,7 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  * @mixes BaseMixin
  */
 export class DataGrid extends BaseMixin {
-    public _conf: IDataGridConf;
+    protected _conf: IDataGridConf;
 
     /**
      * Create a Data Grid.
@@ -53,8 +53,13 @@ export class DataGrid extends BaseMixin {
         this.anchor(parent, chartGroup);
     }
 
-    public configure (conf: IDataGridConf) {
+    public configure (conf: IDataGridConf): this {
         super.configure(conf);
+        return this;
+    }
+
+    public conf(): IDataGridConf {
+        return this._conf;
     }
 
     public _doRender () {

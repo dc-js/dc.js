@@ -81,7 +81,7 @@ const _defaultResetFilterHandler = filters => [];
  * @mixin BaseMixin
  */
 export class BaseMixin {
-    public _conf: IBaseMixinConf;
+    protected _conf: IBaseMixinConf;
 
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
@@ -176,8 +176,13 @@ export class BaseMixin {
         this._filters = [];
     }
 
-    public configure (conf: IBaseMixinConf) {
-        this._conf = {...(this._conf), ...conf}
+    public configure (conf: IBaseMixinConf): this {
+        this._conf = {...(this._conf), ...conf};
+        return this;
+    }
+
+    public conf(): IBaseMixinConf {
+        return this._conf;
     }
 
     /**

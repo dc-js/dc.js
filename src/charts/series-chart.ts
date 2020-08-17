@@ -16,7 +16,7 @@ import {ISeriesChartConf} from './i-series-chart-conf';
  * @mixes CompositeChart
  */
 export class SeriesChart extends CompositeChart {
-    public _conf:ISeriesChartConf;
+    protected _conf:ISeriesChartConf;
 
     private _charts: {[key: string]: LineChart};
 
@@ -50,13 +50,19 @@ export class SeriesChart extends CompositeChart {
         this._mandatoryAttributes().push('seriesAccessor', 'chart');
     }
 
-    public configure (conf: ISeriesChartConf) {
+    public configure (conf: ISeriesChartConf): this {
         super.configure(conf);
 
         // TODO: This is defensive, looking at the code - 'seriesAccessor', 'seriesSort', 'valueSort' do not need it
         if (['chartFunction', 'seriesAccessor', 'seriesSort', 'valueSort'].some(opt => opt in conf)) {
             this._resetChildren();
         }
+
+        return this;
+    }
+
+    public conf(): ISeriesChartConf {
+        return this._conf;
     }
 
     private _compose (subChartArray: LineChart[]): void {
