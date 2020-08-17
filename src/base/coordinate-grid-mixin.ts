@@ -441,9 +441,14 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                     .attr('transform', `translate(${this.margins().left},${this.margins().top})`);
             }
 
-            // XXX
-            const ticks = this._xAxis.tickValues() ? this._xAxis.tickValues() :
-                (typeof this._x.ticks === 'function' ? this._x.ticks.apply(this._x, this._xAxis.tickArguments()) : this._x.domain());
+            let ticks;
+            if (this._xAxis.tickValues()) {
+                ticks = this._xAxis.tickValues();
+            } else if (typeof this._x.ticks === 'function') {
+                ticks = this._x.ticks.apply(this._x, this._xAxis.tickArguments());
+            } else {
+                ticks = this._x.domain();
+            }
 
             const lines = gridLineG.selectAll('line').data(ticks);
 
@@ -593,9 +598,14 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         if (this._conf.renderHorizontalGridLine) {
             // see https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
-            // XXX
-            const ticks = axis.tickValues() ? axis.tickValues() :
-                (scale.ticks ? scale.ticks.apply(scale, axis.tickArguments()) : scale.domain());
+            let ticks: any;
+            if (axis.tickValues()) {
+                ticks = axis.tickValues();
+            } else if (scale.ticks) {
+                ticks = scale.ticks.apply(scale, axis.tickArguments());
+            } else {
+                ticks = scale.domain();
+            }
 
             if (gridLineG.empty()) {
                 gridLineG = g

@@ -84,21 +84,30 @@ export class DataTable extends BaseMixin {
         return this;
     }
 
-    private _doColumnValueFormat (v, d) {
-        // XXX
-        return (typeof v === 'function') ? v(d) :  // v as function
-            (typeof v === 'string') ? d[v] :       // v is field name string
-            v.format(d);                           // v is Object, use fn (element 2)
+    private _doColumnValueFormat(v, d) {
+        if (typeof v === 'function') {
+            // v is function
+            return v(d);
+        }
+        if (typeof v === 'string') {
+            // v is field name string
+            return d[v];
+        }
+        // v is Object, use fn (element 2)
+        return v.format(d);
     }
 
     private _doColumnHeaderFormat(d: DataTableColumnSpec): string {
-        // XXX
         // if 'function', convert to string representation
         // show a string capitalized
         // if an object then display its label string as-is.
-        return (typeof d === 'function') ? this._doColumnHeaderFnToString(d) :
-            (typeof d === 'string') ? this._doColumnHeaderCapitalize(d) :
-            String(d.label);
+        if (typeof d === 'function') {
+            return this._doColumnHeaderFnToString(d);
+        }
+        if (typeof d === 'string') {
+            return this._doColumnHeaderCapitalize(d);
+        }
+        return String(d.label);
     }
 
     private _doColumnHeaderCapitalize(s: string): string {
