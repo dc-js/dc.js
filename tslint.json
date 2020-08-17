@@ -1,7 +1,8 @@
 {
   "defaultSeverity": "error",
   "extends": [
-    "tslint:recommended"
+    "tslint:recommended",
+    "tslint-config-prettier"
   ],
   "jsdoc-format": false,
   "jsRules": {},
@@ -17,11 +18,6 @@
     "object-literal-sort-keys": false,
     "only-arrow-functions": false, // TODO: switch and manual fix
     "prefer-for-of": false,
-    "quotemark": [
-      true,
-      "single"
-    ],
-    "space-before-function-paren": [true, "always"],
     "trailing-comma": false,
     "variable-name": [
       true,
