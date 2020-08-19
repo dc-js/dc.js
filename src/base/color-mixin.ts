@@ -80,15 +80,12 @@ export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
          * @returns {ColorMixin}
          */
         public calculateColorDomain(): this {
-            // TODO: use extent from d3-array which does exactly this
-            const newDomain = [
-                min(this.data(), this._conf.colorAccessor),
-                max(this.data(), this._conf.colorAccessor),
-            ];
+            const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper)
+                .scale as MinimalColorScale;
 
-            // @ts-ignore
-            const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper).scale;
-            scale && scale.domain && scale.domain(newDomain);
+            if (scale && scale.domain) {
+                scale.domain(extent(this.data(), this._conf.colorAccessor));
+            }
 
             return this;
         }
