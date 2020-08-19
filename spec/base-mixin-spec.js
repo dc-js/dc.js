@@ -680,19 +680,31 @@ describe('dc.baseMixin', () => {
 
     describe('accessibility base svg', () => {
 
-        beforeEach(() => {
+        it('should have default description when keyboardAccessible is true', () => {
+            chart
+                .keyboardAccessible(true)
+                .resetSvg();
+
+            expect(chart.svg().attr('tabindex')).toEqual('0');
+            expect(chart.svg().node().firstChild.innerHTML).toEqual('BaseMixin');
+        });
+
+        it('should have custom description if svgDescription is set', () => {
             chart
                 .svgDescription('I am a chart')
                 .resetSvg();
-        });
-
-        it('should have a tabindex', () => {
+            
             expect(chart.svg().attr('tabindex')).toEqual('0');
-        });
-
-        it('should have a description for AT', () => {
             expect(chart.svg().node().firstChild.innerHTML).toEqual('I am a chart');
         });
+
+        it('should not have accessibility features if not explicitly enabled', () => {
+            chart
+                .resetSvg();
+            
+            expect(chart.svg().attr('tabindex')).toBeNull();
+        });
+
 
     })
 });

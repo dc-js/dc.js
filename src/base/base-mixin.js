@@ -72,7 +72,7 @@ const _defaultResetFilterHandler = filters => [];
 export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
-        this._svgDescription = this.constructor.name || '';
+        this._svgDescription = this.svgDescription()
         this._keyboardAccessible = false;
 
         this._dimension = undefined;
@@ -523,35 +523,48 @@ export class BaseMixin {
 
     generateSvg () {
         this._svg = this.root().append('svg');
+    
+        if (this.svgDescription.userSet || this._keyboardAccessible) {
 
-        this._svg.append('desc')
-            .attr('id', `desc-id-${this.__dcFlag__}`)
-            .html(`${this._svgDescription}`);
+            this._svg.append('desc')
+                .attr('id', `desc-id-${this.__dcFlag__}`)
+                .html(`${this._svgDescription}`);
 
-        this._svg
-            .attr('tabindex', '0')
-            .attr('role', 'img')
-            .attr('aria-labelledby', `desc-id-${this.__dcFlag__}`);
+            this._svg
+                .attr('tabindex', '0')
+                .attr('role', 'img')
+                .attr('aria-labelledby', `desc-id-${this.__dcFlag__}`);
+        }
+
         this.sizeSvg();
         return this._svg;
     }
 
     /**
-     * Set description text for the entire SVG graphic to be read out by assistive technologies. By default
-     * will try to set the description to the parent chart's class constructor name: BarChart, HeatMap, etc.
-     * @param {String} [description='']
+     * Set description text for the entire SVG graphic to be read out by assistive technologies and make
+     * the SVG focusable from keyboard.
+     * @param {String} [description]
      * @returns {String|BaseMixin}
      */
-    svgDescription (description) {
-        if (!arguments.length) {
-            return this._svgDescription;
-        }
-        this._svgDescription = description;
-        return this;
+    svgDescription () {
+
+        // overwrite for public API
+        this.svgDescription = description => {
+            this.svgDescription.userSet = true
+            this._svgDescription = description;
+            return this;
+        };
+        // pseudo-default that is exposed only if keyboardAccessible is called
+        return this.constructor.name;
+
     }
 
     /**
-     * Whether interactive chart elements will be accessible by keyboard using tabindex.
+     * If set, interactive chart elements like individual bars in a bar chart or symbols in a scatter plot
+     * will be focusable from keyboard and on pressing Enter or Space will behave as if clicked on.
+     * 
+     * If `svgDescription` has not been explicitly set, will also set SVG description text to the class
+     * constructor name, like BarChart or HeatMap, and make the entire SVG focusable.
      * @param {Boolean} [keyboardAccessible=false]
      * @returns {Boolean|BarChart}
      */

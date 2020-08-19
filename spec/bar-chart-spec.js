@@ -1288,11 +1288,6 @@ describe('dc.BarChart', () => {
             };
         }
 
-        it('default description should match class name', () => {
-            chart.render()
-            expect(chart.svg().node().firstChild.innerHTML).toEqual('BarChart');
-        });
-
         it('internal elements are focusable by keyboard', () => {
             chart.keyboardAccessible(true);
             chart.render();
