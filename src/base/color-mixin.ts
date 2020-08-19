@@ -1,71 +1,14 @@
-import { scaleLinear, scaleOrdinal, scaleQuantize } from 'd3-scale';
-import { interpolateHcl } from 'd3-interpolate';
-import { max, min } from 'd3-array';
+import { scaleQuantize } from 'd3-scale';
+import { extent } from 'd3-array';
 
 import { config } from '../core/config';
 import { BaseMixin } from './base-mixin';
 import { BaseAccessor, Constructor, MinimalColorScale } from '../core/types';
 import { IColorMixinConf } from './i-color-mixin-conf';
-
-export interface IColorHelper {
-    getColor(d, i?: number): string;
-    colorAccessor: BaseAccessor<string>;
-}
-
-export class ColorCalculator implements IColorHelper {
-    public colorAccessor: BaseAccessor<string>;
-    public getColor: BaseAccessor<string>;
-
-    constructor(colorCalculator: BaseAccessor<string>) {
-        this.getColor = colorCalculator;
-    }
-}
-
-export class ColorScaleHelper implements IColorHelper {
-    public colorAccessor: BaseAccessor<string>;
-    public scale: BaseAccessor<string>;
-
-    constructor({
-        scale,
-        colorAccessor,
-    }: {
-        scale: BaseAccessor<string>;
-        colorAccessor?: BaseAccessor<string>;
-    }) {
-        this.colorAccessor = colorAccessor;
-        this.scale = scale;
-    }
-
-    getColor(d, i?: number): string {
-        return this.scale(this.colorAccessor(d, i));
-    }
-}
-
-export class OrdinalColors extends ColorScaleHelper {
-    constructor({
-        colors,
-        colorAccessor,
-    }: {
-        colors: string[];
-        colorAccessor?: BaseAccessor<string>;
-    }) {
-        const scale = scaleOrdinal<any, string>().range(colors);
-        super({ scale, colorAccessor });
-    }
-}
-
-export class LinearColors extends ColorScaleHelper {
-    constructor({
-        range,
-        colorAccessor,
-    }: {
-        range: [string, string];
-        colorAccessor?: BaseAccessor<string>;
-    }) {
-        const scale = scaleLinear<any, string>().range(range).interpolate(interpolateHcl);
-        super({ scale, colorAccessor });
-    }
-}
+import { IColorHelper } from './colors/i-color-helper';
+import { ColorScaleHelper } from './colors/color-scale-helper';
+import { OrdinalColors } from './colors/ordinal-colors';
+import { LinearColors } from './colors/linear-colors';
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support

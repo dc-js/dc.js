@@ -1,7 +1,8 @@
 import { ColorAccessor, Constructor } from '../../core/types';
 import { BaseMixinExt } from './base-mixin';
-import { ColorCalculator, ColorMixin as ColorMixinNeo } from '../../base/color-mixin';
+import { ColorMixin as ColorMixinNeo } from '../../base/color-mixin';
 import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
+import { ColorCalculator } from '../../base/colors/color-calculator';
 
 class Intermediate extends BaseMixinExt(ColorMixinNeo(BaseMixinNeo)) {}
 
