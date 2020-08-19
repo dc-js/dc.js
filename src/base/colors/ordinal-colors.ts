@@ -7,7 +7,7 @@ export class OrdinalColors extends ColorScaleHelper {
         colors,
         colorAccessor,
     }: {
-        colors: string[];
+        colors: readonly string[];
         colorAccessor?: BaseAccessor<string>;
     }) {
         const scale = scaleOrdinal<any, string>().range(colors);

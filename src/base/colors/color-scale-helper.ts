@@ -19,4 +19,8 @@ export class ColorScaleHelper implements IColorHelper {
     getColor(d, i?: number): string {
         return this.scale(this.colorAccessor(d, i));
     }
+
+    share(colorAccessor: BaseAccessor<string>): IColorHelper {
+        return new ColorScaleHelper({ scale: this.scale, colorAccessor });
+    }
 }

@@ -8,4 +8,8 @@ export class ColorCalculator implements IColorHelper {
     constructor(colorCalculator: BaseAccessor<string>) {
         this.getColor = colorCalculator;
     }
+
+    public share(colorAccessor: BaseAccessor<string>): IColorHelper {
+        return this;
+    }
 }
