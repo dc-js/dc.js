@@ -72,7 +72,7 @@ const _defaultResetFilterHandler = filters => [];
 export class BaseMixin {
     constructor () {
         this.__dcFlag__ = utils.uniqueId();
-        this._svgDescription = this.svgDescription()
+        this._svgDescription = null
         this._keyboardAccessible = false;
 
         this._dimension = undefined;
@@ -524,11 +524,11 @@ export class BaseMixin {
     generateSvg () {
         this._svg = this.root().append('svg');
     
-        if (this.svgDescription.userSet || this._keyboardAccessible) {
+        if (this._svgDescription || this._keyboardAccessible) {
 
             this._svg.append('desc')
                 .attr('id', `desc-id-${this.__dcFlag__}`)
-                .html(`${this._svgDescription}`);
+                .html(`${this.svgDescription()}`);
 
             this._svg
                 .attr('tabindex', '0')
@@ -541,22 +541,18 @@ export class BaseMixin {
     }
 
     /**
-     * Set description text for the entire SVG graphic to be read out by assistive technologies and make
-     * the SVG focusable from keyboard.
+     * Set or get description text for the entire SVG graphic. If set, will create a `<desc>` element as the first
+     * child of the SVG with the description text and also make the SVG focusable from keyboard.
      * @param {String} [description]
      * @returns {String|BaseMixin}
      */
-    svgDescription () {
+    svgDescription (description) {
+        if (!arguments.length) {
+            return this._svgDescription || this.constructor.name;
+        }
 
-        // overwrite for public API
-        this.svgDescription = description => {
-            this.svgDescription.userSet = true
-            this._svgDescription = description;
-            return this;
-        };
-        // pseudo-default that is exposed only if keyboardAccessible is called
-        return this.constructor.name;
-
+        this._svgDescription = description;
+        return this;
     }
 
     /**
