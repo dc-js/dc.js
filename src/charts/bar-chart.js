@@ -176,7 +176,8 @@ export class BarChart extends StackMixin {
 
         const enter = bars.enter()
             .append('rect')
-            .attr('class', `bar ${this._keyboardAccessible ? 'dc-tabbable' : ''}`)
+            .attr('class', 'bar')
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('fill', pluck('data', this.getColor))
             .attr('x', d => this._barXPos(d))
             .attr('y', this.yAxisHeight())
@@ -190,6 +191,10 @@ export class BarChart extends StackMixin {
 
         if (this.isOrdinal()) {
             barsEnterUpdate.on('click', adaptHandler(d => this.onClick(d)));
+        }
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this.onClick);
         }
 
         transition(barsEnterUpdate, this.transitionDuration(), this.transitionDelay())

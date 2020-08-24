@@ -710,26 +710,23 @@ export class BaseMixin {
             this._legend.render();
         }
 
-        if (this._keyboardAccessible) {
-            this._makeKeyboardAccessible();
-        }
-
         this._activateRenderlets('postRender');
 
         return result;
     }
 
-    _makeKeyboardAccessible () {
+    _makeKeyboardAccessible (onClickFunction, ...onClickArgs) {
+        // called from each chart module's render and redraw methods
         this._svg.selectAll('.dc-tabbable')
                 .attr('tabindex', 0)
                 .on('keydown', d => {
                     // trigger only if d is an object undestood by KeyAccessor()
                     if (d3Event.keyCode === 13 && typeof d === 'object') {
-                        this.onClick(d)
+                        onClickFunction.call(this, d, ...onClickArgs)
                     } 
                     // special case for space key press - prevent scrolling
                     if (d3Event.keyCode === 32 && typeof d === 'object') {
-                        this.onClick(d)
+                        onClickFunction.call(this, d, ...onClickArgs)
                         d3Event.preventDefault();                
                     }
                 
@@ -772,10 +769,6 @@ export class BaseMixin {
 
         if (this._legend) {
             this._legend.render();
-        }
-
-        if (this._keyboardAccessible) {
-            this._makeKeyboardAccessible();
         }
 
         this._activateRenderlets('postRedraw');

@@ -75,6 +75,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
             .attr('transform', d => this._bubbleLocator(d))
             .append('circle').attr('class', (d, i) => `${this.BUBBLE_CLASS} _${i}`)
             .on('click', adaptHandler(d => this.onClick(d)))
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('fill', this.getColor)
             .attr('r', 0);
 
@@ -84,6 +85,10 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
             .select(`circle.${this.BUBBLE_CLASS}`)
             .attr('r', d => this.bubbleR(d))
             .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this.onClick);
+        }
 
         this._doRenderLabel(bubbleGEnter);
 

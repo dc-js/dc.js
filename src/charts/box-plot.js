@@ -194,7 +194,8 @@ export class BoxPlot extends CoordinateGridMixin {
         const boxesGEnter = boxesG.enter().append('g');
 
         boxesGEnter
-            .attr('class', `box ${this._keyboardAccessible ? 'dc-tabbable' : ''}`)
+            .attr('class', 'box')
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .on('click', adaptHandler(d => {
@@ -203,6 +204,10 @@ export class BoxPlot extends CoordinateGridMixin {
             }))
             .selectAll('circle')
             .classed('dc-tabbable', this._keyboardAccessible);
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this.onClick);
+        }
 
         return boxesGEnter.merge(boxesG);
     }
@@ -233,6 +238,11 @@ export class BoxPlot extends CoordinateGridMixin {
 
     _yAxisRangeRatio () {
         return ((this._maxDataValue() - this._minDataValue()) / this.effectiveHeight());
+    }
+
+    onClick (d) {
+        this.filter(this.keyAccessor()(d));
+        this.redrawGroup();
     }
 
     fadeDeselectedArea (brushSelection) {
