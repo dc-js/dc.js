@@ -584,12 +584,17 @@ export class ScatterPlot extends CoordinateGridMixin {
         return !brushSelection || brushSelection[0][0] >= brushSelection[1][0] || brushSelection[0][1] >= brushSelection[1][1];
     }
 
-    _brushing () {
+    _brushing (evt) {
         if (this._ignoreBrushEvents) {
             return;
         }
 
-        let brushSelection = event.selection;
+        // d3@v5 compatibility
+        if (event) {
+            evt = event;
+        }
+
+        let brushSelection = evt.selection;
 
         // Testing with pixels is more reliable
         let brushIsEmpty = this.brushIsEmpty(brushSelection);

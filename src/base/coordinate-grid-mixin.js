@@ -78,7 +78,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._zoomScale = [1, Infinity];
         this._zoomOutRestrict = true;
 
-        this._zoom = zoom().on('zoom', () => this._onZoom());
+        this._zoom = zoom().on('zoom', evt => this._onZoom(evt));
         this._nullZoom = zoom().on('zoom', null);
         this._hasBeenMouseZoomable = false;
         this._ignoreZoomEvents = false; // ignore when carrying out programmatic zoom operations
@@ -934,7 +934,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     renderBrush (g, doTransition) {
         if (this._brushOn) {
-            this._brush.on('start brush end', () => this._brushing());
+            this._brush.on('start brush end', evt => this._brushing(evt));
 
             // To retrieve selection we need self._gBrush
             this._gBrush = g.append('g')
@@ -974,12 +974,17 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return !brushSelection || brushSelection[1] <= brushSelection[0];
     }
 
-    _brushing () {
+    _brushing (evt) {
         if (this._ignoreBrushEvents) {
             return;
         }
 
-        let brushSelection = event.selection;
+        // d3@v5 compatibility
+        if (event) {
+            evt = event;
+        }
+
+        let brushSelection = evt.selection;
         if (brushSelection) {
             brushSelection = brushSelection.map(this.x().invert);
         }
@@ -1261,13 +1266,18 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
     }
 
-    _onZoom () {
+    _onZoom (evt) {
         // ignore zoom events if it was caused by a programmatic change
         if (this._ignoreZoomEvents) {
             return;
         }
 
-        const newDomain = event.transform.rescaleX(this._origX).domain();
+        // d3@v5 compatibility
+        if (event) {
+            evt = event;
+        }
+
+        const newDomain = evt.transform.rescaleX(this._origX).domain();
         this.focus(newDomain, false);
     }
 
