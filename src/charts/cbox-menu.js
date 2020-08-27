@@ -2,7 +2,7 @@ import {event, select} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
-import {utils} from '../core/utils'
+import {cpt, utils} from '../core/utils'
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -120,9 +120,9 @@ export class CboxMenu extends BaseMixin {
                 .append('input')
                 .attr('type', 'reset')
                 .text(this._promptText)
-                .on('click', function (d, i) {
-                    return chart._onChange(d, i, this);
-                });
+                .on('click', cpt(function (d, evt) {
+                    return chart._onChange(d, evt, this);
+                }));
         } else {
             const li = this._cbox.append('li');
             li.append('input')
@@ -140,15 +140,21 @@ export class CboxMenu extends BaseMixin {
             .selectAll(`li.${ITEM_CSS_CLASS}`)
             .sort(this._order);
 
-        this._cbox.on('change', function (d, i) {
-            return chart._onChange(d, i, this);
-        });
+        this._cbox.on('change', cpt(function (d, evt) {
+            return chart._onChange(d, evt, this);
+        }));
         return options;
     }
 
-    _onChange (d, i, element) {
+    _onChange (d, evt, element) {
         let values;
-        const target = select(event.target);
+
+        // d3@v5 compatibility
+        if (event) {
+            evt = event;
+        }
+
+        const target = select(evt.target);
         let options;
 
         if (!target.datum()) {
