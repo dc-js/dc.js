@@ -460,7 +460,7 @@ describe('dc.rowChart', () => {
     }
 
     itShouldBehaveLikeARowChartWithGroup(positiveGroupHolder, 5, ['0', '5', '10']);
-    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder, 5, ['-10', '-5', '0']);
-    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5, ['-5', '0', '5']);
+    itShouldBehaveLikeARowChartWithGroup(negativeGroupHolder, 5, ['−10', '−5', '0']);
+    itShouldBehaveLikeARowChartWithGroup(mixedGroupHolder, 5, ['−5', '0', '5']);
     itShouldBehaveLikeARowChartWithGroup(largerGroupHolder, 7);
 });
