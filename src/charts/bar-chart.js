@@ -4,7 +4,7 @@ import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
-import {pluck, utils} from '../core/utils';
+import {cpt, pluck, utils} from '../core/utils';
 
 const MIN_BAR_WIDTH = 1;
 const DEFAULT_GAP_BETWEEN_BARS = 2;
@@ -144,7 +144,7 @@ export class BarChart extends StackMixin {
             .merge(labels);
 
         if (this.isOrdinal()) {
-            labelsEnterUpdate.on('click', d => this.onClick(d));
+            labelsEnterUpdate.on('click', cpt(d => this.onClick(d)));
             labelsEnterUpdate.attr('cursor', 'pointer');
         }
 
@@ -188,7 +188,7 @@ export class BarChart extends StackMixin {
         }
 
         if (this.isOrdinal()) {
-            barsEnterUpdate.on('click', d => this.onClick(d));
+            barsEnterUpdate.on('click', cpt(d => this.onClick(d)));
         }
 
         transition(barsEnterUpdate, this.transitionDuration(), this.transitionDelay())

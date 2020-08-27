@@ -7,6 +7,7 @@ import {filters} from '../core/filters';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {MarginMixin} from '../base/margin-mixin';
+import {cpt} from '../core/utils';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 
@@ -231,7 +232,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('fill', 'white')
             .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
             .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
-            .on('click', this.boxOnClick());
+            .on('click', cpt(this.boxOnClick()));
 
         boxes = gEnter.merge(boxes);
 
@@ -264,7 +265,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .style('text-anchor', 'middle')
             .attr('y', this.effectiveHeight())
             .attr('dy', 12)
-            .on('click', this.xAxisOnClick())
+            .on('click', cpt(this.xAxisOnClick()))
             .text(this.colsLabel())
             .merge(gColsText);
 
@@ -290,7 +291,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('dx', -2)
             .attr('y', d => rows(d) + boxHeight / 2)
             .attr('dy', 6)
-            .on('click', this.yAxisOnClick())
+            .on('click', cpt(this.yAxisOnClick()))
             .text(this.rowsLabel())
             .merge(gRowsText);
 
