@@ -4,6 +4,7 @@ import { scaleLinear } from 'd3-scale';
 import {ColorMixin} from './color-mixin';
 import {transition} from '../core/core';
 import {events} from '../core/events';
+import {cpt} from '../core/utils';
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
@@ -149,7 +150,7 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
                 label = bubbleGEnter.append('text')
                         .attr('text-anchor', 'middle')
                         .attr('dy', '.3em')
-                        .on('click', d => this.onClick(d));
+                        .on('click', cpt(d => this.onClick(d)));
             }
 
             label

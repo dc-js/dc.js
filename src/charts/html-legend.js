@@ -1,6 +1,6 @@
 import {select} from 'd3-selection';
 
-import {pluck, utils} from '../core/utils';
+import {cpt, pluck, utils} from '../core/utils';
 import {constants} from '../core/constants';
 
 /**
@@ -52,9 +52,9 @@ export class HtmlLegend {
             .data(legendables).enter()
             .append('div')
             .classed(legendItemClassName, true)
-            .on('mouseover', d => this._parent.legendHighlight(d))
-            .on('mouseout', d => this._parent.legendReset(d))
-            .on('click', d => this._parent.legendToggle(d));
+            .on('mouseover', cpt(d => this._parent.legendHighlight(d)))
+            .on('mouseout', cpt(d => this._parent.legendReset(d)))
+            .on('click', cpt(d => this._parent.legendToggle(d)));
 
         if (this._highlightSelected) {
             itemEnter.classed(constants.SELECTED_CLASS, d => filters.indexOf(d.name) !== -1);

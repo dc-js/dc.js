@@ -1,4 +1,4 @@
-import {pluck, utils} from '../core/utils';
+import {cpt, pluck, utils} from '../core/utils';
 import {constants} from '../core/constants';
 
 const LABEL_GAP = 2;
@@ -219,15 +219,15 @@ export class Legend {
             .enter()
             .append('g')
             .attr('class', 'dc-legend-item')
-            .on('mouseover', d => {
+            .on('mouseover', cpt(d => {
                 this._parent.legendHighlight(d);
-            })
-            .on('mouseout', d => {
+            }))
+            .on('mouseout', cpt(d => {
                 this._parent.legendReset(d);
-            })
-            .on('click', d => {
+            }))
+            .on('click', cpt(d => {
                 d.chart.legendToggle(d);
-            });
+            }));
 
         if (this._highlightSelected) {
             itemEnter.classed(constants.SELECTED_CLASS,
