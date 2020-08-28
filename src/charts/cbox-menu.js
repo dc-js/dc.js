@@ -1,4 +1,4 @@
-import {event, select} from 'd3-selection';
+import {select} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
@@ -148,11 +148,6 @@ export class CboxMenu extends BaseMixin {
 
     _onChange (d, evt, element) {
         let values;
-
-        // d3@v5 compatibility
-        if (event) {
-            evt = event;
-        }
 
         const target = select(evt.target);
         let options;
