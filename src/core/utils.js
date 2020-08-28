@@ -7,7 +7,7 @@ import {event} from 'd3-selection';
 
 export function cpt (handler) {
     return function (a, b) {
-        if (a && a.currentTarget) {
+        if (a && a.target) {
             // d3@v6 - b is __data__, a is the event
             handler.call(this, b, a);
         } else {
