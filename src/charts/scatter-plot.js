@@ -1,5 +1,5 @@
 import {symbol} from 'd3-shape';
-import {event, select} from 'd3-selection';
+import {select} from 'd3-selection';
 import {brush} from 'd3-brush';
 
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
@@ -587,11 +587,6 @@ export class ScatterPlot extends CoordinateGridMixin {
     _brushing (evt) {
         if (this._ignoreBrushEvents) {
             return;
-        }
-
-        // d3@v5 compatibility
-        if (event) {
-            evt = event;
         }
 
         let brushSelection = evt.selection;

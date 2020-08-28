@@ -1,5 +1,3 @@
-import {event} from 'd3-selection';
-
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {logger} from '../core/logger';
@@ -103,11 +101,6 @@ export class SelectMenu extends BaseMixin {
 
     _onChange (_d, evt) {
         let values;
-
-        // d3@v5 compatibility
-        if (event) {
-            evt = event;
-        }
 
         const target = evt.target;
 
