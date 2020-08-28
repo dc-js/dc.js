@@ -50,16 +50,10 @@ const simulateChartBrushing = function (chart, domainSelection) {
     // D3v4 needs scaled coordinates for the event
     const scaledSelection = domainSelection.map(coord => chart.x()(coord));
 
-    d3.event = {
-        sourceEvent: true,
+    // an event with fields that dc cares about
+    chart._brushing({
         selection: scaledSelection
-    };
-
-    try {
-        chart._brushing();
-    } finally {
-        d3.event = null;
-    }
+    });
 };
 
 // Simulate a dummy event - just enough for the handler to get fooled
@@ -70,14 +64,8 @@ const simulateChart2DBrushing = function (chart, domainSelection) {
         return scale(coord);
     }));
 
-    d3.event = {
-        sourceEvent: true,
+    // an event with fields that dc cares about
+    chart._brushing({
         selection: scaledSelection
-    };
-
-    try {
-        chart._brushing();
-    } finally {
-        d3.event = null;
-    }
+    });
 };
