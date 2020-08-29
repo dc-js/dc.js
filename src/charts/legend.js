@@ -1,5 +1,5 @@
 import {pluck, utils} from '../core/utils';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 import {constants} from '../core/constants';
 
 const LABEL_GAP = 2;

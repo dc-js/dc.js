@@ -1,7 +1,7 @@
 import {select} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 import {constants} from '../core/constants';
 
 /**

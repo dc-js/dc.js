@@ -2,7 +2,7 @@ import {ascending} from 'd3-array';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
-import {compatNestHelper} from '../core/d3comapt';
+import {compatNestHelper} from '../core/d3compat';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
 const ROW_CSS_CLASS = 'dc-table-row';

@@ -7,7 +7,7 @@ import {interpolate} from 'd3-interpolate';
 import {transition} from '../core/core';
 import {filters} from '../core/filters';
 import {utils, pluck} from '../core/utils';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';

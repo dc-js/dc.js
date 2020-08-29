@@ -7,7 +7,7 @@ import {filters} from '../core/filters';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {MarginMixin} from '../base/margin-mixin';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 
