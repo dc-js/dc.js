@@ -7,7 +7,7 @@ import {interpolate} from 'd3-interpolate';
 import {transition} from '../core/core';
 import {filters} from '../core/filters';
 import {utils, pluck} from '../core/utils';
-import {cpt} from '../core/d3compat';
+import {adaptHandler} from '../core/d3compat';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
@@ -172,7 +172,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     _createSlicePath (slicesEnter, arcs) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', cpt(d => this.onClick(d)))
+            .on('click', adaptHandler(d => this.onClick(d)))
             .attr('d', d => this._safeArc(arcs, d));
 
         const tranNodes = transition(slicePath, this.transitionDuration());
@@ -220,7 +220,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                     }
                     return classes;
                 })
-                .on('click', cpt(d => this.onClick(d)));
+                .on('click', adaptHandler(d => this.onClick(d)));
             this._positionLabels(labelsEnter, arcs);
         }
     }

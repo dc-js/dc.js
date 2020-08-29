@@ -7,7 +7,7 @@ import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {transition} from '../core/core';
-import {cpt} from '../core/d3compat';
+import {adaptHandler} from '../core/d3compat';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -161,7 +161,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     _createSlicePath (slicesEnter, arcs) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', cpt(d => this._onClick(d)))
+            .on('click', adaptHandler(d => this._onClick(d)))
             .attr('d', (d, i) => this._safeArc(d, i, arcs));
 
         const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
@@ -214,11 +214,11 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                     }
                     return classes;
                 })
-                .on('click', cpt(d => this._onClick(d)))
-                .on('mouseover', cpt(d => {
+                .on('click', adaptHandler(d => this._onClick(d)))
+                .on('mouseover', adaptHandler(d => {
                     this._highlightSlice(d.index, true);
                 }))
-                .on('mouseout', cpt(d => {
+                .on('mouseout', adaptHandler(d => {
                     this._highlightSlice(d.index, false);
                 }));
             this._positionLabels(labelsEnter, arcs);
@@ -238,11 +238,11 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .enter()
             .append('polyline')
             .attr('class', (d, i) => `pie-path _${i} ${this._sliceCssClass}`)
-            .on('click', cpt(d => this._onClick(d)))
-            .on('mouseover', cpt(d => {
+            .on('click', adaptHandler(d => this._onClick(d)))
+            .on('mouseover', adaptHandler(d => {
                 this._highlightSlice(d.index, true);
             }))
-            .on('mouseout', cpt(d => {
+            .on('mouseout', adaptHandler(d => {
                 this._highlightSlice(d.index, false);
             }))
             .merge(polyline);
