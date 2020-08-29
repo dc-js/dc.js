@@ -4,7 +4,7 @@ import { scaleLinear } from 'd3-scale';
 import {ColorMixin} from './color-mixin';
 import {transition} from '../core/core';
 import {events} from '../core/events';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.

@@ -7,7 +7,7 @@ import {CapMixin} from '../base/cap-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {BaseMixin} from '../base/base-mixin';
 import {transition} from '../core/core';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 

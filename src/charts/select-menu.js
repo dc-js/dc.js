@@ -1,7 +1,7 @@
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {logger} from '../core/logger';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';

@@ -7,7 +7,7 @@ import {transition} from '../core/core';
 import {logger} from '../core/logger';
 import {events} from '../core/events';
 import {utils} from '../core/utils';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map

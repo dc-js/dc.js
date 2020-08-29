@@ -12,7 +12,7 @@ import {optionalTransition, transition} from '../core/core';
 import {units} from '../core/units';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 import {logger} from '../core/logger';
 import {filters} from '../core/filters';
 import {events} from '../core/events';

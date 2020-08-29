@@ -5,7 +5,7 @@ import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
 import {pluck, utils} from '../core/utils';
-import {cpt} from '../core/d3comapt';
+import {cpt} from '../core/d3compat';
 
 const MIN_BAR_WIDTH = 1;
 const DEFAULT_GAP_BETWEEN_BARS = 2;
