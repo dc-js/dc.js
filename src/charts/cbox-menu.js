@@ -2,7 +2,8 @@ import {select} from 'd3-selection';
 
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
-import {cpt, utils} from '../core/utils'
+import {utils} from '../core/utils'
+import {cpt} from '../core/d3comapt';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';

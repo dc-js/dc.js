@@ -6,7 +6,7 @@ import {CapMixin} from '../base/cap-mixin';
 import {MarginMixin} from '../base/margin-mixin';
 import {ColorMixin} from '../base/color-mixin';
 import {transition} from '../core/core';
-import {cpt} from '../core/utils';
+import {cpt} from '../core/d3comapt';
 
 /**
  * Concrete row chart implementation.

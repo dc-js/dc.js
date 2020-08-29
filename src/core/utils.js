@@ -3,19 +3,6 @@ import {format} from 'd3-format';
 
 import {constants} from './constants';
 import {config} from './config';
-import {event} from 'd3-selection';
-
-export function cpt (handler) {
-    return function (a, b) {
-        if (a && a.target) {
-            // d3@v6 - b is __data__, a is the event
-            handler.call(this, b, a);
-        } else {
-            // older d3 - a is __data__, event from global d3.event
-            handler.call(this, a, event);
-        }
-    }
-}
 
 /**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function

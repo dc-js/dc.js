@@ -1,7 +1,7 @@
 import {BubbleMixin} from '../base/bubble-mixin';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
-import {cpt} from '../core/utils';
+import {cpt} from '../core/d3comapt';
 
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
