@@ -4,7 +4,8 @@ import {BaseMixin} from '../base/base-mixin';
 import {BubbleMixin} from '../base/bubble-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
-import {cpt, utils} from '../core/utils';
+import {utils} from '../core/utils';
+import {cpt} from '../core/d3comapt';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';

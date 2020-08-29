@@ -1,4 +1,5 @@
-import {cpt, pluck, utils} from '../core/utils';
+import {pluck, utils} from '../core/utils';
+import {cpt} from '../core/d3comapt';
 import {constants} from '../core/constants';
 
 const LABEL_GAP = 2;

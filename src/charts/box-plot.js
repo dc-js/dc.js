@@ -6,7 +6,8 @@ import {d3Box} from '../base/d3.box'
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {units} from '../core/units';
-import {cpt, utils} from '../core/utils';
+import {utils} from '../core/utils';
+import {cpt} from '../core/d3comapt';
 
 // Returns a function to compute the interquartile range.
 function defaultWhiskersIQR (k) {

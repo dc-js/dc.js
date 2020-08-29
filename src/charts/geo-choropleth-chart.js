@@ -6,7 +6,8 @@ import {ColorMixin} from '../base/color-mixin';
 import {transition} from '../core/core';
 import {logger} from '../core/logger';
 import {events} from '../core/events';
-import {cpt, utils} from '../core/utils';
+import {utils} from '../core/utils';
+import {cpt} from '../core/d3comapt';
 
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map

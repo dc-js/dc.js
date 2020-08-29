@@ -4,7 +4,8 @@ import {StackMixin} from '../base/stack-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {logger} from '../core/logger';
-import {cpt, pluck, utils} from '../core/utils';
+import {pluck, utils} from '../core/utils';
+import {cpt} from '../core/d3comapt';
 
 const MIN_BAR_WIDTH = 1;
 const DEFAULT_GAP_BETWEEN_BARS = 2;
