@@ -5,7 +5,7 @@ import {BubbleMixin} from '../base/bubble-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
-import {cpt} from '../core/d3compat';
+import {adaptHandler} from '../core/d3compat';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -115,7 +115,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
                     .attr('class', BUBBLE_CLASS)
                     .attr('r', 0)
                     .attr('fill', this.getColor)
-                    .on('click', cpt(d => this.onClick(d)));
+                    .on('click', adaptHandler(d => this.onClick(d)));
             }
 
             transition(circle, this.transitionDuration(), this.transitionDelay())
