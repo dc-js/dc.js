@@ -225,8 +225,8 @@ describe('dc.heatmap', () => {
 
         const reduceDimensionValues = function (dmsn) {
             return dmsn.top(Infinity).reduce((p, d) => {
-                p.cols.add(d.colData);
-                p.rows.add(d.rowData);
+                p.cols.add(+d.colData);
+                p.rows.add(+d.rowData);
                 return p;
             }, {cols: new Set(), rows: new Set()});
         };
@@ -245,21 +245,21 @@ describe('dc.heatmap', () => {
 
         it('should have the correct number of columns', () => {
             chart.selectAll('.box-group').each(d => {
-                expect(originalDomain.cols.has(`${d.key[0]}`)).toBeTruthy();
+                expect(originalDomain.cols.has(d.key[0])).toBeTruthy();
             });
 
             chart.selectAll('.cols.axis text').each(d => {
-                expect(originalDomain.cols.has(`${d}`)).toBeTruthy();
+                expect(originalDomain.cols.has(d)).toBeTruthy();
             });
         });
 
         it('should have the correct number of rows', () => {
             chart.selectAll('.box-group').each(d => {
-                expect(originalDomain.rows.has(`${d.key[1]}`)).toBeTruthy();
+                expect(originalDomain.rows.has(d.key[1])).toBeTruthy();
             });
 
             chart.selectAll('.rows.axis text').each(d => {
-                expect(originalDomain.rows.has(`${d}`)).toBeTruthy();
+                expect(originalDomain.rows.has(d)).toBeTruthy();
             });
         });
     });
