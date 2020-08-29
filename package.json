@@ -25,7 +25,7 @@
     "url": "https://github.com/dc-js/dc.js.git"
   },
   "dependencies": {
-    "d3": "^6.0.0-rc.4"
+    "d3": "^6.0.0"
   },
   "devDependencies": {
     "compare-versions": "^3.6.0",
