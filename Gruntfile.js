@@ -148,6 +148,11 @@ module.exports = function (grunt) {
                 concurrency: 1,
                 reporters: ['dots', 'summary']
             },
+            'ci-macos': {
+                browsers: ['Safari', 'ChromeNoSandboxHeadless', 'FirefoxHeadless'],
+                concurrency: 1,
+                reporters: ['dots', 'summary']
+            },
         },
         jsdoc: {
             dist: {
@@ -398,6 +403,7 @@ module.exports = function (grunt) {
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
     grunt.registerTask('ci-windows', ['build', 'copy', 'karma:ci-windows']);
+    grunt.registerTask('ci-macos', ['build', 'copy', 'karma:ci-macos']);
     grunt.registerTask('lint', ['shell:eslint']);
     grunt.registerTask('lint-fix', ['shell:eslint-fix']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
