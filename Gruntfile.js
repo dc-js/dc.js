@@ -143,45 +143,11 @@ module.exports = function (grunt) {
                 concurrency: 1,
                 reporters: ['dots', 'summary']
             },
-            sauceLabs: {
-                testName: 'dc.js unit tests',
-                customLaunchers: {
-                    slFirefoxLinux: {
-                        base: 'SauceLabs',
-                        browserName: 'firefox',
-                        version: '68.0',
-                        platform: 'macOS 10.13'
-                    },
-                    slSafari: {
-                        base: 'SauceLabs',
-                        browserName: 'safari',
-                        version: '11.1',
-                        platform: 'macOS 10.13'
-                    },
-                    slChromeWindows: {
-                        base: 'SauceLabs',
-                        browserName: 'chrome',
-                        version: '76.0',
-                        platform: 'Windows 10'
-                    },
-                    slMicrosoftEdge: {
-                        base: 'SauceLabs',
-                        browserName: 'MicrosoftEdge',
-                        version: '18.17763',
-                        platform: 'Windows 10'
-                    }
-                },
-                browsers: [
-                    'slFirefoxLinux',
-                    'slSafari',
-                    'slChromeWindows',
-                    'slMicrosoftEdge'
-                ],
-                concurrency: 2,
-                browserNoActivityTimeout: 120000,
-                reporters: ['saucelabs', 'summary'],
-                singleRun: true
-            }
+            'ci-windows': {
+                browsers: ['EdgeHeadless', 'ChromeNoSandboxHeadless', 'FirefoxHeadless'],
+                concurrency: 1,
+                reporters: ['dots', 'summary']
+            },
         },
         jsdoc: {
             dist: {
@@ -346,7 +312,6 @@ module.exports = function (grunt) {
                 ]
             }
         },
-
         'gh-pages': {
             options: {
                 base: '<%= conf.web %>',
@@ -420,13 +385,6 @@ module.exports = function (grunt) {
         });
         grunt.task.run('watch');
     });
-    grunt.registerTask('safe-sauce-labs', () => {
-        if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
-            grunt.log.writeln('Skipping Sauce Lab tests - SAUCE_USERNAME/SAUCE_ACCESS_KEY not set');
-            return;
-        }
-        grunt.task.run('karma:sauceLabs');
-    });
 
     // task aliases
     grunt.registerTask('build', ['shell:dist-clean', 'shell:rollup', 'sass', 'cssmin']);
@@ -438,8 +396,8 @@ module.exports = function (grunt) {
     grunt.registerTask('test-n-serve', ['server-only', 'test', 'watch:tests']);
     grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
-    grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
+    grunt.registerTask('ci-windows', ['build', 'copy', 'karma:ci-windows']);
     grunt.registerTask('lint', ['shell:eslint']);
     grunt.registerTask('lint-fix', ['shell:eslint-fix']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
