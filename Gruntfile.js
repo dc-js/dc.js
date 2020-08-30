@@ -23,7 +23,7 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    const lintableFiles = `'${config.spec}/**/*.js' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
+    const lintableFiles = `'${config.src}' '${config.spec}' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
 
     const sass = require('node-sass');
 
@@ -146,6 +146,11 @@ module.exports = function (grunt) {
             },
             'ci-windows': {
                 browsers: ['EdgeHeadless', 'ChromeNoSandboxHeadless', 'FirefoxHeadless'],
+                concurrency: 1,
+                reporters: ['dots', 'summary']
+            },
+            'ci-macos': {
+                browsers: ['Safari', 'ChromeNoSandboxHeadless', 'FirefoxHeadless'],
                 concurrency: 1,
                 reporters: ['dots', 'summary']
             },
@@ -415,6 +420,7 @@ module.exports = function (grunt) {
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
     grunt.registerTask('ci-windows', ['build', 'copy', 'karma:ci-windows']);
+    grunt.registerTask('ci-macos', ['build', 'copy', 'karma:ci-macos']);
     grunt.registerTask('lint', ['shell:tslint', 'shell:eslint', 'shell:prettier-check']);
     grunt.registerTask('lint-fix', ['shell:tslint-fix', 'shell:eslint-fix', 'shell:prettier']);
     grunt.registerTask('default', ['build', 'shell:hooks']);

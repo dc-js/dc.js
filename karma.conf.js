@@ -11,6 +11,7 @@ module.exports = function (config) {
             require('karma-coverage'),
             require('karma-firefox-launcher'),
             require('karma-jasmine'),
+            require('karma-safari-launcher'),
             require('karma-summary-reporter'),
         ],
         files: [
