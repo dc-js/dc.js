@@ -49,7 +49,7 @@ export default [
         input: 'src/index-with-version.js',
         external: Object.keys(d3Modules),
         plugins: [
-            terser({include: [/^.+\.min\.js$/]}),
+            terser(),
             jsonPlugin,
             licensePlugin
         ],
