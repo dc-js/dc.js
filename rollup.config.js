@@ -1,5 +1,5 @@
 import {terser} from 'rollup-plugin-terser';
-import json from 'rollup-plugin-json';
+import json from '@rollup/plugin-json';
 import license from 'rollup-plugin-license';
 
 const jsonPlugin = json({include: 'package.json', preferConst: true});
@@ -42,14 +42,16 @@ const umdConf = {
     paths: d3Modules
 };
 
-const umdMinConf = Object.assign({}, umdConf, {file: 'dist/dc.min.js'});
+const umdMinConf = Object.assign({}, umdConf, {
+    file: 'dist/dc.min.js',
+    plugins: [terser()]
+});
 
 export default [
     {
         input: 'src/index-with-version.js',
         external: Object.keys(d3Modules),
         plugins: [
-            terser({include: [/^.+\.min\.js$/]}),
             jsonPlugin,
             licensePlugin
         ],

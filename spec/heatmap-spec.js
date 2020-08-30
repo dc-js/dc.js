@@ -225,10 +225,10 @@ describe('dc.heatmap', () => {
 
         const reduceDimensionValues = function (dmsn) {
             return dmsn.top(Infinity).reduce((p, d) => {
-                p.cols.add(d.colData);
-                p.rows.add(d.rowData);
+                p.cols.add(+d.colData);
+                p.rows.add(+d.rowData);
                 return p;
-            }, {cols: d3.set(), rows: d3.set()});
+            }, {cols: new Set(), rows: new Set()});
         };
 
         beforeEach(() => {

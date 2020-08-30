@@ -1,8 +1,8 @@
 import {ascending} from 'd3-array';
-import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
+import {compatNestHelper} from '../core/d3compat';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
 const ROW_CSS_CLASS = 'dc-table-row';
@@ -174,10 +174,13 @@ export class DataTable extends BaseMixin {
             entries = this.dimension().top(this._size);
         }
 
-        return nest()
-            .key(this.section())
-            .sortKeys(this._order)
-            .entries(entries.sort((a, b) => this._order(this._sortBy(a), this._sortBy(b))).slice(this._beginSlice, this._endSlice));
+        entries = entries.sort((a, b) => this._order(this._sortBy(a), this._sortBy(b))).slice(this._beginSlice, this._endSlice)
+
+        return compatNestHelper({
+            key: this.section(),
+            sortKeys: this._order,
+            entries
+        });
     }
 
     _renderRows (sections) {

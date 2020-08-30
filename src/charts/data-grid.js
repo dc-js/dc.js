@@ -1,8 +1,8 @@
 import {ascending} from 'd3-array';
-import {nest} from 'd3-collection';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
+import {compatNestHelper} from '../core/d3compat';
 
 const LABEL_CSS_CLASS = 'dc-grid-label';
 const ITEM_CSS_CLASS = 'dc-grid-item';
@@ -80,16 +80,17 @@ export class DataGrid extends BaseMixin {
     }
 
     _nestEntries () {
-        const entries = this.dimension().top(this._size);
+        let entries = this.dimension().top(this._size);
 
-        return nest()
-            .key(this.section())
-            .sortKeys(this._order)
-            .entries(
-                entries
-                    .sort((a, b) => this._order(this._sortBy(a), this._sortBy(b)))
-                    .slice(this._beginSlice, this._endSlice)
-            );
+        entries = entries
+            .sort((a, b) => this._order(this._sortBy(a), this._sortBy(b)))
+            .slice(this._beginSlice, this._endSlice)
+
+        return compatNestHelper({
+            key: this.section(),
+            sortKeys: this._order,
+            entries
+        });
     }
 
     _renderItems (sections) {

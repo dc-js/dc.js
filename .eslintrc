@@ -8,13 +8,6 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "globals": {
-    "console": false,
-    "crossfilter": false,
-    "global": false,
-    "module": false,
-    "process": false
-  },
   "extends": "eslint:recommended",
   "rules": {
     "no-useless-escape": "off",
@@ -57,6 +50,7 @@
     {
       "files": ["spec/**/*.js", "web-src/**/*.js"],
       "globals": {
+        "crossfilter": false,
         "d3": false,
         "dc": false
       }

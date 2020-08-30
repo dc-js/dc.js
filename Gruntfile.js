@@ -143,45 +143,16 @@ module.exports = function (grunt) {
                 concurrency: 1,
                 reporters: ['dots', 'summary']
             },
-            sauceLabs: {
-                testName: 'dc.js unit tests',
-                customLaunchers: {
-                    slFirefoxLinux: {
-                        base: 'SauceLabs',
-                        browserName: 'firefox',
-                        version: '68.0',
-                        platform: 'macOS 10.13'
-                    },
-                    slSafari: {
-                        base: 'SauceLabs',
-                        browserName: 'safari',
-                        version: '11.1',
-                        platform: 'macOS 10.13'
-                    },
-                    slChromeWindows: {
-                        base: 'SauceLabs',
-                        browserName: 'chrome',
-                        version: '76.0',
-                        platform: 'Windows 10'
-                    },
-                    slMicrosoftEdge: {
-                        base: 'SauceLabs',
-                        browserName: 'MicrosoftEdge',
-                        version: '18.17763',
-                        platform: 'Windows 10'
-                    }
-                },
-                browsers: [
-                    'slFirefoxLinux',
-                    'slSafari',
-                    'slChromeWindows',
-                    'slMicrosoftEdge'
-                ],
-                concurrency: 2,
-                browserNoActivityTimeout: 120000,
-                reporters: ['saucelabs', 'summary'],
-                singleRun: true
-            }
+            'ci-windows': {
+                browsers: ['EdgeHeadless', 'ChromeNoSandboxHeadless', 'FirefoxHeadless'],
+                concurrency: 1,
+                reporters: ['dots', 'summary']
+            },
+            'ci-macos': {
+                browsers: ['Safari', 'ChromeNoSandboxHeadless', 'FirefoxHeadless'],
+                concurrency: 1,
+                reporters: ['dots', 'summary']
+            },
         },
         jsdoc: {
             dist: {
@@ -346,7 +317,6 @@ module.exports = function (grunt) {
                 ]
             }
         },
-
         'gh-pages': {
             options: {
                 base: '<%= conf.web %>',
@@ -384,8 +354,11 @@ module.exports = function (grunt) {
             hierarchy: {
                 command: 'dot -Tsvg -o <%= conf.websrc %>/img/class-hierarchy.svg class-hierarchy.dot'
             },
+            'dist-clean': {
+                command: 'rm -rf dist/'
+            },
             rollup: {
-                command: 'rm -rf dist/; rollup --config'
+                command: 'rollup --config'
             },
             eslint: {
                 command: `eslint ${lintableFiles}`
@@ -417,16 +390,9 @@ module.exports = function (grunt) {
         });
         grunt.task.run('watch');
     });
-    grunt.registerTask('safe-sauce-labs', () => {
-        if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
-            grunt.log.writeln('Skipping Sauce Lab tests - SAUCE_USERNAME/SAUCE_ACCESS_KEY not set');
-            return;
-        }
-        grunt.task.run('karma:sauceLabs');
-    });
 
     // task aliases
-    grunt.registerTask('build', ['shell:rollup', 'sass', 'cssmin']);
+    grunt.registerTask('build', ['shell:dist-clean', 'shell:rollup', 'sass', 'cssmin']);
     grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
@@ -435,8 +401,9 @@ module.exports = function (grunt) {
     grunt.registerTask('test-n-serve', ['server-only', 'test', 'watch:tests']);
     grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
     grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
-    grunt.registerTask('ci', ['ci-pull', 'safe-sauce-labs']);
     grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
+    grunt.registerTask('ci-windows', ['build', 'copy', 'karma:ci-windows']);
+    grunt.registerTask('ci-macos', ['build', 'copy', 'karma:ci-macos']);
     grunt.registerTask('lint', ['shell:eslint']);
     grunt.registerTask('lint-fix', ['shell:eslint-fix']);
     grunt.registerTask('default', ['build', 'shell:hooks']);

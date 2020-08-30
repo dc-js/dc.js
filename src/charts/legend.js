@@ -1,4 +1,5 @@
 import {pluck, utils} from '../core/utils';
+import {adaptHandler} from '../core/d3compat';
 import {constants} from '../core/constants';
 
 const LABEL_GAP = 2;
@@ -219,15 +220,15 @@ export class Legend {
             .enter()
             .append('g')
             .attr('class', 'dc-legend-item')
-            .on('mouseover', d => {
+            .on('mouseover', adaptHandler(d => {
                 this._parent.legendHighlight(d);
-            })
-            .on('mouseout', d => {
+            }))
+            .on('mouseout', adaptHandler(d => {
                 this._parent.legendReset(d);
-            })
-            .on('click', d => {
+            }))
+            .on('click', adaptHandler(d => {
                 d.chart.legendToggle(d);
-            });
+            }));
 
         if (this._highlightSelected) {
             itemEnter.classed(constants.SELECTED_CLASS,
