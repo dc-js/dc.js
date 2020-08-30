@@ -50,7 +50,7 @@ export default [
         input: 'src/compat/index-compat.ts',
         external: Object.keys(d3Modules),
         plugins: [
-            terser({include: [/^.+\.min\.js$/]}),
+            terser(),
             jsonPlugin,
             licensePlugin,
             typescript({
