@@ -2,6 +2,9 @@
 *.log
 *~
 
+# distribution files no longer checked in as of version 4
+dist
+
 # local files
 node_modules
 bower_components
