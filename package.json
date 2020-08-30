@@ -32,6 +32,7 @@
     "typescript": "^3.9.5"
   },
   "devDependencies": {
+    "@chiragrupani/karma-chromium-edge-launcher": "^2.0.0",
     "compare-versions": "^3.6.0",
     "crossfilter2": "^1.5.2",
     "d3-array": "^2.4.0",
