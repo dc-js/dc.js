@@ -1,4 +1,4 @@
-// https://crossfilter.github.io/crossfilter/ v1.5.2 Copyright 2020 Mike Bostock
+// https://crossfilter.github.io/crossfilter/ v1.5.3 Copyright 2020 Mike Bostock
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
@@ -982,7 +982,7 @@
       function filterFunction(f) {
         filterValue = f;
         filterValuePresent = true;
-        
+
         refilterFunction = f;
         refilter = xfilterFilter.filterAll;
 
@@ -1087,11 +1087,11 @@
         filterListeners.forEach(function(l) { l(one, offset, added, removed); });
         triggerOnChange('filtered');
       }
-      
+
       function currentFilter() {
         return filterValue;
       }
-      
+
       function hasCurrentFilter() {
         return filterValuePresent;
       }
@@ -1425,6 +1425,7 @@
                   ++j;
                 }
               }
+              groupIndex = groupIndex.slice(0, j);
             }
 
             // Reassemble groups including only those groups that were referred
@@ -1902,7 +1903,7 @@
         : 0x100000000;
   }
 
-  var version = "1.5.2";
+  var version = "1.5.3";
 
   // Note(cg): exporting current version for umd build.
   crossfilter.version = version;
