@@ -14,4 +14,4 @@ jobs:
         with:
           node-version: '11.x'
       - run: npm ci
-      - run: npx grunt ci-pull
+      - run: npx grunt ci-macos
