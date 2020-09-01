@@ -23,7 +23,7 @@ module.exports = function (grunt) {
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
     const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
-    const lintableFiles = `'${config.src}' '${config.spec}' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
+    const lintableFiles = `'${config.spec}/**/*.js' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
 
     const sass = require('node-sass');
 
