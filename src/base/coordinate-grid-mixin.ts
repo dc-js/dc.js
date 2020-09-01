@@ -18,7 +18,7 @@ import { filters } from '../core/filters';
 import { events } from '../core/events';
 import { DCBrushSelection, MinimalXYScale, SVGGElementSelection } from '../core/types';
 import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
-import { adaptHandler } from "../core/d3compat";
+import { adaptHandler } from '../core/d3compat';
 
 const GRID_LINE_CLASS = 'grid-line';
 const HORIZONTAL_CLASS = 'horizontal';
@@ -122,7 +122,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._resizing = false;
         this._unitCount = undefined;
 
-        this._zoom = zoom().on('zoom', adaptHandler((d, evt) => this._onZoom(evt)));
+        this._zoom = zoom().on(
+            'zoom',
+            adaptHandler((d, evt) => this._onZoom(evt))
+        );
         this._nullZoom = zoom().on('zoom', null);
         this._hasBeenMouseZoomable = false;
         this._ignoreZoomEvents = false; // ignore when carrying out programmatic zoom operations
@@ -830,7 +833,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public renderBrush(g: SVGGElementSelection, doTransition: boolean) {
         if (this._brushOn) {
-            this._brush.on('start brush end', adaptHandler((d, evt) => this._brushing(evt)));
+            this._brush.on(
+                'start brush end',
+                adaptHandler((d, evt) => this._brushing(evt))
+            );
 
             // To retrieve selection we need self._gBrush
             this._gBrush = g
@@ -903,7 +909,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.redrawGroup();
     }
 
-    protected _withoutBrushEvents (closure) {
+    protected _withoutBrushEvents(closure) {
         const oldValue = this._ignoreBrushEvents;
         this._ignoreBrushEvents = true;
 
@@ -1141,14 +1147,18 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         if (this._zoom) {
             this._withoutZoomEvents(() => {
                 this._zoom.transform(
-                  this.root(),
-                  this._domainToZoomTransform(this.x().domain(), this._xOriginalDomain, this._origX)
+                    this.root(),
+                    this._domainToZoomTransform(
+                        this.x().domain(),
+                        this._xOriginalDomain,
+                        this._origX
+                    )
                 );
             });
         }
     }
 
-    protected _withoutZoomEvents (closure) {
+    protected _withoutZoomEvents(closure) {
         const oldValue = this._ignoreZoomEvents;
         this._ignoreZoomEvents = true;
 

@@ -9,7 +9,7 @@ import { BaseMixin } from '../base/base-mixin';
 import { transition } from '../core/core';
 import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
 import { IPieChartConf } from './i-pie-chart-conf';
-import { adaptHandler } from "../core/d3compat";
+import { adaptHandler } from '../core/d3compat';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -189,7 +189,10 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         const slicePath = slicesEnter
             .append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', adaptHandler(d => this._onClick(d)))
+            .on(
+                'click',
+                adaptHandler(d => this._onClick(d))
+            )
             .attr('d', (d, i) => this._safeArc(d, i, arcs));
 
         const tranNodes = transition(
@@ -254,13 +257,22 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
                     }
                     return classes;
                 })
-                .on('click', adaptHandler(d => this._onClick(d)))
-                .on('mouseover', adaptHandler(d => {
-                    this._highlightSlice(d.index, true);
-                }))
-                .on('mouseout', adaptHandler(d => {
-                    this._highlightSlice(d.index, false);
-                }));
+                .on(
+                    'click',
+                    adaptHandler(d => this._onClick(d))
+                )
+                .on(
+                    'mouseover',
+                    adaptHandler(d => {
+                        this._highlightSlice(d.index, true);
+                    })
+                )
+                .on(
+                    'mouseout',
+                    adaptHandler(d => {
+                        this._highlightSlice(d.index, false);
+                    })
+                );
             this._positionLabels(labelsEnter, arcs);
             if (this._conf.externalLabelRadius && this._conf.drawPaths) {
                 this._updateLabelPaths(pieData, arcs);
@@ -279,13 +291,22 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .enter()
             .append('polyline')
             .attr('class', (d, i) => `pie-path _${i} ${this._sliceCssClass}`)
-            .on('click', adaptHandler(d => this._onClick(d)))
-            .on('mouseover', adaptHandler(d => {
-                this._highlightSlice(d.index, true);
-            }))
-            .on('mouseout', adaptHandler(d => {
-                this._highlightSlice(d.index, false);
-            }))
+            .on(
+                'click',
+                adaptHandler(d => this._onClick(d))
+            )
+            .on(
+                'mouseover',
+                adaptHandler(d => {
+                    this._highlightSlice(d.index, true);
+                })
+            )
+            .on(
+                'mouseout',
+                adaptHandler(d => {
+                    this._highlightSlice(d.index, false);
+                })
+            )
             .merge(polyline);
 
         const arc2 = arc()

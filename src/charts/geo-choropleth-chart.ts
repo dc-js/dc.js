@@ -9,7 +9,7 @@ import { events } from '../core/events';
 import { nameToId } from '../core/utils';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { IGeoChoroplethChartConf } from './i-geo-choropleth-chart-conf';
-import { adaptHandler } from "../core/d3compat";
+import { adaptHandler } from '../core/d3compat';
 
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
@@ -172,7 +172,10 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
                 }
                 return 'none';
             })
-            .on('click', adaptHandler(d => this.onClick(d, layerIndex)));
+            .on(
+                'click',
+                adaptHandler(d => this.onClick(d, layerIndex))
+            );
 
         transition(paths, this._conf.transitionDuration, this._conf.transitionDelay).attr(
             'fill',

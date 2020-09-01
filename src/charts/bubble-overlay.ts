@@ -8,7 +8,7 @@ import { nameToId } from '../core/utils';
 import { ColorMixin } from '../base/color-mixin';
 import { ChartGroupType, ChartParentType, SVGGElementSelection } from '../core/types';
 import { IBubbleOverlayConf } from './i-bubble-overlay-conf';
-import { adaptHandler } from "../core/d3compat";
+import { adaptHandler } from '../core/d3compat';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -119,7 +119,10 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
                     .attr('class', BUBBLE_CLASS)
                     .attr('r', 0)
                     .attr('fill', (d, i) => this.getColor(d, i))
-                    .on('click', adaptHandler(d => this.onClick(d)));
+                    .on(
+                        'click',
+                        adaptHandler(d => this.onClick(d))
+                    );
             }
 
             transition(circle, this._conf.transitionDuration, this._conf.transitionDelay).attr(
