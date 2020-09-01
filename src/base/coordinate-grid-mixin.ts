@@ -5,7 +5,7 @@ import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { Axis, axisBottom, axisLeft, axisRight } from 'd3-axis';
 import { zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
 import { BrushBehavior, brushX } from 'd3-brush';
-import { event, Selection } from 'd3-selection';
+import { Selection } from 'd3-selection';
 
 import { ColorMixin } from './color-mixin';
 import { MarginMixin } from './margin-mixin';
@@ -18,6 +18,7 @@ import { filters } from '../core/filters';
 import { events } from '../core/events';
 import { DCBrushSelection, MinimalXYScale, SVGGElementSelection } from '../core/types';
 import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
+import { adaptHandler } from "../core/d3compat";
 
 const GRID_LINE_CLASS = 'grid-line';
 const HORIZONTAL_CLASS = 'horizontal';
@@ -121,7 +122,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._resizing = false;
         this._unitCount = undefined;
 
-        this._zoom = zoom().on('zoom', () => this._onZoom());
+        this._zoom = zoom().on('zoom', adaptHandler((d, evt) => this._onZoom(evt)));
         this._nullZoom = zoom().on('zoom', null);
         this._hasBeenMouseZoomable = false;
         this._ignoreZoomEvents = false; // ignore when carrying out programmatic zoom operations
@@ -829,7 +830,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public renderBrush(g: SVGGElementSelection, doTransition: boolean) {
         if (this._brushOn) {
-            this._brush.on('start brush end', () => this._brushing());
+            this._brush.on('start brush end', adaptHandler((d, evt) => this._brushing(evt)));
 
             // To retrieve selection we need self._gBrush
             this._gBrush = g
@@ -871,12 +872,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return !brushSelection || brushSelection[1] <= brushSelection[0];
     }
 
-    public _brushing(): void {
+    public _brushing(evt): void {
         if (this._ignoreBrushEvents) {
             return;
         }
 
-        const rawBrushSelection = event.selection;
+        const rawBrushSelection = evt.selection;
         let brushSelection: DCBrushSelection;
 
         if (rawBrushSelection) {
@@ -902,7 +903,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.redrawGroup();
     }
 
-    _withoutBrushEvents (closure) {
+    protected _withoutBrushEvents (closure) {
         const oldValue = this._ignoreBrushEvents;
         this._ignoreBrushEvents = true;
 
@@ -1147,7 +1148,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
     }
 
-    _withoutZoomEvents (closure) {
+    protected _withoutZoomEvents (closure) {
         const oldValue = this._ignoreZoomEvents;
         this._ignoreZoomEvents = true;
 
@@ -1158,13 +1159,13 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
     }
 
-    public _onZoom(): void {
+    public _onZoom(evt): void {
         // ignore zoom events if it was caused by a programmatic change
         if (this._ignoreZoomEvents) {
             return;
         }
 
-        const newDomain = event.transform.rescaleX(this._origX).domain();
+        const newDomain = evt.transform.rescaleX(this._origX).domain();
         this.focus(newDomain, false);
     }
 

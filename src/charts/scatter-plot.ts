@@ -1,5 +1,5 @@
 import { symbol, Symbol, SymbolType } from "d3-shape";
-import { event, select, Selection } from "d3-selection";
+import { select, Selection } from "d3-selection";
 import { brush } from "d3-brush";
 
 import { CoordinateGridMixin } from "../base/coordinate-grid-mixin";
@@ -480,12 +480,12 @@ export class ScatterPlot extends CoordinateGridMixin {
         );
     }
 
-    public _brushing() {
+    public _brushing(evt) {
         if (this._ignoreBrushEvents) {
             return;
         }
 
-        let brushSelection = event.selection;
+        let brushSelection = evt.selection;
 
         // TODO: data type of brush selection changes after scale.invert, need to introduce one more variable
 

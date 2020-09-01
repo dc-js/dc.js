@@ -8,6 +8,7 @@ import {
     DCBrushSelection,
     SVGGElementSelection,
 } from '../core/types';
+import { adaptHandler } from "../core/d3compat";
 
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
@@ -84,7 +85,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
             .attr('transform', d => this._bubbleLocator(d))
             .append('circle')
             .attr('class', (d, i) => `${this.BUBBLE_CLASS} _${i}`)
-            .on('click', d => this.onClick(d))
+            .on('click', adaptHandler(d => this.onClick(d)))
             .attr('fill', (d, i) => this.getColor(d, i))
             .attr('r', 0);
 
