@@ -3,6 +3,7 @@ import { select, Selection } from 'd3-selection';
 import { isNumber } from '../core/utils';
 import { constants } from '../core/constants';
 import { LegendItem, LegendTextAccessor, ParentOfLegend } from '../core/types';
+import { adaptHandler } from "../core/d3compat";
 
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
@@ -72,9 +73,9 @@ export class HtmlLegend {
             .enter()
             .append('div')
             .classed(legendItemClassName, true)
-            .on('mouseover', d => this._parent.legendHighlight(d))
-            .on('mouseout', d => this._parent.legendReset(d))
-            .on('click', d => this._parent.legendToggle(d));
+          .on('mouseover', adaptHandler(d => this._parent.legendHighlight(d)))
+          .on('mouseout', adaptHandler(d => this._parent.legendReset(d)))
+          .on('click', adaptHandler(d => this._parent.legendToggle(d)));
 
         if (this._highlightSelected) {
             // TODO: fragile code - there may be other types of filters

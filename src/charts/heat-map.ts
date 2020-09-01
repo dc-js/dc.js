@@ -10,6 +10,7 @@ import { MarginMixin } from '../base/margin-mixin';
 import { ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types';
 import { Selection } from 'd3-selection';
 import { IHeatMapConf } from './i-heat-map-conf';
+import { adaptHandler } from "../core/d3compat";
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 
@@ -180,7 +181,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('fill', 'white')
             .attr('x', (d, i) => cols(this._conf.keyAccessor(d, i)))
             .attr('y', (d, i) => rows(this._conf.valueAccessor(d, i)))
-            .on('click', this._conf.boxOnClick);
+            .on('click', adaptHandler(this._conf.boxOnClick));
 
         boxes = gEnter.merge(boxes);
 
@@ -213,7 +214,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .style('text-anchor', 'middle')
             .attr('y', this.effectiveHeight())
             .attr('dy', 12)
-            .on('click', this._conf.xAxisOnClick)
+            .on('click', adaptHandler(this._conf.xAxisOnClick))
             .text(this._conf.colsLabel)
             .merge(gColsText);
 
@@ -239,7 +240,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('dx', -2)
             .attr('y', d => rows(d) + boxHeight / 2)
             .attr('dy', 6)
-            .on('click', this._conf.yAxisOnClick)
+            .on('click', adaptHandler(this._conf.yAxisOnClick))
             .text(this._conf.rowsLabel)
             .merge(gRowsText);
 
