@@ -4,7 +4,7 @@ import { CompositeChart } from './composite-chart';
 import { LineChart } from './line-chart';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { ISeriesChartConf } from './i-series-chart-conf';
-import { compatNestHelper } from "../core/d3compat";
+import { compatNestHelper } from '../core/d3compat';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -83,7 +83,7 @@ export class SeriesChart extends CompositeChart {
             key: this._conf.seriesAccessor,
             sortKeys: this._conf.seriesSort,
             sortValues: this._conf.valueSort,
-            entries: this.data()
+            entries: this.data(),
         });
 
         const children = nesting.map((sub, i) => {

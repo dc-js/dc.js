@@ -7,7 +7,7 @@ import { events } from '../core/events';
 import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/types';
 import { BaseMixin } from './base-mixin';
 import { IBubbleMixinConf } from './i-bubble-mixin-conf';
-import { adaptHandler } from "../core/d3compat";
+import { adaptHandler } from '../core/d3compat';
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
@@ -139,7 +139,10 @@ export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
                         .append('text')
                         .attr('text-anchor', 'middle')
                         .attr('dy', '.3em')
-                        .on('click', adaptHandler(d => this.onClick(d)));
+                        .on(
+                            'click',
+                            adaptHandler(d => this.onClick(d))
+                        );
                 }
 
                 label

@@ -1,4 +1,4 @@
-import {event} from 'd3-selection';
+import { event } from 'd3-selection';
 import { nest } from 'd3-collection';
 // @ts-ignore, it is missing in d3@v5
 import { groups } from 'd3-array';
@@ -8,7 +8,7 @@ import { groups } from 'd3-array';
 // Otherwise we assume lower versions of d3.
 // The underlying handler will always receive bound datum as the first argument and the event as the second argument.
 // It is possible that any of these can actually be undefined (or null).
-export function adaptHandler (handler) {
+export function adaptHandler(handler) {
     return function (a, b) {
         if (a && a.target) {
             // d3@v6 - b is __data__, a is the event
@@ -17,7 +17,7 @@ export function adaptHandler (handler) {
             // older d3 - a is __data__, event from global d3.event
             handler.call(this, a, event);
         }
-    }
+    };
 }
 
 export interface INesterParams {

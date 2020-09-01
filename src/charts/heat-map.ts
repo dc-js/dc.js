@@ -10,7 +10,7 @@ import { MarginMixin } from '../base/margin-mixin';
 import { ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types';
 import { Selection } from 'd3-selection';
 import { IHeatMapConf } from './i-heat-map-conf';
-import { adaptHandler } from "../core/d3compat";
+import { adaptHandler } from '../core/d3compat';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 

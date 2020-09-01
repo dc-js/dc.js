@@ -5,7 +5,7 @@ import { BaseMixin } from '../base/base-mixin';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { ascending } from 'd3-array';
 import { ISelectMenuConf } from './i-select-menu-conf';
-import { adaptHandler } from "../core/d3compat";
+import { adaptHandler } from '../core/d3compat';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -113,7 +113,10 @@ export class SelectMenu extends BaseMixin {
 
         this._select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(this._conf.order);
 
-        this._select.on('change', adaptHandler((d, evt) => this._onChange(d, evt)));
+        this._select.on(
+            'change',
+            adaptHandler((d, evt) => this._onChange(d, evt))
+        );
     }
 
     private _onChange(_d, evt): void {
