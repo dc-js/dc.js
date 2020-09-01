@@ -5,6 +5,15 @@ module.exports = function (config) {
     config.set({
         basePath: '',
         frameworks: ['jasmine'],
+        plugins: [
+            require('@chiragrupani/karma-chromium-edge-launcher'),
+            require('karma-chrome-launcher'),
+            require('karma-coverage'),
+            require('karma-firefox-launcher'),
+            require('karma-jasmine'),
+            require('karma-safari-launcher'),
+            require('karma-summary-reporter'),
+        ],
         files: [
             // CSS files
             'dist/style/dc.css',

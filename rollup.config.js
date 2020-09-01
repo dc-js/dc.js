@@ -1,5 +1,5 @@
 import {terser} from 'rollup-plugin-terser';
-import json from 'rollup-plugin-json';
+import json from '@rollup/plugin-json';
 import license from 'rollup-plugin-license';
 import typescript from 'rollup-plugin-typescript2';
 
@@ -43,14 +43,16 @@ const umdConf = {
     paths: d3Modules
 };
 
-const umdMinConf = Object.assign({}, umdConf, {file: 'dist/dc.min.js'});
+const umdMinConf = Object.assign({}, umdConf, {
+    file: 'dist/dc.min.js',
+    plugins: [terser()]
+});
 
 export default [
     {
         input: 'src/compat/index-compat.ts',
         external: Object.keys(d3Modules),
         plugins: [
-            terser({include: [/^.+\.min\.js$/]}),
             jsonPlugin,
             licensePlugin,
             typescript({
