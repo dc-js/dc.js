@@ -1,10 +1,10 @@
 import { ascending } from 'd3-array';
-import { nest } from 'd3-collection';
 import { Selection } from 'd3-selection';
 
 import { BaseMixin } from '../base/base-mixin';
 import { ChartGroupType, ChartParentType, DataTableColumnSpec } from '../core/types';
 import { IDataTableConf } from './i-data-table-conf';
+import { compatNestHelper } from '../core/d3compat';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
 const ROW_CSS_CLASS = 'dc-table-row';
@@ -202,14 +202,15 @@ export class DataTable extends BaseMixin {
             entries = this._conf.dimension.top(this._conf.size);
         }
 
-        return nest()
-            .key(this._conf.section)
-            .sortKeys(this._conf.order)
-            .entries(
-                entries
-                    .sort((a, b) => this._conf.order(this._conf.sortBy(a), this._conf.sortBy(b)))
-                    .slice(this._conf.beginSlice, this._conf.endSlice)
-            );
+        entries = entries
+            .sort((a, b) => this._conf.order(this._conf.sortBy(a), this._conf.sortBy(b)))
+            .slice(this._conf.beginSlice, this._conf.endSlice);
+
+        return compatNestHelper({
+            key: this._conf.section,
+            sortKeys: this._conf.order,
+            entries,
+        });
     }
 
     private _renderRows(sections: Selection<HTMLTableSectionElement, any, Element, any>) {
