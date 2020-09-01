@@ -1,4 +1,4 @@
-import { event, select, Selection } from 'd3-selection';
+import { select, Selection } from 'd3-selection';
 
 import { events } from '../core/events';
 import { BaseMixin } from '../base/base-mixin';
