@@ -15,6 +15,7 @@ import {
     SVGGElementSelection,
 } from '../core/types';
 import { IBoxPlotConf } from './i-box-plot-conf';
+import { adaptHandler } from '../core/d3compat';
 
 // Returns a function to compute the interquartile range.
 function defaultWhiskersIQR(k: number): (d) => [number, number] {
@@ -234,10 +235,13 @@ export class BoxPlot extends CoordinateGridMixin {
             .attr('class', 'box')
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
-            .on('click', d => {
-                this.filter(this._conf.keyAccessor(d));
-                this.redrawGroup();
-            });
+            .on(
+                'click',
+                adaptHandler(d => {
+                    this.filter(this._conf.keyAccessor(d));
+                    this.redrawGroup();
+                })
+            );
         return boxesGEnter.merge(boxesG);
     }
 

@@ -1,10 +1,11 @@
-import { event, Selection } from 'd3-selection';
+import { Selection } from 'd3-selection';
 
 import { events } from '../core/events';
 import { BaseMixin } from '../base/base-mixin';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { ascending } from 'd3-array';
 import { ISelectMenuConf } from './i-select-menu-conf';
+import { adaptHandler } from '../core/d3compat';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -112,19 +113,22 @@ export class SelectMenu extends BaseMixin {
 
         this._select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(this._conf.order);
 
-        this._select.on('change', (d, i) => this._onChange(d, i));
+        this._select.on(
+            'change',
+            adaptHandler((d, evt) => this._onChange(d, evt))
+        );
     }
 
-    private _onChange(_d, i: number): void {
+    private _onChange(_d, evt): void {
         let values;
-        const target = event.target;
+        const target = evt.target;
         if (target.selectedOptions) {
             const selectedOptions = Array.prototype.slice.call(target.selectedOptions);
             values = selectedOptions.map(d => d.value);
         } else {
             // IE and other browsers do not support selectedOptions
             // adapted from this polyfill: https://gist.github.com/brettz9/4212217
-            const options = [].slice.call(event.target.options);
+            const options = [].slice.call(evt.target.options);
             values = options.filter(option => option.selected).map(option => option.value);
         }
         // console.log(values);

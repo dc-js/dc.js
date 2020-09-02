@@ -14,6 +14,7 @@ import { constants } from '../core/constants';
 import { BadArgumentException } from '../core/bad-argument-exception';
 import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
 import { ISunburstChartConf, RingSizeSpecs } from './i-sunburst-chart-conf';
+import { adaptHandler } from '../core/d3compat';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -206,7 +207,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         const slicePath = slicesEnter
             .append('path')
             .attr('fill', (d, i) => this._fill(d, i))
-            .on('click', (d, i) => this.onClick(d, i))
+            .on(
+                'click',
+                adaptHandler(d => this.onClick(d))
+            )
             .attr('d', d => this._safeArc(arcs, d));
 
         const tranNodes = transition(slicePath, this._conf.transitionDuration);
@@ -258,7 +262,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                     }
                     return classes;
                 })
-                .on('click', (d, i) => this.onClick(d, i));
+                .on(
+                    'click',
+                    adaptHandler(d => this.onClick(d))
+                );
 
             this._positionLabels(labelsEnter, arcs);
         }
