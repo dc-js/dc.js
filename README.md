@@ -59,7 +59,7 @@ Install without npm
 --------------------
 Download
 * [d3.js](https://github.com/mbostock/d3)
-* [crossfilter.js](https://github.com/square/crossfilter)
+* [crossfilter.js](https://github.com/crossfilter/crossfilter)
 * [dc.js - stable](https://github.com/dc-js/dc.js/releases)
 * [dc.js - bleeding edge (develop)](https://github.com/dc-js/dc.js)
 
