@@ -3,5 +3,4 @@ import { BaseAccessor, ColorAccessor } from '../core/types';
 
 export interface IColorMixinConf extends IBaseMixinConf {
     readonly colorAccessor?: ColorAccessor;
-    readonly colorCalculator?: BaseAccessor<string>;
 }

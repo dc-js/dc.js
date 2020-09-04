@@ -284,7 +284,7 @@ export class CompositeChart extends CoordinateGridMixin {
             }
 
             if (this._conf.shareColors) {
-                child.colors(this.colors());
+                child.colorHelper(this.colorHelper().share(child.conf().colorAccessor));
             }
 
             child.x(this.x());
@@ -555,7 +555,7 @@ export class CompositeChart extends CoordinateGridMixin {
     public legendables() {
         return this._children.reduce((items, child) => {
             if (this._conf.shareColors) {
-                child.colors(this.colors());
+                child.colorHelper(this.colorHelper().share(child.conf().colorAccessor));
             }
             items.push.apply(items, child.legendables());
             return items;

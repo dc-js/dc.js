@@ -1,7 +1,7 @@
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { timeDay } from 'd3-time';
 import { max, min } from 'd3-array';
-import { scaleBand, scaleLinear, scaleOrdinal } from 'd3-scale';
+import { scaleBand, scaleLinear } from 'd3-scale';
 import { Axis, axisBottom, axisLeft, axisRight } from 'd3-axis';
 import { zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
 import { BrushBehavior, brushX } from 'd3-brush';
@@ -18,6 +18,7 @@ import { filters } from '../core/filters';
 import { events } from '../core/events';
 import { DCBrushSelection, MinimalXYScale, SVGGElementSelection } from '../core/types';
 import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
+import { OrdinalColors } from './colors/ordinal-colors';
 import { adaptHandler } from '../core/d3compat';
 
 const GRID_LINE_CLASS = 'grid-line';
@@ -71,7 +72,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     constructor() {
         super();
 
-        this.colors(scaleOrdinal(schemeCategory10));
+        this.colorHelper(
+            new OrdinalColors({ colors: schemeCategory10, colorAccessor: this._conf.colorAccessor })
+        );
         this._mandatoryAttributes().push('x');
         this._parent = undefined;
         this._g = undefined;
