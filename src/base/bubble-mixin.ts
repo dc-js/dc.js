@@ -8,6 +8,21 @@ import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/t
 import { BaseMixin } from './base-mixin';
 import { IBubbleMixinConf } from './i-bubble-mixin-conf';
 import { adaptHandler } from '../core/d3compat';
+import { IBaseMixinConf } from "./i-base-mixin-conf";
+
+interface MinimalBase {
+    configure(conf: IBaseMixinConf);
+    data();
+    data(callback): this;
+    redrawGroup();
+    title();
+    filter(filter: any);
+    selectAll(arg0: string);
+    hasFilter(f?);
+    highlightSelected(e): void;
+    fadeDeselected(e): void;
+    resetHighlight(e): void;
+}
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
@@ -17,7 +32,7 @@ import { adaptHandler } from '../core/d3compat';
  * @returns {BubbleMixin}
  */
 // tslint:disable-next-line:variable-name
-export function BubbleMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
+export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     // @ts-ignore
     return class extends Base {
         protected _conf: IBubbleMixinConf;

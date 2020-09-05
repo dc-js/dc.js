@@ -7,6 +7,13 @@ import { IColorMixinConf } from './i-color-mixin-conf';
 import { IColorHelper } from './colors/i-color-helper';
 import { ColorScaleHelper } from './colors/color-scale-helper';
 import { OrdinalColors } from './colors/ordinal-colors';
+import { IBaseMixinConf } from "./i-base-mixin-conf";
+
+interface MinimalBase {
+    configure(conf: IBaseMixinConf);
+    data();
+    data(callback): this;
+}
 
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
@@ -16,7 +23,7 @@ import { OrdinalColors } from './colors/ordinal-colors';
  * @returns {ColorMixin}
  */
 // tslint:disable-next-line:variable-name
-export function ColorMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
+export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     return class extends Base {
         protected _conf: IColorMixinConf;
 

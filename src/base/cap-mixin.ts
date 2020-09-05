@@ -2,6 +2,17 @@ import { sum } from 'd3-array';
 import { Constructor } from '../core/types';
 import { BaseMixin } from './base-mixin';
 import { ICapMixinConf } from './i-cap-mixin-conf';
+import { IBaseMixinConf } from "./i-base-mixin-conf";
+
+interface MinimalBase {
+    configure(conf: IBaseMixinConf);
+    data();
+    data(callback): this;
+    _computeOrderedGroups(arg0: any);
+    onClick(d: any);
+    filter(arg0: any[]);
+}
+
 
 /**
  * Cap is a mixin that groups small data elements below a _cap_ into an *others* grouping for both the
@@ -16,7 +27,7 @@ import { ICapMixinConf } from './i-cap-mixin-conf';
  * @returns {CapMixin}
  */
 // tslint:disable-next-line:variable-name
-export function CapMixin<TBase extends Constructor<BaseMixin>>(Base: TBase) {
+export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     // @ts-ignore
     return class extends Base {
         protected _conf: ICapMixinConf;
