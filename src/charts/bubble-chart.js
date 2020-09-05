@@ -53,7 +53,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         const data = this.data();
         let bubbleG = this.chartBodyG().selectAll(`g.${this.BUBBLE_NODE_CLASS}`)
             .data(data, d => d.key);
-        if (this.sortBubbleSize()) {
+        if (this.sortBubbleSize() || this.keyboardAccessible()) {
             // update dom order based on sort
             bubbleG.order();
         }

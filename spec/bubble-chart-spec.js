@@ -710,4 +710,16 @@ describe('dc.bubbleChart', () => {
             });
         });
     });
+
+    describe('accessibility bubble chart', () => {
+
+        it('DOM order follows x values if keyboardAccessible is set', () => {
+            // default (alphabetical) sort order would put F ahead of T in DOM order
+            // keyboardAccessible should instead re-order DOM elements based on x-value
+            // T value is 198; F value is 220
+            chart.keyboardAccessible(true);
+            chart.render();
+            expect(document.querySelectorAll('.node text')[0].innerHTML).toEqual('T')
+        });
+    });
 });
