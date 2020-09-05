@@ -26,7 +26,7 @@ const BUBBLE_CLASS = 'bubble';
  * @mixes BaseMixin
  */
 export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
-    protected _conf: IBubbleOverlayConf;
+    public _conf: IBubbleOverlayConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
 

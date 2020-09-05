@@ -37,7 +37,7 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * @mixes MarginMixin
  */
 export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
-    protected _conf: ICoordinateGridMixinConf;
+    public _conf: ICoordinateGridMixinConf;
 
     private _parent: Selection<SVGElement, any, any, any>;
     private _g: SVGGElementSelection;

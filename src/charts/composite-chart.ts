@@ -23,7 +23,7 @@ const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;
  * @mixes CoordinateGridMixin
  */
 export class CompositeChart extends CoordinateGridMixin {
-    protected _conf: ICompositeChartConf;
+    public _conf: ICompositeChartConf;
 
     private _children: CoordinateGridMixin[];
     private _childOptions; // TODO: it is conf for children, revisit after creating concept of conf

@@ -30,7 +30,7 @@ interface MinimalBase {
 export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     // @ts-ignore
     return class extends Base {
-        protected _conf: ICapMixinConf;
+        public _conf: ICapMixinConf;
 
         constructor(...args: any[]) {
             super();

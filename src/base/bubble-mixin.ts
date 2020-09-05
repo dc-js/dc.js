@@ -35,12 +35,12 @@ interface MinimalBase {
 export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     // @ts-ignore
     return class extends Base {
-        protected _conf: IBubbleMixinConf;
+        public _conf: IBubbleMixinConf;
 
-        protected BUBBLE_NODE_CLASS: string;
-        protected BUBBLE_CLASS: string;
-        protected MIN_RADIUS: number;
-        private _r: MinimalRadiusScale;
+        public BUBBLE_NODE_CLASS: string;
+        public BUBBLE_CLASS: string;
+        public MIN_RADIUS: number;
+        public _r: MinimalRadiusScale;
 
         constructor(...args: any[]) {
             super();

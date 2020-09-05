@@ -21,7 +21,7 @@ export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
  * @mixes CoordinateGridMixin
  */
 export class ScatterPlot extends CoordinateGridMixin {
-    protected _conf: IScatterPlotConf;
+    public _conf: IScatterPlotConf;
 
     private _symbol: Symbol<any, any>;
     private _filtered;

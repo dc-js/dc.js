@@ -28,7 +28,7 @@ import { adaptHandler } from '../core/d3compat';
  */
 
 export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
-    protected _conf: IRowChartConf;
+    public _conf: IRowChartConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
     private _labelOffsetY: number;

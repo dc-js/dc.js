@@ -50,7 +50,7 @@ function defaultWhiskersIQR(k: number): (d) => [number, number] {
  * @mixes CoordinateGridMixin
  */
 export class BoxPlot extends CoordinateGridMixin {
-    protected _conf: IBoxPlotConf;
+    public _conf: IBoxPlotConf;
 
     private readonly _whiskers: (d) => [number, number];
     private readonly _box;
