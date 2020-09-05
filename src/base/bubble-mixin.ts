@@ -5,10 +5,9 @@ import { ColorMixin } from './color-mixin';
 import { transition } from '../core/core';
 import { events } from '../core/events';
 import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/types';
-import { BaseMixin } from './base-mixin';
 import { IBubbleMixinConf } from './i-bubble-mixin-conf';
 import { adaptHandler } from '../core/d3compat';
-import { IBaseMixinConf } from "./i-base-mixin-conf";
+import { IBaseMixinConf } from './i-base-mixin-conf';
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);

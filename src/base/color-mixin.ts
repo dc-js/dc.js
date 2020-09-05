@@ -1,13 +1,12 @@
 import { extent } from 'd3-array';
 
 import { config } from '../core/config';
-import { BaseMixin } from './base-mixin';
 import { Constructor, MinimalColorScale } from '../core/types';
 import { IColorMixinConf } from './i-color-mixin-conf';
 import { IColorHelper } from './colors/i-color-helper';
 import { ColorScaleHelper } from './colors/color-scale-helper';
 import { OrdinalColors } from './colors/ordinal-colors';
-import { IBaseMixinConf } from "./i-base-mixin-conf";
+import { IBaseMixinConf } from './i-base-mixin-conf';
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
