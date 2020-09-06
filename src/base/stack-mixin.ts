@@ -12,7 +12,7 @@ import { IStackMixinConf } from './i-stack-mixin-conf';
  * @mixes CoordinateGridMixin
  */
 export class StackMixin extends CoordinateGridMixin {
-    protected _conf: IStackMixinConf;
+    public _conf: IStackMixinConf;
 
     private _stackLayout: Stack<any, { [p: string]: number }, string>;
     private _stack;

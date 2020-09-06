@@ -16,7 +16,7 @@ import { compatNestHelper } from '../core/d3compat';
  * @mixes CompositeChart
  */
 export class SeriesChart extends CompositeChart {
-    protected _conf: ISeriesChartConf;
+    public _conf: ISeriesChartConf;
 
     private _charts: { [key: string]: LineChart };
 

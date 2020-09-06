@@ -27,7 +27,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  */
 
 export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
-    protected _conf: IPieChartConf;
+    public _conf: IPieChartConf;
 
     private _sliceCssClass: string;
     private _labelCssClass: string;

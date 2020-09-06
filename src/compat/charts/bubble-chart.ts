@@ -7,6 +7,7 @@ import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
 import { BubbleMixinExt } from '../base/bubble-mixin';
 
 export class BubbleChart extends BubbleMixinExt(
+// @ts-ignore
     CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(BubbleChartNeo))))
 ) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

@@ -22,7 +22,7 @@ import { adaptHandler } from '../core/d3compat';
  * @mixes BaseMixin
  */
 export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
-    protected _conf: IGeoChoroplethChartConf;
+    public _conf: IGeoChoroplethChartConf;
 
     private _geoPath: GeoPath;
     private _projectionFlag: boolean;

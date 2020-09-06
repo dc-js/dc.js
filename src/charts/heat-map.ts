@@ -21,7 +21,7 @@ const DEFAULT_BORDER_RADIUS = 6.75;
  * @mixes BaseMixin
  */
 export class HeatMap extends ColorMixin(MarginMixin) {
-    protected _conf: IHeatMapConf;
+    public _conf: IHeatMapConf;
 
     private _chartBody: Selection<SVGGElement, any, SVGElement, any>;
 

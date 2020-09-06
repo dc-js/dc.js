@@ -33,7 +33,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes BaseMixin
  */
 export class SunburstChart extends ColorMixin(BaseMixin) {
-    protected _conf: ISunburstChartConf;
+    public _conf: ISunburstChartConf;
 
     private _sliceCssClass: string;
     private _emptyCssClass: string;

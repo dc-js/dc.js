@@ -27,7 +27,7 @@ const LABEL_PADDING = 3;
  * @mixes StackMixin
  */
 export class BarChart extends StackMixin {
-    protected _conf: IBarChartConf;
+    public _conf: IBarChartConf;
 
     private _gap: number;
     private _barWidth: number;
