@@ -3,7 +3,7 @@ import { easeQuad } from 'd3-ease';
 import { interpolateNumber } from 'd3-interpolate';
 
 import { BaseMixin } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType } from '../core/types';
+import { ChartGroupType, ChartParentType, MinimalCFGroup } from '../core/types';
 import { INumberDisplayConf } from './i-number-display-conf';
 
 const SPAN_CLASS = 'number-display';
@@ -59,11 +59,6 @@ export class NumberDisplay extends BaseMixin {
         // dimension not required
         this._mandatoryAttributes(['group']);
 
-        this.data(group => {
-            const valObj = group.value ? group.value() : this._maxBin(group.all());
-            return this._conf.valueAccessor(valObj);
-        });
-
         this.anchor(parent, chartGroup);
     }
 
@@ -74,6 +69,14 @@ export class NumberDisplay extends BaseMixin {
 
     public conf(): INumberDisplayConf {
         return this._conf;
+    }
+
+    public data() {
+        const group: MinimalCFGroup & { value? } = this.group();
+
+        const valObj = group.value ? group.value() : this._maxBin(group.all());
+
+        return this._conf.valueAccessor(valObj);
     }
 
     /**

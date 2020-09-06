@@ -6,7 +6,6 @@ import { IBaseMixinConf } from './i-base-mixin-conf';
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
     data();
-    data(callback): this;
     _computeOrderedGroups(arg0: any);
     onClick(d: any);
     filter(arg0: any[]);
@@ -56,35 +55,6 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
                 othersLabel: 'Others',
                 othersGrouper: defaultOthersGrouper,
             });
-
-            // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
-            // whether top means front or back depends on takeFront
-            this.data(group => {
-                if (this._conf.cap === Infinity) {
-                    return this._computeOrderedGroups(group.all());
-                } else {
-                    let items = group.all();
-                    let rest;
-
-                    items = this._computeOrderedGroups(items); // sort by baseMixin.ordering
-
-                    if (this._conf.cap) {
-                        if (this._conf.takeFront) {
-                            rest = items.slice(this._conf.cap);
-                            items = items.slice(0, this._conf.cap);
-                        } else {
-                            const start = Math.max(0, items.length - this._conf.cap);
-                            rest = items.slice(0, start);
-                            items = items.slice(start);
-                        }
-                    }
-
-                    if (this._conf.othersGrouper) {
-                        return this._conf.othersGrouper(items, rest);
-                    }
-                    return items;
-                }
-            });
         }
 
         public configure(conf: ICapMixinConf): this {
@@ -94,6 +64,35 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
 
         public conf(): ICapMixinConf {
             return this._conf;
+        }
+
+        public data() {
+            let items = this._computeOrderedGroups(super.data());
+
+            if (this._conf.cap === Infinity) {
+                return items;
+            }
+
+            // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
+            // whether top means front or back depends on takeFront
+            let rest;
+
+            if (this._conf.cap) {
+                if (this._conf.takeFront) {
+                    rest = items.slice(this._conf.cap);
+                    items = items.slice(0, this._conf.cap);
+                } else {
+                    const start = Math.max(0, items.length - this._conf.cap);
+                    rest = items.slice(0, start);
+                    items = items.slice(start);
+                }
+            }
+
+            if (this._conf.othersGrouper) {
+                return this._conf.othersGrouper(items, rest);
+            }
+
+            return items;
         }
 
         public cappedKeyAccessor(d, i?) {

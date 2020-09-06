@@ -12,7 +12,6 @@ import { IBaseMixinConf } from './i-base-mixin-conf';
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
     data();
-    data(callback): this;
     redrawGroup();
     title();
     filter(filter: any);
@@ -59,16 +58,6 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             this.BUBBLE_CLASS = 'bubble';
             this.MIN_RADIUS = 10;
 
-            this.data(group => {
-                const data = group.all();
-                if (this._conf.sortBubbleSize) {
-                    // sort descending so smaller bubbles are on top
-                    const radiusAccessor = this._conf.radiusValueAccessor;
-                    data.sort((a, b) => descending(radiusAccessor(a), radiusAccessor(b)));
-                }
-                return data;
-            });
-
             this._r = scaleLinear().domain([0, 100]);
         }
 
@@ -79,6 +68,16 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
 
         public conf(): IBubbleMixinConf {
             return this._conf;
+        }
+
+        public data() {
+            const data = super.data();
+            if (this._conf.sortBubbleSize) {
+                // sort descending so smaller bubbles are on top
+                const radiusAccessor = this._conf.radiusValueAccessor;
+                data.sort((a, b) => descending(radiusAccessor(a), radiusAccessor(b)));
+            }
+            return data;
         }
 
         /**

@@ -11,7 +11,6 @@ import { IBaseMixinConf } from './i-base-mixin-conf';
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
     data();
-    data(callback): this;
 }
 
 /**
