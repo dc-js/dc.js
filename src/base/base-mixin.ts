@@ -13,6 +13,7 @@ import { InvalidStateException } from '../core/invalid-state-exception';
 import { BadArgumentException } from '../core/bad-argument-exception';
 import {
     BaseAccessor,
+    CFGrouping,
     ChartGroupType,
     ChartParentType,
     LegendItem,
@@ -101,8 +102,6 @@ export class BaseMixin {
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
-    private _defaultData: (group) => any; // TODO: find correct type
-    private _data: (group) => any;
     private _filters: any[]; // TODO: find better types
     protected _groupName: string; // StackMixin needs it
 
@@ -172,9 +171,6 @@ export class BaseMixin {
         );
 
         this._legend = undefined;
-
-        this._defaultData = group => group.all();
-        this._data = this._defaultData;
 
         this._filters = [];
     }
@@ -265,27 +261,11 @@ export class BaseMixin {
     }
 
     /**
-     * Set the data callback or retrieve the chart's data set. The data callback is passed the chart's
-     * group and by default will return
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group_all group.all}.
-     * This behavior may be modified to, for instance, return only the top 5 groups.
-     * @example
-     * // Default data function
-     * chart.data(function (group) { return group.all(); });
-     *
-     * chart.data(function (group) { return group.top(5); });
-     * @param {Function} [callback]
-     * @returns {*|BaseMixin}
+     * Return charts data, typically `group.all()`. Some charts override this method.
+     * The derived classes may even use different return type.
      */
-    public data();
-    public data(callback): this;
-    public data(callback?) {
-        if (!arguments.length) {
-            return this._data(this._group);
-        }
-        this._data = typeof callback === 'function' ? callback : () => callback;
-        this.expireCache();
-        return this;
+    public data(): CFGrouping[] {
+        return this._group.all();
     }
 
     /**

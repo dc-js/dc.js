@@ -102,22 +102,6 @@ export class BoxPlot extends CoordinateGridMixin {
         // default to ordinal
         this.x(scaleBand());
 
-        // valueAccessor should return an array of values that can be coerced into numbers
-        // or if data is overloaded for a static array of arrays, it should be `Number`.
-        // Empty arrays are not included.
-        this.data(group =>
-            group
-                .all()
-                .map(d => {
-                    d.map = accessor => accessor.call(d, d);
-                    return d;
-                })
-                .filter(d => {
-                    const values = this._conf.valueAccessor(d);
-                    return values.length !== 0;
-                })
-        );
-
         this.boxPadding(0.8);
         this.outerPadding(0.5);
 
@@ -133,6 +117,21 @@ export class BoxPlot extends CoordinateGridMixin {
         return this._conf;
     }
 
+    public data() {
+        // valueAccessor should return an array of values that can be coerced into numbers
+        // or if data is overloaded for a static array of arrays, it should be `Number`.
+        // Empty arrays are not included.
+        return super
+            .data()
+            .map(d => {
+                d.map = accessor => accessor.call(d, d);
+                return d;
+            })
+            .filter(d => {
+                const values = this._conf.valueAccessor(d);
+                return values.length !== 0;
+            });
+    }
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
      * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}

@@ -34,30 +34,6 @@ export class StackMixin extends CoordinateGridMixin {
         this._titles = {};
 
         this._hiddenStacks = {};
-
-        this.data(() => {
-            const layers = this._stack.filter(l => this._visibility(l));
-            if (!layers.length) {
-                return [];
-            }
-            layers.forEach((l, i) => this._prepareValues(l, i));
-            const v4data = layers[0].values.map((v, i) => {
-                const col = { x: v.x };
-                layers.forEach(layer => {
-                    col[layer.name] = layer.values[i].y;
-                });
-                return col;
-            });
-            const keys = layers.map(layer => layer.name);
-            const v4result = this.stackLayout().keys(keys)(v4data);
-            v4result.forEach((series, i) => {
-                series.forEach((ys, j) => {
-                    layers[i].values[j].y0 = ys[0];
-                    layers[i].values[j].y1 = ys[1];
-                });
-            });
-            return layers;
-        });
     }
 
     public configure(conf: IStackMixinConf): this {
@@ -67,6 +43,30 @@ export class StackMixin extends CoordinateGridMixin {
 
     public conf(): IStackMixinConf {
         return this._conf;
+    }
+
+    public data() {
+        const layers = this._stack.filter(l => this._visibility(l));
+        if (!layers.length) {
+            return [];
+        }
+        layers.forEach((l, i) => this._prepareValues(l, i));
+        const v4data = layers[0].values.map((v, i) => {
+            const col = { x: v.x };
+            layers.forEach(layer => {
+                col[layer.name] = layer.values[i].y;
+            });
+            return col;
+        });
+        const keys = layers.map(layer => layer.name);
+        const v4result = this.stackLayout().keys(keys)(v4data);
+        v4result.forEach((series, i) => {
+            series.forEach((ys, j) => {
+                layers[i].values[j].y0 = ys[0];
+                layers[i].values[j].y1 = ys[1];
+            });
+        });
+        return layers;
     }
 
     public _prepareValues(layer, layerIdx) {

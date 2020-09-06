@@ -18,13 +18,13 @@ export interface MinimalCFDimension {
     bottom(k: number): any[];
 }
 
-interface CFGrouping {
+export interface CFGrouping {
     key: any;
     value: any;
 }
 
 export interface MinimalCFGroup {
-    all: CFGrouping[];
+    all(): CFGrouping[];
 }
 
 // Used for mix-ins
