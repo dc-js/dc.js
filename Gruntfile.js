@@ -52,9 +52,9 @@ module.exports = function (grunt) {
             }
         },
         watch: {
-            jsdoc2md: {
-                files: ['docs/welcome.base.md', '<%= conf.src %>/**/*.ts', '<%= conf.src %>/**/*.js'],
-                tasks: ['build', 'jsdoc', 'jsdoc2md']
+            typedoc: {
+                files: ['docs/**/*', '<%= conf.src %>/**/*.ts', '<%= conf.src %>/**/*.js'],
+                tasks: ['shell:typedoc']
             },
             scripts: {
                 files: ['<%= conf.src %>/**/*.ts', '<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
@@ -154,22 +154,6 @@ module.exports = function (grunt) {
                 concurrency: 1,
                 reporters: ['dots', 'summary']
             },
-        },
-        jsdoc: {
-            dist: {
-                src: ['docs/welcome.base.md', '<%= conf.src %>/**/*.js', '!<%= conf.src %>/{banner,footer}.js'],
-                options: {
-                    destination: '<%= conf.web %>/docs/html',
-                    template: 'node_modules/ink-docstrap/template',
-                    configure: 'jsdoc.conf.json'
-                }
-            }
-        },
-        jsdoc2md: {
-            dist: {
-                src: '<%= conf.dist %>/<%= conf.pkg.name %>.js',
-                dest: 'docs/api-latest.md'
-            }
         },
         docco: {
             options: {
@@ -362,6 +346,9 @@ module.exports = function (grunt) {
             rollup: {
                 command: 'rollup --config'
             },
+            typedoc: {
+                command: 'typedoc src/index.ts'
+            },
             eslint: {
                 command: `eslint ${lintableFiles}`
             },
@@ -410,7 +397,7 @@ module.exports = function (grunt) {
 
     // task aliases
     grunt.registerTask('build', ['shell:dist-clean', 'shell:tsc', 'shell:rollup', 'sass', 'cssmin']);
-    grunt.registerTask('docs', ['build', 'copy', 'jsdoc', 'jsdoc2md', 'docco', 'fileindex']);
+    grunt.registerTask('docs', ['build', 'copy', 'shell:typedoc', 'docco', 'fileindex']);
     grunt.registerTask('web', ['docs', 'gh-pages']);
     grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
     grunt.registerTask('server', ['server-only', 'watch:scripts-sass-docs']);
@@ -424,5 +411,5 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['shell:tslint', 'shell:eslint', 'shell:prettier-check']);
     grunt.registerTask('lint-fix', ['shell:tslint-fix', 'shell:eslint-fix', 'shell:prettier']);
     grunt.registerTask('default', ['build', 'shell:hooks']);
-    grunt.registerTask('doc-debug', ['build', 'jsdoc', 'jsdoc2md', 'watch:jsdoc2md']);
+    grunt.registerTask('doc-debug', ['build', 'shell:typedoc', 'watch:typedoc']);
 };
