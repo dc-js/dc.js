@@ -50,7 +50,10 @@ $font_sans_serif: sans-serif;
         &.external {
             fill: $color_black;
         }
-        :hover,:focus &.highlight {
+        &:focus {
+            fill-opacity: .8;
+        }
+        :hover &.highlight {
             fill-opacity: .8;
         }
     }

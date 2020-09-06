@@ -719,14 +719,14 @@ export class BaseMixin {
         // called from each chart module's render and redraw methods
         this._svg.selectAll('.dc-tabbable')
                 .attr('tabindex', 0)
-                .on('keydown', d => {
+                .on('keydown', (d, i) => {
                     // trigger only if d is an object undestood by KeyAccessor()
                     if (d3Event.keyCode === 13 && typeof d === 'object') {
-                        onClickFunction.call(this, d, ...onClickArgs)
+                        onClickFunction.call(this, d, i, ...onClickArgs)
                     } 
                     // special case for space key press - prevent scrolling
                     if (d3Event.keyCode === 32 && typeof d === 'object') {
-                        onClickFunction.call(this, d, ...onClickArgs)
+                        onClickFunction.call(this, d, i,  ...onClickArgs)
                         d3Event.preventDefault();                
                     }
                 
