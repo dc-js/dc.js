@@ -49,8 +49,6 @@
     "grunt-docco2": "^0.2.1",
     "grunt-fileindex": "~0.1",
     "grunt-gh-pages": "^4.0.0",
-    "grunt-jsdoc": "^2.4.1",
-    "grunt-jsdoc-to-markdown": "^5.0.0",
     "grunt-karma": "^3.0.2",
     "grunt-sass": "^3.1.0",
     "grunt-shell": "~2.1",
