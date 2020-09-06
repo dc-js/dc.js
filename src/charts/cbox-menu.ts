@@ -57,8 +57,6 @@ export class CboxMenu extends BaseMixin {
 
         this._uniqueId = uniqueId();
 
-        this.data(group => group.all().filter(this._conf.filterDisplayed));
-
         this.anchor(parent, chartGroup);
     }
 
@@ -69,6 +67,10 @@ export class CboxMenu extends BaseMixin {
 
     public conf(): ICboxMenuConf {
         return this._conf;
+    }
+
+    public data() {
+        return super.data().filter(this._conf.filterDisplayed);
     }
 
     public _doRender(): this {

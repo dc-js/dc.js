@@ -52,8 +52,6 @@ export class SelectMenu extends BaseMixin {
 
         this._select = undefined;
 
-        this.data(group => group.all().filter(this._conf.filterDisplayed));
-
         this.anchor(parent, chartGroup);
     }
 
@@ -64,6 +62,10 @@ export class SelectMenu extends BaseMixin {
 
     public conf(): ISelectMenuConf {
         return this._conf;
+    }
+
+    public data() {
+        return super.data().filter(this._conf.filterDisplayed);
     }
 
     public _doRender() {
