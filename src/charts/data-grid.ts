@@ -92,7 +92,8 @@ export class DataGrid extends BaseMixin {
     }
 
     public _nestEntries() {
-        let entries = this._conf.dimension.top(this._conf.size);
+        // TODO: consider creating special DataProvider
+        let entries = this.dataProvider().conf().dimension.top(this._conf.size);
 
         entries = entries
             .sort((a, b) => this._conf.order(this._conf.sortBy(a), this._conf.sortBy(b)))

@@ -98,9 +98,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public dimension(dimension: MinimalCFDimension): this;
         public dimension(dimension?) {
             if (!arguments.length) {
-                return this._conf.dimension;
+                return this.dataProvider().conf().dimension;
             }
-            this.configure({ dimension: dimension });
+            this.dataProvider().configure({ dimension: dimension });
             this.expireCache();
             return this;
         }
@@ -271,9 +271,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public filterHandler(filterHandler): this;
         public filterHandler(filterHandler?) {
             if (!arguments.length) {
-                return this._conf.filterHandler;
+                return this.dataProvider().conf().filterHandler;
             }
-            this.configure({ filterHandler: filterHandler });
+            this.dataProvider().configure({ filterHandler: filterHandler });
             return this;
         }
 
@@ -303,9 +303,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public hasFilterHandler(hasFilterHandler): this;
         public hasFilterHandler(hasFilterHandler?) {
             if (!arguments.length) {
-                return this._conf.hasFilterHandler;
+                return this.dataProvider().conf().hasFilterHandler;
             }
-            this.configure({ hasFilterHandler: hasFilterHandler });
+            this.dataProvider().configure({ hasFilterHandler: hasFilterHandler });
             return this;
         }
 
@@ -339,9 +339,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public removeFilterHandler(removeFilterHandler): this;
         public removeFilterHandler(removeFilterHandler?) {
             if (!arguments.length) {
-                return this._conf.removeFilterHandler;
+                return this.dataProvider().conf().removeFilterHandler;
             }
-            this.configure({ removeFilterHandler: removeFilterHandler });
+            this.dataProvider().configure({ removeFilterHandler: removeFilterHandler });
             return this;
         }
 
@@ -370,9 +370,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public addFilterHandler(addFilterHandler): this;
         public addFilterHandler(addFilterHandler?) {
             if (!arguments.length) {
-                return this._conf.addFilterHandler;
+                return this.dataProvider().conf().addFilterHandler;
             }
-            this.configure({ addFilterHandler: addFilterHandler });
+            this.dataProvider().configure({ addFilterHandler: addFilterHandler });
             return this;
         }
 
@@ -400,9 +400,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public resetFilterHandler(resetFilterHandler): this;
         public resetFilterHandler(resetFilterHandler?) {
             if (!arguments.length) {
-                return this._conf.resetFilterHandler;
+                return this.dataProvider().conf().resetFilterHandler;
             }
-            this.configure({ resetFilterHandler: resetFilterHandler });
+            this.dataProvider().configure({ resetFilterHandler: resetFilterHandler });
             return this;
         }
 

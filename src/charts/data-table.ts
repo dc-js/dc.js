@@ -195,11 +195,14 @@ export class DataTable extends BaseMixin {
     }
 
     private _nestEntries(): { key: string; values: any }[] {
+        // TODO: consider creating special DataProvider
+        const dimension = this.dataProvider().conf().dimension;
+
         let entries;
         if (this._conf.order === ascending) {
-            entries = this._conf.dimension.bottom(this._conf.size);
+            entries = dimension.bottom(this._conf.size);
         } else {
-            entries = this._conf.dimension.top(this._conf.size);
+            entries = dimension.top(this._conf.size);
         }
 
         entries = entries
