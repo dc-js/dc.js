@@ -23,57 +23,7 @@ import {
 } from '../core/types';
 import { IChartGroup } from '../core/chart-group-types';
 import { IBaseMixinConf } from './i-base-mixin-conf';
-
-const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
-    if (filters.length === 0) {
-        dimension.filter(null);
-    } else if (filters.length === 1 && !filters[0].isFiltered) {
-        // single value and not a function-based filter
-        dimension.filterExact(filters[0]);
-    } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-        // single range-based filter
-        dimension.filterRange(filters[0]);
-    } else {
-        dimension.filterFunction(d => {
-            for (let i = 0; i < filters.length; i++) {
-                const filter = filters[i];
-                if (filter.isFiltered) {
-                    if (filter.isFiltered(d)) {
-                        return true;
-                    }
-                } else if (filter <= d && filter >= d) {
-                    return true;
-                }
-            }
-            return false;
-        });
-    }
-    return filters;
-};
-
-const _defaultHasFilterHandler = (filters, filter) => {
-    if (filter === null || typeof filter === 'undefined') {
-        return filters.length > 0;
-    }
-    return filters.some(f => filter <= f && filter >= f);
-};
-
-const _defaultRemoveFilterHandler = (filters, filter) => {
-    for (let i = 0; i < filters.length; i++) {
-        if (filters[i] <= filter && filters[i] >= filter) {
-            filters.splice(i, 1);
-            break;
-        }
-    }
-    return filters;
-};
-
-const _defaultAddFilterHandler = (filters, filter) => {
-    filters.push(filter);
-    return filters;
-};
-
-const _defaultResetFilterHandler = filters => [];
+import {CFSimpleProvider} from '../data/providers';
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
@@ -86,7 +36,6 @@ export class BaseMixin {
 
     // tslint:disable-next-line:variable-name
     private __dcFlag__: string;
-    private _group: MinimalCFGroup;
     private _anchor: string | Element;
     private _root: Selection<Element, any, any, any>; // Do not assume much, allow any HTML or SVG element
     private _svg: Selection<SVGElement, any, any, any>; // from d3-selection
@@ -102,8 +51,8 @@ export class BaseMixin {
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
-    private _filters: any[]; // TODO: find better types
     protected _groupName: string; // StackMixin needs it
+    protected _dataProvider: CFSimpleProvider;
 
     constructor() {
         this.__dcFlag__ = uniqueId().toString();
@@ -118,12 +67,6 @@ export class BaseMixin {
             transitionDuration: 750,
             transitionDelay: 0,
             commitHandler: undefined,
-            dimension: undefined,
-            filterHandler: _defaultFilterHandler,
-            hasFilterHandler: _defaultHasFilterHandler,
-            removeFilterHandler: _defaultRemoveFilterHandler,
-            addFilterHandler: _defaultAddFilterHandler,
-            resetFilterHandler: _defaultResetFilterHandler,
             keyAccessor: d => d.key,
             valueAccessor: d => d.value,
             label: d => d.key,
@@ -131,7 +74,7 @@ export class BaseMixin {
             renderTitle: true,
         });
 
-        this._group = undefined;
+        this._dataProvider = new CFSimpleProvider();
 
         this._anchor = undefined;
         this._root = undefined;
@@ -171,8 +114,6 @@ export class BaseMixin {
         );
 
         this._legend = undefined;
-
-        this._filters = [];
     }
 
     public configure(conf: IBaseMixinConf): this {
@@ -182,6 +123,16 @@ export class BaseMixin {
 
     public conf(): IBaseMixinConf {
         return this._conf;
+    }
+
+    public dataProvider(): CFSimpleProvider;
+    public dataProvider(dataProvider): this;
+    public dataProvider(dataProvider?) {
+        if (!arguments.length) {
+            return this._dataProvider;
+        }
+        this._dataProvider = dataProvider;
+        return this;
     }
 
     /**
@@ -265,7 +216,7 @@ export class BaseMixin {
      * The derived classes may even use different return type.
      */
     public data(): CFGrouping[] {
-        return this._group.all();
+        return this._dataProvider.data();
     }
 
     /**
@@ -292,9 +243,9 @@ export class BaseMixin {
     public group(group: MinimalCFGroup, name?: string, accessor?: BaseAccessor<any>): this;
     public group(group?, name?, accessor?) {
         if (!arguments.length) {
-            return this._group;
+            return this._dataProvider.conf().group;
         }
-        this._group = group;
+        this._dataProvider.configure({group});
         this._groupName = name;
         this.expireCache();
         return this;
@@ -663,17 +614,11 @@ export class BaseMixin {
      * @returns {Boolean}
      */
     public hasFilter(filter?): boolean {
-        return this._conf.hasFilterHandler(this._filters, filter);
+        return this._dataProvider.hasFilter(filter);
     }
 
     public applyFilters(filters) {
-        if (this._conf.dimension && this._conf.dimension.filter) {
-            const fs = this._conf.filterHandler(this._conf.dimension, filters);
-            if (fs) {
-                filters = fs;
-            }
-        }
-        return filters;
+        return this._dataProvider.applyFilters(filters);
     }
 
     /**
@@ -684,8 +629,8 @@ export class BaseMixin {
      * @returns {BaseMixin}
      */
     public replaceFilter(filter): this {
-        this._filters = this._conf.resetFilterHandler(this._filters);
-        this.filter(filter);
+        this._dataProvider.replaceFilter(filter);
+        this.filter(filter); // TODO: this should go to DataProvider, it will need refactoring BaseMixin.filter which has side effects
         return this;
     }
 
@@ -743,29 +688,10 @@ export class BaseMixin {
     public filter(filter): this;
     public filter(filter?) {
         if (!arguments.length) {
-            return this._filters.length > 0 ? this._filters[0] : null;
+            return this._dataProvider.filter();
         }
-        let filters: any[] = this._filters;
-        // TODO: Not a great idea to have a method blessed onto an Array, needs redesign
-        if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
-            // toggle each filter
-            filter[0].forEach(f => {
-                if (this._conf.hasFilterHandler(filters, f)) {
-                    filters = this._conf.removeFilterHandler(filters, f);
-                } else {
-                    filters = this._conf.addFilterHandler(filters, f);
-                }
-            });
-        } else if (filter === null) {
-            filters = this._conf.resetFilterHandler(filters);
-        } else {
-            if (this._conf.hasFilterHandler(filters, filter)) {
-                filters = this._conf.removeFilterHandler(filters, filter);
-            } else {
-                filters = this._conf.addFilterHandler(filters, filter);
-            }
-        }
-        this._filters = this.applyFilters(filters);
+        this._dataProvider.filter(filter);
+
         this._invokeFilteredListener(filter);
 
         if (this._root !== null && this.hasFilter()) {
@@ -784,7 +710,7 @@ export class BaseMixin {
      * @returns {Array<*>}
      */
     public filters() {
-        return this._filters;
+        return this._dataProvider.filters();
     }
 
     public highlightSelected(e): void {

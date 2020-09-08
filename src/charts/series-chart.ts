@@ -94,8 +94,10 @@ export class SeriesChart extends CompositeChart {
             }
             this._charts[sub.key] = subChart;
             keep.push(sub.key);
+            subChart.dataProvider().configure({
+                dimension: this.dataProvider().conf().dimension,
+            });
             subChart.configure({
-                dimension: this._conf.dimension,
                 keyAccessor: this._conf.keyAccessor,
                 valueAccessor: this._conf.valueAccessor,
             });
