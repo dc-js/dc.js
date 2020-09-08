@@ -50,7 +50,6 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this.configure({
             keyAccessor: d => originalKeyAccessor(d)[0],
-            valueAccessor: d => originalKeyAccessor(d)[1],
             colorAccessor: () => this._groupName,
             existenceAccessor: d => d.value,
             highlightedSize: 7,
@@ -65,15 +64,16 @@ export class ScatterPlot extends CoordinateGridMixin {
             useCanvas: false,
         });
 
+        this.dataProvider().configure({
+            valueAccessor: d => originalKeyAccessor(d)[1],
+        });
+
         this._symbol = symbol();
 
         // this basically just counteracts the setting of its own key/value accessors
         // see https://github.com/dc-js/dc.js/issues/702
         this.title(
-            d =>
-                `${this._conf.keyAccessor(d)},${this._conf.valueAccessor(
-                    d
-                )}: ${this._conf.existenceAccessor(d)}`
+            d => `${this._conf.keyAccessor(d)},${d._value}: ${this._conf.existenceAccessor(d)}`
         );
 
         this._filtered = [];
@@ -119,9 +119,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     private _locator(d): string {
-        return `translate(${this.x()(this._conf.keyAccessor(d))},${this.y()(
-            this._conf.valueAccessor(d)
-        )})`;
+        return `translate(${this.x()(this._conf.keyAccessor(d))},${this.y()(d._value)})`;
     }
 
     public filter();
@@ -288,7 +286,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             context.beginPath();
             context.arc(
                 this.x()(this._conf.keyAccessor(d)),
-                this.y()(this._conf.valueAccessor(d)),
+                this.y()(d._value),
                 cSize,
                 0,
                 2 * Math.PI,
@@ -327,7 +325,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         symbols.each((d, i) => {
             this._filtered[i] =
                 !this.filter() ||
-                this.filter().isFiltered([this._conf.keyAccessor(d), this._conf.valueAccessor(d)]);
+                this.filter().isFiltered([this._conf.keyAccessor(d), d._value]);
         });
 
         transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay)

@@ -503,9 +503,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public valueAccessor(valueAccessor: ValueAccessor): this;
         public valueAccessor(valueAccessor?) {
             if (!arguments.length) {
-                return this._conf.valueAccessor;
+                return this.dataProvider().conf().valueAccessor;
             }
-            this.configure({ valueAccessor: valueAccessor });
+            this.dataProvider().configure({ valueAccessor: valueAccessor });
             return this;
         }
     };

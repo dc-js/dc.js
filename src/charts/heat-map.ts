@@ -7,7 +7,7 @@ import { filters } from '../core/filters';
 import { events } from '../core/events';
 import { ColorMixin } from '../base/color-mixin';
 import { MarginMixin } from '../base/margin-mixin';
-import { ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types';
+import { CFGrouping, ChartGroupType, ChartParentType, MinimalXYScale } from "../core/types";
 import { Selection } from 'd3-selection';
 import { IHeatMapConf } from './i-heat-map-conf';
 import { adaptHandler } from '../core/d3compat';
@@ -144,7 +144,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
     public _doRedraw() {
         const data = this.data();
-        let rows = this._conf.rows || data.map(this._conf.valueAccessor);
+        let rows = this._conf.rows || data.map(d => d._value);
         let cols = this._conf.cols || data.map(this._conf.keyAccessor);
 
         if (this._conf.rowOrdering) {
@@ -164,11 +164,11 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         cols.rangeRound([0, this.effectiveWidth()]);
         rows.rangeRound([this.effectiveHeight(), 0]);
 
-        let boxes: Selection<SVGGElement, unknown, SVGGElement, any> = this._chartBody
+        let boxes: Selection<SVGGElement, CFGrouping, SVGGElement, any> = this._chartBody
             .selectAll<SVGGElement, any>('g.box-group')
             .data(
                 this.data(),
-                (d, i) => `${this._conf.keyAccessor(d, i)}\0${this._conf.valueAccessor(d, i)}`
+                (d, i) => `${this._conf.keyAccessor(d, i)}\0${d._value}`
             );
 
         boxes.exit().remove();
@@ -180,7 +180,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('class', 'heat-box')
             .attr('fill', 'white')
             .attr('x', (d, i) => cols(this._conf.keyAccessor(d, i)))
-            .attr('y', (d, i) => rows(this._conf.valueAccessor(d, i)))
+            .attr('y', (d, i) => rows(d._value))
             .on('click', adaptHandler(this._conf.boxOnClick));
 
         boxes = gEnter.merge(boxes);
@@ -192,7 +192,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         transition(boxes.select('rect'), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', (d, i) => cols(this._conf.keyAccessor(d, i)))
-            .attr('y', (d, i) => rows(this._conf.valueAccessor(d, i)))
+            .attr('y', (d, i) => rows(d._value))
             .attr('rx', this._conf.xBorderRadius)
             .attr('ry', this._conf.yBorderRadius)
             .attr('fill', (d, i) => this.getColor(d, i))

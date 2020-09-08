@@ -49,7 +49,7 @@ export class CboxMenu extends BaseMixin {
             multiple: false,
             promptText: 'Select all',
             promptValue: null,
-            filterDisplayed: d => this._conf.valueAccessor(d) > 0,
+            filterDisplayed: d => d._value > 0,
             order: (a, b) => ascending(this._conf.keyAccessor(a), this._conf.keyAccessor(b)),
         });
 
