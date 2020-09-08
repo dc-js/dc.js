@@ -7,7 +7,6 @@ import {
 } from '../core/types';
 
 export interface IBaseMixinConf {
-    readonly valueAccessor?: ValueAccessor;
     readonly keyAccessor?: KeyAccessor;
     readonly renderTitle?: boolean;
     readonly label?: LabelAccessor;

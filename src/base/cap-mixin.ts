@@ -33,7 +33,8 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
             super();
 
             const defaultOthersGrouper = (topItems, restItems) => {
-                const restItemsSum = sum(restItems, this._conf.valueAccessor);
+                // @ts-ignore
+                const restItemsSum = sum(restItems, d => d._value);
                 const restKeys = restItems.map(this._conf.keyAccessor);
 
                 if (restItemsSum > 0) {
@@ -41,7 +42,7 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
                         {
                             others: restKeys,
                             key: this._conf.othersLabel,
-                            value: restItemsSum,
+                            _value: restItemsSum,
                         },
                     ]);
                 }
@@ -104,9 +105,9 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
 
         public cappedValueAccessor(d, i?) {
             if (d.others) {
-                return d.value;
+                return d._value;
             }
-            return this._conf.valueAccessor(d, i);
+            return d._value;
         }
 
         public onClick(d, i?) {

@@ -102,7 +102,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         if (d.path) {
             return d.value;
         }
-        return this._conf.valueAccessor(d);
+        return d._value;
     }
 
     private _scaleRadius(ringIndex: number, y: number): number {
@@ -141,8 +141,9 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         let cdata;
 
         // if we have data...
-        if (sum(this.data(), this._conf.valueAccessor)) {
-            cdata = toHierarchy(this.data(), this._conf.valueAccessor);
+        // @ts-ignore
+        if (sum(this.data(), d => d._value)) {
+            cdata = toHierarchy(this.data(), d => d._value);
             partitionedNodes = this._partitionNodes(cdata);
             // First one is the root, which is not needed
             partitionedNodes.nodes.shift();

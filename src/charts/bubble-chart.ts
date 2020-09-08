@@ -131,7 +131,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     }
 
     public _bubbleY(d): number {
-        let y = this.y()(this._conf.valueAccessor(d));
+        let y = this.y()(d._value);
         if (isNaN(y) || !isFinite(y)) {
             y = 0;
         }

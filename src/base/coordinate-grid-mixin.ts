@@ -760,7 +760,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public yAxisMin() {
         // TODO: can these be anything other than number
-        const m = min(this.data(), e => this._conf.valueAccessor(e));
+        // @ts-ignore
+        const m = min(this.data(), e => e._value);
         return subtract(m, this._conf.yAxisPadding);
     }
 
@@ -770,7 +771,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     public yAxisMax() {
         // TODO: can these be anything other than number
-        const m = max(this.data(), e => this._conf.valueAccessor(e));
+        // @ts-ignore
+        const m = max(this.data(), e => e._value);
         return add(m, this._conf.yAxisPadding);
     }
 

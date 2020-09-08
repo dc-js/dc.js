@@ -1,8 +1,9 @@
-import { MinimalCFGroup } from '../core/types';
+import { MinimalCFGroup, ValueAccessor } from "../core/types";
 import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler';
 
 export interface ICFSimpleAdapterConf extends ICFFilterHandlerConf {
-    group?: MinimalCFGroup;
+    readonly group?: MinimalCFGroup;
+    readonly valueAccessor?: ValueAccessor;
 }
 
 export class CFSimpleAdapter extends CFFilterHandler {
@@ -21,8 +22,15 @@ export class CFSimpleAdapter extends CFFilterHandler {
     }
 
     public data() {
-        const entities = this._conf.group.all();
+        let entities = this._conf.group.all();
+
         // create a two level deep copy defensively
-        return entities.map(val => ({ ...val }));
+        entities.map(val => ({ ...val }));
+
+        entities.forEach(e => {
+           e._value = this._conf.valueAccessor(e);
+        });
+
+        return entities;
     }
 }

@@ -70,7 +70,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public _prepareValues(layer, layerIdx) {
-        const valAccessor = layer.accessor || this._conf.valueAccessor;
+        const valAccessor = layer.accessor || (d => d._value); // TODO: StatckDataProvider
         const allValues = layer.group.all().map((d, i) => ({
             x: this._conf.keyAccessor(d, i),
             y: valAccessor(d, i),
@@ -151,7 +151,7 @@ export class StackMixin extends CoordinateGridMixin {
         this._titles = {};
         this.stack(g, n);
         if (f) {
-            this.configure({ valueAccessor: f });
+            this.dataProvider().configure({ valueAccessor: f });
         }
         return super.group(g, n);
     }
@@ -184,7 +184,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public getValueAccessorByIndex(index) {
-        return this._stack[index].accessor || this._conf.valueAccessor;
+        return this._stack[index].accessor || (d => d._value);
     }
 
     public yAxisMin() {

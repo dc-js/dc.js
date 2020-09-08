@@ -128,7 +128,7 @@ export class BoxPlot extends CoordinateGridMixin {
                 return d;
             })
             .filter(d => {
-                const values = this._conf.valueAccessor(d);
+                const values = d._value;
                 return values.length !== 0;
             });
     }
@@ -205,7 +205,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .whiskers(this._whiskers)
             .width(calculatedBoxWidth)
             .height(this.effectiveHeight())
-            .value(this._conf.valueAccessor)
+            .value(d => d._value)
             .domain(this.y().domain())
             .duration(this._conf.transitionDuration)
             .tickFormat(this._conf.tickFormat)
@@ -261,11 +261,13 @@ export class BoxPlot extends CoordinateGridMixin {
     }
 
     public _minDataValue(): number {
-        return min(this.data(), e => min<number>(this._conf.valueAccessor(e)));
+        // @ts-ignore
+        return min(this.data(), e => min<number>(e._value));
     }
 
     public _maxDataValue(): number {
-        return max(this.data(), e => max<number>(this._conf.valueAccessor(e)));
+        // @ts-ignore
+        return max(this.data(), e => max<number>(e._value));
     }
 
     public _yAxisRangeRatio(): number {

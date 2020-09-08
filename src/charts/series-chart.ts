@@ -99,7 +99,6 @@ export class SeriesChart extends CompositeChart {
             });
             subChart.configure({
                 keyAccessor: this._conf.keyAccessor,
-                valueAccessor: this._conf.valueAccessor,
             });
             return subChart
                 .group(

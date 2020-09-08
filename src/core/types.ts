@@ -20,7 +20,8 @@ export interface MinimalCFDimension {
 
 export interface CFGrouping {
     key: any;
-    value: any;
+    value?: any; // Original as given by CrossFilter
+    _value: any; // After applying valueAccessor
 }
 
 export interface MinimalCFGroup {

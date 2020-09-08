@@ -68,13 +68,14 @@ export class BaseMixin {
             transitionDelay: 0,
             commitHandler: undefined,
             keyAccessor: d => d.key,
-            valueAccessor: d => d.value,
             label: d => d.key,
             renderLabel: false,
             renderTitle: true,
         });
 
-        this._dataProvider = new CFSimpleProvider();
+        this._dataProvider = new CFSimpleProvider().configure({
+            valueAccessor: d => d.value,
+        });
 
         this._anchor = undefined;
         this._root = undefined;
@@ -98,7 +99,7 @@ export class BaseMixin {
         this._height = undefined;
 
         // TODO: StackMixin uses it differently, so, need refactoring before it can be moved to conf
-        this._title = d => `${this._conf.keyAccessor(d)}: ${this._conf.valueAccessor(d)}`;
+        this._title = d => `${this._conf.keyAccessor(d)}: ${d._value}`;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
