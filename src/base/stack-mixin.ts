@@ -123,7 +123,7 @@ export class StackMixin extends CoordinateGridMixin {
     public stack();
     public stack(group, name?, accessor?): this;
     public stack(group?, name?, accessor?) {
-        const stack = this._dataProvider.conf().stack;
+        const stack = this._dataProvider.conf().layers;
         if (!arguments.length) {
             return stack;
         }
@@ -150,7 +150,7 @@ export class StackMixin extends CoordinateGridMixin {
             return super.group();
         }
         this._dataProvider.configure({
-            stack: [],
+            layers: [],
         });
         this._titles = {};
         this.stack(g, n);
@@ -161,7 +161,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public _findLayerByName(n) {
-        const stack = this._dataProvider.conf().stack;
+        const stack = this._dataProvider.conf().layers;
         const i = stack.map(d => d.name).indexOf(n);
         return stack[i];
     }
@@ -284,7 +284,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public legendables(): LegendItem[] {
-        const stack = this._dataProvider.conf().stack;
+        const stack = this._dataProvider.conf().layers;
         return stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
