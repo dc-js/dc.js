@@ -1,15 +1,15 @@
-import { min, sum } from 'd3-array';
-import { Arc, arc, DefaultArcObject, Pie, pie } from 'd3-shape';
-import { select, Selection } from 'd3-selection';
-import { interpolate } from 'd3-interpolate';
+import { min, sum } from "d3-array";
+import { Arc, arc, DefaultArcObject, Pie, pie } from "d3-shape";
+import { select, Selection } from "d3-selection";
+import { interpolate } from "d3-interpolate";
 
-import { CapMixin } from '../base/cap-mixin';
-import { ColorMixin } from '../base/color-mixin';
-import { BaseMixin } from '../base/base-mixin';
-import { transition } from '../core/core';
-import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
-import { IPieChartConf } from './i-pie-chart-conf';
-import { adaptHandler } from '../core/d3compat';
+import { CapMixin } from "../base/cap-mixin";
+import { ColorMixin } from "../base/color-mixin";
+import { BaseMixin } from "../base/base-mixin";
+import { transition } from "../core/core";
+import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from "../core/types";
+import { IPieChartConf } from "./i-pie-chart-conf";
+import { adaptHandler } from "../core/d3compat";
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -57,9 +57,9 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         super();
 
         this.configure({
-            colorAccessor: d => this.cappedKeyAccessor(d),
+            colorAccessor: d => this._conf.keyAccessor(d),
             emptyTitle: 'empty',
-            label: d => this.cappedKeyAccessor(d),
+            label: d => this._conf.keyAccessor(d),
             renderLabel: true,
             transitionDuration: 350,
             transitionDelay: 0,
@@ -83,7 +83,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._cx = undefined;
         this._cy = undefined;
 
-        this.title(d => `${this.cappedKeyAccessor(d)}: ${d._value}`);
+        this.title(d => `${(this._conf.keyAccessor(d))}: ${d._value}`);
 
         this.anchor(parent, chartGroup);
     }
@@ -452,7 +452,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     private _isSelectedSlice(d): boolean {
-        return this.hasFilter(this.cappedKeyAccessor(d.data));
+        return this.hasFilter(this._conf.keyAccessor(d.data));
     }
 
     public _doRedraw(): this {
