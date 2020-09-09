@@ -5,6 +5,7 @@ import { add, subtract } from '../core/utils';
 import { CoordinateGridMixin } from './coordinate-grid-mixin';
 import { BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor } from '../core/types';
 import { IStackMixinConf } from './i-stack-mixin-conf';
+import { CFMultiAdapter } from '../data/c-f-multi-adapter';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -27,6 +28,8 @@ export class StackMixin extends CoordinateGridMixin {
             hidableStacks: false,
             evadeDomainFilter: false,
         });
+
+        this._dataProvider = new CFMultiAdapter();
 
         this._stackLayout = stack();
 
@@ -70,7 +73,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public _prepareValues(layer, layerIdx) {
-        const valAccessor = layer.accessor || (d => d._value); // TODO: StatckDataProvider
+        const valAccessor = layer.accessor || this._dataProvider.conf().valueAccessor;
         const allValues = layer.group.all().map((d, i) => ({
             x: this._conf.keyAccessor(d, i),
             y: valAccessor(d, i),
@@ -151,7 +154,7 @@ export class StackMixin extends CoordinateGridMixin {
         this._titles = {};
         this.stack(g, n);
         if (f) {
-            this.dataProvider().configure({ valueAccessor: f });
+            this._dataProvider.configure({ valueAccessor: f });
         }
         return super.group(g, n);
     }
@@ -184,7 +187,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public getValueAccessorByIndex(index) {
-        return this._stack[index].accessor || (d => d._value);
+        return this._stack[index].accessor || this._dataProvider.conf().valueAccessor;
     }
 
     public yAxisMin() {

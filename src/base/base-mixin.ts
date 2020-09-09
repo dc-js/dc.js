@@ -23,7 +23,7 @@ import {
 } from '../core/types';
 import { IChartGroup } from '../core/chart-group-types';
 import { IBaseMixinConf } from './i-base-mixin-conf';
-import {CFSimpleProvider} from '../data/providers';
+import { CFSimpleAdapter } from "../data/c-f-simple-adapter";
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
@@ -52,7 +52,7 @@ export class BaseMixin {
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
     protected _groupName: string; // StackMixin needs it
-    protected _dataProvider: CFSimpleProvider;
+    protected _dataProvider: CFSimpleAdapter;
 
     constructor() {
         this.__dcFlag__ = uniqueId().toString();
@@ -73,7 +73,7 @@ export class BaseMixin {
             renderTitle: true,
         });
 
-        this._dataProvider = new CFSimpleProvider().configure({
+        this._dataProvider = new CFSimpleAdapter().configure({
             valueAccessor: d => d.value,
         });
 
@@ -126,7 +126,7 @@ export class BaseMixin {
         return this._conf;
     }
 
-    public dataProvider(): CFSimpleProvider;
+    public dataProvider(): CFSimpleAdapter;
     public dataProvider(dataProvider): this;
     public dataProvider(dataProvider?) {
         if (!arguments.length) {
