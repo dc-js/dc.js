@@ -324,8 +324,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         symbols.each((d, i) => {
             this._filtered[i] =
-                !this.filter() ||
-                this.filter().isFiltered([this._conf.keyAccessor(d), d._value]);
+                !this.filter() || this.filter().isFiltered([this._conf.keyAccessor(d), d._value]);
         });
 
         transition(symbols, this._conf.transitionDuration, this._conf.transitionDelay)

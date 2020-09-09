@@ -79,7 +79,7 @@ export class CFFilterHandler {
     public configure(conf: ICFFilterHandlerConf): this {
         this._conf = { ...this._conf, ...conf };
         return this;
-     }
+    }
 
     public conf(): ICFFilterHandlerConf {
         return this._conf;

@@ -17,13 +17,12 @@ import {
     ChartGroupType,
     ChartParentType,
     LegendItem,
-    MinimalCFDimension,
     MinimalCFGroup,
     TitleAccessor,
 } from '../core/types';
 import { IChartGroup } from '../core/chart-group-types';
 import { IBaseMixinConf } from './i-base-mixin-conf';
-import { CFSimpleAdapter } from "../data/c-f-simple-adapter";
+import { CFSimpleAdapter } from '../data/c-f-simple-adapter';
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
@@ -246,7 +245,7 @@ export class BaseMixin {
         if (!arguments.length) {
             return this._dataProvider.conf().group;
         }
-        this._dataProvider.configure({group});
+        this._dataProvider.configure({ group });
         this._groupName = name;
         this.expireCache();
         return this;

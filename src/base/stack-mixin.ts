@@ -1,11 +1,11 @@
-import { Stack, stack } from "d3-shape";
-import { max, min } from "d3-array";
+import { Stack, stack } from 'd3-shape';
+import { max, min } from 'd3-array';
 
-import { add, subtract } from "../core/utils";
-import { CoordinateGridMixin } from "./coordinate-grid-mixin";
-import { BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor } from "../core/types";
-import { IStackMixinConf } from "./i-stack-mixin-conf";
-import { CFMultiAdapter, LayerSpec } from "../data/c-f-multi-adapter";
+import { add, subtract } from '../core/utils';
+import { CoordinateGridMixin } from './coordinate-grid-mixin';
+import { BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor } from '../core/types';
+import { IStackMixinConf } from './i-stack-mixin-conf';
+import { CFMultiAdapter, LayerSpec } from '../data/c-f-multi-adapter';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -132,7 +132,7 @@ export class StackMixin extends CoordinateGridMixin {
             accessor = name;
         }
 
-        name = typeof name === "string" ? name : String(stack.length);
+        name = typeof name === 'string' ? name : String(stack.length);
         const layer: LayerSpec = { group, name };
         if (typeof accessor === 'function') {
             layer.valueAccessor = accessor;

@@ -7,7 +7,7 @@ import { filters } from '../core/filters';
 import { events } from '../core/events';
 import { ColorMixin } from '../base/color-mixin';
 import { MarginMixin } from '../base/margin-mixin';
-import { CFGrouping, ChartGroupType, ChartParentType, MinimalXYScale } from "../core/types";
+import { CFGrouping, ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types';
 import { Selection } from 'd3-selection';
 import { IHeatMapConf } from './i-heat-map-conf';
 import { adaptHandler } from '../core/d3compat';
@@ -166,10 +166,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         let boxes: Selection<SVGGElement, CFGrouping, SVGGElement, any> = this._chartBody
             .selectAll<SVGGElement, any>('g.box-group')
-            .data(
-                this.data(),
-                (d, i) => `${this._conf.keyAccessor(d, i)}\0${d._value}`
-            );
+            .data(this.data(), (d, i) => `${this._conf.keyAccessor(d, i)}\0${d._value}`);
 
         boxes.exit().remove();
 
