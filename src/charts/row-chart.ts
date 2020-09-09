@@ -1,20 +1,15 @@
-import { extent } from 'd3-array';
-import { Axis, axisBottom } from 'd3-axis';
-import { scaleLinear } from 'd3-scale';
+import { extent } from "d3-array";
+import { Axis, axisBottom } from "d3-axis";
+import { scaleLinear } from "d3-scale";
 
-import { CapMixin } from '../base/cap-mixin';
-import { MarginMixin } from '../base/margin-mixin';
-import { ColorMixin } from '../base/color-mixin';
-import { transition } from '../core/core';
-import { Selection } from 'd3-selection';
-import {
-    ChartGroupType,
-    ChartParentType,
-    MinimalXYScale,
-    SVGGElementSelection,
-} from '../core/types';
-import { IRowChartConf } from './i-row-chart-conf';
-import { adaptHandler } from '../core/d3compat';
+import { CapMixin } from "../base/cap-mixin";
+import { MarginMixin } from "../base/margin-mixin";
+import { ColorMixin } from "../base/color-mixin";
+import { transition } from "../core/core";
+import { Selection } from "d3-selection";
+import { ChartGroupType, ChartParentType, MinimalXYScale, SVGGElementSelection } from "../core/types";
+import { IRowChartConf } from "./i-row-chart-conf";
+import { adaptHandler } from "../core/d3compat";
 
 /**
  * Concrete row chart implementation.
@@ -80,7 +75,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this._rowData = undefined;
 
-        this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
+        this.title(d => `${this.cappedKeyAccessor(d)}: ${(d._value)}`);
 
         this.anchor(parent, chartGroup);
     }
@@ -96,7 +91,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
     private _calculateAxisScale(): void {
         if (!this._x || this._conf.elasticX) {
-            const _extent = extent<any, number>(this._rowData, d => this.cappedValueAccessor(d));
+            const _extent = extent<any, number>(this._rowData, d => d._value);
             if (_extent[0] > 0) {
                 _extent[0] = 0;
             }
@@ -230,7 +225,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .classed('selected', d => (this.hasFilter() ? this._isSelectedRow(d) : false));
 
         transition(rect, this._conf.transitionDuration, this._conf.transitionDelay)
-            .attr('width', d => Math.abs(this._rootValue() - this._x(this.cappedValueAccessor(d))))
+            .attr('width', d => Math.abs(this._rootValue() - this._x(d._value)))
             .attr('transform', d => this._translateX(d));
 
         this._createTitles(rows);
@@ -307,7 +302,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     private _translateX(d): string {
-        const x = this._x(this.cappedValueAccessor(d));
+        const x = this._x(d._value);
         const x0 = this._rootValue();
         const s = x > x0 ? x0 : x;
 
