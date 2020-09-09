@@ -5,7 +5,7 @@ import { add, subtract } from '../core/utils';
 import { CoordinateGridMixin } from './coordinate-grid-mixin';
 import { BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor } from '../core/types';
 import { IStackMixinConf } from './i-stack-mixin-conf';
-import { CFMultiAdapter } from '../data/c-f-multi-adapter';
+import { CFMultiAdapter, LayerSpec } from "../data/c-f-multi-adapter";
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
@@ -16,9 +16,10 @@ export class StackMixin extends CoordinateGridMixin {
     public _conf: IStackMixinConf;
 
     private _stackLayout: Stack<any, { [p: string]: number }, string>;
-    private _stack;
     private _titles;
     private _hiddenStacks;
+
+    protected _dataProvider: CFMultiAdapter;
 
     constructor() {
         super();
@@ -33,7 +34,6 @@ export class StackMixin extends CoordinateGridMixin {
 
         this._stackLayout = stack();
 
-        this._stack = [];
         this._titles = {};
 
         this._hiddenStacks = {};
@@ -49,11 +49,25 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public data() {
-        const layers = this._stack.filter(l => this._visibility(l));
+        let layers: any[] = this._dataProvider.data();
+        layers = layers.filter(l => this._visibility(l));
+
         if (!layers.length) {
             return [];
         }
-        layers.forEach((l, i) => this._prepareValues(l, i));
+
+        layers.forEach((l, i) => {
+            const allValues = l.rawData.map((d, i) => ({
+                x: this._conf.keyAccessor(d, i),
+                y: d._value,
+                data: d,
+                name: l.name,
+            }));
+
+            l.domainValues = allValues.filter(l => this._domainFilter()(l));
+            l.values = this._conf.evadeDomainFilter ? allValues : l.domainValues;
+        });
+
         const v4data = layers[0].values.map((v, i) => {
             const col = { x: v.x };
             layers.forEach(layer => {
@@ -70,19 +84,6 @@ export class StackMixin extends CoordinateGridMixin {
             });
         });
         return layers;
-    }
-
-    public _prepareValues(layer, layerIdx) {
-        const valAccessor = layer.accessor || this._dataProvider.conf().valueAccessor;
-        const allValues = layer.group.all().map((d, i) => ({
-            x: this._conf.keyAccessor(d, i),
-            y: valAccessor(d, i),
-            data: d,
-            name: layer.name,
-        }));
-
-        layer.domainValues = allValues.filter(l => this._domainFilter()(l));
-        layer.values = this._conf.evadeDomainFilter ? allValues : layer.domainValues;
     }
 
     public _domainFilter() {
@@ -122,24 +123,22 @@ export class StackMixin extends CoordinateGridMixin {
     public stack();
     public stack(group, name?, accessor?): this;
     public stack(group?, name?, accessor?) {
+        const stack = this._dataProvider.conf().stack;
         if (!arguments.length) {
-            return this._stack;
+            return stack;
         }
 
         if (arguments.length <= 2) {
             accessor = name;
         }
 
-        const layer: { [key: string]: any } = { group };
-        if (typeof name === 'string') {
-            layer.name = name;
-        } else {
-            layer.name = String(this._stack.length);
-        }
+        name = typeof name === "string" ? name : String(stack.length);
+        const layer: LayerSpec = { group, name };
         if (typeof accessor === 'function') {
-            layer.accessor = accessor;
+            layer.valueAccessor = accessor;
         }
-        this._stack.push(layer);
+        // @ts-ignore
+        stack.push(layer);
 
         return this;
     }
@@ -150,7 +149,9 @@ export class StackMixin extends CoordinateGridMixin {
         if (!arguments.length) {
             return super.group();
         }
-        this._stack = [];
+        this._dataProvider.configure({
+            stack: [],
+        });
         this._titles = {};
         this.stack(g, n);
         if (f) {
@@ -160,8 +161,9 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public _findLayerByName(n) {
-        const i = this._stack.map(d => d.name).indexOf(n);
-        return this._stack[i];
+        const stack = this._dataProvider.conf().stack;
+        const i = stack.map(d => d.name).indexOf(n);
+        return stack[i];
     }
 
     /**
@@ -184,10 +186,6 @@ export class StackMixin extends CoordinateGridMixin {
     public showStack(stackName) {
         this._hiddenStacks[stackName] = false;
         return this;
-    }
-
-    public getValueAccessorByIndex(index) {
-        return this._stack[index].accessor || this._dataProvider.conf().valueAccessor;
     }
 
     public yAxisMin() {
@@ -286,7 +284,8 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public legendables(): LegendItem[] {
-        return this._stack.map((layer, i) => ({
+        const stack = this._dataProvider.conf().stack;
+        return stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
             hidden: !this._visibility(layer),
