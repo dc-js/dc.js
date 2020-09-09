@@ -76,7 +76,7 @@ export class NumberDisplay extends BaseMixin {
 
         const valObj = group.value ? group.value() : this._maxBin(group.all());
 
-        return valObj._value;
+        return this._dataProvider.conf().valueAccessor(valObj);
     }
 
     /**
