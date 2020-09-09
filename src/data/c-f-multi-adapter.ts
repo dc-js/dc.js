@@ -37,21 +37,17 @@ export class CFMultiAdapter extends CFSimpleAdapter {
 
     // TODO: better typing
     public data(): any {
-        return this._conf.stack.map(layer => {
-            let entities = layer.group.all();
-
-            // create a two level deep copy defensively
-            entities.map(val => ({ ...val }));
-
+        // Two level defensive copy
+        const layers: any[] = this._conf.stack.map(l => ({ ...l }));
+        layers.forEach((layer) => {
             const valueAccessor = layer.valueAccessor || this._conf.valueAccessor;
-            entities.forEach(e => {
-                e._value = valueAccessor(e);
+            // Two level defensive copy
+            const rawData = layer.group.all().map(val => ({ ...val }));
+            rawData.forEach(d => {
+                d._value = valueAccessor(d);
             });
-
-            return {
-                name: layer.name,
-                rawData: entities,
-            };
+            layer.rawData = rawData;
         });
+        return layers;
     }
 }
