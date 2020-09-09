@@ -1,10 +1,10 @@
-import { Stack, stack } from 'd3-shape';
-import { max, min } from 'd3-array';
+import { Stack, stack } from "d3-shape";
+import { max, min } from "d3-array";
 
-import { add, subtract } from '../core/utils';
-import { CoordinateGridMixin } from './coordinate-grid-mixin';
-import { BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor } from '../core/types';
-import { IStackMixinConf } from './i-stack-mixin-conf';
+import { add, subtract } from "../core/utils";
+import { CoordinateGridMixin } from "./coordinate-grid-mixin";
+import { BaseAccessor, LegendItem, MinimalCFGroup, TitleAccessor } from "../core/types";
+import { IStackMixinConf } from "./i-stack-mixin-conf";
 import { CFMultiAdapter, LayerSpec } from "../data/c-f-multi-adapter";
 
 /**
@@ -50,7 +50,7 @@ export class StackMixin extends CoordinateGridMixin {
 
     public data() {
         let layers: any[] = this._dataProvider.data();
-        layers = layers.filter(l => this._visibility(l));
+        layers = layers.filter(l => this._isLayerVisible(l.name));
 
         if (!layers.length) {
             return [];
@@ -160,12 +160,6 @@ export class StackMixin extends CoordinateGridMixin {
         return super.group(g, n);
     }
 
-    public _findLayerByName(n) {
-        const stack = this._dataProvider.conf().layers;
-        const i = stack.map(d => d.name).indexOf(n);
-        return stack[i];
-    }
-
     /**
      * Hide all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
@@ -186,6 +180,10 @@ export class StackMixin extends CoordinateGridMixin {
     public showStack(stackName) {
         this._hiddenStacks[stackName] = false;
         return this;
+    }
+
+    public _isLayerVisible(layerName) {
+        return !this._hiddenStacks[layerName];
     }
 
     public yAxisMin() {
@@ -273,10 +271,6 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    public _visibility(l) {
-        return !this._hiddenStacks[l.name];
-    }
-
     public _ordinalXDomain() {
         const flat = this._flattenStack().map(d => d.data);
         const ordered = this._computeOrderedGroups(flat);
@@ -288,14 +282,13 @@ export class StackMixin extends CoordinateGridMixin {
         return stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
-            hidden: !this._visibility(layer),
+            hidden: !this._isLayerVisible(layer.name),
             color: this.getColor(layer, i),
         }));
     }
 
     public isLegendableHidden(d: LegendItem) {
-        const layer = this._findLayerByName(d.name);
-        return layer ? !this._visibility(layer) : false;
+        return !this._isLayerVisible(d.name);
     }
 
     public legendToggle(d: LegendItem) {
