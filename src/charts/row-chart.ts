@@ -52,7 +52,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         super();
 
         this.configure({
-            label: d => this.cappedKeyAccessor(d),
+            label: d => this._conf.keyAccessor(d),
             renderLabel: true,
             labelOffsetX: 10,
             labelOffsetY: undefined,
@@ -75,7 +75,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this._rowData = undefined;
 
-        this.title(d => `${this.cappedKeyAccessor(d)}: ${(d._value)}`);
+        this.title(d => `${(this._conf.keyAccessor(d))}: ${(d._value)}`);
 
         this.anchor(parent, chartGroup);
     }
@@ -340,6 +340,6 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     }
 
     private _isSelectedRow(d): boolean {
-        return this.hasFilter(this.cappedKeyAccessor(d));
+        return this.hasFilter(this._conf.keyAccessor(d));
     }
 }

@@ -96,13 +96,6 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
             return items;
         }
 
-        public cappedKeyAccessor(d, i?) {
-            if (d.others) {
-                return d.key;
-            }
-            return this._conf.keyAccessor(d, i);
-        }
-
         public onClick(d, i?) {
             if (d.others) {
                 this.filter([d.others]);
