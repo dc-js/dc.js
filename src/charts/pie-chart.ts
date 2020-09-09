@@ -83,7 +83,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         this._cx = undefined;
         this._cy = undefined;
 
-        this.title(d => `${this.cappedKeyAccessor(d)}: ${this.cappedValueAccessor(d)}`);
+        this.title(d => `${this.cappedKeyAccessor(d)}: ${d._value}`);
 
         this.anchor(parent, chartGroup);
     }
@@ -122,7 +122,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
         let pieData;
         // if we have data...
-        if (sum(this.data(), d => this.cappedValueAccessor(d))) {
+        // @ts-ignore // TODO: better typing
+        if (sum(this.data(), d => d._value)) {
             pieData = pieLayout(this.data());
             this._g.classed(this._emptyCssClass, false);
         } else {
@@ -461,9 +462,12 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
 
     private _pieLayout(): Pie<any, any> {
         // The 2nd argument is type of datum that will be used. TODO: revisit after refactoring.
-        return pie()
-            .sort(null)
-            .value(d => this.cappedValueAccessor(d)) as Pie<any, any>;
+        return (
+            pie()
+                .sort(null)
+                // @ts-ignore // TODO: better typing
+                .value(d => d._value) as Pie<any, any>
+        );
     }
 
     private _sliceTooSmall(d): boolean {
@@ -472,7 +476,7 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
     }
 
     private _sliceHasNoData(d): boolean {
-        return this.cappedValueAccessor(d) === 0;
+        return d._value === 0;
     }
 
     private _isOffCanvas(current): boolean {

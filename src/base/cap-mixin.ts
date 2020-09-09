@@ -103,13 +103,6 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
             return this._conf.keyAccessor(d, i);
         }
 
-        public cappedValueAccessor(d, i?) {
-            if (d.others) {
-                return d._value;
-            }
-            return d._value;
-        }
-
         public onClick(d, i?) {
             if (d.others) {
                 this.filter([d.others]);
