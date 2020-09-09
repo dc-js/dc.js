@@ -21,7 +21,8 @@ export class CFSimpleAdapter extends CFFilterHandler {
         return super.conf();
     }
 
-    public data() {
+    // TODO: better typing
+    public data(): any {
         let entities = this._conf.group.all();
 
         // create a two level deep copy defensively
