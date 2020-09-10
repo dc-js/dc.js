@@ -1,13 +1,13 @@
-import { sum } from 'd3-array';
-import { Constructor } from '../core/types';
-import { ICapMixinConf } from './i-cap-mixin-conf';
-import { IBaseMixinConf } from './i-base-mixin-conf';
+import { sum } from "d3-array";
+import { Constructor } from "../core/types";
+import { ICapMixinConf } from "./i-cap-mixin-conf";
+import { IBaseMixinConf } from "./i-base-mixin-conf";
 import { CFSimpleAdapter } from "../data/c-f-simple-adapter";
+import { sortBy } from "../core/utils";
+import { CFDataCapHelper } from "../data/c-f-data-cap-helper";
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
-    data();
-    _computeOrderedGroups(arg0: any);
     onClick(d: any);
     filter(arg0: any[]);
     dataProvider(): CFSimpleAdapter;
@@ -35,33 +35,7 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
         constructor(...args: any[]) {
             super();
 
-            const defaultOthersGrouper = (topItems, restItems) => {
-                // @ts-ignore
-                const restItemsSum = sum(restItems, d => d._value);
-                const restKeys = restItems.map(this._conf.keyAccessor);
-
-                if (restItemsSum > 0) {
-                    return topItems.concat([
-                        {
-                            others: restKeys,
-                            key: this._conf.othersLabel,
-                            _value: restItemsSum,
-                        },
-                    ]);
-                }
-                return topItems;
-            };
-
-            this.configure({
-                cap: Infinity,
-                takeFront: true,
-                othersLabel: 'Others',
-                othersGrouper: defaultOthersGrouper,
-            });
-
-            this.dataProvider().configure({
-                ordering: kv => -kv.value, // emulate old group.top(N) ordering
-            });
+            this.dataProvider(new CFDataCapHelper());
         }
 
         public configure(conf: ICapMixinConf): this {
@@ -71,42 +45,6 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
 
         public conf(): ICapMixinConf {
             return this._conf;
-        }
-
-        public data() {
-            let items = this._computeOrderedGroups(super.data());
-
-            if (this._conf.cap === Infinity) {
-                return items;
-            }
-
-            // return N "top" groups, where N is the cap, sorted by baseMixin.ordering
-            // whether top means front or back depends on takeFront
-            let rest;
-
-            if (this._conf.cap) {
-                if (this._conf.takeFront) {
-                    rest = items.slice(this._conf.cap);
-                    items = items.slice(0, this._conf.cap);
-                } else {
-                    const start = Math.max(0, items.length - this._conf.cap);
-                    rest = items.slice(0, start);
-                    items = items.slice(start);
-                }
-            }
-
-            if (this._conf.othersGrouper) {
-                return this._conf.othersGrouper(items, rest);
-            }
-
-            return items;
-        }
-
-        public onClick(d, i?) {
-            if (d.others) {
-                this.filter([d.others]);
-            }
-            super.onClick(d);
         }
     };
 }
