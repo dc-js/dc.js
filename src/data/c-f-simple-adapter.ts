@@ -11,6 +11,10 @@ export class CFSimpleAdapter extends CFFilterHandler {
 
     constructor() {
         super();
+
+        this.configure({
+            valueAccessor: d => d.value,
+        });
     }
 
     public configure(conf: ICFSimpleAdapterConf): this {
