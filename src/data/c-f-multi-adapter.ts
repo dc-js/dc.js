@@ -1,5 +1,4 @@
-import { ICFFilterHandlerConf } from './c-f-filter-handler';
-import { CFGrouping, MinimalCFGroup, ValueAccessor } from '../core/types';
+import { MinimalCFGroup, ValueAccessor } from '../core/types';
 import { CFSimpleAdapter, ICFSimpleAdapterConf } from './c-f-simple-adapter';
 
 export interface LayerSpec {

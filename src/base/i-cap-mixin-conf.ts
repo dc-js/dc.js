@@ -1,4 +1,3 @@
 import { IBaseMixinConf } from './i-base-mixin-conf';
 
-export interface ICapMixinConf extends IBaseMixinConf {
-}
+export interface ICapMixinConf extends IBaseMixinConf {}

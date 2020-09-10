@@ -505,9 +505,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         const ordering = this.dataProvider().conf().ordering;
         const _hierarchy = hierarchy(data)
             .sum(d => (d.children ? 0 : this._extendedValueAccessor(d)))
-            .sort((a, b) =>
-                ascending(ordering(getSortable(a)), ordering(getSortable(b)))
-            );
+            .sort((a, b) => ascending(ordering(getSortable(a)), ordering(getSortable(b))));
 
         const _partition = partition().size([2 * Math.PI, this._conf.ringSizes.partitionDy()]);
 
