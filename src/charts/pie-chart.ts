@@ -3,13 +3,13 @@ import { Arc, arc, DefaultArcObject, Pie, pie } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 
-import { CapMixin } from '../base/cap-mixin';
 import { ColorMixin } from '../base/color-mixin';
 import { BaseMixin } from '../base/base-mixin';
 import { transition } from '../core/core';
 import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
 import { IPieChartConf } from './i-pie-chart-conf';
 import { adaptHandler } from '../core/d3compat';
+import { CFDataCapHelper } from "../data/c-f-data-cap-helper";
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -26,7 +26,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * @mixes BaseMixin
  */
 
-export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
+export class PieChart extends ColorMixin(BaseMixin) {
     public _conf: IPieChartConf;
 
     private _sliceCssClass: string;
@@ -70,6 +70,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             externalLabelRadius: undefined,
             drawPaths: false,
         });
+
+        this.dataProvider(new CFDataCapHelper());
 
         this._sliceCssClass = 'pie-slice';
         this._labelCssClass = 'pie-label';
