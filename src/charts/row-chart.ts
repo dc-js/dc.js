@@ -1,15 +1,20 @@
-import { extent } from "d3-array";
-import { Axis, axisBottom } from "d3-axis";
-import { scaleLinear } from "d3-scale";
+import { extent } from 'd3-array';
+import { Axis, axisBottom } from 'd3-axis';
+import { scaleLinear } from 'd3-scale';
 
-import { CapMixin } from "../base/cap-mixin";
-import { MarginMixin } from "../base/margin-mixin";
-import { ColorMixin } from "../base/color-mixin";
-import { transition } from "../core/core";
-import { Selection } from "d3-selection";
-import { ChartGroupType, ChartParentType, MinimalXYScale, SVGGElementSelection } from "../core/types";
-import { IRowChartConf } from "./i-row-chart-conf";
-import { adaptHandler } from "../core/d3compat";
+import { CapMixin } from '../base/cap-mixin';
+import { MarginMixin } from '../base/margin-mixin';
+import { ColorMixin } from '../base/color-mixin';
+import { transition } from '../core/core';
+import { Selection } from 'd3-selection';
+import {
+    ChartGroupType,
+    ChartParentType,
+    MinimalXYScale,
+    SVGGElementSelection,
+} from '../core/types';
+import { IRowChartConf } from './i-row-chart-conf';
+import { adaptHandler } from '../core/d3compat';
 
 /**
  * Concrete row chart implementation.
@@ -75,7 +80,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
 
         this._rowData = undefined;
 
-        this.title(d => `${(this._conf.keyAccessor(d))}: ${(d._value)}`);
+        this.title(d => `${this._conf.keyAccessor(d)}: ${d._value}`);
 
         this.anchor(parent, chartGroup);
     }

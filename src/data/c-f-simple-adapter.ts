@@ -1,4 +1,4 @@
-import { BaseAccessor, MinimalCFGroup, ValueAccessor } from "../core/types";
+import { BaseAccessor, MinimalCFGroup, ValueAccessor } from '../core/types';
 import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler';
 
 export interface ICFSimpleAdapterConf extends ICFFilterHandlerConf {

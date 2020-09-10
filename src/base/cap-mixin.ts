@@ -1,10 +1,8 @@
-import { sum } from "d3-array";
-import { Constructor } from "../core/types";
-import { ICapMixinConf } from "./i-cap-mixin-conf";
-import { IBaseMixinConf } from "./i-base-mixin-conf";
-import { CFSimpleAdapter } from "../data/c-f-simple-adapter";
-import { sortBy } from "../core/utils";
-import { CFDataCapHelper } from "../data/c-f-data-cap-helper";
+import { Constructor } from '../core/types';
+import { ICapMixinConf } from './i-cap-mixin-conf';
+import { IBaseMixinConf } from './i-base-mixin-conf';
+import { CFSimpleAdapter } from '../data/c-f-simple-adapter';
+import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
