@@ -72,9 +72,7 @@ export class BaseMixin {
             renderTitle: true,
         });
 
-        this._dataProvider = new CFSimpleAdapter().configure({
-            valueAccessor: d => d.value,
-        });
+        this._dataProvider = new CFSimpleAdapter();
 
         this._anchor = undefined;
         this._root = undefined;
