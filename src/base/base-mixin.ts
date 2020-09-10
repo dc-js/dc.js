@@ -59,7 +59,6 @@ export class BaseMixin {
             minWidth: 200,
             minHeight: 200,
             useViewBoxResizing: false,
-            ordering: d => d.key,
             filterPrinter: printers.filters,
             controlsUseVisibility: false,
             transitionDuration: 750,
@@ -249,7 +248,7 @@ export class BaseMixin {
     }
 
     public _computeOrderedGroups(data) {
-        return sortBy(data, this._conf.ordering);
+        return sortBy(data, this._dataProvider.conf().ordering);
     }
 
     /**

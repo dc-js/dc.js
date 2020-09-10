@@ -16,7 +16,6 @@ export interface IBaseMixinConf {
     readonly transitionDelay?: number;
     readonly transitionDuration?: number;
     readonly filterPrinter?: (filters: any) => string;
-    readonly ordering?: BaseAccessor<any>;
     readonly useViewBoxResizing?: boolean;
     readonly minWidth?: number;
     readonly minHeight?: number;
