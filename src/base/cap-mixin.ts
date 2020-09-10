@@ -2,6 +2,7 @@ import { sum } from 'd3-array';
 import { Constructor } from '../core/types';
 import { ICapMixinConf } from './i-cap-mixin-conf';
 import { IBaseMixinConf } from './i-base-mixin-conf';
+import { CFSimpleAdapter } from "../data/c-f-simple-adapter";
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
@@ -9,6 +10,8 @@ interface MinimalBase {
     _computeOrderedGroups(arg0: any);
     onClick(d: any);
     filter(arg0: any[]);
+    dataProvider(): CFSimpleAdapter;
+    dataProvider(dataProvider: CFSimpleAdapter): this;
 }
 
 /**
@@ -51,10 +54,13 @@ export function CapMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
 
             this.configure({
                 cap: Infinity,
-                ordering: kv => -kv.value, // emulate old group.top(N) ordering
                 takeFront: true,
                 othersLabel: 'Others',
                 othersGrouper: defaultOthersGrouper,
+            });
+
+            this.dataProvider().configure({
+                ordering: kv => -kv.value, // emulate old group.top(N) ordering
             });
         }
 

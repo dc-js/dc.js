@@ -119,9 +119,9 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         public ordering(orderFunction: BaseAccessor<any>): this;
         public ordering(orderFunction?) {
             if (!arguments.length) {
-                return this._conf.ordering;
+                return this._dataProvider.conf().ordering;
             }
-            this.configure({ ordering: orderFunction });
+            this._dataProvider.configure({ ordering: orderFunction });
             this.expireCache();
             return this;
         }

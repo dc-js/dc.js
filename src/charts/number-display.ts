@@ -47,10 +47,13 @@ export class NumberDisplay extends BaseMixin {
         super();
 
         this.configure({
-            ordering: kv => kv.value, // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
             transitionDuration: 250, // good default
             transitionDelay: 0,
             formatNumber: format('.2s'),
+        });
+
+        this.dataProvider().configure({
+            ordering: kv => kv.value, // default to ordering by value, to emulate old group.top(1) behavior when multiple groups
         });
 
         this._html = { one: '', some: '', none: '' };

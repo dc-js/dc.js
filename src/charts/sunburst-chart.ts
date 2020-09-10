@@ -63,7 +63,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         this.configure({
             colorAccessor: d => this._conf.keyAccessor(d),
-            ordering: d => d.key, // override cap mixin // TODO: not needed, does not mix CapMixin any longer
             label: d => this._conf.keyAccessor(d),
             renderLabel: true,
             transitionDuration: 350,
@@ -73,6 +72,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             ringSizes: this.defaultRingSizes(),
             minAngleForLabel: DEFAULT_MIN_ANGLE_FOR_LABEL,
             externalLabelRadius: undefined,
+        });
+
+        this.dataProvider().configure({
+            ordering: d => d.key, // override cap mixin // TODO: not needed, does not mix CapMixin any longer
         });
 
         this._sliceCssClass = 'pie-slice';
@@ -499,10 +502,11 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         const getSortable = function (d) {
             return { key: d.data.key, value: d.value };
         };
+        const ordering = this.dataProvider().conf().ordering;
         const _hierarchy = hierarchy(data)
             .sum(d => (d.children ? 0 : this._extendedValueAccessor(d)))
             .sort((a, b) =>
-                ascending(this._conf.ordering(getSortable(a)), this._conf.ordering(getSortable(b)))
+                ascending(ordering(getSortable(a)), ordering(getSortable(b)))
             );
 
         const _partition = partition().size([2 * Math.PI, this._conf.ringSizes.partitionDy()]);

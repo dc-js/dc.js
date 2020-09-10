@@ -1,9 +1,10 @@
-import { MinimalCFGroup, ValueAccessor } from '../core/types';
+import { BaseAccessor, MinimalCFGroup, ValueAccessor } from "../core/types";
 import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler';
 
 export interface ICFSimpleAdapterConf extends ICFFilterHandlerConf {
     readonly group?: MinimalCFGroup;
     readonly valueAccessor?: ValueAccessor;
+    readonly ordering?: BaseAccessor<any>;
 }
 
 export class CFSimpleAdapter extends CFFilterHandler {
@@ -14,6 +15,7 @@ export class CFSimpleAdapter extends CFFilterHandler {
 
         this.configure({
             valueAccessor: d => d.value,
+            ordering: d => d.key,
         });
     }
 
