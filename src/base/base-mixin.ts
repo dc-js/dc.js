@@ -1,8 +1,7 @@
 import { BaseType, select, Selection } from 'd3-selection';
 import { dispatch, Dispatch } from 'd3-dispatch';
-import { ascending } from 'd3-array';
 
-import { isNumber, uniqueId } from '../core/utils';
+import { isNumber, sortBy, uniqueId } from '../core/utils';
 import { instanceOfChart } from '../core/core';
 import { chartRegistry } from '../core/chart-registry';
 import { constants } from '../core/constants';
@@ -250,10 +249,7 @@ export class BaseMixin {
     }
 
     public _computeOrderedGroups(data) {
-        // clone the array before sorting, otherwise Array.sort sorts in-place
-        return Array.from(data).sort((a, b) =>
-            ascending(this._conf.ordering(a), this._conf.ordering(b))
-        );
+        return sortBy(data, this._conf.ordering);
     }
 
     /**
