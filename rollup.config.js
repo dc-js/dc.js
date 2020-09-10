@@ -1,16 +1,16 @@
-import {terser} from 'rollup-plugin-terser';
+import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
 import license from 'rollup-plugin-license';
 import typescript from 'rollup-plugin-typescript2';
 
-const jsonPlugin = json({include: 'package.json', preferConst: true});
+const jsonPlugin = json({ include: 'package.json', preferConst: true });
 const licensePlugin = license({
     sourcemap: true,
     banner: {
         content: {
-            file: 'LICENSE_BANNER'
-        }
-    }
+            file: 'LICENSE_BANNER',
+        },
+    },
 });
 
 const d3Modules = {
@@ -31,7 +31,7 @@ const d3Modules = {
     'd3-time': 'd3',
     'd3-time-format': 'd3',
     'd3-timer': 'd3',
-    'd3-zoom': 'd3'
+    'd3-zoom': 'd3',
 };
 
 const umdConf = {
@@ -40,34 +40,42 @@ const umdConf = {
     name: 'dc',
     sourcemap: true,
     globals: d3Modules,
-    paths: d3Modules
+    paths: d3Modules,
 };
 
 const umdMinConf = Object.assign({}, umdConf, {
     file: 'dist/dc.min.js',
-    plugins: [terser()]
+    plugins: [terser()],
 });
+
+const plugins = [
+    jsonPlugin,
+    licensePlugin,
+    typescript({
+        tsconfig: 'tsconfig.json',
+        tsconfigOverride: {
+            compilerOptions: {
+                declaration: false, // Type definitions are generated as part of ESM6 by `tsc`
+                resolveJsonModule: true, // to get info from package.json
+            },
+        },
+    }),
+];
 
 export default [
     {
         input: 'src/compat/index-compat.ts',
         external: Object.keys(d3Modules),
-        plugins: [
-            jsonPlugin,
-            licensePlugin,
-            typescript({
-                tsconfig: 'tsconfig.json',
-                tsconfigOverride: { compilerOptions:
-                        {
-                            declaration: false,      // Type definitions are generated as part of ESM6 by `tsc`
-                            resolveJsonModule: true  // to get info from package.json
-                        }
-                }
-            })
-        ],
+        plugins: plugins,
+        output: [umdConf, umdMinConf],
+    },
+    {
+        input: 'src/index-with-version.ts',
+        external: Object.keys(d3Modules),
+        plugins: plugins,
         output: [
-            umdConf,
-            umdMinConf
-        ]
-    }
+            Object.assign({}, umdConf, { file: 'dist/dc-neo.js' }),
+            Object.assign({}, umdMinConf, { file: 'dist/dc-neo.min.js' }),
+        ],
+    },
 ];
