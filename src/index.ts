@@ -14,7 +14,6 @@ export * from './core/utils';
 
 export * from './base/base-mixin';
 export * from './base/bubble-mixin';
-export * from './base/cap-mixin';
 export * from './base/color-mixin';
 export * from './base/coordinate-grid-mixin';
 export * from './base/d3.box';

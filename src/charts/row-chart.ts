@@ -2,7 +2,6 @@ import { extent } from 'd3-array';
 import { Axis, axisBottom } from 'd3-axis';
 import { scaleLinear } from 'd3-scale';
 
-import { CapMixin } from '../base/cap-mixin';
 import { MarginMixin } from '../base/margin-mixin';
 import { ColorMixin } from '../base/color-mixin';
 import { transition } from '../core/core';
@@ -15,6 +14,7 @@ import {
 } from '../core/types';
 import { IRowChartConf } from './i-row-chart-conf';
 import { adaptHandler } from '../core/d3compat';
+import { CFDataCapHelper } from "../data/c-f-data-cap-helper";
 
 /**
  * Concrete row chart implementation.
@@ -27,7 +27,7 @@ import { adaptHandler } from '../core/d3compat';
  * @mixes BaseMixin
  */
 
-export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
+export class RowChart extends ColorMixin(MarginMixin) {
     public _conf: IRowChartConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
@@ -67,6 +67,8 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             renderTitleLabel: false,
             elasticX: undefined,
         });
+
+        this.dataProvider(new CFDataCapHelper());
 
         this._g = undefined;
 

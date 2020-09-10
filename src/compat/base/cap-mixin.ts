@@ -1,14 +1,16 @@
 import { Constructor } from '../../core/types';
 import { BaseMixinExt } from './base-mixin';
-import { CapMixin as CapMixinNeo } from '../../base/cap-mixin';
 import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
+import { CFDataCapHelper } from "../../data/c-f-data-cap-helper";
 
-class Intermediate extends BaseMixinExt(CapMixinNeo(BaseMixinNeo)) {}
+class Intermediate extends BaseMixinExt(BaseMixinNeo) {}
 
 export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
         constructor(...args: any[]) {
             super(...args);
+
+            this.dataProvider(new CFDataCapHelper());
         }
 
         /**
@@ -135,7 +137,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
 }
 
 export function CapMixin<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
-    return class extends CapMixinExt(CapMixinNeo(BaseMixinExt(Base))) {
+    return class extends CapMixinExt(BaseMixinExt(Base)) {
         constructor(...args: any[]) {
             super(...args);
         }
