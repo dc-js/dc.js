@@ -3,12 +3,20 @@ import { format } from 'd3-format';
 
 import { constants } from './constants';
 import { config } from './config';
+import { ascending } from 'd3-array';
 
 export const pluck2 = function (n, f) {
     return function (d, i) {
         return f.call(d, d[n], i);
     };
 };
+
+export function sortBy(data, ordering: (d: any) => any) {
+    // clone the array before sorting, otherwise Array.sort sorts in-place
+    return [...data].sort((a, b) => {
+        return ascending(ordering(a), ordering(b));
+    });
+}
 
 /**
  * Print a single value filter.
