@@ -45,9 +45,11 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
         public cap(count): this;
         public cap(count?) {
             if (!arguments.length) {
-                return this._conf.cap;
+                // @ts-ignore
+                return this._dataProvider.conf().cap;
             }
-            this.configure({ cap: count });
+            // @ts-ignore
+            this._dataProvider.configure({ cap: count });
             return this;
         }
 
@@ -64,9 +66,11 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
         public takeFront(takeFront): this;
         public takeFront(takeFront?) {
             if (!arguments.length) {
-                return this._conf.takeFront;
+                // @ts-ignore
+                return this._dataProvider.conf().takeFront;
             }
-            this.configure({ takeFront: takeFront });
+            // @ts-ignore
+            this._dataProvider.configure({ takeFront: takeFront });
             return this;
         }
 
@@ -81,9 +85,11 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
         public othersLabel(label): this;
         public othersLabel(label?) {
             if (!arguments.length) {
-                return this._conf.othersLabel;
+                // @ts-ignore
+                return this._dataProvider.conf().othersLabel;
             }
-            this.configure({ othersLabel: label });
+            // @ts-ignore
+            this._dataProvider.configure({ othersLabel: label });
             return this;
         }
 
@@ -118,9 +124,11 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
         public othersGrouper(grouperFunction): this;
         public othersGrouper(grouperFunction?) {
             if (!arguments.length) {
-                return this._conf.othersGrouper;
+                // @ts-ignore
+                return this._dataProvider.conf().othersGrouper;
             }
-            this.configure({ othersGrouper: grouperFunction });
+            // @ts-ignore
+            this._dataProvider.configure({ othersGrouper: grouperFunction });
             return this;
         }
     };
