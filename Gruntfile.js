@@ -170,7 +170,7 @@ module.exports = function (grunt) {
             }
         },
         copy: {
-            'dc-to-gh': {
+            web: {
                 files: [
                     {
                         expand: true,
@@ -341,6 +341,9 @@ module.exports = function (grunt) {
             'dist-clean': {
                 command: 'rm -rf dist/'
             },
+            'web-specs-clean' :{
+                command: 'rm -rf web/ spec/3rd-part'
+            },
             rollup: {
                 command: 'rollup --config'
             },
@@ -395,19 +398,26 @@ module.exports = function (grunt) {
 
     // task aliases
     grunt.registerTask('build', ['shell:dist-clean', 'shell:tsc', 'shell:rollup', 'sass', 'cssmin']);
-    grunt.registerTask('docs', ['build', 'copy', 'shell:typedoc', 'docco', 'fileindex']);
-    grunt.registerTask('web', ['docs', 'gh-pages']);
-    grunt.registerTask('server-only', ['docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
-    grunt.registerTask('server', ['server-only', 'watch:scripts-sass-docs']);
-    // This task will active server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
-    grunt.registerTask('test-n-serve', ['server-only', 'test', 'watch:tests']);
-    grunt.registerTask('test', ['build', 'copy', 'karma:unit']);
-    grunt.registerTask('coverage', ['build', 'copy', 'karma:coverage']);
-    grunt.registerTask('ci-pull', ['build', 'copy', 'karma:ci']);
-    grunt.registerTask('ci-windows', ['build', 'copy', 'karma:ci-windows']);
-    grunt.registerTask('ci-macos', ['build', 'copy', 'karma:ci-macos']);
+    grunt.registerTask('pre-test', ['build', 'shell:web-specs-clean', 'copy']);
+    grunt.registerTask('build-copy', ['build', 'copy']);
+
+    grunt.registerTask('test', ['pre-test', 'karma:unit']);
+    grunt.registerTask('coverage', ['pre-test', 'karma:coverage']);
     grunt.registerTask('lint', ['shell:tslint', 'shell:eslint', 'shell:prettier-check']);
     grunt.registerTask('lint-fix', ['shell:tslint-fix', 'shell:eslint-fix', 'shell:prettier']);
+
+    grunt.registerTask('docs', ['shell:typedoc', 'docco']);
+    grunt.registerTask('web', ['build-copy', 'docs', 'gh-pages']);
+    grunt.registerTask('doc-debug', ['shell:typedoc', 'watch:typedoc']);
+
+    grunt.registerTask('server-only', ['build-copy', 'docs', 'fileindex', 'jasmine:specs:build', 'connect:server']);
+    grunt.registerTask('server', ['server-only', 'watch:scripts-sass-docs']);
+    // This task will activate server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
+    grunt.registerTask('test-n-serve', ['connect:server', 'test', 'watch:tests']);
+
+    grunt.registerTask('ci-pull', ['pre-test', 'karma:ci']);
+    grunt.registerTask('ci-windows', ['pre-test', 'karma:ci-windows']);
+    grunt.registerTask('ci-macos', ['pre-test', 'karma:ci-macos']);
+
     grunt.registerTask('default', ['build', 'shell:hooks']);
-    grunt.registerTask('doc-debug', ['build', 'shell:typedoc', 'watch:typedoc']);
 };
