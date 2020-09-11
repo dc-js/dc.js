@@ -415,7 +415,7 @@ module.exports = function (grunt) {
     // This task will activate server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
     grunt.registerTask('test-n-serve', ['connect:server', 'test', 'watch:tests']);
 
-    grunt.registerTask('ci-pull', ['pre-test', 'karma:ci']);
+    grunt.registerTask('ci', ['pre-test', 'karma:ci']);
     grunt.registerTask('ci-windows', ['pre-test', 'karma:ci-windows']);
     grunt.registerTask('ci-macos', ['pre-test', 'karma:ci-macos']);
 
