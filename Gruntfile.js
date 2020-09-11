@@ -9,34 +9,22 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
 
     const formatFileList = require('./grunt/format-file-list')(grunt);
+    const lintableFiles = "'spec/**/*.js' '*.js' 'grunt/*.js' 'web-src/stock.js'";
 
-    const config = {
-        src: 'src',
-        spec: 'spec',
-        web: 'web',
-        websrc: 'web-src',
-        dist: 'dist',
-        pkg: require('./package.json'),
-        banner: grunt.file.read('./LICENSE_BANNER')
-    };
-
+    const pkg = require('./package.json');
     // in d3v4 and d3v5 pre-built d3.js are in different sub folders
-    const d3pkgSubDir = config.pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
-
-    const lintableFiles = `'${config.spec}/**/*.js' '*.js' 'grunt/*.js' '<%= conf.websrc %>/stock.js'`;
+    const d3pkgSubDir = pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
 
     const sass = require('node-sass');
 
     grunt.initConfig({
-        conf: config,
-
         sass: {
             options: {
                 implementation: sass
             },
             dist: {
                 files: {
-                    '<%= conf.dist %>/style/<%= conf.pkg.name %>.css': 'style/<%= conf.pkg.name %>.scss'
+                    'dist/style/dc.css': 'style/dc.scss'
                 }
             }
         },
@@ -47,43 +35,43 @@ module.exports = function (grunt) {
             },
             main: {
                 files: {
-                    '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css': ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css']
+                    'dist/style/dc.min.css': ['dist/style/dc.css']
                 }
             }
         },
         watch: {
             typedoc: {
-                files: ['docs/**/*', '<%= conf.src %>/**/*.ts', '<%= conf.src %>/**/*.js'],
+                files: ['docs/**/*', 'src/**/*.ts', 'src/**/*.js'],
                 tasks: ['shell:typedoc']
             },
             scripts: {
-                files: ['<%= conf.src %>/**/*.ts', '<%= conf.src %>/**/*.js', '<%= conf.web %>/stock.js'],
+                files: ['src/**/*.ts', 'src/**/*.js', 'web/stock.js'],
                 tasks: ['docs']
             },
             websrc: {
-                files: ['<%= conf.websrc %>/**/*.html', '<%= conf.websrc %>/**/*.js'],
+                files: ['web-src/**/*.html', 'web-src/**/*.js'],
                 tasks: ['docs']
             },
             sass: {
-                files: ['style/<%= conf.pkg.name %>.scss'],
+                files: ['style/dc.scss'],
                 tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh']
             },
             tests: {
                 files: [
-                    '<%= conf.src %>/**/*.ts',
-                    '<%= conf.src %>/**/*.js',
-                    '<%= conf.spec %>/*.js',
-                    '<%= conf.spec %>/helpers/*.js',
-                    '<%= conf.websrc %>/**/*',
+                    'src/**/*.ts',
+                    'src/**/*.js',
+                    'spec/*.js',
+                    'spec/helpers/*.js',
+                    'web-src/**/*',
                     'docs/**/*'],
                 tasks: ['test']
             },
             reload: {
-                files: ['<%= conf.dist %>/<%= conf.pkg.name %>.js',
-                        '<%= conf.dist %>/style/<%= conf.pkg.name %>.css',
-                        '<%= conf.web %>/js/<%= conf.pkg.name %>.js',
-                        '<%= conf.web %>/css/<%= conf.pkg.name %>.css',
-                        '<%= conf.dist %>/<%= conf.pkg.name %>.min.js'],
+                files: ['dist/dc.js',
+                        'dist/style/dc.css',
+                        'web/js/dc.js',
+                        'web/css/dc.css',
+                        'dist/dc.min.js'],
                 options: {
                     livereload: true
                 }
@@ -102,19 +90,19 @@ module.exports = function (grunt) {
                 options: {
                     display: 'short',
                     summary: true,
-                    specs: '<%= conf.spec %>/*-spec.js',
+                    specs: 'spec/*-spec.js',
                     helpers: [
-                        '<%= conf.spec %>/helpers/*.js',
-                        '<%= conf.spec %>/3rd-party/*.js'
+                        'spec/helpers/*.js',
+                        'spec/3rd-party/*.js'
                     ],
                     styles: [
-                        '<%= conf.dist %>/style/dc.css'
+                        'dist/style/dc.css'
                     ],
-                    outfile: '<%= conf.spec %>/index.html',
+                    outfile: 'spec/index.html',
                     keepRunner: true
                 },
                 src: [
-                    '<%= conf.dist %>/<%= conf.pkg.name %>.js'
+                    'dist/dc.js'
                 ]
             }
         },
@@ -130,7 +118,7 @@ module.exports = function (grunt) {
                     // source files, that you wanna generate coverage for
                     // do not include tests or libraries
                     // (these files will be instrumented by Istanbul)
-                    '<%= conf.dist %>/<%= conf.pkg.name %>.js': ['coverage']
+                    'dist/dc.js': ['coverage']
                 },
 
                 // optionally, configure the reporter
@@ -157,13 +145,13 @@ module.exports = function (grunt) {
         },
         docco: {
             options: {
-                dst: '<%= conf.web %>/docs'
+                dst: 'web/docs'
             },
             howto: {
                 files: [
                     {
                         expand: true,
-                        cwd: '<%= conf.web %>',
+                        cwd: 'web',
                         src: ['stock.js']
                     }
                 ]
@@ -175,37 +163,37 @@ module.exports = function (grunt) {
                     {
                         expand: true,
                         nonull: true,
-                        cwd: '<%= conf.websrc %>',
+                        cwd: 'web-src',
                         src: '**',
-                        dest: '<%= conf.web %>/'
+                        dest: 'web/'
                     },
                     {
                         expand: true,
                         cwd: 'docs/old-api-docs',
                         src: '**',
-                        dest: '<%= conf.web %>/docs/'
+                        dest: 'web/docs/'
                     },
                     {
                         expand: true,
                         flatten: true,
                         nonull: true,
-                        src: ['<%= conf.dist %>/style/<%= conf.pkg.name %>.css', '<%= conf.dist %>/style/<%= conf.pkg.name %>.min.css'],
-                        dest: '<%= conf.web %>/css/'
+                        src: ['dist/style/dc.css', 'dist/style/dc.min.css'],
+                        dest: 'web/css/'
                     },
                     {
                         expand: true,
                         flatten: true,
                         nonull: true,
                         src: [
-                            '<%= conf.dist %>/*.js',
-                            '<%= conf.dist %>/*.js.map',
+                            'dist/*.js',
+                            'dist/*.js.map',
                             `node_modules/d3/${d3pkgSubDir}/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
                             'node_modules/reductio/reductio.js',
                             'node_modules/regression/dist/regression.js'
                         ],
-                        dest: '<%= conf.web %>/js/'
+                        dest: 'web/js/'
                     }
                 ]
             },
@@ -219,7 +207,7 @@ module.exports = function (grunt) {
                             `node_modules/d3/${d3pkgSubDir}/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                         ],
-                        dest: '<%= conf.spec %>/3rd-party/'
+                        dest: 'spec/3rd-party/'
                     },
                     {
                         expand: true,
@@ -228,7 +216,7 @@ module.exports = function (grunt) {
                         src: [
                             'node_modules/compare-versions/index.js'
                         ],
-                        dest: '<%= conf.spec %>/3rd-party/',
+                        dest: 'spec/3rd-party/',
                         rename: function (dest, src) {
                             return `${dest}compare-versions.js`;
                         }
@@ -245,10 +233,10 @@ module.exports = function (grunt) {
                     heading: 'Examples of using dc.js',
                     description: 'An attempt to present a simple example of each chart type.',
                     also: ['transitions', 'resizing', 'zoom'],
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/examples'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/web-src/examples'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/examples/index.html', src: ['<%= conf.websrc %>/examples/*.html']}
+                    {dest: 'web/examples/index.html', src: ['web-src/examples/*.html']}
                 ]
             },
             'transitions-listing': {
@@ -260,10 +248,10 @@ module.exports = function (grunt) {
                     description: 'Transitions can only be tested by eye. ' +
                         'These pages automate the transitions so they can be visually verified.',
                     also: ['examples', 'resizing', 'zoom'],
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/transitions'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/web-src/transitions'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/transitions/index.html', src: ['<%= conf.websrc %>/transitions/*.html']}
+                    {dest: 'web/transitions/index.html', src: ['web-src/transitions/*.html']}
                 ]
             },
             'resizing-listing': {
@@ -279,10 +267,10 @@ module.exports = function (grunt) {
                         '<a href="http://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#useViewBoxResizing__anchor">' +
                         'useViewBoxResizing</a> strategy.',
                     also: ['examples', 'transitions', 'zoom'],
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/resizing'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/web-src/resizing'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/resizing/index.html', src: ['<%= conf.websrc %>/resizing/*.html']}
+                    {dest: 'web/resizing/index.html', src: ['web-src/resizing/*.html']}
                 ]
             },
             'zoom-listing': {
@@ -294,16 +282,16 @@ module.exports = function (grunt) {
                     description: 'It\'s hard to conceive of a way to test zoom except by trying it. ' +
                         'So this is a substitute for automated tests in this area',
                     also: ['examples', 'transitions', 'resizing'],
-                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/<%= conf.websrc %>/zoom'
+                    sourceLink: 'https://github.com/dc-js/dc.js/tree/develop/web-src/zoom'
                 },
                 files: [
-                    {dest: '<%= conf.web %>/zoom/index.html', src: ['<%= conf.websrc %>/zoom/*.html']}
+                    {dest: 'web/zoom/index.html', src: ['web-src/zoom/*.html']}
                 ]
             }
         },
         'gh-pages': {
             options: {
-                base: '<%= conf.web %>',
+                base: 'web',
                 message: 'Synced from from master branch.'
             },
             src: ['**']
@@ -336,7 +324,7 @@ module.exports = function (grunt) {
                     ' || echo \'Cowardly refusing to overwrite your existing git pre-commit hook.\''
             },
             hierarchy: {
-                command: 'dot -Tsvg -o <%= conf.websrc %>/img/class-hierarchy.svg class-hierarchy.dot'
+                command: 'dot -Tsvg -o web-src/img/class-hierarchy.svg class-hierarchy.dot'
             },
             'dist-clean': {
                 command: 'rm -rf dist/'
