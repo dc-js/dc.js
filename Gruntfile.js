@@ -63,6 +63,8 @@ module.exports = function (grunt) {
                     'src/**/*.js',
                     'spec/*.js',
                     'spec/helpers/*.js',
+                    'tsconfig.json',
+                    'rollup.config.js',
                 ],
                 tasks: ['test'],
                 options: {
