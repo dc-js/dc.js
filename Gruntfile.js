@@ -42,11 +42,11 @@ module.exports = function (grunt) {
         },
         watch: {
             typedoc: {
-                files: ['docs/**/*', 'src/**/*.ts', 'src/**/*.js'],
+                files: ['docs/**/*', 'src/**/*.ts'],
                 tasks: ['shell:typedoc'],
             },
             scripts: {
-                files: ['src/**/*.ts', 'src/**/*.js', 'web/stock.js'],
+                files: ['src/**/*.ts', 'web/stock.js'],
                 tasks: ['docs'],
             },
             websrc: {
@@ -60,7 +60,6 @@ module.exports = function (grunt) {
             tests: {
                 files: [
                     'src/**/*.ts',
-                    'src/**/*.js',
                     'spec/*.js',
                     'spec/helpers/*.js',
                     'tsconfig.json',
