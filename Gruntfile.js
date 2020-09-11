@@ -55,7 +55,7 @@ module.exports = function (grunt) {
             },
             sass: {
                 files: ['style/dc.scss'],
-                tasks: ['sass', 'cssmin:main', 'copy:dc-to-gh'],
+                tasks: ['sass', 'cssmin:main', 'copy:web'],
             },
             tests: {
                 files: [
@@ -63,10 +63,11 @@ module.exports = function (grunt) {
                     'src/**/*.js',
                     'spec/*.js',
                     'spec/helpers/*.js',
-                    'web-src/**/*',
-                    'docs/**/*',
                 ],
                 tasks: ['test'],
+                options: {
+                    atBegin: true,
+                },
             },
             reload: {
                 files: [
@@ -414,7 +415,7 @@ module.exports = function (grunt) {
     ]);
     grunt.registerTask('server', ['server-only', 'watch:scripts-sass-docs']);
     // This task will activate server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
-    grunt.registerTask('test-n-serve', ['connect:server', 'test', 'watch:tests']);
+    grunt.registerTask('test-n-serve', ['connect:server', 'watch:tests']);
 
     grunt.registerTask('ci', ['pre-test', 'karma:ci']);
     grunt.registerTask('ci-windows', ['pre-test', 'karma:ci-windows']);
