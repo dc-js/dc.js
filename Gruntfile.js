@@ -63,6 +63,7 @@ module.exports = function (grunt) {
                 tasks: ['test'],
                 options: {
                     atBegin: true,
+                    interrupt: true,
                 },
             },
             reload: {
