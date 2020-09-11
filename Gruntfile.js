@@ -11,11 +11,6 @@ module.exports = function (grunt) {
     const formatFileList = require('./grunt/format-file-list')(grunt);
     const lintableFiles = "'spec/**/*.js' '*.js' 'grunt/*.js' 'web-src/stock.js'";
 
-    const pkg = require('./package.json');
-    // in d3v4 and d3v5 pre-built d3.js are in different sub folders
-    const d3pkgSubDir =
-        pkg.dependencies.d3.split('.')[0].replace(/[^\d]/g, '') === '4' ? 'build' : 'dist';
-
     const sass = require('node-sass');
 
     grunt.initConfig({
@@ -186,7 +181,7 @@ module.exports = function (grunt) {
                         src: [
                             'dist/*.js',
                             'dist/*.js.map',
-                            `node_modules/d3/${d3pkgSubDir}/d3.js`,
+                            `node_modules/d3/dist/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
                             'node_modules/reductio/reductio.js',
@@ -203,7 +198,7 @@ module.exports = function (grunt) {
                         flatten: true,
                         nonull: true,
                         src: [
-                            `node_modules/d3/${d3pkgSubDir}/d3.js`,
+                            `node_modules/d3/dist/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                         ],
                         dest: 'spec/3rd-party/',
