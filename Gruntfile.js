@@ -197,10 +197,8 @@ module.exports = function (grunt) {
                         flatten: true,
                         nonull: true,
                         src: [
-                            '<%= conf.dist %>/<%= conf.pkg.name %>.js',
-                            '<%= conf.dist %>/<%= conf.pkg.name %>.js.map',
-                            '<%= conf.dist %>/<%= conf.pkg.name %>.min.js',
-                            '<%= conf.dist %>/<%= conf.pkg.name %>.min.js.map',
+                            '<%= conf.dist %>/*.js',
+                            '<%= conf.dist %>/*.js.map',
                             `node_modules/d3/${d3pkgSubDir}/d3.js`,
                             'node_modules/crossfilter2/crossfilter.js',
                             'node_modules/file-saver/FileSaver.js',
