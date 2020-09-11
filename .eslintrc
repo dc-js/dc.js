@@ -8,7 +8,10 @@
     "ecmaVersion": 6,
     "sourceType": "module"
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "prettier"
+  ],
   "rules": {
     "no-useless-escape": "off",
     "no-console": "off",
@@ -16,34 +19,19 @@
     "curly": "error",
     "eqeqeq": "error",
     "no-extend-native": "error",
-    "wrap-iife": ["error", "any"],
-    "indent": ["error", 4, {
-        "SwitchCase": 1,
-        "MemberExpression": "off",
-        "CallExpression": {"arguments": "first"},
-        "ArrayExpression": "first",
-        "flatTernaryExpressions": true
-      }
-    ],
     "no-caller": "error",
     "no-new": "error",
     "no-unused-vars": ["error", {"args": "none"}],
     "max-params": ["error", 5],
     "max-depth": ["error", 4],
     "complexity": ["error", 10],
-    "max-len": ["error", 140],
-    "quotes": ["error", "single"],
     "no-var": "error",
     "prefer-const": "error",
     "no-shadow": "error",
     "prefer-arrow-callback": "error",
     "arrow-body-style": "error",
-    "implicit-arrow-linebreak": "error",
-    "arrow-parens": ["error", "as-needed"],
-    "space-before-function-paren": ["error", "always"],
     "no-useless-concat": "error",
     "prefer-template": "error",
-    "template-curly-spacing": "error",
     "valid-jsdoc": ["error", {"requireParamDescription": false, "requireReturnDescription": false}]
   },
   "overrides": [
