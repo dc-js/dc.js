@@ -37,20 +37,36 @@ module.exports = function (grunt) {
         },
         watch: {
             typedoc: {
-                files: ['docs/**/*', 'src/**/*.ts'],
+                files: ['docs/**/*', 'src/**/*.ts', '!src/compat/**/*'], // Typedoc excludes compat
                 tasks: ['shell:typedoc'],
+                options: {
+                    atBegin: true,
+                    interrupt: true,
+                },
             },
-            scripts: {
-                files: ['src/**/*.ts', 'web/stock.js'],
-                tasks: ['docs'],
+            docco: {
+                files: ['web-src/stock.js'],
+                tasks: ['copy:web', 'docco'],
+                options: {
+                    atBegin: true,
+                    interrupt: true,
+                },
             },
             websrc: {
-                files: ['web-src/**/*.html', 'web-src/**/*.js'],
-                tasks: ['docs'],
+                files: ['web-src/**/*', '!web-src/stock.js'],
+                tasks: ['shell:web-clean', 'copy:web', 'fileindex'],
+                options: {
+                    atBegin: true,
+                    interrupt: true,
+                },
             },
             sass: {
                 files: ['style/dc.scss'],
                 tasks: ['sass', 'cssmin:main', 'copy:web'],
+                options: {
+                    atBegin: true,
+                    interrupt: true,
+                },
             },
             tests: {
                 files: [
@@ -320,8 +336,11 @@ module.exports = function (grunt) {
             'dist-clean': {
                 command: 'rm -rf dist/',
             },
-            'web-specs-clean': {
-                command: 'rm -rf web/ spec/3rd-part',
+            'web-clean': {
+                command: 'rm -rf web/',
+            },
+            'specs-clean': {
+                command: 'rm -rf spec/3rd-party',
             },
             rollup: {
                 command: 'rollup --config',
@@ -374,11 +393,29 @@ module.exports = function (grunt) {
             require('./regression/stock-regression-test.js').updateStockExample(this.async());
         }
     );
-    grunt.registerTask('watch:scripts-sass-docs', () => {
+
+    grunt.registerTask('watch:web-sass-docs-tests', () => {
         grunt.config('watch', {
-            scripts: grunt.config('watch').scripts,
+            typedoc: grunt.config('watch').typedoc,
+            docco: grunt.config('watch').docco,
             websrc: grunt.config('watch').websrc,
             sass: grunt.config('watch').sass,
+            tests: grunt.config('watch').tests,
+        });
+        grunt.task.run('watch');
+    });
+    grunt.registerTask('watch:typedoc-docco', () => {
+        grunt.config('watch', {
+            typedoc: grunt.config('watch').typedoc,
+            docco: grunt.config('watch').docco,
+        });
+        grunt.task.run('watch');
+    });
+    grunt.registerTask('watch:tests-web-sass', () => {
+        grunt.config('watch', {
+            websrc: grunt.config('watch').websrc,
+            sass: grunt.config('watch').sass,
+            tests: grunt.config('watch').tests,
         });
         grunt.task.run('watch');
     });
@@ -391,8 +428,9 @@ module.exports = function (grunt) {
         'sass',
         'cssmin',
     ]);
-    grunt.registerTask('pre-test', ['build', 'shell:web-specs-clean', 'copy']);
-    grunt.registerTask('build-copy', ['build', 'copy']);
+    grunt.registerTask('clean-copy', ['shell:web-clean', 'shell:specs-clean', 'copy']);
+    grunt.registerTask('build-copy', ['build', 'clean-copy']);
+    grunt.registerTask('pre-test', ['build-copy']);
 
     grunt.registerTask('test', ['pre-test', 'karma:unit']);
     grunt.registerTask('coverage', ['pre-test', 'karma:coverage']);
@@ -401,18 +439,10 @@ module.exports = function (grunt) {
 
     grunt.registerTask('docs', ['shell:typedoc', 'docco']);
     grunt.registerTask('web', ['build-copy', 'docs', 'gh-pages']);
-    grunt.registerTask('doc-debug', ['shell:typedoc', 'watch:typedoc']);
 
-    grunt.registerTask('server-only', [
-        'build-copy',
-        'docs',
-        'fileindex',
-        'jasmine:specs:build',
-        'connect:server',
-    ]);
-    grunt.registerTask('server', ['server-only', 'watch:scripts-sass-docs']);
-    // This task will activate server, test when initiated, and then keep a watch for changes, and rebuild and test as needed
-    grunt.registerTask('test-n-serve', ['connect:server', 'watch:tests']);
+    grunt.registerTask('server', ['connect:server', 'watch:web-sass-docs-tests']);
+    grunt.registerTask('test-n-serve', ['connect:server', 'watch:tests-web-sass']);
+    grunt.registerTask('docs-n-serve', ['connect:server', 'watch:typedoc-docco']);
 
     grunt.registerTask('ci', ['pre-test', 'karma:ci']);
     grunt.registerTask('ci-windows', ['pre-test', 'karma:ci-windows']);
