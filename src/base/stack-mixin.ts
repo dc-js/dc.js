@@ -182,7 +182,7 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    public _isLayerVisible(layerName) {
+    private _isLayerVisible (layerName) {
         return !this._hiddenStacks[layerName];
     }
 
@@ -196,11 +196,10 @@ export class StackMixin extends CoordinateGridMixin {
         return add(m, this._conf.yAxisPadding);
     }
 
-    public _flattenStack() {
-        // A round about way to achieve flatMap
-        // When target browsers support flatMap, just replace map -> flatMap, no concat needed
-        const values = this.data().map(layer => layer.domainValues);
-        return [].concat(...values);
+    // TODO: better types
+    private _flattenStack (): any[] {
+        // @ts-ignore     // TODO: better types
+        return this.data().flatMap(layer => layer.domainValues);
     }
 
     public xAxisMin() {
