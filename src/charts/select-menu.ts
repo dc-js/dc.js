@@ -111,7 +111,7 @@ export class SelectMenu extends BaseMixin {
             .classed(OPTION_CSS_CLASS, true)
             .attr('value', d => this._conf.keyAccessor(d))
             .merge(options)
-            .text(this.title());
+            .text(this._conf.title);
 
         this._select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(this._conf.order);
 

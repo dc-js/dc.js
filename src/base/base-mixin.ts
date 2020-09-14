@@ -44,7 +44,6 @@ export class BaseMixin {
     private _heightCalc: (element) => number;
     private _width: number;
     private _height: number;
-    private _title: TitleAccessor;
     private _mandatoryAttributesList: string[];
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
@@ -68,6 +67,7 @@ export class BaseMixin {
             label: d => d.key,
             renderLabel: false,
             renderTitle: true,
+            title: d => `${this._conf.keyAccessor(d)}: ${d._value}`,
         });
 
         this._dataProvider = new CFSimpleAdapter();
@@ -92,9 +92,6 @@ export class BaseMixin {
         this._heightCalc = this._defaultHeightCalc;
         this._width = undefined;
         this._height = undefined;
-
-        // TODO: StackMixin uses it differently, so, need refactoring before it can be moved to conf
-        this._title = d => `${this._conf.keyAccessor(d)}: ${d._value}`;
 
         this._mandatoryAttributesList = ['dimension', 'group'];
 
@@ -774,36 +771,6 @@ export class BaseMixin {
     public isLegendableHidden(d?: LegendItem): boolean {
         // do nothing in base, should be overridden by sub-function
         return false;
-    }
-
-    /**
-     * Set or get the title function. The chart class will use this function to render the SVGElement title
-     * (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
-     * in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
-     * however in grid coordinate charts you need to turn off the brush in order to see titles, because
-     * otherwise the brush layer will block tooltip triggering.
-     * @example
-     * // default title function shows "key: value"
-     * chart.title(function(d) { return d.key + ': ' + d.value; });
-     * // title function has access to the standard d3 data binding and can get quite complicated
-     * chart.title(function(p) {
-     *    return p.key.getFullYear()
-     *        + '\n'
-     *        + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
-     *        + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
-     *        + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
-     * });
-     * @param {Function} [titleFunction]
-     * @returns {Function|BaseMixin}
-     */
-    public title(): TitleAccessor;
-    public title(titleFunction: TitleAccessor): this;
-    public title(titleFunction?) {
-        if (!arguments.length) {
-            return this._title;
-        }
-        this._title = titleFunction;
-        return this;
     }
 
     /**

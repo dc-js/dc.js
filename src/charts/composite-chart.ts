@@ -402,7 +402,9 @@ export class CompositeChart extends CoordinateGridMixin {
             child.margins(this.margins());
 
             if (this._conf.shareTitle) {
-                child.title(this.title());
+                child.configure({
+                    title: this._conf.title,
+                });
             }
 
             child.options(this._childOptions);

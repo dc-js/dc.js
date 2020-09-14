@@ -3,8 +3,8 @@ import {
     Constructor,
     KeyAccessor,
     LabelAccessor,
-    MinimalCFDimension,
-    ValueAccessor,
+    MinimalCFDimension, TitleAccessor,
+    ValueAccessor
 } from '../../core/types';
 
 import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
@@ -461,6 +461,38 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
                 return this._conf.renderTitle;
             }
             this.configure({ renderTitle: renderTitle });
+            return this;
+        }
+
+        /**
+         * Set or get the title function. The chart class will use this function to render the SVGElement title
+         * (usually interpreted by browser as tooltips) for each child element in the chart, e.g. a slice
+         * in a pie chart or a bubble in a bubble chart. Almost every chart supports the title function;
+         * however in grid coordinate charts you need to turn off the brush in order to see titles, because
+         * otherwise the brush layer will block tooltip triggering.
+         * @example
+         * // default title function shows "key: value"
+         * chart.title(function(d) { return d.key + ': ' + d.value; });
+         * // title function has access to the standard d3 data binding and can get quite complicated
+         * chart.title(function(p) {
+         *    return p.key.getFullYear()
+         *        + '\n'
+         *        + 'Index Gain: ' + numberFormat(p.value.absGain) + '\n'
+         *        + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
+         *        + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
+         * });
+         * @param {Function} [titleFunction]
+         * @returns {Function|BaseMixin}
+         */
+        public title(): TitleAccessor;
+        public title(titleFunction: TitleAccessor): this;
+        public title(titleFunction?) {
+            if (!arguments.length) {
+                return this._conf.title;
+            }
+            this.configure({
+                title: titleFunction,
+            });
             return this;
         }
 

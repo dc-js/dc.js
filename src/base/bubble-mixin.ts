@@ -13,7 +13,6 @@ interface MinimalBase {
     configure(conf: IBaseMixinConf);
     data();
     redrawGroup();
-    title();
     filter(filter: any);
     selectAll(arg0: string);
     hasFilter(f?);
@@ -185,7 +184,7 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
         }
 
         public _titleFunction(d): string | number {
-            return this.title()(d);
+            return this._conf.title(d);
         }
 
         public _doRenderTitles(g): void {

@@ -65,6 +65,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             colorAccessor: d => this._conf.keyAccessor(d),
             label: d => this._conf.keyAccessor(d),
             renderLabel: true,
+            title: d => `${this._conf.keyAccessor(d)}: ${this._extendedValueAccessor(d)}`,
             transitionDuration: 350,
             emptyTitle: 'empty',
             radius: undefined, // given radius, if any
@@ -85,8 +86,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this._g = undefined;
         this._cx = undefined;
         this._cy = undefined;
-
-        this.title(d => `${this._conf.keyAccessor(d)}: ${this._extendedValueAccessor(d)}`);
 
         this.anchor(parent, chartGroup);
     }
@@ -228,7 +227,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     private _createTitles(slicesEnter: SVGGElementSelection): void {
         if (this._conf.renderTitle) {
-            slicesEnter.append('title').text(d => this.title()(d));
+            slicesEnter.append('title').text(d => this._conf.title(d));
         }
     }
 
@@ -313,7 +312,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 .selectAll(`g.${this._sliceCssClass}`)
                 .data(sunburstData)
                 .select('title')
-                .text(d => this.title()(d));
+                .text(d => this._conf.title(d));
         }
     }
 

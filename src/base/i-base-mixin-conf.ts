@@ -1,8 +1,9 @@
-import { KeyAccessor, LabelAccessor } from '../core/types';
+import { KeyAccessor, LabelAccessor, TitleAccessor } from '../core/types';
 
 export interface IBaseMixinConf {
     readonly keyAccessor?: KeyAccessor;
     readonly renderTitle?: boolean;
+    readonly title?: TitleAccessor;
     readonly label?: LabelAccessor;
     readonly renderLabel?: boolean;
     readonly commitHandler?: (render: boolean, callback: (error: any, result: any) => void) => void;

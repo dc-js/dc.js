@@ -9,7 +9,7 @@ import { transition } from '../core/core';
 import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
 import { IPieChartConf } from './i-pie-chart-conf';
 import { adaptHandler } from '../core/d3compat';
-import { CFDataCapHelper } from "../data/c-f-data-cap-helper";
+import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 
@@ -61,6 +61,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
             emptyTitle: 'empty',
             label: d => this._conf.keyAccessor(d),
             renderLabel: true,
+            title: d => `${this._conf.keyAccessor(d)}: ${d._value}`,
             transitionDuration: 350,
             transitionDelay: 0,
             radius: undefined, // specified radius, if any
@@ -84,8 +85,6 @@ export class PieChart extends ColorMixin(BaseMixin) {
         this._g = undefined;
         this._cx = undefined;
         this._cy = undefined;
-
-        this.title(d => `${this._conf.keyAccessor(d)}: ${d._value}`);
 
         this.anchor(parent, chartGroup);
     }
@@ -213,7 +212,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
 
     private _createTitles(slicesEnter: SVGGElementSelection): void {
         if (this._conf.renderTitle) {
-            slicesEnter.append('title').text(d => this.title()(d.data));
+            slicesEnter.append('title').text(d => this._conf.title(d.data));
         }
     }
 
@@ -388,7 +387,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
                 .selectAll<SVGGElement, any>(`g.${this._sliceCssClass}`)
                 .data<any>(pieData)
                 .select('title')
-                .text(d => this.title()(d.data));
+                .text(d => this._conf.title(d.data));
         }
     }
 

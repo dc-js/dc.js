@@ -14,7 +14,7 @@ import {
 } from '../core/types';
 import { IRowChartConf } from './i-row-chart-conf';
 import { adaptHandler } from '../core/d3compat';
-import { CFDataCapHelper } from "../data/c-f-data-cap-helper";
+import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
 
 /**
  * Concrete row chart implementation.
@@ -59,6 +59,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
         this.configure({
             label: d => this._conf.keyAccessor(d),
             renderLabel: true,
+            title: d => `${this._conf.keyAccessor(d)}: ${d._value}`,
             labelOffsetX: 10,
             labelOffsetY: undefined,
             titleLabelOffsetX: 2,
@@ -81,8 +82,6 @@ export class RowChart extends ColorMixin(MarginMixin) {
         this._xAxis = axisBottom(undefined);
 
         this._rowData = undefined;
-
-        this.title(d => `${this._conf.keyAccessor(d)}: ${d._value}`);
 
         this.anchor(parent, chartGroup);
     }
@@ -242,7 +241,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
     private _createTitles(rows: SVGGElementSelection): void {
         if (this._conf.renderTitle) {
             rows.select('title').remove();
-            rows.append('title').text(this.title());
+            rows.append('title').text(this._conf.title);
         }
     }
 
@@ -294,7 +293,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
                 .attr('text-anchor', 'end')
                 .on('click', d => adaptHandler(this._onClick(d)))
                 .attr('class', (d, i) => `${this._titleRowCssClass} _${i}`)
-                .text(d => this.title()(d));
+                .text(d => this._conf.title(d));
 
             transition(
                 titlelab,

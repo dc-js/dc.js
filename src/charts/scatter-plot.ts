@@ -52,6 +52,9 @@ export class ScatterPlot extends CoordinateGridMixin {
             keyAccessor: d => originalKeyAccessor(d)[0],
             colorAccessor: () => this._groupName,
             existenceAccessor: d => d.value,
+            // see https://github.com/dc-js/dc.js/issues/702
+            title: d =>
+                `${this._conf.keyAccessor(d)},${d._value}: ${this._conf.existenceAccessor(d)}`,
             highlightedSize: 7,
             symbolSize: 5,
             excludedSize: 3,
@@ -69,12 +72,6 @@ export class ScatterPlot extends CoordinateGridMixin {
         });
 
         this._symbol = symbol();
-
-        // this basically just counteracts the setting of its own key/value accessors
-        // see https://github.com/dc-js/dc.js/issues/702
-        this.title(
-            d => `${this._conf.keyAccessor(d)},${d._value}: ${this._conf.existenceAccessor(d)}`
-        );
 
         this._filtered = [];
         this._canvas = null;
@@ -361,7 +358,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     private _renderTitles(_symbol: Selection<SVGPathElement, any, SVGGElement, any>, _d): void {
         if (this._conf.renderTitle) {
             _symbol.selectAll('title').remove();
-            _symbol.append('title').text(d => this.title()(d));
+            _symbol.append('title').text(d => this._conf.title(d));
         }
     }
 
