@@ -49,4 +49,12 @@ export class CFMultiAdapter extends CFSimpleAdapter {
         });
         return layers;
     }
+
+    public layers() {
+        return this._conf.layers;
+    }
+
+    public layerByName(name: string) {
+        return this._conf.layers.find(l => l.name === name);
+    }
 }
