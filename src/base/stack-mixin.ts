@@ -123,7 +123,7 @@ export class StackMixin extends CoordinateGridMixin {
     public stack();
     public stack(group, name?, accessor?): this;
     public stack(group?, name?, accessor?) {
-        const stack = this._dataProvider.conf().layers;
+        const stack = this._dataProvider.layers();
         if (!arguments.length) {
             return stack;
         }
@@ -277,7 +277,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public legendables(): LegendItem[] {
-        const stack = this._dataProvider.conf().layers;
+        const stack = this._dataProvider.layers();
         return stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
