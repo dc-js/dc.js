@@ -16,7 +16,6 @@ export class StackMixin extends CoordinateGridMixin {
     public _conf: IStackMixinConf;
 
     private _stackLayout: Stack<any, { [p: string]: number }, string>;
-    private _titles;
     private _hiddenStacks;
 
     protected _dataProvider: CFMultiAdapter;
@@ -33,8 +32,6 @@ export class StackMixin extends CoordinateGridMixin {
         this._dataProvider = new CFMultiAdapter();
 
         this._stackLayout = stack();
-
-        this._titles = {};
 
         this._hiddenStacks = {};
     }
@@ -152,7 +149,9 @@ export class StackMixin extends CoordinateGridMixin {
         this._dataProvider.configure({
             layers: [],
         });
-        this._titles = {};
+        this.configure({
+            titles: {},
+        });
         this.stack(g, n);
         if (f) {
             this._dataProvider.configure({ valueAccessor: f });
@@ -182,7 +181,7 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    private _isLayerVisible (layerName) {
+    private _isLayerVisible(layerName) {
         return !this._hiddenStacks[layerName];
     }
 
@@ -197,7 +196,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     // TODO: better types
-    private _flattenStack (): any[] {
+    private _flattenStack(): any[] {
         // @ts-ignore     // TODO: better types
         return this.data().flatMap(layer => layer.domainValues);
     }
@@ -210,6 +209,10 @@ export class StackMixin extends CoordinateGridMixin {
     public xAxisMax() {
         const m = max(this._flattenStack(), d => d.x);
         return add(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
+    }
+
+    protected titleFn(stackName: string): TitleAccessor {
+        return (this._conf.titles && this._conf.titles[stackName]) || super.title();
     }
 
     /**
@@ -245,10 +248,10 @@ export class StackMixin extends CoordinateGridMixin {
         }
 
         if (typeof titleAccessor !== 'function') {
-            return this._titles[stackName] || super.title();
+            return this._conf.titles[stackName] || super.title();
         }
 
-        this._titles[stackName] = titleAccessor;
+        this._conf.titles[stackName] = titleAccessor;
 
         return this;
     }

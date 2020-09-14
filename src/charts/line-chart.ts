@@ -550,7 +550,7 @@ export class LineChart extends StackMixin {
     private _doRenderTitle(dot: Selection<SVGCircleElement, any, SVGGElement, any>, d): void {
         if (this._conf.renderTitle) {
             dot.select('title').remove();
-            dot.append('title').text(pluck2('data', this.title(d.name)));
+            dot.append('title').text(pluck2('data', this.titleFn(d.name)));
         }
     }
 
