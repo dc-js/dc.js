@@ -219,7 +219,7 @@ export class BarChart extends StackMixin {
         const barsEnterUpdate: Selection<SVGRectElement, unknown, SVGGElement, any> = enter.merge(bars);
 
         if (this._conf.renderTitle) {
-            enter.append('title').text(pluck2('data', this.title(data.name)));
+            enter.append('title').text(pluck2('data', this.titleFn(data.name)));
         }
 
         if (this.isOrdinal()) {
@@ -244,7 +244,7 @@ export class BarChart extends StackMixin {
             .attr('height', d => this._barHeight(d))
             .attr('fill', (d, i) => this.getColor(d, i))
             .select('title')
-            .text(pluck2('data', this.title(data.name)));
+            .text(pluck2('data', this.titleFn(data.name)));
 
         transition(bars.exit(), this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('x', d => this.x()(d.x))
