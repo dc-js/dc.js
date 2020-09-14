@@ -212,48 +212,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     protected titleFn(stackName: string): TitleAccessor {
-        return (this._conf.titles && this._conf.titles[stackName]) || super.title();
-    }
-
-    /**
-     * Set or get the title function. Chart class will use this function to render svg title (usually interpreted by
-     * browser as tooltips) for each child element in the chart, i.e. a slice in a pie chart or a bubble in a bubble chart.
-     * Almost every chart supports title function however in grid coordinate chart you need to turn off brush in order to
-     * use title otherwise the brush layer will block tooltip trigger.
-     *
-     * If the first argument is a stack name, the title function will get or set the title for that stack. If stackName
-     * is not provided, the first stack is implied.
-     * @example
-     * // set a title function on 'first stack'
-     * chart.title('first stack', function(d) { return d.key + ': ' + d.value; });
-     * // get a title function from 'second stack'
-     * var secondTitleFunction = chart.title('second stack');
-     * @param {String} [stackName]
-     * @param {Function} [titleAccessor]
-     * @returns {String|StackMixin}
-     */
-    public title(): TitleAccessor;
-    public title(stackName); // TODO: actually TitleAccessor, however conflicts with base class signature
-    public title(stackName, titleAccessor): this;
-    public title(stackName?, titleAccessor?) {
-        if (!stackName) {
-            return super.title();
-        }
-
-        if (typeof stackName === 'function') {
-            return super.title(stackName);
-        }
-        if (stackName === this._groupName && typeof titleAccessor === 'function') {
-            return super.title(titleAccessor);
-        }
-
-        if (typeof titleAccessor !== 'function') {
-            return this._conf.titles[stackName] || super.title();
-        }
-
-        this._conf.titles[stackName] = titleAccessor;
-
-        return this;
+        return (this._conf.titles && this._conf.titles[stackName]) || this._conf.title;
     }
 
     /**

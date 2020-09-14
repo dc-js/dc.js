@@ -53,6 +53,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             yBorderRadius: DEFAULT_BORDER_RADIUS,
             colsLabel: d => d,
             rowsLabel: d => d,
+            title: this._conf.colorAccessor,
 
             xAxisOnClick: d => {
                 this._filterAxis(0, d);
@@ -75,7 +76,6 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         this._rowScale = scaleBand();
 
         this._mandatoryAttributes(['group']);
-        this.title(this._conf.colorAccessor);
 
         this.anchor(parent, chartGroup);
     }
@@ -184,7 +184,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         if (this._conf.renderTitle) {
             gEnter.append('title');
-            boxes.select('title').text(this.title());
+            boxes.select('title').text(this._conf.title);
         }
 
         transition(boxes.select('rect'), this._conf.transitionDuration, this._conf.transitionDelay)

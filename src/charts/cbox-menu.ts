@@ -123,7 +123,7 @@ export class CboxMenu extends BaseMixin {
         options
             .append('label')
             .attr('for', (d, i) => `input_${this._uniqueId}_${i}`)
-            .text(this.title());
+            .text(this._conf.title);
 
         const chart = this;
         // 'all' option

@@ -200,7 +200,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
             regionG.selectAll('title').text(d => {
                 const key = this._getKey(layerIndex, d);
                 const value = data[key];
-                return this.title()({ key, value });
+                return this._conf.title({ key, value });
             });
         }
     }
