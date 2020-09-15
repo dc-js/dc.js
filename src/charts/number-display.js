@@ -40,6 +40,7 @@ export class NumberDisplay extends BaseMixin {
         this._formatNumber = format('.2s');
         this._html = {one: '', some: '', none: ''};
         this._lastValue = undefined;
+        this._ariaLiveRegion = false;
 
         // dimension not required
         this._mandatoryAttributes(['group']);
@@ -121,26 +122,22 @@ export class NumberDisplay extends BaseMixin {
                 .enter()
                 .append('span')
                 .attr('class', SPAN_CLASS)
+                .classed('dc-tabbable', this._keyboardAccessible)
                 .merge(span);
         }
 
-        {
-            const chart = this;
-            span.transition()
-                .duration(chart.transitionDuration())
-                .delay(chart.transitionDelay())
-                .ease(easeQuad)
-                .tween('text', function () {
-                    // [XA] don't try and interpolate from Infinity, else this breaks.
-                    const interpStart = isFinite(chart._lastValue) ? chart._lastValue : 0;
-                    const interp = interpolateNumber(interpStart || 0, newValue);
-                    chart._lastValue = newValue;
+        {               
 
-                    // need to save it in D3v4
-                    const node = this;
-                    return t => {
+            const chart = this;
+            // change text value without triggering transition
+            if (this._ariaLiveRegion) {
+                span
+                    .attr('aria-live', 'polite')
+                    .text(() => {
+
                         let html = null;
-                        const num = chart.formatNumber()(interp(t));
+                        const num = chart.formatNumber()(newValue);
+
                         if (newValue === 0 && (chart._html.none !== '')) {
                             html = chart._html.none;
                         } else if (newValue === 1 && (chart._html.one !== '')) {
@@ -148,9 +145,38 @@ export class NumberDisplay extends BaseMixin {
                         } else if (chart._html.some !== '') {
                             html = chart._html.some;
                         }
-                        node.innerHTML = html ? html.replace('%number', num) : num;
-                    };
-                });
+                        return html ? html.replace('%number', num) : num;
+
+                    });
+
+            } else {
+
+                span.transition()
+                    .duration(chart.transitionDuration())
+                    .delay(chart.transitionDelay())
+                    .ease(easeQuad)
+                    .tween('text', function () {
+                        // [XA] don't try and interpolate from Infinity, else this breaks.
+                        const interpStart = isFinite(chart._lastValue) ? chart._lastValue : 0;
+                        const interp = interpolateNumber(interpStart || 0, newValue);
+                        chart._lastValue = newValue;
+
+                        // need to save it in D3v4
+                        const node = this;
+                        return t => {
+                            let html = null;
+                            const num = chart.formatNumber()(interp(t));
+                            if (newValue === 0 && (chart._html.none !== '')) {
+                                html = chart._html.none;
+                            } else if (newValue === 1 && (chart._html.one !== '')) {
+                                html = chart._html.one;
+                            } else if (chart._html.some !== '') {
+                                html = chart._html.some;
+                            }
+                            node.innerHTML = html ? html.replace('%number', num) : num;
+                        };
+                    });
+            }
         }
     }
 
@@ -169,6 +195,23 @@ export class NumberDisplay extends BaseMixin {
             return this._formatNumber;
         }
         this._formatNumber = formatter;
+        return this;
+    }
+
+    /**
+     * If set, the Number Display widget will have its aria-live attribute set to 'polite' which will
+     * notify screen readers when the widget changes its value. Note that setting this method will also
+     * disable the default transition between the old and the new values. This is to avoid change
+     * notifications spoken out before the new value finishes re-drawing. It is also advisable to check
+     * if the widget has appropriately set accessibility description or label. 
+     * @param {Boolean} [ariaLiveRegion=false]
+     * @returns {Boolean|NumberDisplay}
+     */
+    ariaLiveRegion (ariaLiveRegion) {
+        if (!arguments.length) {
+            return this._ariaLiveRegion;
+        }
+        this._ariaLiveRegion = ariaLiveRegion;
         return this;
     }
 
