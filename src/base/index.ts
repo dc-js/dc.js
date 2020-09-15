@@ -1,4 +1,4 @@
-export * from './colors/index'
+export * from './colors/index';
 
 export * from './d3.box';
 

@@ -3,8 +3,10 @@ import {
     Constructor,
     KeyAccessor,
     LabelAccessor,
-    MinimalCFDimension, MinimalCFGroup, TitleAccessor,
-    ValueAccessor
+    MinimalCFDimension,
+    MinimalCFGroup,
+    TitleAccessor,
+    ValueAccessor,
 } from '../../core/types';
 
 import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';

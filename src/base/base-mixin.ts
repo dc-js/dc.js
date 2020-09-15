@@ -10,15 +10,7 @@ import { logger } from '../core/logger';
 import { printers } from '../core/printers';
 import { InvalidStateException } from '../core/invalid-state-exception';
 import { BadArgumentException } from '../core/bad-argument-exception';
-import {
-    BaseAccessor,
-    CFGrouping,
-    ChartGroupType,
-    ChartParentType,
-    LegendItem,
-    MinimalCFGroup,
-    TitleAccessor,
-} from '../core/types';
+import { CFGrouping, ChartGroupType, ChartParentType, LegendItem } from '../core/types';
 import { IChartGroup } from '../core/chart-group-types';
 import { IBaseMixinConf } from './i-base-mixin-conf';
 import { CFSimpleAdapter } from '../data/c-f-simple-adapter';
