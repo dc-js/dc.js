@@ -100,66 +100,6 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     /**
-     * Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
-     * in the same chart will share the same key accessor and therefore the same set of keys.
-     *
-     * For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
-     * of keys on the x axis, while stacked vertically. If name is specified then it will be used to
-     * generate the legend label.
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
-     * @example
-     * // stack group using default accessor
-     * chart.stack(valueSumGroup)
-     * // stack group using custom accessor
-     * .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
-     * @param {crossfilter.group} group
-     * @param {String} [name]
-     * @param {Function} [accessor]
-     * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|StackMixin}
-     */
-    public stack();
-    public stack(group, name?, accessor?): this;
-    public stack(group?, name?, accessor?) {
-        const stack = this._dataProvider.layers();
-        if (!arguments.length) {
-            return stack;
-        }
-
-        if (arguments.length <= 2) {
-            accessor = name;
-        }
-
-        name = typeof name === 'string' ? name : String(stack.length);
-        const layer: LayerSpec = { group, name };
-        if (typeof accessor === 'function') {
-            layer.valueAccessor = accessor;
-        }
-        // @ts-ignore
-        stack.push(layer);
-
-        return this;
-    }
-
-    public group(): MinimalCFGroup;
-    public group(g: MinimalCFGroup, n?: string, f?: BaseAccessor<any>): this;
-    public group(g?, n?, f?) {
-        if (!arguments.length) {
-            return super.group();
-        }
-        this._dataProvider.configure({
-            layers: [],
-        });
-        this.configure({
-            titles: {},
-        });
-        this.stack(g, n);
-        if (f) {
-            this._dataProvider.configure({ valueAccessor: f });
-        }
-        return super.group(g, n);
-    }
-
-    /**
      * Hide all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
      * @param {String} stackName

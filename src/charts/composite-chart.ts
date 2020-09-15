@@ -103,8 +103,8 @@ export class CompositeChart extends CoordinateGridMixin {
             if (!child.dataProvider().conf().dimension) {
                 child.dataProvider().configure({ dimension: this.dataProvider().conf().dimension });
             }
-            if (!child.group()) {
-                child.group(this.group());
+            if (!child.dataProvider().conf().group) {
+                child.dataProvider().configure({ group: this.dataProvider().conf().group });
             }
 
             child.configure({
