@@ -50,7 +50,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this.configure({
             keyAccessor: d => originalKeyAccessor(d)[0],
-            colorAccessor: () => this._groupName,
+            colorAccessor: () => this._conf.groupName,
             existenceAccessor: d => d.value,
             // see https://github.com/dc-js/dc.js/issues/702
             title: d =>
@@ -408,7 +408,9 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     public legendables(): LegendItem[] {
         // Argument to getColor is ignored by the default color accessor for this chart
-        return [{ chart: this, name: this._groupName, color: this.getColor(this._groupName) }];
+        return [
+            { chart: this, name: this._conf.groupName, color: this.getColor(this._conf.groupName) },
+        ];
     }
 
     public legendHighlight(d: LegendItem): void {

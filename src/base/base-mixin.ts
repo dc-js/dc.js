@@ -48,7 +48,6 @@ export class BaseMixin {
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
-    protected _groupName: string; // StackMixin needs it
     protected _dataProvider: CFSimpleAdapter;
 
     constructor() {
@@ -210,38 +209,6 @@ export class BaseMixin {
      */
     public data(): CFGrouping[] {
         return this._dataProvider.data();
-    }
-
-    /**
-     * **mandatory**
-     *
-     * Set or get the group attribute of a chart. In `dc` a group is a
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter group}.
-     * Usually the group should be created from the particular dimension associated with the same chart. If a value is
-     * given, then it will be used as the new group.
-     *
-     * If no value specified then the current group will be returned.
-     * If `name` is specified then it will be used to generate legend label.
-     * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
-     * @example
-     * var index = crossfilter([]);
-     * var dimension = index.dimension(pluck('key'));
-     * chart.dimension(dimension);
-     * chart.group(dimension.group().reduceSum());
-     * @param {crossfilter.group} [group]
-     * @param {String} [name]
-     * @returns {crossfilter.group|BaseMixin}
-     */
-    public group(): MinimalCFGroup;
-    public group(group: MinimalCFGroup, name?: string, accessor?: BaseAccessor<any>): this;
-    public group(group?, name?, accessor?) {
-        if (!arguments.length) {
-            return this._dataProvider.conf().group;
-        }
-        this._dataProvider.configure({ group });
-        this._groupName = name;
-        this.expireCache();
-        return this;
     }
 
     public _computeOrderedGroups(data) {

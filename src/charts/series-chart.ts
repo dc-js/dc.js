@@ -5,6 +5,7 @@ import { LineChart } from './line-chart';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { ISeriesChartConf } from './i-series-chart-conf';
 import { compatNestHelper } from '../core/d3compat';
+import { ICFMultiAdapterConf } from '../data/c-f-multi-adapter';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -96,18 +97,19 @@ export class SeriesChart extends CompositeChart {
             keep.push(sub.key);
             subChart.dataProvider().configure({
                 dimension: this.dataProvider().conf().dimension,
-            });
+                layers: [
+                    {
+                        name: sub.key,
+                        group: {
+                            all: typeof sub.values === 'function' ? sub.values : () => sub.values,
+                        },
+                    },
+                ],
+            } as ICFMultiAdapterConf);
             subChart.configure({
                 keyAccessor: this._conf.keyAccessor,
             });
-            return subChart
-                .group(
-                    {
-                        all: typeof sub.values === 'function' ? sub.values : () => sub.values,
-                    },
-                    sub.key
-                )
-                .brushOn(false);
+            return subChart.brushOn(false);
         });
         // this works around the fact compositeChart doesn't really
         // have a removal interface

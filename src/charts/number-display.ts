@@ -74,8 +74,9 @@ export class NumberDisplay extends BaseMixin {
         return this._conf;
     }
 
+    // TODO: chart specific DataProvider
     public data() {
-        const group: MinimalCFGroup & { value? } = this.group();
+        const group: MinimalCFGroup & { value? } = this.dataProvider().conf().group;
 
         const valObj = group.value ? group.value() : this._maxBin(group.all());
 

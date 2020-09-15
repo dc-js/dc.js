@@ -1,9 +1,10 @@
-import { Constructor, TitleAccessor } from '../../core/types';
+import { BaseAccessor, Constructor, MinimalCFGroup, TitleAccessor } from '../../core/types';
 import { BaseMixinExt } from './base-mixin';
 import { StackMixin as StackMixinNeo } from '../../base/stack-mixin';
 import { MarginMixinExt } from './margin-mixin';
 import { ColorMixinExt } from './color-mixin';
 import { CoordinateGridMixinExt } from './coordinate-grid-mixin';
+import { LayerSpec } from '../../data';
 
 class Intermediate extends CoordinateGridMixinExt(MarginMixinExt(BaseMixinExt(StackMixinNeo))) {}
 
@@ -11,6 +12,66 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
     return class extends Base {
         constructor(...args: any[]) {
             super(...args);
+        }
+
+        /**
+         * Stack a new crossfilter group onto this chart with an optional custom value accessor. All stacks
+         * in the same chart will share the same key accessor and therefore the same set of keys.
+         *
+         * For example, in a stacked bar chart, the bars of each stack will be positioned using the same set
+         * of keys on the x axis, while stacked vertically. If name is specified then it will be used to
+         * generate the legend label.
+         * @see {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#group-map-reduce crossfilter.group}
+         * @example
+         * // stack group using default accessor
+         * chart.stack(valueSumGroup)
+         * // stack group using custom accessor
+         * .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
+         * @param {crossfilter.group} group
+         * @param {String} [name]
+         * @param {Function} [accessor]
+         * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|StackMixin}
+         */
+        public stack();
+        public stack(group, name?, accessor?): this;
+        public stack(group?, name?, accessor?) {
+            const stack = this._dataProvider.layers();
+            if (!arguments.length) {
+                return stack;
+            }
+
+            if (arguments.length <= 2) {
+                accessor = name;
+            }
+
+            name = typeof name === 'string' ? name : String(stack.length);
+            const layer: LayerSpec = { group, name };
+            if (typeof accessor === 'function') {
+                layer.valueAccessor = accessor;
+            }
+            // @ts-ignore
+            stack.push(layer);
+
+            return this;
+        }
+
+        public group(): MinimalCFGroup;
+        public group(g: MinimalCFGroup, n?: string, f?: BaseAccessor<any>): this;
+        public group(g?, n?, f?) {
+            if (!arguments.length) {
+                return super.group();
+            }
+            this._dataProvider.configure({
+                layers: [],
+            });
+            this.configure({
+                titles: {},
+            });
+            this.stack(g, n);
+            if (f) {
+                this._dataProvider.configure({ valueAccessor: f });
+            }
+            return super.group(g, n);
         }
 
         /**
@@ -41,7 +102,7 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
             if (typeof stackName === 'function') {
                 return super.title(stackName);
             }
-            if (stackName === this._groupName && typeof titleAccessor === 'function') {
+            if (stackName === this._conf.groupName && typeof titleAccessor === 'function') {
                 return super.title(titleAccessor);
             }
 
