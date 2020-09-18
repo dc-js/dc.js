@@ -21,6 +21,8 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
+dc.constants.EVENT_DELAY = 0;
+
 var focusChart = new dc.SeriesChart("#test");
 var overviewChart = new dc.SeriesChart("#test-overview");
 var ndx, runDimension, runGroup, overviewRunDimension, overviewRunGroup;
@@ -36,6 +38,7 @@ d3.csv("morley.csv").then(function(experiments) {
   focusChart
     .width(768)
     .height(480)
+    .transitionDuration(0)
     .chart(function(c) { return new dc.LineChart(c).curve(d3.curveCardinal).evadeDomainFilter(true); })
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(false)
@@ -53,10 +56,11 @@ d3.csv("morley.csv").then(function(experiments) {
     .legend(dc.legend().x(350).y(350).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
   focusChart.yAxis().tickFormat(function(d) {return d3.format(',d')(d+299500);});
   focusChart.margins().left += 40;
-  
+
   overviewChart
     .width(768)
     .height(100)
+    .transitionDuration(0)
     .chart(function(c) { return new dc.LineChart(c).curve(d3.curveCardinal); })
     .x(d3.scaleLinear().domain([0,20]))
     .brushOn(true)
