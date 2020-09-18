@@ -35,7 +35,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
     function sort_group(group, sort) {
         return {
             all: function() {
-                return group.all().sort(sort);
+                return group.all().slice().sort(sort);
             }
         };
     }
