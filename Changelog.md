@@ -1,3 +1,7 @@
+## 4.1.1
+* The [brush ordinal example](https://dc-js.github.io/dc.js/examples/brush-ordinal.html) did not filter correctly when row chart was clicked ([#1770](https://github.com/dc-js/dc.js/issues/1770))
+* Some examples were broken by the move to d3@6 ([#1769](https://github.com/dc-js/dc.js/issues/1769))
+
 ## 4.1.0
 * Compatible with dc@6 while preserving compatibility with dc@5, by Deepak Kumar ([#1749](https://github.com/dc-js/dc.js/pull/1749) / [#1748](https://github.com/dc-js/dc.js/issues/1748))
 
