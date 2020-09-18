@@ -74,10 +74,9 @@
       }
 
       redraw() {
-          const nester = d3.nest().key(this._seriesAccessor),
-                nesting = nester.entries(this._group.all());
+          const grouped = d3.groups(this._group.all(), this._seriesAccessor);
           let horizon = this._root.selectAll('.horizon')
-              .data(nesting);
+              .data(grouped);
           horizon.exit().remove();
           horizon = horizon.enter()
               .append('div')
@@ -89,9 +88,9 @@
               .each(function(series) {
                   d3.select(this).selectAll('*').remove();
                   d3.horizonChart()
-                      .colors(typeof colors === 'function' ? colors(series.key) : colors)
-                      .title(series.key)
-                      .call(this, series.values.map(valueAccessor));
+                      .colors(typeof colors === 'function' ? colors(series[0]) : colors)
+                      .title(series[0])
+                      .call(this, series[1].map(valueAccessor));
             });
       }
   }
@@ -167,7 +166,7 @@
       exptPie
           .width(250)
           .height(250)
-          .colors(d3.scaleOrdinal().domain(1,6).range(d3.schemeCategory10))
+          .colors(d3.scaleOrdinal().domain([1,6]).range(d3.schemeCategory10))
           .dimension(exptDim)
           .group(exptGroup);
 
