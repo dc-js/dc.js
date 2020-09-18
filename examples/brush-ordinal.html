@@ -35,7 +35,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
     function sort_group(group, sort) {
         return {
             all: function() {
-                return group.all().sort(sort);
+                return group.all().slice().sort(sort);
             }
         };
     }
@@ -117,6 +117,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
             });
             return filters;
         });
+        bar.on('preRedraw', chart =>  chart.rescale());
         // display a row chart of first letters, to test filtering
         var letterDimension = cf.dimension(function(d) {
             return d.key.split(' ').map(function(s) { return s[0]; });
