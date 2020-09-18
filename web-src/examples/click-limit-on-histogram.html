@@ -42,9 +42,9 @@ d3.csv("morley.csv").then(function(experiments) {
     .dimension(runDimension)
     .group(speedSumGroup)
     .on('pretransition', function(chart) {
-        chart.svg().on('click', function() {
+        chart.svg().on('click', function(event) {
             var bound = chart.root().node().getBoundingClientRect();
-            x_vert = chart.x().invert(d3.event.clientX - bound.left - chart.margins().left);
+            x_vert = chart.x().invert(event.clientX - bound.left - chart.margins().left);
             console.log('clicked', x_vert);
             chart.redraw();
         });
