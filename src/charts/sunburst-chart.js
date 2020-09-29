@@ -177,7 +177,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             .attr('d', d => this._safeArc(arcs, d));
 
         if (this._keyboardAccessible) {
-            this._makeKeyboardAccessible(adaptHandler(d => this.onClick(d)));
+            this._makeKeyboardAccessible(this.onClick);
         }
 
         const tranNodes = transition(slicePath, this.transitionDuration());

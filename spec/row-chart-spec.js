@@ -163,6 +163,40 @@ describe('dc.rowChart', () => {
         });
     });
 
+    describe('accessibility row chart', () => {
+
+        beforeEach(() => {
+            chart.group(positiveGroupHolder.group);
+            chart.x(d3.scaleLinear());
+            chart.keyboardAccessible(true);
+        });
+
+        it('internal elements are focusable by keyboard', () => {
+
+            chart.render();
+            chart.selectAll('rect').each(function () {
+                const row = d3.select(this);
+                expect(row.attr('tabindex')).toEqual('0');
+            });
+        });
+
+        it('internal elements are clickable by pressing enter', () => {
+
+            const clickHandlerSpy = jasmine.createSpy();
+            chart._onClick = clickHandlerSpy;
+            chart.render();
+          
+            const event = new Event('keydown');
+            event.keyCode = 13;
+                     
+            chart.selectAll('rect').each(function () {
+                const row = d3.select(this).node();
+                row.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalled();            
+            });
+        });
+    });
+
     function itShouldBehaveLikeARowChartWithGroup (groupHolder, N, xAxisTicks) {
         describe(`for ${groupHolder.groupType} data`, () => {
             beforeEach(() => {

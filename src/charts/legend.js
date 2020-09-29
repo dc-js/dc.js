@@ -1,7 +1,6 @@
 import {pluck, utils} from '../core/utils';
 import {adaptHandler} from '../core/d3compat';
 import {constants} from '../core/constants';
-import {event} from 'd3-selection';
 
 const LABEL_GAP = 2;
 
@@ -242,7 +241,7 @@ export class Legend {
             .attr('tabindex', 0);
 
         tabElements
-            .on('keydown', d => {
+            .on('keydown', adaptHandler((d, event) => {
                 // trigger only if d is an object
                 if (event.keyCode === 13 && typeof d === 'object') {
                     d.chart.legendToggle(d)
@@ -252,13 +251,13 @@ export class Legend {
                     d.chart.legendToggle(d)
                     event.preventDefault();            
                 }
-            })
-            .on('focus', d => {
+            }))
+            .on('focus', adaptHandler(d => {
                 this._parent.legendHighlight(d);
-            })
-            .on('blur', d => {
+            }))
+            .on('blur', adaptHandler(d => {
                 this._parent.legendReset(d);
-            });
+            }));
     }
 
     render () {

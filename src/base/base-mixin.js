@@ -1,4 +1,4 @@
-import {select, event as d3Event} from 'd3-selection';
+import {select} from 'd3-selection';
 import {dispatch} from 'd3-dispatch';
 import {ascending} from 'd3-array';
 
@@ -11,6 +11,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
+import {adaptHandler} from '../core/d3compat';
 
 const _defaultFilterHandler = (dimension, filters) => {
     if (filters.length === 0) {
@@ -722,18 +723,18 @@ export class BaseMixin {
             .attr('tabindex', 0);
                 
         if (onClickFunction) {
-            tabElements.on('keydown', (d, i) => {
+            tabElements.on('keydown', adaptHandler((d, event) => {
                 // trigger only if d is an object undestood by KeyAccessor()
-                if (d3Event.keyCode === 13 && typeof d === 'object') {
-                    onClickFunction.call(this, d, i, ...onClickArgs)
+                if (event.keyCode === 13 && typeof d === 'object') {
+                    onClickFunction.call(this, d, ...onClickArgs)
                 } 
                 // special case for space key press - prevent scrolling
-                if (d3Event.keyCode === 32 && typeof d === 'object') {
-                    onClickFunction.call(this, d, i,  ...onClickArgs)
-                    d3Event.preventDefault();                
+                if (event.keyCode === 32 && typeof d === 'object') {
+                    onClickFunction.call(this, d, ...onClickArgs)
+                    event.preventDefault();                
                 }
             
-            });
+            }));
         }
     }
 

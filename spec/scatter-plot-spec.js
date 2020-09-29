@@ -538,6 +538,21 @@ describe('dc.scatterPlot', () => {
         });
     });
 
+    describe('accessibility scatter plot', () => {
+
+        beforeEach(() => {
+            chart.keyboardAccessible(true);
+        })
+
+        it('internal elements are focusable by keyboard', () => {
+            chart.render();
+            chart.selectAll('path.symbol').each(function () {
+                const dot = d3.select(this);
+                expect(dot.attr('tabindex')).toEqual('0');
+            });
+        });
+    });
+
     function nthSymbol (i) {
         return d3.select(chart.selectAll('path.symbol').nodes()[i]);
     }

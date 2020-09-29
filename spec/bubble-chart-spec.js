@@ -721,5 +721,31 @@ describe('dc.bubbleChart', () => {
             chart.render();
             expect(document.querySelectorAll('.node text')[0].innerHTML).toEqual('T')
         });
+
+        it('internal elements are focusable by keyboard', () => {
+            chart.keyboardAccessible(true);
+            chart.render();
+            chart.selectAll('circle').each(function () {
+                const bubble = d3.select(this);
+                expect(bubble.attr('tabindex')).toEqual('0');
+            });
+        });
+
+        it('internal elements are clickable by pressing enter', () => {
+            chart.keyboardAccessible(true);
+            const clickHandlerSpy = jasmine.createSpy();
+            chart.onClick = clickHandlerSpy;
+            chart.render();
+          
+            const event = new Event('keydown');
+            event.keyCode = 13;
+                     
+            chart.selectAll('circle').each(function () {
+                const bubble = d3.select(this).node();
+                bubble.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalled();            
+            });
+        });
+
     });
 });

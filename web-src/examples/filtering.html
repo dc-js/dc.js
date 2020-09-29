@@ -64,12 +64,14 @@ var ndx = crossfilter(spendData),
 yearRingChart
     .dimension(yearDim)
     .group(spendPerYear)
+    .keyboardAccessible(true)
     .innerRadius(50)
     .controlsUseVisibility(true);
 
   spendHistChart
     .dimension(spendDim)
     .group(spendHist)
+    .svgDescription("Histogram")
     .x(d3.scaleLinear().domain([0,10]))
     .elasticY(true)
     .controlsUseVisibility(true);
@@ -80,6 +82,7 @@ spendHistChart.yAxis().ticks(2);
 spenderRowChart
     .dimension(nameDim)
     .group(spendPerName)
+    .keyboardAccessible(true)
     .elasticX(true)
     .controlsUseVisibility(true);
 

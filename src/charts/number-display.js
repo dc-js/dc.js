@@ -124,6 +124,10 @@ export class NumberDisplay extends BaseMixin {
                 .attr('class', SPAN_CLASS)
                 .classed('dc-tabbable', this._keyboardAccessible)
                 .merge(span);
+
+            if (this._keyboardAccessible) {
+                span.attr('tabindex', '0');
+            }
         }
 
         {               

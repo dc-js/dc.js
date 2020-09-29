@@ -605,4 +605,36 @@ describe('dc.heatmap', () => {
             });
         });
     });
+
+    describe('accessibility heatmap', () => {
+
+        beforeEach(() => {
+            chart.keyboardAccessible(true);
+        })
+
+        it('internal elements are focusable by keyboard', () => {
+
+            chart.render();
+            chart.selectAll('rect.heat-box').each(function () {
+                const bar = d3.select(this);
+                expect(bar.attr('tabindex')).toEqual('0');
+            });
+        });
+
+        it('internal elements are clickable by pressing enter', () => {
+
+            const clickHandlerSpy = jasmine.createSpy();
+            chart.boxOnClick = clickHandlerSpy;
+            chart.render();
+          
+            const event = new Event('keydown');
+            event.keyCode = 13;
+                     
+            chart.selectAll('rect.heat-box').each(function () {
+                const bar = d3.select(this).node();
+                bar.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalled();            
+            });
+        });
+    });
 });
