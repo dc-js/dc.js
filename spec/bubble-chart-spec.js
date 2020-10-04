@@ -740,10 +740,10 @@ describe('dc.bubbleChart', () => {
             const event = new Event('keydown');
             event.keyCode = 13;
                      
-            chart.selectAll('circle').each(function () {
-                const bubble = d3.select(this).node();
-                bubble.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('circle').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();           
             });
         });
 

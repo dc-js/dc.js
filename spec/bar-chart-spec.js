@@ -1306,10 +1306,10 @@ describe('dc.BarChart', () => {
             const event = new Event('keydown');
             event.keyCode = 13;
                      
-            chart.selectAll('rect.bar').each(function () {
-                const bar = d3.select(this).node();
-                bar.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('rect.bar').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();    
             });
         });
 
@@ -1343,10 +1343,10 @@ describe('dc.BarChart', () => {
             regionDimension.filterAll();
             chart.redraw();
                     
-            chart.selectAll('rect.bar').each(function () {
-                const bar = d3.select(this).node();
-                bar.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('rect.bar').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
             });
 
         });

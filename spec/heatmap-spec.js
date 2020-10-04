@@ -630,10 +630,10 @@ describe('dc.heatmap', () => {
             const event = new Event('keydown');
             event.keyCode = 13;
                      
-            chart.selectAll('rect.heat-box').each(function () {
-                const bar = d3.select(this).node();
-                bar.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('rect.heat-box').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
             });
         });
     });

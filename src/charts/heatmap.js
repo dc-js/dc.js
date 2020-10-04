@@ -236,7 +236,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .on('click', adaptHandler(this.boxOnClick()));
 
         if (this._keyboardAccessible) {
-            this._makeKeyboardAccessible(this.boxOnClick());
+            this._makeKeyboardAccessible(this.boxOnClick);
         }
 
         boxes = gEnter.merge(boxes);

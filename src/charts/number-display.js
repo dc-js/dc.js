@@ -128,20 +128,30 @@ export class NumberDisplay extends BaseMixin {
             if (this._keyboardAccessible) {
                 span.attr('tabindex', '0');
             }
+
+            if (this._ariaLiveRegion) {
+                this.transitionDuration(0);
+                span.attr('aria-live', 'polite');
+            }
         }
 
-        {               
-
+        {
             const chart = this;
-            // change text value without triggering transition
-            if (this._ariaLiveRegion) {
-                span
-                    .attr('aria-live', 'polite')
-                    .text(() => {
+            span.transition()
+                .duration(chart.transitionDuration())
+                .delay(chart.transitionDelay())
+                .ease(easeQuad)
+                .tween('text', function () {
+                    // [XA] don't try and interpolate from Infinity, else this breaks.
+                    const interpStart = isFinite(chart._lastValue) ? chart._lastValue : 0;
+                    const interp = interpolateNumber(interpStart || 0, newValue);
+                    chart._lastValue = newValue;
 
+                    // need to save it in D3v4
+                    const node = this;
+                    return t => {
                         let html = null;
-                        const num = chart.formatNumber()(newValue);
-
+                        const num = chart.formatNumber()(interp(t));
                         if (newValue === 0 && (chart._html.none !== '')) {
                             html = chart._html.none;
                         } else if (newValue === 1 && (chart._html.one !== '')) {
@@ -149,38 +159,9 @@ export class NumberDisplay extends BaseMixin {
                         } else if (chart._html.some !== '') {
                             html = chart._html.some;
                         }
-                        return html ? html.replace('%number', num) : num;
-
-                    });
-
-            } else {
-
-                span.transition()
-                    .duration(chart.transitionDuration())
-                    .delay(chart.transitionDelay())
-                    .ease(easeQuad)
-                    .tween('text', function () {
-                        // [XA] don't try and interpolate from Infinity, else this breaks.
-                        const interpStart = isFinite(chart._lastValue) ? chart._lastValue : 0;
-                        const interp = interpolateNumber(interpStart || 0, newValue);
-                        chart._lastValue = newValue;
-
-                        // need to save it in D3v4
-                        const node = this;
-                        return t => {
-                            let html = null;
-                            const num = chart.formatNumber()(interp(t));
-                            if (newValue === 0 && (chart._html.none !== '')) {
-                                html = chart._html.none;
-                            } else if (newValue === 1 && (chart._html.one !== '')) {
-                                html = chart._html.one;
-                            } else if (chart._html.some !== '') {
-                                html = chart._html.some;
-                            }
-                            node.innerHTML = html ? html.replace('%number', num) : num;
-                        };
-                    });
-            }
+                        node.innerHTML = html ? html.replace('%number', num) : num;
+                    };
+                });
         }
     }
 

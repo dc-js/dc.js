@@ -313,10 +313,10 @@ describe('dc.BoxPlot', () => {
             event.keyCode = 13;
             
             // only boxes are valid targets for keydown events
-            chart.selectAll('g.box').each(function () {
-                const circle = d3.select(this).node();
-                circle.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('g.box').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();      
             });
         });
 

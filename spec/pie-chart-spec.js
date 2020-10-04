@@ -845,10 +845,10 @@ describe('dc.pieChart', () => {
             const event = new Event('keydown');
             event.keyCode = 13;
                      
-            chart.selectAll('g.pie-slice').each(function () {
-                const pie = d3.select(this).node();
-                pie.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('g.pie-slice').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
             });
         });
     });

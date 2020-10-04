@@ -11,6 +11,7 @@
 
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
+  <p>This page demonstrates filtering and accessibility features. Charts can be labelled for screen readers using <code>svgDescription()</code> method and internal chart elements, like bars in a bar chart, can be made interactive as if clicked on by setting the <code>keyboardAccessible()</code> method to <code>true</code></p>
   <div id="chart-ring-year" style="width:300px; height:300px">
     <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
       <a href="javascript:yearRingChart.filterAll();dc.redrawAll();">reset</a>
@@ -72,7 +73,9 @@ yearRingChart
     .dimension(spendDim)
     .group(spendHist)
     .svgDescription("Histogram")
-    .x(d3.scaleLinear().domain([0,10]))
+    .keyboardAccessible(true)
+    .x(d3.scaleBand().domain(d3.range(10)))
+    .xUnits(dc.units.ordinal)
     .elasticY(true)
     .controlsUseVisibility(true);
 

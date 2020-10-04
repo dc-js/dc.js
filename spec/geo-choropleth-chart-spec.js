@@ -308,10 +308,10 @@ describe('dc.geoChoropleth', () => {
             const event = new Event('keydown');
             event.keyCode = 13;
                      
-            chart.selectAll('path.dc-tabbable').each(function () {
-                const state = d3.select(this).node();
-                state.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('path.dc-tabbable').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
             });
         });
 

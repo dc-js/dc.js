@@ -189,10 +189,10 @@ describe('dc.rowChart', () => {
             const event = new Event('keydown');
             event.keyCode = 13;
                      
-            chart.selectAll('rect').each(function () {
-                const row = d3.select(this).node();
-                row.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('rect').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
             });
         });
     });

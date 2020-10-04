@@ -513,10 +513,10 @@ describe('dc.sunburstChart', () => {
             const event = new Event('keydown');
             event.keyCode = 13;
                      
-            chart.selectAll('g.pie-slice path').each(function () {
-                const burst = d3.select(this).node();
-                burst.dispatchEvent(event);
-                expect(clickHandlerSpy).toHaveBeenCalled();            
+            chart.selectAll('g.pie-slice path').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();   
             });
         });
     });
