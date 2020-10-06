@@ -1,5 +1,5 @@
 /*!
- *  dc 4.1.1
+ *  dc 4.2.0
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -21,9 +21,9 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3'], factory) :
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
-}(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Dispatch, d3Array, d3Scale, d3Interpolate, d3Collection, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
+}(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Dispatch, d3Array, d3Collection, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.1.1";
+  const version = "4.2.0";
 
   class BadArgumentException extends Error { }
 
@@ -1192,6 +1192,60 @@
       return _f;
   };
 
+  // d3v6 has changed the arguments for event handlers.
+  // We are creating a wrapper which detects if the first argument is an event, which indicated d3@v6
+  // Otherwise we assume lower versions of d3.
+  // The underlying handler will always receive bound datum as the first argument and the event as the second argument.
+  // It is possible that any of these can actually be undefined (or null).
+  function adaptHandler (handler) {
+      return function (a, b) {
+          if (a && a.target) {
+              // d3@v6 - b is __data__, a is the event
+              handler.call(this, b, a);
+          } else {
+              // older d3 - a is __data__, event from global d3.event
+              handler.call(this, a, d3Selection.event);
+          }
+      }
+  }
+
+  function _d3v5Nester ({key, sortKeys, sortValues, entries}) {
+      const nester = d3Collection.nest().key(key);
+      if (sortKeys) {
+          nester.sortKeys(sortKeys);
+      }
+      if (sortValues) {
+          nester.sortValues(sortValues);
+      }
+      return nester.entries(entries);
+  }
+
+  function _d3v6Nester ({key, sortKeys, sortValues, entries}) {
+      if (sortValues) {
+          entries = [...entries].sort(sortValues);
+      }
+      let out = d3Array.groups(entries, key);
+      if (sortKeys) {
+          out = out.sort(sortKeys);
+      }
+
+      // remap to d3@v5 structure
+      return out.map(e => ({
+          key: `${e[0]}`, // d3@v5 always returns key as string
+          values: e[1]
+      }));
+  }
+
+  function compatNestHelper ({key, sortKeys, sortValues, entries}) {
+      if (d3Array.groups) {
+          // d3@v6
+          return _d3v6Nester({key, sortKeys, sortValues, entries});
+      } else {
+          // older d3
+          return _d3v5Nester({key, sortKeys, sortValues, entries});
+      }
+  }
+
   const _defaultFilterHandler = (dimension, filters) => {
       if (filters.length === 0) {
           dimension.filter(null);
@@ -1252,6 +1306,8 @@
   class BaseMixin {
       constructor () {
           this.__dcFlag__ = utils.uniqueId();
+          this._svgDescription = null;
+          this._keyboardAccessible = false;
 
           this._dimension = undefined;
           this._group = undefined;
@@ -1701,8 +1757,53 @@
 
       generateSvg () {
           this._svg = this.root().append('svg');
+      
+          if (this._svgDescription || this._keyboardAccessible) {
+
+              this._svg.append('desc')
+                  .attr('id', `desc-id-${this.__dcFlag__}`)
+                  .html(`${this.svgDescription()}`);
+
+              this._svg
+                  .attr('tabindex', '0')
+                  .attr('role', 'img')
+                  .attr('aria-labelledby', `desc-id-${this.__dcFlag__}`);
+          }
+
           this.sizeSvg();
           return this._svg;
+      }
+
+      /**
+       * Set or get description text for the entire SVG graphic. If set, will create a `<desc>` element as the first
+       * child of the SVG with the description text and also make the SVG focusable from keyboard.
+       * @param {String} [description]
+       * @returns {String|BaseMixin}
+       */
+      svgDescription (description) {
+          if (!arguments.length) {
+              return this._svgDescription || this.constructor.name;
+          }
+
+          this._svgDescription = description;
+          return this;
+      }
+
+      /**
+       * If set, interactive chart elements like individual bars in a bar chart or symbols in a scatter plot
+       * will be focusable from keyboard and on pressing Enter or Space will behave as if clicked on.
+       * 
+       * If `svgDescription` has not been explicitly set, will also set SVG description text to the class
+       * constructor name, like BarChart or HeatMap, and make the entire SVG focusable.
+       * @param {Boolean} [keyboardAccessible=false]
+       * @returns {Boolean|BarChart}
+       */
+      keyboardAccessible (keyboardAccessible) {
+          if (!arguments.length) {
+              return this._keyboardAccessible;
+          }
+          this._keyboardAccessible = keyboardAccessible;
+          return this;
       }
 
       /**
@@ -1846,6 +1947,28 @@
           this._activateRenderlets('postRender');
 
           return result;
+      }
+
+      _makeKeyboardAccessible (onClickFunction, ...onClickArgs) {
+          // called from each chart module's render and redraw methods
+          const tabElements = this._svg
+              .selectAll('.dc-tabbable')
+              .attr('tabindex', 0);
+                  
+          if (onClickFunction) {
+              tabElements.on('keydown', adaptHandler((d, event) => {
+                  // trigger only if d is an object undestood by KeyAccessor()
+                  if (event.keyCode === 13 && typeof d === 'object') {
+                      onClickFunction.call(this, d, ...onClickArgs);
+                  } 
+                  // special case for space key press - prevent scrolling
+                  if (event.keyCode === 32 && typeof d === 'object') {
+                      onClickFunction.call(this, d, ...onClickArgs);
+                      event.preventDefault();                
+                  }
+              
+              }));
+          }
       }
 
       _activateRenderlets (event) {
@@ -2780,60 +2903,6 @@
       }
   };
 
-  // d3v6 has changed the arguments for event handlers.
-  // We are creating a wrapper which detects if the first argument is an event, which indicated d3@v6
-  // Otherwise we assume lower versions of d3.
-  // The underlying handler will always receive bound datum as the first argument and the event as the second argument.
-  // It is possible that any of these can actually be undefined (or null).
-  function adaptHandler (handler) {
-      return function (a, b) {
-          if (a && a.target) {
-              // d3@v6 - b is __data__, a is the event
-              handler.call(this, b, a);
-          } else {
-              // older d3 - a is __data__, event from global d3.event
-              handler.call(this, a, d3Selection.event);
-          }
-      }
-  }
-
-  function _d3v5Nester ({key, sortKeys, sortValues, entries}) {
-      const nester = d3Collection.nest().key(key);
-      if (sortKeys) {
-          nester.sortKeys(sortKeys);
-      }
-      if (sortValues) {
-          nester.sortValues(sortValues);
-      }
-      return nester.entries(entries);
-  }
-
-  function _d3v6Nester ({key, sortKeys, sortValues, entries}) {
-      if (sortValues) {
-          entries = [...entries].sort(sortValues);
-      }
-      let out = d3Array.groups(entries, key);
-      if (sortKeys) {
-          out = out.sort(sortKeys);
-      }
-
-      // remap to d3@v5 structure
-      return out.map(e => ({
-          key: `${e[0]}`, // d3@v5 always returns key as string
-          values: e[1]
-      }));
-  }
-
-  function compatNestHelper ({key, sortKeys, sortValues, entries}) {
-      if (d3Array.groups) {
-          // d3@v6
-          return _d3v6Nester({key, sortKeys, sortValues, entries});
-      } else {
-          // older d3
-          return _d3v5Nester({key, sortKeys, sortValues, entries});
-      }
-  }
-
   /**
    * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
    * @mixin BubbleMixin
@@ -2860,6 +2929,12 @@
 
           this.data(group => {
               const data = group.all();
+
+              if (this._keyboardAccessible) {
+                  // sort based on the x value (key)
+                  data.sort((a, b) => d3Array.ascending(this.keyAccessor()(a), this.keyAccessor()(b)));
+              }
+
               if (this._sortBubbleSize) {
                   // sort descending so smaller bubbles are on top
                   const radiusAccessor = this.radiusValueAccessor();
@@ -5711,6 +5786,7 @@
           const enter = bars.enter()
               .append('rect')
               .attr('class', 'bar')
+              .classed('dc-tabbable', this._keyboardAccessible)
               .attr('fill', pluck('data', this.getColor))
               .attr('x', d => this._barXPos(d))
               .attr('y', this.yAxisHeight())
@@ -5724,6 +5800,10 @@
 
           if (this.isOrdinal()) {
               barsEnterUpdate.on('click', adaptHandler(d => this.onClick(d)));
+          }
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(this.onClick);
           }
 
           transition(barsEnterUpdate, this.transitionDuration(), this.transitionDelay())
@@ -5937,7 +6017,7 @@
    */
   class BoxPlot extends CoordinateGridMixin {
       /**
-       * Create a BoxP lot.
+       * Create a Box Plot.
        *
        * @example
        * // create a box plot under #chart-container1 element using the default global chart group
@@ -6089,12 +6169,20 @@
 
           boxesGEnter
               .attr('class', 'box')
+              .classed('dc-tabbable', this._keyboardAccessible)
               .attr('transform', (d, i) => this._boxTransform(d, i))
               .call(this._box)
               .on('click', adaptHandler(d => {
                   this.filter(this.keyAccessor()(d));
                   this.redrawGroup();
-              }));
+              }))
+              .selectAll('circle')
+              .classed('dc-tabbable', this._keyboardAccessible);
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(this.onClick);
+          }
+
           return boxesGEnter.merge(boxesG);
       }
 
@@ -6124,6 +6212,11 @@
 
       _yAxisRangeRatio () {
           return ((this._maxDataValue() - this._minDataValue()) / this.effectiveHeight());
+      }
+
+      onClick (d) {
+          this.filter(this.keyAccessor()(d));
+          this.redrawGroup();
       }
 
       fadeDeselectedArea (brushSelection) {
@@ -6340,7 +6433,7 @@
           const data = this.data();
           let bubbleG = this.chartBodyG().selectAll(`g.${this.BUBBLE_NODE_CLASS}`)
               .data(data, d => d.key);
-          if (this.sortBubbleSize()) {
+          if (this.sortBubbleSize() || this.keyboardAccessible()) {
               // update dom order based on sort
               bubbleG.order();
           }
@@ -6362,6 +6455,7 @@
               .attr('transform', d => this._bubbleLocator(d))
               .append('circle').attr('class', (d, i) => `${this.BUBBLE_CLASS} _${i}`)
               .on('click', adaptHandler(d => this.onClick(d)))
+              .classed('dc-tabbable', this._keyboardAccessible)
               .attr('fill', this.getColor)
               .attr('r', 0);
 
@@ -6371,6 +6465,10 @@
               .select(`circle.${this.BUBBLE_CLASS}`)
               .attr('r', d => this.bubbleR(d))
               .attr('opacity', d => (this.bubbleR(d) > 0) ? 1 : 0);
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(this.onClick);
+          }
 
           this._doRenderLabel(bubbleGEnter);
 
@@ -6470,6 +6568,7 @@
            */
           this._g = undefined;
           this._points = [];
+          this._keyboardAccessible = false;
 
           this.transitionDuration(750);
 
@@ -6529,9 +6628,14 @@
               if (circle.empty()) {
                   circle = nodeG.append('circle')
                       .attr('class', BUBBLE_CLASS)
+                      .classed('dc-tabbable', this._keyboardAccessible)
                       .attr('r', 0)
                       .attr('fill', this.getColor)
                       .on('click', adaptHandler(d => this.onClick(d)));
+              }
+
+              if (this._keyboardAccessible) {
+                  this._makeKeyboardAccessible(this.onClick);
               }
 
               transition(circle, this.transitionDuration(), this.transitionDelay())
@@ -8385,6 +8489,7 @@
 
               regionG
                   .append('path')
+                  .classed('dc-tabbable', this._keyboardAccessible)
                   .attr('fill', 'white')
                   .attr('d', this._getGeoPath());
 
@@ -8471,6 +8576,10 @@
                   return 'none';
               })
               .on('click', adaptHandler(d => this.onClick(d, layerIndex)));
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(this.onClick, layerIndex);
+          }
 
           transition(paths, this.transitionDuration(),
                      this.transitionDelay()).attr('fill', (d, i) => this.getColor(data[this._geoJson(layerIndex).keyAccessor(d)], i));
@@ -8834,10 +8943,15 @@
 
           gEnter.append('rect')
               .attr('class', 'heat-box')
+              .classed('dc-tabbable', this._keyboardAccessible)
               .attr('fill', 'white')
               .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
               .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
               .on('click', adaptHandler(this.boxOnClick()));
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(this.boxOnClick);
+          }
 
           boxes = gEnter.merge(boxes);
 
@@ -9027,6 +9141,7 @@
           this._horizontal = false;
           this._legendItemClass = undefined;
           this._highlightSelected = false;
+          this._keyboardAccessible = false;
       }
 
       parent (p) {
@@ -9071,8 +9186,13 @@
 
           itemEnter.append('span')
               .attr('class', 'dc-legend-item-label')
+              .classed('dc-tabbable', this._keyboardAccessible)
               .attr('title', this._legendText)
               .text(this._legendText);
+
+          if (this._keyboardAccessible) {
+              this._makeLegendKeyboardAccessible();
+          }
       }
 
       /**
@@ -9168,6 +9288,62 @@
           this._maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
           return this;
       }
+
+      /**
+       * If set, individual legend items will be focusable from keyboard and on pressing Enter or Space
+       * will behave as if clicked on.
+       * 
+       * If `svgDescription` on the parent chart has not been explicitly set, will also set the default 
+       * SVG description text to the class constructor name, like BarChart or HeatMap, and make the entire
+       * SVG focusable.
+       * @param {Boolean} [keyboardAccessible=false]
+       * @returns {Boolean|HtmlLegend}
+       */
+      keyboardAccessible (keyboardAccessible) {
+          if (!arguments.length) {
+              return this._keyboardAccessible;
+          }
+          this._keyboardAccessible = keyboardAccessible;
+          return this;
+      }
+
+      _makeLegendKeyboardAccessible () {
+
+          if (!this._parent._svgDescription) {
+
+              this._parent.svg().append('desc')
+                  .attr('id', `desc-id-${this._parent.__dcFlag__}`)
+                  .html(`${this._parent.svgDescription()}`);
+
+              this._parent.svg()
+                  .attr('tabindex', '0')
+                  .attr('role', 'img')
+                  .attr('aria-labelledby', `desc-id-${this._parent.__dcFlag__}`);
+          }
+
+          const tabElements = this.container()
+              .selectAll('.dc-legend-item-label.dc-tabbable')
+              .attr('tabindex', 0);
+
+          tabElements
+              .on('keydown', d => {
+                  // trigger only if d is an object
+                  if (d3Selection.event.keyCode === 13 && typeof d === 'object') {
+                      d.chart.legendToggle(d);
+                  } 
+                  // special case for space key press - prevent scrolling
+                  if (d3Selection.event.keyCode === 32 && typeof d === 'object') {
+                      d.chart.legendToggle(d);
+                      d3Selection.event.preventDefault();            
+                  }
+              })
+              .on('focus', d => {
+                  this._parent.legendHighlight(d);
+              })
+              .on('blur', d => {
+                  this._parent.legendReset(d);
+              });
+      }
   }
 
   const htmlLegend = () => new HtmlLegend();
@@ -9199,6 +9375,7 @@
           this._legendText = pluck('name');
           this._maxItems = undefined;
           this._highlightSelected = false;
+          this._keyboardAccessible = false;
 
           this._g = undefined;
       }
@@ -9367,10 +9544,66 @@
           return this;
       }
 
+      /**
+       * If set, individual legend items will be focusable from keyboard and on pressing Enter or Space
+       * will behave as if clicked on.
+       * 
+       * If `svgDescription` on the parent chart has not been explicitly set, will also set the default 
+       * SVG description text to the class constructor name, like BarChart or HeatMap, and make the entire
+       * SVG focusable.
+       * @param {Boolean} [keyboardAccessible=false]
+       * @returns {Boolean|Legend}
+       */
+      keyboardAccessible (keyboardAccessible) {
+          if (!arguments.length) {
+              return this._keyboardAccessible;
+          }
+          this._keyboardAccessible = keyboardAccessible;
+          return this;
+      }
+
       // Implementation methods
 
       _legendItemHeight () {
           return this._gap + this._itemHeight;
+      }
+
+      _makeLegendKeyboardAccessible () {
+
+          if (!this._parent._svgDescription) {
+
+              this._parent.svg().append('desc')
+                  .attr('id', `desc-id-${this._parent.__dcFlag__}`)
+                  .html(`${this._parent.svgDescription()}`);
+
+              this._parent.svg()
+                  .attr('tabindex', '0')
+                  .attr('role', 'img')
+                  .attr('aria-labelledby', `desc-id-${this._parent.__dcFlag__}`);
+          }
+
+          const tabElements = this._parent.svg()
+              .selectAll('.dc-legend .dc-tabbable')
+              .attr('tabindex', 0);
+
+          tabElements
+              .on('keydown', adaptHandler((d, event) => {
+                  // trigger only if d is an object
+                  if (event.keyCode === 13 && typeof d === 'object') {
+                      d.chart.legendToggle(d);
+                  } 
+                  // special case for space key press - prevent scrolling
+                  if (event.keyCode === 32 && typeof d === 'object') {
+                      d.chart.legendToggle(d);
+                      event.preventDefault();            
+                  }
+              }))
+              .on('focus', adaptHandler(d => {
+                  this._parent.legendHighlight(d);
+              }))
+              .on('blur', adaptHandler(d => {
+                  this._parent.legendReset(d);
+              }));
       }
 
       render () {
@@ -9432,10 +9665,15 @@
 
               itemEnter.append('text')
                   .text(self._legendText)
+                  .classed('dc-tabbable', this._keyboardAccessible)
                   .attr('x', self._itemHeight + LABEL_GAP)
                   .attr('y', function () {
                       return self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
                   });
+
+              if (this._keyboardAccessible) {
+                  this._makeLegendKeyboardAccessible();
+              }
           }
 
           let cumulativeLegendTextWidth = 0;
@@ -9822,6 +10060,7 @@
                       .enter()
                       .append('circle')
                       .attr('class', DOT_CIRCLE_CLASS)
+                      .classed('dc-tabbable', this._keyboardAccessible)
                       .attr('cx', d => utils.safeNumber(this.x()(d.x)))
                       .attr('cy', d => utils.safeNumber(this.y()(d.y + d.y0)))
                       .attr('r', this._getDotRadius())
@@ -9840,6 +10079,23 @@
                           chart._hideRefLines(g);
                       })
                       .merge(dots);
+
+                  // special case for on-focus for line chart and its dots
+                  if (this._keyboardAccessible) {
+
+                      this._svg.selectAll('.dc-tabbable')
+                          .attr('tabindex', 0)
+                          .on('focus', function () {
+                              const dot = d3Selection.select(this);
+                              chart._showDot(dot);
+                              chart._showRefLines(dot, g);
+                          })
+                          .on('blur', function () {
+                              const dot = d3Selection.select(this);
+                              chart._hideDot(dot);
+                              chart._hideRefLines(g);
+                          });
+                  }
 
                   dotsEnterModify.call(dot => this._doRenderTitle(dot, data));
 
@@ -10061,6 +10317,7 @@
           this._formatNumber = d3Format.format('.2s');
           this._html = {one: '', some: '', none: ''};
           this._lastValue = undefined;
+          this._ariaLiveRegion = false;
 
           // dimension not required
           this._mandatoryAttributes(['group']);
@@ -10142,7 +10399,17 @@
                   .enter()
                   .append('span')
                   .attr('class', SPAN_CLASS)
+                  .classed('dc-tabbable', this._keyboardAccessible)
                   .merge(span);
+
+              if (this._keyboardAccessible) {
+                  span.attr('tabindex', '0');
+              }
+
+              if (this._ariaLiveRegion) {
+                  this.transitionDuration(0);
+                  span.attr('aria-live', 'polite');
+              }
           }
 
           {
@@ -10190,6 +10457,23 @@
               return this._formatNumber;
           }
           this._formatNumber = formatter;
+          return this;
+      }
+
+      /**
+       * If set, the Number Display widget will have its aria-live attribute set to 'polite' which will
+       * notify screen readers when the widget changes its value. Note that setting this method will also
+       * disable the default transition between the old and the new values. This is to avoid change
+       * notifications spoken out before the new value finishes re-drawing. It is also advisable to check
+       * if the widget has appropriately set accessibility description or label. 
+       * @param {Boolean} [ariaLiveRegion=false]
+       * @returns {Boolean|NumberDisplay}
+       */
+      ariaLiveRegion (ariaLiveRegion) {
+          if (!arguments.length) {
+              return this._ariaLiveRegion;
+          }
+          this._ariaLiveRegion = ariaLiveRegion;
           return this;
       }
 
@@ -10343,7 +10627,8 @@
           return slices
               .enter()
               .append('g')
-              .attr('class', (d, i) => `${this._sliceCssClass} _${i}`);
+              .attr('class', (d, i) => `${this._sliceCssClass} _${i}`)
+              .classed('dc-tabbable', this._keyboardAccessible);
       }
 
       _createSlicePath (slicesEnter, arcs) {
@@ -10351,6 +10636,10 @@
               .attr('fill', (d, i) => this._fill(d, i))
               .on('click', adaptHandler(d => this._onClick(d)))
               .attr('d', (d, i) => this._safeArc(d, i, arcs));
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(this._onClick);
+          }
 
           const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
           if (tranNodes.attrTween) {
@@ -10948,8 +11237,13 @@
               .attr('height', height)
               .attr('fill', this.getColor)
               .on('click', adaptHandler(d => this._onClick(d)))
+              .classed('dc-tabbable', this._keyboardAccessible)
               .classed('deselected', d => (this.hasFilter()) ? !this._isSelectedRow(d) : false)
               .classed('selected', d => (this.hasFilter()) ? this._isSelectedRow(d) : false);
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(adaptHandler(d => this._onClick(d)));
+          }
 
           transition(rect, this.transitionDuration(), this.transitionDelay())
               .attr('width', d => Math.abs(this._rootValue() - this._x(this.cappedValueAccessor(d))))
@@ -11418,8 +11712,16 @@
       }
 
       _plotOnSVG () {
+
+          const data = this.data();
+
+          if (this._keyboardAccessible) {
+              // sort based on the x value (key)
+              data.sort((a, b) => d3Array.ascending(this.keyAccessor()(a), this.keyAccessor()(b)));
+          }
+
           let symbols = this.chartBodyG().selectAll('path.symbol')
-              .data(this.data());
+              .data(data);
 
           transition(symbols.exit(), this.transitionDuration(), this.transitionDelay())
               .attr('opacity', 0).remove();
@@ -11428,12 +11730,19 @@
               .enter()
               .append('path')
               .attr('class', 'symbol')
+              .classed('dc-tabbable', this._keyboardAccessible)
               .attr('opacity', 0)
               .attr('fill', this.getColor)
               .attr('transform', d => this._locator(d))
               .merge(symbols);
 
-          symbols.call(s => this._renderTitles(s, this.data()));
+          // no click handler - just tabindex for reading out of tooltips
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible();
+              symbols.order();
+          }
+
+          symbols.call(s => this._renderTitles(s, data));
 
           symbols.each((d, i) => {
               this._filtered[i] = !this.filter() || this.filter().isFiltered([this.keyAccessor()(d), this.valueAccessor()(d)]);
@@ -12398,7 +12707,12 @@
           const slicePath = slicesEnter.append('path')
               .attr('fill', (d, i) => this._fill(d, i))
               .on('click', adaptHandler(d => this.onClick(d)))
+              .classed('dc-tabbable', this._keyboardAccessible)
               .attr('d', d => this._safeArc(arcs, d));
+
+          if (this._keyboardAccessible) {
+              this._makeKeyboardAccessible(this.onClick);
+          }
 
           const tranNodes = transition(slicePath, this.transitionDuration());
           if (tranNodes.attrTween) {
@@ -12833,7 +13147,7 @@
           const path = d.path || d.key;
           const filter = filters.HierarchyFilter(path);
 
-          // filters are equal to, parents or children of the path.
+          // filters are equal to parents or children of the path.
           const filtersList = this._filtersForPath(path);
           let exactMatch = false;
           // clear out any filters that cover the path filtered.

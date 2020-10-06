@@ -1,11 +1,11 @@
-// https://d3js.org v6.1.0 Copyright 2020 Mike Bostock
+// https://d3js.org v6.2.0 Copyright 2020 Mike Bostock
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 typeof define === 'function' && define.amd ? define(['exports'], factory) :
 (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.d3 = global.d3 || {}));
 }(this, (function (exports) { 'use strict';
 
-var version = "6.1.0";
+var version = "6.2.0";
 
 function ascending(a, b) {
   return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -330,20 +330,6 @@ function constant(x) {
   };
 }
 
-function sequence(start, stop, step) {
-  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
-
-  var i = -1,
-      n = Math.max(0, Math.ceil((stop - start) / step)) | 0,
-      range = new Array(n);
-
-  while (++i < n) {
-    range[i] = start + i * step;
-  }
-
-  return range;
-}
-
 var e10 = Math.sqrt(50),
     e5 = Math.sqrt(10),
     e2 = Math.sqrt(2);
@@ -397,6 +383,23 @@ function tickStep(start, stop, count) {
   return stop < start ? -step1 : step1;
 }
 
+function nice(start, stop, count) {
+  let prestep;
+  while (true) {
+    const step = tickIncrement(start, stop, count);
+    if (step === prestep || step === 0 || !isFinite(step)) {
+      return [start, stop];
+    } else if (step > 0) {
+      start = Math.floor(start / step) * step;
+      stop = Math.ceil(stop / step) * step;
+    } else if (step < 0) {
+      start = Math.ceil(start * step) / step;
+      stop = Math.floor(stop * step) / step;
+    }
+    prestep = step;
+  }
+}
+
 function thresholdSturges(values) {
   return Math.ceil(Math.log(count(values)) / Math.LN2) + 1;
 }
@@ -423,10 +426,13 @@ function bin() {
         x1 = xz[1],
         tz = threshold(values, x0, x1);
 
-    // Convert number of thresholds into uniform thresholds.
+    // Convert number of thresholds into uniform thresholds,
+    // and nice the default domain accordingly.
     if (!Array.isArray(tz)) {
-      tz = tickStep(x0, x1, tz);
-      tz = sequence(Math.ceil(x0 / tz) * tz, x1, tz); // exclusive
+      tz = +tz;
+      if (domain === extent) [x0, x1] = nice(x0, x1, tz);
+      tz = ticks(x0, x1, tz);
+      if (tz[tz.length - 1] === x1) tz.pop(); // exclusive
     }
 
     // Remove any thresholds outside the domain.
@@ -688,6 +694,20 @@ function permute(source, keys) {
   return Array.from(keys, key => source[key]);
 }
 
+function sequence(start, stop, step) {
+  start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
+
+  var i = -1,
+      n = Math.max(0, Math.ceil((stop - start) / step)) | 0,
+      range = new Array(n);
+
+  while (++i < n) {
+    range[i] = start + i * step;
+  }
+
+  return range;
+}
+
 function least(values, compare = ascending) {
   let min;
   let defined = false;
@@ -832,6 +852,141 @@ function length$1(d) {
 
 function zip() {
   return transpose(arguments);
+}
+
+function every(values, test) {
+  if (typeof test !== "function") throw new TypeError("test is not a function");
+  let index = -1;
+  for (const value of values) {
+    if (!test(value, ++index, values)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function some(values, test) {
+  if (typeof test !== "function") throw new TypeError("test is not a function");
+  let index = -1;
+  for (const value of values) {
+    if (test(value, ++index, values)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function filter(values, test) {
+  if (typeof test !== "function") throw new TypeError("test is not a function");
+  const array = [];
+  let index = -1;
+  for (const value of values) {
+    if (test(value, ++index, values)) {
+      array.push(value);
+    }
+  }
+  return array;
+}
+
+function map(values, mapper) {
+  if (typeof values[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
+  if (typeof mapper !== "function") throw new TypeError("mapper is not a function");
+  return Array.from(values, (value, index) => mapper(value, index, values));
+}
+
+function reduce(values, reducer, value) {
+  if (typeof reducer !== "function") throw new TypeError("reducer is not a function");
+  const iterator = values[Symbol.iterator]();
+  let done, next, index = -1;
+  if (arguments.length < 3) {
+    ({done, value} = iterator.next());
+    if (done) return;
+    ++index;
+  }
+  while (({done, value: next} = iterator.next()), !done) {
+    value = reducer(value, next, ++index, values);
+  }
+  return value;
+}
+
+function reverse(values) {
+  if (typeof values[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
+  return Array.from(values).reverse();
+}
+
+function sort(values, comparator = ascending) {
+  if (typeof values[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
+  return Array.from(values).sort(comparator);
+}
+
+function difference(values, ...others) {
+  values = new Set(values);
+  for (const other of others) {
+    for (const value of other) {
+      values.delete(value);
+    }
+  }
+  return values;
+}
+
+function disjoint(values, other) {
+  const iterator = other[Symbol.iterator](), set = new Set();
+  for (const v of values) {
+    if (set.has(v)) return false;
+    let value, done;
+    while (({value, done} = iterator.next())) {
+      if (done) break;
+      if (Object.is(v, value)) return false;
+      set.add(value);
+    }
+  }
+  return true;
+}
+
+function set(values) {
+  return values instanceof Set ? values : new Set(values);
+}
+
+function intersection(values, ...others) {
+  values = new Set(values);
+  others = others.map(set);
+  out: for (const value of values) {
+    for (const other of others) {
+      if (!other.has(value)) {
+        values.delete(value);
+        continue out;
+      }
+    }
+  }
+  return values;
+}
+
+function superset(values, other) {
+  const iterator = values[Symbol.iterator](), set = new Set();
+  for (const o of other) {
+    if (set.has(o)) continue;
+    let value, done;
+    while (({value, done} = iterator.next())) {
+      if (done) return false;
+      set.add(value);
+      if (Object.is(o, value)) break;
+    }
+  }
+  return true;
+}
+
+function subset(values, other) {
+  return superset(other, values);
+}
+
+function union(...others) {
+  const set = new Set();
+  for (const other of others) {
+    for (const o of other) {
+      set.add(o);
+    }
+  }
+  return set;
 }
 
 var slice$1 = Array.prototype.slice;
@@ -1052,8 +1207,8 @@ Dispatch.prototype = dispatch.prototype = {
     // Otherwise, if a null callback was specified, remove callbacks of the given name.
     if (callback != null && typeof callback !== "function") throw new Error("invalid callback: " + callback);
     while (++i < n) {
-      if (t = (typename = T[i]).type) _[t] = set(_[t], typename.name, callback);
-      else if (callback == null) for (t in _) _[t] = set(_[t], typename.name, null);
+      if (t = (typename = T[i]).type) _[t] = set$1(_[t], typename.name, callback);
+      else if (callback == null) for (t in _) _[t] = set$1(_[t], typename.name, null);
     }
 
     return this;
@@ -1082,7 +1237,7 @@ function get(type, name) {
   }
 }
 
-function set(type, name, callback) {
+function set$1(type, name, callback) {
   for (var i = 0, n = type.length; i < n; ++i) {
     if (type[i].name === name) {
       type[i] = noop, type = type.slice(0, i).concat(type.slice(i + 1));
@@ -1223,7 +1378,7 @@ function selection_selectChild(match) {
       : childFind(typeof match === "function" ? match : childMatcher(match)));
 }
 
-var filter = Array.prototype.filter;
+var filter$1 = Array.prototype.filter;
 
 function children() {
   return this.children;
@@ -1231,7 +1386,7 @@ function children() {
 
 function childrenFilter(match) {
   return function() {
-    return filter.call(this.children, match);
+    return filter$1.call(this.children, match);
   };
 }
 
@@ -3605,7 +3760,7 @@ function init(node, id) {
   return schedule;
 }
 
-function set$1(node, id) {
+function set$2(node, id) {
   var schedule = get$1(node, id);
   if (schedule.state > STARTED) throw new Error("too late; already running");
   return schedule;
@@ -3752,7 +3907,7 @@ function selection_interrupt(name) {
 function tweenRemove(id, name) {
   var tween0, tween1;
   return function() {
-    var schedule = set$1(this, id),
+    var schedule = set$2(this, id),
         tween = schedule.tween;
 
     // If this node shared tween with the previous node,
@@ -3777,7 +3932,7 @@ function tweenFunction(id, name, value) {
   var tween0, tween1;
   if (typeof value !== "function") throw new Error;
   return function() {
-    var schedule = set$1(this, id),
+    var schedule = set$2(this, id),
         tween = schedule.tween;
 
     // If this node shared tween with the previous node,
@@ -3820,7 +3975,7 @@ function tweenValue(transition, name, value) {
   var id = transition._id;
 
   transition.each(function() {
-    var schedule = set$1(this, id);
+    var schedule = set$2(this, id);
     (schedule.value || (schedule.value = {}))[name] = value.apply(this, arguments);
   });
 
@@ -3978,13 +4133,13 @@ function transition_delay(value) {
 
 function durationFunction(id, value) {
   return function() {
-    set$1(this, id).duration = +value.apply(this, arguments);
+    set$2(this, id).duration = +value.apply(this, arguments);
   };
 }
 
 function durationConstant(id, value) {
   return value = +value, function() {
-    set$1(this, id).duration = value;
+    set$2(this, id).duration = value;
   };
 }
 
@@ -4001,7 +4156,7 @@ function transition_duration(value) {
 function easeConstant(id, value) {
   if (typeof value !== "function") throw new Error;
   return function() {
-    set$1(this, id).ease = value;
+    set$2(this, id).ease = value;
   };
 }
 
@@ -4017,7 +4172,7 @@ function easeVarying(id, value) {
   return function() {
     var v = value.apply(this, arguments);
     if (typeof v !== "function") throw new Error;
-    set$1(this, id).ease = v;
+    set$2(this, id).ease = v;
   };
 }
 
@@ -4067,7 +4222,7 @@ function start(name) {
 }
 
 function onFunction(id, name, listener) {
-  var on0, on1, sit = start(name) ? init : set$1;
+  var on0, on1, sit = start(name) ? init : set$2;
   return function() {
     var schedule = sit(this, id),
         on = schedule.on;
@@ -4198,7 +4353,7 @@ function styleFunction$1(name, interpolate, value) {
 function styleMaybeRemove(id, name) {
   var on0, on1, listener0, key = "style." + name, event = "end." + key, remove;
   return function() {
-    var schedule = set$1(this, id),
+    var schedule = set$2(this, id),
         on = schedule.on,
         listener = schedule.value[key] == null ? remove || (remove = styleRemove$1(name)) : undefined;
 
@@ -4322,7 +4477,7 @@ function transition_end() {
         end = {value: function() { if (--size === 0) resolve(); }};
 
     that.each(function() {
-      var schedule = set$1(this, id),
+      var schedule = set$2(this, id),
           on = schedule.on;
 
       // If this node shared a dispatch with the previous node,
@@ -8750,15 +8905,15 @@ function identity$3(x) {
   return x;
 }
 
-var map = Array.prototype.map,
+var map$1 = Array.prototype.map,
     prefixes = ["y","z","a","f","p","n","\xB5","m","","k","M","G","T","P","E","Z","Y"];
 
 function formatLocale(locale) {
-  var group = locale.grouping === undefined || locale.thousands === undefined ? identity$3 : formatGroup(map.call(locale.grouping, Number), locale.thousands + ""),
+  var group = locale.grouping === undefined || locale.thousands === undefined ? identity$3 : formatGroup(map$1.call(locale.grouping, Number), locale.thousands + ""),
       currencyPrefix = locale.currency === undefined ? "" : locale.currency[0] + "",
       currencySuffix = locale.currency === undefined ? "" : locale.currency[1] + "",
       decimal = locale.decimal === undefined ? "." : locale.decimal + "",
-      numerals = locale.numerals === undefined ? identity$3 : formatNumerals(map.call(locale.numerals, String)),
+      numerals = locale.numerals === undefined ? identity$3 : formatNumerals(map$1.call(locale.numerals, String)),
       percent = locale.percent === undefined ? "%" : locale.percent + "",
       minus = locale.minus === undefined ? "\u2212" : locale.minus + "",
       nan = locale.nan === undefined ? "NaN" : locale.nan + "";
@@ -13916,7 +14071,7 @@ function point() {
   return pointish(band.apply(null, arguments).paddingInner(1));
 }
 
-function constant$a(x) {
+function constants(x) {
   return function() {
     return x;
   };
@@ -13935,7 +14090,7 @@ function identity$6(x) {
 function normalize(a, b) {
   return (b -= (a = +a))
       ? function(x) { return (x - a) / b; }
-      : constant$a(isNaN(b) ? NaN : 0.5);
+      : constants(isNaN(b) ? NaN : 0.5);
 }
 
 function clamper(a, b) {
@@ -14166,7 +14321,7 @@ function identity$7(domain) {
   return linearish(scale);
 }
 
-function nice(domain, interval) {
+function nice$1(domain, interval) {
   domain = domain.slice();
 
   var i0 = 0,
@@ -14305,7 +14460,7 @@ function loggish(transform) {
   };
 
   scale.nice = function() {
-    return domain(nice(domain(), {
+    return domain(nice$1(domain(), {
       floor: function(x) { return pows(Math.floor(logs(x))); },
       ceil: function(x) { return pows(Math.ceil(logs(x))); }
     }));
@@ -14473,7 +14628,7 @@ function quantile$1() {
   function rescale() {
     var i = 0, n = Math.max(1, range.length);
     thresholds = new Array(n - 1);
-    while (++i < n) thresholds[i - 1] = quantile(domain, i / n);
+    while (++i < n) thresholds[i - 1] = quantileSorted(domain, i / n);
     return scale;
   }
 
@@ -15748,7 +15903,7 @@ function calendar(year, month, week, day, hour, minute, second, millisecond, for
   scale.nice = function(interval) {
     var d = domain();
     return (interval = tickInterval(interval, d[0], d[d.length - 1]))
-        ? domain(nice(d, interval))
+        ? domain(nice$1(d, interval))
         : scale;
   };
 
@@ -16431,7 +16586,7 @@ var inferno = ramp$1(colors("00000401000501010601010802010a02020c02020e030210040
 
 var plasma = ramp$1(colors("0d088710078813078916078a19068c1b068d1d068e20068f2206902406912605912805922a05932c05942e05952f059631059733059735049837049938049a3a049a3c049b3e049c3f049c41049d43039e44039e46039f48039f4903a04b03a14c02a14e02a25002a25102a35302a35502a45601a45801a45901a55b01a55c01a65e01a66001a66100a76300a76400a76600a76700a86900a86a00a86c00a86e00a86f00a87100a87201a87401a87501a87701a87801a87a02a87b02a87d03a87e03a88004a88104a78305a78405a78606a68707a68808a68a09a58b0aa58d0ba58e0ca48f0da4910ea3920fa39410a29511a19613a19814a099159f9a169f9c179e9d189d9e199da01a9ca11b9ba21d9aa31e9aa51f99a62098a72197a82296aa2395ab2494ac2694ad2793ae2892b02991b12a90b22b8fb32c8eb42e8db52f8cb6308bb7318ab83289ba3388bb3488bc3587bd3786be3885bf3984c03a83c13b82c23c81c33d80c43e7fc5407ec6417dc7427cc8437bc9447aca457acb4679cc4778cc4977cd4a76ce4b75cf4c74d04d73d14e72d24f71d35171d45270d5536fd5546ed6556dd7566cd8576bd9586ada5a6ada5b69db5c68dc5d67dd5e66de5f65de6164df6263e06363e16462e26561e26660e3685fe4695ee56a5de56b5de66c5ce76e5be76f5ae87059e97158e97257ea7457eb7556eb7655ec7754ed7953ed7a52ee7b51ef7c51ef7e50f07f4ff0804ef1814df1834cf2844bf3854bf3874af48849f48948f58b47f58c46f68d45f68f44f79044f79143f79342f89441f89540f9973ff9983ef99a3efa9b3dfa9c3cfa9e3bfb9f3afba139fba238fca338fca537fca636fca835fca934fdab33fdac33fdae32fdaf31fdb130fdb22ffdb42ffdb52efeb72dfeb82cfeba2cfebb2bfebd2afebe2afec029fdc229fdc328fdc527fdc627fdc827fdca26fdcb26fccd25fcce25fcd025fcd225fbd324fbd524fbd724fad824fada24f9dc24f9dd25f8df25f8e125f7e225f7e425f6e626f6e826f5e926f5eb27f4ed27f3ee27f3f027f2f227f1f426f1f525f0f724f0f921"));
 
-function constant$b(x) {
+function constant$a(x) {
   return function constant() {
     return x;
   };
@@ -16533,7 +16688,7 @@ function cornerTangents(x0, y0, x1, y1, r1, rc, cw) {
 function arc() {
   var innerRadius = arcInnerRadius,
       outerRadius = arcOuterRadius,
-      cornerRadius = constant$b(0),
+      cornerRadius = constant$a(0),
       padRadius = null,
       startAngle = arcStartAngle,
       endAngle = arcEndAngle,
@@ -16682,31 +16837,31 @@ function arc() {
   };
 
   arc.innerRadius = function(_) {
-    return arguments.length ? (innerRadius = typeof _ === "function" ? _ : constant$b(+_), arc) : innerRadius;
+    return arguments.length ? (innerRadius = typeof _ === "function" ? _ : constant$a(+_), arc) : innerRadius;
   };
 
   arc.outerRadius = function(_) {
-    return arguments.length ? (outerRadius = typeof _ === "function" ? _ : constant$b(+_), arc) : outerRadius;
+    return arguments.length ? (outerRadius = typeof _ === "function" ? _ : constant$a(+_), arc) : outerRadius;
   };
 
   arc.cornerRadius = function(_) {
-    return arguments.length ? (cornerRadius = typeof _ === "function" ? _ : constant$b(+_), arc) : cornerRadius;
+    return arguments.length ? (cornerRadius = typeof _ === "function" ? _ : constant$a(+_), arc) : cornerRadius;
   };
 
   arc.padRadius = function(_) {
-    return arguments.length ? (padRadius = _ == null ? null : typeof _ === "function" ? _ : constant$b(+_), arc) : padRadius;
+    return arguments.length ? (padRadius = _ == null ? null : typeof _ === "function" ? _ : constant$a(+_), arc) : padRadius;
   };
 
   arc.startAngle = function(_) {
-    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$b(+_), arc) : startAngle;
+    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$a(+_), arc) : startAngle;
   };
 
   arc.endAngle = function(_) {
-    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$b(+_), arc) : endAngle;
+    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$a(+_), arc) : endAngle;
   };
 
   arc.padAngle = function(_) {
-    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$b(+_), arc) : padAngle;
+    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$a(+_), arc) : padAngle;
   };
 
   arc.context = function(_) {
@@ -16765,13 +16920,13 @@ function y$3(p) {
 }
 
 function line(x, y) {
-  var defined = constant$b(true),
+  var defined = constant$a(true),
       context = null,
       curve = curveLinear,
       output = null;
 
-  x = typeof x === "function" ? x : (x === undefined) ? x$3 : constant$b(x);
-  y = typeof y === "function" ? y : (y === undefined) ? y$3 : constant$b(y);
+  x = typeof x === "function" ? x : (x === undefined) ? x$3 : constant$a(x);
+  y = typeof y === "function" ? y : (y === undefined) ? y$3 : constant$a(y);
 
   function line(data) {
     var i,
@@ -16794,15 +16949,15 @@ function line(x, y) {
   }
 
   line.x = function(_) {
-    return arguments.length ? (x = typeof _ === "function" ? _ : constant$b(+_), line) : x;
+    return arguments.length ? (x = typeof _ === "function" ? _ : constant$a(+_), line) : x;
   };
 
   line.y = function(_) {
-    return arguments.length ? (y = typeof _ === "function" ? _ : constant$b(+_), line) : y;
+    return arguments.length ? (y = typeof _ === "function" ? _ : constant$a(+_), line) : y;
   };
 
   line.defined = function(_) {
-    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$b(!!_), line) : defined;
+    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$a(!!_), line) : defined;
   };
 
   line.curve = function(_) {
@@ -16818,14 +16973,14 @@ function line(x, y) {
 
 function area$3(x0, y0, y1) {
   var x1 = null,
-      defined = constant$b(true),
+      defined = constant$a(true),
       context = null,
       curve = curveLinear,
       output = null;
 
-  x0 = typeof x0 === "function" ? x0 : (x0 === undefined) ? x$3 : constant$b(+x0);
-  y0 = typeof y0 === "function" ? y0 : (y0 === undefined) ? constant$b(0) : constant$b(+y0);
-  y1 = typeof y1 === "function" ? y1 : (y1 === undefined) ? y$3 : constant$b(+y1);
+  x0 = typeof x0 === "function" ? x0 : (x0 === undefined) ? x$3 : constant$a(+x0);
+  y0 = typeof y0 === "function" ? y0 : (y0 === undefined) ? constant$a(0) : constant$a(+y0);
+  y1 = typeof y1 === "function" ? y1 : (y1 === undefined) ? y$3 : constant$a(+y1);
 
   function area(data) {
     var i,
@@ -16870,27 +17025,27 @@ function area$3(x0, y0, y1) {
   }
 
   area.x = function(_) {
-    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$b(+_), x1 = null, area) : x0;
+    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$a(+_), x1 = null, area) : x0;
   };
 
   area.x0 = function(_) {
-    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$b(+_), area) : x0;
+    return arguments.length ? (x0 = typeof _ === "function" ? _ : constant$a(+_), area) : x0;
   };
 
   area.x1 = function(_) {
-    return arguments.length ? (x1 = _ == null ? null : typeof _ === "function" ? _ : constant$b(+_), area) : x1;
+    return arguments.length ? (x1 = _ == null ? null : typeof _ === "function" ? _ : constant$a(+_), area) : x1;
   };
 
   area.y = function(_) {
-    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$b(+_), y1 = null, area) : y0;
+    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$a(+_), y1 = null, area) : y0;
   };
 
   area.y0 = function(_) {
-    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$b(+_), area) : y0;
+    return arguments.length ? (y0 = typeof _ === "function" ? _ : constant$a(+_), area) : y0;
   };
 
   area.y1 = function(_) {
-    return arguments.length ? (y1 = _ == null ? null : typeof _ === "function" ? _ : constant$b(+_), area) : y1;
+    return arguments.length ? (y1 = _ == null ? null : typeof _ === "function" ? _ : constant$a(+_), area) : y1;
   };
 
   area.lineX0 =
@@ -16907,7 +17062,7 @@ function area$3(x0, y0, y1) {
   };
 
   area.defined = function(_) {
-    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$b(!!_), area) : defined;
+    return arguments.length ? (defined = typeof _ === "function" ? _ : constant$a(!!_), area) : defined;
   };
 
   area.curve = function(_) {
@@ -16933,9 +17088,9 @@ function pie() {
   var value = identity$8,
       sortValues = descending$1,
       sort = null,
-      startAngle = constant$b(0),
-      endAngle = constant$b(tau$5),
-      padAngle = constant$b(0);
+      startAngle = constant$a(0),
+      endAngle = constant$a(tau$5),
+      padAngle = constant$a(0);
 
   function pie(data) {
     var i,
@@ -16978,7 +17133,7 @@ function pie() {
   }
 
   pie.value = function(_) {
-    return arguments.length ? (value = typeof _ === "function" ? _ : constant$b(+_), pie) : value;
+    return arguments.length ? (value = typeof _ === "function" ? _ : constant$a(+_), pie) : value;
   };
 
   pie.sortValues = function(_) {
@@ -16990,15 +17145,15 @@ function pie() {
   };
 
   pie.startAngle = function(_) {
-    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$b(+_), pie) : startAngle;
+    return arguments.length ? (startAngle = typeof _ === "function" ? _ : constant$a(+_), pie) : startAngle;
   };
 
   pie.endAngle = function(_) {
-    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$b(+_), pie) : endAngle;
+    return arguments.length ? (endAngle = typeof _ === "function" ? _ : constant$a(+_), pie) : endAngle;
   };
 
   pie.padAngle = function(_) {
-    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$b(+_), pie) : padAngle;
+    return arguments.length ? (padAngle = typeof _ === "function" ? _ : constant$a(+_), pie) : padAngle;
   };
 
   return pie;
@@ -17117,11 +17272,11 @@ function link$2(curve) {
   };
 
   link.x = function(_) {
-    return arguments.length ? (x = typeof _ === "function" ? _ : constant$b(+_), link) : x;
+    return arguments.length ? (x = typeof _ === "function" ? _ : constant$a(+_), link) : x;
   };
 
   link.y = function(_) {
-    return arguments.length ? (y = typeof _ === "function" ? _ : constant$b(+_), link) : y;
+    return arguments.length ? (y = typeof _ === "function" ? _ : constant$a(+_), link) : y;
   };
 
   link.context = function(_) {
@@ -17289,8 +17444,8 @@ var symbols = [
 
 function symbol(type, size) {
   var context = null;
-  type = typeof type === "function" ? type : constant$b(type || circle$2);
-  size = typeof size === "function" ? size : constant$b(size === undefined ? 64 : +size);
+  type = typeof type === "function" ? type : constant$a(type || circle$2);
+  size = typeof size === "function" ? size : constant$a(size === undefined ? 64 : +size);
 
   function symbol() {
     var buffer;
@@ -17300,11 +17455,11 @@ function symbol(type, size) {
   }
 
   symbol.type = function(_) {
-    return arguments.length ? (type = typeof _ === "function" ? _ : constant$b(_), symbol) : type;
+    return arguments.length ? (type = typeof _ === "function" ? _ : constant$a(_), symbol) : type;
   };
 
   symbol.size = function(_) {
-    return arguments.length ? (size = typeof _ === "function" ? _ : constant$b(+_), symbol) : size;
+    return arguments.length ? (size = typeof _ === "function" ? _ : constant$a(+_), symbol) : size;
   };
 
   symbol.context = function(_) {
@@ -18173,7 +18328,7 @@ function stackSeries(key) {
 }
 
 function stack() {
-  var keys = constant$b([]),
+  var keys = constant$a([]),
       order = none$2,
       offset = none$1,
       value = stackValue;
@@ -18198,15 +18353,15 @@ function stack() {
   }
 
   stack.keys = function(_) {
-    return arguments.length ? (keys = typeof _ === "function" ? _ : constant$b(Array.from(_)), stack) : keys;
+    return arguments.length ? (keys = typeof _ === "function" ? _ : constant$a(Array.from(_)), stack) : keys;
   };
 
   stack.value = function(_) {
-    return arguments.length ? (value = typeof _ === "function" ? _ : constant$b(+_), stack) : value;
+    return arguments.length ? (value = typeof _ === "function" ? _ : constant$a(+_), stack) : value;
   };
 
   stack.order = function(_) {
-    return arguments.length ? (order = _ == null ? none$2 : typeof _ === "function" ? _ : constant$b(Array.from(_)), stack) : order;
+    return arguments.length ? (order = _ == null ? none$2 : typeof _ === "function" ? _ : constant$a(Array.from(_)), stack) : order;
   };
 
   stack.offset = function(_) {
@@ -18323,11 +18478,11 @@ function insideOut(series) {
   return bottoms.reverse().concat(tops);
 }
 
-function reverse(series) {
+function reverse$1(series) {
   return none$2(series).reverse();
 }
 
-var constant$c = x => () => x;
+var constant$b = x => () => x;
 
 function ZoomEvent(type, {
   sourceEvent,
@@ -18792,19 +18947,19 @@ function zoom() {
   }
 
   zoom.wheelDelta = function(_) {
-    return arguments.length ? (wheelDelta = typeof _ === "function" ? _ : constant$c(+_), zoom) : wheelDelta;
+    return arguments.length ? (wheelDelta = typeof _ === "function" ? _ : constant$b(+_), zoom) : wheelDelta;
   };
 
   zoom.filter = function(_) {
-    return arguments.length ? (filter = typeof _ === "function" ? _ : constant$c(!!_), zoom) : filter;
+    return arguments.length ? (filter = typeof _ === "function" ? _ : constant$b(!!_), zoom) : filter;
   };
 
   zoom.touchable = function(_) {
-    return arguments.length ? (touchable = typeof _ === "function" ? _ : constant$c(!!_), zoom) : touchable;
+    return arguments.length ? (touchable = typeof _ === "function" ? _ : constant$b(!!_), zoom) : touchable;
   };
 
   zoom.extent = function(_) {
-    return arguments.length ? (extent = typeof _ === "function" ? _ : constant$c([[+_[0][0], +_[0][1]], [+_[1][0], +_[1][1]]]), zoom) : extent;
+    return arguments.length ? (extent = typeof _ === "function" ? _ : constant$b([[+_[0][0], +_[0][1]], [+_[1][0], +_[1][1]]]), zoom) : extent;
   };
 
   zoom.scaleExtent = function(_) {
@@ -18910,6 +19065,8 @@ exports.curveStepAfter = stepAfter;
 exports.curveStepBefore = stepBefore;
 exports.descending = descending;
 exports.deviation = deviation;
+exports.difference = difference;
+exports.disjoint = disjoint;
 exports.dispatch = dispatch;
 exports.drag = drag;
 exports.dragDisable = dragDisable;
@@ -18953,7 +19110,9 @@ exports.easeSin = sinInOut;
 exports.easeSinIn = sinIn;
 exports.easeSinInOut = sinInOut;
 exports.easeSinOut = sinOut;
+exports.every = every;
 exports.extent = extent;
+exports.filter = filter;
 exports.forceCenter = center$1;
 exports.forceCollide = collide;
 exports.forceLink = link;
@@ -19092,6 +19251,7 @@ exports.interpolateYlOrBr = YlOrBr;
 exports.interpolateYlOrRd = YlOrRd;
 exports.interpolateZoom = interpolateZoom;
 exports.interrupt = interrupt;
+exports.intersection = intersection;
 exports.interval = interval$1;
 exports.isoFormat = formatIso;
 exports.isoParse = parseIso;
@@ -19106,6 +19266,7 @@ exports.linkHorizontal = linkHorizontal;
 exports.linkRadial = linkRadial;
 exports.linkVertical = linkVertical;
 exports.local = local;
+exports.map = map;
 exports.matcher = matcher;
 exports.max = max;
 exports.maxIndex = maxIndex;
@@ -19116,6 +19277,7 @@ exports.min = min;
 exports.minIndex = minIndex;
 exports.namespace = namespace;
 exports.namespaces = namespaces;
+exports.nice = nice;
 exports.now = now;
 exports.pack = index$3;
 exports.packEnclose = enclose;
@@ -19163,6 +19325,8 @@ exports.randomPoisson = poisson;
 exports.randomUniform = uniform;
 exports.randomWeibull = weibull;
 exports.range = sequence;
+exports.reduce = reduce;
+exports.reverse = reverse;
 exports.rgb = rgb;
 exports.ribbon = ribbon$1;
 exports.ribbonArrow = ribbonArrow;
@@ -19240,6 +19404,8 @@ exports.selector = selector;
 exports.selectorAll = selectorAll;
 exports.shuffle = shuffle;
 exports.shuffler = shuffler;
+exports.some = some;
+exports.sort = sort;
 exports.stack = stack;
 exports.stackOffsetDiverging = diverging$1;
 exports.stackOffsetExpand = expand;
@@ -19251,10 +19417,12 @@ exports.stackOrderAscending = ascending$3;
 exports.stackOrderDescending = descending$2;
 exports.stackOrderInsideOut = insideOut;
 exports.stackOrderNone = none$2;
-exports.stackOrderReverse = reverse;
+exports.stackOrderReverse = reverse$1;
 exports.stratify = stratify;
 exports.style = styleValue;
+exports.subset = subset;
 exports.sum = sum;
+exports.superset = superset;
 exports.svg = svg;
 exports.symbol = symbol;
 exports.symbolCircle = circle$2;
@@ -19327,6 +19495,7 @@ exports.tsvFormatRows = tsvFormatRows;
 exports.tsvFormatValue = tsvFormatValue;
 exports.tsvParse = tsvParse;
 exports.tsvParseRows = tsvParseRows;
+exports.union = union;
 exports.utcDay = utcDay;
 exports.utcDays = utcDays;
 exports.utcFriday = utcFriday;

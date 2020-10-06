@@ -5,7 +5,7 @@
 .dc-chart rect.bar {
   stroke: none;
   cursor: pointer; }
-  .dc-chart rect.bar:hover {
+  .dc-chart rect.bar:hover, .dc-chart rect.bar:focus {
     fill-opacity: .5; }
 
 .dc-chart rect.deselected {
@@ -18,7 +18,9 @@
   cursor: pointer; }
   .dc-chart .pie-slice.external {
     fill: #000; }
-  .dc-chart .pie-slice :hover, .dc-chart .pie-slice.highlight {
+  .dc-chart .pie-slice:focus {
+    fill-opacity: .8; }
+  :hover .dc-chart .pie-slice.highlight {
     fill-opacity: .8; }
 
 .dc-chart .pie-path {
@@ -74,7 +76,7 @@
 
 .dc-chart g.state {
   cursor: pointer; }
-  .dc-chart g.state :hover {
+  .dc-chart g.state :hover, .dc-chart g.state :focus {
     fill-opacity: .8; }
   .dc-chart g.state path {
     stroke: #fff; }
@@ -88,7 +90,7 @@
 .dc-chart g.row rect {
   fill-opacity: 0.8;
   cursor: pointer; }
-  .dc-chart g.row rect:hover {
+  .dc-chart g.row rect:hover, .dc-chart g.row rect:focus {
     fill-opacity: 0.6; }
 
 .dc-chart g.row text {
@@ -121,7 +123,7 @@
 .dc-chart .node {
   font-size: 0.7em;
   cursor: pointer; }
-  .dc-chart .node :hover {
+  .dc-chart .node :hover, .dc-chart .node :focus {
     fill-opacity: .8; }
 
 .dc-chart .bubble {
