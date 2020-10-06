@@ -1278,6 +1278,81 @@ describe('dc.BarChart', () => {
         }
     });
 
+    describe('accessibility bar chart', () => {
+
+        function removeEmptyBins (sourceGroup) {
+            return {
+                all:function () {
+                    return sourceGroup.all().filter( d => d.value !== 0);
+                }
+            };
+        }
+
+        it('internal elements are focusable by keyboard', () => {
+            chart.keyboardAccessible(true);
+            chart.render();
+            chart.selectAll('rect.bar').each(function () {
+                const bar = d3.select(this);
+                expect(bar.attr('tabindex')).toEqual('0');
+            });
+        });
+
+        it('initial internal elements are clickable by pressing enter', () => {
+            chart.keyboardAccessible(true);
+            const clickHandlerSpy = jasmine.createSpy();
+            chart.onClick = clickHandlerSpy;
+            chart.render();
+          
+            const event = new Event('keydown');
+            event.keyCode = 13;
+                     
+            chart.selectAll('rect.bar').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();    
+            });
+        });
+
+        it('newly added internal elements are also clickable from keyboard', () => {
+            chart.keyboardAccessible(true);
+            const clickHandlerSpy = jasmine.createSpy();
+            chart.onClick = clickHandlerSpy;
+
+            const event = new Event('keydown');
+            event.keyCode = 13;
+
+            const stateDimension = data.dimension(d => d.state);
+            const regionDimension = data.dimension(d => d.region);
+            const stateGroup = stateDimension.group().reduceSum(d => +d.value);
+            const ordinalDomainValues = ['California', 'Colorado', 'Delaware', 'Ontario', 'Mississippi', 'Oklahoma'];
+            
+            chart
+                .dimension(stateDimension)
+                .group(removeEmptyBins(stateGroup))
+                .xUnits(dc.units.ordinal)
+                .x(d3.scaleBand().domain(ordinalDomainValues))
+                .elasticX(true)
+                .barPadding(0)
+                .outerPadding(0.1)
+                .transitionDuration(0)
+                .render();
+
+            //force creation of new <rect> elements on existing chart
+            regionDimension.filterExact('West');
+            chart.redraw();
+            regionDimension.filterAll();
+            chart.redraw();
+                    
+            chart.selectAll('rect.bar').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
+            });
+
+        });
+
+    });
+
     function nthStack (n) {
         const stack = d3.select(chart.selectAll('.stack').nodes()[n]);
 

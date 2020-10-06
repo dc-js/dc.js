@@ -192,8 +192,13 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .attr('height', height)
             .attr('fill', this.getColor)
             .on('click', adaptHandler(d => this._onClick(d)))
+            .classed('dc-tabbable', this._keyboardAccessible)
             .classed('deselected', d => (this.hasFilter()) ? !this._isSelectedRow(d) : false)
             .classed('selected', d => (this.hasFilter()) ? this._isSelectedRow(d) : false);
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(adaptHandler(d => this._onClick(d)));
+        }
 
         transition(rect, this.transitionDuration(), this.transitionDelay())
             .attr('width', d => Math.abs(this._rootValue() - this._x(this.cappedValueAccessor(d))))

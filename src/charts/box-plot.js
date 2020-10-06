@@ -43,7 +43,7 @@ function defaultWhiskersIQR (k) {
  */
 export class BoxPlot extends CoordinateGridMixin {
     /**
-     * Create a BoxP lot.
+     * Create a Box Plot.
      *
      * @example
      * // create a box plot under #chart-container1 element using the default global chart group
@@ -195,12 +195,20 @@ export class BoxPlot extends CoordinateGridMixin {
 
         boxesGEnter
             .attr('class', 'box')
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .on('click', adaptHandler(d => {
                 this.filter(this.keyAccessor()(d));
                 this.redrawGroup();
-            }));
+            }))
+            .selectAll('circle')
+            .classed('dc-tabbable', this._keyboardAccessible);
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this.onClick);
+        }
+
         return boxesGEnter.merge(boxesG);
     }
 
@@ -230,6 +238,11 @@ export class BoxPlot extends CoordinateGridMixin {
 
     _yAxisRangeRatio () {
         return ((this._maxDataValue() - this._minDataValue()) / this.effectiveHeight());
+    }
+
+    onClick (d) {
+        this.filter(this.keyAccessor()(d));
+        this.redrawGroup();
     }
 
     fadeDeselectedArea (brushSelection) {

@@ -273,6 +273,31 @@ describe('dc.legend', () => {
         });
     });
 
+    describe('accessible legends', () => {
+        beforeEach(() => {
+            chart.legend(new dc.Legend().keyboardAccessible(true)).render();
+        });
+
+        it('legend items should be focusable from keyboard', () => {
+
+            chart.select('g.dc-legend').selectAll('g.dc-legend-item text').each(function () {
+                const item = d3.select(this);
+                expect(item.attr('tabindex')).toEqual('0');
+            });
+           
+        });
+
+        it('keyboard focus on legend item should highlight chart item', () => {
+
+            chart
+            .select('g.dc-legend').select('g.dc-legend-item text')
+            .on('focus').call(legendItem(0).nodes()[0], legendItem(0).datum());
+
+            expect(d3.select(chart.selectAll('path.line').nodes()[0]).classed('highlight')).toBeTruthy();
+        });
+
+    });
+    
     function legendItem (n) {
         return d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[n]);
     }

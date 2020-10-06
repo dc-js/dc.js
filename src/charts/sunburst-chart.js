@@ -173,7 +173,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         const slicePath = slicesEnter.append('path')
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', adaptHandler(d => this.onClick(d)))
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('d', d => this._safeArc(arcs, d));
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this.onClick);
+        }
 
         const tranNodes = transition(slicePath, this.transitionDuration());
         if (tranNodes.attrTween) {
@@ -608,7 +613,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         const path = d.path || d.key;
         const filter = filters.HierarchyFilter(path);
 
-        // filters are equal to, parents or children of the path.
+        // filters are equal to parents or children of the path.
         const filtersList = this._filtersForPath(path);
         let exactMatch = false;
         // clear out any filters that cover the path filtered.

@@ -268,4 +268,53 @@ describe('dc.geoChoropleth', () => {
             expect(chart.geoJsons().filter(e => e.name === 'state').length).toEqual(0);
         });
     });
+
+    describe('accessibility choropleth', () => {
+        // create chart without rendering it
+        let chart;
+        beforeEach(() => {
+            const id = 'accessible-choropleth-chart'
+            chart = new dc.GeoChoroplethChart(`#${id}`);
+            appendChartID(id);
+
+            chart.dimension(stateDimension)
+                .group(stateValueSumGroup)
+                .width(990)
+                .height(600)
+                .keyboardAccessible(true)
+                .colors(['#ccc', '#e2f2ff', '#c4e4ff', '#9ed2ff', '#81c5ff', '#6bbaff', '#51aeff', '#36a2ff', '#1e96ff', '#0089ff'])
+                .colorDomain([0, 155])
+                .overlayGeoJson(geoJson.features, 'state', d => d.properties.name)
+                .overlayGeoJson(geoJson2.features, 'county')
+                .transitionDuration(0)
+                .title(d => `${d.key} : ${d.value ? d.value : 0}`);
+        });
+
+        it('internal elements are focusable by keyboard', () => {
+            
+            chart.render();
+            chart.selectAll('path.dc-tabbable').each(function () {
+                const state = d3.select(this);
+                expect(state.attr('tabindex')).toEqual('0');
+            });
+        });
+
+        it('internal elements are clickable by pressing enter', () => {
+
+            const clickHandlerSpy = jasmine.createSpy();
+            chart.onClick = clickHandlerSpy;
+            chart.render();
+          
+            const event = new Event('keydown');
+            event.keyCode = 13;
+                     
+            chart.selectAll('path.dc-tabbable').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
+            });
+        });
+
+    });
+
 });

@@ -6,11 +6,32 @@
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
     <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
+    <style>
+      /* kbd styles from GitHub */
+      kbd {
+        display: inline-block;
+        padding: 3px 5px;
+        font: 11px SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+        line-height: normal;
+        line-height: 10px;
+        color: #444d56;
+        vertical-align: middle;
+        background-color: #fafbfc;
+        border: 1px solid #d1d5da;
+        border-radius: 6px;
+        box-shadow: inset 0 -1px 0 #d1d5da;
+      }
+    </style>
 </head>
 <body>
 
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
+<p>This page demonstrates filtering and accessibility features.</p>
+<p>Charts can be labelled for screen readers with <a href="http://dc-js.github.io/dc.js/docs/html/BaseMixin.html#svgDescription">BaseMixin.svgDescription</a>, and internal chart elements (like bars in a bar chart) can be made accessible with <a href="http://dc-js.github.io/dc.js/docs/html/BaseMixin.html#keyboardAccessible">BaseMixin.keyboardAccessible</a>.</p>
+<p>Try it here:
+  <ul><li>select elements using the <kbd>tab</kbd> key</li>
+    <li>toggle filtering using the <kbd>space</kbd> or <kbd>enter</kbd> keys</li></p>
   <div id="chart-ring-year" style="width:300px; height:300px">
     <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
       <a href="javascript:yearRingChart.filterAll();dc.redrawAll();">reset</a>
@@ -64,13 +85,17 @@ var ndx = crossfilter(spendData),
 yearRingChart
     .dimension(yearDim)
     .group(spendPerYear)
+    .keyboardAccessible(true)
     .innerRadius(50)
     .controlsUseVisibility(true);
 
   spendHistChart
     .dimension(spendDim)
     .group(spendHist)
-    .x(d3.scaleLinear().domain([0,10]))
+    .svgDescription("Histogram")
+    .keyboardAccessible(true)
+    .x(d3.scaleBand().domain(d3.range(10)))
+    .xUnits(dc.units.ordinal)
     .elasticY(true)
     .controlsUseVisibility(true);
 
@@ -80,6 +105,7 @@ spendHistChart.yAxis().ticks(2);
 spenderRowChart
     .dimension(nameDim)
     .group(spendPerName)
+    .keyboardAccessible(true)
     .elasticX(true)
     .controlsUseVisibility(true);
 

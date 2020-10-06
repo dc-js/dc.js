@@ -817,5 +817,45 @@ describe('dc.pieChart', () => {
             valueDimension.filterAll();
         });
     });
+
+    describe('accessibility pie chart', () => {
+
+        let chart;
+        beforeEach(() => {
+            chart = buildChart('pie-chart-legend');
+            chart.keyboardAccessible(true);
+ 
+        });
+
+        it('internal elements are focusable by keyboard', () => {
+
+            chart.render();
+            chart.selectAll('g.pie-slice').each(function () {
+                const pie = d3.select(this);
+                expect(pie.attr('tabindex')).toEqual('0');
+            });
+        });
+
+        it('internal elements are clickable by pressing enter', () => {
+
+            const clickHandlerSpy = jasmine.createSpy();
+            chart._onClick = clickHandlerSpy;
+            chart.render();
+          
+            const event = new Event('keydown');
+            event.keyCode = 13;
+                     
+            chart.selectAll('g.pie-slice').each(function (d) {
+                this.dispatchEvent(event);
+                expect(clickHandlerSpy).toHaveBeenCalledWith(d);
+                clickHandlerSpy.calls.reset();
+            });
+        });
+    });
+
+
+
+
+
 });
 

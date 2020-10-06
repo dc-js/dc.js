@@ -229,10 +229,15 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         gEnter.append('rect')
             .attr('class', 'heat-box')
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('fill', 'white')
             .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
             .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
             .on('click', adaptHandler(this.boxOnClick()));
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this.boxOnClick);
+        }
 
         boxes = gEnter.merge(boxes);
 

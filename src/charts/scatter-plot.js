@@ -1,6 +1,7 @@
 import {symbol} from 'd3-shape';
 import {select} from 'd3-selection';
 import {brush} from 'd3-brush';
+import {ascending} from 'd3-array'
 
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {optionalTransition, transition} from '../core/core';
@@ -278,8 +279,16 @@ export class ScatterPlot extends CoordinateGridMixin {
     }
 
     _plotOnSVG () {
+
+        const data = this.data();
+
+        if (this._keyboardAccessible) {
+            // sort based on the x value (key)
+            data.sort((a, b) => ascending(this.keyAccessor()(a), this.keyAccessor()(b)));
+        }
+
         let symbols = this.chartBodyG().selectAll('path.symbol')
-            .data(this.data());
+            .data(data);
 
         transition(symbols.exit(), this.transitionDuration(), this.transitionDelay())
             .attr('opacity', 0).remove();
@@ -288,12 +297,19 @@ export class ScatterPlot extends CoordinateGridMixin {
             .enter()
             .append('path')
             .attr('class', 'symbol')
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('opacity', 0)
             .attr('fill', this.getColor)
             .attr('transform', d => this._locator(d))
             .merge(symbols);
 
-        symbols.call(s => this._renderTitles(s, this.data()));
+        // no click handler - just tabindex for reading out of tooltips
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible();
+            symbols.order();
+        }
+
+        symbols.call(s => this._renderTitles(s, data));
 
         symbols.each((d, i) => {
             this._filtered[i] = !this.filter() || this.filter().isFiltered([this.keyAccessor()(d), this.valueAccessor()(d)]);
