@@ -677,4 +677,34 @@ describe('dc.baseMixin', () => {
             expect(chart.filters().length).toEqual(0);
         });
     });
+
+    describe('accessibility base svg', () => {
+
+        it('should have default description when keyboardAccessible is true', () => {
+            chart
+                .keyboardAccessible(true)
+                .resetSvg();
+
+            expect(chart.svg().attr('tabindex')).toEqual('0');
+            expect(chart.svg().node().firstChild.innerHTML).toEqual('BaseMixin');
+        });
+
+        it('should have custom description if svgDescription is set', () => {
+            chart
+                .svgDescription('I am a chart')
+                .resetSvg();
+            
+            expect(chart.svg().attr('tabindex')).toEqual('0');
+            expect(chart.svg().node().firstChild.innerHTML).toEqual('I am a chart');
+        });
+
+        it('should not have accessibility features if not explicitly enabled', () => {
+            chart
+                .resetSvg();
+            
+            expect(chart.svg().attr('tabindex')).toBeNull();
+        });
+
+
+    })
 });

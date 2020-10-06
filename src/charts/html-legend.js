@@ -1,4 +1,5 @@
 import {select} from 'd3-selection';
+import {event} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
 import {adaptHandler} from '../core/d3compat';
@@ -23,6 +24,7 @@ export class HtmlLegend {
         this._horizontal = false;
         this._legendItemClass = undefined;
         this._highlightSelected = false;
+        this._keyboardAccessible = false;
     }
 
     parent (p) {
@@ -67,8 +69,13 @@ export class HtmlLegend {
 
         itemEnter.append('span')
             .attr('class', 'dc-legend-item-label')
+            .classed('dc-tabbable', this._keyboardAccessible)
             .attr('title', this._legendText)
             .text(this._legendText);
+
+        if (this._keyboardAccessible) {
+            this._makeLegendKeyboardAccessible();
+        }
     }
 
     /**
@@ -163,6 +170,62 @@ export class HtmlLegend {
         }
         this._maxItems = utils.isNumber(maxItems) ? maxItems : undefined;
         return this;
+    }
+
+    /**
+     * If set, individual legend items will be focusable from keyboard and on pressing Enter or Space
+     * will behave as if clicked on.
+     * 
+     * If `svgDescription` on the parent chart has not been explicitly set, will also set the default 
+     * SVG description text to the class constructor name, like BarChart or HeatMap, and make the entire
+     * SVG focusable.
+     * @param {Boolean} [keyboardAccessible=false]
+     * @returns {Boolean|HtmlLegend}
+     */
+    keyboardAccessible (keyboardAccessible) {
+        if (!arguments.length) {
+            return this._keyboardAccessible;
+        }
+        this._keyboardAccessible = keyboardAccessible;
+        return this;
+    }
+
+    _makeLegendKeyboardAccessible () {
+
+        if (!this._parent._svgDescription) {
+
+            this._parent.svg().append('desc')
+                .attr('id', `desc-id-${this._parent.__dcFlag__}`)
+                .html(`${this._parent.svgDescription()}`);
+
+            this._parent.svg()
+                .attr('tabindex', '0')
+                .attr('role', 'img')
+                .attr('aria-labelledby', `desc-id-${this._parent.__dcFlag__}`);
+        }
+
+        const tabElements = this.container()
+            .selectAll('.dc-legend-item-label.dc-tabbable')
+            .attr('tabindex', 0);
+
+        tabElements
+            .on('keydown', d => {
+                // trigger only if d is an object
+                if (event.keyCode === 13 && typeof d === 'object') {
+                    d.chart.legendToggle(d)
+                } 
+                // special case for space key press - prevent scrolling
+                if (event.keyCode === 32 && typeof d === 'object') {
+                    d.chart.legendToggle(d)
+                    event.preventDefault();            
+                }
+            })
+            .on('focus', d => {
+                this._parent.legendHighlight(d);
+            })
+            .on('blur', d => {
+                this._parent.legendReset(d);
+            });
     }
 }
 

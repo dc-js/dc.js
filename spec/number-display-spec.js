@@ -221,4 +221,39 @@ describe('dc.numberDisplay', () => {
             });
         });
     });
+
+    describe('accessibility number display' , () => {
+        let chart;
+        beforeEach(() => {
+
+            const id = 'empty-div';
+            appendChartID(id);
+
+            chart = new dc.NumberDisplay(`#${id}`)
+            .transitionDuration(0)
+            .group(meanGroup)
+            .formatNumber(d3.format('.3s'))
+            .valueAccessor(average);
+        });
+
+        it('should have aria-live', () => {
+            chart.ariaLiveRegion(true);
+            chart.render();
+            d3.timerFlush();
+
+            expect(chart.select('span.number-display').attr('aria-live')).toEqual('polite');
+
+        });
+
+        it('should be focusable', () => {
+            chart.keyboardAccessible(true);
+            chart.render();
+            d3.timerFlush();
+
+            expect(chart.select('span.number-display').attr('tabindex')).toEqual('0');
+
+        });
+
+    });
+
 });

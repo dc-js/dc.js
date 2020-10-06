@@ -1,4 +1,4 @@
-import { descending, min, max } from 'd3-array';
+import { ascending, descending, min, max } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 
 import {ColorMixin} from './color-mixin';
@@ -32,6 +32,12 @@ export const BubbleMixin = Base => class extends ColorMixin(Base) {
 
         this.data(group => {
             const data = group.all();
+
+            if (this._keyboardAccessible) {
+                // sort based on the x value (key)
+                data.sort((a, b) => ascending(this.keyAccessor()(a), this.keyAccessor()(b)));
+            }
+
             if (this._sortBubbleSize) {
                 // sort descending so smaller bubbles are on top
                 const radiusAccessor = this.radiusValueAccessor();

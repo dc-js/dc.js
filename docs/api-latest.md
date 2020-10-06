@@ -661,7 +661,7 @@ Examples:
 <a name="new_BoxPlot_new"></a>
 
 ### new BoxPlot(parent, [chartGroup])
-Create a BoxP lot.
+Create a Box Plot.
 
 
 | Param | Type | Description |
@@ -2154,6 +2154,7 @@ labels.
     * [.horizontal([horizontal])](#HtmlLegend+horizontal) ⇒ <code>String</code> \| [<code>HtmlLegend</code>](#HtmlLegend)
     * [.legendText([legendText])](#HtmlLegend+legendText) ⇒ <code>function</code> \| [<code>HtmlLegend</code>](#HtmlLegend)
     * [.maxItems([maxItems])](#HtmlLegend+maxItems) ⇒ [<code>HtmlLegend</code>](#HtmlLegend)
+    * [.keyboardAccessible([keyboardAccessible])](#HtmlLegend+keyboardAccessible) ⇒ <code>Boolean</code> \| [<code>HtmlLegend</code>](#HtmlLegend)
 
 <a name="HtmlLegend+container"></a>
 
@@ -2239,6 +2240,22 @@ Maximum number of legend items to display
 | --- | --- |
 | [maxItems] | <code>Number</code> | 
 
+<a name="HtmlLegend+keyboardAccessible"></a>
+
+### htmlLegend.keyboardAccessible([keyboardAccessible]) ⇒ <code>Boolean</code> \| [<code>HtmlLegend</code>](#HtmlLegend)
+If set, individual legend items will be focusable from keyboard and on pressing Enter or Space
+will behave as if clicked on.
+
+If `svgDescription` on the parent chart has not been explicitly set, will also set the default 
+SVG description text to the class constructor name, like BarChart or HeatMap, and make the entire
+SVG focusable.
+
+**Kind**: instance method of [<code>HtmlLegend</code>](#HtmlLegend)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [keyboardAccessible] | <code>Boolean</code> | <code>false</code> | 
+
 <a name="Legend"></a>
 
 ## Legend
@@ -2263,6 +2280,7 @@ Examples:
     * [.autoItemWidth([autoItemWidth])](#Legend+autoItemWidth) ⇒ <code>Boolean</code> \| [<code>Legend</code>](#Legend)
     * [.legendText([legendText])](#Legend+legendText) ⇒ <code>function</code> \| [<code>Legend</code>](#Legend)
     * [.maxItems([maxItems])](#Legend+maxItems) ⇒ [<code>Legend</code>](#Legend)
+    * [.keyboardAccessible([keyboardAccessible])](#Legend+keyboardAccessible) ⇒ <code>Boolean</code> \| [<code>Legend</code>](#Legend)
 
 <a name="Legend+x"></a>
 
@@ -2399,6 +2417,22 @@ Maximum number of legend items to display
 | Param | Type |
 | --- | --- |
 | [maxItems] | <code>Number</code> | 
+
+<a name="Legend+keyboardAccessible"></a>
+
+### legend.keyboardAccessible([keyboardAccessible]) ⇒ <code>Boolean</code> \| [<code>Legend</code>](#Legend)
+If set, individual legend items will be focusable from keyboard and on pressing Enter or Space
+will behave as if clicked on.
+
+If `svgDescription` on the parent chart has not been explicitly set, will also set the default 
+SVG description text to the class constructor name, like BarChart or HeatMap, and make the entire
+SVG focusable.
+
+**Kind**: instance method of [<code>Legend</code>](#Legend)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [keyboardAccessible] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="LineChart"></a>
 
@@ -2643,6 +2677,7 @@ the largest value if the values are numeric.
     * [.html([html])](#NumberDisplay+html) ⇒ <code>Object</code> \| [<code>NumberDisplay</code>](#NumberDisplay)
     * [.value()](#NumberDisplay+value) ⇒ <code>Number</code>
     * [.formatNumber([formatter])](#NumberDisplay+formatNumber) ⇒ <code>function</code> \| [<code>NumberDisplay</code>](#NumberDisplay)
+    * [.ariaLiveRegion([ariaLiveRegion])](#NumberDisplay+ariaLiveRegion) ⇒ <code>Boolean</code> \| [<code>NumberDisplay</code>](#NumberDisplay)
 
 <a name="new_NumberDisplay_new"></a>
 
@@ -2699,6 +2734,21 @@ Get or set a function to format the value for the display.
 | Param | Type | Default |
 | --- | --- | --- |
 | [formatter] | <code>function</code> | <code>d3.format(&#x27;.2s&#x27;)</code> | 
+
+<a name="NumberDisplay+ariaLiveRegion"></a>
+
+### numberDisplay.ariaLiveRegion([ariaLiveRegion]) ⇒ <code>Boolean</code> \| [<code>NumberDisplay</code>](#NumberDisplay)
+If set, the Number Display widget will have its aria-live attribute set to 'polite' which will
+notify screen readers when the widget changes its value. Note that setting this method will also
+disable the default transition between the old and the new values. This is to avoid change
+notifications spoken out before the new value finishes re-drawing. It is also advisable to check
+if the widget has appropriately set accessibility description or label.
+
+**Kind**: instance method of [<code>NumberDisplay</code>](#NumberDisplay)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [ariaLiveRegion] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="PieChart"></a>
 
@@ -3894,6 +3944,8 @@ and available on all chart implementations in the `dc` library.
     * [.root([rootElement])](#BaseMixin+root) ⇒ <code>HTMLElement</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.svg([svgElement])](#BaseMixin+svg) ⇒ <code>SVGElement</code> \| <code>d3.selection</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.resetSvg()](#BaseMixin+resetSvg) ⇒ <code>SVGElement</code>
+    * [.svgDescription([description])](#BaseMixin+svgDescription) ⇒ <code>String</code> \| [<code>BaseMixin</code>](#BaseMixin)
+    * [.keyboardAccessible([keyboardAccessible])](#BaseMixin+keyboardAccessible) ⇒ <code>Boolean</code> \| [<code>BarChart</code>](#BarChart)
     * [.filterPrinter([filterPrinterFunction])](#BaseMixin+filterPrinter) ⇒ <code>function</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.controlsUseVisibility([controlsUseVisibility])](#BaseMixin+controlsUseVisibility) ⇒ <code>Boolean</code> \| [<code>BaseMixin</code>](#BaseMixin)
     * [.turnOnControls()](#BaseMixin+turnOnControls) ⇒ [<code>BaseMixin</code>](#BaseMixin)
@@ -4235,6 +4287,33 @@ Remove the chart's SVGElements from the dom and recreate the container SVGElemen
 
 **Kind**: instance method of [<code>BaseMixin</code>](#BaseMixin)  
 **See**: [SVGElement](https://developer.mozilla.org/en-US/docs/Web/API/SVGElement)  
+<a name="BaseMixin+svgDescription"></a>
+
+### baseMixin.svgDescription([description]) ⇒ <code>String</code> \| [<code>BaseMixin</code>](#BaseMixin)
+Set or get description text for the entire SVG graphic. If set, will create a `<desc>` element as the first
+child of the SVG with the description text and also make the SVG focusable from keyboard.
+
+**Kind**: instance method of [<code>BaseMixin</code>](#BaseMixin)  
+
+| Param | Type |
+| --- | --- |
+| [description] | <code>String</code> | 
+
+<a name="BaseMixin+keyboardAccessible"></a>
+
+### baseMixin.keyboardAccessible([keyboardAccessible]) ⇒ <code>Boolean</code> \| [<code>BarChart</code>](#BarChart)
+If set, interactive chart elements like individual bars in a bar chart or symbols in a scatter plot
+will be focusable from keyboard and on pressing Enter or Space will behave as if clicked on.
+
+If `svgDescription` has not been explicitly set, will also set SVG description text to the class
+constructor name, like BarChart or HeatMap, and make the entire SVG focusable.
+
+**Kind**: instance method of [<code>BaseMixin</code>](#BaseMixin)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [keyboardAccessible] | <code>Boolean</code> | <code>false</code> | 
+
 <a name="BaseMixin+filterPrinter"></a>
 
 ### baseMixin.filterPrinter([filterPrinterFunction]) ⇒ <code>function</code> \| [<code>BaseMixin</code>](#BaseMixin)

@@ -155,7 +155,8 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
         return slices
             .enter()
             .append('g')
-            .attr('class', (d, i) => `${this._sliceCssClass} _${i}`);
+            .attr('class', (d, i) => `${this._sliceCssClass} _${i}`)
+            .classed('dc-tabbable', this._keyboardAccessible);
     }
 
     _createSlicePath (slicesEnter, arcs) {
@@ -163,6 +164,10 @@ export class PieChart extends CapMixin(ColorMixin(BaseMixin)) {
             .attr('fill', (d, i) => this._fill(d, i))
             .on('click', adaptHandler(d => this._onClick(d)))
             .attr('d', (d, i) => this._safeArc(d, i, arcs));
+
+        if (this._keyboardAccessible) {
+            this._makeKeyboardAccessible(this._onClick);
+        }
 
         const tranNodes = transition(slicePath, this.transitionDuration(), this.transitionDelay());
         if (tranNodes.attrTween) {
