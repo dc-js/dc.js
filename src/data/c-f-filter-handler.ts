@@ -35,13 +35,7 @@ const _defaultHasFilterHandler = (filters, filter) => {
 };
 
 const _defaultRemoveFilterHandler = (filters, filter) => {
-    for (let i = 0; i < filters.length; i++) {
-        if (filters[i] <= filter && filters[i] >= filter) {
-            filters.splice(i, 1);
-            break;
-        }
-    }
-    return filters;
+    return filters.filter(f => !(filter <= f && filter >= f));
 };
 
 const _defaultAddFilterHandler = (filters, filter) => {

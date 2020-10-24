@@ -566,10 +566,6 @@ export class BaseMixin {
         return this._dataProvider.hasFilter(filter);
     }
 
-    public applyFilters(filters) {
-        return this._dataProvider.applyFilters(filters);
-    }
-
     /**
      * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
      * but more efficient because the filter is only applied once.
