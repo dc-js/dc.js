@@ -563,38 +563,9 @@ describe('dc.baseMixin', () => {
             expect(chart.hasFilter(filter)).toBeTruthy();
             expect(chart.hasFilter(notFilter)).toBeFalsy();
         });
-        it('with a truthy hasFilterHandler', () => {
-            chart.filter(filter);
-            chart.hasFilterHandler(() => true);
-            expect(chart.hasFilter(filter)).toBeTruthy();
-            expect(chart.hasFilter(notFilter)).toBeTruthy();
-        });
-        it('with a falsy hasFilterHandler', () => {
-            chart.filter(filter);
-            chart.hasFilterHandler(() => false);
-            expect(chart.hasFilter(filter)).toBeFalsy();
-            expect(chart.hasFilter(notFilter)).toBeFalsy();
-        });
         it('with the default addFilterHandler', () => {
             chart.filter(filter);
             expect(chart.hasFilter(filter)).toBeTruthy();
-            expect(chart.filters().length).toEqual(1);
-        });
-        it('with a noop addFilterHandler', () => {
-            chart.addFilterHandler((filters, f) => filters);
-            chart.filter(filter);
-            expect(chart.hasFilter(filter)).toBeFalsy();
-            expect(chart.hasFilter(notFilter)).toBeFalsy();
-            expect(chart.filters().length).toEqual(0);
-        });
-        it('with a static addFilterHandler', () => {
-            chart.addFilterHandler((filters, f) => {
-                filters.push(notFilter);
-                return filters;
-            });
-            chart.filter(filter);
-            expect(chart.hasFilter(filter)).toBeFalsy();
-            expect(chart.hasFilter(notFilter)).toBeTruthy();
             expect(chart.filters().length).toEqual(1);
         });
         it('with the default removeFilterHandler', () => {
@@ -602,39 +573,6 @@ describe('dc.baseMixin', () => {
             chart.filter(notFilter);
             expect(chart.filters().length).toEqual(2);
             chart.filter(filter);
-            expect(chart.hasFilter(filter)).toBeFalsy();
-            expect(chart.hasFilter(notFilter)).toBeTruthy();
-            expect(chart.filters().length).toEqual(1);
-            chart.filter(notFilter);
-            expect(chart.hasFilter(filter)).toBeFalsy();
-            expect(chart.hasFilter(notFilter)).toBeFalsy();
-            expect(chart.filters().length).toEqual(0);
-        });
-        it('with a noop removeFilterHandler', () => {
-            chart.filter(filter);
-            chart.filter(notFilter);
-            chart.removeFilterHandler((filters, f) => filters);
-            expect(chart.filters().length).toEqual(2);
-            chart.filter(filter);
-            expect(chart.hasFilter(filter)).toBeTruthy();
-            expect(chart.hasFilter(notFilter)).toBeTruthy();
-            expect(chart.filters().length).toEqual(2);
-            chart.filter(notFilter);
-            expect(chart.hasFilter(filter)).toBeTruthy();
-            expect(chart.hasFilter(notFilter)).toBeTruthy();
-            expect(chart.filters().length).toEqual(2);
-        });
-        it('with a shift removeFilterHandler', () => {
-            chart.filter(filter);
-            chart.filter(notFilter);
-            chart.removeFilterHandler((filters, f) => {
-                if (filters.length > 0) {
-                    filters.shift();
-                }
-                return filters;
-            });
-            expect(chart.filters().length).toEqual(2);
-            chart.filter(notFilter);
             expect(chart.hasFilter(filter)).toBeFalsy();
             expect(chart.hasFilter(notFilter)).toBeTruthy();
             expect(chart.filters().length).toEqual(1);

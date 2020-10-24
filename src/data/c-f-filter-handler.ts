@@ -27,31 +27,12 @@ const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
     return filters;
 };
 
-const _defaultHasFilterHandler = (filters, filter) => {
-    if (filter === null || typeof filter === 'undefined') {
-        return filters.length > 0;
-    }
-    return filters.some(f => filter <= f && filter >= f);
-};
-
-const _defaultRemoveFilterHandler = (filters, filter) => {
-    return filters.filter(f => !(filter <= f && filter >= f));
-};
-
-const _defaultAddFilterHandler = (filters, filter) => {
-    filters.push(filter);
-    return filters;
-};
-
 const _defaultResetFilterHandler = filters => [];
 
 export interface ICFFilterHandlerConf {
     dimension?: MinimalCFDimension;
     readonly resetFilterHandler?: (filters: any) => any[];
-    readonly addFilterHandler?: (filters: any, filter: any) => any;
-    readonly removeFilterHandler?: (filters: any, filter: any) => any;
     readonly filterHandler?: (dimension: MinimalCFDimension, filters: any) => any;
-    readonly hasFilterHandler?: (filters, filter) => boolean;
 }
 
 export class CFFilterHandler {
@@ -61,9 +42,6 @@ export class CFFilterHandler {
     constructor() {
         this.configure({
             filterHandler: _defaultFilterHandler,
-            hasFilterHandler: _defaultHasFilterHandler,
-            removeFilterHandler: _defaultRemoveFilterHandler,
-            addFilterHandler: _defaultAddFilterHandler,
             resetFilterHandler: _defaultResetFilterHandler,
         });
 
@@ -87,7 +65,10 @@ export class CFFilterHandler {
      * @returns {Boolean}
      */
     public hasFilter(filter?): boolean {
-        return this._conf.hasFilterHandler(this._filters, filter);
+        if (filter === null || typeof filter === 'undefined') {
+            return this._filters.length > 0;
+        }
+        return this._filters.some(f => filter <= f && filter >= f);
     }
 
     public applyFilters(filters) {
@@ -169,29 +150,36 @@ export class CFFilterHandler {
         if (!arguments.length) {
             return this._filters.length > 0 ? this._filters[0] : null;
         }
-        let filters: any[] = this._filters;
         // TODO: Not a great idea to have a method blessed onto an Array, needs redesign
         if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
             // toggle each filter
             filter[0].forEach(f => {
-                if (this._conf.hasFilterHandler(filters, f)) {
-                    filters = this._conf.removeFilterHandler(filters, f);
+                if (this.hasFilter(f)) {
+                    this._removeFilter(f);
                 } else {
-                    filters = this._conf.addFilterHandler(filters, f);
+                    this._addFilter(f);
                 }
             });
         } else if (filter === null) {
-            filters = this._conf.resetFilterHandler(filters);
+            this._filters = this._conf.resetFilterHandler(this._filters);
         } else {
-            if (this._conf.hasFilterHandler(filters, filter)) {
-                filters = this._conf.removeFilterHandler(filters, filter);
+            if (this.hasFilter(filter)) {
+                this._removeFilter(filter);
             } else {
-                filters = this._conf.addFilterHandler(filters, filter);
+                this._addFilter(filter);
             }
         }
-        this._filters = this.applyFilters(filters);
+        this._filters = this.applyFilters(this._filters);
 
         return this;
+    }
+
+    private _addFilter (f) {
+        this._filters.push(f);
+    }
+
+    private _removeFilter (filter) {
+        this._filters = this._filters.filter(f => !(filter <= f && filter >= f));
     }
 
     /**
