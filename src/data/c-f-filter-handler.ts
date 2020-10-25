@@ -152,26 +152,23 @@ export class CFFilterHandler {
         }
         // TODO: Not a great idea to have a method blessed onto an Array, needs redesign
         if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
-            // toggle each filter
-            filter[0].forEach(f => {
-                if (this.hasFilter(f)) {
-                    this._removeFilter(f);
-                } else {
-                    this._addFilter(f);
-                }
-            });
+            filter[0].forEach(f => this._toggleFilter(f));
         } else if (filter === null) {
             this._filters = this._conf.resetFilterHandler(this._filters);
         } else {
-            if (this.hasFilter(filter)) {
-                this._removeFilter(filter);
-            } else {
-                this._addFilter(filter);
-            }
+            this._toggleFilter(filter);
         }
         this._filters = this.applyFilters(this._filters);
 
         return this;
+    }
+
+    private _toggleFilter (filter) {
+        if (this.hasFilter(filter)) {
+            this._removeFilter(filter);
+        } else {
+            this._addFilter(filter);
+        }
     }
 
     private _addFilter (f) {
