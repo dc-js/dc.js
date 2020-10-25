@@ -1,6 +1,6 @@
 /* global appendChartID, flushAllD3Transitions, loadDateFixture */
 describe('dc.baseMixin', () => {
-    let id, chart, dimension, group, addFilterHandler, removeFilterHandler, hasFilterHandler, resetFilterHandler;
+    let id, chart, dimension, group;
 
     beforeEach(() => {
         const data = crossfilter(loadDateFixture());
@@ -17,10 +17,6 @@ describe('dc.baseMixin', () => {
         appendChartID(id);
         chart.anchor(`#${id}`)
             .resetSvg(); // so that renderlets can fire
-        addFilterHandler = chart.addFilterHandler();
-        hasFilterHandler = chart.hasFilterHandler();
-        removeFilterHandler = chart.removeFilterHandler();
-        resetFilterHandler = chart.resetFilterHandler();
     });
 
     describe('renderlets', () => {
@@ -552,10 +548,6 @@ describe('dc.baseMixin', () => {
             // 1 && 0 should handle most cases.  Could be true/false booleans...
             filter = 1;
             notFilter = 0;
-            chart.addFilterHandler(addFilterHandler);
-            chart.hasFilterHandler(hasFilterHandler);
-            chart.removeFilterHandler(removeFilterHandler);
-            chart.resetFilterHandler(resetFilterHandler);
             chart.filterAll();
         });
         it('with the default hasFilterHandler', () => {
