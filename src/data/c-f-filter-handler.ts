@@ -85,7 +85,7 @@ export class CFFilterHandler {
      * @returns {BaseMixin}
      */
     public replaceFilter(filter): this {
-        this._resetFilters();
+        this.resetFilters();
         // this.filter(filter);  // TODO: this should be here, it will need refactoring BaseMixin.filter which has side effects
         return this;
     }
@@ -148,34 +148,34 @@ export class CFFilterHandler {
         }
         // TODO: Not a great idea to have a method blessed onto an Array, needs redesign
         if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
-            filter[0].forEach(f => this._toggleFilter(f));
+            filter[0].forEach(f => this.toggleFilter(f));
         } else if (filter === null) {
-            this._resetFilters();
+            this.resetFilters();
         } else {
-            this._toggleFilter(filter);
+            this.toggleFilter(filter);
         }
         this._filters = this.applyFilters(this._filters);
 
         return this;
     }
 
-    private _toggleFilter(filter) {
+    public toggleFilter (filter) {
         if (this.hasFilter(filter)) {
-            this._removeFilter(filter);
+            this.removeFilter(filter);
         } else {
-            this._addFilter(filter);
+            this.addFilter(filter);
         }
     }
 
-    private _addFilter(f) {
+    public addFilter(f) {
         this._filters.push(f);
     }
 
-    private _removeFilter(filter) {
+    public removeFilter(filter) {
         this._filters = this._filters.filter(f => !(filter <= f && filter >= f));
     }
 
-    private _resetFilters() {
+    public resetFilters() {
         this._filters = [];
     }
 
