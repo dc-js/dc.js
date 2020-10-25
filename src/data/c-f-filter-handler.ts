@@ -133,11 +133,12 @@ export class CFFilterHandler {
         if (!arguments.length) {
             return this._filters.length > 0 ? this._filters[0] : null;
         }
-        // TODO: Not a great idea to have a method blessed onto an Array, needs redesign
-        if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
-            filter[0].forEach(f => this.toggleFilter(f));
-        } else if (filter === null) {
+
+        if (filter === null) {
             this.resetFilters();
+        } else if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
+            // list of filters
+            filter[0].forEach(f => this.toggleFilter(f));
         } else {
             this.toggleFilter(filter);
         }
