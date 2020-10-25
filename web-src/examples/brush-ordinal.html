@@ -81,9 +81,29 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
             return d3.descending(a.value, b.value);
         }));
 
+        class MyDataAdapter extends dc.CFMultiAdapter {
+            applyFilters() {
+                var filters = this._filters;
+
+                if(!filters || !filters.length) {
+                    dimension.filter(null);
+                }
+                console.assert(filters.length === 1);
+                console.assert(filters[0].filterType === 'RangedFilter');
+                var inside = group.all().filter(function(kv) {
+                    var i = group.ord2int(kv.key);
+                    return filters[0][0] <= i && i < filters[0][1];
+                }).map(function(kv) { return kv.key; });
+                dimension.filterFunction(function(d) {
+                    return inside.includes(d);
+                });
+            }
+        }
+
         bar = new dc.BarChart('#bar');
         var linear_domain = [-0.5, short.length - 0.5];
         bar
+            .dataProvider(new MyDataAdapter())
             .width(1000).height(300)
             .margins({left: 75, top: 0, right: 10, bottom: 140})
             .x(d3.scaleLinear().domain(linear_domain))
@@ -101,22 +121,6 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
             .tickValues(d3.range(short.length))
             .tickFormat(function(d) { return group.int2ord(d); });
 
-        bar.filterHandler(function(dimension, filters) {
-            if(!filters || !filters.length) {
-                dimension.filter(null);
-                return filters;
-            }
-            console.assert(filters.length === 1);
-            console.assert(filters[0].filterType === 'RangedFilter');
-            var inside = group.all().filter(function(kv) {
-                var i = group.ord2int(kv.key);
-                return filters[0][0] <= i && i < filters[0][1];
-            }).map(function(kv) { return kv.key; });
-            dimension.filterFunction(function(d) {
-                return inside.includes(d);
-            });
-            return filters;
-        });
         // display a row chart of first letters, to test filtering
         var letterDimension = cf.dimension(function(d) {
             return d.key.split(' ').map(function(s) { return s[0]; });
