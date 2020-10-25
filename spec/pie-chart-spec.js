@@ -666,25 +666,6 @@ describe('dc.pieChart', () => {
         });
     });
 
-    describe('custom filter handler', () => {
-        let chart;
-        beforeEach(() => {
-            chart = buildChart('pie-chart-filter-handler');
-            chart.filterHandler((dimension, filters) => {
-                dimension.filter('66');
-                return ['66'];
-            });
-            return chart;
-        });
-        it('default function should be used to dynamically generate label', () => {
-            chart.filter(6);
-            expect(chart.filter()).toEqual('66');
-        });
-        afterEach(() => {
-            valueDimension.filterAll();
-        });
-    });
-
     describe('external labeling', () => {
         let chart;
         beforeEach(() => {

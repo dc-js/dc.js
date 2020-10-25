@@ -1,35 +1,7 @@
 import { MinimalCFDimension } from '../core/types';
 
-const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
-    if (filters.length === 0) {
-        dimension.filter(null);
-    } else if (filters.length === 1 && !filters[0].isFiltered) {
-        // single value and not a function-based filter
-        dimension.filterExact(filters[0]);
-    } else if (filters.length === 1 && filters[0].filterType === 'RangedFilter') {
-        // single range-based filter
-        dimension.filterRange(filters[0]);
-    } else {
-        dimension.filterFunction(d => {
-            for (let i = 0; i < filters.length; i++) {
-                const filter = filters[i];
-                if (filter.isFiltered) {
-                    if (filter.isFiltered(d)) {
-                        return true;
-                    }
-                } else if (filter <= d && filter >= d) {
-                    return true;
-                }
-            }
-            return false;
-        });
-    }
-    return filters;
-};
-
 export interface ICFFilterHandlerConf {
     dimension?: MinimalCFDimension;
-    readonly filterHandler?: (dimension: MinimalCFDimension, filters: any) => any;
 }
 
 export class CFFilterHandler {
@@ -37,10 +9,6 @@ export class CFFilterHandler {
     protected _filters: any[]; // TODO: find better types
 
     constructor() {
-        this.configure({
-            filterHandler: _defaultFilterHandler,
-        });
-
         this._filters = [];
     }
 
@@ -67,14 +35,34 @@ export class CFFilterHandler {
         return this._filters.some(f => filter <= f && filter >= f);
     }
 
-    public applyFilters(filters) {
-        if (this._conf.dimension && this._conf.dimension.filter) {
-            const fs = this._conf.filterHandler(this._conf.dimension, filters);
-            if (fs) {
-                filters = fs;
-            }
+    public applyFilters() {
+        if (!(this._conf.dimension && this._conf.dimension.filter)) {
+            return;
         }
-        return filters;
+
+        if (this._filters.length === 0) {
+            this._conf.dimension.filter(null);
+        } else if (this._filters.length === 1 && !this._filters[0].isFiltered) {
+            // single value and not a function-based filter
+            this._conf.dimension.filterExact(this._filters[0]);
+        } else if (this._filters.length === 1 && this._filters[0].filterType === 'RangedFilter') {
+            // single range-based filter
+            this._conf.dimension.filterRange(this._filters[0]);
+        } else {
+            this._conf.dimension.filterFunction(d => {
+                for (let i = 0; i < this._filters.length; i++) {
+                    const filter = this._filters[i];
+                    if (filter.isFiltered) {
+                        if (filter.isFiltered(d)) {
+                            return true;
+                        }
+                    } else if (filter <= d && filter >= d) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+        }
     }
 
     /**
@@ -136,18 +124,23 @@ export class CFFilterHandler {
 
         if (filter === null) {
             this.resetFilters();
-        } else if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
+        } else if (
+            filter instanceof Array &&
+            filter[0] instanceof Array &&
+            !(filter as any).isFiltered
+        ) {
             // list of filters
             filter[0].forEach(f => this.toggleFilter(f));
         } else {
             this.toggleFilter(filter);
         }
-        this._filters = this.applyFilters(this._filters);
+
+        this.applyFilters();
 
         return this;
     }
 
-    public toggleFilter (filter) {
+    public toggleFilter(filter) {
         if (this.hasFilter(filter)) {
             this.removeFilter(filter);
         } else {
