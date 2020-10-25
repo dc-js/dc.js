@@ -574,8 +574,10 @@ export class BaseMixin {
      * @returns {BaseMixin}
      */
     public replaceFilter(filter): this {
-        this._dataProvider.replaceFilter(filter);
-        this.filter(filter); // TODO: this should go to DataProvider, it will need refactoring BaseMixin.filter which has side effects
+        // The following call resets the filters without actually applying those
+        this._dataProvider.resetFilters();
+
+        this.filter(filter);
         return this;
     }
 

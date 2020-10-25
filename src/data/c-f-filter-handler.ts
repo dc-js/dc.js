@@ -78,19 +78,6 @@ export class CFFilterHandler {
     }
 
     /**
-     * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
-     * but more efficient because the filter is only applied once.
-     *
-     * @param {*} [filter]
-     * @returns {BaseMixin}
-     */
-    public replaceFilter(filter): this {
-        this.resetFilters();
-        // this.filter(filter);  // TODO: this should be here, it will need refactoring BaseMixin.filter which has side effects
-        return this;
-    }
-
-    /**
      * Filter the chart by the given parameter, or return the current filter if no input parameter
      * is given.
      *
