@@ -27,22 +27,18 @@ const _defaultFilterHandler = (dimension: MinimalCFDimension, filters) => {
     return filters;
 };
 
-const _defaultResetFilterHandler = filters => [];
-
 export interface ICFFilterHandlerConf {
     dimension?: MinimalCFDimension;
-    readonly resetFilterHandler?: (filters: any) => any[];
     readonly filterHandler?: (dimension: MinimalCFDimension, filters: any) => any;
 }
 
 export class CFFilterHandler {
     protected _conf: ICFFilterHandlerConf;
-    public _filters: any[]; // TODO: find better types
+    protected _filters: any[]; // TODO: find better types
 
     constructor() {
         this.configure({
             filterHandler: _defaultFilterHandler,
-            resetFilterHandler: _defaultResetFilterHandler,
         });
 
         this._filters = [];
@@ -89,7 +85,7 @@ export class CFFilterHandler {
      * @returns {BaseMixin}
      */
     public replaceFilter(filter): this {
-        this._filters = this._conf.resetFilterHandler(this._filters);
+        this._resetFilters();
         // this.filter(filter);  // TODO: this should be here, it will need refactoring BaseMixin.filter which has side effects
         return this;
     }
@@ -154,7 +150,7 @@ export class CFFilterHandler {
         if (filter instanceof Array && filter[0] instanceof Array && !(filter as any).isFiltered) {
             filter[0].forEach(f => this._toggleFilter(f));
         } else if (filter === null) {
-            this._filters = this._conf.resetFilterHandler(this._filters);
+            this._resetFilters();
         } else {
             this._toggleFilter(filter);
         }
@@ -163,7 +159,7 @@ export class CFFilterHandler {
         return this;
     }
 
-    private _toggleFilter (filter) {
+    private _toggleFilter(filter) {
         if (this.hasFilter(filter)) {
             this._removeFilter(filter);
         } else {
@@ -171,12 +167,16 @@ export class CFFilterHandler {
         }
     }
 
-    private _addFilter (f) {
+    private _addFilter(f) {
         this._filters.push(f);
     }
 
-    private _removeFilter (filter) {
+    private _removeFilter(filter) {
         this._filters = this._filters.filter(f => !(filter <= f && filter >= f));
+    }
+
+    private _resetFilters() {
+        this._filters = [];
     }
 
     /**

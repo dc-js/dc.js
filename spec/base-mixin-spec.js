@@ -589,30 +589,5 @@ describe('dc.baseMixin', () => {
             expect(chart.hasFilter(notFilter)).toBeFalsy();
             expect(chart.filters().length).toEqual(0);
         });
-        it('with a noop resetFilterHandler', () => {
-            chart.filter(filter);
-            chart.filter(notFilter);
-            chart.resetFilterHandler(filters => filters);
-            chart.filter(null);
-            expect(chart.hasFilter(filter)).toBeTruthy();
-            expect(chart.hasFilter(notFilter)).toBeTruthy();
-            expect(chart.filters().length).toEqual(2);
-        });
-        it('with a shift resetFilterHandler', () => {
-            chart.filter(filter);
-            chart.filter(notFilter);
-            chart.resetFilterHandler(filters => {
-                filters.shift();
-                return filters;
-            });
-            chart.filter(null);
-            expect(chart.hasFilter(filter)).toBeFalsy();
-            expect(chart.hasFilter(notFilter)).toBeTruthy();
-            expect(chart.filters().length).toEqual(1);
-            chart.filter(null);
-            expect(chart.hasFilter(filter)).toBeFalsy();
-            expect(chart.hasFilter(notFilter)).toBeFalsy();
-            expect(chart.filters().length).toEqual(0);
-        });
     });
 });
