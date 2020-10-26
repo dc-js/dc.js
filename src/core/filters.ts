@@ -33,6 +33,25 @@ export const filters: IFilters = {
     TwoDimensionalFilter(filter): any {},
 };
 
+interface IFilter<T> {
+    filterType: string;
+    isFiltered (value: T): boolean;
+}
+
+export class RangedFilter<T> extends Array<T> implements IFilter<T> {
+    readonly filterType = 'RangedFilter';
+
+    constructor (low: T, high: T) {
+        super();
+        this[0] = low;
+        this[1] = high;
+    }
+
+    isFiltered (value: T): boolean {
+        return value >= this[0] && value < this[1];
+    }
+}
+
 /**
  * RangedFilter is a filter which accepts keys between `low` and `high`.  It is used to implement X
  * axis brushing for the {@link CoordinateGridMixin coordinate grid charts}.
@@ -45,15 +64,7 @@ export const filters: IFilters = {
  * @returns {Array<Number>}
  * @constructor
  */
-filters.RangedFilter = function (low, high) {
-    const range: any = new Array(low, high);
-    range.isFiltered = function (value) {
-        return value >= this[0] && value < this[1];
-    };
-    range.filterType = 'RangedFilter';
-
-    return range;
-};
+filters.RangedFilter = (low, high) => new RangedFilter(low, high);
 
 /**
  * TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
