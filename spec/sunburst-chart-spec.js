@@ -265,7 +265,7 @@ describe('dc.sunburstChart', () => {
                 expect(chart.filters()).toEqual([]);
                 const d = chart.select('.pie-slice-level-3').datum();
                 chart.onClick(d);
-                expect(chart.filter().slice(0)).toEqual(d.path);
+                expect(dc.utils.arraysEqual(chart.filter(), d.path)).toBe(true);
             });
             it('onClick should reset filter if clicked twice', () => {
                 expect(chart.filters()).toEqual([]);

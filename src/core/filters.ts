@@ -33,21 +33,21 @@ export const filters: IFilters = {
     TwoDimensionalFilter(filter): any {},
 };
 
-interface IFilter<T> {
+interface IFilter {
     filterType: string;
-    isFiltered (value: T): boolean;
+    isFiltered(value): boolean;
 }
 
-export class RangedFilter<T> extends Array<T> implements IFilter<T> {
+export class RangedFilter<T> extends Array<T> implements IFilter {
     readonly filterType = 'RangedFilter';
 
-    constructor (low: T, high: T) {
+    constructor(low: T, high: T) {
         super();
         this[0] = low;
         this[1] = high;
     }
 
-    isFiltered (value: T): boolean {
+    isFiltered(value: T): boolean {
         return value >= this[0] && value < this[1];
     }
 }
@@ -66,6 +66,25 @@ export class RangedFilter<T> extends Array<T> implements IFilter<T> {
  */
 filters.RangedFilter = (low, high) => new RangedFilter(low, high);
 
+export class TwoDimensionalFilter extends Array implements IFilter {
+    public readonly filterType = 'TwoDimensionalFilter';
+
+    constructor(filter) {
+        super();
+        this[0] = filter[0];
+        this[1] = filter[1];
+    }
+
+    public isFiltered(value) {
+        return (
+            value.length &&
+            value.length === this.length &&
+            value[0] === this[0] &&
+            value[1] === this[1]
+        );
+    }
+}
+
 /**
  * TwoDimensionalFilter is a filter which accepts a single two-dimensional value.  It is used by the
  * {@link HeatMap heat map chart} to include particular cells as they are clicked.  (Rows and columns are
@@ -78,19 +97,7 @@ filters.RangedFilter = (low, high) => new RangedFilter(low, high);
  * @returns {Array<Number>}
  * @constructor
  */
-filters.TwoDimensionalFilter = function (filter) {
-    if (filter === null) {
-        return null;
-    }
-
-    const f = filter;
-    f.isFiltered = function (value) {
-        return value.length && value.length === f.length && value[0] === f[0] && value[1] === f[1];
-    };
-    f.filterType = 'TwoDimensionalFilter';
-
-    return f;
-};
+filters.TwoDimensionalFilter = filter => new TwoDimensionalFilter(filter);
 
 /**
  * The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
@@ -157,24 +164,20 @@ filters.RangedTwoDimensionalFilter = function (filter) {
 
 // ******** Sunburst Chart ********
 
-/**
- * HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
- * child of, the given path. It is used by the {@link SunburstChart sunburst chart} to include particular cells and all
- * their children as they are clicked.
- *
- * @name HierarchyFilter
- * @memberof filters
- * @param {String} path
- * @returns {Array<String>}
- * @constructor
- */
-filters.HierarchyFilter = function (path) {
-    if (path === null) {
-        return null;
+class HierarchyFilter extends Array implements IFilter {
+    public readonly filterType = 'HierarchyFilter';
+
+    constructor(path) {
+        super();
+
+        for(let i=0; i< path.length; i++) {
+           this[i] = path[i];
+        }
     }
 
-    const filter = path.slice(0);
-    filter.isFiltered = function (value) {
+    public isFiltered(value): boolean {
+        const filter = this;
+
         if (!(filter.length && value && value.length && value.length >= filter.length)) {
             return false;
         }
@@ -186,6 +189,18 @@ filters.HierarchyFilter = function (path) {
         }
 
         return true;
-    };
-    return filter;
-};
+    }
+}
+
+/**
+ * HierarchyFilter is a filter which accepts a key path as an array. It matches any node at, or
+ * child of, the given path. It is used by the {@link SunburstChart sunburst chart} to include particular cells and all
+ * their children as they are clicked.
+ *
+ * @name HierarchyFilter
+ * @memberof filters
+ * @param {String} path
+ * @returns {Array<String>}
+ * @constructor
+ */
+filters.HierarchyFilter = path => new HierarchyFilter(path);
