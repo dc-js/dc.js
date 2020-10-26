@@ -1,3 +1,5 @@
+export * from './filters/index';
+
 export * from './bad-argument-exception';
 export * from './chart-group';
 export * from './chart-group-types';
@@ -7,7 +9,6 @@ export * from './constants';
 export * from './core';
 export * from './d3compat';
 export * from './events';
-export * from './filters';
 export * from './invalid-state-exception';
 export * from './logger';
 export * from './printers';

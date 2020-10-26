@@ -3,7 +3,6 @@ import { scaleBand } from 'd3-scale';
 
 import { transition } from '../core/core';
 import { logger } from '../core/logger';
-import { TwoDimensionalFilter } from '../core/filters';
 import { events } from '../core/events';
 import { ColorMixin } from '../base/color-mixin';
 import { MarginMixin } from '../base/margin-mixin';
@@ -11,6 +10,7 @@ import { CFGrouping, ChartGroupType, ChartParentType, MinimalXYScale } from '../
 import { Selection } from 'd3-selection';
 import { IHeatMapConf } from './i-heat-map-conf';
 import { adaptHandler } from '../core/d3compat';
+import { TwoDimensionalFilter } from '../core/filters/two-dimensional-filter';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 

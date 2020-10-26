@@ -5,7 +5,6 @@ import { select, Selection } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 
 import { transition } from '../core/core';
-import { HierarchyFilter } from '../core/filters';
 import { arraysIdentical, toHierarchy } from '../core/utils';
 import { events } from '../core/events';
 import { ColorMixin } from '../base/color-mixin';
@@ -15,6 +14,7 @@ import { BadArgumentException } from '../core/bad-argument-exception';
 import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
 import { ISunburstChartConf, RingSizeSpecs } from './i-sunburst-chart-conf';
 import { adaptHandler } from '../core/d3compat';
+import { HierarchyFilter } from '../core/filters/hierarchy-filter';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 

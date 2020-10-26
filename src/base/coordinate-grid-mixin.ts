@@ -14,12 +14,12 @@ import { units } from '../core/units';
 import { constants } from '../core/constants';
 import { add, appendOrSelect, arraysEqual, subtract } from '../core/utils';
 import { logger } from '../core/logger';
-import { RangedFilter } from '../core/filters';
 import { events } from '../core/events';
 import { DCBrushSelection, MinimalXYScale, SVGGElementSelection } from '../core/types';
 import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
 import { OrdinalColors } from './colors/ordinal-colors';
 import { adaptHandler } from '../core/d3compat';
+import { RangedFilter } from '../core/filters/ranged-filter';
 
 const GRID_LINE_CLASS = 'grid-line';
 const HORIZONTAL_CLASS = 'horizontal';

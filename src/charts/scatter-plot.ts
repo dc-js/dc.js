@@ -4,11 +4,11 @@ import { brush } from 'd3-brush';
 
 import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
 import { optionalTransition, transition } from '../core/core';
-import { RangedTwoDimensionalFilter } from '../core/filters';
 import { constants } from '../core/constants';
 import { events } from '../core/events';
 import { ChartGroupType, ChartParentType, LegendItem } from '../core/types';
 import { IScatterPlotConf } from './i-scatter-plot-conf';
+import { RangedTwoDimensionalFilter } from '../core/filters/ranged-two-dimensional-filter';
 
 export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
 
