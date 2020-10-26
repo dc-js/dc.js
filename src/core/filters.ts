@@ -99,6 +99,52 @@ export class TwoDimensionalFilter extends Array implements IFilter {
  */
 filters.TwoDimensionalFilter = filter => new TwoDimensionalFilter(filter);
 
+export class RangedTwoDimensionalFilter extends Array implements IFilter {
+    public readonly filterType = 'RangedTwoDimensionalFilter';
+
+    private fromBottomLeft;
+
+    constructor(filter) {
+        super();
+
+        for (let i = 0; i < filter.length; i++) {
+            this[i] = filter[i];
+        }
+
+        if (filter[0] instanceof Array) {
+            this.fromBottomLeft = [
+                [Math.min(filter[0][0], filter[1][0]), Math.min(filter[0][1], filter[1][1])],
+                [Math.max(filter[0][0], filter[1][0]), Math.max(filter[0][1], filter[1][1])],
+            ];
+        } else {
+            this.fromBottomLeft = [
+                [filter[0], -Infinity],
+                [filter[1], Infinity],
+            ];
+        }
+    }
+
+    public isFiltered(value): boolean {
+        let x;
+        let y;
+
+        if (value instanceof Array) {
+            x = value[0];
+            y = value[1];
+        } else {
+            x = value;
+            y = this.fromBottomLeft[0][1];
+        }
+
+        return (
+            x >= this.fromBottomLeft[0][0] &&
+            x < this.fromBottomLeft[1][0] &&
+            y >= this.fromBottomLeft[0][1] &&
+            y < this.fromBottomLeft[1][1]
+        );
+    }
+}
+
 /**
  * The RangedTwoDimensionalFilter allows filtering all values which fit within a rectangular
  * region. It is used by the {@link ScatterPlot scatter plot} to implement rectangular brushing.
@@ -118,49 +164,7 @@ filters.TwoDimensionalFilter = filter => new TwoDimensionalFilter(filter);
  * @returns {Array<Array<Number>>}
  * @constructor
  */
-filters.RangedTwoDimensionalFilter = function (filter) {
-    if (filter === null) {
-        return null;
-    }
-
-    const f = filter;
-    let fromBottomLeft;
-
-    if (f[0] instanceof Array) {
-        fromBottomLeft = [
-            [Math.min(filter[0][0], filter[1][0]), Math.min(filter[0][1], filter[1][1])],
-            [Math.max(filter[0][0], filter[1][0]), Math.max(filter[0][1], filter[1][1])],
-        ];
-    } else {
-        fromBottomLeft = [
-            [filter[0], -Infinity],
-            [filter[1], Infinity],
-        ];
-    }
-
-    f.isFiltered = function (value) {
-        let x;
-        let y;
-
-        if (value instanceof Array) {
-            x = value[0];
-            y = value[1];
-        } else {
-            x = value;
-            y = fromBottomLeft[0][1];
-        }
-
-        return (
-            x >= fromBottomLeft[0][0] &&
-            x < fromBottomLeft[1][0] &&
-            y >= fromBottomLeft[0][1] &&
-            y < fromBottomLeft[1][1]
-        );
-    };
-    f.filterType = 'RangedTwoDimensionalFilter';
-
-    return f;
-};
+filters.RangedTwoDimensionalFilter = filter => new RangedTwoDimensionalFilter(filter);
 
 // ******** Sunburst Chart ********
 
@@ -170,8 +174,8 @@ class HierarchyFilter extends Array implements IFilter {
     constructor(path) {
         super();
 
-        for(let i=0; i< path.length; i++) {
-           this[i] = path[i];
+        for (let i = 0; i < path.length; i++) {
+            this[i] = path[i];
         }
     }
 

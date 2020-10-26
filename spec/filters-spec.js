@@ -87,10 +87,6 @@ describe('dc.filters', () => {
     describe('RangedTwoDimensionalFilter', () => {
         let filter;
 
-        it('should return null if filtered with null', () => {
-            expect(dc.filters.RangedTwoDimensionalFilter(null)).toBe(null);
-        });
-
         describe('two-dimensional filtering', () => {
             beforeEach(() => {
                 filter = dc.filters.RangedTwoDimensionalFilter([[0, 1],[10, 20]]);

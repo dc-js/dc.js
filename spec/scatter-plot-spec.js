@@ -163,8 +163,8 @@ describe('dc.scatterPlot', () => {
 
                 beforeEach(() => {
                     otherDimension = data.dimension(d => [+d.value, +d.nvalue]);
-                    const ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
-                    otherDimension.filterFunction(ff);
+                    const filter = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]);
+                    otherDimension.filterFunction(v => filter.isFiltered(v));
                     chart.redraw();
                 });
 
@@ -239,8 +239,8 @@ describe('dc.scatterPlot', () => {
                 chart.group(removeEmptyBins(group))
                     .render();
                 otherDimension = data.dimension(d => [+d.value, +d.nvalue]);
-                const ff = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]).isFiltered;
-                otherDimension.filterFunction(ff);
+                const filter = dc.filters.RangedTwoDimensionalFilter([[22, -3], [44, 2]]);
+                otherDimension.filterFunction(v => filter.isFiltered(v));
                 chart.redraw();
             });
 

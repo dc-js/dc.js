@@ -126,6 +126,9 @@ export class ScatterPlot extends CoordinateGridMixin {
             return super.filter();
         }
 
+        if (filter === null) {
+            return super.filter(null);
+        }
         return super.filter(filters.RangedTwoDimensionalFilter(filter));
     }
 
