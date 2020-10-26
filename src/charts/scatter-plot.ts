@@ -4,7 +4,7 @@ import { brush } from 'd3-brush';
 
 import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
 import { optionalTransition, transition } from '../core/core';
-import { filters } from '../core/filters';
+import { RangedTwoDimensionalFilter } from '../core/filters';
 import { constants } from '../core/constants';
 import { events } from '../core/events';
 import { ChartGroupType, ChartParentType, LegendItem } from '../core/types';
@@ -129,7 +129,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         if (filter === null) {
             return super.filter(null);
         }
-        return super.filter(filters.RangedTwoDimensionalFilter(filter));
+        return super.filter(new RangedTwoDimensionalFilter(filter));
     }
 
     /**
@@ -509,7 +509,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         const ranged2DFilter = brushIsEmpty
             ? null
-            : filters.RangedTwoDimensionalFilter(brushSelection);
+            : new RangedTwoDimensionalFilter(brushSelection);
 
         events.trigger(() => {
             this.replaceFilter(ranged2DFilter);

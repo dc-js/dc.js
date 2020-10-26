@@ -3,7 +3,7 @@ import { scaleBand } from 'd3-scale';
 
 import { transition } from '../core/core';
 import { logger } from '../core/logger';
-import { filters } from '../core/filters';
+import { TwoDimensionalFilter } from '../core/filters';
 import { events } from '../core/events';
 import { ColorMixin } from '../base/color-mixin';
 import { MarginMixin } from '../base/margin-mixin';
@@ -64,7 +64,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             boxOnClick: d => {
                 const filter = d.key;
                 events.trigger(() => {
-                    this.filter(filters.TwoDimensionalFilter(filter));
+                    this.filter(new TwoDimensionalFilter(filter));
                     this.redrawGroup();
                 });
             },
@@ -98,7 +98,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
 
         events.trigger(() => {
             const selection = unfilteredCellsOnAxis.empty() ? cellsOnAxis : unfilteredCellsOnAxis;
-            const filtersList = selection.data().map(kv => filters.TwoDimensionalFilter(kv.key));
+            const filtersList = selection.data().map(kv => new TwoDimensionalFilter(kv.key));
             this.filter([filtersList]);
             this.redrawGroup();
         });
@@ -111,7 +111,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             logger.warnOnce(
                 'heatmap.filter taking a coordinate is deprecated - please pass dc.filters.TwoDimensionalFilter instead'
             );
-            return this.filter(filters.TwoDimensionalFilter(f));
+            return this.filter(new TwoDimensionalFilter(f));
         };
 
         if (!arguments.length) {

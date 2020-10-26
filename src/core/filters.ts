@@ -88,7 +88,7 @@ export class RangedTwoDimensionalFilter extends Array implements IFilter {
 
 // ******** Sunburst Chart ********
 
-class HierarchyFilter extends Array implements IFilter {
+export class HierarchyFilter extends Array implements IFilter {
     public readonly filterType = 'HierarchyFilter';
 
     constructor(path) {

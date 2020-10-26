@@ -5,7 +5,7 @@ import { select, Selection } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 
 import { transition } from '../core/core';
-import { filters } from '../core/filters';
+import { HierarchyFilter } from '../core/filters';
 import { arraysIdentical, toHierarchy } from '../core/utils';
 import { events } from '../core/events';
 import { ColorMixin } from '../base/color-mixin';
@@ -481,7 +481,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     // returns all filters that are a parent or child of the path
     private _filtersForPath(path) {
-        const pathFilter = filters.HierarchyFilter(path);
+        const pathFilter = new HierarchyFilter(path);
         const filtersList = [];
         for (let i = 0; i < this.filters().length; i++) {
             const currentFilter = this.filters()[i];
@@ -554,7 +554,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
         // Must be better way to handle this, in legends we need to access `d.key`
         const path = d.path || d.key;
-        const filter = filters.HierarchyFilter(path);
+        const filter = new HierarchyFilter(path);
 
         // filters are equal to, parents or children of the path.
         const filtersList = this._filtersForPath(path);

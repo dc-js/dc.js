@@ -14,7 +14,7 @@ import { units } from '../core/units';
 import { constants } from '../core/constants';
 import { add, appendOrSelect, arraysEqual, subtract } from '../core/utils';
 import { logger } from '../core/logger';
-import { filters } from '../core/filters';
+import { RangedFilter } from '../core/filters';
 import { events } from '../core/events';
 import { DCBrushSelection, MinimalXYScale, SVGGElementSelection } from '../core/types';
 import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
@@ -901,7 +901,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         const rangedFilter = this.brushIsEmpty(brushSelection)
             ? null
-            : filters.RangedFilter(brushSelection[0], brushSelection[1]);
+            : new RangedFilter(brushSelection[0], brushSelection[1]);
 
         events.trigger(() => {
             this.applyBrushSelection(rangedFilter);
@@ -1114,7 +1114,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
         if (this._hasRangeSelected(newDomain)) {
             this.x().domain(newDomain);
-            domFilter = filters.RangedFilter(newDomain[0], newDomain[1]);
+            domFilter = new RangedFilter(newDomain[0], newDomain[1]);
         } else {
             this.x().domain(this._xOriginalDomain);
             domFilter = null;
