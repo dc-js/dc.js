@@ -657,7 +657,7 @@ export class BaseMixin {
      * @returns {Array<*>}
      */
     public filters() {
-        return this._dataProvider.filters();
+        return this._dataProvider.filters;
     }
 
     public highlightSelected(e): void {

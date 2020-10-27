@@ -5,11 +5,19 @@ export interface ICFFilterHandlerConf {
 }
 
 export class CFFilterHandler {
+    private _filters: any[]; // TODO: find better types
+    get filters (): any[] {
+        return this._filters;
+    }
+
+    set filters (value: any[]) {
+        this._filters = value;
+    }
+
     protected _conf: ICFFilterHandlerConf;
-    protected _filters: any[]; // TODO: find better types
 
     constructor() {
-        this._filters = [];
+        this.filters = [];
     }
 
     public configure(conf: ICFFilterHandlerConf): this {
@@ -30,9 +38,9 @@ export class CFFilterHandler {
      */
     public hasFilter(filter?): boolean {
         if (filter === null || typeof filter === 'undefined') {
-            return this._filters.length > 0;
+            return this.filters.length > 0;
         }
-        return this._filters.some(f => filter <= f && filter >= f);
+        return this.filters.some(f => filter <= f && filter >= f);
     }
 
     public applyFilters() {
@@ -40,18 +48,18 @@ export class CFFilterHandler {
             return;
         }
 
-        if (this._filters.length === 0) {
+        if (this.filters.length === 0) {
             this._conf.dimension.filter(null);
-        } else if (this._filters.length === 1 && !this._filters[0].isFiltered) {
+        } else if (this.filters.length === 1 && !this.filters[0].isFiltered) {
             // single value and not a function-based filter
-            this._conf.dimension.filterExact(this._filters[0]);
-        } else if (this._filters.length === 1 && this._filters[0].filterType === 'RangedFilter') {
+            this._conf.dimension.filterExact(this.filters[0]);
+        } else if (this.filters.length === 1 && this.filters[0].filterType === 'RangedFilter') {
             // single range-based filter
-            this._conf.dimension.filterRange(this._filters[0]);
+            this._conf.dimension.filterRange(this.filters[0]);
         } else {
             this._conf.dimension.filterFunction(d => {
-                for (let i = 0; i < this._filters.length; i++) {
-                    const filter = this._filters[i];
+                for (let i = 0; i < this.filters.length; i++) {
+                    const filter = this.filters[i];
                     if (filter.isFiltered) {
                         if (filter.isFiltered(d)) {
                             return true;
@@ -119,7 +127,7 @@ export class CFFilterHandler {
     public filter(filter): this;
     public filter(filter?) {
         if (!arguments.length) {
-            return this._filters.length > 0 ? this._filters[0] : null;
+            return this.filters.length > 0 ? this.filters[0] : null;
         }
 
         if (filter === null) {
@@ -149,24 +157,14 @@ export class CFFilterHandler {
     }
 
     public addFilter(f) {
-        this._filters.push(f);
+        this.filters.push(f);
     }
 
     public removeFilter(filter) {
-        this._filters = this._filters.filter(f => !(filter <= f && filter >= f));
+        this.filters = this.filters.filter(f => !(filter <= f && filter >= f));
     }
 
     public resetFilters() {
-        this._filters = [];
-    }
-
-    /**
-     * Returns all current filters. This method does not perform defensive cloning of the internal
-     * filter array before returning, therefore any modification of the returned array will effect the
-     * chart's internal filter storage.
-     * @returns {Array<*>}
-     */
-    public filters() {
-        return this._filters;
+        this.filters = [];
     }
 }
