@@ -39,7 +39,7 @@ export class SelectMenu extends BaseMixin {
      * Interaction with the widget will only trigger events and redraws within its group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super();
+        super(chartGroup);
 
         this.configure({
             multiple: false,
@@ -52,7 +52,7 @@ export class SelectMenu extends BaseMixin {
 
         this._select = undefined;
 
-        this.anchor(parent, chartGroup);
+        this.anchor(parent);
     }
 
     public configure(conf: ISelectMenuConf): this {

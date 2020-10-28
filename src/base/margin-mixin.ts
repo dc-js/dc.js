@@ -1,5 +1,5 @@
 import { BaseMixin } from './base-mixin';
-import { Margins } from '../core/types';
+import { ChartGroupType, Margins } from '../core/types';
 import { IMarginMixinConf } from './i-margin-mixin-conf';
 
 /**
@@ -14,8 +14,8 @@ export class MarginMixin extends BaseMixin {
 
     private _margins: Margins;
 
-    constructor() {
-        super();
+    constructor(chartGroup: ChartGroupType) {
+        super(chartGroup);
 
         this._margins = { top: 10, right: 50, bottom: 30, left: 30 };
     }

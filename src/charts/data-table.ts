@@ -49,7 +49,7 @@ export class DataTable extends BaseMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super();
+        super(chartGroup);
 
         this.configure({
             size: 25,
@@ -64,7 +64,7 @@ export class DataTable extends BaseMixin {
 
         this._mandatoryAttributes(['dimension']);
 
-        this.anchor(parent, chartGroup);
+        this.anchor(parent);
     }
 
     public configure(conf: IDataTableConf): this {

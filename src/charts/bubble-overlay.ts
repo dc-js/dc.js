@@ -45,7 +45,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super();
+        super(chartGroup);
 
         this.configure({
             points: [],
@@ -72,7 +72,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
             radiusValueAccessor: d => d.value,
         });
 
-        this.anchor(parent, chartGroup);
+        this.anchor(parent);
     }
 
     public configure(conf: IBubbleOverlayConf): this {

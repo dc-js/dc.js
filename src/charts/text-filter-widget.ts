@@ -43,7 +43,7 @@ export class TextFilterWidget extends BaseMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super();
+        super(chartGroup);
 
         this.configure({
             placeHolder: 'search',
@@ -54,7 +54,7 @@ export class TextFilterWidget extends BaseMixin {
             },
         });
 
-        this.anchor(parent, chartGroup);
+        this.anchor(parent);
     }
 
     public configure(conf: ITextFilterWidgetConf): this {

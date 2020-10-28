@@ -42,8 +42,9 @@ export class BaseMixin {
     private _legend; // TODO: figure out actual type
     protected _dataProvider: CFSimpleAdapter;
 
-    constructor() {
+    constructor(chartGroup: ChartGroupType) {
         this.__dcFlag__ = uniqueId().toString();
+        this._chartGroup = this._getChartGroup(chartGroup);
 
         this.configure({
             minWidth: 200,
@@ -260,12 +261,11 @@ export class BaseMixin {
      * @returns {String|node|d3.selection|BaseMixin}
      */
     public anchor(): string | Element;
-    public anchor(parent: ChartParentType, chartGroup: ChartGroupType): this;
-    public anchor(parent?, chartGroup?) {
+    public anchor(parent: ChartParentType): this;
+    public anchor(parent?) {
         if (!arguments.length) {
             return this._anchor;
         }
-        this._chartGroup = this._getChartGroup(chartGroup);
         if (instanceOfChart(parent)) {
             this._anchor = parent.anchor();
             if ((this._anchor as any).children) {

@@ -40,7 +40,7 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
         public _r: MinimalRadiusScale;
 
         constructor(...args: any[]) {
-            super();
+            super(...args);
 
             this.configure({
                 renderLabel: true,

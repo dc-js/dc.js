@@ -59,7 +59,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super();
+        super(chartGroup);
 
         this.configure({
             colorAccessor: d => this._conf.keyAccessor(d),
@@ -87,7 +87,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         this._cx = undefined;
         this._cy = undefined;
 
-        this.anchor(parent, chartGroup);
+        this.anchor(parent);
     }
 
     public configure(conf: ISunburstChartConf): this {

@@ -28,7 +28,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
         public _colorHelper: IColorHelper;
 
         constructor(...args: any[]) {
-            super();
+            super(...args);
 
             this.configure({
                 colorAccessor: (d, i?) => this._conf.keyAccessor(d),

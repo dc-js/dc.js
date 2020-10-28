@@ -42,7 +42,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super();
+        super(chartGroup);
 
         this.configure({
             colorAccessor: d => d || 0,
@@ -53,7 +53,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         this._projectionFlag = undefined;
         this._projection = undefined;
 
-        this.anchor(parent, chartGroup);
+        this.anchor(parent);
     }
 
     public configure(conf: IGeoChoroplethChartConf): this {

@@ -50,7 +50,7 @@ export class BarChart extends StackMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super();
+        super(chartGroup);
 
         this.configure({
             label: d => printSingleValue(d.y0 + d.y),
@@ -63,7 +63,7 @@ export class BarChart extends StackMixin {
 
         this._barWidth = undefined;
 
-        this.anchor(parent, chartGroup);
+        this.anchor(parent);
     }
 
     public configure(conf: IBarChartConf): this {
