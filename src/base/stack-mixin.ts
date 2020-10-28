@@ -29,7 +29,7 @@ export class StackMixin extends CoordinateGridMixin {
             evadeDomainFilter: false,
         });
 
-        this._dataProvider = new CFMultiAdapter();
+        this.dataProvider(new CFMultiAdapter());
 
         this._stackLayout = stack();
 
@@ -45,8 +45,17 @@ export class StackMixin extends CoordinateGridMixin {
         return this._conf;
     }
 
+    public dataProvider(): CFMultiAdapter;
+    public dataProvider(dataProvider): this;
+    public dataProvider(dataProvider?) {
+        if (!arguments.length) {
+            return super.dataProvider();
+        }
+        return super.dataProvider(dataProvider);
+    }
+
     public data() {
-        let layers: any[] = this._dataProvider.data();
+        let layers: any[] = this.dataProvider().data();
         layers = layers.filter(l => this._isLayerVisible(l.name));
 
         if (!layers.length) {
@@ -179,7 +188,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public legendables(): LegendItem[] {
-        const stack = this._dataProvider.layers();
+        const stack = this.dataProvider().layers();
         return stack.map((layer, i) => ({
             chart: this,
             name: layer.name,
