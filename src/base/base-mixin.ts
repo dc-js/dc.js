@@ -11,7 +11,7 @@ import { printers } from '../core/printers';
 import { InvalidStateException } from '../core/invalid-state-exception';
 import { BadArgumentException } from '../core/bad-argument-exception';
 import { CFGrouping, ChartGroupType, ChartParentType, LegendItem } from '../core/types';
-import { IChartGroup } from '../core/chart-group-types';
+import { IChartGroup, IFilterStorage } from '../core/chart-group-types';
 import { IBaseMixinConf } from './i-base-mixin-conf';
 import { CFSimpleAdapter } from '../data/c-f-simple-adapter';
 
@@ -68,7 +68,7 @@ export class BaseMixin {
             title: d => `${this._conf.keyAccessor(d)}: ${d._value}`,
         });
 
-        this._dataProvider = new CFSimpleAdapter();
+        this.dataProvider(new CFSimpleAdapter());
 
         this._defaultWidthCalc = element => {
             const width =
@@ -102,6 +102,13 @@ export class BaseMixin {
         this._legend = undefined;
     }
 
+    // cleanup
+    public dispose() {
+        if (this._dataProvider) {
+            this._dataProvider.dispose();
+        }
+    }
+
     public configure(conf: IBaseMixinConf): this {
         this._conf = { ...this._conf, ...conf };
         return this;
@@ -117,7 +124,21 @@ export class BaseMixin {
         if (!arguments.length) {
             return this._dataProvider;
         }
+
+        // cleanup previous data provider
+        if (this._dataProvider) {
+            this._dataProvider.dispose();
+        }
+
         this._dataProvider = dataProvider;
+
+        this._dataProvider.configure({
+            anchorName: this.anchorName(),
+            filterStorage: this.chartGroup().filterStorage,
+            onFiltersChanged: filter => this._filtersChanged(filter),
+            shareFilters: false,
+        });
+
         return this;
     }
 
@@ -639,15 +660,17 @@ export class BaseMixin {
         }
         this._dataProvider.filter(filter);
 
-        this._invokeFilteredListener(filter);
+        return this;
+    }
+
+    protected _filtersChanged(filters) {
+        this._invokeFilteredListener(filters);
 
         if (this._root !== null && this.hasFilter()) {
             this.turnOnControls();
         } else {
             this.turnOffControls();
         }
-
-        return this;
     }
 
     /**

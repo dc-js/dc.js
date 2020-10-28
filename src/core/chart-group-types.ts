@@ -3,6 +3,7 @@ export interface IMinimalChart {
     redraw(): void;
     filterAll(): void;
     focus?(): void;
+    dispose?(): void;
 }
 
 export interface IChartGroup {
@@ -12,4 +13,14 @@ export interface IChartGroup {
     redrawAll(): void;
     filterAll(): void;
     refocusAll(): void;
+    filterStorage: IFilterStorage;
+}
+
+export interface IFilterStorage {
+    setFiltersFor(storageKey: any, filters);
+    getFiltersFor(storageKey: any);
+    registerFilterListener(storageKey: any, onFiltersChanged: (filters) => void): any;
+    deRegisterFilterListener(storageKey: any, listner: any): void;
+    notifyListeners(storageKey: any, filters): void;
+    deRegisterAll(): void;
 }

@@ -9,6 +9,7 @@ export * from './constants';
 export * from './core';
 export * from './d3compat';
 export * from './events';
+export * from './filter-storage';
 export * from './invalid-state-exception';
 export * from './logger';
 export * from './printers';

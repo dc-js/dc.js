@@ -1,10 +1,13 @@
-import { IChartGroup, IMinimalChart } from './chart-group-types';
+import { IChartGroup, IFilterStorage, IMinimalChart } from './chart-group-types';
+import { FilterStorage } from './filter-storage';
 
 export class ChartGroup implements IChartGroup {
     private _charts: IMinimalChart[];
+    public filterStorage: IFilterStorage;
 
     constructor() {
         this._charts = [];
+        this.filterStorage = new FilterStorage();
     }
 
     public list(): IMinimalChart[] {
@@ -20,6 +23,10 @@ export class ChartGroup implements IChartGroup {
     }
 
     public deregister(chart: IMinimalChart): void {
+        if (typeof chart.dispose === 'function') {
+            chart.dispose();
+        }
+
         this._charts = this._charts.filter(ch => ch !== chart);
     }
 

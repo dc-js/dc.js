@@ -1,14 +1,14 @@
 import { BaseAccessor, MinimalCFGroup, ValueAccessor } from '../core/types';
-import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler';
+import { FilterStorageHelper, IFilterStorageConf } from './filter-storage-helper';
 
-export interface ICFSimpleAdapterConf extends ICFFilterHandlerConf {
+export interface ICFSimpleAdapterConf extends IFilterStorageConf {
     readonly group?: MinimalCFGroup;
     readonly groupName?: string;
     readonly valueAccessor?: ValueAccessor;
     readonly ordering?: BaseAccessor<any>;
 }
 
-export class CFSimpleAdapter extends CFFilterHandler {
+export class CFSimpleAdapter extends FilterStorageHelper {
     protected _conf: ICFSimpleAdapterConf;
 
     constructor() {

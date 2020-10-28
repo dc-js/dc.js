@@ -1,15 +1,11 @@
 export class FilterHandler {
-    private _filters: any[]; // TODO: find better types
+    private _filters: any[] = []; // TODO: find better types
     get filters(): any[] {
         return this._filters;
     }
 
     set filters(value: any[]) {
         this._filters = value;
-    }
-
-    constructor() {
-        this.filters = [];
     }
 
     /**
@@ -102,8 +98,13 @@ export class FilterHandler {
 
         this.applyFilters();
 
+        this.notifyListeners(filter);
+
         return this;
     }
+
+    // Will be implemented in derived class
+    public notifyListeners(filter) {}
 
     public toggleFilter(filter) {
         if (this.hasFilter(filter)) {
@@ -123,5 +124,9 @@ export class FilterHandler {
 
     public resetFilters() {
         this.filters = [];
+    }
+
+    public dispose() {
+        // use this to cleanup before discarding
     }
 }
