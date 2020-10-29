@@ -428,7 +428,7 @@ module.exports = function (grunt) {
         'sass',
         'cssmin',
     ]);
-    grunt.registerTask('clean-copy', ['shell:web-clean', 'shell:specs-clean', 'copy']);
+    grunt.registerTask('clean-copy', ['shell:web-clean', 'shell:specs-clean', 'copy', 'fileindex']);
     grunt.registerTask('build-copy', ['build', 'clean-copy']);
     grunt.registerTask('pre-test', ['build-copy']);
 
