@@ -505,9 +505,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
         this.redrawBrush(brushSelection, false);
 
-        const ranged2DFilter = brushIsEmpty
-            ? null
-            : new RangedTwoDimensionalFilter(brushSelection);
+        const ranged2DFilter = brushIsEmpty ? null : new RangedTwoDimensionalFilter(brushSelection);
 
         events.trigger(() => {
             this.replaceFilter(ranged2DFilter);

@@ -29,7 +29,7 @@ export class CFSimpleAdapter extends CFFilterHandler {
 
     // TODO: better typing
     public data(): any {
-        let entities = this._conf.group.all();
+        const entities = this._conf.group.all();
 
         // create a two level deep copy defensively
         entities.map(val => ({ ...val }));

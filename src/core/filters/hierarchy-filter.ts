@@ -3,7 +3,7 @@ import { IFilter } from './i-filter';
 export class HierarchyFilter extends Array implements IFilter {
     public readonly filterType = 'HierarchyFilter';
 
-    constructor (path) {
+    constructor(path) {
         super();
 
         for (let i = 0; i < path.length; i++) {
@@ -11,7 +11,7 @@ export class HierarchyFilter extends Array implements IFilter {
         }
     }
 
-    public isFiltered (value): boolean {
+    public isFiltered(value): boolean {
         const filter = this;
 
         if (!(filter.length && value && value.length && value.length >= filter.length)) {

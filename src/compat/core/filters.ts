@@ -1,8 +1,8 @@
 import {
-    RangedFilter,
-    TwoDimensionalFilter,
-    RangedTwoDimensionalFilter,
     HierarchyFilter,
+    RangedFilter,
+    RangedTwoDimensionalFilter,
+    TwoDimensionalFilter,
 } from '../../core/filters/index';
 
 /**

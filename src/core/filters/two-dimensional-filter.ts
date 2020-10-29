@@ -3,13 +3,13 @@ import { IFilter } from './i-filter';
 export class TwoDimensionalFilter extends Array implements IFilter {
     public readonly filterType = 'TwoDimensionalFilter';
 
-    constructor (filter) {
+    constructor(filter) {
         super();
         this[0] = filter[0];
         this[1] = filter[1];
     }
 
-    public isFiltered (value) {
+    public isFiltered(value) {
         return (
             value.length &&
             value.length === this.length &&

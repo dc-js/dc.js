@@ -1,14 +1,14 @@
 export class FilterHandler {
     private _filters: any[]; // TODO: find better types
-    get filters (): any[] {
+    get filters(): any[] {
         return this._filters;
     }
 
-    set filters (value: any[]) {
+    set filters(value: any[]) {
         this._filters = value;
     }
 
-    constructor () {
+    constructor() {
         this.filters = [];
     }
 
@@ -19,14 +19,14 @@ export class FilterHandler {
      * @param {*} [filter]
      * @returns {Boolean}
      */
-    public hasFilter (filter?): boolean {
+    public hasFilter(filter?): boolean {
         if (filter === null || typeof filter === 'undefined') {
             return this.filters.length > 0;
         }
         return this.filters.some(f => filter <= f && filter >= f);
     }
 
-    public applyFilters () {
+    public applyFilters() {
         // do nothing at this level, derived classes will actually implement it
     }
 
@@ -80,9 +80,9 @@ export class FilterHandler {
      * @param {*} [filter]
      * @returns {BaseMixin}
      */
-    public filter ();
-    public filter (filter): this;
-    public filter (filter?) {
+    public filter();
+    public filter(filter): this;
+    public filter(filter?) {
         if (!arguments.length) {
             return this.filters.length > 0 ? this.filters[0] : null;
         }
@@ -105,7 +105,7 @@ export class FilterHandler {
         return this;
     }
 
-    public toggleFilter (filter) {
+    public toggleFilter(filter) {
         if (this.hasFilter(filter)) {
             this.removeFilter(filter);
         } else {
@@ -113,15 +113,15 @@ export class FilterHandler {
         }
     }
 
-    public addFilter (f) {
+    public addFilter(f) {
         this.filters.push(f);
     }
 
-    public removeFilter (filter) {
+    public removeFilter(filter) {
         this.filters = this.filters.filter(f => !(filter <= f && filter >= f));
     }
 
-    public resetFilters () {
+    public resetFilters() {
         this.filters = [];
     }
 }

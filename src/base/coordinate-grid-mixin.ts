@@ -15,7 +15,13 @@ import { constants } from '../core/constants';
 import { add, appendOrSelect, arraysEqual, subtract } from '../core/utils';
 import { logger } from '../core/logger';
 import { events } from '../core/events';
-import { ChartGroupType, ChartParentType, DCBrushSelection, MinimalXYScale, SVGGElementSelection } from '../core/types';
+import {
+    ChartGroupType,
+    ChartParentType,
+    DCBrushSelection,
+    MinimalXYScale,
+    SVGGElementSelection,
+} from '../core/types';
 import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
 import { OrdinalColors } from './colors/ordinal-colors';
 import { adaptHandler } from '../core/d3compat';

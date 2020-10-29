@@ -1,4 +1,4 @@
 export interface IFilter {
     filterType: string;
-    isFiltered (value): boolean;
+    isFiltered(value): boolean;
 }

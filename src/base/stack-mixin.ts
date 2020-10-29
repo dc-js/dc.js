@@ -62,7 +62,7 @@ export class StackMixin extends CoordinateGridMixin {
             return [];
         }
 
-        layers.forEach((l, i) => {
+        layers.forEach(l => {
             const allValues = l.rawData.map((d, i) => ({
                 x: this._conf.keyAccessor(d, i),
                 y: d._value,
@@ -70,7 +70,7 @@ export class StackMixin extends CoordinateGridMixin {
                 name: l.name,
             }));
 
-            l.domainValues = allValues.filter(l => this._domainFilter()(l));
+            l.domainValues = allValues.filter(layer => this._domainFilter()(layer));
             l.values = this._conf.evadeDomainFilter ? allValues : l.domainValues;
         });
 
@@ -188,13 +188,14 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     public legendables(): LegendItem[] {
-        const stack = this.dataProvider().layers();
-        return stack.map((layer, i) => ({
-            chart: this,
-            name: layer.name,
-            hidden: !this._isLayerVisible(layer.name),
-            color: this.getColor(layer, i),
-        }));
+        return this.dataProvider()
+            .layers()
+            .map((layer, i) => ({
+                chart: this,
+                name: layer.name,
+                hidden: !this._isLayerVisible(layer.name),
+                color: this.getColor(layer, i),
+            }));
     }
 
     public isLegendableHidden(d: LegendItem) {
