@@ -317,7 +317,9 @@ describe('dc.heatmap', () => {
 
         it('should keep all data points for that cell', () => {
             const otherGroup = otherDimension.group().reduceSum(d => +d.colorData);
-            const otherChart = dc.baseMixin().dimension(otherDimension).group(otherGroup);
+            id = 'other-chart';
+            appendChartID(id);
+            const otherChart = dc.baseMixin(`#${id}`).dimension(otherDimension).group(otherGroup);
 
             otherChart.render();
             const clickedCell = clickCellOnChart(chart, filterX, filterY);

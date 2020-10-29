@@ -50,7 +50,7 @@ export class BarChart extends StackMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         this.configure({
             label: d => printSingleValue(d.y0 + d.y),
@@ -62,8 +62,6 @@ export class BarChart extends StackMixin {
         this._gap = DEFAULT_GAP_BETWEEN_BARS; // TODO: after untangling it with outer/inner paddings try to move to conf
 
         this._barWidth = undefined;
-
-        this.anchor(parent);
     }
 
     public configure(conf: IBarChartConf): this {

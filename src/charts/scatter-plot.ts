@@ -44,7 +44,7 @@ export class ScatterPlot extends CoordinateGridMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         const originalKeyAccessor = this._conf.keyAccessor;
 
@@ -81,8 +81,6 @@ export class ScatterPlot extends CoordinateGridMixin {
         this.brush(brush());
 
         this._symbol.size((d, i) => this._elementSize(d, i));
-
-        this.anchor(parent);
     }
 
     public configure(conf: IScatterPlotConf): this {

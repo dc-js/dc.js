@@ -1,4 +1,4 @@
-/* global loadDateFixture */
+/* global appendChartID, loadDateFixture */
 describe('dc.capMixin', () => {
     let data, dimension, group;
     let mixin, total;
@@ -10,7 +10,9 @@ describe('dc.capMixin', () => {
         total = d3.sum(group.all().map(dc.pluck('value')));
 
         const CapMixinTester = dc.CapMixin(dc.BaseMixin);
-        mixin = new CapMixinTester();
+        const id = 'cap-mixin-tester';
+        appendChartID(id);
+        mixin = new CapMixinTester(`#${id}`);
 
         mixin.dimension(dimension)
             .group(group);

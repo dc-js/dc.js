@@ -79,7 +79,7 @@ export class LineChart extends StackMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         this.configure({
             transitionDuration: 500,
@@ -101,8 +101,6 @@ export class LineChart extends StackMixin {
         this._xyTipsOn = true;
 
         this._rangeBandPadding(1);
-
-        this.anchor(parent);
     }
 
     public plotData() {

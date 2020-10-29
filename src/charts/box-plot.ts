@@ -71,7 +71,7 @@ export class BoxPlot extends CoordinateGridMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         const whiskerIqrFactor = 1.5;
         this._whiskers = defaultWhiskersIQR(whiskerIqrFactor);
@@ -104,8 +104,6 @@ export class BoxPlot extends CoordinateGridMixin {
 
         this.boxPadding(0.8);
         this.outerPadding(0.5);
-
-        this.anchor(parent);
     }
 
     public configure(conf: IBoxPlotConf): this {

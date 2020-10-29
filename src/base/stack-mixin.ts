@@ -3,7 +3,7 @@ import { max, min } from 'd3-array';
 
 import { add, subtract } from '../core/utils';
 import { CoordinateGridMixin } from './coordinate-grid-mixin';
-import { ChartGroupType, LegendItem, TitleAccessor } from '../core/types';
+import { ChartGroupType, ChartParentType, LegendItem, TitleAccessor } from '../core/types';
 import { IStackMixinConf } from './i-stack-mixin-conf';
 import { CFMultiAdapter } from '../data/c-f-multi-adapter';
 
@@ -20,8 +20,8 @@ export class StackMixin extends CoordinateGridMixin {
 
     protected _dataProvider: CFMultiAdapter;
 
-    constructor(chartGroup: ChartGroupType) {
-        super(chartGroup);
+    constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
+        super(parent, chartGroup);
 
         this.configure({
             colorAccessor: d => d.name,

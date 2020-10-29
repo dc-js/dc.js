@@ -42,9 +42,15 @@ export class BaseMixin {
     private _legend; // TODO: figure out actual type
     protected _dataProvider: CFSimpleAdapter;
 
-    constructor(chartGroup: ChartGroupType) {
+    constructor(parent, chartGroup: ChartGroupType) {
+        this._anchor = undefined;
+        this._root = undefined;
+        this._svg = undefined;
+        this._isChild = undefined;
+
         this.__dcFlag__ = uniqueId().toString();
         this._chartGroup = this._getChartGroup(chartGroup);
+        this.anchor(parent);
 
         this.configure({
             minWidth: 200,
@@ -63,11 +69,6 @@ export class BaseMixin {
         });
 
         this._dataProvider = new CFSimpleAdapter();
-
-        this._anchor = undefined;
-        this._root = undefined;
-        this._svg = undefined;
-        this._isChild = undefined;
 
         this._defaultWidthCalc = element => {
             const width =
@@ -257,7 +258,6 @@ export class BaseMixin {
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.
      * @param {anchorChart|anchorSelector|anchorNode} [parent]
-     * @param {String} [chartGroup]
      * @returns {String|node|d3.selection|BaseMixin}
      */
     public anchor(): string | Element;

@@ -54,7 +54,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         this.configure({
             label: d => this._conf.keyAccessor(d),
@@ -82,8 +82,6 @@ export class RowChart extends ColorMixin(MarginMixin) {
         this._xAxis = axisBottom(undefined);
 
         this._rowData = undefined;
-
-        this.anchor(parent);
     }
 
     public configure(conf: IRowChartConf): this {

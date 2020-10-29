@@ -42,7 +42,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         this.configure({
             // TODO: move following two to Mixin, BubbleOverlay has exactly same setup
@@ -51,8 +51,6 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         });
 
         this._bubbleLocator = d => `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
-
-        this.anchor(parent);
     }
 
     public plotData(): void {

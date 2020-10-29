@@ -42,7 +42,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         this.configure({
             cols: undefined,
@@ -76,8 +76,6 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         this._rowScale = scaleBand();
 
         this._mandatoryAttributes(['group']);
-
-        this.anchor(parent);
     }
 
     public configure(conf: IHeatMapConf): this {

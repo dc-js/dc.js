@@ -398,4 +398,4 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
 
 export const BaseMixin = BaseMixinExt(BaseMixinNeo);
 
-export const baseMixin = () => new BaseMixin(undefined);
+export const baseMixin = (parent, chartGroup) => new BaseMixin(parent, chartGroup);

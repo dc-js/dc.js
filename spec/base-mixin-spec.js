@@ -7,16 +7,14 @@ describe('dc.baseMixin', () => {
         dimension = data.dimension(d => d3.utcDay(d.dd));
         group = dimension.group().reduceSum(d => d.value);
 
-        chart = dc.baseMixin({})
-            .options({
-                dimension: dimension,
-                group: group,
-                transitionDuration: 100
-            });
         id = 'base-chart';
         appendChartID(id);
-        chart.anchor(`#${id}`)
-            .resetSvg(); // so that renderlets can fire
+        chart = dc.baseMixin(`#${id}`).options({
+            dimension: dimension,
+            group: group,
+            transitionDuration: 100,
+        });
+        chart.resetSvg(); // so that renderlets can fire
     });
 
     describe('renderlets', () => {
@@ -123,7 +121,7 @@ describe('dc.baseMixin', () => {
                 expect(thirdRenderlet).not.toHaveBeenCalled();
                 done();
             });
-            chart.on('renderlet.third' , secondRenderlet);
+            chart.on('renderlet.third', secondRenderlet);
             chart.renderlet(secondRenderlet);
             chart.on('renderlet.third');
             chart.redraw();
@@ -137,7 +135,7 @@ describe('dc.baseMixin', () => {
                 expect(thirdRenderlet).not.toHaveBeenCalled();
                 done();
             });
-            chart.on('renderlet.third' , secondRenderlet);
+            chart.on('renderlet.third', secondRenderlet);
             chart.renderlet(secondRenderlet);
             chart.on('renderlet.third');
             chart.render();
@@ -261,11 +259,12 @@ describe('dc.baseMixin', () => {
     });
 
     describe('validations', () => {
-
         it('should require dimension', () => {
             try {
-                dc.baseMixin({}).group(group).render();
-                throw new Error('That should\'ve thrown');
+                id = 'base-chart';
+                appendChartID(id);
+                dc.baseMixin(`#${id}`).group(group).render();
+                throw new Error("That should've thrown");
             } catch (e) {
                 expect(e instanceof dc.InvalidStateException).toBeTruthy();
             }
@@ -273,8 +272,10 @@ describe('dc.baseMixin', () => {
 
         it('should require group', () => {
             try {
-                dc.baseMixin({}).dimension(dimension).render();
-                throw new Error('That should\'ve thrown');
+                id = 'base-chart';
+                appendChartID(id);
+                dc.baseMixin(`#${id}`).dimension(dimension).render();
+                throw new Error("That should've thrown");
             } catch (e) {
                 expect(e instanceof dc.InvalidStateException).toBeTruthy();
             }
@@ -321,7 +322,6 @@ describe('dc.baseMixin', () => {
                     // see http://stackoverflow.com/questions/70579/what-are-valid-values-for-the-id-attribute-in-html
                     expect(chart.anchorName()).toMatch(/^[a-zA-Z][a-zA-Z0-9_:.-]*$/);
                 });
-
             });
         });
 
@@ -360,7 +360,6 @@ describe('dc.baseMixin', () => {
                     // see http://stackoverflow.com/questions/70579/what-are-valid-values-for-the-id-attribute-in-html
                     expect(chart.anchorName()).toMatch(/^[a-zA-Z][a-zA-Z0-9_:.-]*$/);
                 });
-
             });
         });
 
@@ -394,9 +393,7 @@ describe('dc.baseMixin', () => {
         describe('when set to a falsy on a sized div', () => {
             let h0, w0;
             beforeEach(() => {
-                dimdiv
-                    .style('height', '220px')
-                    .style('width', '230px');
+                dimdiv.style('height', '220px').style('width', '230px');
                 chart.width(null).height(null).render();
                 w0 = chart.width();
                 h0 = chart.height();
@@ -423,8 +420,7 @@ describe('dc.baseMixin', () => {
 
             describe('and minimums set', () => {
                 beforeEach(() => {
-                    chart.minHeight(234).minWidth(976)
-                        .render();
+                    chart.minHeight(234).minWidth(976).render();
                 });
 
                 it('should set the height to the minimum', () => {
@@ -441,9 +437,7 @@ describe('dc.baseMixin', () => {
             let h0, w0;
             beforeEach(() => {
                 dimdiv.append('h1').text('helL0');
-                chart.width(null).height(null)
-                    .render()
-                    .resetSvg(); // because all real charts generate svg
+                chart.width(null).height(null).render().resetSvg(); // because all real charts generate svg
                 w0 = chart.width();
                 h0 = chart.height();
             });
@@ -502,10 +496,7 @@ describe('dc.baseMixin', () => {
 
     describe('viewbox resizing strategy', () => {
         beforeEach(() => {
-            chart
-                .width(600)
-                .height(400)
-                .resetSvg();
+            chart.width(600).height(400).resetSvg();
         });
         it('useViewBoxResizing defaults false', () => {
             expect(chart.useViewBoxResizing()).toBeFalsy();

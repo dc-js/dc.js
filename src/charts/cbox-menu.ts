@@ -43,7 +43,7 @@ export class CboxMenu extends BaseMixin {
      * Interaction with the widget will only trigger events and redraws within its group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         this.configure({
             multiple: false,
@@ -56,8 +56,6 @@ export class CboxMenu extends BaseMixin {
         this._cbox = undefined;
 
         this._uniqueId = uniqueId();
-
-        this.anchor(parent);
     }
 
     public configure(conf: ICboxMenuConf): this {

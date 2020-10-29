@@ -1,19 +1,24 @@
-/* global loadDateFixture, compareVersions */
+/* global appendChartID, loadDateFixture, compareVersions */
 describe('dc.colorMixin', () => {
-    function colorTest (chart, domain, test) {
+    function colorTest(chart, domain, test) {
         chart.colorDomain(domain);
         return (test || domain).map((d, i) => chart.getColor(d, i));
     }
 
     function identity (d) { return d; }
 
-    const ColorMixinTester = dc.ColorMixin(dc.BaseMixin);
+    function instantiateColorMixin() {
+        const ColorMixinTester = dc.ColorMixin(dc.BaseMixin);
+        const id = 'cap-mixin-tester';
+        appendChartID(id);
+        return new ColorMixinTester(`#${id}`);
+    }
 
     describe('deprecation', () => {
         it('issues a one time warning when using default color scheme', () => {
             spyOn(dc.logger, 'warnOnce');
 
-            new ColorMixinTester(); // eslint-disable-line no-new
+            instantiateColorMixin();
 
             expect(dc.logger.warnOnce).toHaveBeenCalled();
         });
@@ -24,7 +29,7 @@ describe('dc.colorMixin', () => {
             spyOn(dc.logger, 'warnOnce');
 
             dc.config.defaultColors(d3.schemeSet1);
-            new ColorMixinTester(); // eslint-disable-line no-new
+            instantiateColorMixin();
 
             expect(dc.logger.warnOnce).not.toHaveBeenCalled();
 
@@ -33,11 +38,11 @@ describe('dc.colorMixin', () => {
         });
     });
 
-    describe('with ordinal domain' , () => {
+    describe('with ordinal domain', () => {
         let chart, domain;
 
         beforeEach(() => {
-            chart = new ColorMixinTester();
+            chart = instantiateColorMixin();
             chart.colorAccessor(identity);
             domain = ['a','b','c','d','e'];
         });
@@ -76,7 +81,7 @@ describe('dc.colorMixin', () => {
         let chart, domain, test, expectedColorIndices;
 
         beforeEach(() => {
-            chart = new ColorMixinTester();
+            chart = instantiateColorMixin();
             chart.colorAccessor(identity);
             domain = [1, 100];
             // It has items that are not part of the domain.
@@ -131,7 +136,7 @@ describe('dc.colorMixin', () => {
             const data = crossfilter(loadDateFixture());
             const valueDimension = data.dimension(d => d.value);
             const valueGroup = valueDimension.group();
-            chart = new ColorMixinTester()
+            chart = instantiateColorMixin()
                 .colorAccessor(d => d.value)
                 .group(valueGroup);
         });

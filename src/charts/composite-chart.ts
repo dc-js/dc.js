@@ -48,7 +48,7 @@ export class CompositeChart extends CoordinateGridMixin {
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
-        super(chartGroup);
+        super(parent, chartGroup);
 
         this.configure({
             transitionDuration: 500,
@@ -79,8 +79,6 @@ export class CompositeChart extends CoordinateGridMixin {
                 this._children[i].replaceFilter(this.filter());
             }
         });
-
-        this.anchor(parent);
     }
 
     public configure(conf: ICompositeChartConf): this {
