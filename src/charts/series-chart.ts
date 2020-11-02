@@ -98,15 +98,11 @@ export class SeriesChart extends CompositeChart {
             subChart.dataProvider().configure({
                 dimension: this.dataProvider().conf().dimension,
                 valueAccessor: this.dataProvider().conf().valueAccessor,
-                layers: [
-                    {
-                        name: sub.key,
-                        group: {
-                            all: typeof sub.values === 'function' ? sub.values : () => sub.values,
-                        },
-                    },
-                ],
-            } as ICFMultiAdapterConf);
+                groupName: sub.key,
+                group: {
+                    all: typeof sub.values === 'function' ? sub.values : () => sub.values,
+                },
+            });
             subChart.configure({
                 keyAccessor: this._conf.keyAccessor,
             });

@@ -9,8 +9,6 @@ export interface LayerSpec {
 }
 
 export interface ICFMultiAdapterConf extends ICFSimpleAdapterConf {
-    readonly group?: MinimalCFGroup;
-    readonly valueAccessor?: ValueAccessor;
     readonly layers?: LayerSpec[];
 }
 
@@ -37,7 +35,8 @@ export class CFMultiAdapter extends CFSimpleAdapter {
     // TODO: better typing
     public data(): any {
         // Two level defensive copy
-        const layers: any[] = this._conf.layers.map(l => ({ ...l }));
+        const layers = this.layers().map(l => ({ ...l }));
+
         layers.forEach(layer => {
             const valueAccessor = layer.valueAccessor || this._conf.valueAccessor;
             // Two level defensive copy
@@ -50,11 +49,17 @@ export class CFMultiAdapter extends CFSimpleAdapter {
         return layers;
     }
 
-    public layers() {
+    public layers(): LayerSpec[] {
+        if (this._conf.group) {
+            // if a stack configuration includes a `group` as well, that become the first layer
+            const firstLayer = { name: this._conf.groupName, group: this._conf.group };
+
+            return [firstLayer].concat(this._conf.layers);
+        }
         return this._conf.layers;
     }
 
-    public layerByName(name: string) {
+    public layerByName(name: string): LayerSpec {
         return this._conf.layers.find(l => l.name === name);
     }
 }

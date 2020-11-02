@@ -4,7 +4,7 @@ import { StackMixin as StackMixinNeo } from '../../base/stack-mixin';
 import { MarginMixinExt } from './margin-mixin';
 import { ColorMixinExt } from './color-mixin';
 import { CoordinateGridMixinExt } from './coordinate-grid-mixin';
-import { LayerSpec } from '../../data';
+import { ICFMultiAdapterConf, LayerSpec } from '../../data';
 
 class Intermediate extends CoordinateGridMixinExt(MarginMixinExt(BaseMixinExt(StackMixinNeo))) {}
 
@@ -35,10 +35,11 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         public stack();
         public stack(group, name?, accessor?): this;
         public stack(group?, name?, accessor?) {
-            const stack = this._dataProvider.layers();
             if (!arguments.length) {
-                return stack;
+                return this._dataProvider.layers();
             }
+
+            const stack = (this._dataProvider.conf() as ICFMultiAdapterConf).layers;
 
             if (arguments.length <= 2) {
                 accessor = name;
@@ -49,7 +50,7 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
             if (typeof accessor === 'function') {
                 layer.valueAccessor = accessor;
             }
-            // @ts-ignore
+
             stack.push(layer);
 
             return this;
@@ -67,7 +68,6 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
             this.configure({
                 titles: {},
             });
-            this.stack(g, n);
             if (f) {
                 this._dataProvider.configure({ valueAccessor: f });
             }
