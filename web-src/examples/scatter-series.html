@@ -47,7 +47,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .elasticY(true)
     .dimension(runDimension)
     .group(runGroup)
-    .mouseZoomable(true)
+    .mouseZoomable(false)
     .shareTitle(false) // allow default scatter title to work
     .seriesAccessor(function(d) {return "Expt: " + d.key[0];})
     .keyAccessor(function(d) {return +d.key[1];})
