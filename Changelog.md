@@ -1,3 +1,7 @@
+## 4.2.1
+* Text filter widget should redraw chart's group - thanks @kriddy! ([#1678](https://github.com/dc-js/dc.js/pull/1678) / [#14978](https://github.com/dc-js/dc.js/issues/14978))
+* Pareto chart example was not correctly sorted, and scatter series chart displayed brush when zoomed ([#1780](https://github.com/dc-js/dc.js/pull/1780) / [#1772](https://github.com/dc-js/dc.js/issues/1772))
+
 ## 4.2.0
 * Accessibility features <a href="http://dc-js.github.io/dc.js/docs/html/BaseMixin.html#svgDescription">BaseMixin.svgDescription</a> and <a href="http://dc-js.github.io/dc.js/docs/html/BaseMixin.html#keyboardAccessible">BaseMixin.keyboardAccessible</a>, by German Priks. <a href="http://dc-js.github.io/dc.js/examples/filtering.html">Demo here</a>. ([#1738](https://github.com/dc-js/dc.js/pull/1738) / [#1185](https://github.com/dc-js/dc.js/issues/1185))
 

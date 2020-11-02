@@ -1,7 +1,6 @@
 import {BaseMixin} from '../base/base-mixin';
 import {constants} from '../core/constants';
 import {events} from '../core/events';
-import {redrawAll} from '../core/chart-registry';
 
 const INPUT_CSS_CLASS = 'dc-text-filter-input';
 
@@ -65,7 +64,7 @@ export class TextFilterWidget extends BaseMixin {
         this._input.on('input', function () {
             chart.dimension().filterFunction(chart._filterFunctionFactory(this.value));
             events.trigger(() => {
-                redrawAll();
+                chart.redrawGroup();
             }, constants.EVENT_DELAY);
         });
 
