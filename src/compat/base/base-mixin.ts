@@ -133,10 +133,7 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
             if (!arguments.length) {
                 return this._dataProvider.conf().group;
             }
-            this._dataProvider.configure({ group });
-            this.configure({
-                groupName: name,
-            });
+            this._dataProvider.configure({ group, groupName: name });
             this.expireCache();
             return this;
         }

@@ -6,7 +6,6 @@ export interface IBaseMixinConf {
     readonly title?: TitleAccessor;
     readonly label?: LabelAccessor;
     readonly renderLabel?: boolean;
-    readonly groupName?: string;
     readonly commitHandler?: (render: boolean, callback: (error: any, result: any) => void) => void;
     readonly controlsUseVisibility?: boolean;
     readonly transitionDelay?: number;

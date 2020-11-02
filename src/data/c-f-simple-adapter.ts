@@ -3,6 +3,7 @@ import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler';
 
 export interface ICFSimpleAdapterConf extends ICFFilterHandlerConf {
     readonly group?: MinimalCFGroup;
+    readonly groupName?: string;
     readonly valueAccessor?: ValueAccessor;
     readonly ordering?: BaseAccessor<any>;
 }

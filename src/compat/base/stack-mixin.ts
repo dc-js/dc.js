@@ -102,7 +102,10 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
             if (typeof stackName === 'function') {
                 return super.title(stackName);
             }
-            if (stackName === this._conf.groupName && typeof titleAccessor === 'function') {
+            if (
+                stackName === this.dataProvider().conf().groupName &&
+                typeof titleAccessor === 'function'
+            ) {
                 return super.title(titleAccessor);
             }
 
