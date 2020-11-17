@@ -1,4 +1,3 @@
-import { terser } from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
 import license from 'rollup-plugin-license';
 import typescript from 'rollup-plugin-typescript2';
@@ -13,7 +12,7 @@ const licensePlugin = license({
     },
 });
 
-const d3Modules = {
+export const d3Modules = {
     'd3-array': 'd3',
     'd3-axis': 'd3',
     'd3-brush': 'd3',
@@ -34,7 +33,7 @@ const d3Modules = {
     'd3-zoom': 'd3',
 };
 
-const umdConf = {
+export const umdConf = {
     file: 'dist/dc.js',
     format: 'umd',
     name: 'dc',
@@ -43,12 +42,7 @@ const umdConf = {
     paths: d3Modules,
 };
 
-const umdMinConf = Object.assign({}, umdConf, {
-    file: 'dist/dc.min.js',
-    plugins: [terser()],
-});
-
-const plugins = [
+export const plugins = [
     jsonPlugin,
     licensePlugin,
     typescript({
@@ -67,15 +61,6 @@ export default [
         input: 'src/compat/index-compat.ts',
         external: Object.keys(d3Modules),
         plugins: plugins,
-        output: [umdConf, umdMinConf],
-    },
-    {
-        input: 'src/index-with-version.ts',
-        external: Object.keys(d3Modules),
-        plugins: plugins,
-        output: [
-            Object.assign({}, umdConf, { file: 'dist/dc-neo.js' }),
-            Object.assign({}, umdMinConf, { file: 'dist/dc-neo.min.js' }),
-        ],
+        output: [umdConf],
     },
 ];

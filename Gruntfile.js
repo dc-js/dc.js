@@ -345,6 +345,9 @@ module.exports = function (grunt) {
             rollup: {
                 command: 'rollup --config',
             },
+            'rollup-full': {
+                command: 'rollup --config rollup-full.config.js',
+            },
             typedoc: {
                 command: 'typedoc src/index.ts',
             },
