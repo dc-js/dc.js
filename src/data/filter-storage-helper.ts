@@ -12,6 +12,13 @@ export class FilterStorageHelper extends CFFilterHandler {
     private _listenerRegToken: any;
     protected _conf: IFilterStorageConf;
 
+    constructor() {
+        super();
+        this.configure({
+            shareFilters: true,
+        });
+    }
+
     public conf(): IFilterStorageConf {
         return super.conf();
     }

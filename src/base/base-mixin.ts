@@ -136,7 +136,6 @@ export class BaseMixin {
             anchorName: this.anchorName(),
             filterStorage: this.chartGroup().filterStorage,
             onFiltersChanged: filter => this._filtersChanged(filter),
-            shareFilters: false,
         });
 
         return this;
