@@ -142,6 +142,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._rangeChart = undefined;
         this._focusChart = undefined;
 
+        this.on('filtered._coordinate', () => {
+            this.onFilterChange();
+        });
+
         // TODO: These two parameters have been exposed differently in BarChart and BoxPlot. In addition _gap in BoxPlot
         // TODO: also interact with these. Need to change consistently
         this._fOuterRangeBandPadding = 0.5;
@@ -806,18 +810,13 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public filter();
-    public filter(_): this;
-    public filter(_?) {
-        if (!arguments.length) {
-            return super.filter();
+    protected onFilterChange() {
+        const currentFilter = this.filter();
+        this.redrawBrush(currentFilter, false);
+
+        if (this._rangeChart) {
+            this.focus(currentFilter, true);
         }
-
-        super.filter(_);
-
-        this.redrawBrush(_, false);
-
-        return this;
     }
 
     /**
@@ -1126,18 +1125,14 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             domFilter = null;
         }
 
-        this.replaceFilter(domFilter);
+        if (!noRaiseEvents) {
+            this.replaceFilter(domFilter);
+        }
+
         this.rescale();
         this.redraw();
 
         if (!noRaiseEvents) {
-            if (this._rangeChart && !arraysEqual(this.filter(), this._rangeChart.filter())) {
-                events.trigger(() => {
-                    this._rangeChart.replaceFilter(domFilter);
-                    this._rangeChart.redraw();
-                });
-            }
-
             this._invokeZoomedListener();
             events.trigger(() => {
                 this.redrawGroup();
@@ -1255,17 +1250,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._focusChart;
         }
         this._focusChart = c;
-        this.on('filtered.dcjs-range-chart', chart => {
-            if (!chart.filter()) {
-                events.trigger(() => {
-                    this._focusChart.x().domain(this._focusChart.xOriginalDomain());
-                });
-            } else if (!arraysEqual(chart.filter(), this._focusChart.filter())) {
-                events.trigger(() => {
-                    this._focusChart.focus(chart.filter(), true);
-                });
-            }
-        });
         return this;
     }
 

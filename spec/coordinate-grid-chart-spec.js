@@ -790,10 +790,6 @@ describe('dc.coordinateGridChart', () => {
                     expect(dc.utils.arraysEqual(_chart.rangeChart().filter(), _chart.filter())).toEqual(true);
                 });
 
-                it('should trigger redraw on its range chart', () => {
-                    expect(_chart.rangeChart().redraw).toHaveBeenCalled();
-                });
-
                 it('should fire custom zoom listeners', () => {
                     expect(_zoomCallback).toHaveBeenCalled();
                 });
@@ -879,10 +875,9 @@ describe('dc.coordinateGridChart', () => {
         });
 
         it('should update the range chart brush to match zoomed domain of focus chart', () => {
-            spyOn(rangeChart, 'replaceFilter');
             chart.focus(selectedRange);
-            const replaceFilter = cleanDateRange(rangeChart.replaceFilter.calls.argsFor(0)[0]);
-            expect(replaceFilter).toEqual(selectedRange);
+            const filter = cleanDateRange(rangeChart.filter());
+            expect(filter).toEqual(selectedRange);
         });
     });
 
