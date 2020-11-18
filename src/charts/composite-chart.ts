@@ -75,9 +75,12 @@ export class CompositeChart extends CoordinateGridMixin {
             // Propagate the filters onto the children
             // Notice that on children the call is .replaceFilter and not .filter
             //   the reason is that _chart.filter() returns the entire current set of filters not just the last added one
-            for (let i = 0; i < this._children.length; ++i) {
-                this._children[i].replaceFilter(this.filter());
-            }
+            this._children.forEach(child => {
+                // Go defensive - the shareFilter option may have already set the correct filters
+                if (child.filter() !== this.filter()) {
+                    child.replaceFilter(this.filter());
+                }
+            });
         });
     }
 
@@ -104,6 +107,7 @@ export class CompositeChart extends CoordinateGridMixin {
             if (!child.dataProvider().conf().group) {
                 child.dataProvider().configure({ group: this.dataProvider().conf().group });
             }
+            child.dataProvider().configure({ shareFilters: this.dataProvider().conf().shareFilters });
 
             child.configure({
                 xUnits: this._conf.xUnits,

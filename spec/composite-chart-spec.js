@@ -714,6 +714,8 @@ describe('dc.compositeChart', () => {
             lineDimension = data.dimension(d => +d.value);
             lineGroup = lineDimension.group();
 
+            chart.dataProvider().configure({ shareFilters: false });
+
             chart
                 .dimension(scatterDimension)
                 .group(scatterGroup)
