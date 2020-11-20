@@ -839,7 +839,6 @@ describe('dc.coordinateGridChart', () => {
         });
 
         it('range filter should execute filtered listener and zoom focus chart', () => {
-            spyOn(chart, 'focus').and.callThrough();
             const expectedCallbackSignature = function (callbackChart, callbackFilter) {
                 expect(callbackChart).toBe(rangeChart);
                 expect(callbackFilter).toEqual(selectedRange);
@@ -851,17 +850,13 @@ describe('dc.coordinateGridChart', () => {
             rangeChart.filter(selectedRange);
             expect(filteredCallback).toHaveBeenCalled();
 
-            expect(chart.focus).toHaveBeenCalled();
-            const focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
-            expect(focus).toEqual(selectedRange);
+            expect(chart.x().domain()).toEqual(selectedRange);
         });
 
         it('should zoom the focus chart when range chart is brushed', () => {
-            spyOn(chart, 'focus').and.callThrough();
             simulateChartBrushing(rangeChart, selectedRange);
             jasmine.clock().tick(100);
-            const focus = cleanDateRange(chart.focus.calls.argsFor(0)[0]);
-            expect(focus).toEqual(selectedRange);
+            expect(chart.x().domain()).toEqual(selectedRange);
         });
 
         it('should zoom the focus chart back out when range chart is un-brushed', () => {

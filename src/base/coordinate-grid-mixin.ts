@@ -815,7 +815,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.redrawBrush(currentFilter, false);
 
         if (this._rangeChart) {
-            this.focus(currentFilter, true);
+            this._updateUIforZoom(currentFilter, true);
         }
     }
 
@@ -1114,23 +1114,16 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.root().call(this._nullZoom);
     }
 
-    public _zoomHandler(newDomain, noRaiseEvents: boolean) {
-        let domFilter;
-
-        if (this._hasRangeSelected(newDomain)) {
+    private _updateUIforZoom(newDomain, noRaiseEvents: boolean) {
+        if (newDomain instanceof Array && newDomain.length > 1) {
             this.x().domain(newDomain);
-            domFilter = new RangedFilter(newDomain[0], newDomain[1]);
         } else {
             this.x().domain(this._xOriginalDomain);
-            domFilter = null;
-        }
-
-        if (!noRaiseEvents) {
-            this.replaceFilter(domFilter);
         }
 
         this.rescale();
         this.redraw();
+        this._updateD3zoomTransform();
 
         if (!noRaiseEvents) {
             this._invokeZoomedListener();
@@ -1182,7 +1175,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
 
         const newDomain = evt.transform.rescaleX(this._origX).domain();
-        this.focus(newDomain, false);
+        this.focus(newDomain);
     }
 
     // TODO: come back for return type, currently forced, but generics may help
@@ -1221,10 +1214,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      *     });
      * })
      * @param {Array<Number>} [range]
-     * @param {Boolean} [noRaiseEvents = false]
      * @return {undefined}
      */
-    public focus(range: DCBrushSelection, noRaiseEvents: boolean): void {
+    public focus(range: DCBrushSelection): void {
         if (this._conf.zoomOutRestrict) {
             // ensure range is within self._xOriginalDomain
             range = this._checkExtents(range, this._xOriginalDomain);
@@ -1235,8 +1227,15 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             }
         }
 
-        this._zoomHandler(range, noRaiseEvents);
-        this._updateD3zoomTransform();
+        let domFilter;
+        if (range instanceof Array && range.length > 1) {
+            domFilter = new RangedFilter(range[0], range[1]);
+        } else {
+            domFilter = null;
+        }
+        this.replaceFilter(domFilter);
+
+        this._updateUIforZoom(range, false);
     }
 
     public refocused(): boolean {
@@ -1293,9 +1292,5 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     // Get the SVG rendered brush
     public gBrush(): SVGGElementSelection {
         return this._gBrush;
-    }
-
-    public _hasRangeSelected(range): boolean {
-        return range instanceof Array && range.length > 1;
     }
 }
