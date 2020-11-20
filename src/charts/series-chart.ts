@@ -5,7 +5,6 @@ import { LineChart } from './line-chart';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { ISeriesChartConf } from './i-series-chart-conf';
 import { compatNestHelper } from '../core/d3compat';
-import { ICFMultiAdapterConf } from '../data/c-f-multi-adapter';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the

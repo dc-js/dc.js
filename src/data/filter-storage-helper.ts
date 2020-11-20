@@ -40,7 +40,7 @@ export class FilterStorageHelper extends CFFilterHandler {
         const storageKey = this._storageKey();
 
         if (this._listenerRegToken) {
-            if (this._listenerRegToken['storageKey'] === storageKey) {
+            if (this._listenerRegToken.storageKey === storageKey) {
                 // all good, storageKey has not changed
                 return;
             }
@@ -56,7 +56,7 @@ export class FilterStorageHelper extends CFFilterHandler {
 
     private _deRegisterListener() {
         this._conf.filterStorage.deRegisterFilterListener(
-            this._listenerRegToken['storageKey'],
+            this._listenerRegToken.storageKey,
             this._listenerRegToken
         );
         this._listenerRegToken = undefined;
