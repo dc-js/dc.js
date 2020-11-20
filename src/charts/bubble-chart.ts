@@ -75,7 +75,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.fadeDeselectedArea(this.filter());
     }
 
-    public _renderNodes(bubbleG: SVGGElementSelection): SVGGElementSelection {
+    private _renderNodes(bubbleG: SVGGElementSelection): SVGGElementSelection {
         const bubbleGEnter = bubbleG.enter().append('g');
 
         bubbleGEnter
@@ -104,7 +104,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return bubbleG;
     }
 
-    public _updateNodes(bubbleG: SVGGElementSelection): void {
+    private _updateNodes(bubbleG: SVGGElementSelection): void {
         transition(bubbleG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', d => this._bubbleLocator(d))
             .select(`circle.${this.BUBBLE_CLASS}`)
@@ -116,11 +116,11 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this.doUpdateTitles(bubbleG);
     }
 
-    public _removeNodes(bubbleG: SVGGElementSelection): void {
+    private _removeNodes(bubbleG: SVGGElementSelection): void {
         bubbleG.exit().remove();
     }
 
-    public _bubbleX(d): number {
+    private _bubbleX(d): number {
         let x = this.x()(this._conf.keyAccessor(d));
         if (isNaN(x) || !isFinite(x)) {
             x = 0;
@@ -128,7 +128,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return x;
     }
 
-    public _bubbleY(d): number {
+    private _bubbleY(d): number {
         let y = this.y()(d._value);
         if (isNaN(y) || !isFinite(y)) {
             y = 0;

@@ -73,7 +73,7 @@ export class DataCount extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender() {
+    protected _doRender(): this {
         const tot: number = this.crossfilter().size();
         const val: number = this.groupAll().value();
         const all: string = this._conf.formatNumber(tot);
@@ -94,7 +94,7 @@ export class DataCount extends BaseMixin {
         return this;
     }
 
-    public _doRedraw() {
+    protected _doRedraw(): this {
         return this._doRender();
     }
 

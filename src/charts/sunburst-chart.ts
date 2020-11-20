@@ -119,7 +119,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    public _doRender(): this {
+    protected _doRender(): this {
         this.resetSvg();
 
         this._g = this.svg().append('g').attr('transform', `translate(${this.cx()},${this.cy()})`);
@@ -490,7 +490,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
         return filtersList;
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         this._drawChart();
         return this;
     }

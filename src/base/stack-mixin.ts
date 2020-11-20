@@ -92,7 +92,7 @@ export class StackMixin extends CoordinateGridMixin {
         return layers;
     }
 
-    public _domainFilter() {
+    private _domainFilter() {
         if (!this.x()) {
             return () => true;
         }
@@ -181,7 +181,7 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
-    public _ordinalXDomain() {
+    protected _ordinalXDomain() {
         const flat = this._flattenStack().map(d => d.data);
         const ordered = this._computeOrderedGroups(flat);
         return ordered.map(this._conf.keyAccessor);

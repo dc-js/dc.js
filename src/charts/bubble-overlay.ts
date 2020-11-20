@@ -82,7 +82,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this._conf;
     }
 
-    public _doRender(): this {
+    protected _doRender(): this {
         this._g = this._initOverlayG();
 
         this.r().range([this.MIN_RADIUS, this.width() * this._conf.maxBubbleRelativeSize]);
@@ -94,7 +94,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _initOverlayG(): Selection<SVGGElement, any, any, any> {
+    private _initOverlayG(): Selection<SVGGElement, any, any, any> {
         this._g = this.select<SVGGElement>(`g.${BUBBLE_OVERLAY_CLASS}`);
         if (this._g.empty()) {
             this._g = this.svg().append('g').attr('class', BUBBLE_OVERLAY_CLASS);
@@ -102,7 +102,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this._g;
     }
 
-    public _initializeBubbles() {
+    private _initializeBubbles() {
         const data = this._mapData();
         this.calculateRadiusDomain();
 
@@ -134,7 +134,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    public _mapData() {
+    private _mapData() {
         const data = {};
         this.data().forEach(datum => {
             data[this._conf.keyAccessor(datum)] = datum;
@@ -142,7 +142,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return data;
     }
 
-    public _getNodeG(point: { name: string; x: number; y: number }, data): SVGGElementSelection {
+    private _getNodeG(point: { name: string; x: number; y: number }, data): SVGGElementSelection {
         const bubbleNodeClass = `${BUBBLE_NODE_CLASS} ${nameToId(point.name)}`;
 
         let nodeG: SVGGElementSelection = this._g.select(`g.${nameToId(point.name)}`);
@@ -159,7 +159,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return nodeG;
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         this._updateBubbles();
 
         this.fadeDeselectedArea(this.filter());
@@ -167,7 +167,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this;
     }
 
-    public _updateBubbles(): void {
+    private _updateBubbles(): void {
         const data = this._mapData();
         this.calculateRadiusDomain();
 

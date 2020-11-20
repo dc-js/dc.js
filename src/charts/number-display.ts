@@ -137,7 +137,7 @@ export class NumberDisplay extends BaseMixin {
         return sorted[sorted.length - 1];
     }
 
-    public _doRender(): this {
+    protected _doRender(): this {
         const newValue: number = this.value();
         let span = this.selectAll<HTMLSpanElement, any>(`.${SPAN_CLASS}`);
 
@@ -176,7 +176,7 @@ export class NumberDisplay extends BaseMixin {
         return this;
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         return this._doRender();
     }
 }

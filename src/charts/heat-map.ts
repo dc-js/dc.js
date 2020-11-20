@@ -87,7 +87,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this._conf;
     }
 
-    public _filterAxis(axis: number, value): void {
+    private _filterAxis(axis: number, value): void {
         const cellsOnAxis = this.selectAll<SVGElement, any>('.box-group').filter(
             d => d.key[axis] === value
         );
@@ -129,7 +129,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return super.filter(filter);
     }
 
-    public _doRender(): this {
+    protected _doRender(): this {
         this.resetSvg();
 
         this._chartBody = this.svg()
@@ -140,7 +140,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
         return this._doRedraw();
     }
 
-    public _doRedraw() {
+    protected _doRedraw(): this {
         const data = this.data();
         let rows = this._conf.rows || data.map(d => d._value);
         let cols = this._conf.cols || data.map(this._conf.keyAccessor);

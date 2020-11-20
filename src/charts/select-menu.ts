@@ -66,7 +66,7 @@ export class SelectMenu extends BaseMixin {
         return super.data().filter(this._conf.filterDisplayed);
     }
 
-    public _doRender() {
+    protected _doRender(): this {
         this.select('select').remove();
         this._select = this.root().append('select').classed(SELECT_CSS_CLASS, true);
         this._select.append('option').text(this._conf.promptText).attr('value', '');
@@ -75,7 +75,7 @@ export class SelectMenu extends BaseMixin {
         return this;
     }
 
-    public _doRedraw() {
+    protected _doRedraw(): this {
         this._setAttributes();
         this._renderOptions();
         // select the option(s) corresponding to current filter(s)

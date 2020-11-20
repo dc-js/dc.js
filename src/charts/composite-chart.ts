@@ -151,7 +151,7 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public _prepareYAxis(): void {
+    protected _prepareYAxis(): void {
         const left = this._leftYAxisChildren().length !== 0;
         const right = this._rightYAxisChildren().length !== 0;
         const ranges = this._calculateYAxisRanges(left, right);

@@ -190,7 +190,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         }
     }
 
-    public _resizeCanvas() {
+    private _resizeCanvas() {
         const width = this.effectiveWidth();
         const height = this.effectiveHeight();
 
@@ -481,7 +481,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         );
     }
 
-    public _brushing(evt) {
+    protected _brushing(evt) {
         if (this._ignoreBrushEvents) {
             return;
         }

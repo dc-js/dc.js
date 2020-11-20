@@ -96,7 +96,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
         return this._conf;
     }
 
-    public _doRender(): this {
+    protected _doRender(): this {
         this.resetSvg();
 
         this._g = this.svg().append('g').attr('transform', `translate(${this.cx()},${this.cy()})`);
@@ -454,7 +454,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
         return this.hasFilter(this._conf.keyAccessor(d.data));
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         this._drawChart();
         return this;
     }

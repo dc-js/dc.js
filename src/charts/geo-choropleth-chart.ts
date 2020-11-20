@@ -63,7 +63,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         return this._conf;
     }
 
-    public _doRender() {
+    protected _doRender(): this {
         this.resetSvg();
         for (let layerIndex = 0; layerIndex < this._conf.geoJsons.length; ++layerIndex) {
             const states: Selection<SVGGElement, any, any, any> = this.svg()
@@ -203,7 +203,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
         }
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         for (let layerIndex = 0; layerIndex < this._conf.geoJsons.length; ++layerIndex) {
             this._plotData(layerIndex);
             if (this._projectionFlag) {

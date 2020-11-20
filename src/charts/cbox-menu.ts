@@ -71,11 +71,11 @@ export class CboxMenu extends BaseMixin {
         return super.data().filter(this._conf.filterDisplayed);
     }
 
-    public _doRender(): this {
+    protected _doRender(): this {
         return this._doRedraw();
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         this.select('ul').remove();
         this._cbox = this.root().append('ul').classed(GROUP_CSS_CLASS, true);
         this._renderOptions();
@@ -101,7 +101,7 @@ export class CboxMenu extends BaseMixin {
         return this;
     }
 
-    public _renderOptions() {
+    private _renderOptions() {
         const inputType = this._conf.multiple ? 'checkbox' : 'radio';
 
         let options: Selection<HTMLLIElement, unknown, HTMLElement, any> = this._cbox

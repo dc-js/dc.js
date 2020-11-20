@@ -131,11 +131,11 @@ export class BarChart extends StackMixin {
         }
     }
 
-    public _barHeight(d): number {
+    private _barHeight(d): number {
         return safeNumber(Math.abs(this.y()(d.y + d.y0) - this.y()(d.y0)));
     }
 
-    public _labelXPos(d): number {
+    private _labelXPos(d): number {
         let x = this.x()(d.x);
         if (!this._conf.centerBar) {
             x += this._barWidth / 2;
@@ -146,7 +146,7 @@ export class BarChart extends StackMixin {
         return safeNumber(x);
     }
 
-    public _labelYPos(d): number {
+    private _labelYPos(d): number {
         let y = this.y()(d.y + d.y0);
 
         if (d.y < 0) {
@@ -156,7 +156,7 @@ export class BarChart extends StackMixin {
         return safeNumber(y - LABEL_PADDING);
     }
 
-    public _renderLabels(layer: SVGGElementSelection, layerIndex: number, data): void {
+    private _renderLabels(layer: SVGGElementSelection, layerIndex: number, data): void {
         const labels: Selection<SVGTextElement, unknown, SVGGElement, any> = layer
             .selectAll<SVGTextElement, any>('text.barLabel')
             .data(data.values, d => d.x);
@@ -188,7 +188,7 @@ export class BarChart extends StackMixin {
             .remove();
     }
 
-    public _barXPos(d): number {
+    private _barXPos(d): number {
         let x: number = this.x()(d.x);
         if (this._conf.centerBar) {
             x -= this._barWidth / 2;
@@ -199,7 +199,7 @@ export class BarChart extends StackMixin {
         return safeNumber(x);
     }
 
-    public _renderBars(layer: SVGGElementSelection, layerIndex: number, data): void {
+    private _renderBars(layer: SVGGElementSelection, layerIndex: number, data): void {
         const bars: Selection<SVGRectElement, any, SVGGElement, any> = layer
             .selectAll<SVGRectElement, any>('rect.bar')
             .data<any>(data.values, d => d.x);

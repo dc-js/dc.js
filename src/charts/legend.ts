@@ -239,7 +239,7 @@ export class Legend {
 
     // Implementation methods
 
-    public _legendItemHeight(): number {
+    private _legendItemHeight(): number {
         return this._gap + this._itemHeight;
     }
 

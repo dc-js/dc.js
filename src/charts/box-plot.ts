@@ -190,7 +190,7 @@ export class BoxPlot extends CoordinateGridMixin {
         return `translate(${xOffset}, 0)`;
     }
 
-    public _preprocessData(): void {
+    protected _preprocessData(): void {
         if (this._conf.elasticX) {
             this.x().domain([]);
         }

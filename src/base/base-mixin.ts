@@ -225,7 +225,7 @@ export class BaseMixin {
         return this._dataProvider.data();
     }
 
-    public _computeOrderedGroups(data) {
+    protected _computeOrderedGroups(data) {
         return sortBy(data, this._dataProvider.conf().ordering);
     }
 

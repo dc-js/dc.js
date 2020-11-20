@@ -76,7 +76,7 @@ export class SeriesChart extends CompositeChart {
         throw new Error('Not supported for this chart type');
     }
 
-    public _preprocessData() {
+    protected _preprocessData(): void {
         const keep: string[] = [];
         let childrenChanged: boolean;
 

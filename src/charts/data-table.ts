@@ -74,7 +74,7 @@ export class DataTable extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender() {
+    protected _doRender(): this {
         this.selectAll('tbody').remove();
 
         this._renderRows(this._renderSections());
@@ -239,7 +239,7 @@ export class DataTable extends BaseMixin {
         return rows;
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         return this._doRender();
     }
 }

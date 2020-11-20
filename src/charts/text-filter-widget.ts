@@ -64,7 +64,7 @@ export class TextFilterWidget extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender(): this {
+    protected _doRender(): this {
         this.select('input').remove();
 
         this._input = this.root().append('input').classed(INPUT_CSS_CLASS, true);
@@ -85,7 +85,7 @@ export class TextFilterWidget extends BaseMixin {
         return this;
     }
 
-    public _doRedraw(): this {
+    protected _doRedraw(): this {
         this.root().selectAll('input').attr('placeholder', this._conf.placeHolder);
 
         return this;

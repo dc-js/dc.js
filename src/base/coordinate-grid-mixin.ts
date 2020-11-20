@@ -209,7 +209,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public _generateG(parent?: Selection<SVGElement, any, any, any>): SVGGElementSelection {
+    protected _generateG(parent?: Selection<SVGElement, any, any, any>): SVGGElementSelection {
         if (parent === undefined) {
             this._parent = this.svg();
         } else {
@@ -359,12 +359,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return true;
     }
 
-    public _ordinalXDomain(): any[] {
+    protected _ordinalXDomain(): any[] {
         const groups = this._computeOrderedGroups(this.data());
         return groups.map(this._conf.keyAccessor);
     }
 
-    public _prepareXAxis(g: SVGGElementSelection, render: boolean) {
+    private _prepareXAxis(g: SVGGElementSelection, render: boolean) {
         if (!this.isOrdinal()) {
             if (this._conf.elasticX) {
                 this._x.domain([this.xAxisMin(), this.xAxisMax()]);
@@ -451,7 +451,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         );
     }
 
-    public _renderVerticalGridLines(g: SVGGElementSelection) {
+    private _renderVerticalGridLines(g: SVGGElementSelection) {
         let gridLineG = g.select(`g.${VERTICAL_CLASS}`);
 
         if (this._conf.renderVerticalGridLines) {
@@ -529,11 +529,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public _createYAxis(): Axis<undefined> {
+    private _createYAxis(): Axis<undefined> {
         return this._conf.useRightYAxis ? axisRight(undefined) : axisLeft(undefined);
     }
 
-    public _prepareYAxis(g: SVGGElementSelection) {
+    protected _prepareYAxis(g: SVGGElementSelection) {
         if (this._y === undefined || this._conf.elasticY) {
             if (this._y === undefined) {
                 this._y = scaleLinear();
@@ -610,7 +610,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.renderYAxisLabel('y', this.yAxisLabel(), rotation, labelPosition);
     }
 
-    public _renderHorizontalGridLinesForAxis(
+    protected _renderHorizontalGridLinesForAxis(
         g: SVGGElementSelection,
         scale: MinimalXYScale,
         axis: Axis<any>
@@ -665,7 +665,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
     }
 
-    public _yAxisX(): number {
+    protected _yAxisX(): number {
         return this._conf.useRightYAxis ? this.width() - this.margins().right : this.margins().left;
     }
 
@@ -888,7 +888,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return !brushSelection || brushSelection[1] <= brushSelection[0];
     }
 
-    public _brushing(evt): void {
+    protected _brushing(evt): void {
         if (this._ignoreBrushEvents) {
             return;
         }
@@ -996,11 +996,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         );
     }
 
-    public _getClipPathId(): string {
+    private _getClipPathId(): string {
         return `${this.anchorName().replace(/[ .#=\[\]"]/g, '-')}-clip`;
     }
 
-    public _generateClipPath(): void {
+    private _generateClipPath(): void {
         const defs = appendOrSelect(this._parent, 'defs');
         // cannot select <clippath> elements; bug in WebKit, must select by id
         // https://groups.google.com/forum/#!topic/d3-js/6EpAzQ2gU9I
@@ -1041,7 +1041,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
-    public _drawChart(render: boolean): void {
+    private _drawChart(render: boolean): void {
         if (this.isOrdinal()) {
             this._brushOn = false;
         }
@@ -1074,7 +1074,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         throw new Error('Method not implemented.');
     }
 
-    public _configureMouseZoom(): void {
+    private _configureMouseZoom(): void {
         // Save a copy of original x scale
         this._origX = this._x.copy();
 
@@ -1085,7 +1085,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
     }
 
-    public _enableMouseZoom() {
+    private _enableMouseZoom() {
         this._hasBeenMouseZoomable = true;
 
         const extent: [[number, number], [number, number]] = [
@@ -1110,7 +1110,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._updateD3zoomTransform();
     }
 
-    public _disableMouseZoom() {
+    private _disableMouseZoom() {
         this.root().call(this._nullZoom);
     }
 
@@ -1134,7 +1134,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     // event.transform.rescaleX(self._origX).domain() should give back newDomain
-    public _domainToZoomTransform(newDomain, origDomain, xScale): ZoomTransform {
+    private _domainToZoomTransform(newDomain, origDomain, xScale): ZoomTransform {
         const k = (origDomain[1] - origDomain[0]) / (newDomain[1] - newDomain[0]);
         const xt = -1 * xScale(newDomain[0]);
 
@@ -1142,7 +1142,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     // If we changing zoom status (for example by calling focus), tell D3 zoom about it
-    public _updateD3zoomTransform(): void {
+    private _updateD3zoomTransform(): void {
         if (this._zoom) {
             this._withoutZoomEvents(() => {
                 this._zoom.transform(
@@ -1168,7 +1168,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
     }
 
-    public _onZoom(evt): void {
+    private _onZoom(evt): void {
         // ignore zoom events if it was caused by a programmatic change
         if (this._ignoreZoomEvents) {
             return;
@@ -1179,7 +1179,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     // TODO: come back for return type, currently forced, but generics may help
-    public _checkExtents(ext: DCBrushSelection, outerLimits: DCBrushSelection): DCBrushSelection {
+    private _checkExtents(ext: DCBrushSelection, outerLimits: DCBrushSelection): DCBrushSelection {
         if (!ext || ext.length !== 2 || !outerLimits || outerLimits.length !== 2) {
             return ext;
         }
@@ -1273,7 +1273,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * This will be internally used by composite chart onto children. Please go not invoke directly.
+     * This will be internally used by composite chart onto children. Please do not invoke directly.
      *
      * @protected
      * @param {Boolean} [brushOn=false]

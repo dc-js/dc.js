@@ -63,7 +63,7 @@ export class DataGrid extends BaseMixin {
         return this._conf;
     }
 
-    public _doRender() {
+    protected _doRender(): this {
         this.selectAll(`div.${GRID_CSS_CLASS}`).remove();
 
         this._renderItems(this._renderSections());
@@ -71,7 +71,7 @@ export class DataGrid extends BaseMixin {
         return this;
     }
 
-    public _renderSections() {
+    private _renderSections() {
         const sections: Selection<HTMLDivElement, any, Element, any> = this.root()
             .selectAll<HTMLDivElement, any>(`div.${GRID_CSS_CLASS}`)
             .data<any>(this._nestEntries(), d => this._conf.keyAccessor(d));
@@ -89,7 +89,7 @@ export class DataGrid extends BaseMixin {
         return itemSection;
     }
 
-    public _nestEntries() {
+    private _nestEntries() {
         // TODO: consider creating special DataProvider
         let entries = this.dataProvider().conf().dimension.top(this._conf.size);
 
@@ -104,7 +104,7 @@ export class DataGrid extends BaseMixin {
         });
     }
 
-    public _renderItems(sections: Selection<HTMLDivElement, any, Element, any>) {
+    private _renderItems(sections: Selection<HTMLDivElement, any, Element, any>) {
         let items: Selection<HTMLDivElement, unknown, HTMLDivElement, any> = sections
             .order()
             .selectAll<HTMLDivElement, any>(`div.${ITEM_CSS_CLASS}`)
@@ -122,7 +122,7 @@ export class DataGrid extends BaseMixin {
         return items;
     }
 
-    public _doRedraw() {
+    protected _doRedraw(): this {
         return this._doRender();
     }
 }
