@@ -9,8 +9,6 @@ import { ColorsList } from './types';
 export class Config {
     public dateFormat: (date: Date) => string;
 
-    public _renderlet: (arg0?: string) => void; // TODO: determine correct type
-
     public disableTransitions: boolean;
 
     private _defaultColors: ColorsList;
@@ -24,8 +22,6 @@ export class Config {
          * @default d3.timeFormat('%m/%d/%Y')
          */
         this.dateFormat = timeFormat('%m/%d/%Y');
-
-        this._renderlet = null;
 
         /**
          * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen

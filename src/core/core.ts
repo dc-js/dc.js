@@ -69,14 +69,6 @@ export function afterTransition(_transition, callback) {
     }
 }
 
-export function renderlet(_?: (arg0?) => void): (arg0) => void {
-    if (!arguments.length) {
-        return config._renderlet;
-    }
-    config._renderlet = _;
-    return null;
-}
-
 export function instanceOfChart(o: any): boolean {
     return o instanceof Object && o.__dcFlag__ && true;
 }
