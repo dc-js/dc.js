@@ -1,3 +1,6 @@
+## 4.2.2
+* Add [linked filter example](https://dc-js.github.io/dc.js/examples/linked-filter.html), had been floating around as a jsfiddle answer to [SO question](https://stackoverflow.com/questions/59461538/dc-js-how-to-mirror-brush-across-multiple-charts) for a while.
+
 ## 4.2.1
 * Text filter widget should redraw chart's group - thanks @kriddy! ([#1678](https://github.com/dc-js/dc.js/pull/1678) / [#14978](https://github.com/dc-js/dc.js/issues/14978))
 * Pareto chart example was not correctly sorted, and scatter series chart displayed brush when zoomed ([#1780](https://github.com/dc-js/dc.js/pull/1780) / [#1772](https://github.com/dc-js/dc.js/issues/1772))
