@@ -14,6 +14,7 @@ export interface IChartGroup {
     filterAll(): void;
     refocusAll(): void;
     filterStorage: IFilterStorage;
+    renderlet: () => void;
 }
 
 export interface IFilterStorage {
