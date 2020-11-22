@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>dc.js - Temporal Brushing</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+
+    <style>
+        div.dc-chart {
+            float: left;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+<script type="text/javascript" src="header.js"></script>
+
+<div id='timeLine'></div>
+
+<script type="text/javascript" src="../js/d3.js"></script>
+<script type="text/javascript" src="../js/crossfilter.js"></script>
+<script type="text/javascript" src="../js/dc.js"></script>
+<script type="text/javascript">
+
+        let data = [
+            {name: "joe",  timeObserved: 1596819575959},
+            { name: "jack",  timeObserved: 1596819575959},
+            { name: "jim",  timeObserved: 1596819576000},
+            { name: "tom",  timeObserved: 1596819576000},
+            { name: "john",  timeObserved: 1596819576000},
+            { name: "jill",  timeObserved: 1596819575949},
+            { name: "craig",  timeObserved: 1596819580801},
+            { name: "norbert",  timeObserved: 1596819575959},
+            { name: "donald",  timeObserved: 1596819575949}
+        ];
+        let cf = crossfilter(data);
+
+        this.timeLineChart = dc.lineChart('#timeLine');
+
+        this.dateDim = cf.dimension((d) => {
+            return d3.timeSecond(new Date(d.timeObserved));
+        });
+
+        this.group = this.dateDim.group().reduceSum((d) => 1);
+
+        let minDate = d3.min(this.group.all(), (kv) => {
+            return kv.key;
+        });
+
+        let maxDate = d3.max(this.group.all(), (kv) => {
+            return kv.key;
+        });
+
+
+        let min = 0;
+        let max = 20;
+        this.timeLineChart
+        .width(470).height(300)
+        .dimension(this.dateDim)
+        .group(this.group)
+        .curve(d3.curveMonotoneX)
+        .renderArea(true)
+        .mouseZoomable(true)
+        .elasticY(true)
+        .yAxisPadding(.1)
+        .elasticX(true)
+        .x(d3.scaleTime().domain([minDate, maxDate]))
+        .xUnits(d3.timeWeek.range)
+        .yAxis()
+        .tickValues(d3.range(min > 0 ? min - 1 : min, max + 1));
+        this.timeLineChart.yAxisMin = function() {
+            return 0;
+        };
+
+        dc.renderAll();
+</script>
+
+</div>
+</body>
+</html>

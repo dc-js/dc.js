@@ -1,5 +1,5 @@
 /*!
- *  dc 4.2.0
+ *  dc 4.2.2
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -23,7 +23,7 @@
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
 }(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Dispatch, d3Array, d3Collection, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.2.0";
+  const version = "4.2.2";
 
   class BadArgumentException extends Error { }
 
@@ -13301,7 +13301,7 @@
           this._input.on('input', function () {
               chart.dimension().filterFunction(chart._filterFunctionFactory(this.value));
               events.trigger(() => {
-                  redrawAll();
+                  chart.redrawGroup();
               }, constants.EVENT_DELAY);
           });
 
