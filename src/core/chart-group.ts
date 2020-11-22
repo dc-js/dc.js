@@ -4,6 +4,7 @@ import { FilterStorage } from './filter-storage';
 export class ChartGroup implements IChartGroup {
     private _charts: IMinimalChart[];
     public filterStorage: IFilterStorage;
+    public renderlet: () => void;
 
     constructor() {
         this._charts = [];
@@ -38,11 +39,19 @@ export class ChartGroup implements IChartGroup {
         for (const chart of this._charts) {
             chart.render();
         }
+
+        if (typeof this.renderlet === 'function') {
+            this.renderlet();
+        }
     }
 
     public redrawAll(): void {
         for (const chart of this._charts) {
             chart.redraw();
+        }
+
+        if (typeof this.renderlet === 'function') {
+            this.renderlet();
         }
     }
 
