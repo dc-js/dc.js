@@ -70,8 +70,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _nullZoom: ZoomBehavior<Element, unknown>;
     private _hasBeenMouseZoomable: boolean;
     private _ignoreZoomEvents: boolean;
-    private _rangeChart: CoordinateGridMixin;
-    private _focusChart: CoordinateGridMixin;
     private _fOuterRangeBandPadding: number;
     private _fRangeBandPadding: number;
 
@@ -99,6 +97,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             zoomScale: [1, Infinity],
             zoomOutRestrict: true,
             mouseZoomable: false,
+            autoFocus: false,
             clipPadding: 0,
             useRightYAxis: false,
         });
@@ -139,9 +138,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._hasBeenMouseZoomable = false;
         this._ignoreZoomEvents = false; // ignore when carrying out programmatic zoom operations
 
-        this._rangeChart = undefined;
-        this._focusChart = undefined;
-
         this.on('filtered._coordinate', () => {
             this.onFilterChange();
         });
@@ -181,31 +177,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             return this._resizing;
         }
         this._resizing = resizing;
-        return this;
-    }
-
-    /**
-     * Get or set the range selection chart associated with this instance. Setting the range selection
-     * chart using this function will automatically update its selection brush when the current chart
-     * zooms in. In return the given range chart will also automatically attach this chart as its focus
-     * chart hence zoom in when range brush updates.
-     *
-     * Usually the range and focus charts will share a dimension. The range chart will set the zoom
-     * boundaries for the focus chart, so its dimension values must be compatible with the domain of
-     * the focus chart.
-     *
-     * See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
-     * @param {CoordinateGridMixin} [rangeChart]
-     * @returns {CoordinateGridMixin}
-     */
-    public rangeChart(): CoordinateGridMixin;
-    public rangeChart(rangeChart: CoordinateGridMixin): this;
-    public rangeChart(rangeChart?) {
-        if (!arguments.length) {
-            return this._rangeChart;
-        }
-        this._rangeChart = rangeChart;
-        this._rangeChart.focusChart(this);
         return this;
     }
 
@@ -814,7 +785,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         const currentFilter = this.filter();
         this.redrawBrush(currentFilter, false);
 
-        if (this._rangeChart) {
+        if (this._conf.autoFocus) {
             this._updateUIforZoom(currentFilter, true);
         }
     }
@@ -1220,11 +1191,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         if (this._conf.zoomOutRestrict) {
             // ensure range is within self._xOriginalDomain
             range = this._checkExtents(range, this._xOriginalDomain);
-
-            // If it has an associated range chart ensure range is within domain of that rangeChart
-            if (this._rangeChart) {
-                range = this._checkExtents(range, this._rangeChart.x().domain());
-            }
         }
 
         let domFilter;
@@ -1240,16 +1206,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public refocused(): boolean {
         return !arraysEqual(this.x().domain(), this._xOriginalDomain);
-    }
-
-    public focusChart(): CoordinateGridMixin;
-    public focusChart(c: CoordinateGridMixin): this;
-    public focusChart(c?) {
-        if (!arguments.length) {
-            return this._focusChart;
-        }
-        this._focusChart = c;
-        return this;
     }
 
     /**

@@ -896,11 +896,6 @@ describe('dc.coordinateGridChart', () => {
                 rangeChart.render();
                 chart.focus([makeDate(2012, 8, 20), makeDate(2012, 8, 25)]);
             });
-
-            it('should not be able to zoom out past its range chart origin x domain', () => {
-                chart.focus([makeDate(2012, 2, 20), makeDate(2012, 9, 15)]);
-                expect(chart.x().domain()).toEqual(chart.rangeChart().xOriginalDomain());
-            });
         });
     });
 

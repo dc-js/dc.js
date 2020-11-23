@@ -7,6 +7,7 @@ export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinC
     readonly useRightYAxis?: boolean;
     readonly clipPadding?: number;
     readonly mouseZoomable?: boolean;
+    readonly autoFocus?: boolean;
     readonly zoomOutRestrict?: boolean;
     readonly zoomScale?: [number, number];
     readonly renderHorizontalGridLine?: boolean;

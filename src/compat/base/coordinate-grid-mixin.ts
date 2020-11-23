@@ -10,8 +10,14 @@ class Intermediate extends MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)) 
 
 export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase) {
     return class extends Base {
+        private _rangeChart: typeof CoordinateGridMixin;
+        private _focusChart: typeof CoordinateGridMixin;
+
         constructor(...args: any[]) {
             super(...args);
+
+            this._rangeChart = undefined;
+            this._focusChart = undefined;
         }
 
         /**
@@ -297,9 +303,47 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
             this.configure({ useRightYAxis: useRightYAxis });
             return this;
         }
+
+        /**
+         * Get or set the range selection chart associated with this instance. Setting the range selection
+         * chart using this function will automatically update its selection brush when the current chart
+         * zooms in. In return the given range chart will also automatically attach this chart as its focus
+         * chart hence zoom in when range brush updates.
+         *
+         * Usually the range and focus charts will share a dimension. The range chart will set the zoom
+         * boundaries for the focus chart, so its dimension values must be compatible with the domain of
+         * the focus chart.
+         *
+         * See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
+         * @param {CoordinateGridMixin} [rangeChart]
+         * @returns {CoordinateGridMixin}
+         */
+        public rangeChart(): typeof CoordinateGridMixin;
+        public rangeChart(rangeChart: typeof CoordinateGridMixin): this;
+        public rangeChart(rangeChart?) {
+            if (!arguments.length) {
+                return this._rangeChart;
+            }
+            this._rangeChart = rangeChart;
+            this.configure({autoFocus: true});
+            // @ts-ignore
+            this._rangeChart.focusChart(this);
+            return this;
+        }
+
+        public focusChart(): typeof CoordinateGridMixin;
+        public focusChart(c: typeof CoordinateGridMixin): this;
+        public focusChart(c?) {
+            if (!arguments.length) {
+                return this._focusChart;
+            }
+            this._focusChart = c;
+            return this;
+        }
     };
 }
 
+// @ts-ignore
 export const CoordinateGridMixin = CoordinateGridMixinExt(
     ColorMixinExt(MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)))
 );
