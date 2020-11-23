@@ -6,6 +6,8 @@ import { CountableTimeInterval } from 'd3-time';
 export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinConf {
     readonly useRightYAxis?: boolean;
     readonly clipPadding?: number;
+    readonly brushOn?: boolean;
+    readonly parentBrushOn?: boolean;
     readonly mouseZoomable?: boolean;
     readonly autoFocus?: boolean;
     readonly zoomOutRestrict?: boolean;

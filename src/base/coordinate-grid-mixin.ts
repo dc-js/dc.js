@@ -61,8 +61,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     private _yAxisLabelPadding: number;
     private _brush: BrushBehavior<unknown>;
     private _gBrush: SVGGElementSelection;
-    private _brushOn: boolean;
-    private _parentBrushOn: boolean;
     protected _ignoreBrushEvents: boolean; // needed by ScatterPlot
     private _resizing: boolean;
     private _unitCount: number;
@@ -100,6 +98,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             autoFocus: false,
             clipPadding: 0,
             useRightYAxis: false,
+            brushOn: true,
+            parentBrushOn: false,
         });
 
         this._x = undefined;
@@ -123,8 +123,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._brush = brushX();
 
         this._gBrush = undefined;
-        this._brushOn = true; // Can not be moved to conf, gets reassigned within dc code
-        this._parentBrushOn = false;
         this._ignoreBrushEvents = false; // ignore when carrying out programmatic brush operations
 
         this._resizing = false;
@@ -813,7 +811,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public renderBrush(g: SVGGElementSelection, doTransition: boolean) {
-        if (this._brushOn) {
+        if (this._conf.brushOn) {
             this._brush.on(
                 'start brush end',
                 adaptHandler((d, evt) => this._brushing(evt))
@@ -914,7 +912,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     public redrawBrush(brushSelection: DCBrushSelection, doTransition: boolean): void {
-        if (this._brushOn && this._gBrush) {
+        if (this._conf.brushOn && this._gBrush) {
             if (this._resizing) {
                 this.setBrushExtents(doTransition);
             }
@@ -1014,7 +1012,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     private _drawChart(render: boolean): void {
         if (this.isOrdinal()) {
-            this._brushOn = false;
+            this.configure({ brushOn: false });
         }
 
         this._prepareXAxis(this.g(), render);
@@ -1206,43 +1204,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     public refocused(): boolean {
         return !arraysEqual(this.x().domain(), this._xOriginalDomain);
-    }
-
-    /**
-     * Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
-     * across a chart with a quantitative scale to perform range filtering based on the extent of the
-     * brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
-     * un-filter them. However turning on the brush filter will disable other interactive elements on
-     * the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
-     * if enabled, but only via scrolling (panning will be disabled.)
-     * @param {Boolean} [brushOn=true]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public brushOn(): boolean;
-    public brushOn(brushOn: boolean): this;
-    public brushOn(brushOn?) {
-        if (!arguments.length) {
-            return this._brushOn;
-        }
-        this._brushOn = brushOn;
-        return this;
-    }
-
-    /**
-     * This will be internally used by composite chart onto children. Please do not invoke directly.
-     *
-     * @protected
-     * @param {Boolean} [brushOn=false]
-     * @returns {Boolean|CoordinateGridMixin}
-     */
-    public parentBrushOn(): boolean;
-    public parentBrushOn(brushOn: boolean): this;
-    public parentBrushOn(brushOn?) {
-        if (!arguments.length) {
-            return this._parentBrushOn;
-        }
-        this._parentBrushOn = brushOn;
-        return this;
     }
 
     // Get the SVG rendered brush

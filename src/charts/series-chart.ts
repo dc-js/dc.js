@@ -105,7 +105,7 @@ export class SeriesChart extends CompositeChart {
             subChart.configure({
                 keyAccessor: this._conf.keyAccessor,
             });
-            return subChart.brushOn(false);
+            return subChart.configure({ brushOn: false });
         });
         // this works around the fact compositeChart doesn't really
         // have a removal interface

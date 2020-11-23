@@ -401,7 +401,7 @@ export class LineChart extends StackMixin {
     private _drawDots(chartBody: SVGGElementSelection, layers: SVGGElementSelection) {
         if (
             this.xyTipsOn() === 'always' ||
-            (!(this.brushOn() || this.parentBrushOn()) && this.xyTipsOn())
+            (!(this._conf.brushOn || this._conf.parentBrushOn) && this.xyTipsOn())
         ) {
             const tooltipListClass = `${TOOLTIP_G_CLASS}-list`;
             let tooltips = chartBody.select<SVGGElement>(`g.${tooltipListClass}`);

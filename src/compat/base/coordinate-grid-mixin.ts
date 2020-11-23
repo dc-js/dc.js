@@ -325,7 +325,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
                 return this._rangeChart;
             }
             this._rangeChart = rangeChart;
-            this.configure({autoFocus: true});
+            this.configure({ autoFocus: true });
             // @ts-ignore
             this._rangeChart.focusChart(this);
             return this;
@@ -338,6 +338,43 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
                 return this._focusChart;
             }
             this._focusChart = c;
+            return this;
+        }
+
+        /**
+         * Turn on/off the brush-based range filter. When brushing is on then user can drag the mouse
+         * across a chart with a quantitative scale to perform range filtering based on the extent of the
+         * brush, or click on the bars of an ordinal bar chart or slices of a pie chart to filter and
+         * un-filter them. However turning on the brush filter will disable other interactive elements on
+         * the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
+         * if enabled, but only via scrolling (panning will be disabled.)
+         * @param {Boolean} [brushOn=true]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public brushOn(): boolean;
+        public brushOn(brushOn: boolean): this;
+        public brushOn(brushOn?) {
+            if (!arguments.length) {
+                return this._conf.brushOn;
+            }
+            this.configure({ brushOn });
+            return this;
+        }
+
+        /**
+         * This will be internally used by composite chart onto children. Please do not invoke directly.
+         *
+         * @protected
+         * @param {Boolean} [brushOn=false]
+         * @returns {Boolean|CoordinateGridMixin}
+         */
+        public parentBrushOn(): boolean;
+        public parentBrushOn(brushOn: boolean): this;
+        public parentBrushOn(brushOn?) {
+            if (!arguments.length) {
+                return this._conf.parentBrushOn;
+            }
+            this.configure({ parentBrushOn: brushOn });
             return this;
         }
     };

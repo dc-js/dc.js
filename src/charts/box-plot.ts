@@ -286,7 +286,7 @@ export class BoxPlot extends CoordinateGridMixin {
                         }
                     });
             } else {
-                if (!(this.brushOn() || this.parentBrushOn())) {
+                if (!(this._conf.brushOn || this._conf.parentBrushOn)) {
                     return;
                 }
                 const start = brushSelection[0];

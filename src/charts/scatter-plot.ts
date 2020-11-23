@@ -521,7 +521,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         // override default x axis brush from parent chart
         const gBrush = this.gBrush();
 
-        if (this.brushOn() && gBrush) {
+        if (this._conf.brushOn && gBrush) {
             if (this.resizing()) {
                 this.setBrushExtents(doTransition);
             }

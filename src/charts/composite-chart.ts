@@ -121,8 +121,10 @@ export class CompositeChart extends CoordinateGridMixin {
 
             child.chartGroup(this.chartGroup());
             child.svg(this.svg());
-            child.parentBrushOn(this.brushOn());
-            child.brushOn(false);
+            child.configure({
+                parentBrushOn: this._conf.brushOn,
+                brushOn: false,
+            });
         }
 
         return g;
@@ -347,7 +349,7 @@ export class CompositeChart extends CoordinateGridMixin {
     }
 
     public fadeDeselectedArea(brushSelection) {
-        if (this.brushOn()) {
+        if (this._conf.brushOn) {
             for (let i = 0; i < this._children.length; ++i) {
                 const child = this._children[i];
                 child.fadeDeselectedArea(brushSelection);

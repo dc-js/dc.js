@@ -289,7 +289,7 @@ export class BarChart extends StackMixin {
                 bars.classed(constants.SELECTED_CLASS, false);
                 bars.classed(constants.DESELECTED_CLASS, false);
             }
-        } else if (this.brushOn() || this.parentBrushOn()) {
+        } else if (this._conf.brushOn || this._conf.parentBrushOn) {
             if (!this.brushIsEmpty(brushSelection)) {
                 const start = brushSelection[0];
                 const end = brushSelection[1];
