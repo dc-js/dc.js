@@ -384,7 +384,7 @@ d3.csv('ndx.csv').then(data => {
         .dimension(moveMonths)
         .mouseZoomable(true)
     // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
-        .rangeChart(volumeChart)
+        .configure({autoFocus: true})
         .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
         .round(d3.timeMonth.round)
         .xUnits(d3.timeMonths)

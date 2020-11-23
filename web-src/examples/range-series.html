@@ -49,7 +49,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .dimension(runDimension)
     .group(runGroup)
     .mouseZoomable(true)
-    .rangeChart(overviewChart)
+    .configure({autoFocus: true})
     .seriesAccessor(function(d) {return "Expt: " + d.key[0];})
     .keyAccessor(function(d) {return +d.key[1];})
     .valueAccessor(function(d) {return +d.value - 500;})

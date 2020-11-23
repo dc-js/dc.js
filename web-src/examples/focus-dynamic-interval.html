@@ -95,7 +95,7 @@
                 .group(choose_group(fullDomain))
                 .yAxisPadding(0.1)
                 .valueAccessor(kv => kv.value.total / kv.value.count)
-                .rangeChart(rangeChart)
+                .configure({autoFocus: true})
                 .x(d3.scaleTime().domain(fullDomain))
                 .xUnits(d3.timeDay)
                 .brushOn(false)
