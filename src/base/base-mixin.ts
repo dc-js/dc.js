@@ -11,9 +11,9 @@ import { printers } from '../core/printers';
 import { InvalidStateException } from '../core/invalid-state-exception';
 import { BadArgumentException } from '../core/bad-argument-exception';
 import { CFGrouping, ChartGroupType, ChartParentType, LegendItem } from '../core/types';
-import { IChartGroup } from '../core/chart-group-types';
 import { IBaseMixinConf } from './i-base-mixin-conf';
 import { CFSimpleAdapter } from '../data/c-f-simple-adapter';
+import { IChartGroup } from '../core/i-chart-group';
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object

@@ -1,6 +1,6 @@
-import { IMinimalChart } from '../../core/chart-group-types';
 import { chartRegistry } from '../../core/chart-registry';
 import { config } from './config';
+import { IMinimalChart } from '../../core/i-minimal-chart';
 
 export * from '../../core/chart-group';
 export * from '../../core/filter-storage';

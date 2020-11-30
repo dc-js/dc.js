@@ -1,7 +1,6 @@
 import { constants } from './constants';
-import { config } from './config';
 import { ChartGroup } from './chart-group';
-import { IMinimalChart } from './chart-group-types';
+import { IMinimalChart } from './i-minimal-chart';
 
 /**
  * The ChartRegistry maintains sets of all instantiated dc.js charts under named groups

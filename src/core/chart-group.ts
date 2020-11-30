@@ -1,5 +1,7 @@
-import { IChartGroup, IFilterStorage, IMinimalChart } from './chart-group-types';
 import { FilterStorage } from './filter-storage';
+import { IFilterStorage } from './i-filter-storage';
+import { IChartGroup } from './i-chart-group';
+import { IMinimalChart } from './i-minimal-chart';
 
 export class ChartGroup implements IChartGroup {
     private _charts: IMinimalChart[];

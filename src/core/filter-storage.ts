@@ -1,4 +1,4 @@
-import { IFilterStorage } from './chart-group-types';
+import { IFilterStorage } from './i-filter-storage';
 
 export class FilterStorage implements IFilterStorage {
     // Current filters

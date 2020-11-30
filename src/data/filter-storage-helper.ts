@@ -1,5 +1,5 @@
-import { IFilterStorage } from '../core/chart-group-types';
 import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler';
+import { IFilterStorage } from '../core/i-filter-storage';
 
 export interface IFilterStorageConf extends ICFFilterHandlerConf {
     readonly filterStorage?: IFilterStorage;
