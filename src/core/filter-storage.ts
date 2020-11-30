@@ -19,7 +19,7 @@ export class FilterStorage implements IFilterStorage {
         chartId,
         primaryChart,
     }: IFilterListenerParams): any {
-        if (!(this._listeners.get(storageKey) && this._listeners.get(storageKey).length >= 0)) {
+        if (!this._listeners.get(storageKey)) {
             this._listeners.set(storageKey, []);
         }
         const listener = {
