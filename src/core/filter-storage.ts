@@ -1,4 +1,4 @@
-import { IFilterStorage } from './i-filter-storage';
+import { IFilterListenerParams, IFilterStorage } from './i-filter-storage';
 
 export class FilterStorage implements IFilterStorage {
     // Current filters
@@ -13,7 +13,12 @@ export class FilterStorage implements IFilterStorage {
         this._listeners = new Map();
     }
 
-    public registerFilterListener(storageKey: any, onFiltersChanged: (filters) => void): any {
+    public registerFilterListener({
+        storageKey,
+        onFiltersChanged,
+        chartId,
+        primaryChart,
+    }: IFilterListenerParams): any {
         if (!(this._listeners.get(storageKey) && this._listeners.get(storageKey).length >= 0)) {
             this._listeners.set(storageKey, []);
         }
@@ -55,5 +60,11 @@ export class FilterStorage implements IFilterStorage {
             this._filters.set(storageKey, []);
         }
         return this._filters.get(storageKey);
+    }
+
+    public restore(state: Object): void {}
+
+    public serialize(): Object {
+        return undefined;
     }
 }

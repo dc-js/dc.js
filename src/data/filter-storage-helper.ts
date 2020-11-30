@@ -3,7 +3,8 @@ import { IFilterStorage } from '../core/i-filter-storage';
 
 export interface IFilterStorageConf extends ICFFilterHandlerConf {
     readonly filterStorage?: IFilterStorage;
-    readonly anchorName?: string;
+    readonly chartId?: string;
+    readonly primaryChart?: boolean;
     readonly shareFilters?: boolean;
     readonly onFiltersChanged?: (filters) => void;
 }
@@ -48,10 +49,12 @@ export class FilterStorageHelper extends CFFilterHandler {
             this._deRegisterListener();
         }
 
-        this._listenerRegToken = this._conf.filterStorage.registerFilterListener(
+        this._listenerRegToken = this._conf.filterStorage.registerFilterListener({
             storageKey,
-            this._conf.onFiltersChanged
-        );
+            onFiltersChanged: this._conf.onFiltersChanged,
+            chartId: this._conf.chartId,
+            primaryChart: this._conf.primaryChart,
+        });
     }
 
     private _deRegisterListener() {
