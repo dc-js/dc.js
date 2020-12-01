@@ -107,3 +107,4 @@ export function redrawAll(group?: string): void {
         config._renderlet(group);
     }
 }
+export { ISerializedFilters } from '../../core/i-serialized-filters';

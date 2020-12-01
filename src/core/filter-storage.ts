@@ -1,5 +1,7 @@
 import { IFilterListenerParams, IFilterStorage } from './i-filter-storage';
 import { IFilter } from './filters/i-filter';
+import { filterFactory } from './filters/filter-factory';
+import { ISerializedFilters } from './i-serialized-filters';
 
 export class FilterStorage implements IFilterStorage {
     // Current filters
@@ -84,7 +86,7 @@ export class FilterStorage implements IFilterStorage {
             .filter(o => o); // Exclude all undefined
     }
 
-    private _serializeFilters(chartId: string, filters: any[]): Object {
+    private _serializeFilters(chartId: string, filters: any[]): ISerializedFilters {
         if (typeof filters[0].isFiltered !== 'function') {
             return {
                 chartId,
@@ -101,5 +103,36 @@ export class FilterStorage implements IFilterStorage {
         };
     }
 
-    public restore(state: Object): void {}
+    public restore(entries: ISerializedFilters[]): void {
+        const listeners = Array.from(this._listeners.values());
+
+        entries.forEach(entry => {
+            // Find a listenerChain that has same chartId registered
+            const listenersChain = listeners.find((listenersChain: IFilterListenerParams[]) =>
+                listenersChain.find(listener => listener.chartId === entry.chartId)
+            );
+
+            // convert to appropriate dc IFilter objects
+            const filters = this._instantiateFilters(entry.filterType, entry.values);
+
+            // pickup storageKey from first entry - all entries will have same storage key
+            const storageKey = listenersChain[0].storageKey;
+
+            // Update filters and notify all listeners
+            this.setFiltersFor(storageKey, filters);
+            this.notifyListeners(storageKey, filters);
+        });
+    }
+
+    private _instantiateFilters(filterType, values) {
+        // Simple filters are simple list of items, not need to any additional instantiation
+        if (filterType === 'Simple') {
+            return values;
+        }
+
+        // Lookup filter factory based on the filter type
+        const filterCreator = filterFactory[filterType];
+
+        return values.map(f => filterCreator(f));
+    }
 }
