@@ -26,4 +26,8 @@ export class HierarchyFilter extends Array implements IFilter {
 
         return true;
     }
+
+    serialize (): Object {
+        return [...this];
+    }
 }

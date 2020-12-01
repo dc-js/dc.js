@@ -1,4 +1,5 @@
 import { IFilterListenerParams, IFilterStorage } from './i-filter-storage';
+import { IFilter } from './filters/i-filter';
 
 export class FilterStorage implements IFilterStorage {
     // Current filters
@@ -6,7 +7,7 @@ export class FilterStorage implements IFilterStorage {
 
     // List of listeners for each storage key
     // Storage key will be dimension (id shareFilters is true) or the chart itself
-    private _listeners: Map<any, { onFiltersChanged: (filters) => void }[]>;
+    private _listeners: Map<any, IFilterListenerParams[]>;
 
     constructor() {
         this._filters = new Map();
@@ -23,8 +24,10 @@ export class FilterStorage implements IFilterStorage {
             this._listeners.set(storageKey, []);
         }
         const listener = {
-            onFiltersChanged,
             storageKey,
+            onFiltersChanged,
+            chartId,
+            primaryChart,
         };
         this._listeners.get(storageKey).push(listener);
         return listener;
@@ -62,9 +65,41 @@ export class FilterStorage implements IFilterStorage {
         return this._filters.get(storageKey);
     }
 
-    public restore(state: Object): void {}
+    public serialize(): Object[] {
+        // Include items that have active filters
+        // In case of Composite charts, include only the parent chart
+        return Array.from(this._listeners.values())
+            .map(listenersList => {
+                // check if any item in the list corresponds to a non-child chart
+                const listener = listenersList.find(l => l.primaryChart);
 
-    public serialize(): Object {
-        return undefined;
+                if (listener) {
+                    const filters = this._filters.get(listener.storageKey);
+                    if (filters && filters.length > 0) {
+                        return this._serializeFilters(listener.chartId, filters);
+                    }
+                }
+                return undefined;
+            })
+            .filter(o => o); // Exclude all undefined
     }
+
+    private _serializeFilters(chartId: string, filters: any[]): Object {
+        if (typeof filters[0].isFiltered !== 'function') {
+            return {
+                chartId,
+                filterType: 'Simple',
+                values: filters,
+            };
+        }
+
+        const filtersWithType: IFilter[] = filters;
+        return {
+            chartId,
+            filterType: filtersWithType[0].filterType,
+            values: filtersWithType.map(f => f.serialize()),
+        };
+    }
+
+    public restore(state: Object): void {}
 }

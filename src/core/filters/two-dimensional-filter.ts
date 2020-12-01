@@ -17,4 +17,8 @@ export class TwoDimensionalFilter extends Array implements IFilter {
             value[1] === this[1]
         );
     }
+
+    serialize (): Object {
+        return [...this];
+    }
 }

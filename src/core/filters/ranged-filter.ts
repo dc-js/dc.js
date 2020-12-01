@@ -12,4 +12,8 @@ export class RangedFilter<T> extends Array<T> implements IFilter {
     isFiltered(value: T): boolean {
         return value >= this[0] && value < this[1];
     }
+
+    serialize (): Object {
+        return [...this];
+    }
 }
