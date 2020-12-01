@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>dc.js - Current Filters</title>
+
+    <meta charset="UTF-8" />
+
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+    <link rel="icon" type="image/x-icon" href="../dc.logo.png" />
+
+    <style>
+      div.dc-chart {
+        float: left;
+      }
+      #monthly-volume-chart g.y {
+        display: none;
+      }
+    </style>
+
+    <style>
+      #current-filters-widget-wrapper {
+        margin: 10px 0;
+      }
+
+      #current-filters-widget {
+        height: 100px;
+        overflow: auto;
+      }
+
+      #current-filters-widget span {
+        display: inline-block;
+      }
+
+      #current-filters-widget .label {
+        width: 150px;
+      }
+
+      #current-filters-widget .value {
+        padding-left: 10px;
+      }
+
+      #current-filters-widget .action {
+        width: 20px;
+        font-size: 0.6em;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div id="current-filters-widget-wrapper">
+          <strong>Current Filters</strong>
+          <a class="reset" href="javascript:clearAllFilters();">clear all</a>
+          <div id="current-filters-widget"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="yearly-bubble-chart" class="dc-chart">
+          <strong>Yearly Performance</strong> (radius: fluctuation/index ratio,
+          color: gain/loss)
+          <a
+            class="reset"
+            href="javascript:yearlyBubbleChart.filterAll();chartGroup.redrawAll();"
+            style="display: none;"
+            >reset</a
+          >
+
+          <div class="clearfix"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="gain-loss-chart">
+          <strong>Days by Gain/Loss</strong>
+          <a
+            class="reset"
+            href="javascript:gainOrLossChart.filterAll();chartGroup.redrawAll();"
+            style="display: none;"
+            >reset</a
+          >
+
+          <div class="clearfix"></div>
+        </div>
+
+        <div id="quarter-chart">
+          <strong>Quarters</strong>
+          <a
+            class="reset"
+            href="javascript:quarterChart.filterAll();chartGroup.redrawAll();"
+            style="display: none;"
+            >reset</a
+          >
+
+          <div class="clearfix"></div>
+        </div>
+
+        <div id="day-of-week-chart">
+          <strong>Day of Week</strong>
+          <a
+            class="reset"
+            href="javascript:dayOfWeekChart.filterAll();chartGroup.redrawAll();"
+            style="display: none;"
+            >reset</a
+          >
+
+          <div class="clearfix"></div>
+        </div>
+
+        <div id="fluctuation-chart">
+          <strong>Days by Fluctuation(%)</strong>
+          <span class="reset" style="display: none;"
+            >range: <span class="filter"></span
+          ></span>
+          <a
+            class="reset"
+            href="javascript:fluctuationChart.filterAll();chartGroup.redrawAll();"
+            style="display: none;"
+            >reset</a
+          >
+
+          <div class="clearfix"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="monthly-move-chart">
+          <strong>Monthly Index Abs Move & Volume/500,000 Chart</strong>
+          <span class="reset" style="display: none;"
+            >range: <span class="filter"></span
+          ></span>
+          <a
+            class="reset"
+            href="javascript:moveChart.filterAll();volumeChart.filterAll();chartGroup.redrawAll();"
+            style="display: none;"
+            >reset</a
+          >
+
+          <div class="clearfix"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="monthly-volume-chart"></div>
+        <p class="muted pull-right" style="margin-right: 15px;">
+          select a time range to zoom in
+        </p>
+      </div>
+
+      <div class="row">
+        <div>
+          <div class="dc-data-count">
+            <span class="filter-count"></span> selected out of
+            <span class="total-count"></span> records |
+            <a href="javascript:chartGroup.filterAll(); chartGroup.redrawAll();"
+              >Reset All</a
+            >
+          </div>
+        </div>
+        <table class="table table-hover dc-data-table"></table>
+      </div>
+
+      <div class="clearfix"></div>
+    </div>
+
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+
+    <script type="text/javascript" src="../stock.js"></script>
+
+    <script type="application/javascript">
+      const filterStorage = chartGroup.filterStorage;
+
+      const clearAllFilters = () => {
+        filterStorage.restore([]);
+        chartGroup.redrawAll();
+      };
+
+      filterStorage.onFilterChange('current-filters', params => {
+        const data = filterStorage
+          .serialize({ includeStorageKey: true })
+          .sort((a, b) => d3.ascending(a.chartId, b.chartId));
+
+        const filterStatus = d3
+          .select('#current-filters-widget')
+          .selectAll('div.filter')
+          .data(data, d => d.chartId)
+          .join(enter =>
+            enter
+              .append('div')
+              .classed('filter', true)
+              .call(s =>
+                s
+                  .append('span')
+                  .classed('action', true)
+                  .html('&#x274C;') // Cross mark (&#x274C;) or Negative squared cross mark (&#x274E;)
+                  .on('click', (e, d) => {
+                    filterStorage.resetFiltersAndNotify(d.storageKey);
+                    chartGroup.redrawAll();
+                  })
+              )
+              .call(s =>
+                s
+                  .append('span')
+                  .classed('label', true)
+                  .text(d => d.chartId)
+              )
+              .call(s => s.append('span').classed('value', true))
+          );
+
+        filterStatus
+          .selectAll('span.value')
+          .data(data, d => d.chartId)
+          .text(d => d.values.toString());
+      });
+    </script>
+  </body>
+</html>
