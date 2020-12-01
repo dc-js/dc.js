@@ -16,23 +16,12 @@ export class FilterStorage implements IFilterStorage {
         this._listeners = new Map();
     }
 
-    public registerFilterListener({
-        storageKey,
-        onFiltersChanged,
-        chartId,
-        primaryChart,
-        applyFilters,
-    }: IFilterListenerParams): any {
+    public registerFilterListener(params: IFilterListenerParams): any {
+        const storageKey = params.storageKey;
         if (!this._listeners.get(storageKey)) {
             this._listeners.set(storageKey, []);
         }
-        const listener = {
-            storageKey,
-            onFiltersChanged,
-            chartId,
-            primaryChart,
-            applyFilters,
-        };
+        const listener = {...params};
         this._listeners.get(storageKey).push(listener);
         return listener;
     }
@@ -88,23 +77,6 @@ export class FilterStorage implements IFilterStorage {
             .filter(o => o); // Exclude all undefined
     }
 
-    private _serializeFilters(chartId: string, filters: any[]): ISerializedFilters {
-        if (typeof filters[0].isFiltered !== 'function') {
-            return {
-                chartId,
-                filterType: 'Simple',
-                values: filters,
-            };
-        }
-
-        const filtersWithType: IFilter[] = filters;
-        return {
-            chartId,
-            filterType: filtersWithType[0].filterType,
-            values: filtersWithType.map(f => f.serialize()),
-        };
-    }
-
     public restore(entries: ISerializedFilters[]): void {
         const listeners = Array.from(this._listeners.values());
 
@@ -142,6 +114,23 @@ export class FilterStorage implements IFilterStorage {
             // Notify charts that filter has been updated
             this.notifyListeners(storageKey, filters);
         }
+    }
+
+    private _serializeFilters(chartId: string, filters: any[]): ISerializedFilters {
+        if (typeof filters[0].isFiltered !== 'function') {
+            return {
+                chartId,
+                filterType: 'Simple',
+                values: filters,
+            };
+        }
+
+        const filtersWithType: IFilter[] = filters;
+        return {
+            chartId,
+            filterType: filtersWithType[0].filterType,
+            values: filtersWithType.map(f => f.serialize()),
+        };
     }
 
     private _deSerializeFilters(filterType, values) {
