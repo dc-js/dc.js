@@ -6,6 +6,17 @@
 // This allows associating all charts that are linked together and should respond to changes in other charts
 const chartGroup = new dc.ChartGroup();
 
+let savedFilterState = [];
+
+const saveFilterState = () => {
+    savedFilterState = chartGroup.filterStorage.serialize();
+};
+
+const restoreFilterState = () => {
+    chartGroup.filterStorage.restore(savedFilterState);
+    chartGroup.redrawAll();
+};
+
 // ### Create Chart Objects
 
 // Create chart objects associated with the container elements identified by the css selector.
