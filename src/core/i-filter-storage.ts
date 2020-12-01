@@ -13,6 +13,6 @@ export interface IFilterStorage {
     deRegisterFilterListener(storageKey: any, listner: any): void;
     notifyListeners(storageKey: any, filters): void;
     deRegisterAll(): void;
-    serialize(): Object;
-    restore(state: Object): void;
+    serialize(): object;
+    restore(state: object): void;
 }

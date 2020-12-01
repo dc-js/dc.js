@@ -45,7 +45,7 @@ export class RangedTwoDimensionalFilter extends Array implements IFilter {
         );
     }
 
-    serialize (): Object {
+    serialize(): object {
         return [...this];
     }
 }

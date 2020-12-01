@@ -21,7 +21,7 @@ export class FilterStorage implements IFilterStorage {
         if (!this._listeners.get(storageKey)) {
             this._listeners.set(storageKey, []);
         }
-        const listener = {...params};
+        const listener = { ...params };
         this._listeners.get(storageKey).push(listener);
         return listener;
     }
@@ -58,7 +58,7 @@ export class FilterStorage implements IFilterStorage {
         return this._filters.get(storageKey);
     }
 
-    public serialize(): Object[] {
+    public serialize(): object[] {
         // Include items that have active filters
         // In case of Composite charts, include only the parent chart
         return Array.from(this._listeners.values())
@@ -78,13 +78,13 @@ export class FilterStorage implements IFilterStorage {
     }
 
     public restore(entries: ISerializedFilters[]): void {
-        const listeners = Array.from(this._listeners.values());
+        const listenerChains = Array.from(this._listeners.values());
 
         const filtersToRestore = new Map(
             entries.map(entry => {
                 // Find a listenerChain that has same chartId registered
-                const listenersChain = listeners.find((listenersChain: IFilterListenerParams[]) =>
-                    listenersChain.find(listener => listener.chartId === entry.chartId)
+                const listenersChain = listenerChains.find((lsnrsChain: IFilterListenerParams[]) =>
+                    lsnrsChain.find(listener => listener.chartId === entry.chartId)
                 );
 
                 // convert to appropriate dc IFilter objects
@@ -97,7 +97,7 @@ export class FilterStorage implements IFilterStorage {
             })
         );
 
-        for (let storageKey of this._listeners.keys()) {
+        for (const storageKey of this._listeners.keys()) {
             // reset a filter if it is not getting restored
             const filters = filtersToRestore.has(storageKey)
                 ? filtersToRestore.get(storageKey)
@@ -108,8 +108,10 @@ export class FilterStorage implements IFilterStorage {
 
             // Apply filters with the DataProvider - it will update CrossFilter
             // Applying it to just first entry is sufficient as these share the underlying dimension
-            const listeners= this._listeners.get(storageKey);
-            listeners && listeners[0].applyFilters(filters);
+            const listeners = this._listeners.get(storageKey);
+            if (listeners && listeners[0]) {
+                listeners[0].applyFilters(filters);
+            }
 
             // Notify charts that filter has been updated
             this.notifyListeners(storageKey, filters);

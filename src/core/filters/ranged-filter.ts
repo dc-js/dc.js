@@ -13,7 +13,7 @@ export class RangedFilter<T> extends Array<T> implements IFilter {
         return value >= this[0] && value < this[1];
     }
 
-    serialize (): Object {
+    serialize(): object {
         return [...this];
     }
 }
