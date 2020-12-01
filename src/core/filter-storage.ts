@@ -21,6 +21,7 @@ export class FilterStorage implements IFilterStorage {
         onFiltersChanged,
         chartId,
         primaryChart,
+        applyFilters,
     }: IFilterListenerParams): any {
         if (!this._listeners.get(storageKey)) {
             this._listeners.set(storageKey, []);
@@ -30,6 +31,7 @@ export class FilterStorage implements IFilterStorage {
             onFiltersChanged,
             chartId,
             primaryChart,
+            applyFilters,
         };
         this._listeners.get(storageKey).push(listener);
         return listener;
@@ -106,25 +108,43 @@ export class FilterStorage implements IFilterStorage {
     public restore(entries: ISerializedFilters[]): void {
         const listeners = Array.from(this._listeners.values());
 
-        entries.forEach(entry => {
-            // Find a listenerChain that has same chartId registered
-            const listenersChain = listeners.find((listenersChain: IFilterListenerParams[]) =>
-                listenersChain.find(listener => listener.chartId === entry.chartId)
-            );
+        const filtersToRestore = new Map(
+            entries.map(entry => {
+                // Find a listenerChain that has same chartId registered
+                const listenersChain = listeners.find((listenersChain: IFilterListenerParams[]) =>
+                    listenersChain.find(listener => listener.chartId === entry.chartId)
+                );
 
-            // convert to appropriate dc IFilter objects
-            const filters = this._instantiateFilters(entry.filterType, entry.values);
+                // convert to appropriate dc IFilter objects
+                const filters = this._deSerializeFilters(entry.filterType, entry.values);
 
-            // pickup storageKey from first entry - all entries will have same storage key
-            const storageKey = listenersChain[0].storageKey;
+                // pickup storageKey from first entry - all entries will have same storage key
+                const storageKey = listenersChain[0].storageKey;
 
-            // Update filters and notify all listeners
+                return [storageKey, filters];
+            })
+        );
+
+        for (let storageKey of this._listeners.keys()) {
+            // reset a filter if it is not getting restored
+            const filters = filtersToRestore.has(storageKey)
+                ? filtersToRestore.get(storageKey)
+                : [];
+
+            // Update filters in the storage
             this.setFiltersFor(storageKey, filters);
+
+            // Apply filters with the DataProvider - it will update CrossFilter
+            // Applying it to just first entry is sufficient as these share the underlying dimension
+            const listeners= this._listeners.get(storageKey);
+            listeners && listeners[0].applyFilters(filters);
+
+            // Notify charts that filter has been updated
             this.notifyListeners(storageKey, filters);
-        });
+        }
     }
 
-    private _instantiateFilters(filterType, values) {
+    private _deSerializeFilters(filterType, values) {
         // Simple filters are simple list of items, not need to any additional instantiation
         if (filterType === 'Simple') {
             return values;

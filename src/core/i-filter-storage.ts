@@ -3,6 +3,7 @@ export interface IFilterListenerParams {
     onFiltersChanged: (filters) => void;
     chartId: string;
     primaryChart: boolean;
+    applyFilters: (filters) => void;
 }
 
 export interface IFilterStorage {

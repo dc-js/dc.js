@@ -54,6 +54,7 @@ export class FilterStorageHelper extends CFFilterHandler {
             onFiltersChanged: this._conf.onFiltersChanged,
             chartId: this._conf.chartId,
             primaryChart: this._conf.primaryChart,
+            applyFilters: filters => this.applyFilters(),
         });
     }
 
