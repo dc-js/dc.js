@@ -10,6 +10,7 @@ export * from './core/logger';
 export * from './core/printers';
 export * from './core/units';
 export * from './core/utils';
+export * from './core/d3compat';
 
 export * from './base/base-mixin';
 export * from './base/bubble-mixin';
