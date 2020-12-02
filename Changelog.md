@@ -1,3 +1,7 @@
+## 4.2.3
+* Export d3 compat functions allowing it to be used to simplify d3@6 compatibility in examples.
+  Fixes [#1787](https://github.com/dc-js/dc.js/issues/1787).
+
 ## 4.2.2
 * Add [linked filter example](https://dc-js.github.io/dc.js/examples/linked-filter.html), had been floating around as a jsfiddle answer to [SO question](https://stackoverflow.com/questions/59461538/dc-js-how-to-mirror-brush-across-multiple-charts) for a while.
 
