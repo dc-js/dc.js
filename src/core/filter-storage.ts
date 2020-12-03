@@ -2,6 +2,7 @@ import { IFilterListenerParams, IFilterStorage } from './i-filter-storage';
 import { IFilter } from './filters/i-filter';
 import { filterFactory } from './filters/filter-factory';
 import { ISerializedFilters } from './i-serialized-filters';
+import { Dispatch, dispatch } from 'd3-dispatch';
 
 export class FilterStorage implements IFilterStorage {
     // Current filters
@@ -11,9 +12,17 @@ export class FilterStorage implements IFilterStorage {
     // Storage key will be dimension (id shareFilters is true) or the chart itself
     private _listenerChains: Map<any, IFilterListenerParams[]>;
 
+    // notify when filter changes for any of the charts
+    private _filterChangeListener: Dispatch<object>;
+
     constructor() {
         this._filters = new Map();
         this._listenerChains = new Map();
+        this._filterChangeListener = dispatch('filter-changed');
+    }
+
+    public onFilterChange(key: string, callback) {
+        this._filterChangeListener.on(`filter-changed.${key}`, callback);
     }
 
     public registerFilterListener(params: IFilterListenerParams): any {
@@ -45,6 +54,12 @@ export class FilterStorage implements IFilterStorage {
             .forEach(l => {
                 l.onFiltersChanged(filters);
             });
+
+        const chartIds = listenerChain.map(lsnr => lsnr.chartId);
+        this._filterChangeListener.call('filter-changed', this, {
+            chartIds,
+            filters: this._filters.get(storageKey),
+        });
     }
 
     public setFiltersFor(storageKey: any, filters) {
