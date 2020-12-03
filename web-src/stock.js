@@ -17,6 +17,11 @@ const restoreFilterState = () => {
     chartGroup.redrawAll();
 };
 
+chartGroup.filterStorage.onFilterChange('debug', params => {
+    console.log(`Chart Ids: [${params.chartIds}] - filters: [${params.filters}]`);
+    console.log(`Filter state: ${JSON.stringify(chartGroup.filterStorage.serialize())}`);
+});
+
 // ### Create Chart Objects
 
 // Create chart objects associated with the container elements identified by the css selector.
@@ -127,7 +132,7 @@ d3.csv('ndx.csv').then(data => {
             fluctuationPercentage: 0,
             sumIndex: 0,
             avgIndex: 0,
-            percentageGain: 0
+            percentageGain: 0,
         })
     );
 
@@ -153,16 +158,16 @@ d3.csv('ndx.csv').then(data => {
             p.avg = p.days ? Math.round(p.total / p.days) : 0;
             return p;
         },
-        () => ({days: 0, total: 0, avg: 0})
+        () => ({ days: 0, total: 0, avg: 0 })
     );
 
     // Create categorical dimension
-    const gainOrLoss = ndx.dimension(d => d.open > d.close ? 'Loss' : 'Gain');
+    const gainOrLoss = ndx.dimension(d => (d.open > d.close ? 'Loss' : 'Gain'));
     // Produce counts records in the dimension
     const gainOrLossGroup = gainOrLoss.group();
 
     // Determine a histogram of percent changes
-    const fluctuation = ndx.dimension(d => Math.round((d.close - d.open) / d.open * 100));
+    const fluctuation = ndx.dimension(d => Math.round(((d.close - d.open) / d.open) * 100));
     const fluctuationGroup = fluctuation.group();
 
     // Summarize volume by quarter
@@ -208,7 +213,7 @@ d3.csv('ndx.csv').then(data => {
         .height(250)
         // (_optional_) define chart transition duration, `default = 750`
         .transitionDuration(1500)
-        .margins({top: 10, right: 50, bottom: 30, left: 40})
+        .margins({ top: 10, right: 50, bottom: 30, left: 40 })
         .dimension(yearlyDimension)
         //The bubble chart expects the groups are reduced to multiple values which are used
         //to generate x, y, and radius for each key (bubble) in the group
@@ -217,9 +222,9 @@ d3.csv('ndx.csv').then(data => {
         .colors(d3.schemeRdYlGn[9])
         //(optional) define color domain to match your data domain if you want to bind data or color
         .colorDomain([-500, 500])
-    //##### Accessors
+        //##### Accessors
 
-    //Accessor functions are applied to each value returned by the grouping
+        //Accessor functions are applied to each value returned by the grouping
 
         // `.colorAccessor` - the returned value will be passed to the `.colors()` scale to determine a fill color
         .colorAccessor(d => d.value.absGain)
@@ -259,17 +264,20 @@ d3.csv('ndx.csv').then(data => {
         .label(p => p.key)
         // (_optional_) whether chart should render titles, `default = false`
         .renderTitle(true)
-        .title(p => [
-            p.key,
-            `Index Gain: ${numberFormat(p.value.absGain)}`,
-            `Index Gain in Percentage: ${numberFormat(p.value.percentageGain)}%`,
-            `Fluctuation / Index Ratio: ${numberFormat(p.value.fluctuationPercentage)}%`
-        ].join('\n'))
+        .title(p =>
+            [
+                p.key,
+                `Index Gain: ${numberFormat(p.value.absGain)}`,
+                `Index Gain in Percentage: ${numberFormat(p.value.percentageGain)}%`,
+                `Fluctuation / Index Ratio: ${numberFormat(p.value.fluctuationPercentage)}%`,
+            ].join('\n')
+        )
         //#### Customize Axes
 
         // Set a custom tick format. Both `.yAxis()` and `.xAxis()` return an axis object,
         // so any additional method chaining applies to the axis, not the chart.
-        .yAxis().tickFormat(v => `${v}%`);
+        .yAxis()
+        .tickFormat(v => `${v}%`);
 
     // #### Pie/Donut Charts
 
@@ -280,27 +288,27 @@ d3.csv('ndx.csv').then(data => {
     // <br>API: [Pie Chart](https://dc-js.github.io/dc.js/docs/html/PieChart.html)
 
     gainOrLossChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
-    // (_optional_) define chart width, `default = 200`
+        // (_optional_) define chart width, `default = 200`
         .width(180)
-    // (optional) define chart height, `default = 200`
+        // (optional) define chart height, `default = 200`
         .height(180)
-    // Define pie radius
+        // Define pie radius
         .radius(80)
-    // Set dimension
+        // Set dimension
         .dimension(gainOrLoss)
-    // Set group
+        // Set group
         .group(gainOrLossGroup)
-    // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
+        // (_optional_) by default pie chart will use `group.key` as its label but you can overwrite it with a closure.
         .label(d => {
             if (gainOrLossChart.hasFilter() && !gainOrLossChart.hasFilter(d.key)) {
                 return `${d.key}(0%)`;
             }
             let label = d.key;
             if (all.value()) {
-                label += `(${Math.floor(d.value / all.value() * 100)}%)`;
+                label += `(${Math.floor((d.value / all.value()) * 100)}%)`;
             }
             return label;
-        })
+        });
     /*
         // (_optional_) whether chart should render labels, `default = true`
         .renderLabel(true)
@@ -314,7 +322,7 @@ d3.csv('ndx.csv').then(data => {
         .colorDomain([-1750, 1644])
         // (_optional_) define color value accessor
         .colorAccessor(function(d, i){return d.value;})
-        */;
+        */
 
     quarterChart /* dc.pieChart('#quarter-chart', 'chartGroup') */
         .width(180)
@@ -334,7 +342,7 @@ d3.csv('ndx.csv').then(data => {
     dayOfWeekChart /* dc.rowChart('#day-of-week-chart', 'chartGroup') */
         .width(180)
         .height(180)
-        .margins({top: 20, left: 10, right: 10, bottom: 20})
+        .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         .group(dayOfWeekGroup)
         .dimension(dayOfWeek)
         // Assign colors to each value in the x scale domain
@@ -343,7 +351,8 @@ d3.csv('ndx.csv').then(data => {
         // Title sets the row text
         .title(d => d.value)
         .elasticX(true)
-        .xAxis().ticks(4);
+        .xAxis()
+        .ticks(4);
 
     //#### Bar Chart
 
@@ -355,7 +364,7 @@ d3.csv('ndx.csv').then(data => {
     fluctuationChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
         .width(420)
         .height(180)
-        .margins({top: 10, right: 50, bottom: 30, left: 40})
+        .margins({ top: 10, right: 50, bottom: 30, left: 40 })
         .dimension(fluctuation)
         .group(fluctuationGroup)
         .elasticY(true)
@@ -377,8 +386,7 @@ d3.csv('ndx.csv').then(data => {
         });
 
     // Customize axes
-    fluctuationChart.xAxis().tickFormat(
-        v => `${v}%`);
+    fluctuationChart.xAxis().tickFormat(v => `${v}%`);
     fluctuationChart.yAxis().ticks(5);
 
     //#### Stacked Area Chart
@@ -391,17 +399,17 @@ d3.csv('ndx.csv').then(data => {
         .width(990)
         .height(200)
         .transitionDuration(1000)
-        .margins({top: 30, right: 50, bottom: 25, left: 40})
+        .margins({ top: 30, right: 50, bottom: 25, left: 40 })
         .dimension(moveMonths)
         .mouseZoomable(true)
-    // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
+        // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
         .rangeChart(volumeChart)
         .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
         .round(d3.timeMonth.round)
         .xUnits(d3.timeMonths)
         .elasticY(true)
         .renderHorizontalGridLines(true)
-    //##### Legend
+        //##### Legend
 
         // Position the legend relative to the chart origin and specify items' height and separation.
         .legend(new dc.Legend().x(800).y(10).itemHeight(13).gap(5))
@@ -427,9 +435,10 @@ d3.csv('ndx.csv').then(data => {
 
     // Since this bar chart is specified as "range chart" for the area chart, its brush extent
     // will always match the zoom of the area chart.
-    volumeChart.width(990) /* dc.barChart('#monthly-volume-chart', 'chartGroup'); */
+    volumeChart
+        .width(990) /* dc.barChart('#monthly-volume-chart', 'chartGroup'); */
         .height(40)
-        .margins({top: 0, right: 50, bottom: 20, left: 40})
+        .margins({ top: 0, right: 50, bottom: 20, left: 40 })
         .dimension(moveMonths)
         .group(volumeByMonthGroup)
         .centerBar(true)
@@ -461,9 +470,10 @@ d3.csv('ndx.csv').then(data => {
         // `.html` replaces everything in the anchor with the html given using the following function.
         // `%filter-count` and `%total-count` are replaced with the values obtained.
         .html({
-            some: '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
-                ' | <a href=\'javascript:chartGroup.filterAll(); chartGroup.redrawAll();\'>Reset All</a>',
-            all: 'All records selected. Please click on the graph to apply filters.'
+            some:
+                '<strong>%filter-count</strong> selected out of <strong>%total-count</strong> records' +
+                " | <a href='javascript:chartGroup.filterAll(); chartGroup.redrawAll();'>Reset All</a>",
+            all: 'All records selected. Please click on the graph to apply filters.',
         });
 
     //#### Data Table
@@ -497,7 +507,7 @@ d3.csv('ndx.csv').then(data => {
         // Specify a section function to nest rows of the table
         .section(d => {
             const format = d3.format('02d');
-            return `${d.dd.getFullYear()}/${format((d.dd.getMonth() + 1))}`;
+            return `${d.dd.getFullYear()}/${format(d.dd.getMonth() + 1)}`;
         })
         // (_optional_) max number of records to be shown, `default = 25`
         .size(10)
@@ -514,10 +524,10 @@ d3.csv('ndx.csv').then(data => {
                 label: 'Change',
                 format: function (d) {
                     return numberFormat(d.close - d.open);
-                }
+                },
             },
             // Use `d.volume`
-            'volume'
+            'volume',
         ])
 
         // (_optional_) sort using the given field, `default = function(d){return d;}`
@@ -542,7 +552,6 @@ d3.csv('ndx.csv').then(data => {
     // Or you can choose to redraw only those charts associated with a specific chart group
     dc.redrawAll('group');
     */
-
 });
 
 //#### Versions
