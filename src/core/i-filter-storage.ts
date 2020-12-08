@@ -1,9 +1,15 @@
+import { ISerializedFilters } from './i-serialized-filters';
+
 export interface IFilterListenerParams {
     storageKey: any;
     onFiltersChanged: (filters) => void;
     chartId: string;
     primaryChart: boolean;
     applyFilters: (filters) => void;
+}
+
+export interface ISerializeOpts {
+    includeStorageKey?: boolean;
 }
 
 export interface IFilterStorage {
@@ -13,6 +19,6 @@ export interface IFilterStorage {
     deRegisterFilterListener(storageKey: any, listner: any): void;
     notifyListeners(storageKey: any, filters): void;
     deRegisterAll(): void;
-    serialize(): object;
+    serialize(opts: ISerializeOpts): ISerializedFilters[];
     restore(state: object): void;
 }

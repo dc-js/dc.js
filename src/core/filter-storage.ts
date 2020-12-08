@@ -1,4 +1,4 @@
-import { IFilterListenerParams, IFilterStorage } from './i-filter-storage';
+import { IFilterListenerParams, IFilterStorage, ISerializeOpts } from './i-filter-storage';
 import { IFilter } from './filters/i-filter';
 import { filterFactory } from './filters/filter-factory';
 import { ISerializedFilters } from './i-serialized-filters';
@@ -73,7 +73,31 @@ export class FilterStorage implements IFilterStorage {
         return this._filters.get(storageKey);
     }
 
-    public serialize(): object[] {
+    public resetFiltersAndNotify(storageKey) {
+        this.setFiltersAndNotify(storageKey, []);
+    }
+
+    public setFiltersAndNotify(storageKey, filters) {
+        // Update filters in the storage
+        this.setFiltersFor(storageKey, filters);
+
+        // Apply filters with the DataProvider - it will update CrossFilter
+        // Applying it to just first entry is sufficient as these share the underlying dimension
+        const listenerChain = this._listenerChains.get(storageKey);
+        if (listenerChain && listenerChain[0]) {
+            listenerChain[0].applyFilters(filters);
+        }
+
+        // Notify charts that filter has been updated
+        this.notifyListeners(storageKey, filters);
+    }
+
+    public deserializeFiltersSetAndNotify(storageKey, entry) {
+        const filters = this._deSerializeFilters(entry.filterType, entry.values);
+        this.setFiltersAndNotify(storageKey, filters);
+    }
+
+    public serialize({ includeStorageKey }: ISerializeOpts = {}): ISerializedFilters[] {
         // Include items that have active filters
         // In case of Composite charts, include only the parent chart
         return Array.from(this._listenerChains.values())
@@ -84,7 +108,11 @@ export class FilterStorage implements IFilterStorage {
                 if (listener) {
                     const filters = this._filters.get(listener.storageKey);
                     if (filters && filters.length > 0) {
-                        return this._serializeFilters(listener.chartId, filters);
+                        const entry = this._serializeFilters(listener.chartId, filters);
+                        if (includeStorageKey) {
+                            entry.storageKey = listener.storageKey;
+                        }
+                        return entry;
                     }
                 }
                 return undefined;
@@ -118,18 +146,7 @@ export class FilterStorage implements IFilterStorage {
                 ? filtersToRestore.get(storageKey)
                 : [];
 
-            // Update filters in the storage
-            this.setFiltersFor(storageKey, filters);
-
-            // Apply filters with the DataProvider - it will update CrossFilter
-            // Applying it to just first entry is sufficient as these share the underlying dimension
-            const listenerChain = this._listenerChains.get(storageKey);
-            if (listenerChain && listenerChain[0]) {
-                listenerChain[0].applyFilters(filters);
-            }
-
-            // Notify charts that filter has been updated
-            this.notifyListeners(storageKey, filters);
+            this.setFiltersAndNotify(storageKey, filters);
         }
     }
 
@@ -138,7 +155,7 @@ export class FilterStorage implements IFilterStorage {
             return {
                 chartId,
                 filterType: 'Simple',
-                values: filters,
+                values: [...filters], // defensively clone
             };
         }
 
