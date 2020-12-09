@@ -19,6 +19,32 @@
     </style>
 
     <style>
+      #filter-states-widget-wrapper {
+        margin: 10px 0;
+      }
+
+      #filter-states-widget {
+        height: 100px;
+        overflow: auto;
+      }
+
+      #filter-states-widget span {
+        display: inline-block;
+      }
+
+      #filter-states-widget .label {
+        width: 150px;
+        cursor: pointer;
+      }
+
+      #filter-states-widget .action {
+        width: 20px;
+        font-size: 0.6em;
+        cursor: pointer;
+      }
+    </style>
+
+    <style>
       #current-filters-widget-wrapper {
         margin: 10px 0;
       }
@@ -49,6 +75,14 @@
   </head>
   <body>
     <div class="container">
+      <div class="row">
+        <div id="filter-states-widget-wrapper">
+          <strong>Saved Filter States</strong>
+          <a href="javascript:saveFilterState();">save current</a>
+          <div id="filter-states-widget"></div>
+        </div>
+      </div>
+
       <div class="row">
         <div id="current-filters-widget-wrapper">
           <strong>Current Filters</strong>
@@ -174,6 +208,57 @@
     <script type="application/javascript">
       const filterStorage = chartGroup.filterStorage;
 
+      // Save/restore filter state
+
+      let savedFilterStates = [];
+      let counter = 0;
+
+      const saveFilterState = function () {
+        savedFilterStates.unshift({
+          label: `state ${++counter}`,
+          state: filterStorage.serialize(),
+        });
+        updateState();
+      };
+
+      const updateState = () => {
+        const widget = d3
+          .select('#filter-states-widget')
+          .selectAll('div.filter-states')
+          .data(savedFilterStates, d => d.label)
+          .join(enter =>
+            enter
+              .append('div')
+              .classed('filter-states', true)
+              .call(
+                s => s.append('span').classed('action', true).html('&#x274C;') // Cross mark (&#x274C;) or Negative squared cross mark (&#x274E;)
+              )
+              .call(s => {
+                s.append('span').classed('label', true);
+              })
+          );
+
+        widget
+          .selectAll('span.action')
+          .data(savedFilterStates, d => d.label)
+          .on('click', (e, d) => {
+            savedFilterStates = savedFilterStates.filter(x => x !== d);
+            updateState();
+          });
+
+        widget
+          .selectAll('span.label')
+          .data(savedFilterStates, d => d.label)
+          .text(d => d.label)
+          .on('click', (e, d) => {
+            filterStorage.restore(d.state);
+            chartGroup.redrawAll();
+          })
+          .attr('title', d => JSON.stringify(d.state));
+      };
+
+      // Current Filters Widget
+
       const clearAllFilters = () => {
         filterStorage.restore([]);
         chartGroup.redrawAll();
@@ -216,6 +301,7 @@
           .data(data, d => d.chartId)
           .text(d => d.values.toString());
       });
+
     </script>
   </body>
 </html>
