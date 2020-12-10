@@ -29,12 +29,15 @@ d3.csv("../examples/morley.csv").then(function(experiments) {
     .width(window.innerWidth-adjustX)
     .height(window.innerHeight-adjustY)
     .slicesCap(4)
-    .innerRadius(100)
     .dimension(runDimension)
     .group(speedSumGroup)
     .legend(dc.legend());
 
-    apply_resizing(chart, adjustX, adjustY);
+  apply_resizing(chart, adjustX, adjustY);
+
+  chart.on('preRender.resizing preRedraw.resizing', () => {
+    chart.innerRadius(d3.min([chart.width() - adjustX, chart.height() - adjustY]) * 0.2);
+  });
 
   chart.render();
 });
