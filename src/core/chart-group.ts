@@ -7,6 +7,8 @@ export class ChartGroup implements IChartGroup {
     private _charts: IMinimalChart[];
     public filterStorage: IFilterStorage;
     public renderlet: () => void;
+    public beforeRedrawAll: () => Promise<void>;
+    public beforeRenderAll: () => Promise<void>;
 
     constructor() {
         this._charts = [];
@@ -37,7 +39,11 @@ export class ChartGroup implements IChartGroup {
         this._charts = [];
     }
 
-    public renderAll(): void {
+    public async renderAll(): Promise<void> {
+        if (typeof this.beforeRenderAll === 'function') {
+            await this.beforeRenderAll();
+        }
+
         for (const chart of this._charts) {
             chart.render();
         }
@@ -47,7 +53,11 @@ export class ChartGroup implements IChartGroup {
         }
     }
 
-    public redrawAll(): void {
+    public async redrawAll(): Promise<void> {
+        if (typeof this.beforeRedrawAll === 'function') {
+            await this.beforeRedrawAll();
+        }
+
         for (const chart of this._charts) {
             chart.redraw();
         }

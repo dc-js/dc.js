@@ -9,5 +9,7 @@ export interface IChartGroup {
     filterAll(): void;
     refocusAll(): void;
     filterStorage: IFilterStorage;
+    beforeRedrawAll: () => Promise<void>;
+    beforeRenderAll: () => Promise<void>;
     renderlet: () => void;
 }
