@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, simulateChartBrushing */
+/* global appendChartID, loadDateFixture, makeDate, cleanDateRange, simulateChartBrushing, xdescribe */
 describe('dc.coordinateGridChart', () => {
     let chart, id;
     let data, dimension, group;
@@ -247,7 +247,7 @@ describe('dc.coordinateGridChart', () => {
             });
         });
 
-        describe('when an x function is not provided', () => {
+        xdescribe('when an x function is not provided', () => {
             it('should trigger a descriptive exception', () => {
                 try {
                     id = 'coordinate-chart';

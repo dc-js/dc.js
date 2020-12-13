@@ -463,9 +463,9 @@ export class BaseMixin {
         this._height = this._width = undefined; // force recalculate
         this._listeners.call('preRender', this, this);
 
-        if (this._mandatoryAttributesList) {
-            this._mandatoryAttributesList.forEach(e => this.checkForMandatoryAttributes(e));
-        }
+        // if (this._mandatoryAttributesList) {
+        //     this._mandatoryAttributesList.forEach(e => this.checkForMandatoryAttributes(e));
+        // }
 
         const result = this._doRender();
 

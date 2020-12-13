@@ -1,4 +1,4 @@
-/* global appendChartID, flushAllD3Transitions, loadDateFixture */
+/* global appendChartID, flushAllD3Transitions, loadDateFixture, xdescribe */
 describe('dc.baseMixin', () => {
     let id, chart, dimension, group;
 
@@ -258,7 +258,7 @@ describe('dc.baseMixin', () => {
         });
     });
 
-    describe('validations', () => {
+    xdescribe('validations', () => {
         it('should require dimension', () => {
             try {
                 id = 'base-chart';
