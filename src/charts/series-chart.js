@@ -102,7 +102,7 @@ export class SeriesChart extends CompositeChart {
     }
 
     _resetChildren () {
-        Object.keys(this._charts).map(this._clearChart);
+        Object.keys(this._charts).map(this._clearChart.bind(this));
         this._charts = {};
     }
 
