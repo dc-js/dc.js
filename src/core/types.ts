@@ -21,11 +21,11 @@ export interface MinimalCFDimension {
 export interface CFGrouping {
     key: any;
     value?: any; // Original as given by CrossFilter
-    _value: any; // After applying valueAccessor
+    _value?: any; // After applying valueAccessor
 }
 
 export interface MinimalCFGroup {
-    all(): CFGrouping[];
+    all(): ReadonlyArray<CFGrouping>;
 }
 
 // Used for mix-ins

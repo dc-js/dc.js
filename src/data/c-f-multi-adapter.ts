@@ -2,7 +2,7 @@ import { MinimalCFGroup, ValueAccessor } from '../core/types';
 import { CFSimpleAdapter, ICFSimpleAdapterConf } from './c-f-simple-adapter';
 
 export interface LayerSpec {
-    name: string;
+    name?: string;
     group: MinimalCFGroup;
     valueAccessor?: ValueAccessor;
     rawData?;
@@ -52,7 +52,7 @@ export class CFMultiAdapter extends CFSimpleAdapter {
     public layers(): LayerSpec[] {
         if (this._conf.group) {
             // if a stack configuration includes a `group` as well, that become the first layer
-            const firstLayer = { name: this._conf.groupName, group: this._conf.group };
+            const firstLayer: LayerSpec = { name: this._conf.groupName, group: this._conf.group };
 
             return [firstLayer].concat(this._conf.layers);
         }
