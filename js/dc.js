@@ -1,5 +1,5 @@
 /*!
- *  dc 4.2.2
+ *  dc 4.2.3
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -21,9 +21,9 @@
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3'), require('d3')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3', 'd3'], factory) :
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
-}(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Dispatch, d3Array, d3Collection, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
+}(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Collection, d3Array, d3Dispatch, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.2.2";
+  const version = "4.2.3";
 
   class BadArgumentException extends Error { }
 
@@ -12460,7 +12460,7 @@
       }
 
       _resetChildren () {
-          Object.keys(this._charts).map(this._clearChart);
+          Object.keys(this._charts).map(this._clearChart.bind(this));
           this._charts = {};
       }
 
@@ -13409,6 +13409,7 @@
   exports.StackMixin = StackMixin;
   exports.SunburstChart = SunburstChart;
   exports.TextFilterWidget = TextFilterWidget;
+  exports.adaptHandler = adaptHandler;
   exports.afterTransition = afterTransition;
   exports.barChart = barChart;
   exports.baseMixin = baseMixin;
@@ -13417,6 +13418,7 @@
   exports.bubbleOverlay = bubbleOverlay;
   exports.cboxMenu = cboxMenu;
   exports.chartRegistry = chartRegistry;
+  exports.compatNestHelper = compatNestHelper;
   exports.compositeChart = compositeChart;
   exports.config = config;
   exports.constants = constants;

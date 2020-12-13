@@ -121,10 +121,10 @@
                       var key = multikey(d.x, d.layer);
                       return chart.filter() && chart.filters().indexOf(key)===-1;
                   })
-                  .on('click', function(d) {
+                  .on('click', dc.adaptHandler(function(d) {
                       chart.filter(multikey(d.x, d.layer));
                       dc.redrawAll();
-                  });
+                  }));
           });
 
           pie
