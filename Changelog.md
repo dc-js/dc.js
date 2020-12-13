@@ -1,4 +1,5 @@
 ## 4.2.3
+* Fix undefined this on SeriesChart redraw, by Maxime Rouyrre ([#1800](https://github.com/dc-js/dc.js/pull/1800))
 * Export d3 compat functions allowing it to be used to simplify d3@6 compatibility in examples.
   Fixes [#1787](https://github.com/dc-js/dc.js/issues/1787).
 
