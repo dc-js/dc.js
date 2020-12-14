@@ -11,12 +11,11 @@ export interface ICFSimpleAdapterConf extends IFilterStorageConf {
 export class CFSimpleAdapter extends FilterStorageHelper {
     protected _conf: ICFSimpleAdapterConf;
 
-    constructor() {
-        super();
-
-        this.configure({
+    constructor(conf: ICFSimpleAdapterConf = {}) {
+        super({
             valueAccessor: d => d.value,
             ordering: d => d.key,
+            ...conf,
         });
     }
 

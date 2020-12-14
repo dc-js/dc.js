@@ -13,9 +13,7 @@ export class CFDataCapHelper extends CFSimpleAdapter {
     protected _conf: ICFDataCapHelperConf;
     private _restKeys: string[];
 
-    constructor() {
-        super();
-
+    constructor(conf: ICFDataCapHelperConf = {}) {
         const defaultOthersGrouper = (topItems, restItems) => {
             // @ts-ignore
             const restItemsSum = sum(restItems, d => d._value);
@@ -32,15 +30,13 @@ export class CFDataCapHelper extends CFSimpleAdapter {
             return topItems;
         };
 
-        this.configure({
+        super({
             cap: Infinity,
             takeFront: true,
             othersLabel: 'Others',
             othersGrouper: defaultOthersGrouper,
-        });
-
-        this.configure({
             ordering: kv => -kv.value, // emulate old group.top(N) ordering
+            ...conf,
         });
     }
 

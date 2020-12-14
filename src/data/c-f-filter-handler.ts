@@ -8,6 +8,10 @@ export interface ICFFilterHandlerConf {
 export class CFFilterHandler extends FilterHandler {
     protected _conf: ICFFilterHandlerConf;
 
+    constructor(conf: ICFFilterHandlerConf = {}) {
+        super();
+        this.configure(conf);
+    }
     public configure(conf: ICFFilterHandlerConf): this {
         this._conf = { ...this._conf, ...conf };
         return this;

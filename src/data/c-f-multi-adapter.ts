@@ -15,12 +15,11 @@ export interface ICFMultiAdapterConf extends ICFSimpleAdapterConf {
 export class CFMultiAdapter extends CFSimpleAdapter {
     protected _conf: ICFMultiAdapterConf;
 
-    constructor() {
-        super();
-
-        this.configure({
+    constructor(conf: ICFMultiAdapterConf = {}) {
+        super({
             layers: [],
             valueAccessor: d => d.value,
+            ...conf,
         });
     }
 
