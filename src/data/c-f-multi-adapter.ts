@@ -3,9 +3,8 @@ import { CFSimpleAdapter, ICFSimpleAdapterConf } from './c-f-simple-adapter';
 
 export interface LayerSpec {
     name?: string;
-    group: MinimalCFGroup;
+    group?: MinimalCFGroup;
     valueAccessor?: ValueAccessor;
-    rawData?;
 }
 
 export interface ICFMultiAdapterConf extends ICFSimpleAdapterConf {
@@ -34,18 +33,13 @@ export class CFMultiAdapter extends CFSimpleAdapter {
     // TODO: better typing
     public data(): any {
         // Two level defensive copy
-        const layers = this.layers().map(l => ({ ...l }));
-
-        layers.forEach(layer => {
+        return this.layers().map(layer => {
             const valueAccessor = layer.valueAccessor || this._conf.valueAccessor;
             // Two level defensive copy
-            const rawData = layer.group.all().map(val => ({ ...val }));
-            rawData.forEach(d => {
-                d._value = valueAccessor(d);
-            });
-            layer.rawData = rawData;
+            const rawData = layer.group.all().map(val => ({ ...val, _value: valueAccessor(val) }));
+
+            return { name: layer.name, rawData };
         });
-        return layers;
     }
 
     public layers(): LayerSpec[] {
