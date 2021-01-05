@@ -16,6 +16,7 @@
       "allow-empty-functions"
     ],
     "no-empty-interface": false,
+    "no-redundant-jsdoc": true,
     "object-literal-sort-keys": false,
     "only-arrow-functions": false, // TODO: switch and manual fix
     "prefer-for-of": false,
