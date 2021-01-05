@@ -1,9 +1,7 @@
 {
   "out": "web/html2",
-  "mode": "library",
-  "includes": "./docs",
-  "exclude": ["src/index-with-version.ts", "src/compat/**/*"],
+  "entryPoints": "src/index.ts",
   "excludeExternals": true,
   "excludePrivate": true,
-  "stripInternal": true
+  "listInvalidSymbolLinks": true
 }
