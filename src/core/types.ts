@@ -87,7 +87,7 @@ export interface MinimalXYScale extends MinimalScaleWithRange<any, number> {
 }
 
 // Units, used by Coordinate Grid Charts
-export interface Units {
+export interface IUnits {
     // Sometimes it returns an array
     (start: any, end: any): number | any[];
 

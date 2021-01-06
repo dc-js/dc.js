@@ -5,7 +5,7 @@ import { max, min } from 'd3-array';
 import { d3Box } from '../base/d3.box';
 import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
 import { transition } from '../core/core';
-import { units } from '../core/units';
+import { UnitsOrdinal } from '../core/units';
 import { add, subtract } from '../core/utils';
 import {
     BoxWidthFn,
@@ -76,7 +76,7 @@ export class BoxPlot extends CoordinateGridMixin {
 
         this._box = d3Box();
         this.configure({
-            xUnits: units.ordinal,
+            xUnits: UnitsOrdinal,
             tickFormat: null,
             renderDataPoints: false,
             dataOpacity: 0.3,

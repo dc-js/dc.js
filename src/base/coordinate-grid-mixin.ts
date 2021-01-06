@@ -10,7 +10,7 @@ import { Selection } from 'd3-selection';
 import { ColorMixin } from './color-mixin';
 import { MarginMixin } from './margin-mixin';
 import { optionalTransition, transition } from '../core/core';
-import { units } from '../core/units';
+import { UnitsInteger, UnitsOrdinal } from '../core/units';
 import { constants } from '../core/constants';
 import { add, appendOrSelect, arraysEqual, subtract } from '../core/utils';
 import { logger } from '../core/logger';
@@ -80,7 +80,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._chartBodyG = undefined;
 
         this.configure({
-            xUnits: units.integers,
+            xUnits: UnitsInteger,
             xAxisPadding: 0,
             xAxisPaddingUnit: timeDay,
             elasticX: false,
@@ -281,7 +281,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
-     * `units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
+     * `UnitsOrdinal`), this is the number of items in the domain of the x scale. Otherwise, the
      * x unit count is calculated using the {@link CoordinateGridMixin#xUnits xUnits} function.
      */
     public xUnitCount() {
@@ -302,12 +302,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * Returns true if the chart is using ordinal xUnits ({@link units.ordinal units.ordinal}, or false
+     * Returns true if the chart is using ordinal xUnits ({@link UnitsOrdinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
      */
     public isOrdinal(): boolean {
-        return this._conf.xUnits === units.ordinal;
+        return this._conf.xUnits === UnitsOrdinal;
     }
 
     public _useOuterPadding(): boolean {

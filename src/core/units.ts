@@ -1,19 +1,16 @@
 import { isNegligible } from './utils';
-import { Units } from './types';
-
-export const units: any = {};
+import { IUnits } from './types';
 
 /**
  * The default value for {@link CoordinateGridMixin#xUnits .xUnits} for the
  * {@link CoordinateGridMixin Coordinate Grid Chart} and should
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
- * @method integers
  * @see {@link CoordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @example
- * chart.xUnits(units.integers) // already the default
+ * chart.xUnits(UnitsIntegers) // already the default
  */
-units.integers = function (start: number, end: number): number {
+export const UnitsInteger: IUnits = function (start: number, end: number): number {
     return Math.abs(end - start);
 };
 
@@ -26,19 +23,17 @@ units.integers = function (start: number, end: number): number {
  *
  * As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
  * function is not called.
- * @method ordinal
  * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
  * @see {@link CoordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @see {@link CoordinateGridMixin#x coordinateGridMixin.x}
  * @example
- * chart.xUnits(units.ordinal)
+ * chart.xUnits(UnitsOrdinal)
  *      .x(d3.scaleOrdinal())
  */
-units.ordinal = function (start, end): number {
+export const UnitsOrdinal: IUnits = function (start, end): number {
     throw new Error('dc.units.ordinal should not be called - it is a placeholder');
 };
 
-units.fp = {};
 /**
  * This function generates an argument for the {@link CoordinateGridMixin Coordinate Grid Chart}
  * {@link CoordinateGridMixin#xUnits .xUnits} function specifying that the x values are floating-point
@@ -49,13 +44,13 @@ units.fp = {};
  * @see {@link CoordinateGridMixin#xUnits coordinateGridMixin.xUnits}
  * @example
  * // specify values (and ticks) every 0.1 units
- * chart.xUnits(units.fp.precision(0.1)
+ * chart.xUnits(UnitWithPrecision(0.1)
  * // there are 500 units between 0.5 and 1 if the precision is 0.001
- * var thousandths = units.fp.precision(0.001);
+ * var thousandths = UnitWithPrecision(0.001);
  * thousandths(0.5, 1.0) // returns 500
  */
-units.fp.precision = function (precision: number): Units {
-    const _f: Units = function (s: number, e: number): number {
+export const UnitWithPrecision = function (precision: number): IUnits {
+    const _f: IUnits = function (s: number, e: number): number {
         const d = Math.abs((e - s) / _f.resolution);
         if (isNegligible(d - Math.floor(d))) {
             return Math.floor(d);

@@ -1,4 +1,4 @@
-import { Constructor, RoundFn, Units } from '../../core/types';
+import { Constructor, RoundFn, IUnits } from '../../core/types';
 import { BaseMixinExt } from './base-mixin';
 import { CoordinateGridMixin as CoordinateGridMixinNeo } from '../../base/coordinate-grid-mixin';
 import { MarginMixinExt } from './margin-mixin';
@@ -56,8 +56,8 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * }
          * @param [xUnits=units.integers]
          */
-        public xUnits(): Units;
-        public xUnits(xUnits: Units): this;
+        public xUnits(): IUnits;
+        public xUnits(xUnits: IUnits): this;
         public xUnits(xUnits?) {
             if (!arguments.length) {
                 return this._conf.xUnits;
