@@ -15,8 +15,7 @@ export class BarChart extends StackMixinExt(
 
     /**
      * Whether the bar chart will render each bar centered around the data position on the x-axis.
-     * @param {Boolean} [centerBar=false]
-     * @returns {Boolean|BarChart}
+     * @param [centerBar=false]
      */
     public centerBar(): boolean;
     public centerBar(centerBar: boolean): this;
@@ -37,8 +36,7 @@ export class BarChart extends StackMixinExt(
      * compensate, such as in the following example.
      * @example
      * chart.round(function(n) { return Math.floor(n) + 0.5; });
-     * @param {Boolean} [alwaysUseRounding=false]
-     * @returns {Boolean|BarChart}
+     * @param [alwaysUseRounding=false]
      */
     public alwaysUseRounding(): boolean;
     public alwaysUseRounding(alwaysUseRounding: boolean): this;

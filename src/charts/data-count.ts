@@ -27,7 +27,6 @@ interface MinimalGroupAll {
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @mixes BaseMixin
  */
 export class DataCount extends BaseMixin {
     protected _conf: IDataCountConf;
@@ -44,10 +43,10 @@ export class DataCount extends BaseMixin {
      * new DataCount('.dc-data-count')
      *     .crossfilter(ndx)
      *     .groupAll(all);
-     * @param {String|node|d3.selection} parent - Any valid
+     * @param parent - Any valid
      * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
      * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * @param chartGroup - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

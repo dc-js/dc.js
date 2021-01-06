@@ -45,8 +45,6 @@ const LABEL_PADDING = 3;
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @mixes StackMixin
- * @mixes CoordinateGridMixin
  */
 export class LineChart extends StackMixin {
     private _renderArea: boolean;
@@ -70,13 +68,6 @@ export class LineChart extends StackMixin {
      * var chart2 = new LineChart('#chart-container2', 'chartGroupA');
      * // create a sub-chart under a composite parent chart
      * var chart3 = new LineChart(compositeChart);
-     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
-     * specifying a dom block element such as a div; or a dom element or d3 selection.  If the line
-     * chart is a sub-chart in a {@link CompositeChart Composite Chart} then pass in the parent
-     * composite chart instance instead.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -156,7 +147,6 @@ export class LineChart extends StackMixin {
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
      * @param  {d3.curve} [curve=d3.curveLinear]
-     * @returns {d3.curve|LineChart}
      */
     public curve(): CurveFactory | CurveFactoryLineOnly;
     public curve(curve: CurveFactory | CurveFactoryLineOnly): this;
@@ -182,7 +172,6 @@ export class LineChart extends StackMixin {
      * @deprecated since version 3.0 use {@link LineChart#curve} instead
      * @see {@link LineChart#curve}
      * @param  {d3.curve} [interpolate=d3.curveLinear]
-     * @returns {d3.curve|LineChart}
      */
     public interpolate(): CurveFactory | CurveFactoryLineOnly | string;
     public interpolate(interpolate: CurveFactory | CurveFactoryLineOnly | string): this;
@@ -210,7 +199,6 @@ export class LineChart extends StackMixin {
      * @deprecated since version 3.0 use {@link LineChart#curve} instead
      * @see {@link LineChart#curve}
      * @param  {Number} [tension=0]
-     * @returns {Number|LineChart}
      */
     public tension(): number;
     public tension(tension: number): this;
@@ -236,8 +224,6 @@ export class LineChart extends StackMixin {
      * {@link https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248 this GitHub comment}
      * for more details and an example.
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined line.defined}
-     * @param  {Function} [defined]
-     * @returns {Function|LineChart}
      */
     public defined(): BaseAccessor<boolean>;
     public defined(defined: BaseAccessor<boolean>): this;
@@ -256,8 +242,6 @@ export class LineChart extends StackMixin {
      * @example
      * // create a Dash Dot Dot Dot
      * chart.dashStyle([3,1,1,1]);
-     * @param  {Array<Number>} [dashStyle=[]]
-     * @returns {Array<Number>|LineChart}
      */
     public dashStyle(): number[];
     public dashStyle(dashStyle: number[]): this;
@@ -273,7 +257,6 @@ export class LineChart extends StackMixin {
      * Get or set render area flag. If the flag is set to true then the chart will render the area
      * beneath each line and the line chart effectively becomes an area chart.
      * @param  {Boolean} [renderArea=false]
-     * @returns {Boolean|LineChart}
      */
     public renderArea(): boolean;
     public renderArea(renderArea: boolean): this;
@@ -558,7 +541,6 @@ export class LineChart extends StackMixin {
      * {@link CoordinateGridMixin#brushOn brush} is on.
      *
      * @param  {Boolean} [xyTipsOn=false]
-     * @returns {Boolean|LineChart}
      */
     public xyTipsOn(): boolean | 'always';
     public xyTipsOn(xyTipsOn: 'always'): this;
@@ -573,7 +555,6 @@ export class LineChart extends StackMixin {
     /**
      * Get or set the radius (in px) for dots displayed on the data points.
      * @param  {Number} [dotRadius=5]
-     * @returns {Number|LineChart}
      */
     public dotRadius(): number;
     public dotRadius(dotRadius: number): this;

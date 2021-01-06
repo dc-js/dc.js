@@ -27,10 +27,6 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * chart.stack(valueSumGroup)
          * // stack group using custom accessor
          * .stack(avgByDayGroup, function(d){return d.value.avgByDay;});
-         * @param {crossfilter.group} group
-         * @param {String} [name]
-         * @param {Function} [accessor]
-         * @returns {Array<{group: crossfilter.group, name: String, accessor: Function}>|StackMixin}
          */
         public stack();
         public stack(group, name?, accessor?): this;
@@ -87,9 +83,6 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * chart.title('first stack', function(d) { return d.key + ': ' + d.value; });
          * // get a title function from 'second stack'
          * var secondTitleFunction = chart.title('second stack');
-         * @param {String} [stackName]
-         * @param {Function} [titleAccessor]
-         * @returns {String|StackMixin}
          */
         public title(): TitleAccessor;
         public title(stackName); // TODO: actually TitleAccessor, however conflicts with base class signature
@@ -121,8 +114,7 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         /**
          * Allow named stacks to be hidden or shown by clicking on legend items.
          * This does not affect the behavior of hideStack or showStack.
-         * @param {Boolean} [hidableStacks=false]
-         * @returns {Boolean|StackMixin}
+         * @param [hidableStacks=false]
          */
         public hidableStacks(hidableStacks) {
             if (!arguments.length) {
@@ -142,8 +134,7 @@ export function StackMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * that fix is published, so set this flag to skip any filtering of points.
          *
          * Once the bug is fixed, this flag will have no effect, and it will be deprecated.
-         * @param {Boolean} [evadeDomainFilter=false]
-         * @returns {Boolean|StackMixin}
+         * @param [evadeDomainFilter=false]
          */
         public evadeDomainFilter();
         public evadeDomainFilter(evadeDomainFilter): this;

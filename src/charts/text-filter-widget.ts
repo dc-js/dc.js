@@ -15,7 +15,6 @@ const INPUT_CSS_CLASS = 'dc-text-filter-input';
  * As opposed to the other charts, this doesn't display any result and doesn't update its display,
  * it's just to input an filter other charts.
  *
- * @mixes BaseMixin
  */
 export class TextFilterWidget extends BaseMixin {
     protected _conf: ITextFilterWidgetConf;
@@ -35,12 +34,6 @@ export class TextFilterWidget extends BaseMixin {
      * new TextFilterWidget('#search')
      *     .dimension(dimension);
      *     // you don't need the group() function
-     *
-     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
-     * specifying a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

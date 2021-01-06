@@ -11,8 +11,6 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
      * Get or set the function that controls the ordering of option tags in the
      * cbox menu. By default options are ordered by the group key in ascending
      * order.
-     * @param {Function} [order]
-     * @returns {Function|CboxMenu}
      * @example
      * // order by the group's value
      * chart.order(function (a,b) {
@@ -31,8 +29,7 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
 
     /**
      * Get or set the text displayed in the options used to prompt selection.
-     * @param {String} [promptText='Select all']
-     * @returns {String|CboxMenu}
+     * @param [promptText='Select all']
      * @example
      * chart.promptText('All states');
      */
@@ -49,8 +46,6 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
     /**
      * Get or set the function that filters options prior to display. By default only options
      * with a value > 0 are displayed.
-     * @param {function} [filterDisplayed]
-     * @returns {Function|CboxMenu}
      * @example
      * // display all options override the `filterDisplayed` function:
      * chart.filterDisplayed(function () {
@@ -70,8 +65,7 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
     /**
      * Controls the type of input element. Setting it to true converts
      * the HTML `input` tags from radio buttons to checkboxes.
-     * @param {boolean} [multiple=false]
-     * @returns {Boolean|CboxMenu}
+     * @param [multiple=false]
      * @example
      * chart.multiple(true);
      */
@@ -90,8 +84,6 @@ export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
      * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
      * when only the prompt value is selected. If `null` (the default), no filtering will occur when
      * just the prompt is selected.
-     * @param {?*} [promptValue=null]
-     * @returns {*|CboxMenu}
      */
     public promptValue();
     public promptValue(promptValue): this;

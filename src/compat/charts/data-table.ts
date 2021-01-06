@@ -26,8 +26,6 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * // section rows by the value of their field
      * chart
      *     .section(function(d) { return d.field; })
-     * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|DataTable}
      */
     public section(): BaseAccessor<string>;
     public section(section: BaseAccessor<string>): this;
@@ -42,8 +40,6 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
     /**
      * Backward-compatible synonym for {@link DataTable#section section}.
      *
-     * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|DataTable}
      */
     // @ts-ignore, signature is different in BaseMixin
     public group(): BaseAccessor<string>;
@@ -60,8 +56,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
 
     /**
      * Get or set the table size which determines the number of rows displayed by the widget.
-     * @param {Number} [size=25]
-     * @returns {Number|DataTable}
+     * @param [size=25]
      */
     public size(): number;
     public size(size: number): this;
@@ -80,8 +75,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * Note: the sortBy function will determine how the rows are ordered for pagination purposes.
      * See the {@link http://dc-js.github.io/dc.js/examples/table-pagination.html table pagination example}
      * to see how to implement the pagination user interface using `beginSlice` and `endSlice`.
-     * @param {Number} [beginSlice=0]
-     * @returns {Number|DataTable}
+     * @param [beginSlice=0]
      */
     public beginSlice(): number;
     public beginSlice(beginSlice: number): this;
@@ -96,8 +90,6 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the
      * widget. Useful when implementing pagination. See {@link DataTable#beginSlice `beginSlice`} for more information.
-     * @param {Number|undefined} [endSlice=undefined]
-     * @returns {Number|DataTable}
      */
     public endSlice(): number;
     public endSlice(endSlice: number): this;
@@ -182,8 +174,6 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * override `_chart._doColumnHeaderFormat` and `_chart._doColumnValueFormat` Be aware that
      * fields without numberFormat specification will be displayed just as they are stored in the
      * data, unformatted.
-     * @param {Array<Function>} [columns=[]]
-     * @returns {Array<Function>}|DataTable}
      */
     public columns(): DataTableColumnSpec[];
     public columns(columns: DataTableColumnSpec[]): this;
@@ -202,8 +192,6 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * chart.sortBy(function(d) {
      *     return d.date;
      * });
-     * @param {Function} [sortBy=identity function]
-     * @returns {Function|DataTable}
      */
     public sortBy(): BaseAccessor<any>;
     public sortBy(sortBy: BaseAccessor<any>): this;
@@ -222,8 +210,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
-     * @param {Function} [order=d3.ascending]
-     * @returns {Function|DataTable}
+     * @param [order=d3.ascending]
      */
     public order(): CompareFn;
     public order(order: CompareFn): this;
@@ -241,8 +228,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * chart
      *     .section([value], [name])
      *     .showSections(true|false);
-     * @param {Boolean} [showSections=true]
-     * @returns {Boolean|DataTable}
+     * @param [showSections=true]
      */
     public showSections(): boolean;
     public showSections(showSections: boolean): this;
@@ -256,8 +242,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
 
     /**
      * Backward-compatible synonym for {@link DataTable#showSections showSections}.
-     * @param {Boolean} [showSections=true]
-     * @returns {Boolean|DataTable}
+     * @param [showSections=true]
      */
     public showGroups(): boolean;
     public showGroups(showSections: boolean): this;

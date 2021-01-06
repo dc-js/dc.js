@@ -21,8 +21,6 @@ import {
  *
  * Currently these filter objects are also arrays, but this is not a requirement. Custom filters
  * can be used as long as they have the properties above.
- * @namespace filters
- * @type {{}}
  */
 
 export const filters = {
@@ -32,10 +30,6 @@ export const filters = {
      *
      * Its `filterType` is 'RangedFilter'
      * @name RangedFilter
-     * @memberof filters
-     * @param {Number} low
-     * @param {Number} high
-     * @returns {Array<Number>}
      * @constructor
      */
     RangedFilter: (low, high) => new RangedFilter(low, high),
@@ -47,9 +41,6 @@ export const filters = {
      *
      * Its `filterType` is 'TwoDimensionalFilter'
      * @name TwoDimensionalFilter
-     * @memberof filters
-     * @param {Array<Number>} filter
-     * @returns {Array<Number>}
      * @constructor
      */
     TwoDimensionalFilter: filter => new TwoDimensionalFilter(filter),
@@ -68,9 +59,6 @@ export const filters = {
      *
      * Its `filterType` is 'RangedTwoDimensionalFilter'
      * @name RangedTwoDimensionalFilter
-     * @memberof filters
-     * @param {Array<Array<Number>>} filter
-     * @returns {Array<Array<Number>>}
      * @constructor
      */
     RangedTwoDimensionalFilter: filter => new RangedTwoDimensionalFilter(filter),
@@ -81,9 +69,6 @@ export const filters = {
      * their children as they are clicked.
      *
      * @name HierarchyFilter
-     * @memberof filters
-     * @param {String} path
-     * @returns {Array<String>}
      * @constructor
      */
     HierarchyFilter: path => new HierarchyFilter(path),

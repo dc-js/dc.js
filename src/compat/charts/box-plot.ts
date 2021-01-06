@@ -18,8 +18,6 @@ export class BoxPlot extends CoordinateGridMixinExt(
      * @example
      * // format ticks to 2 decimal places
      * chart.tickFormat(d3.format('.2f'));
-     * @param {Function} [tickFormat]
-     * @returns {Number|Function|BoxPlot}
      */
     public tickFormat(): NumberFormatFn;
     public tickFormat(tickFormat: NumberFormatFn): this;
@@ -36,8 +34,7 @@ export class BoxPlot extends CoordinateGridMixinExt(
      * @example
      * // Enable rendering of individual data points
      * chart.renderDataPoints(true);
-     * @param {Boolean} [show=false]
-     * @returns {Boolean|BoxPlot}
+     * @param [show=false]
      */
     public renderDataPoints(): boolean;
     public renderDataPoints(show: boolean): this;
@@ -54,8 +51,7 @@ export class BoxPlot extends CoordinateGridMixinExt(
      * @example
      * // If individual data points are rendered increase the opacity.
      * chart.dataOpacity(0.7);
-     * @param {Number} [opacity=0.3]
-     * @returns {Number|BoxPlot}
+     * @param [opacity=0.3]
      */
     public dataOpacity(): number;
     public dataOpacity(opacity: number): this;
@@ -73,8 +69,7 @@ export class BoxPlot extends CoordinateGridMixinExt(
      * @example
      * // allow more space for a bigger whisker font
      * chart.yRangePadding(12);
-     * @param {Function} [yRangePadding = 8]
-     * @returns {Number|Function|BoxPlot}
+     * @param [yRangePadding = 8]
      */
     public yRangePadding(): number;
     public yRangePadding(yRangePadding: number): this;
@@ -91,8 +86,7 @@ export class BoxPlot extends CoordinateGridMixinExt(
      * @example
      * // If individual data points are rendered increase the data box.
      * chart.dataWidthPortion(0.9);
-     * @param {Number} [percentage=0.8]
-     * @returns {Number|BoxPlot}
+     * @param [percentage=0.8]
      */
     public dataWidthPortion(): number;
     public dataWidthPortion(percentage: number): this;
@@ -109,8 +103,7 @@ export class BoxPlot extends CoordinateGridMixinExt(
      * @example
      * // Disable rendering of outliers
      * chart.showOutliers(false);
-     * @param {Boolean} [show=true]
-     * @returns {Boolean|BoxPlot}
+     * @param [show=true]
      */
     public showOutliers(): boolean;
     public showOutliers(show: boolean): this;
@@ -127,8 +120,7 @@ export class BoxPlot extends CoordinateGridMixinExt(
      * @example
      * // If outliers are rendered display as bold
      * chart.boldOutlier(true);
-     * @param {Boolean} [show=false]
-     * @returns {Boolean|BoxPlot}
+     * @param [show=false]
      */
     public boldOutlier(): boolean;
     public boldOutlier(show: boolean): this;

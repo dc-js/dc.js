@@ -12,8 +12,6 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      * Get or set the function that controls the ordering of option tags in the
      * select menu. By default options are ordered by the group key in ascending
      * order.
-     * @param {Function} [order]
-     * @returns {Function|SelectMenu}
      * @example
      * // order by the group's value
      * chart.order(function (a,b) {
@@ -32,8 +30,7 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
 
     /**
      * Get or set the text displayed in the options used to prompt selection.
-     * @param {String} [promptText='Select all']
-     * @returns {String|SelectMenu}
+     * @param [promptText='Select all']
      * @example
      * chart.promptText('All states');
      */
@@ -50,8 +47,6 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
     /**
      * Get or set the function that filters option tags prior to display. By default options
      * with a value of < 1 are not displayed.
-     * @param {function} [filterDisplayed]
-     * @returns {Function|SelectMenu}
      * @example
      * // display all options override the `filterDisplayed` function:
      * chart.filterDisplayed(function () {
@@ -71,8 +66,7 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
     /**
      * Controls the type of select menu. Setting it to true converts the underlying
      * HTML tag into a multiple select.
-     * @param {boolean} [multiple=false]
-     * @returns {boolean|SelectMenu}
+     * @param [multiple=false]
      * @example
      * chart.multiple(true);
      */
@@ -92,8 +86,6 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      * [dimension.filter](https://github.com/crossfilter/crossfilter/wiki/API-Reference#dimension_filter)
      * when only the prompt value is selected. If `null` (the default), no filtering will occur when
      * just the prompt is selected.
-     * @param {?*} [promptValue=null]
-     * @returns {*|SelectMenu}
      */
     public promptValue(): string;
     public promptValue(promptValue: string): this;
@@ -110,8 +102,6 @@ export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
      * Controls the number of items to show in the select menu, when `.multiple()` is true. This
      * controls the [`size` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes) of
      * the `select` element. If `null` (the default), uses the browser's default height.
-     * @param {?number} [numberVisible=null]
-     * @returns {number|SelectMenu}
      * @example
      * chart.numberVisible(10);
      */

@@ -16,9 +16,6 @@ interface MinimalBase {
 /**
  * The Color Mixin is an abstract chart functional class providing universal coloring support
  * as a mix-in for any concrete chart implementation.
- * @mixin ColorMixin
- * @param {Object} Base
- * @returns {ColorMixin}
  */
 // tslint:disable-next-line:variable-name
 export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
@@ -65,11 +62,6 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
         /**
          * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
          * @method getColor
-         * @memberof ColorMixin
-         * @instance
-         * @param {*} d
-         * @param {Number} [i]
-         * @returns {String}
          */
         public getColor(d, i?: number): string {
             return this._colorHelper.getColor(d, i);
@@ -78,9 +70,6 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
         /**
          * Set the domain by determining the min and max values as retrieved by
          * {@link ColorMixin#colorAccessor .colorAccessor} over the chart's dataset.
-         * @memberof ColorMixin
-         * @instance
-         * @returns {ColorMixin}
          */
         public calculateColorDomain(): this {
             const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper)

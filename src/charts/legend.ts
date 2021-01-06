@@ -15,7 +15,6 @@ const LABEL_GAP = 2;
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
  * @example
  * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
- * @returns {Legend}
  */
 export class Legend {
     private _parent: ParentOfLegend;
@@ -61,8 +60,6 @@ export class Legend {
 
     /**
      * Set or get x coordinate for legend widget.
-     * @param  {Number} [x=0]
-     * @returns {Number|Legend}
      */
     public x(): number;
     public x(x: number): this;
@@ -76,8 +73,6 @@ export class Legend {
 
     /**
      * Set or get y coordinate for legend widget.
-     * @param  {Number} [y=0]
-     * @returns {Number|Legend}
      */
     public y(): number;
     public y(y: number): this;
@@ -91,8 +86,6 @@ export class Legend {
 
     /**
      * Set or get gap between legend items.
-     * @param  {Number} [gap=5]
-     * @returns {Number|Legend}
      */
     public gap(): number;
     public gap(gap: number): this;
@@ -107,8 +100,6 @@ export class Legend {
     /**
      * This can be optionally used to enable highlighting legends for the selections/filters for the
      * chart.
-     * @param {boolean} [highlightSelected]
-     * @return {boolean|dc.legend}
      */
     public highlightSelected(): boolean;
     public highlightSelected(highlightSelected: boolean): this;
@@ -122,8 +113,6 @@ export class Legend {
 
     /**
      * Set or get legend item height.
-     * @param  {Number} [itemHeight=12]
-     * @returns {Number|Legend}
      */
     public itemHeight(): number;
     public itemHeight(itemHeight: number): this;
@@ -137,8 +126,6 @@ export class Legend {
 
     /**
      * Position legend horizontally instead of vertically.
-     * @param  {Boolean} [horizontal=false]
-     * @returns {Boolean|Legend}
      */
     public horizontal(): boolean;
     public horizontal(horizontal: boolean): this;
@@ -152,8 +139,6 @@ export class Legend {
 
     /**
      * Maximum width for horizontal legend.
-     * @param  {Number} [legendWidth=500]
-     * @returns {Number|Legend}
      */
     public legendWidth(): number;
     public legendWidth(legendWidth: number): this;
@@ -167,8 +152,6 @@ export class Legend {
 
     /**
      * Legend item width for horizontal legend.
-     * @param  {Number} [itemWidth=70]
-     * @returns {Number|Legend}
      */
     public itemWidth(): number;
     public itemWidth(itemWidth: number): this;
@@ -183,8 +166,6 @@ export class Legend {
     /**
      * Turn automatic width for legend items on or off. If true, {@link Legend#itemWidth itemWidth} is ignored.
      * This setting takes into account the {@link Legend#gap gap}.
-     * @param  {Boolean} [autoItemWidth=false]
-     * @returns {Boolean|Legend}
      */
     public autoItemWidth(): boolean;
     public autoItemWidth(autoItemWidth: boolean): this;
@@ -200,8 +181,6 @@ export class Legend {
      * Set or get the legend text function. The legend widget uses this function to render the legend
      * text for each item. If no function is specified the legend widget will display the names
      * associated with each group.
-     * @param  {Function} [legendText]
-     * @returns {Function|Legend}
      * @example
      * // default legendText
      * legend.legendText(pluck('name'))
@@ -224,8 +203,6 @@ export class Legend {
 
     /**
      * Maximum number of legend items to display
-     * @param  {Number} [maxItems]
-     * @return {Legend}
      */
     public maxItems(): number;
     public maxItems(maxItems: number): this;

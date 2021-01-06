@@ -5,10 +5,6 @@ interface IPrinters {
     filter: (filter) => string;
 }
 
-/**
- * @namespace printers
- * @type {{}}
- */
 export const printers: IPrinters = {
     filter(filter): string {
         return '';
@@ -21,9 +17,6 @@ export const printers: IPrinters = {
 /**
  * Converts a list of filters into a readable string.
  * @method filters
- * @memberof printers
- * @param {Array<filters>} filters
- * @returns {String}
  */
 printers.filters = function (filters) {
     let s = '';
@@ -41,9 +34,6 @@ printers.filters = function (filters) {
 /**
  * Converts a filter into a readable string.
  * @method filter
- * @memberof printers
- * @param {filters|any|Array<any>} filter
- * @returns {String}
  */
 printers.filter = function (filter) {
     let s = '';

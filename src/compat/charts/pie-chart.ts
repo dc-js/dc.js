@@ -11,8 +11,6 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
 
     /**
      * Title to use for the only slice when there is no data.
-     * @param {String} [title]
-     * @returns {String|PieChart}
      */
     public emptyTitle(): string;
     public emptyTitle(title: string): this;
@@ -27,8 +25,6 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
     /**
      * Get or set the maximum number of slices the pie chart will generate. The top slices are determined by
      * value from high to low. Other slices exceeding the cap will be rolled up into one single *Others* slice.
-     * @param {Number} [cap]
-     * @returns {Number|PieChart}
      */
     public slicesCap(cap?: number): this | number {
         return this.cap(cap);
@@ -37,8 +33,7 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
     /**
      * Get or set the external radius padding of the pie chart. This will force the radius of the
      * pie chart to become smaller or larger depending on the value.
-     * @param {Number} [externalRadiusPadding=0]
-     * @returns {Number|PieChart}
+     * @param [externalRadiusPadding=0]
      */
     public externalRadiusPadding(): number;
     public externalRadiusPadding(externalRadiusPadding: number): this;
@@ -53,8 +48,7 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
     /**
      * Get or set the inner radius of the pie chart. If the inner radius is greater than 0px then the
      * pie chart will be rendered as a doughnut chart.
-     * @param {Number} [innerRadius=0]
-     * @returns {Number|PieChart}
+     * @param [innerRadius=0]
      */
     public innerRadius(): number;
     public innerRadius(innerRadius: number): this;
@@ -69,8 +63,6 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
     /**
      * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
      * chart width and height.
-     * @param {Number} [radius]
-     * @returns {Number|PieChart}
      */
     public radius(): number;
     public radius(radius: number): this;
@@ -85,8 +77,7 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
     /**
      * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
      * display a slice label.
-     * @param {Number} [minAngleForLabel=0.5]
-     * @returns {Number|PieChart}
+     * @param [minAngleForLabel=0.5]
      */
     public minAngleForLabel(): number;
     public minAngleForLabel(minAngleForLabel: number): this;
@@ -102,8 +93,6 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * Position slice labels offset from the outer edge of the chart.
      *
      * The argument specifies the extra radius to be added for slice labels.
-     * @param {Number} [externalLabelRadius]
-     * @returns {Number|PieChart}
      */
     public externalLabels(): number;
     public externalLabels(externalLabelRadius: number): this;
@@ -123,8 +112,6 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
     /**
      * Get or set whether to draw lines from pie slices to their labels.
      *
-     * @param {Boolean} [drawPaths]
-     * @returns {Boolean|PieChart}
      */
     public drawPaths(): boolean;
     public drawPaths(drawPaths: boolean): this;

@@ -21,8 +21,7 @@ export class SeriesChart extends CompositeChartExt(
      * chart.chart(function(c) { return new LineChart(c).curve(d3.curveBasis); })
      * // do a scatter series chart
      * chart.chart(anchor => new ScatterPlot(anchor))
-     * @param {Function} [chartFunction= (anchor) =>  new LineChart(anchor)]
-     * @returns {Function|SeriesChart}
+     * @param [chartFunction= (anchor) =>  new LineChart(anchor)]
      */
     public chart(): LineChartFunction;
     public chart(chartFunction: LineChartFunction): this;
@@ -42,8 +41,6 @@ export class SeriesChart extends CompositeChartExt(
      * @example
      * // simple series accessor
      * chart.seriesAccessor(function(d) { return "Expt: " + d.key[0]; })
-     * @param {Function} [accessor]
-     * @returns {Function|SeriesChart}
      */
     public seriesAccessor(): BaseAccessor<string>;
     public seriesAccessor(accessor: BaseAccessor<string>): this;
@@ -61,8 +58,7 @@ export class SeriesChart extends CompositeChartExt(
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.seriesSort(d3.descending);
-     * @param {Function} [sortFunction=d3.ascending]
-     * @returns {Function|SeriesChart}
+     * @param [sortFunction=d3.ascending]
      */
     public seriesSort(): CompareFn;
     public seriesSort(sortFunction: CompareFn): this;
@@ -85,8 +81,6 @@ export class SeriesChart extends CompositeChartExt(
      * _chart.valueSort(function keySort (a, b) {
      *     return d3.ascending(_chart.keyAccessor()(a), _chart.keyAccessor()(b));
      * });
-     * @param {Function} [sortFunction]
-     * @returns {Function|SeriesChart}
      */
     public valueSort(): CompareFn;
     public valueSort(sortFunction: CompareFn): this;

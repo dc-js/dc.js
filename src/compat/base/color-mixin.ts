@@ -20,15 +20,11 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * Set or the get color accessor function. This function will be used to map a data point in a
          * crossfilter group to a color value on the color scale. The default function uses the key
          * accessor.
-         * @memberof ColorMixin
-         * @instance
          * @example
          * // default index based color accessor
          * .colorAccessor(function (d, i){return i;})
          * // color accessor for a multi-value crossfilter reduction
          * .colorAccessor(function (d){return d.value.absGain;})
-         * @param {Function} [colorAccessor]
-         * @returns {Function|ColorMixin}
          */
         public colorAccessor(): ColorAccessor;
         public colorAccessor(colorAccessor: ColorAccessor): this;
@@ -48,10 +44,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          *
          * But sometimes it is difficult to get a color scale to produce the desired effect. The `colorCalculator`
          * takes the datum and index and returns a color directly.
-         * @memberof ColorMixin
-         * @instance
-         * @param {*} [colorCalculator]
-         * @returns {Function|ColorMixin}
          */
         public colorCalculator(): ColorAccessor;
         public colorCalculator(colorCalculator: ColorAccessor): this;
@@ -66,8 +58,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         /**
          * Retrieve current color scale or set a new color scale. This methods accepts any function that
          * operates like a d3 scale.
-         * @memberof ColorMixin
-         * @instance
          * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
          * @example
          * // alternate categorical scale
@@ -78,8 +68,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * chart.ordinalColors(['red','green','blue']);
          * // set a linear scale
          * chart.linearColors(["#4575b4", "#ffffbf", "#a50026"]);
-         * @param {d3.scale} [colorScale=d3.scaleOrdinal(d3.schemeCategory20c)]
-         * @returns {d3.scale|ColorMixin}
          */
         public colors(): BaseAccessor<string>;
         public colors(colorScale: BaseAccessor<string>): this;
@@ -107,10 +95,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * Convenience method to set the color scale to
          * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal} with
          * range `r`.
-         * @memberof ColorMixin
-         * @instance
-         * @param {Array<String>} r
-         * @returns {ColorMixin}
          */
         public ordinalColors(r: string[]): this {
             this.colorHelper(
@@ -124,10 +108,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
 
         /**
          * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
-         * @memberof ColorMixin
-         * @instance
-         * @param {Array<Number>} r
-         * @returns {ColorMixin}
          */
         public linearColors(r: [string, string]): this {
             this.colorHelper(
@@ -145,10 +125,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          *
          * Note: previously this method accepted a callback function. Instead you may use a custom scale
          * set by {@link ColorMixin#colors .colors}.
-         * @memberof ColorMixin
-         * @instance
-         * @param {Array<String>} [domain]
-         * @returns {Array<String>|ColorMixin}
          */
         public colorDomain(): string[];
         public colorDomain(domain: string[]): this;

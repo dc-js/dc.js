@@ -47,7 +47,6 @@ function defaultWhiskersIQR(k: number): (d) => [number, number] {
  * - {@link http://dc-js.github.io/dc.js/examples/boxplot-enhanced.html Boxplot Enhanced example}
  * - {@link http://dc-js.github.io/dc.js/examples/boxplot-render-data.html Boxplot Render Data example}
  * - {@link http://dc-js.github.io/dc.js/examples/boxplot-time.html Boxplot time example}
- * @mixes CoordinateGridMixin
  */
 export class BoxPlot extends CoordinateGridMixin {
     public _conf: IBoxPlotConf;
@@ -64,10 +63,9 @@ export class BoxPlot extends CoordinateGridMixin {
      * var boxPlot1 = new BoxPlot('#chart-container1');
      * // create a box plot under #chart-container2 element using chart group A
      * var boxPlot2 = new BoxPlot('#chart-container2', 'chartGroupA');
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * @param parent - Any valid {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
      * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * @param chartGroup - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
@@ -136,7 +134,6 @@ export class BoxPlot extends CoordinateGridMixin {
      * for a visual description of how the padding is applied.
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
      * @param {Number} [padding=0.8]
-     * @returns {Number|BoxPlot}
      */
     public boxPadding(): number;
     public boxPadding(padding: number): this;
@@ -152,7 +149,6 @@ export class BoxPlot extends CoordinateGridMixin {
      * or on charts with a custom {@link BoxPlot#boxWidth .boxWidth}. Will pad the width by
      * `padding * barWidth` on each side of the chart.
      * @param {Number} [padding=0.5]
-     * @returns {Number|BoxPlot}
      */
     public outerPadding(): number;
     public outerPadding(padding: number): this;
@@ -173,7 +169,6 @@ export class BoxPlot extends CoordinateGridMixin {
      * // Using function
      * chart.boxWidth((innerChartWidth, xUnits) { ... });
      * @param {Number|Function} [boxWidth=0.5]
-     * @returns {Number|Function|BoxPlot}
      */
     public boxWidth(): BoxWidthFn;
     public boxWidth(boxWidth: BoxWidthFn): this;

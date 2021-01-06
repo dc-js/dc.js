@@ -12,8 +12,7 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
     /**
      * Get or set the inner radius of the sunburst chart. If the inner radius is greater than 0px then the
      * sunburst chart will be rendered as a doughnut chart. Default inner radius is 0px.
-     * @param {Number} [innerRadius=0]
-     * @returns {Number|SunburstChart}
+     * @param [innerRadius=0]
      */
     public innerRadius(): number;
     public innerRadius(innerRadius: number): this;
@@ -28,8 +27,6 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
     /**
      * Get or set the outer radius. If the radius is not set, it will be half of the minimum of the
      * chart width and height.
-     * @param {Number} [radius]
-     * @returns {Number|SunburstChart}
      */
     public radius(): number;
     public radius(radius: number): this;
@@ -44,8 +41,7 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
     /**
      * Get or set the minimal slice angle for label rendering. Any slice with a smaller angle will not
      * display a slice label.
-     * @param {Number} [minAngleForLabel=0.5]
-     * @returns {Number|SunburstChart}
+     * @param [minAngleForLabel=0.5]
      */
     public minAngleForLabel(): number;
     public minAngleForLabel(minAngleForLabel: number): this;
@@ -59,8 +55,6 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
 
     /**
      * Title to use for the only slice when there is no data.
-     * @param {String} [title]
-     * @returns {String|SunburstChart}
      */
     public emptyTitle(): string;
     public emptyTitle(title: string): this;
@@ -76,8 +70,6 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * Position slice labels offset from the outer edge of the chart.
      *
      * The argument specifies the extra radius to be added for slice labels.
-     * @param {Number} [externalLabelRadius]
-     * @returns {Number|SunburstChart}
      */
     public externalLabels(): number;
     public externalLabels(externalLabelRadius: number): this;
@@ -118,8 +110,6 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * chart.ringSizes(chart.equalRingSizes())
      * // reset to default behavior
      * chart.ringSizes(chart.defaultRingSizes()))
-     * @param {RingSizes} ringSizes
-     * @returns {Object|SunburstChart}
      */
     public ringSizes(): RingSizeSpecs;
     public ringSizes(ringSizes: RingSizeSpecs): this;

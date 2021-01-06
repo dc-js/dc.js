@@ -23,7 +23,6 @@ type HTMLSpec = { some: string; one: string; none: string };
  * sorting with the {@link https://dc-js.github.io/dc.js/docs/html/dc.baseMixin.html#ordering__anchor ordering}
  * function. `numberDisplay` defaults the `ordering` function to sorting by value, so this will display
  * the largest value if the values are numeric.
- * @mixes BaseMixin
  */
 export class NumberDisplay extends BaseMixin {
     protected _conf: INumberDisplayConf;
@@ -37,11 +36,6 @@ export class NumberDisplay extends BaseMixin {
      * @example
      * // create a number display under #chart-container1 element using the default global chart group
      * var display1 = new NumberDisplay('#chart-container1');
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -93,7 +87,6 @@ export class NumberDisplay extends BaseMixin {
      *      some:'%number records',
      *      none:'no records'})
      * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
-     * @returns {{one:String, some:String, none:String}|NumberDisplay}
      */
     public html(): HTMLSpec;
     public html(html): this;
@@ -123,7 +116,6 @@ export class NumberDisplay extends BaseMixin {
 
     /**
      * Calculate and return the underlying value of the display.
-     * @returns {Number}
      */
     public value(): number {
         return this.data();

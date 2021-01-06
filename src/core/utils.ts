@@ -21,9 +21,6 @@ export function sortBy(data, ordering: (d: any) => any) {
 /**
  * Print a single value filter.
  * @method printSingleValue
- * @memberof utils
- * @param {any} filter
- * @returns {String}
  */
 export function printSingleValue(filter): string {
     let s: string = `${filter}`;
@@ -70,13 +67,12 @@ function _toTimeFunc(t) {
  * They also generate strange results if l is a string.
  * @method add
  * @memberof utils
- * @param {Date|Number} l the value to modify
- * @param {String|Number} r the amount by which to modify the value
- * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * @param l the value to modify
+ * @param r the amount by which to modify the value
+ * @param [t=d3.timeDay] if `l` is a `Date`, then this should be a
  * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
  * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
- * @returns {Date|Number}
  */
 export function add(l, r, t?) {
     if (typeof r === 'string') {
@@ -115,14 +111,12 @@ export function add(l, r, t?) {
  *
  * They also generate strange results if l is a string.
  * @method subtract
- * @memberof utils
- * @param {Date|Number} l the value to modify
- * @param {String|Number} r the amount by which to modify the value
- * @param {Function|String} [t=d3.timeDay] if `l` is a `Date`, then this should be a
+ * @param l the value to modify
+ * @param r the amount by which to modify the value
+ * @param [t=d3.timeDay] if `l` is a `Date`, then this should be a
  * [d3 time interval](https://github.com/d3/d3-time/blob/master/README.md#_interval).
  * For backward compatibility with dc.js 2.0, it can also be the name of an interval, i.e.
  * 'millis', 'second', 'minute', 'hour', 'day', 'week', 'month', or 'year'
- * @returns {Date|Number}
  */
 export function subtract(l, r, t?) {
     if (typeof r === 'string') {
@@ -151,10 +145,6 @@ export function subtract(l, r, t?) {
 
 /**
  * Is the value a number?
- * @method isNumber
- * @memberof utils
- * @param {any} n
- * @returns {Boolean}
  */
 export function isNumber(n) {
     return n === +n;
@@ -162,10 +152,6 @@ export function isNumber(n) {
 
 /**
  * Is the value a float?
- * @method isFloat
- * @memberof utils
- * @param {any} n
- * @returns {Boolean}
  */
 export function isFloat(n) {
     // tslint:disable-next-line:no-bitwise
@@ -174,10 +160,6 @@ export function isFloat(n) {
 
 /**
  * Is the value an integer?
- * @method isInteger
- * @memberof utils
- * @param {any} n
- * @returns {Boolean}
  */
 export function isInteger(n) {
     // tslint:disable-next-line:no-bitwise
@@ -186,10 +168,6 @@ export function isInteger(n) {
 
 /**
  * Is the value very close to zero?
- * @method isNegligible
- * @memberof utils
- * @param {any} n
- * @returns {Boolean}
  */
 export function isNegligible(n) {
     return !isNumber(n) || (n < constants.NEGLIGIBLE_NUMBER && n > -constants.NEGLIGIBLE_NUMBER);
@@ -197,12 +175,6 @@ export function isNegligible(n) {
 
 /**
  * Ensure the value is no greater or less than the min/max values.  If it is return the boundary value.
- * @method clamp
- * @memberof utils
- * @param {any} val
- * @param {any} min
- * @param {any} max
- * @returns {any}
  */
 export function clamp(val, min, max) {
     return val < min ? min : val > max ? max : val;
@@ -210,9 +182,6 @@ export function clamp(val, min, max) {
 
 /**
  * Using a simple static counter, provide a unique integer id.
- * @method uniqueId
- * @memberof utils
- * @returns {Number}
  */
 let _idCounter = 0;
 export function uniqueId() {
@@ -221,10 +190,6 @@ export function uniqueId() {
 
 /**
  * Convert a name to an ID.
- * @method nameToId
- * @memberof utils
- * @param {String} name
- * @returns {String}
  */
 export function nameToId(name) {
     return name.toLowerCase().replace(/[\s]/g, '_').replace(/[\.']/g, '');
@@ -232,12 +197,6 @@ export function nameToId(name) {
 
 /**
  * Append or select an item on a parent element.
- * @method appendOrSelect
- * @memberof utils
- * @param {d3.selection} parent
- * @param {String} selector
- * @param {String} tag
- * @returns {d3.selection}
  */
 export function appendOrSelect(parent, selector, tag?) {
     tag = tag || selector;
@@ -250,10 +209,6 @@ export function appendOrSelect(parent, selector, tag?) {
 
 /**
  * Return the number if the value is a number; else 0.
- * @method safeNumber
- * @memberof utils
- * @param {Number|any} n
- * @returns {Number}
  */
 export function safeNumber(n) {
     return isNumber(+n) ? +n : 0;
@@ -261,11 +216,6 @@ export function safeNumber(n) {
 
 /**
  * Return true if both arrays are equal, if both array are null these are considered equal
- * @method arraysEqual
- * @memberof utils
- * @param {Array|null} a1
- * @param {Array|null} a2
- * @returns {Boolean}
  */
 export function arraysEqual(a1, a2) {
     if (!a1 && !a2) {

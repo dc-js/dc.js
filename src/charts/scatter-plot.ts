@@ -18,7 +18,6 @@ export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
  * Examples:
  * - {@link http://dc-js.github.io/dc.js/examples/scatter.html Scatter Chart}
  * - {@link http://dc-js.github.io/dc.js/examples/multi-scatter.html Multi-Scatter Chart}
- * @mixes CoordinateGridMixin
  */
 export class ScatterPlot extends CoordinateGridMixin {
     public _conf: IScatterPlotConf;
@@ -37,11 +36,6 @@ export class ScatterPlot extends CoordinateGridMixin {
      * var chart2 = new ScatterPlot('#chart-container2', 'chartGroupA');
      * // create a sub-chart under a composite parent chart
      * var chart3 = new ScatterPlot(compositeChart);
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -136,7 +130,6 @@ export class ScatterPlot extends CoordinateGridMixin {
      * so they are overlapped on top of each other.
      * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
-     * @returns {SVGElement}
      */
     public resetSvg() {
         if (!this._conf.useCanvas) {
@@ -207,8 +200,6 @@ export class ScatterPlot extends CoordinateGridMixin {
      * Set or get canvas element. You should usually only ever use the get method as
      * dc.js will handle canvas element generation.  Provides valid canvas only when
      * {@link ScatterPlot#useCanvas useCanvas} is set to `true`
-     * @param {CanvasElement|d3.selection} [canvasElement]
-     * @return {CanvasElement|d3.selection}
      */
     public canvas(): Selection<HTMLCanvasElement, any, any, any>;
     public canvas(canvasElement: Selection<HTMLCanvasElement, any, any, any>): this;
@@ -223,7 +214,6 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Get canvas 2D context. Provides valid context only when
      * {@link ScatterPlot#useCanvas useCanvas} is set to `true`
-     * @return {CanvasContext}
      */
     public context(): CanvasRenderingContext2D {
         return this._context;
@@ -372,8 +362,6 @@ export class ScatterPlot extends CoordinateGridMixin {
      * chart.symbol(d3.symbolCircle);
      * // Square type
      * chart.symbol(d3.symbolSquare);
-     * @param {Function} [type=d3.symbolCircle]
-     * @returns {Function|ScatterPlot}
      */
     public symbol(): SymbolTypeGenerator;
     public symbol(type: SymbolTypeGenerator): this;
@@ -393,8 +381,6 @@ export class ScatterPlot extends CoordinateGridMixin {
      * on the symbol generator.
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol d3.symbol}
      * @see {@link https://stackoverflow.com/questions/25332120/create-additional-d3-js-symbols Create additional D3.js symbols}
-     * @param {String|Function} [customSymbol=d3.symbol()]
-     * @returns {String|Function|ScatterPlot}
      */
     public customSymbol(): Symbol<any, any>;
     public customSymbol(customSymbol: Symbol<any, any>): this;

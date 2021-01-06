@@ -20,8 +20,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
      * with filled circles. Symbols are drawn with
      * {@link ScatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
      * is used when `useCanvas` is set to `false`.
-     * @param {Boolean} [useCanvas=false]
-     * @return {Boolean|d3.selection}
+     * @param [useCanvas=false]
      */
     public useCanvas(): boolean;
     public useCanvas(useCanvas: boolean): this;
@@ -44,8 +43,6 @@ export class ScatterPlot extends CoordinateGridMixinExt(
      * @example
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });
-     * @param {Function} [accessor]
-     * @returns {Function|ScatterPlot}
      */
     public existenceAccessor(): BaseAccessor<any>;
     public existenceAccessor(accessor: BaseAccessor<any>): this;
@@ -60,8 +57,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
     /**
      * Set or get radius for highlighted symbols.
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [highlightedSize=5]
-     * @returns {Number|ScatterPlot}
+     * @param [highlightedSize=5]
      */
     public highlightedSize(): number;
     public highlightedSize(highlightedSize: number): this;
@@ -77,8 +73,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
      * Set or get size for symbols excluded from this chart's filter. If null, no
      * special size is applied for symbols based on their filter status.
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [excludedSize=null]
-     * @returns {Number|ScatterPlot}
+     * @param [excludedSize=null]
      */
     public excludedSize(): number;
     public excludedSize(excludedSize: number): this;
@@ -93,8 +88,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
     /**
      * Set or get color for symbols excluded from this chart's filter. If null, no
      * special color is applied for symbols based on their filter status.
-     * @param {string} [excludedColor=null]
-     * @returns {string|ScatterPlot}
+     * @param [excludedColor=null]
      */
     public excludedColor(): string;
     public excludedColor(excludedColor: string): this;
@@ -108,8 +102,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
 
     /**
      * Set or get opacity for symbols excluded from this chart's filter.
-     * @param {Number} [excludedOpacity=1.0]
-     * @returns {Number|ScatterPlot}
+     * @param [excludedOpacity=1.0]
      */
     public excludedOpacity(): number;
     public excludedOpacity(excludedOpacity: number): this;
@@ -124,8 +117,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
     /**
      * Set or get radius for symbols when the group is empty.
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [emptySize=0]
-     * @returns {Number|ScatterPlot}
+     * @param [emptySize=0]
      */
     public emptySize(): number;
     public emptySize(emptySize: number): this;
@@ -149,9 +141,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
     /**
      * Set or get color for symbols when the group is empty. If null, just use the
      * {@link ColorMixin#colors colorMixin.colors} color scale zero value.
-     * @param {String} [emptyColor=null]
-     * @return {String}
-     * @return {ScatterPlot}/
+     * @param [emptyColor=null]
      */
     public emptyColor(): string;
     public emptyColor(emptyColor: string): this;
@@ -165,9 +155,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
 
     /**
      * Set or get opacity for symbols when the group is empty.
-     * @param {Number} [emptyOpacity=0]
-     * @return {Number}
-     * @return {ScatterPlot}
+     * @param [emptyOpacity=0]
      */
     public emptyOpacity(): number;
     public emptyOpacity(emptyOpacity: number): this;
@@ -181,9 +169,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
 
     /**
      * Set or get opacity for symbols when the group is not empty.
-     * @param {Number} [nonemptyOpacity=1]
-     * @return {Number}
-     * @return {ScatterPlot}
+     * @param [nonemptyOpacity=1]
      */
     public nonemptyOpacity(): number;
     public nonemptyOpacity(nonemptyOpacity: number): this;
@@ -198,8 +184,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
     /**
      * Set or get radius for symbols.
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_size d3.symbol.size}
-     * @param {Number} [symbolSize=3]
-     * @returns {Number|ScatterPlot}
+     * @param [symbolSize=3]
      */
     public symbolSize(): number;
     public symbolSize(symbolSize: number): this;

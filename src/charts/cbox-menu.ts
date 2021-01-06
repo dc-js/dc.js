@@ -15,7 +15,6 @@ const ITEM_CSS_CLASS = 'dc-cbox-item';
  * The CboxMenu is a simple widget designed to filter a dimension by
  * selecting option(s) from a set of HTML `<input />` elements. The menu can be
  * made into a set of radio buttons (single select) or checkboxes (multiple).
- * @mixes BaseMixin
  */
 export class CboxMenu extends BaseMixin {
     protected _conf: ICboxMenuConf;
@@ -36,10 +35,8 @@ export class CboxMenu extends BaseMixin {
      * cbox.title(function (d){
      *     return 'STATE: ' + d.key;
      * })
-     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
      * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
      * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
      * Interaction with the widget will only trigger events and redraws within its group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

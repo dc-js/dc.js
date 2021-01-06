@@ -34,19 +34,12 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
  * ({@link https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html source})
  *
- * @mixes BaseMixin
  */
 export class DataTable extends BaseMixin {
     protected _conf: IDataTableConf;
 
     /**
      * Create a Data Table.
-     *
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

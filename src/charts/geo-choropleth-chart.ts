@@ -18,8 +18,6 @@ import { adaptHandler } from '../core/d3compat';
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
- * @mixes ColorMixin
- * @mixes BaseMixin
  */
 export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     public _conf: IGeoChoroplethChartConf;
@@ -35,11 +33,6 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * var chart1 = new GeoChoroplethChart('#us-chart');
      * // create a choropleth chart under '#us-chart2' element using chart group A
      * var chart2 = new CompositeChart('#us-chart2', 'chartGroupA');
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -228,8 +221,6 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * projection to be `null` please set it explicitly to `null`.
      * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
      * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
-     * @param {d3.projection} [projection=d3.geoAlbersUsa()]
-     * @returns {d3.projection|GeoChoroplethChart}
      */
     public projection(): GeoProjection;
     public projection(projection: GeoProjection): this;
@@ -260,7 +251,6 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
      * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath}
-     * @returns {d3.geoPath}
      */
     public geoPath(): GeoPath {
         return this._geoPath;

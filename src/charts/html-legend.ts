@@ -10,7 +10,6 @@ import { adaptHandler } from '../core/d3compat';
  * labels.
  * @example
  * chart.legend(HtmlLegend().container(legendContainerElement).horizontal(false))
- * @returns {HtmlLegend}
  */
 export class HtmlLegend {
     private _htmlLegendDivCssClass: string;
@@ -105,8 +104,6 @@ export class HtmlLegend {
 
     /**
      * Set the container selector for the legend widget. Required.
-     * @param {String} [container]
-     * @return {String|HtmlLegend}
      */
     public container(): Selection<HTMLElement, any, any, any>;
     public container(container: string | Selection<HTMLElement, any, any, any>): this;
@@ -124,8 +121,6 @@ export class HtmlLegend {
      * the style for all charts.
      *
      * Setting this will disable the highlighting of selected items also.
-     * @param {String} [legendItemClass]
-     * @return {String|HtmlLegend}
      */
     public legendItemClass(): string;
     public legendItemClass(legendItemClass: string): this;
@@ -140,8 +135,6 @@ export class HtmlLegend {
     /**
      * This can be optionally used to enable highlighting legends for the selections/filters for the
      * chart.
-     * @param {boolean} [highlightSelected]
-     * @return {boolean|HtmlLegend}
      */
     public highlightSelected(): boolean;
     public highlightSelected(highlightSelected: boolean): this;
@@ -155,8 +148,6 @@ export class HtmlLegend {
 
     /**
      * Display the legend horizontally instead of vertically
-     * @param {boolean} [horizontal]
-     * @return {boolean|HtmlLegend}
      */
     public horizontal(): boolean;
     public horizontal(horizontal: boolean): this;
@@ -172,8 +163,6 @@ export class HtmlLegend {
      * Set or get the legend text function. The legend widget uses this function to render the legend
      * text for each item. If no function is specified the legend widget will display the names
      * associated with each group.
-     * @param  {Function} [legendText]
-     * @returns {Function|HtmlLegend}
      * @example
      * // default legendText
      * legend.legendText(pluck('name'))
@@ -196,8 +185,6 @@ export class HtmlLegend {
 
     /**
      * Maximum number of legend items to display
-     * @param  {Number} [maxItems]
-     * @return {HtmlLegend}
      */
     public maxItems(): number;
     public maxItems(maxItems: number): this;

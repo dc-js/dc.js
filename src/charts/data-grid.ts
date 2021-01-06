@@ -21,17 +21,16 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  *
  * Examples:
  * - {@link https://dc-js.github.io/dc.js/ep/ List of members of the european parliament}
- * @mixes BaseMixin
  */
 export class DataGrid extends BaseMixin {
     protected _conf: IDataGridConf;
 
     /**
      * Create a Data Grid.
-     * @param {String|node|d3.selection} parent - Any valid
+     * @param parent - Any valid
      * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
      * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
+     * @param chartGroup - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

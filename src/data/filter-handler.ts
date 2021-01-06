@@ -12,8 +12,6 @@ export class FilterHandler {
      * Check whether any active filter or a specific filter is associated with particular chart instance.
      * This function is **not chainable**.
      * @see {@link BaseMixin#hasFilterHandler hasFilterHandler}
-     * @param {*} [filter]
-     * @returns {Boolean}
      */
     public hasFilter(filter?): boolean {
         if (filter === null || typeof filter === 'undefined') {
@@ -73,8 +71,6 @@ export class FilterHandler {
      * // filter by range -- note the use of filters.RangedFilter, which is different
      * // from the syntax for filtering a crossfilter dimension directly, dimension.filter([15,20])
      * chart.filter(filters.RangedFilter(15,20));
-     * @param {*} [filter]
-     * @returns {BaseMixin}
      */
     public filter();
     public filter(filter): this;

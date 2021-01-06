@@ -10,8 +10,7 @@ export class NumberDisplay extends BaseMixinExt(NumberDisplayNeo) {
     /**
      * Get or set a function to format the value for the display.
      * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
-     * @param {Function} [formatter=d3.format('.2s')]
-     * @returns {Function|NumberDisplay}
+     * @param [formatter=d3.format('.2s')]
      */
     public formatNumber(): NumberFormatFn;
     public formatNumber(formatter: NumberFormatFn): this;

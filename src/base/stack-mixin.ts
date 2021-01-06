@@ -9,8 +9,6 @@ import { CFMultiAdapter } from '../data/c-f-multi-adapter';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
- * @mixin StackMixin
- * @mixes CoordinateGridMixin
  */
 export class StackMixin extends CoordinateGridMixin {
     public _conf: IStackMixinConf;
@@ -111,8 +109,6 @@ export class StackMixin extends CoordinateGridMixin {
     /**
      * Hide all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
-     * @param {String} stackName
-     * @returns {StackMixin}
      */
     public hideStack(stackName) {
         this._hiddenStacks[stackName] = true;
@@ -122,8 +118,6 @@ export class StackMixin extends CoordinateGridMixin {
     /**
      * Show all stacks on the chart with the given name.
      * The chart must be re-rendered for this change to appear.
-     * @param {String} stackName
-     * @returns {StackMixin}
      */
     public showStack(stackName) {
         this._hiddenStacks[stackName] = false;
@@ -168,8 +162,6 @@ export class StackMixin extends CoordinateGridMixin {
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
      * propagates it to the next.
      * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md d3.stackD3v3}
-     * @param {Function} [_stack=d3.stackD3v3]
-     * @returns {Function|StackMixin}
      */
     public stackLayout();
     public stackLayout(_stack): this;

@@ -7,8 +7,16 @@ import { ColorsList } from './types';
  * General configuration
  */
 export class Config {
+    /**
+     * The default date format for dc.js,
+     * by default d3.timeFormat('%m/%d/%Y')
+     */
     public dateFormat: (date: Date) => string;
 
+    /**
+     * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
+     * immediately.
+     */
     public disableTransitions: boolean;
 
     private _defaultColors: ColorsList;
@@ -16,19 +24,8 @@ export class Config {
     constructor() {
         this._defaultColors = Config._schemeCategory20c;
 
-        /**
-         * The default date format for dc.js
-         * @type {Function}
-         * @default d3.timeFormat('%m/%d/%Y')
-         */
         this.dateFormat = timeFormat('%m/%d/%Y');
 
-        /**
-         * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
-         * immediately.
-         * @type {Boolean}
-         * @default false
-         */
         this.disableTransitions = false;
     }
 
@@ -42,8 +39,6 @@ export class Config {
      *
      * @example
      * config.defaultColors(d3.schemeSet1)
-     * @param {Array} [colors]
-     * @returns {Array|config}
      */
     public defaultColors(): ColorsList;
     public defaultColors(colors: ColorsList): this;

@@ -38,9 +38,6 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
 /**
  * Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
  * concrete chart types, e.g. bar chart, line chart, and bubble chart.
- * @mixin CoordinateGridMixin
- * @mixes ColorMixin
- * @mixes MarginMixin
  */
 export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     public _conf: ICoordinateGridMixinConf;
@@ -160,7 +157,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
      * with {@link CoordinateGridMixin+x .x()} or {@link CoordinateGridMixin#y .y()}, and has
      * no effect on elastic scales.)
-     * @returns {CoordinateGridMixin}
      */
     public rescale(): this {
         this._unitCount = undefined;
@@ -202,8 +198,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Get or set the root g element. This method is usually used to retrieve the g element in order to
      * overlay custom svg drawing programatically. **Caution**: The root g element is usually generated
      * by dc.js internals, and resetting it might produce unpredictable result.
-     * @param {SVGElement} [gElement]
-     * @returns {SVGElement|CoordinateGridMixin}
      */
     public g(): SVGGElementSelection;
     public g(gElement: SVGGElementSelection): this;
@@ -217,8 +211,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Retrieve the svg group for the chart body.
-     * @param {SVGElement} [chartBodyG]
-     * @returns {SVGElement}
      */
     public chartBodyG(); // TODO: figure out correct type
     public chartBodyG(chartBodyG): this;
@@ -242,8 +234,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * chart.x(d3.scaleLinear().domain([-2500, 2500]))
      * // set x to a time scale to generate histogram
      * chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
-     * @param {d3.scale} [xScale]
-     * @returns {d3.scale|CoordinateGridMixin}
      */
     public x(): MinimalXYScale;
     public x(xScale: MinimalXYScale): this;
@@ -278,8 +268,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.axis} [xAxis=d3.axisBottom()]
-     * @returns {d3.axis|CoordinateGridMixin}
      */
     public xAxis(): Axis<any>;
     public xAxis(xAxis: Axis<any>): this;
@@ -295,7 +283,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
      * `units.ordinal`), this is the number of items in the domain of the x scale. Otherwise, the
      * x unit count is calculated using the {@link CoordinateGridMixin#xUnits xUnits} function.
-     * @returns {Number}
      */
     public xUnitCount() {
         if (this._unitCount === undefined) {
@@ -318,7 +305,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Returns true if the chart is using ordinal xUnits ({@link units.ordinal units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
-     * @returns {Boolean}
      */
     public isOrdinal(): boolean {
         return this._conf.xUnits === units.ordinal;
@@ -481,9 +467,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * Set or get the x axis label. If setting the label, you may optionally include additional padding to
      * the margin to make room for the label. By default the padded is set to 12 to accommodate the text height.
-     * @param {String} [labelText]
-     * @param {Number} [padding=12]
-     * @returns {String}
      */
     public xAxisLabel(): string;
     public xAxisLabel(labelText: string, padding?: number): this;
@@ -642,9 +625,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * Set or get the y axis label. If setting the label, you may optionally include additional padding
      * to the margin to make room for the label. By default the padding is set to 12 to accommodate the
      * text height.
-     * @param {String} [labelText]
-     * @param {Number} [padding=12]
-     * @returns {String|CoordinateGridMixin}
      */
     public yAxisLabel(): string;
     public yAxisLabel(labelText: string, padding?: number): this;
@@ -662,8 +642,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
-     * @param {d3.scale} [yScale]
-     * @returns {d3.scale|CoordinateGridMixin}
      */
     public y(): MinimalXYScale;
     public y(yScale: MinimalXYScale): this;
@@ -697,8 +675,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
-     * @param {d3.axisLeft|d3.axisRight} [yAxis]
-     * @returns {d3.axisLeft|d3.axisRight|CoordinateGridMixin}
      */
     public yAxis(): Axis<any>;
     public yAxis(yAxis: Axis<any>): this;
@@ -715,7 +691,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the minimum x value to display in the chart. Includes xAxisPadding if set.
-     * @returns {*}
      */
     public xAxisMin() {
         // TODO: can these be anything other than number and Date
@@ -725,7 +700,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the maximum x value to display in the chart. Includes xAxisPadding if set.
-     * @returns {*}
      */
     public xAxisMax() {
         // TODO: can these be anything other than number and Date
@@ -735,7 +709,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the minimum y value to display in the chart. Includes yAxisPadding if set.
-     * @returns {*}
      */
     public yAxisMin() {
         // TODO: can these be anything other than number
@@ -746,7 +719,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Calculates the maximum y value to display in the chart. Includes yAxisPadding if set.
-     * @returns {*}
      */
     public yAxisMax() {
         // TODO: can these be anything other than number
@@ -797,8 +769,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * if you want to pass a new brush object. Even if you are only using the getter,
      * the brush object may not behave the way you expect.
      *
-     * @param {d3.brush} [_]
-     * @returns {d3.brush|CoordinateGridMixin}
      */
     public brush();
     public brush(_): this;
@@ -1182,8 +1152,6 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      *          someOtherChart.focus(chart.filter());
      *     });
      * })
-     * @param {Array<Number>} [range]
-     * @return {undefined}
      */
     public focus(range: DCBrushSelection): void {
         if (this._conf.zoomOutRestrict) {

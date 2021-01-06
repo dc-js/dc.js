@@ -16,8 +16,7 @@ export class RowChart extends CapMixinExt(
 
     /**
      * Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
-     * @param {Boolean} [renderTitleLabel=false]
-     * @returns {Boolean|RowChart}
+     * @param [renderTitleLabel=false]
      */
     public renderTitleLabel(): boolean;
     public renderTitleLabel(renderTitleLabel: boolean): this;
@@ -36,8 +35,7 @@ export class RowChart extends CapMixinExt(
      * your vertical gap space).
      * @example
      * chart.fixedBarHeight( chartheight - (count + 1) * gap / count);
-     * @param {Boolean|Number} [fixedBarHeight=false]
-     * @returns {Boolean|Number|RowChart}
+     * @param [fixedBarHeight=false]
      */
     public fixedBarHeight(): number;
     public fixedBarHeight(fixedBarHeight: number): this;
@@ -51,8 +49,7 @@ export class RowChart extends CapMixinExt(
 
     /**
      * Get or set the vertical gap space between rows on a particular row chart instance.
-     * @param {Number} [gap=5]
-     * @returns {Number|RowChart}
+     * @param [gap=5]
      */
     public gap(): number;
     public gap(gap: number): this;
@@ -67,8 +64,6 @@ export class RowChart extends CapMixinExt(
     /**
      * Get or set the elasticity on x axis. If this attribute is set to true, then the x axis will rescale to auto-fit the
      * data range when filtered.
-     * @param {Boolean} [elasticX]
-     * @returns {Boolean|RowChart}
      */
     public elasticX(): boolean;
     public elasticX(elasticX: boolean): this;
@@ -82,8 +77,7 @@ export class RowChart extends CapMixinExt(
 
     /**
      * Get or set the x offset (horizontal space to the top left corner of a row) for labels on a particular row chart.
-     * @param {Number} [labelOffsetX=10]
-     * @returns {Number|RowChart}
+     * @param [labelOffsetX=10]
      */
     public labelOffsetX(): number;
     public labelOffsetX(labelOffsetX: number): this;
@@ -97,8 +91,6 @@ export class RowChart extends CapMixinExt(
 
     /**
      * Get or set the y offset (vertical space to the top left corner of a row) for labels on a particular row chart.
-     * @param {Number} [labelOffsety]
-     * @returns {Number|RowChart}
      */
     public labelOffsetY(): number;
     public labelOffsetY(labelOffsety: number): this;
@@ -112,8 +104,7 @@ export class RowChart extends CapMixinExt(
 
     /**
      * Get of set the x offset (horizontal space between right edge of row and right edge or text.
-     * @param {Number} [titleLabelOffsetX=2]
-     * @returns {Number|RowChart}
+     * @param [titleLabelOffsetX=2]
      */
     public titleLabelOffsetX(): number;
     public titleLabelOffsetX(titleLabelOffsetX: number): this;

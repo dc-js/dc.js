@@ -37,8 +37,6 @@ export class DataCount extends BaseMixinExt(DataCountNeo) {
      *      some: '%filter-count out of %total-count records selected',
      *      all: 'All records selected. Click on charts to apply filters'
      * })
-     * @param {{some:String, all: String}} [options]
-     * @returns {{some:String, all: String}|DataCount}
      */
     public html(): DataCountHTMLOptions;
     public html(options: DataCountHTMLOptions): this;
@@ -60,8 +58,7 @@ export class DataCount extends BaseMixinExt(DataCountNeo) {
      * @see {@link https://github.com/d3/d3-format/blob/master/README.md#format d3.format}
      * @example
      * counter.formatNumber(d3.format('.2g'))
-     * @param {Function} [formatter=d3.format('.2g')]
-     * @returns {Function|DataCount}
+     * @param [formatter=d3.format('.2g')]
      */
     public formatNumber(): NumberFormatFn;
     public formatNumber(formatter: NumberFormatFn): this;

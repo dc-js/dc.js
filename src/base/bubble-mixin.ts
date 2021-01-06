@@ -23,10 +23,6 @@ interface MinimalBase {
 
 /**
  * This Mixin provides reusable functionalities for any chart that needs to visualize data using bubbles.
- * @mixin BubbleMixin
- * @mixes ColorMixin
- * @param {Object} Base
- * @returns {BubbleMixin}
  */
 // tslint:disable-next-line:variable-name
 export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
@@ -83,11 +79,7 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
          * Get or set the bubble radius scale. By default the bubble chart uses
          * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
          * as its radius scale.
-         * @memberof BubbleMixin
-         * @instance
          * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
-         * @param {d3.scale} [bubbleRadiusScale=d3.scaleLinear().domain([0, 100])]
-         * @returns {d3.scale|BubbleMixin}
          */
         public r(): MinimalRadiusScale;
         public r(bubbleRadiusScale: MinimalRadiusScale): this;
@@ -205,10 +197,6 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
 
         /**
          * Get or set the minimum radius. This will be used to initialize the radius scale's range.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [radius=10]
-         * @returns {Number|BubbleMixin}
          */
         public minRadius(): number;
         public minRadius(radius: number);

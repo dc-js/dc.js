@@ -25,8 +25,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * // section rows by the value of their field
      * chart
      *     .section(function(d) { return d.field; })
-     * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|DataGrid}
      */
     public section(): GroupingFn;
     public section(section: GroupingFn): this;
@@ -41,8 +39,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
     /**
      * Backward-compatible synonym for {@link DataGrid#section section}.
      *
-     * @param {Function} section Function taking a row of data and returning the nest key.
-     * @returns {Function|DataGrid}
      */
     // @ts-ignore, signature is different in BaseMixin
     public group(): GroupingFn;
@@ -60,8 +56,7 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
     /**
      * Get or set the index of the beginning slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
-     * @param {Number} [beginSlice=0]
-     * @returns {Number|DataGrid}
+     * @param [beginSlice=0]
      */
     public beginSlice(): number;
     public beginSlice(beginSlice: number): this;
@@ -76,8 +71,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the widget.
      * Useful when implementing pagination.
-     * @param {Number} [endSlice]
-     * @returns {Number|DataGrid}
      */
     public endSlice(): number;
     public endSlice(endSlice: number): this;
@@ -91,8 +84,7 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
 
     /**
      * Get or set the grid size which determines the number of items displayed by the widget.
-     * @param {Number} [size=999]
-     * @returns {Number|DataGrid}
+     * @param [size=999]
      */
     public size(): number;
     public size(size: number): this;
@@ -110,8 +102,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * generate the string directly.
      * @example
      * chart.html(function (d) { return '<div class='item '+data.exampleCategory+''>'+data.exampleString+'</div>';});
-     * @param {Function} [html]
-     * @returns {Function|DataGrid}
      */
     public html(): BaseAccessor<string>;
     public html(html: BaseAccessor<string>): this;
@@ -127,8 +117,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * Get or set the function that formats a section label.
      * @example
      * chart.htmlSection (function (d) { return '<h2>'.d.key . 'with ' . d.values.length .' items</h2>'});
-     * @param {Function} [htmlSection]
-     * @returns {Function|DataGrid}
      */
     public htmlSection(): BaseAccessor<string>;
     public htmlSection(htmlSection: BaseAccessor<string>): this;
@@ -142,8 +130,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
 
     /**
      * Backward-compatible synonym for {@link DataGrid#htmlSection htmlSection}.
-     * @param {Function} [htmlSection]
-     * @returns {Function|DataGrid}
      */
     public htmlGroup(): BaseAccessor<string>;
     public htmlGroup(htmlSection: BaseAccessor<string>): this;
@@ -164,8 +150,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * chart.sortBy(function(d) {
      *     return d.date;
      * });
-     * @param {Function} [sortByFunction]
-     * @returns {Function|DataGrid}
      */
     public sortBy(): BaseAccessor<any>;
     public sortBy(sortByFunction: BaseAccessor<any>): this;
@@ -183,8 +167,6 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
      * @see {@link https://github.com/d3/d3-array/blob/master/README.md#descending d3.descending}
      * @example
      * chart.order(d3.descending);
-     * @param {Function} [order=d3.ascending]
-     * @returns {Function|DataGrid}
      */
     public order(): CompareFn;
     public order(order: CompareFn): this;

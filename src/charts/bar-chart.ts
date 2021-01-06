@@ -24,7 +24,6 @@ const LABEL_PADDING = 3;
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
- * @mixes StackMixin
  */
 export class BarChart extends StackMixin {
     public _conf: IBarChartConf;
@@ -41,12 +40,10 @@ export class BarChart extends StackMixin {
      * var chart2 = new BarChart('#chart-container2', 'chartGroupA');
      * // create a sub-chart under a composite parent chart
      * var chart3 = new BarChart(compositeChart);
-     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
      * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
      * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
      * chart is a sub-chart in a {@link CompositeChart Composite Chart} then pass in the parent
      * composite chart instance instead.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
@@ -76,8 +73,6 @@ export class BarChart extends StackMixin {
     /**
      * Get or set the outer padding on an ordinal bar chart. This setting has no effect on non-ordinal charts.
      * Will pad the width by `padding * barWidth` on each side of the chart.
-     * @param {Number} [padding=0.5]
-     * @returns {Number|BarChart}
      */
     public outerPadding(): number;
     public outerPadding(padding: number): this;
@@ -310,8 +305,6 @@ export class BarChart extends StackMixin {
      * Setting this value will also remove any previously set {@link BarChart#gap gap}. See the
      * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
-     * @param {Number} [barPadding=0]
-     * @returns {Number|BarChart}
      */
     public barPadding(): number;
     public barPadding(barPadding: number): this;
@@ -332,8 +325,6 @@ export class BarChart extends StackMixin {
      * Manually set fixed gap (in px) between bars instead of relying on the default auto-generated
      * gap.  By default the bar chart implementation will calculate and set the gap automatically
      * based on the number of data points and the length of the x axis.
-     * @param {Number} [gap=2]
-     * @returns {Number|BarChart}
      */
     public gap(): number;
     public gap(gap: number): this;

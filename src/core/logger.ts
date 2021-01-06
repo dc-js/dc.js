@@ -2,16 +2,13 @@
  * Provides basis logging and deprecation utilities
  */
 export class Logger {
+    /**
+     * Enable debug level logging. Set to `false` by default.
+     */
     public enableDebugLog: boolean;
     private readonly _alreadyWarned: { [msg: string]: boolean };
 
     constructor() {
-        /**
-         * Enable debug level logging. Set to `false` by default.
-         * @name enableDebugLog
-         * @memberof Logger
-         * @instance
-         */
         this.enableDebugLog = false;
 
         this._alreadyWarned = {};
@@ -21,8 +18,6 @@ export class Logger {
      * Put a warning message to console
      * @example
      * logger.warn('Invalid use of .tension on CurveLinear');
-     * @param {String} [msg]
-     * @returns {Logger}
      */
     public warn(msg: string): Logger {
         if (console) {
@@ -40,8 +35,6 @@ export class Logger {
      * Put a warning message to console. It will warn only on unique messages.
      * @example
      * logger.warnOnce('Invalid use of .tension on CurveLinear');
-     * @param {String} [msg]
-     * @returns {Logger}
      */
     public warnOnce(msg: string): Logger {
         if (!this._alreadyWarned[msg]) {
@@ -57,8 +50,6 @@ export class Logger {
      * Put a debug message to console. It is controlled by `logger.enableDebugLog`
      * @example
      * logger.debug('Total number of slices: ' + numSlices);
-     * @param {String} [msg]
-     * @returns {Logger}
      */
     public debug(msg: string): Logger {
         if (this.enableDebugLog && console) {

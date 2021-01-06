@@ -20,8 +20,7 @@ export function CompositeChartExt<TBase extends Constructor<Intermediate>>(Base:
          * will be shared with composed children. Additionally if the child chart implements
          * Stackable and has not set a custom .colorAccessor, then it will generate a color
          * specific to its order in the composition.
-         * @param {Boolean} [shareColors=false]
-         * @returns {Boolean|CompositeChart}
+         * @param [shareColors=false]
          */
         public shareColors(): boolean;
         public shareColors(shareColors: boolean): this;
@@ -39,8 +38,7 @@ export function CompositeChartExt<TBase extends Constructor<Intermediate>>(Base:
          *
          * Note: currently you must call this before `compose` or the child will still get the parent's
          * `title` function!
-         * @param {Boolean} [shareTitle=true]
-         * @returns {Boolean|CompositeChart}
+         * @param [shareTitle=true]
          */
         public shareTitle(): boolean;
         public shareTitle(shareTitle: boolean): this;

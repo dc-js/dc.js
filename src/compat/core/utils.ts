@@ -35,10 +35,6 @@ import {
  *     return this.radius + x;
  * });
  * selectAll('.circle').data(...).x(xPosition);
- * @function pluck
- * @param {String} n
- * @param {Function} [f]
- * @returns {Function}
  */
 export const pluck = function (n, f?) {
     if (!f) {
@@ -51,10 +47,6 @@ export const pluck = function (n, f?) {
     };
 };
 
-/**
- * @namespace utils
- * @type {{}}
- */
 export const utils = {
     add: add,
     allChildren: allChildren,

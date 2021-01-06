@@ -14,10 +14,7 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
         /**
          * Turn on or off the bubble sorting feature, or return the value of the flag. If enabled,
          * bubbles will be sorted by their radius, with smaller bubbles in front.
-         * @memberof BubbleChart
-         * @instance
-         * @param {Boolean} [sortBubbleSize=false]
-         * @returns {Boolean|BubbleChart}
+         * @param [sortBubbleSize=false]
          */
         public sortBubbleSize(): boolean;
         public sortBubbleSize(sortBubbleSize: boolean);
@@ -34,10 +31,6 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
          * be used to retrieve a data value for each bubble. The data retrieved then will be mapped using
          * the r scale to the actual bubble radius. This allows you to encode a data dimension using bubble
          * size.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Function} [radiusValueAccessor]
-         * @returns {Function|BubbleMixin}
          */
         public radiusValueAccessor(): RValueAccessor;
         public radiusValueAccessor(radiusValueAccessor: RValueAccessor);
@@ -52,10 +45,7 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
         /**
          * Get or set the minimum radius for label rendering. If a bubble's radius is less than this value
          * then no label will be rendered.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [radius=10]
-         * @returns {Number|BubbleMixin}
+         * @param [radius=10]
          */
         public minRadiusWithLabel(): number;
         public minRadiusWithLabel(radius: number);
@@ -70,10 +60,7 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
         /**
          * Get or set the maximum relative size of a bubble to the length of x axis. This value is useful
          * when the difference in radius between bubbles is too great.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Number} [relativeSize=0.3]
-         * @returns {Number|BubbleMixin}
+         * @param [relativeSize=0.3]
          */
         public maxBubbleRelativeSize(): number;
         public maxBubbleRelativeSize(relativeSize: number);
@@ -88,10 +75,7 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
         /**
          * Turn on or off the elastic bubble radius feature, or return the value of the flag. If this
          * feature is turned on, then bubble radii will be automatically rescaled to fit the chart better.
-         * @memberof BubbleMixin
-         * @instance
-         * @param {Boolean} [elasticRadius=false]
-         * @returns {Boolean|BubbleChart}
+         * @param [elasticRadius=false]
          */
         public elasticRadius(): boolean;
         public elasticRadius(elasticRadius: boolean);
@@ -105,10 +89,7 @@ export function BubbleMixinExt<TBase extends Constructor<Intermediate>>(Base: TB
 
         /**
          * Should the chart exclude zero when calculating elastic bubble radius?
-         * @memberof BubbleMixin
-         * @instance
-         * @param  {Boolean} [excludeZero=true]
-         * @returns {Boolean|BubbleMixin}
+         * @param [excludeZero=true]
          */
         public excludeElasticZero(): boolean;
         public excludeElasticZero(excludeZero: boolean);

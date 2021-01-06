@@ -21,8 +21,7 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @example
      * // the default label function just returns the name
      * chart.colsLabel(function(d) { return d; });
-     * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @returns {Function|HeatMap}
+     * @param [labelFunction=function(d) { return d; }]
      */
     public colsLabel(): BaseAccessor<any>;
     public colsLabel(labelFunction: BaseAccessor<any>): this;
@@ -40,8 +39,7 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * @example
      * // the default label function just returns the name
      * chart.rowsLabel(function(d) { return d; });
-     * @param  {Function} [labelFunction=function(d) { return d; }]
-     * @returns {Function|HeatMap}
+     * @param [labelFunction=function(d) { return d; }]
      */
     public rowsLabel(): BaseAccessor<any>;
     public rowsLabel(labelFunction: BaseAccessor<any>): this;
@@ -56,8 +54,6 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
     /**
      * Gets or sets the values used to create the rows of the heatmap, as an array. By default, all
      * the values will be fetched from the data using the value accessor.
-     * @param  {Array<String|Number>} [rows]
-     * @returns {Array<String|Number>|HeatMap}
      */
     public rows();
     public rows(rows): this;
@@ -72,8 +68,6 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
     /**
      * Get or set a comparator to order the rows.
      * Default is {@link https://github.com/d3/d3-array#ascending d3.ascending}.
-     * @param  {Function} [rowOrdering]
-     * @returns {Function|HeatMap}
      */
     public rowOrdering(): CompareFn;
     public rowOrdering(rowOrdering: CompareFn): this;
@@ -88,8 +82,6 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
     /**
      * Gets or sets the keys used to create the columns of the heatmap, as an array. By default, all
      * the values will be fetched from the data using the key accessor.
-     * @param  {Array<String|Number>} [cols]
-     * @returns {Array<String|Number>|HeatMap}
      */
     public cols();
     public cols(cols): this;
@@ -104,8 +96,6 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
     /**
      * Get or set a comparator to order the columns.
      * Default is  {@link https://github.com/d3/d3-array#ascending d3.ascending}.
-     * @param  {Function} [colOrdering]
-     * @returns {Function|HeatMap}
      */
     public colOrdering(): CompareFn;
     public colOrdering(colOrdering: CompareFn): this;
@@ -129,8 +119,6 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      *         _chart.redrawGroup();
      *     });
      * });
-     * @param  {Function} [handler]
-     * @returns {Function|HeatMap}
      */
     public boxOnClick(): HeatMapClickHandler;
     public boxOnClick(handler: HeatMapClickHandler): this;
@@ -146,8 +134,6 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * Gets or sets the handler that fires when a column tick is clicked in the x axis.
      * By default, if any cells in the column are unselected, the whole column will be selected,
      * otherwise the whole column will be unselected.
-     * @param  {Function} [handler]
-     * @returns {Function|HeatMap}
      */
     public xAxisOnClick(): HeatMapClickHandler;
     public xAxisOnClick(handler: HeatMapClickHandler): this;
@@ -163,8 +149,6 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
      * Gets or sets the handler that fires when a row tick is clicked in the y axis.
      * By default, if any cells in the row are unselected, the whole row will be selected,
      * otherwise the whole row will be unselected.
-     * @param  {Function} [handler]
-     * @returns {Function|HeatMap}
      */
     public yAxisOnClick(): HeatMapClickHandler;
     public yAxisOnClick(handler: HeatMapClickHandler): this;
@@ -178,8 +162,7 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
 
     /**
      * Gets or sets the X border radius.  Set to 0 to get full rectangles.
-     * @param  {Number} [xBorderRadius=6.75]
-     * @returns {Number|HeatMap}
+     * @param [xBorderRadius=6.75]
      */
     public xBorderRadius(): number;
     public xBorderRadius(xBorderRadius: number): this;
@@ -193,8 +176,7 @@ export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNe
 
     /**
      * Gets or sets the Y border radius.  Set to 0 to get full rectangles.
-     * @param  {Number} [yBorderRadius=6.75]
-     * @returns {Number|HeatMap}
+     * @param [yBorderRadius=6.75]
      */
     public yBorderRadius(): number;
     public yBorderRadius(yBorderRadius: number): this;

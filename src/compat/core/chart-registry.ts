@@ -9,10 +9,6 @@ export * from '../../core/chart-registry';
 /**
  * Add given chart instance to the given group, creating the group if necessary.
  * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
- * @function registerChart
- * @param {Object} chart dc.js chart instance
- * @param {String} [group] Group name
- * @return {undefined}
  */
 export function registerChart(chart: IMinimalChart, group?: string): void {
     chartRegistry.chartGroup(group).register(chart);
@@ -21,10 +17,6 @@ export function registerChart(chart: IMinimalChart, group?: string): void {
 /**
  * Remove given chart instance from the given group, creating the group if necessary.
  * If no group is provided, the default group `constants.DEFAULT_CHART_GROUP` will be used.
- * @function deregisterChart
- * @param {Object} chart dc.js chart instance
- * @param {String} [group] Group name
- * @return {undefined}
  */
 export function deregisterChart(chart: IMinimalChart, group?: string): void {
     chartRegistry.chartGroup(group).deregister(chart);
@@ -32,9 +24,6 @@ export function deregisterChart(chart: IMinimalChart, group?: string): void {
 
 /**
  * Determine if a given chart instance resides in any group in the registry.
- * @function hasChart
- * @param {Object} chart dc.js chart instance
- * @returns {Boolean}
  */
 export function hasChart(chart: IMinimalChart): boolean {
     return chartRegistry.has(chart);
@@ -42,9 +31,6 @@ export function hasChart(chart: IMinimalChart): boolean {
 
 /**
  * Clear given group if one is provided, otherwise clears all groups.
- * @function deregisterAllCharts
- * @param {String} group Group name
- * @return {undefined}
  */
 export function deregisterAllCharts(group?) {
     chartRegistry.clear(group);
@@ -53,9 +39,6 @@ export function deregisterAllCharts(group?) {
 /**
  * Clear all filters on all charts within the given chart group. If the chart group is not given then
  * only charts that belong to the default chart group will be reset.
- * @function filterAll
- * @param {String} [group]
- * @return {undefined}
  */
 export function filterAll(group?: string): void {
     chartRegistry.chartGroup(group).filterAll();
@@ -64,9 +47,6 @@ export function filterAll(group?: string): void {
 /**
  * Reset zoom level / focus on all charts that belong to the given chart group. If the chart group is
  * not given then only charts that belong to the default chart group will be reset.
- * @function refocusAll
- * @param {String} [group]
- * @return {undefined}
  */
 export function refocusAll(group?: string): void {
     chartRegistry.chartGroup(group).refocusAll();
@@ -75,9 +55,6 @@ export function refocusAll(group?: string): void {
 /**
  * Re-render all charts belong to the given chart group. If the chart group is not given then only
  * charts that belong to the default chart group will be re-rendered.
- * @function renderAll
- * @param {String} [group]
- * @return {undefined}
  */
 export function renderAll(group?: string): void {
     chartRegistry.chartGroup(group).renderAll();
@@ -94,9 +71,6 @@ export function renderAll(group?: string): void {
  * that belong to the default chart group will be re-drawn. Redraw is different from re-render since
  * when redrawing dc tries to update the graphic incrementally, using transitions, instead of starting
  * from scratch.
- * @function redrawAll
- * @param {String} [group]
- * @return {undefined}
  */
 export function redrawAll(group?: string): void {
     chartRegistry.chartGroup(group).redrawAll();

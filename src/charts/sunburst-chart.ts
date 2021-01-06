@@ -28,9 +28,6 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  *
  * When filtering, the sunburst chart creates instances of {@link Filters.HierarchyFilter HierarchyFilter}.
  *
- * @mixes CapMixin
- * @mixes ColorMixin
- * @mixes BaseMixin
  */
 export class SunburstChart extends ColorMixin(BaseMixin) {
     public _conf: ISunburstChartConf;
@@ -51,12 +48,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * var chart1 = new SunburstChart('#chart-container1');
      * // create a sunburst chart under #chart-container2 element using chart group A
      * var chart2 = new SunburstChart('#chart-container2', 'chartGroupA');
-     *
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Selections.md#selecting-elements d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -337,8 +328,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     /**
      * Get or set center x coordinate position. Default is center of svg.
-     * @param {Number} [cx]
-     * @returns {Number|SunburstChart}
      */
     public cx(): number;
     public cx(cx: number): this;
@@ -352,8 +341,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     /**
      * Get or set center y coordinate position. Default is center of svg.
-     * @param {Number} [cy]
-     * @returns {Number|SunburstChart}
      */
     public cy(): number;
     public cy(cy: number): this;
@@ -374,7 +361,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @example
      *   var chart = new dc.SunburstChart(...);
      *   chart.ringSizes(chart.defaultRingSizes())
-     * @returns {RingSizes}
      */
     public defaultRingSizes(): RingSizeSpecs {
         return {
@@ -393,7 +379,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * @example
      *   var chart = new dc.SunburstChart(...);
      *   chart.ringSizes(chart.equalRingSizes())
-     * @returns {RingSizes}
      */
     public equalRingSizes(): RingSizeSpecs {
         return this.relativeRingSizes(ringCount => {
@@ -419,8 +404,6 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
      * chart.ringSizes(chart.relativeRingSizes(function (ringCount) {
      *     return [.1, .3, .6];
      * });
-     * @param {Function} [relativeRingSizesFunction]
-     * @returns {RingSizes}
      */
     public relativeRingSizes(
         relativeRingSizesFunction: (ringCount: number) => number[]

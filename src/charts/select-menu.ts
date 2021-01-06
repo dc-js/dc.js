@@ -13,7 +13,6 @@ const OPTION_CSS_CLASS = 'dc-select-option';
 /**
  * The select menu is a simple widget designed to filter a dimension by selecting an option from
  * an HTML `<select/>` menu. The menu can be optionally turned into a multiselect.
- * @mixes BaseMixin
  */
 export class SelectMenu extends BaseMixin {
     protected _conf: ISelectMenuConf;
@@ -32,11 +31,6 @@ export class SelectMenu extends BaseMixin {
      * select.title(function (d){
      *     return 'STATE: ' + d.key;
      * })
-     * @param {String|node|d3.selection|CompositeChart} parent - Any valid
-     * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this widget should be placed in.
-     * Interaction with the widget will only trigger events and redraws within its group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

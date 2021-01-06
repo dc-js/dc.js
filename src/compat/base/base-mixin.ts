@@ -20,8 +20,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * Set or get the minimum width attribute of a chart. This only has effect when used with the default
          * {@link BaseMixin#width width} function.
          * @see {@link BaseMixin#width width}
-         * @param {Number} [minWidth=200]
-         * @returns {Number|BaseMixin}
          */
         public minWidth(): number;
         public minWidth(minWidth: number): this;
@@ -37,8 +35,7 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * Set or get the minimum height attribute of a chart. This only has effect when used with the default
          * {@link BaseMixin#height height} function.
          * @see {@link BaseMixin#height height}
-         * @param {Number} [minHeight=200]
-         * @returns {Number|BaseMixin}
+         * @param [minHeight=200]
          */
         public minHeight(): number;
         public minHeight(minHeight: number): this;
@@ -67,8 +64,7 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * You can see examples of this resizing strategy in the [Chart Resizing
          * Examples](http://dc-js.github.io/dc.js/resizing/); just add `?resize=viewbox` to any of the
          * one-chart examples to enable `useViewBoxResizing`.
-         * @param {Boolean} [useViewBoxResizing=false]
-         * @returns {Boolean|BaseMixin}
+         * @param [useViewBoxResizing=false]
          */
         public useViewBoxResizing(): boolean;
         public useViewBoxResizing(useViewBoxResizing: boolean): this;
@@ -93,8 +89,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * var index = crossfilter([]);
          * var dimension = index.dimension(pluck('key'));
          * chart.dimension(dimension);
-         * @param {crossfilter.dimension} [dimension]
-         * @returns {crossfilter.dimension|BaseMixin}
          */
         public dimension(): MinimalCFDimension;
         public dimension(dimension: MinimalCFDimension): this;
@@ -123,9 +117,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * var dimension = index.dimension(pluck('key'));
          * chart.dimension(dimension);
          * chart.group(dimension.group().reduceSum());
-         * @param {crossfilter.group} [group]
-         * @param {String} [name]
-         * @returns {crossfilter.group|BaseMixin}
          */
         public group(): MinimalCFGroup;
         public group(group: MinimalCFGroup, name?: string, accessor?: BaseAccessor<any>): this;
@@ -145,8 +136,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * @example
          * // Default ordering accessor
          * _chart.ordering(pluck('key'));
-         * @param {Function} [orderFunction]
-         * @returns {Function|BaseMixin}
          */
         public ordering(): BaseAccessor<any>;
         public ordering(orderFunction: BaseAccessor<any>): this;
@@ -176,8 +165,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          *   return 'start ' + printSingleValue(filters[0][0]) +
          *     ' extent ' + printSingleValue(filters[0][1] - filters[0][0]);
          * });
-         * @param {Function} [filterPrinterFunction=printers.filters]
-         * @returns {Function|BaseMixin}
          */
         public filterPrinter();
         public filterPrinter(filterPrinterFunction): this;
@@ -191,8 +178,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
 
         /**
          * Set or get the animation transition duration (in milliseconds) for this chart instance.
-         * @param {Number} [duration=750]
-         * @returns {Number|BaseMixin}
          */
         public transitionDuration(): number;
         public transitionDuration(duration: number): this;
@@ -206,8 +191,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
 
         /**
          * Set or get the animation transition delay (in milliseconds) for this chart instance.
-         * @param {Number} [delay=0]
-         * @returns {Number|BaseMixin}
          */
         public transitionDelay(): number;
         public transitionDelay(delay: number): this;
@@ -222,8 +205,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         /**
          * If set, use the `visibility` attribute instead of the `display` attribute for showing/hiding
          * chart reset and filter controls, for less disruption to the layout.
-         * @param {Boolean} [controlsUseVisibility=false]
-         * @returns {Boolean|BaseMixin}
          */
         public controlsUseVisibility(): boolean;
         public controlsUseVisibility(controlsUseVisibility: boolean): this;
@@ -243,8 +224,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * a flag indicating whether this is a render (true) or a redraw (false), and a callback to be
          * triggered once the commit is done. The callback has the standard node.js continuation signature
          * with error first and result second.
-         * @param {Function} commitHandler
-         * @returns {BaseMixin}
          */
         public commitHandler(): () => void;
         public commitHandler(commitHandler: () => void): this;
@@ -266,9 +245,7 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * chart.label(function(d) { return d.key; });
          * // label function has access to the standard d3 data binding and can get quite complicated
          * chart.label(function(d) { return d.data.key + '(' + Math.floor(d.data.value / all.value() * 100) + '%)'; });
-         * @param {Function} [labelFunction]
-         * @param {Boolean} [enableLabels=true]
-         * @returns {Function|BaseMixin}
+         * @param [enableLabels=true]
          */
         public label(): LabelAccessor;
         public label(labelFunction: LabelAccessor, enableLabels?: boolean): this;
@@ -285,8 +262,7 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
 
         /**
          * Turn on/off label rendering
-         * @param {Boolean} [renderLabel=false]
-         * @returns {Boolean|BaseMixin}
+         * @param [renderLabel=false]
          */
         public renderLabel(): boolean;
         public renderLabel(renderLabel: boolean): this;
@@ -301,8 +277,7 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         /**
          * Turn on/off title rendering, or return the state of the render title flag if no arguments are
          * given.
-         * @param {Boolean} [renderTitle=true]
-         * @returns {Boolean|BaseMixin}
+         * @param [renderTitle=true]
          */
         public renderTitle(): boolean;
         public renderTitle(renderTitle: boolean): this;
@@ -331,8 +306,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          *        + 'Index Gain in Percentage: ' + numberFormat(p.value.percentageGain) + '%\n'
          *        + 'Fluctuation / Index Ratio: ' + numberFormat(p.value.fluctuationPercentage) + '%';
          * });
-         * @param {Function} [titleFunction]
-         * @returns {Function|BaseMixin}
          */
         public title(): TitleAccessor;
         public title(titleFunction: TitleAccessor): this;
@@ -355,8 +328,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * chart.keyAccessor(function(d) { return d.key; });
          * // custom key accessor for a multi-value crossfilter reduction
          * chart.keyAccessor(function(p) { return p.value.absGain; });
-         * @param {Function} [keyAccessor]
-         * @returns {Function|BaseMixin}
          */
         public keyAccessor(): KeyAccessor;
         public keyAccessor(keyAccessor: KeyAccessor): this;
@@ -378,8 +349,6 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
          * chart.valueAccessor(function(d) { return d.value; });
          * // custom value accessor for a multi-value crossfilter reduction
          * chart.valueAccessor(function(p) { return p.value.percentageGain; });
-         * @param {Function} [valueAccessor]
-         * @returns {Function|BaseMixin}
          */
         public valueAccessor(): ValueAccessor;
         public valueAccessor(valueAccessor: ValueAccessor): this;

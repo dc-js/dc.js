@@ -12,7 +12,6 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
      * Returns all GeoJson layers currently registered with this chart. The returned array is a
      * reference to this chart's internal data structure, so any modification to this array will also
      * modify this chart's internal registration.
-     * @returns {Array<{name:String, data: Object, accessor: Function}>}
      */
     public geoJsons(): IGeoJson[] {
         return this._conf.geoJsons;
@@ -32,11 +31,10 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
      * chart.overlayGeoJson(statesJson.features, 'state', function(d) {
      *      return d.properties.name;
      * });
-     * @param {_geoJson} json - a geojson feed
-     * @param {String} name - name of the layer
-     * @param {Function} keyAccessor - accessor function used to extract 'key' from the GeoJson data. The key extracted by
+     * @param json - a geojson feed
+     * @param name - name of the layer
+     * @param keyAccessor - accessor function used to extract 'key' from the GeoJson data. The key extracted by
      * this function should match the keys returned by the crossfilter groups.
-     * @returns {GeoChoroplethChart}
      */
     public overlayGeoJson(json, name: string, keyAccessor: BaseAccessor<any>) {
         for (let i = 0; i < this._conf.geoJsons.length; ++i) {
@@ -52,8 +50,6 @@ export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoropleth
 
     /**
      * Remove a GeoJson layer from this chart by name
-     * @param {String} name
-     * @returns {GeoChoroplethChart}
      */
     public removeGeoJson(name: string): this {
         const geoJsons = [];

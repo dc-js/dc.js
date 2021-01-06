@@ -5,15 +5,13 @@ import { config } from './config';
  * ({@link disableTransitions} is false) and the duration is greater than zero; otherwise return
  * the selection. Since most operations are the same on a d3 selection and a d3 transition, this
  * allows a common code path for both cases.
- * @function transition
- * @param {d3.selection} selection - the selection to be transitioned
- * @param {Number|Function} [duration=250] - the duration of the transition in milliseconds, a
+ * @param selection - the selection to be transitioned
+ * @param [duration=250] - the duration of the transition in milliseconds, a
  * function returning the duration, or 0 for no transition
- * @param {Number|Function} [delay] - the delay of the transition in milliseconds, or a function
+ * @param [delay] - the delay of the transition in milliseconds, or a function
  * returning the delay, or 0 for no delay
- * @param {String} [name] - the name of the transition (if concurrent transitions on the same
+ * @param [name] - the name of the transition (if concurrent transitions on the same
  * elements are needed)
- * @returns {d3.transition|d3.selection}
  */
 export function transition(selection, duration?: number, delay?: number, name?: string) {
     // TODO: can we do typing for selection here

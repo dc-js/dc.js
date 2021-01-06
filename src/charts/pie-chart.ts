@@ -21,9 +21,6 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @mixes CapMixin
- * @mixes ColorMixin
- * @mixes BaseMixin
  */
 
 export class PieChart extends ColorMixin(BaseMixin) {
@@ -47,11 +44,6 @@ export class PieChart extends ColorMixin(BaseMixin) {
      * var chart1 = new PieChart('#chart-container1');
      * // create a pie chart under #chart-container2 element using chart group A
      * var chart2 = new PieChart('#chart-container2', 'chartGroupA');
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -416,8 +408,6 @@ export class PieChart extends ColorMixin(BaseMixin) {
 
     /**
      * Get or set center x coordinate position. Default is center of svg.
-     * @param {Number} [cx]
-     * @returns {Number|PieChart}
      */
     public cx(): number;
     public cx(cx: number): this;
@@ -431,8 +421,6 @@ export class PieChart extends ColorMixin(BaseMixin) {
 
     /**
      * Get or set center y coordinate position. Default is center of svg.
-     * @param {Number} [cy]
-     * @returns {Number|PieChart}
      */
     public cy(): number;
     public cy(cy: number): this;

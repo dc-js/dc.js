@@ -19,7 +19,6 @@ import { IChartGroup } from '../core/i-chart-group';
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
  * for all chart and widget implementations. Methods from the {@link #BaseMixin BaseMixin} are inherited
  * and available on all chart implementations in the `dc` library.
- * @mixin BaseMixin
  */
 export class BaseMixin {
     protected _conf: IBaseMixinConf;
@@ -164,8 +163,6 @@ export class BaseMixin {
      * chart.height(250); // Set the chart's height to 250px;
      * chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the chart's height with a function
      * chart.height(null); // reset the height to the default auto calculation
-     * @param {Number|Function} [height]
-     * @returns {Number|BaseMixin}
      */
     public height(): number;
     public height(height: number | (() => number)): this;
@@ -196,8 +193,6 @@ export class BaseMixin {
      *     var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
      *     return (width && width > chart.minWidth()) ? width : chart.minWidth();
      * });
-     * @param {Number|Function} [width]
-     * @returns {Number|BaseMixin}
      */
     public width(): number;
     public width(width: number | (() => number)): this;
@@ -233,7 +228,6 @@ export class BaseMixin {
     /**
      * Clear all filters associated with this chart. The same effect can be achieved by calling
      * {@link BaseMixin#filter chart.filter(null)}.
-     * @returns {BaseMixin}
      */
     public filterAll() {
         return this.filter(null);
@@ -249,8 +243,8 @@ export class BaseMixin {
      * @example
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
-     * @param {String} sel CSS selector string
-     * @returns {d3.selection}
+     *
+     * * @param sel CSS selector string
      */
     public select<DescElement extends BaseType>(sel) {
         return this._root.select<DescElement>(sel);
@@ -265,8 +259,6 @@ export class BaseMixin {
      * @example
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
-     * @param {String} sel CSS selector string
-     * @returns {d3.selection}
      */
     public selectAll<DescElement extends BaseType, OldDatum>(sel) {
         return this._root ? this._root.selectAll<DescElement, OldDatum>(sel) : null;
@@ -278,8 +270,6 @@ export class BaseMixin {
      * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
      * within the chartGroup. This class is called internally on chart initialization, but be called
      * again to relocate the chart. However, it will orphan any previously created SVGElements.
-     * @param {anchorChart|anchorSelector|anchorNode} [parent]
-     * @returns {String|node|d3.selection|BaseMixin}
      */
     public anchor(): string | Element;
     public anchor(parent: ChartParentType): this;
@@ -320,7 +310,6 @@ export class BaseMixin {
 
     /**
      * Returns the DOM id for the chart's anchored location.
-     * @returns {String}
      */
     public anchorName(): string {
         const a: string | Element = this.anchor();
@@ -340,8 +329,6 @@ export class BaseMixin {
      * dc internally. Resetting the root element on a chart outside of dc internals may have
      * unexpected consequences.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement HTMLElement}
-     * @param {HTMLElement} [rootElement]
-     * @returns {HTMLElement|BaseMixin}
      */
     public root(): Selection<Element, any, any, any>;
     public root(rootElement: Selection<Element, any, any, any>): this;
@@ -358,8 +345,6 @@ export class BaseMixin {
      * however this is usually handled by dc internally. Resetting the SVGElement on a chart outside
      * of dc internals may have unexpected consequences.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
-     * @param {SVGElement|d3.selection} [svgElement]
-     * @returns {SVGElement|d3.selection|BaseMixin}
      */
     public svg(): Selection<SVGElement, any, any, any>;
     public svg(svgElement): this;
@@ -374,7 +359,6 @@ export class BaseMixin {
     /**
      * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
-     * @returns {SVGElement}
      */
     public resetSvg(): Selection<SVGElement, any, any, any> {
         this.select('svg').remove();
@@ -406,7 +390,6 @@ export class BaseMixin {
      * * root.selectAll('.filter') elements are turned on if the chart has an active filter. The text
      * content of this element is then replaced with the current filter value using the filter printer
      * function. This type of element will be turned off automatically if the filter is cleared.
-     * @returns {BaseMixin}
      */
     public turnOnControls(): this {
         if (this._root) {
@@ -422,7 +405,6 @@ export class BaseMixin {
     /**
      * Turn off optional control elements within the root element.
      * @see {@link BaseMixin#turnOnControls turnOnControls}
-     * @returns {BaseMixin}
      */
     public turnOffControls(): this {
         if (this._root) {
@@ -457,7 +439,6 @@ export class BaseMixin {
      * should only be used to render the chart for the first time on the page or if you want to make
      * sure everything is redrawn from scratch instead of relying on the default incremental redrawing
      * behaviour.
-     * @returns {BaseMixin}
      */
     public render(): this {
         this._height = this._width = undefined; // force recalculate
@@ -508,7 +489,6 @@ export class BaseMixin {
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}).
-     * @returns {BaseMixin}
      */
     public redraw(): this {
         this.sizeSvg();
@@ -529,7 +509,6 @@ export class BaseMixin {
      * Redraws all charts in the same group as this chart, typically in reaction to a filter
      * change. If the chart has a {@link BaseMixin.commitFilter commitHandler}, it will
      * be executed and waited for.
-     * @returns {BaseMixin}
      */
     public redrawGroup(): this {
         if (this._conf.commitHandler) {
@@ -549,7 +528,6 @@ export class BaseMixin {
     /**
      * Renders all charts in the same group as this chart. If the chart has a
      * {@link BaseMixin.commitFilter commitHandler}, it will be executed and waited for
-     * @returns {BaseMixin}
      */
     public renderGroup(): this {
         if (this._conf.commitHandler) {
@@ -580,8 +558,6 @@ export class BaseMixin {
      * Check whether any active filter or a specific filter is associated with particular chart instance.
      * This function is **not chainable**.
      * @see {@link BaseMixin#hasFilterHandler hasFilterHandler}
-     * @param {*} [filter]
-     * @returns {Boolean}
      */
     public hasFilter(filter?): boolean {
         return this._dataProvider.hasFilter(filter);
@@ -591,8 +567,6 @@ export class BaseMixin {
      * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
      * but more efficient because the filter is only applied once.
      *
-     * @param {*} [filter]
-     * @returns {BaseMixin}
      */
     public replaceFilter(filter): this {
         // The following call resets the filters without actually applying those
@@ -649,8 +623,6 @@ export class BaseMixin {
      * // filter by range -- note the use of filters.RangedFilter, which is different
      * // from the syntax for filtering a crossfilter dimension directly, dimension.filter([15,20])
      * chart.filter(filters.RangedFilter(15,20));
-     * @param {*} [filter]
-     * @returns {BaseMixin}
      */
     public filter();
     public filter(filter): this;
@@ -677,7 +649,6 @@ export class BaseMixin {
      * Returns all current filters. This method does not perform defensive cloning of the internal
      * filter array before returning, therefore any modification of the returned array will effect the
      * chart's internal filter storage.
-     * @returns {Array<*>}
      */
     public filters() {
         return this._dataProvider.filters;
@@ -707,8 +678,6 @@ export class BaseMixin {
      * var oldHandler = chart.onClick;
      * chart.onClick = function(datum) {
      *   // use datum.
-     * @param {*} datum
-     * @return {undefined}
      */
     public onClick(datum: any, i?: number): void {
         const filter = this._conf.keyAccessor(datum);
@@ -756,8 +725,6 @@ export class BaseMixin {
     /**
      * Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
      * together since it is expected they share the same underlying crossfilter data set.
-     * @param {String} [chartGroup]
-     * @returns {String|BaseMixin}
      */
     public chartGroup(): IChartGroup;
     public chartGroup(chartGroup: ChartGroupType): this;
@@ -782,7 +749,6 @@ export class BaseMixin {
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}
      * function or reset group or dimension after rendering, it is a good idea to
      * clear the cache to make sure charts are rendered properly.
-     * @returns {BaseMixin}
      */
     protected expireCache(): this {
         // do nothing in base, should be overridden by sub-function
@@ -794,8 +760,6 @@ export class BaseMixin {
      * based on the color setting and names associated with each group.
      * @example
      * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
-     * @param {Legend} [legend]
-     * @returns {Legend|BaseMixin}
      */
     public legend();
     public legend(legend): this;
@@ -810,7 +774,6 @@ export class BaseMixin {
 
     /**
      * Returns the internal numeric ID of the chart.
-     * @returns {String}
      */
     public chartID(): string {
         return this.__dcFlag__;
@@ -821,8 +784,6 @@ export class BaseMixin {
      * the same name to be called with the value to set that attribute for the chart.
      * @example
      * chart.options({dimension: myDimension, group: myGroup});
-     * @param {{}} opts
-     * @returns {BaseMixin}
      */
     public options(opts) {
         const applyOptions = [
@@ -875,9 +836,6 @@ export class BaseMixin {
      * .on('postRedraw', function(chart){...})
      * .on('filtered', function(chart, filter){...})
      * .on('zoomed', function(chart, filter){...})
-     * @param {String} event
-     * @param {Function} listener
-     * @returns {BaseMixin}
      */
     public on(event, listener): this {
         this._listeners.on(event, listener);
@@ -902,8 +860,6 @@ export class BaseMixin {
      *     // its a closure so you can also access other chart variable available in the closure scope
      *     moveChart.filter(chart.filter());
      * });
-     * @param {Function} renderletFunction
-     * @returns {BaseMixin}
      */
     public renderlet(renderletFunction): this {
         logger.warnOnce(

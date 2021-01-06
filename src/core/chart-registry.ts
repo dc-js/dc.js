@@ -35,8 +35,6 @@ class ChartRegistry {
 
     /**
      * Determine if a given chart instance resides in any group in the registry.
-     * @param {Object} chart dc.js chart instance
-     * @returns {Boolean}
      */
     public has(chart: IMinimalChart): boolean {
         for (const chartGroupName in this._chartMap) {
@@ -50,8 +48,6 @@ class ChartRegistry {
     }
     /**
      * Clear given group if one is provided, otherwise clears all groups.
-     * @param {String} group Group name
-     * @return {undefined}
      */
     public clear(group?: string): void {
         if (group) {
@@ -72,8 +68,6 @@ class ChartRegistry {
     /**
      * Get an array of each chart instance in the given group.
      * If no group is provided, the charts in the default group are returned.
-     * @param {String} [group] Group name
-     * @returns {Array<Object>}
      */
     public list(group?: string): IMinimalChart[] {
         return this.chartGroup(group).list();

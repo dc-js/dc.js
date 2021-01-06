@@ -14,8 +14,6 @@ export class TextFilterWidget extends BaseMixinExt(TextFilterWidgetNeo) {
      * chart.normalize(function (s) {
      *   return s.toLowerCase();
      * });
-     * @param {function} [normalize]
-     * @returns {TextFilterWidget|function}
      */
     public normalize(): (s) => string;
     public normalize(normalize: (s) => string): this;
@@ -32,8 +30,7 @@ export class TextFilterWidget extends BaseMixinExt(TextFilterWidgetNeo) {
      * @example
      * // This is the default
      * chart.placeHolder('type to filter');
-     * @param {function} [placeHolder='search']
-     * @returns {TextFilterWidget|string}
+     * @param [placeHolder='search']
      */
     public placeHolder(): string;
     public placeHolder(placeHolder: string): this;
@@ -56,8 +53,6 @@ export class TextFilterWidget extends BaseMixinExt(TextFilterWidgetNeo) {
      *         return _normalize(d).indexOf(query) !== -1;
      *     };
      * };
-     * @param {function} [filterFunctionFactory]
-     * @returns {TextFilterWidget|function}
      */
     public filterFunctionFactory(): (query) => BaseAccessor<boolean>;
     public filterFunctionFactory(filterFunctionFactory: (query) => BaseAccessor<boolean>): this;

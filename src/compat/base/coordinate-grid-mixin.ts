@@ -54,8 +54,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          *      // be aware using fixed units will disable the focus/zoom ability on the chart
          *      return 1000;
          * }
-         * @param {Function} [xUnits=units.integers]
-         * @returns {Function|CoordinateGridMixin}
+         * @param [xUnits=units.integers]
          */
         public xUnits(): Units;
         public xUnits(xUnits: Units): this;
@@ -75,8 +74,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * number or date x axes.  When padding a date axis, an integer represents number of units being padded
          * and a percentage string will be treated the same as an integer. The unit will be determined by the
          * xAxisPaddingUnit variable.
-         * @param {Number|String} [padding=0]
-         * @returns {Number|String|CoordinateGridMixin}
+         * @param [padding=0]
          */
         public xAxisPadding(): number;
         public xAxisPadding(padding: number): this;
@@ -98,8 +96,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * For backward compatibility with dc.js 2.0, it can also be the name of a d3 time interval
          * ('day', 'hour', etc). Available arguments are the
          * [d3 time intervals](https://github.com/d3/d3-time/blob/master/README.md#intervals d3.timeInterval).
-         * @param {String} [unit=d3.timeDay]
-         * @returns {String|CoordinateGridMixin}
+         * @param [unit=d3.timeDay]
          */
         public xAxisPaddingUnit(): string | CountableTimeInterval;
         public xAxisPaddingUnit(unit: string | CountableTimeInterval): this;
@@ -114,8 +111,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
         /**
          * Turn on/off elastic x axis behavior. If x axis elasticity is turned on, then the grid chart will
          * attempt to recalculate the x axis range whenever a redraw event is triggered.
-         * @param {Boolean} [elasticX=false]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [elasticX=false]
          */
         public elasticX(): boolean;
         public elasticX(elasticX: boolean): this;
@@ -134,8 +130,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * Padding can be an integer or percentage in string (e.g. '10%'). Padding can be applied to
          * number or date axes. When padding a date axis, an integer represents number of days being padded
          * and a percentage string will be treated the same as an integer.
-         * @param {Number|String} [padding=0]
-         * @returns {Number|CoordinateGridMixin}
+         * @param [padding=0]
          */
         public yAxisPadding(): number;
         public yAxisPadding(padding: number): this;
@@ -150,8 +145,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
         /**
          * Turn on/off elastic y axis behavior. If y axis elasticity is turned on, then the grid chart will
          * attempt to recalculate the y axis range whenever a redraw event is triggered.
-         * @param {Boolean} [elasticY=false]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [elasticY=false]
          */
         public elasticY(): boolean;
         public elasticY(elasticY: boolean): this;
@@ -169,8 +163,6 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * // set x unit round to by month, this will make sure range selection brush will
          * // select whole months
          * chart.round(d3.timeMonth.round);
-         * @param {Function} [round]
-         * @returns {Function|CoordinateGridMixin}
          */
         public round(): RoundFn;
         public round(round: RoundFn): this;
@@ -184,8 +176,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
 
         /**
          * Turn on/off horizontal grid lines.
-         * @param {Boolean} [renderHorizontalGridLines=false]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [renderHorizontalGridLines=false]
          */
         public renderHorizontalGridLines(): boolean;
         public renderHorizontalGridLines(renderHorizontalGridLines: boolean): this;
@@ -199,8 +190,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
 
         /**
          * Turn on/off vertical grid lines.
-         * @param {Boolean} [renderVerticalGridLines=false]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [renderVerticalGridLines=false]
          */
         public renderVerticalGridLines(): boolean;
         public renderVerticalGridLines(renderVerticalGridLines: boolean): this;
@@ -215,7 +205,6 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
         /**
          * Get or set the scale extent for mouse zooms. See https://github.com/d3/d3-zoom#zoom_scaleExtent.
          *
-         * @returns {Array<Number>|CoordinateGridMixin}
          */
         public zoomScale(): [number, number];
         public zoomScale(extent: [number, number]): this;
@@ -229,8 +218,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
 
         /**
          * Get or set the zoom restriction for the chart. If true limits the zoom to original domain of the chart.
-         * @param {Boolean} [zoomOutRestrict=true]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [zoomOutRestrict=true]
          */
         public zoomOutRestrict(): boolean;
         public zoomOutRestrict(zoomOutRestrict: boolean): this;
@@ -246,8 +234,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * Set or get mouse zoom capability flag (default: false). When turned on the chart will be
          * zoomable using the mouse wheel. If the range selector chart is attached zooming will also update
          * the range selection brush on the associated range selector chart.
-         * @param {Boolean} [mouseZoomable=false]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [mouseZoomable=false]
          */
         public mouseZoomable(): boolean;
         public mouseZoomable(mouseZoomable: boolean): this;
@@ -263,8 +250,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * Get or set the padding in pixels for the clip path. Once set padding will be applied evenly to
          * the top, left, right, and bottom when the clip path is generated. If set to zero, the clip area
          * will be exactly the chart body area minus the margins.
-         * @param {Number} [padding=5]
-         * @returns {Number|CoordinateGridMixin}
+         * @param [padding=5]
          */
         public clipPadding(): number;
         public clipPadding(padding: number): this;
@@ -280,8 +266,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * Gets or sets whether the chart should be drawn with a right axis instead of a left axis. When
          * used with a chart in a composite chart, allows both left and right Y axes to be shown on a
          * chart.
-         * @param {Boolean} [useRightYAxis=false]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [useRightYAxis=false]
          */
         public useRightYAxis(): boolean;
         public useRightYAxis(useRightYAxis: boolean): this;
@@ -315,8 +300,6 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * the focus chart.
          *
          * See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
-         * @param {CoordinateGridMixin} [rangeChart]
-         * @returns {CoordinateGridMixin}
          */
         public rangeChart(): typeof CoordinateGridMixin;
         public rangeChart(rangeChart: typeof CoordinateGridMixin): this;
@@ -348,8 +331,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * un-filter them. However turning on the brush filter will disable other interactive elements on
          * the chart such as highlighting, tool tips, and reference lines. Zooming will still be possible
          * if enabled, but only via scrolling (panning will be disabled.)
-         * @param {Boolean} [brushOn=true]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [brushOn=true]
          */
         public brushOn(): boolean;
         public brushOn(brushOn: boolean): this;
@@ -365,8 +347,7 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
          * This will be internally used by composite chart onto children. Please do not invoke directly.
          *
          * @protected
-         * @param {Boolean} [brushOn=false]
-         * @returns {Boolean|CoordinateGridMixin}
+         * @param [brushOn=false]
          */
         public parentBrushOn(): boolean;
         public parentBrushOn(brushOn: boolean): this;

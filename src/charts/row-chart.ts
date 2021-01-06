@@ -21,10 +21,6 @@ import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * @mixes CapMixin
- * @mixes MarginMixin
- * @mixes ColorMixin
- * @mixes BaseMixin
  */
 
 export class RowChart extends ColorMixin(MarginMixin) {
@@ -47,11 +43,6 @@ export class RowChart extends ColorMixin(MarginMixin) {
      * var chart1 = new RowChart('#chart-container1');
      * // create a row chart under #chart-container2 element using chart group A
      * var chart2 = new RowChart('#chart-container2', 'chartGroupA');
-     * @param {String|node|d3.selection} parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param {String} [chartGroup] - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -138,8 +129,6 @@ export class RowChart extends ColorMixin(MarginMixin) {
      * Gets or sets the x scale. The x scale can be any d3
      * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}.
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
-     * @param {d3.scale} [scale]
-     * @returns {d3.scale|RowChart}
      */
     public x(): MinimalXYScale;
     public x(scale: MinimalXYScale): this;
@@ -322,7 +311,6 @@ export class RowChart extends ColorMixin(MarginMixin) {
      * Get or sets the x axis for the row chart instance.
      * See the {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * documention for more information.
-     * @param {d3.axis} [xAxis]
      * @example
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
@@ -331,7 +319,6 @@ export class RowChart extends ColorMixin(MarginMixin) {
      * // use a top-oriented axis. Note: position of the axis and grid lines will need to
      * // be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
      * chart.xAxis(d3.axisTop())
-     * @returns {d3.axis|RowChart}
      */
     public xAxis(): Axis<any>;
     public xAxis(xAxis: Axis<any>): this;

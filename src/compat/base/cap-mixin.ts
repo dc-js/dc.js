@@ -38,10 +38,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          * If you want to cap by one ordering but sort by another, you can still do this by
          * specifying your own {@link BaseMixin#data `.data()`} callback. For details, see the example
          * {@link https://dc-js.github.io/dc.js/examples/cap-and-sort-differently.html Cap and Sort Differently}.
-         * @memberof CapMixin
-         * @instance
-         * @param {Number} [count=Infinity]
-         * @returns {Number|CapMixin}
+         * @param [count=Infinity]
          */
         public cap();
         public cap(count): this;
@@ -59,10 +56,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          * Get or set the direction of capping. If set, the chart takes the first
          * {@link CapMixin#cap cap} elements from the sorted array of elements; otherwise
          * it takes the last `cap` elements.
-         * @memberof CapMixin
-         * @instance
-         * @param {Boolean} [takeFront=true]
-         * @returns {Boolean|CapMixin}
+         * @param [takeFront=true]
          */
         public takeFront();
         public takeFront(takeFront): this;
@@ -78,10 +72,7 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
 
         /**
          * Get or set the label for *Others* slice when slices cap is specified.
-         * @memberof CapMixin
-         * @instance
-         * @param {String} [label="Others"]
-         * @returns {String|CapMixin}
+         * @param [label="Others"]
          */
         public othersLabel();
         public othersLabel(label): this;
@@ -101,8 +92,6 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          *
          * The grouper function takes an array of included ("top") items, and an array of the rest of
          * the items. By default the grouper function computes the sum of the rest.
-         * @memberof CapMixin
-         * @instance
          * @example
          * // Do not show others
          * chart.othersGrouper(null);
@@ -119,8 +108,6 @@ export function CapMixinExt<TBase extends Constructor<Intermediate>>(Base: TBase
          *     }
          *     return topItems;
          * });
-         * @param {Function} [grouperFunction]
-         * @returns {Function|CapMixin}
          */
         public othersGrouper();
         public othersGrouper(grouperFunction): this;
