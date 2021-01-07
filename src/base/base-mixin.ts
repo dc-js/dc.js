@@ -7,7 +7,7 @@ import { chartRegistry } from '../core/chart-registry';
 import { constants } from '../core/constants';
 import { events } from '../core/events';
 import { logger } from '../core/logger';
-import { printers } from '../core/printers';
+import { printFilters } from '../core/printers';
 import { InvalidStateException } from '../core/invalid-state-exception';
 import { BadArgumentException } from '../core/bad-argument-exception';
 import { CFGrouping, ChartGroupType, ChartParentType, LegendItem } from '../core/types';
@@ -55,7 +55,7 @@ export class BaseMixin {
             minWidth: 200,
             minHeight: 200,
             useViewBoxResizing: false,
-            filterPrinter: printers.filters,
+            filterPrinter: printFilters,
             controlsUseVisibility: false,
             transitionDuration: 750,
             transitionDelay: 0,

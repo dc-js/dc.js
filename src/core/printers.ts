@@ -1,41 +1,16 @@
 import { printSingleValue } from './utils';
 
-interface IPrinters {
-    filters: (filters) => string;
-    filter: (filter) => string;
-}
-
-export const printers: IPrinters = {
-    filter(filter): string {
-        return '';
-    },
-    filters(filters): string {
-        return '';
-    },
-};
-
 /**
  * Converts a list of filters into a readable string.
- * @method filters
  */
-printers.filters = function (filters) {
-    let s = '';
-
-    for (let i = 0; i < filters.length; ++i) {
-        if (i > 0) {
-            s += ', ';
-        }
-        s += printers.filter(filters[i]);
-    }
-
-    return s;
-};
+export function printFilters(filters) {
+    return filters.map(filter => printFilter(filter)).join(', ');
+}
 
 /**
  * Converts a filter into a readable string.
- * @method filter
  */
-printers.filter = function (filter) {
+export function printFilter(filter) {
     let s = '';
 
     if (typeof filter !== 'undefined' && filter !== null) {
@@ -51,4 +26,4 @@ printers.filter = function (filter) {
     }
 
     return s;
-};
+}
