@@ -15,10 +15,6 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  * Data grid is a simple widget designed to list the filtered records, providing
  * a simple way to define how the items are displayed.
  *
- * Note: Formerly the data grid chart (and data table) used the {@link DataGrid#group group} attribute as a
- * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
- * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
- *
  * Examples:
  * - {@link https://dc-js.github.io/dc.js/ep/ List of members of the european parliament}
  */
@@ -27,11 +23,6 @@ export class DataGrid extends BaseMixin {
 
     /**
      * Create a Data Grid.
-     * @param parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param chartGroup - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

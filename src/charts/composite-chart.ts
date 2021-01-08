@@ -328,7 +328,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Get or set chart-specific options for all child charts. This is equivalent to calling
-     * {@link BaseMixin#options .options} on each child chart.
+     * {@link BaseMixin.options .options} on each child chart.
      */
     public childOptions();
     public childOptions(childOptions): this;
@@ -474,7 +474,7 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Get or set alignment between left and right y axes. A line connecting '0' on both y axis
-     * will be parallel to x axis. This only has effect when {@link CoordinateGridMixin#elasticY elasticY} is true.
+     * will be parallel to x axis. This only has effect when {@link ICoordinateGridMixinConf.elasticY elasticY} is true.
      */
     public alignYAxes(): boolean;
     public alignYAxes(alignYAxes: boolean): this;

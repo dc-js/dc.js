@@ -4,7 +4,7 @@ import { scaleBand } from 'd3-scale';
 import { transition } from '../core/core';
 import { logger } from '../core/logger';
 import { events } from '../core/events';
-import { ColorMixin } from '../base/color-mixin';
+import { ColorMixin, IColorMixin } from '../base/color-mixin';
 import { MarginMixin } from '../base/margin-mixin';
 import { CFGrouping, ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types';
 import { Selection } from 'd3-selection';
@@ -17,7 +17,7 @@ const DEFAULT_BORDER_RADIUS = 6.75;
 /**
  * A heat map is matrix that represents the values of two dimensions of data using colors.
  */
-export class HeatMap extends ColorMixin(MarginMixin) {
+export class HeatMap extends ColorMixin(MarginMixin) implements IColorMixin {
     public _conf: IHeatMapConf;
 
     private _chartBody: Selection<SVGGElement, any, SVGElement, any>;

@@ -1,6 +1,6 @@
 import { IMarginMixinConf } from './i-margin-mixin-conf';
 import { IColorMixinConf } from './i-color-mixin-conf';
-import { RoundFn, IUnits } from '../core/types';
+import { IUnits, RoundFn } from '../core/types';
 import { CountableTimeInterval } from 'd3-time';
 
 export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinConf {

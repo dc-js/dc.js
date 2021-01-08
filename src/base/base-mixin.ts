@@ -17,7 +17,7 @@ import { IChartGroup } from '../core/i-chart-group';
 
 /**
  * `BaseMixin` is an abstract functional object representing a basic `dc` chart object
- * for all chart and widget implementations. Methods from the {@link #BaseMixin BaseMixin} are inherited
+ * for all chart and widget implementations. Methods from this class are inherited
  * and available on all chart implementations in the `dc` library.
  */
 export class BaseMixin {
@@ -150,9 +150,9 @@ export class BaseMixin {
      *
      * By default, without an explicit height being given, the chart will select the width of its
      * anchor element. If that isn't possible it defaults to 200 (provided by the
-     * {@link BaseMixin#minHeight minHeight} property). Setting the value falsy will return
+     * {@link IBaseMixinConf.minHeight} property). Setting the value falsy will return
      * the chart to the default behavior.
-     * @see {@link BaseMixin#minHeight minHeight}
+     * @see {@link IBaseMixinConf.minHeight}
      * @example
      * // Default height
      * chart.height(function (element) {
@@ -185,8 +185,8 @@ export class BaseMixin {
 
     /**
      * Set or get the width attribute of a chart.
-     * @see {@link BaseMixin#height height}
-     * @see {@link BaseMixin#minWidth minWidth}
+     * @see {@link BaseMixin.height height}
+     * @see {@link IBaseMixinConf.minWidth}
      * @example
      * // Default width
      * chart.width(function (element) {
@@ -227,7 +227,7 @@ export class BaseMixin {
 
     /**
      * Clear all filters associated with this chart. The same effect can be achieved by calling
-     * {@link BaseMixin#filter chart.filter(null)}.
+     * {@link BaseMixin.filter chart.filter(null)}.
      */
     public filterAll() {
         return this.filter(null);
@@ -404,7 +404,7 @@ export class BaseMixin {
 
     /**
      * Turn off optional control elements within the root element.
-     * @see {@link BaseMixin#turnOnControls turnOnControls}
+     * @see {@link BaseMixin.turnOnControls turnOnControls}
      */
     public turnOffControls(): this {
         if (this._root) {
@@ -507,7 +507,7 @@ export class BaseMixin {
 
     /**
      * Redraws all charts in the same group as this chart, typically in reaction to a filter
-     * change. If the chart has a {@link BaseMixin.commitFilter commitHandler}, it will
+     * change. If the chart has a {@link IBaseMixinConf.commitHandler commitHandler}, it will
      * be executed and waited for.
      */
     public redrawGroup(): this {
@@ -527,7 +527,7 @@ export class BaseMixin {
 
     /**
      * Renders all charts in the same group as this chart. If the chart has a
-     * {@link BaseMixin.commitFilter commitHandler}, it will be executed and waited for
+     * {@link IBaseMixinConf.commitHandler commitHandler}, it will be executed and waited for
      */
     public renderGroup(): this {
         if (this._conf.commitHandler) {
@@ -557,7 +557,10 @@ export class BaseMixin {
     /**
      * Check whether any active filter or a specific filter is associated with particular chart instance.
      * This function is **not chainable**.
-     * @see {@link BaseMixin#hasFilterHandler hasFilterHandler}
+     *
+     * Starting version 5, filtering is provided by DataProvider.
+     *
+     * @see {@link CFSimpleAdapter.hasFilter}.
      */
     public hasFilter(filter?): boolean {
         return this._dataProvider.hasFilter(filter);
@@ -567,6 +570,9 @@ export class BaseMixin {
      * Replace the chart filter. This is equivalent to calling `chart.filter(null).filter(filter)`
      * but more efficient because the filter is only applied once.
      *
+     * Starting version 5, filtering is provided by DataProvider.
+     *
+     * @see {@link CFSimpleAdapter.resetFilters}.
      */
     public replaceFilter(filter): this {
         // The following call resets the filters without actually applying those
@@ -580,49 +586,9 @@ export class BaseMixin {
      * Filter the chart by the given parameter, or return the current filter if no input parameter
      * is given.
      *
-     * The filter parameter can take one of these forms:
-     * * A single value: the value will be toggled (added if it is not present in the current
-     * filters, removed if it is present)
-     * * An array containing a single array of values (`[[value,value,value]]`): each value is
-     * toggled
-     * * When appropriate for the chart, a {@link filters dc filter object} such as
-     *   * {@link filters.RangedFilter `filters.RangedFilter`} for the
-     * {@link CoordinateGridMixin CoordinateGridMixin} charts
-     *   * {@link filters.TwoDimensionalFilter `filters.TwoDimensionalFilter`} for the
-     * {@link HeatMap heat map}
-     *   * {@link filters.RangedTwoDimensionalFilter `filters.RangedTwoDimensionalFilter`}
-     * for the {@link ScatterPlot scatter plot}
-     * * `null`: the filter will be reset using the
-     * {@link BaseMixin#resetFilterHandler resetFilterHandler}
+     * Starting version 5, filtering is provided by DataProvider.
      *
-     * Note that this is always a toggle (even when it doesn't make sense for the filter type). If
-     * you wish to replace the current filter, either call `chart.filter(null)` first - or it's more
-     * efficient to call {@link BaseMixin#replaceFilter `chart.replaceFilter(filter)`} instead.
-     *
-     * Each toggle is executed by checking if the value is already present using the
-     * {@link BaseMixin#hasFilterHandler hasFilterHandler}; if it is not present, it is added
-     * using the {@link BaseMixin#addFilterHandler addFilterHandler}; if it is already present,
-     * it is removed using the {@link BaseMixin#removeFilterHandler removeFilterHandler}.
-     *
-     * Once the filters array has been updated, the filters are applied to the
-     * crossfilter dimension, using the {@link BaseMixin#filterHandler filterHandler}.
-     *
-     * Once you have set the filters, call {@link BaseMixin#redrawGroup `chart.redrawGroup()`}
-     * (or {@link redrawAll `redrawAll()`}) to redraw the chart's group.
-     * @see {@link BaseMixin#addFilterHandler addFilterHandler}
-     * @see {@link BaseMixin#removeFilterHandler removeFilterHandler}
-     * @see {@link BaseMixin#resetFilterHandler resetFilterHandler}
-     * @see {@link BaseMixin#filterHandler filterHandler}
-     * @example
-     * // filter by a single string
-     * chart.filter('Sunday');
-     * // filter by a single age
-     * chart.filter(18);
-     * // filter by a set of states
-     * chart.filter([['MA', 'TX', 'ND', 'WA']]);
-     * // filter by range -- note the use of filters.RangedFilter, which is different
-     * // from the syntax for filtering a crossfilter dimension directly, dimension.filter([15,20])
-     * chart.filter(filters.RangedFilter(15,20));
+     * @see {@link CFSimpleAdapter.filter}.
      */
     public filter();
     public filter(filter): this;
@@ -649,6 +615,10 @@ export class BaseMixin {
      * Returns all current filters. This method does not perform defensive cloning of the internal
      * filter array before returning, therefore any modification of the returned array will effect the
      * chart's internal filter storage.
+     *
+     * Starting version 5, filtering is provided by DataProvider.
+     *
+     * @see {@link CFSimpleAdapter.filters}.
      */
     public filters() {
         return this._dataProvider.filters;
@@ -816,7 +786,7 @@ export class BaseMixin {
      * All dc chart instance supports the following listeners.
      * Supports the following events:
      * * `renderlet` - This listener function will be invoked after transitions after redraw and render. Replaces the
-     * deprecated {@link BaseMixin#renderlet renderlet} method.
+     * deprecated {@link BaseMixin.renderlet renderlet} method.
      * * `pretransition` - Like `.on('renderlet', ...)` but the event is fired before transitions start.
      * * `preRender` - This listener function will be invoked before chart rendering.
      * * `postRender` - This listener function will be invoked after chart finish rendering including
@@ -849,7 +819,7 @@ export class BaseMixin {
      * Renderlet functions take the chart instance as the only input parameter and you can
      * use the dc API or use raw d3 to achieve pretty much any effect.
      *
-     * Use {@link BaseMixin#on on} with a 'renderlet' prefix.
+     * Use {@link BaseMixin.on on} with a 'renderlet' prefix.
      * Generates a random key for the renderlet, which makes it hard to remove.
      * @deprecated chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)
      * @example

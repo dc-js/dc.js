@@ -1,7 +1,6 @@
 import { descending, max, min } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 
-import { ColorMixin } from './color-mixin';
 import { transition } from '../core/core';
 import { events } from '../core/events';
 import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/types';

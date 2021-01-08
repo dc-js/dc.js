@@ -16,7 +16,7 @@ export function CompositeChartExt<TBase extends Constructor<Intermediate>>(Base:
         }
 
         /**
-         * Get or set color sharing for the chart. If set, the {@link ColorMixin#colors .colors()} value from this chart
+         * Get or set color sharing for the chart. If set, the {@link ColorMixin.colors .colors()} value from this chart
          * will be shared with composed children. Additionally if the child chart implements
          * Stackable and has not set a custom .colorAccessor, then it will generate a color
          * specific to its order in the composition.
@@ -33,7 +33,7 @@ export function CompositeChartExt<TBase extends Constructor<Intermediate>>(Base:
         }
 
         /**
-         * Get or set title sharing for the chart. If set, the {@link BaseMixin#title .title()} value from
+         * Get or set title sharing for the chart. If set, the {@link BaseMixin.title .title()} value from
          * this chart will be shared with composed children.
          *
          * Note: currently you must call this before `compose` or the child will still get the parent's

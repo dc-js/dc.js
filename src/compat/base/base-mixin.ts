@@ -18,8 +18,8 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         }
         /**
          * Set or get the minimum width attribute of a chart. This only has effect when used with the default
-         * {@link BaseMixin#width width} function.
-         * @see {@link BaseMixin#width width}
+         * {@link BaseMixin.width width} function.
+         * @see {@link BaseMixin.width width}
          */
         public minWidth(): number;
         public minWidth(minWidth: number): this;
@@ -33,8 +33,8 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
 
         /**
          * Set or get the minimum height attribute of a chart. This only has effect when used with the default
-         * {@link BaseMixin#height height} function.
-         * @see {@link BaseMixin#height height}
+         * {@link BaseMixin.height height} function.
+         * @see {@link BaseMixin.height height}
          * @param [minHeight=200]
          */
         public minHeight(): number;
@@ -151,7 +151,7 @@ export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBas
         /**
          * Set or get the filter printer function. The filter printer function is used to generate human
          * friendly text for filter value(s) associated with the chart instance. The text will get shown
-         * in the `.filter element; see {@link BaseMixin#turnOnControls turnOnControls}.
+         * in the `.filter element; see {@link BaseMixin.turnOnControls turnOnControls}.
          *
          * By default dc charts use a default filter printer {@link printers.filters printers.filters}
          * that provides simple printing support for both single value and ranged filters.

@@ -124,7 +124,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * array.
          *
          * Note: previously this method accepted a callback function. Instead you may use a custom scale
-         * set by {@link ColorMixin#colors .colors}.
+         * set by {@link ColorMixin.colors .colors}.
          */
         public colorDomain(): string[];
         public colorDomain(domain: string[]): this;

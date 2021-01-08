@@ -164,8 +164,8 @@ export class Legend {
     }
 
     /**
-     * Turn automatic width for legend items on or off. If true, {@link Legend#itemWidth itemWidth} is ignored.
-     * This setting takes into account the {@link Legend#gap gap}.
+     * Turn automatic width for legend items on or off. If true, {@link Legend.itemWidth itemWidth} is ignored.
+     * This setting takes into account the {@link Legend.gap gap}.
      */
     public autoItemWidth(): boolean;
     public autoItemWidth(autoItemWidth: boolean): this;

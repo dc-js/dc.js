@@ -89,9 +89,9 @@ export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo))
      * Get or set the strategy to use for sizing the charts rings.
      *
      * There are three strategies available
-     * * {@link SunburstChart#defaultRingSizes `defaultRingSizes`}: the rings get narrower farther away from the center
-     * * {@link SunburstChart#relativeRingSizes `relativeRingSizes`}: set the ring sizes as portions of 1
-     * * {@link SunburstChart#equalRingSizes `equalRingSizes`}: the rings are equally wide
+     * * {@link SunburstChart.defaultRingSizes `defaultRingSizes`}: the rings get narrower farther away from the center
+     * * {@link SunburstChart.relativeRingSizes `relativeRingSizes`}: set the ring sizes as portions of 1
+     * * {@link SunburstChart.equalRingSizes `equalRingSizes`}: the rings are equally wide
      *
      * You can modify the returned strategy, or create your own, for custom ring sizing.
      *

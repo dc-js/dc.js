@@ -127,7 +127,7 @@ export class LineChart extends StackMixin {
      * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
      * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
      *
-     * Replaces the use of {@link LineChart#interpolate} and {@link LineChart#tension}
+     * Replaces the use of {@link LineChart.interpolate} and {@link LineChart.tension}
      * in dc.js < 3.0
      *
      * This is passed to
@@ -166,11 +166,11 @@ export class LineChart extends StackMixin {
      * 'basis-open', 'basis-closed', 'bundle', 'cardinal', 'cardinal-open', 'cardinal-closed', and
      * 'monotone'.
      *
-     * This function exists for backward compatibility. Use {@link LineChart#curve}
+     * This function exists for backward compatibility. Use {@link LineChart.curve}
      * which is generic and provides more options.
      * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
-     * @deprecated since version 3.0 use {@link LineChart#curve} instead
-     * @see {@link LineChart#curve}
+     * @deprecated since version 3.0 use {@link LineChart.curve} instead
+     * @see {@link LineChart.curve}
      * @param  {d3.curve} [interpolate=d3.curveLinear]
      */
     public interpolate(): CurveFactory | CurveFactoryLineOnly | string;
@@ -193,11 +193,11 @@ export class LineChart extends StackMixin {
      * if it provides a `.tension` function. Example:
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
      *
-     * This function exists for backward compatibility. Use {@link LineChart#curve}
+     * This function exists for backward compatibility. Use {@link LineChart.curve}
      * which is generic and provides more options.
      * Value set through `.curve` takes precedence over `.interpolate` and `.tension`.
-     * @deprecated since version 3.0 use {@link LineChart#curve} instead
-     * @see {@link LineChart#curve}
+     * @deprecated since version 3.0 use {@link LineChart.curve} instead
+     * @see {@link LineChart.curve}
      * @param  {Number} [tension=0]
      */
     public tension(): number;
@@ -537,10 +537,11 @@ export class LineChart extends StackMixin {
 
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
-     * dashed lines back to each respective axis.  This is ignored if the chart
-     * {@link CoordinateGridMixin#brushOn brush} is on.
+     * dashed lines back to each respective axis.
+     * This is ignored if the chart {@link ICoordinateGridMixinConf.brushOn brush} is on.
+     * Set it to a special value ` 'always' ` to force it.
      *
-     * @param  {Boolean} [xyTipsOn=false]
+     * It is on by default.
      */
     public xyTipsOn(): boolean | 'always';
     public xyTipsOn(xyTipsOn: 'always'): this;

@@ -302,7 +302,7 @@ export class BarChart extends StackMixin {
 
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
-     * Setting this value will also remove any previously set {@link BarChart#gap gap}. See the
+     * Setting this value will also remove any previously set {@link BarChart.gap gap}. See the
      * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
      * for a visual description of how the padding is applied.
      */

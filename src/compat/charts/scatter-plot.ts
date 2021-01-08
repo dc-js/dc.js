@@ -15,10 +15,10 @@ export class ScatterPlot extends CoordinateGridMixinExt(
     /**
      * Set or get whether to use canvas backend for plotting scatterPlot. Note that the
      * canvas backend does not currently support
-     * {@link ScatterPlot#customSymbol customSymbol} or
-     * {@link ScatterPlot#symbol symbol} methods and is limited to always plotting
+     * {@link ScatterPlot.customSymbol customSymbol} or
+     * {@link ScatterPlot.symbol symbol} methods and is limited to always plotting
      * with filled circles. Symbols are drawn with
-     * {@link ScatterPlot#symbolSize symbolSize} radius. By default, the SVG backend
+     * {@link ScatterPlot.symbolSize symbolSize} radius. By default, the SVG backend
      * is used when `useCanvas` is set to `false`.
      * @param [useCanvas=false]
      */
@@ -34,12 +34,12 @@ export class ScatterPlot extends CoordinateGridMixinExt(
 
     /**
      * Get or set the existence accessor.  If a point exists, it is drawn with
-     * {@link ScatterPlot#symbolSize symbolSize} radius and
+     * {@link ScatterPlot.symbolSize symbolSize} radius and
      * opacity 1; if it does not exist, it is drawn with
-     * {@link ScatterPlot#emptySize emptySize} radius and opacity 0. By default,
+     * {@link ScatterPlot.emptySize emptySize} radius and opacity 0. By default,
      * the existence accessor checks if the reduced value is truthy.
-     * @see {@link ScatterPlot#symbolSize symbolSize}
-     * @see {@link ScatterPlot#emptySize emptySize}
+     * @see {@link ScatterPlot.symbolSize symbolSize}
+     * @see {@link ScatterPlot.emptySize emptySize}
      * @example
      * // default accessor
      * chart.existenceAccessor(function (d) { return d.value; });
@@ -140,7 +140,7 @@ export class ScatterPlot extends CoordinateGridMixinExt(
 
     /**
      * Set or get color for symbols when the group is empty. If null, just use the
-     * {@link ColorMixin#colors colorMixin.colors} color scale zero value.
+     * {@link ColorMixin.colors colorMixin.colors} color scale zero value.
      * @param [emptyColor=null]
      */
     public emptyColor(): string;

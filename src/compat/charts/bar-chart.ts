@@ -30,7 +30,7 @@ export class BarChart extends StackMixinExt(
     /**
      * Set or get whether rounding is enabled when bars are centered. If false, using
      * rounding with centered bars will result in a warning and rounding will be ignored.  This flag
-     * has no effect if bars are not {@link BarChart#centerBar centered}.
+     * has no effect if bars are not {@link BarChart.centerBar centered}.
      * When using standard d3.js rounding methods, the brush often doesn't align correctly with
      * centered bars since the bars are offset.  The rounding function must add an offset to
      * compensate, such as in the following example.

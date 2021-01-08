@@ -37,7 +37,7 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
     }
 
     /**
-     * Backward-compatible synonym for {@link DataGrid#section section}.
+     * Backward-compatible synonym for {@link DataGrid.section section}.
      *
      */
     // @ts-ignore, signature is different in BaseMixin
@@ -129,7 +129,7 @@ export class DataGrid extends BaseMixinExt(DataGridNeo) {
     }
 
     /**
-     * Backward-compatible synonym for {@link DataGrid#htmlSection htmlSection}.
+     * Backward-compatible synonym for {@link DataGrid.htmlSection htmlSection}.
      */
     public htmlGroup(): BaseAccessor<string>;
     public htmlGroup(htmlSection: BaseAccessor<string>): this;

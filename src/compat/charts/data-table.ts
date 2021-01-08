@@ -20,7 +20,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
      * returns the key to specify to {@link https://github.com/d3/d3-collection/blob/master/README.md#nest d3.nest}
      * to split rows into sections. By default there will be only one section with no name.
      *
-     * Set {@link DataTable#showSections showSections} to false to hide the section headers
+     * Set {@link DataTable.showSections showSections} to false to hide the section headers
      *
      * @example
      * // section rows by the value of their field
@@ -38,7 +38,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
     }
 
     /**
-     * Backward-compatible synonym for {@link DataTable#section section}.
+     * Backward-compatible synonym for {@link DataTable.section section}.
      *
      */
     // @ts-ignore, signature is different in BaseMixin
@@ -89,7 +89,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
 
     /**
      * Get or set the index of the end slice which determines which entries get displayed by the
-     * widget. Useful when implementing pagination. See {@link DataTable#beginSlice `beginSlice`} for more information.
+     * widget. Useful when implementing pagination. See {@link DataTable.beginSlice `beginSlice`} for more information.
      */
     public endSlice(): number;
     public endSlice(endSlice: number): this;
@@ -241,7 +241,7 @@ export class DataTable extends BaseMixinExt(DataTableNeo) {
     }
 
     /**
-     * Backward-compatible synonym for {@link DataTable#showSections showSections}.
+     * Backward-compatible synonym for {@link DataTable.showSections showSections}.
      * @param [showSections=true]
      */
     public showGroups(): boolean;

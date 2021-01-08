@@ -3,7 +3,7 @@ import { Arc, arc, DefaultArcObject, Pie, pie } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 
-import { ColorMixin } from '../base/color-mixin';
+import { ColorMixin, IColorMixin } from '../base/color-mixin';
 import { BaseMixin } from '../base/base-mixin';
 import { transition } from '../core/core';
 import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
@@ -16,14 +16,14 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by {@link BaseMixin#ordering ordering}
+ * slice relative to the sum of all values. Slices are ordered by {@link ICFSimpleAdapterConf.ordering ordering}
  * which defaults to sorting by key.
  *
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
  */
 
-export class PieChart extends ColorMixin(BaseMixin) {
+export class PieChart extends ColorMixin(BaseMixin) implements IColorMixin {
     public _conf: IPieChartConf;
 
     private _sliceCssClass: string;

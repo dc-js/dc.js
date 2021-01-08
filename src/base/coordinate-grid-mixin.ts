@@ -7,7 +7,7 @@ import { zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
 import { BrushBehavior, brushX } from 'd3-brush';
 import { Selection } from 'd3-selection';
 
-import { ColorMixin } from './color-mixin';
+import { ColorMixin, IColorMixin } from './color-mixin';
 import { MarginMixin } from './margin-mixin';
 import { optionalTransition, transition } from '../core/core';
 import { UnitsInteger, UnitsOrdinal } from '../core/units';
@@ -39,7 +39,7 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
  * concrete chart types, e.g. bar chart, line chart, and bubble chart.
  */
-export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
+export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements IColorMixin {
     public _conf: ICoordinateGridMixinConf;
 
     private _parent: Selection<SVGElement, any, any, any>;
@@ -155,7 +155,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
-     * with {@link CoordinateGridMixin+x .x()} or {@link CoordinateGridMixin#y .y()}, and has
+     * with {@link CoordinateGridMixin.x .x()} or {@link CoordinateGridMixin.y .y()}, and has
      * no effect on elastic scales.)
      */
     public rescale(): this {
@@ -282,7 +282,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     /**
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
      * `UnitsOrdinal`), this is the number of items in the domain of the x scale. Otherwise, the
-     * x unit count is calculated using the {@link CoordinateGridMixin#xUnits xUnits} function.
+     * x unit count is calculated using the {@link ICoordinateGridMixinConf.xUnits xUnits} function.
      */
     public xUnitCount() {
         if (this._unitCount === undefined) {

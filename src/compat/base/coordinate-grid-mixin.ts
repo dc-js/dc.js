@@ -1,4 +1,4 @@
-import { Constructor, RoundFn, IUnits } from '../../core/types';
+import { Constructor, IUnits, RoundFn } from '../../core/types';
 import { BaseMixinExt } from './base-mixin';
 import { CoordinateGridMixin as CoordinateGridMixinNeo } from '../../base/coordinate-grid-mixin';
 import { MarginMixinExt } from './margin-mixin';

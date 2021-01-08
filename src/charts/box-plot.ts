@@ -146,7 +146,7 @@ export class BoxPlot extends CoordinateGridMixin {
 
     /**
      * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-     * or on charts with a custom {@link BoxPlot#boxWidth .boxWidth}. Will pad the width by
+     * or on charts with a custom {@link BoxPlot.boxWidth .boxWidth}. Will pad the width by
      * `padding * barWidth` on each side of the chart.
      * @param {Number} [padding=0.5]
      */

@@ -7,10 +7,35 @@ import { IColorHelper } from './colors/i-color-helper';
 import { ColorScaleHelper } from './colors/color-scale-helper';
 import { OrdinalColors } from './colors/ordinal-colors';
 import { IBaseMixinConf } from './i-base-mixin-conf';
+import { BaseMixin } from './base-mixin';
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
     data();
+}
+
+export interface IColorMixin extends BaseMixin {
+    configure(conf: IColorMixinConf): this;
+
+    conf(): IColorMixinConf;
+
+    colorHelper(): IColorHelper;
+
+    colorHelper(colorHelper: IColorHelper): this;
+
+    colorHelper(colorHelper?): any;
+
+    /**
+     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
+     * @method getColor
+     */
+    getColor(d, i?: number): string;
+
+    /**
+     * Set the domain by determining the min and max values as retrieved by
+     * {@link IColorMixinConf.colorAccessor .colorAccessor} over the chart's dataset.
+     */
+    calculateColorDomain(): this;
 }
 
 /**
@@ -69,7 +94,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
 
         /**
          * Set the domain by determining the min and max values as retrieved by
-         * {@link ColorMixin#colorAccessor .colorAccessor} over the chart's dataset.
+         * {@link IColorMixinConf.colorAccessor .colorAccessor} over the chart's dataset.
          */
         public calculateColorDomain(): this {
             const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper)

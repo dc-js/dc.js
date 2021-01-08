@@ -199,7 +199,7 @@ export class ScatterPlot extends CoordinateGridMixin {
     /**
      * Set or get canvas element. You should usually only ever use the get method as
      * dc.js will handle canvas element generation.  Provides valid canvas only when
-     * {@link ScatterPlot#useCanvas useCanvas} is set to `true`
+     * {@link IScatterPlotConf.useCanvas useCanvas} is set to `true`
      */
     public canvas(): Selection<HTMLCanvasElement, any, any, any>;
     public canvas(canvasElement: Selection<HTMLCanvasElement, any, any, any>): this;
@@ -213,7 +213,7 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Get canvas 2D context. Provides valid context only when
-     * {@link ScatterPlot#useCanvas useCanvas} is set to `true`
+     * {@link IScatterPlotConf.useCanvas useCanvas} is set to `true`
      */
     public context(): CanvasRenderingContext2D {
         return this._context;

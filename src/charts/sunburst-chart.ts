@@ -7,7 +7,7 @@ import { interpolate } from 'd3-interpolate';
 import { transition } from '../core/core';
 import { arraysIdentical, toHierarchy } from '../core/utils';
 import { events } from '../core/events';
-import { ColorMixin } from '../base/color-mixin';
+import { ColorMixin, IColorMixin } from '../base/color-mixin';
 import { BaseMixin } from '../base/base-mixin';
 import { constants } from '../core/constants';
 import { BadArgumentException } from '../core/bad-argument-exception';
@@ -21,15 +21,15 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 /**
  * The sunburst chart implementation is usually used to visualize a small tree distribution.  The sunburst
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by {@link BaseMixin#ordering ordering} which defaults to sorting
- * by key.
+ * slice relative to the sum of all values.
+ * Slices are ordered by {@link ICFSimpleAdapterConf.ordering ordering} which defaults to sorting by key.
  *
  * The keys used in the sunburst chart should be arrays, representing paths in the tree.
  *
- * When filtering, the sunburst chart creates instances of {@link Filters.HierarchyFilter HierarchyFilter}.
+ * When filtering, the sunburst chart creates instances of {@link HierarchyFilter}.
  *
  */
-export class SunburstChart extends ColorMixin(BaseMixin) {
+export class SunburstChart extends ColorMixin(BaseMixin) implements IColorMixin {
     public _conf: ISunburstChartConf;
 
     private _sliceCssClass: string;
@@ -353,7 +353,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     /**
-     * Constructs the default RingSizes parameter for {@link SunburstChart#ringSizes ringSizes()},
+     * Constructs the default RingSizes parameter for {@link ISunburstChartConf.ringSizes},
      * which makes the rings narrower as they get farther away from the center.
      *
      * Can be used as a parameter to ringSizes() to reset the default behavior, or modified for custom ring sizes.
@@ -373,7 +373,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     /**
-     * Constructs a RingSizes parameter for {@link SunburstChart#ringSizes ringSizes()}
+     * Constructs a RingSizes parameter for {@link ISunburstChartConf.ringSizes}
      * that will make the chart rings equally wide.
      *
      * @example
@@ -391,7 +391,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     /**
-     * Constructs a RingSizes parameter for {@link SunburstChart#ringSizes ringSizes()} using the given function
+     * Constructs a RingSizes parameter for {@link ISunburstChartConf.ringSizes} using the given function
      * to determine each rings width.
      *
      * * The function must return an array containing portion values for each ring/level of the chart.

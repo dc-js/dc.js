@@ -10,8 +10,8 @@ import { IMinimalChart } from './i-minimal-chart';
  * the set of charts which should be updated when a filter changes on one of the charts or when the
  * global functions {@link filterAll filterAll}, {@link refocusAll refocusAll},
  * {@link renderAll renderAll}, {@link redrawAll redrawAll}, or chart functions
- * {@link baseMixin#renderGroup baseMixin.renderGroup},
- * {@link baseMixin#redrawGroup baseMixin.redrawGroup} are called.
+ * {@link BaseMixin.renderGroup},
+ * {@link BaseMixin.redrawGroup} are called.
  */
 class ChartRegistry {
     private _chartMap: { [group: string]: ChartGroup };
@@ -76,6 +76,6 @@ class ChartRegistry {
 
 /**
  * The chartRegistry object maintains sets of all instantiated dc.js charts under named groups
- * and the default group. See {@link ChartRegistry ChartRegistry} for its methods.
+ * and the default group.
  */
 export const chartRegistry = new ChartRegistry();
