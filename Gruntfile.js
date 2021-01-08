@@ -349,7 +349,7 @@ module.exports = function (grunt) {
                 command: 'rollup --config rollup-full.config.js',
             },
             typedoc: {
-                command: 'typedoc src/index.ts',
+                command: 'rm -rf web/html2 && typedoc src/index.ts',
             },
             eslint: {
                 command: `eslint ${lintableFiles}`,
