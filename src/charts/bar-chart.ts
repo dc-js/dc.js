@@ -22,8 +22,8 @@ const LABEL_PADDING = 3;
  * Concrete bar chart/histogram implementation.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html | Canadian City Crime Stats}
  */
 export class BarChart extends StackMixin {
     public _conf: IBarChartConf;
@@ -44,9 +44,9 @@ export class BarChart extends StackMixin {
      * var chart2 = new BarChart('#chart-container2', 'chartGroupA');
      * // create a sub-chart under a composite parent chart
      * var chart3 = new BarChart(compositeChart);
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector}
+     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select | d3 single selector}
      * specifying a dom block element such as a div; or a dom element or d3 selection.  If the bar
-     * chart is a sub-chart in a {@link CompositeChart Composite Chart} then pass in the parent
+     * chart is a sub-chart in a {@link CompositeChart | Composite Chart} then pass in the parent
      * composite chart instance instead.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
      * ```
@@ -307,8 +307,8 @@ export class BarChart extends StackMixin {
 
     /**
      * Get or set the spacing between bars as a fraction of bar size. Valid values are between 0-1.
-     * Setting this value will also remove any previously set {@link BarChart.gap gap}. See the
-     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
+     * Setting this value will also remove any previously set {@link BarChart.gap | gap}. See the
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand | d3 docs}
      * for a visual description of how the padding is applied.
      */
     public barPadding(): number;

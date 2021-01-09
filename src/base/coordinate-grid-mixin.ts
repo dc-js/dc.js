@@ -155,7 +155,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
     /**
      * When changing the domain of the x or y scale, it is necessary to tell the chart to recalculate
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
-     * with {@link CoordinateGridMixin.x .x()} or {@link CoordinateGridMixin.y .y()}, and has
+     * with {@link CoordinateGridMixin.x | .x()} or {@link CoordinateGridMixin.y | .y()}, and has
      * no effect on elastic scales.)
      */
     public rescale(): this {
@@ -226,9 +226,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      * **mandatory**
      *
      * Get or set the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale} or
-     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales ordinal scale}
-     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md | d3.scale} or
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales | ordinal scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md | d3.scale}
      * @example
      * ```
      * // set x to a linear scale
@@ -256,7 +256,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
     /**
      * Set or get the x axis used by a particular coordinate grid chart instance. This function is most
      * useful when x axis customization is required. The x axis in dc.js is an instance of a
-     * {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3 bottom axis object};
+     * {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom | d3 bottom axis object};
      * therefore it supports any valid d3 axisBottom manipulation.
      *
      * **Caution**: The x axis is usually generated internally by dc; resetting it may cause
@@ -264,7 +264,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      * it returns the axis, not the chart,
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.xAxis()` will fail}.
-     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom | d3.axisBottom}
      * @example
      * ```
      * // customize x axis tick format
@@ -286,7 +286,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
     /**
      * Returns the number of units displayed on the x axis. If the x axis is ordinal (`xUnits` is
      * `UnitsOrdinal`), this is the number of items in the domain of the x scale. Otherwise, the
-     * x unit count is calculated using the {@link ICoordinateGridMixinConf.xUnits xUnits} function.
+     * x unit count is calculated using the {@link ICoordinateGridMixinConf.xUnits | xUnits} function.
      */
     public xUnitCount() {
         if (this._unitCount === undefined) {
@@ -645,7 +645,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
 
     /**
      * Get or set the y scale. The y scale is typically automatically determined by the chart implementation.
-     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md | d3.scale}
      */
     public y(): MinimalXYScale;
     public y(yScale: MinimalXYScale): this;
@@ -673,7 +673,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      * In addition, depending on whether you are going to use the axis on left or right
      * you need to appropriately pass [d3.axisLeft](https://github.com/d3/d3-axis/blob/master/README.md#axisLeft)
      * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
-     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
+     * @see {@link https://github.com/d3/d3-axis/blob/master/README.md | d3.axis}
      * @example
      * ```
      * // customize y axis tick format

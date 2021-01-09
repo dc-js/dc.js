@@ -20,7 +20,7 @@ import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
  * Concrete row chart implementation.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
  */
 
 export class RowChart extends ColorMixin(MarginMixin) implements IColorMixin {
@@ -132,8 +132,8 @@ export class RowChart extends ColorMixin(MarginMixin) implements IColorMixin {
 
     /**
      * Gets or sets the x scale. The x scale can be any d3
-     * {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}.
-     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+     * {@link https://github.com/d3/d3-scale/blob/master/README.md | d3.scale}.
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md | d3.scale}
      */
     public x(): MinimalXYScale;
     public x(scale: MinimalXYScale): this;
@@ -314,7 +314,7 @@ export class RowChart extends ColorMixin(MarginMixin) implements IColorMixin {
 
     /**
      * Get or sets the x axis for the row chart instance.
-     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
+     * See the {@link https://github.com/d3/d3-axis/blob/master/README.md | d3.axis}
      * documention for more information.
      *
      * @example

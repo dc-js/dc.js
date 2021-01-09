@@ -16,7 +16,7 @@ const GRID_CSS_CLASS = 'dc-grid-top';
  * a simple way to define how the items are displayed.
  *
  * Examples:
- * - {@link https://dc-js.github.io/dc.js/ep/ List of members of the european parliament}
+ * - {@link https://dc-js.github.io/dc.js/ep/ | List of members of the european parliament}
  */
 export class DataGrid extends BaseMixin {
     protected _conf: IDataGridConf;

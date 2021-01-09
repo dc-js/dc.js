@@ -42,7 +42,7 @@ export class FilterHandler {
      * filters, removed if it is present)
      * * An array containing a single array of values (`[ [value,value,value] ]`): each value is
      * toggled
-     * * When appropriate for the chart, a {@link IFilter dc filter object} such as
+     * * When appropriate for the chart, a {@link IFilter | dc filter object} such as
      *   * {@link RangedFilter} for the {@link CoordinateGridMixin} charts
      *   * {@link TwoDimensionalFilter} for the {@link HeatMap}
      *   * {@link RangedTwoDimensionalFilter} for the {@link ScatterPlot}
@@ -51,7 +51,7 @@ export class FilterHandler {
      *
      * Note that this is always a toggle (even when it doesn't make sense for the filter type). If
      * you wish to replace the current filter call
-     * {@link BaseMixin.replaceFilter `chart.replaceFilter(filter)`} instead.
+     * {@link BaseMixin.replaceFilter | `chart.replaceFilter(filter)`} instead.
      *
      * Each toggle is executed by checking if the value is already present using the
      * {@link CFSimpleAdapter.hasFilter}; if it is not present, it is added

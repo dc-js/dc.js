@@ -76,9 +76,9 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
 
         /**
          * Get or set the bubble radius scale. By default the bubble chart uses
-         * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear d3.scaleLinear().domain([0, 100])}
+         * {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleLinear | d3.scaleLinear().domain([0, 100])}
          * as its radius scale.
-         * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
+         * @see {@link https://github.com/d3/d3-scale/blob/master/README.md | d3.scale}
          */
         public r(): MinimalRadiusScale;
         public r(bubbleRadiusScale: MinimalRadiusScale): this;

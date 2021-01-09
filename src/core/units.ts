@@ -2,8 +2,8 @@ import { isNegligible } from './utils';
 import { IUnits } from './types';
 
 /**
- * The default value for {@link ICoordinateGridMixinConf.xUnits .xUnits} for the
- * {@link CoordinateGridMixin Coordinate Grid Chart} and should
+ * The default value for {@link ICoordinateGridMixinConf.xUnits | .xUnits} for the
+ * {@link CoordinateGridMixin | Coordinate Grid Chart} and should
  * be used when the x values are a sequence of integers.
  * It is a function that counts the number of integers in the range supplied in its start and end parameters.
  *
@@ -19,18 +19,18 @@ export const UnitsInteger: IUnits = function (start: number, end: number): numbe
 };
 
 /**
- * This argument can be passed to the {@link ICoordinateGridMixinConf.xUnits .xUnits} function of a
+ * This argument can be passed to the {@link ICoordinateGridMixinConf.xUnits | .xUnits} function of a
  * coordinate grid chart to specify ordinal units for the x axis. Usually this parameter is used in
  * combination with passing
- * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
- * to {@link CoordinateGridMixin.x .x}.
+ * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales | d3.scaleOrdinal}
+ * to {@link CoordinateGridMixin.x | .x}.
  *
  * As of dc.js 3.0, this is purely a placeholder or magic value which causes the chart to go into ordinal mode; the
  * function is not called.
  *
- * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal}
+ * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales | d3.scaleOrdinal}
  * @see {@link ICoordinateGridMixinConf.xUnits}
- * @see {@link CoordinateGridMixin.x coordinateGridMixin.x}
+ * @see {@link CoordinateGridMixin.x | coordinateGridMixin.x}
  *
  * @example
  * ```
@@ -43,8 +43,8 @@ export const UnitsOrdinal: IUnits = function (start, end): number {
 };
 
 /**
- * This function generates an argument for the {@link CoordinateGridMixin Coordinate Grid Chart}
- * {@link ICoordinateGridMixinConf.xUnits .xUnits} function specifying that the x values are floating-point
+ * This function generates an argument for the {@link CoordinateGridMixin | Coordinate Grid Chart}
+ * {@link ICoordinateGridMixinConf.xUnits | .xUnits} function specifying that the x values are floating-point
  * numbers with the given precision.
  * The returned function determines how many values at the given precision will fit into the range
  * supplied in its start and end parameters.

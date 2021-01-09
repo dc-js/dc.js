@@ -21,7 +21,7 @@ const BUBBLE_CLASS = 'bubble';
  * and coloring.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html | Canadian City Crime Stats}
  */
 export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) implements IColorMixin {
     public _conf: IBubbleOverlayConf;

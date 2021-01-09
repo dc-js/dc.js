@@ -26,7 +26,7 @@ interface MinimalGroupAll {
  * {@link NumberDisplay} widget instead.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
  */
 export class DataCount extends BaseMixin {
     protected _conf: IDataCountConf;

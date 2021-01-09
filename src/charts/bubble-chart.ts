@@ -19,8 +19,8 @@ import { adaptHandler } from '../core/d3compat';
  * - color
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/vc/index.html | US Venture Capital Landscape 2011}
  */
 export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
     private _bubbleLocator: BaseAccessor<string>;

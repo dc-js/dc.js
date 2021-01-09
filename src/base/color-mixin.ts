@@ -33,7 +33,7 @@ export interface IColorMixin extends BaseMixin {
 
     /**
      * Set the domain by determining the min and max values as retrieved by
-     * {@link IColorMixinConf.colorAccessor .colorAccessor} over the chart's dataset.
+     * {@link IColorMixinConf.colorAccessor | .colorAccessor} over the chart's dataset.
      */
     calculateColorDomain(): this;
 }
@@ -94,7 +94,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
 
         /**
          * Set the domain by determining the min and max values as retrieved by
-         * {@link IColorMixinConf.colorAccessor .colorAccessor} over the chart's dataset.
+         * {@link IColorMixinConf.colorAccessor | .colorAccessor} over the chart's dataset.
          */
         public calculateColorDomain(): this {
             const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper)

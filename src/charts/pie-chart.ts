@@ -16,11 +16,11 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 /**
  * The pie chart implementation is usually used to visualize a small categorical distribution.  The pie
  * chart uses keyAccessor to determine the slices, and valueAccessor to calculate the size of each
- * slice relative to the sum of all values. Slices are ordered by {@link ICFSimpleAdapterConf.ordering ordering}
+ * slice relative to the sum of all values. Slices are ordered by {@link ICFSimpleAdapterConf.ordering | ordering}
  * which defaults to sorting by key.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
  */
 
 export class PieChart extends ColorMixin(BaseMixin) implements IColorMixin {

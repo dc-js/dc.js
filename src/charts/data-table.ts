@@ -18,7 +18,7 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  *
  * An interesting feature of the data table is that you can pass a crossfilter group to the
  * `dimension`, if you want to show aggregated data instead of raw data rows. This requires no
- * special code as long as you specify the {@link IDataTableConf.order order} as `d3.descending`,
+ * special code as long as you specify the {@link IDataTableConf.order | order} as `d3.descending`,
  * since the data table will use `dimension.top()` to fetch the data in that case, and the method is
  * equally supported on the crossfilter group as the crossfilter dimension.
  *
@@ -27,9 +27,9 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  * `.bottom()` method. See the example linked below for more details.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
- * ({@link https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html source})
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
+ * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html | dataTable on a crossfilter group}
+ * ({@link https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html | source})
  *
  */
 export class DataTable extends BaseMixin {

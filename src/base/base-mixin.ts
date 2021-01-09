@@ -187,7 +187,7 @@ export class BaseMixin {
 
     /**
      * Set or get the width attribute of a chart.
-     * @see {@link BaseMixin.height height}
+     * @see {@link BaseMixin.height | height}
      * @see {@link IBaseMixinConf.minWidth}
      * @example
      * ```
@@ -231,7 +231,7 @@ export class BaseMixin {
 
     /**
      * Clear all filters associated with this chart. The same effect can be achieved by calling
-     * {@link BaseMixin.filter chart.filter(null)}.
+     * {@link BaseMixin.filter | chart.filter(null)}.
      */
     public filterAll() {
         return this.filter(null);
@@ -243,7 +243,7 @@ export class BaseMixin {
      *
      * This function is **not chainable** since it does not return a chart instance; however the d3
      * selection result can be chained to d3 function calls.
-     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3.select}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select | d3.select}
      * @example
      * ```
      * // Has the same effect as d3.select('#chart-id').select(selector)
@@ -261,7 +261,7 @@ export class BaseMixin {
      *
      * This function is **not chainable** since it does not return a chart instance; however the d3
      * selection result can be chained to d3 function calls.
-     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll d3.selectAll}
+     * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll | d3.selectAll}
      * @example
      * ```
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
@@ -336,7 +336,7 @@ export class BaseMixin {
      * the SVGElement was created. You can also pass in a new root element however this is usually handled by
      * dc internally. Resetting the root element on a chart outside of dc internals may have
      * unexpected consequences.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement HTMLElement}
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement | HTMLElement}
      */
     public root(): Selection<Element, any, any, any>;
     public root(rootElement: Selection<Element, any, any, any>): this;
@@ -352,7 +352,7 @@ export class BaseMixin {
      * Returns the top SVGElement for this specific chart. You can also pass in a new SVGElement,
      * however this is usually handled by dc internally. Resetting the SVGElement on a chart outside
      * of dc internals may have unexpected consequences.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement | SVGElement}
      */
     public svg(): Selection<SVGElement, any, any, any>;
     public svg(svgElement): this;
@@ -366,7 +366,7 @@ export class BaseMixin {
 
     /**
      * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement SVGElement}
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement | SVGElement}
      */
     public resetSvg(): Selection<SVGElement, any, any, any> {
         this.select('svg').remove();
@@ -412,7 +412,7 @@ export class BaseMixin {
 
     /**
      * Turn off optional control elements within the root element.
-     * @see {@link BaseMixin.turnOnControls turnOnControls}
+     * @see {@link BaseMixin.turnOnControls | turnOnControls}
      */
     public turnOffControls(): this {
         if (this._root) {
@@ -493,10 +493,10 @@ export class BaseMixin {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular {@link redrawAll redrawAll}); therefore, you only need to
+     * events (in particular {@link redrawAll | redrawAll}); therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}).
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add | crossfilter.add}).
      */
     public redraw(): this {
         this.sizeSvg();
@@ -515,7 +515,7 @@ export class BaseMixin {
 
     /**
      * Redraws all charts in the same group as this chart, typically in reaction to a filter
-     * change. If the chart has a {@link IBaseMixinConf.commitHandler commitHandler}, it will
+     * change. If the chart has a {@link IBaseMixinConf.commitHandler | commitHandler}, it will
      * be executed and waited for.
      */
     public redrawGroup(): this {
@@ -535,7 +535,7 @@ export class BaseMixin {
 
     /**
      * Renders all charts in the same group as this chart. If the chart has a
-     * {@link IBaseMixinConf.commitHandler commitHandler}, it will be executed and waited for
+     * {@link IBaseMixinConf.commitHandler | commitHandler}, it will be executed and waited for
      */
     public renderGroup(): this {
         if (this._conf.commitHandler) {
@@ -727,7 +727,7 @@ export class BaseMixin {
      * Expire the internal chart cache. dc charts cache some data internally on a per chart basis to
      * speed up rendering and avoid unnecessary calculation; however it might be useful to clear the
      * cache if you have changed state which will affect rendering.  For example, if you invoke
-     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add crossfilter.add}
+     * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add | crossfilter.add}
      * function or reset group or dimension after rendering, it is a good idea to
      * clear the cache to make sure charts are rendered properly.
      */
@@ -802,7 +802,7 @@ export class BaseMixin {
      * All dc chart instance supports the following listeners.
      * Supports the following events:
      * * `renderlet` - This listener function will be invoked after transitions after redraw and render. Replaces the
-     * deprecated {@link BaseMixin.renderlet renderlet} method.
+     * deprecated {@link BaseMixin.renderlet | renderlet} method.
      * * `pretransition` - Like `.on('renderlet', ...)` but the event is fired before transitions start.
      * * `preRender` - This listener function will be invoked before chart rendering.
      * * `postRender` - This listener function will be invoked after chart finish rendering including
@@ -812,7 +812,7 @@ export class BaseMixin {
      * including all renderlets' logic.
      * * `filtered` - This listener function will be invoked after a filter is applied, added or removed.
      * * `zoomed` - This listener function will be invoked after a zoom is triggered.
-     * @see {@link https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on d3.dispatch.on}
+     * @see {@link https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on | d3.dispatch.on}
      * @example
      * ```
      * .on('renderlet', function(chart, filter){...})
@@ -837,7 +837,7 @@ export class BaseMixin {
      * Renderlet functions take the chart instance as the only input parameter and you can
      * use the dc API or use raw d3 to achieve pretty much any effect.
      *
-     * Use {@link BaseMixin.on on} with a 'renderlet' prefix.
+     * Use {@link BaseMixin.on | on} with a 'renderlet' prefix.
      * Generates a random key for the renderlet, which makes it hard to remove.
      * @deprecated chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)
      * @example

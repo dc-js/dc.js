@@ -14,10 +14,10 @@ import { adaptHandler } from '../core/d3compat';
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map
  * from GeoJson data. This chart implementation was inspired by
- * {@link http://bl.ocks.org/4060606 the great d3 choropleth example}.
+ * {@link http://bl.ocks.org/4060606 | the great d3 choropleth example}.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
+ * - {@link http://dc-js.github.com/dc.js/vc/index.html | US Venture Capital Landscape 2011}
  */
 export class GeoChoroplethChart extends ColorMixin(BaseMixin) implements IColorMixin {
     public _conf: IGeoChoroplethChartConf;
@@ -217,15 +217,15 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) implements IColorM
 
     /**
      * Gets or sets a custom geo projection function. See the available
-     * {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3 geo projection functions}.
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#projections | d3 geo projection functions}.
      *
      * Starting version 3.0 it has been deprecated to rely on the default projection being
-     * {@link https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa d3.geoAlbersUsa()}. Please
+     * {@link https://github.com/d3/d3-geo/blob/master/README.md#geoAlbersUsa | d3.geoAlbersUsa()}. Please
      * set it explicitly. {@link https://bl.ocks.org/mbostock/5557726
      * Considering that `null` is also a valid value for projection}, if you need
      * projection to be `null` please set it explicitly to `null`.
-     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections d3.projection}
-     * @see {@link https://github.com/d3/d3-geo-projection d3-geo-projection}
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#projections | d3.projection}
+     * @see {@link https://github.com/d3/d3-geo-projection | d3-geo-projection}
      */
     public projection(): GeoProjection;
     public projection(projection: GeoProjection): this;
@@ -252,10 +252,10 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) implements IColorM
     }
 
     /**
-     * Returns the {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath} object used to
+     * Returns the {@link https://github.com/d3/d3-geo/blob/master/README.md#paths | d3.geoPath} object used to
      * render the projection and features.  Can be useful for figuring out the bounding box of the
      * feature set and thus a way to calculate scale and translation for the projection.
-     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths d3.geoPath}
+     * @see {@link https://github.com/d3/d3-geo/blob/master/README.md#paths | d3.geoPath}
      */
     public geoPath(): GeoPath {
         return this._geoPath;

@@ -11,8 +11,8 @@ const LABEL_GAP = 2;
  * labels.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html | Canadian City Crime Stats}
  * @example
  * ```
  * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
@@ -166,8 +166,8 @@ export class Legend {
     }
 
     /**
-     * Turn automatic width for legend items on or off. If true, {@link Legend.itemWidth itemWidth} is ignored.
-     * This setting takes into account the {@link Legend.gap gap}.
+     * Turn automatic width for legend items on or off. If true, {@link Legend.itemWidth | itemWidth} is ignored.
+     * This setting takes into account the {@link Legend.gap | gap}.
      */
     public autoItemWidth(): boolean;
     public autoItemWidth(autoItemWidth: boolean): this;

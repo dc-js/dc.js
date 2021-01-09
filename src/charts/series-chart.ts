@@ -12,7 +12,7 @@ import { compatNestHelper } from '../core/d3compat';
  * composite features other than recomposing the chart.
  *
  * Examples:
- * - {@link http://dc-js.github.io/dc.js/examples/series.html Series Chart}
+ * - {@link http://dc-js.github.io/dc.js/examples/series.html | Series Chart}
  */
 export class SeriesChart extends CompositeChart {
     public _conf: ISeriesChartConf;

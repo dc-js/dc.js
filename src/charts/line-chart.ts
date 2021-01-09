@@ -43,8 +43,8 @@ const LABEL_PADDING = 3;
  * Concrete line/area chart implementation.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
+ * - {@link http://dc-js.github.com/dc.js/crime/index.html | Canadian City Crime Stats}
  */
 export class LineChart extends StackMixin {
     private _renderArea: boolean;
@@ -129,19 +129,19 @@ export class LineChart extends StackMixin {
     /**
      * Gets or sets the curve factory to use for lines and areas drawn, allowing e.g. step
      * functions, splines, and cubic interpolation. Typically you would use one of the interpolator functions
-     * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
+     * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves | d3 curves}.
      *
      * Replaces the use of {@link LineChart.interpolate} and {@link LineChart.tension}
      * in dc.js 3.0 onwards.
      *
      * This is passed to
-     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
-     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}.
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve | line.curve} and
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve | area.curve}.
      *
-     * Default is {@link https://github.com/d3/d3-shape/blob/master/README.md#curveLinear | curveLinear}
+     * Default is {@link https://github.com/d3/d3-shape/blob/master/README.md#curveLinear | | curveLinear}
      *
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve | line.curve}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve | area.curve}
      *
      * @example
      * ```
@@ -198,9 +198,9 @@ export class LineChart extends StackMixin {
     /**
      * Gets or sets the tension to use for lines drawn, in the range 0 to 1.
      *
-     * Passed to the {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curve function}
+     * Passed to the {@link https://github.com/d3/d3-shape/blob/master/README.md#curves | d3 curve function}
      * if it provides a `.tension` function. Example:
-     * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension curveCardinal.tension}.
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#curveCardinal_tension | curveCardinal.tension}.
      *
      * This function exists for backward compatibility. Use {@link LineChart.curve}
      * which is generic and provides more options.
@@ -226,13 +226,13 @@ export class LineChart extends StackMixin {
      * Gets or sets a function that will determine discontinuities in the line which should be
      * skipped: the path will be broken into separate subpaths if some points are undefined.
      * This function is passed to
-     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined line.defined}
+     * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined | line.defined}
      *
      * Note: crossfilter will sometimes coerce nulls to 0, so you may need to carefully write
      * custom reduce functions to get this to work, depending on your data. See
-     * {@link https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248 this GitHub comment}
+     * {@link https://github.com/dc-js/dc.js/issues/615#issuecomment-49089248 | this GitHub comment}
      * for more details and an example.
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined line.defined}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_defined | line.defined}
      */
     public defined(): BaseAccessor<boolean>;
     public defined(defined: BaseAccessor<boolean>): this;
@@ -247,7 +247,7 @@ export class LineChart extends StackMixin {
     /**
      * Set the line's d3 dashstyle. This value becomes the 'stroke-dasharray' of line. Defaults to empty
      * array (solid line).
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray stroke-dasharray}
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray | stroke-dasharray}
      * @example
      * ```
      * // create a Dash Gap Dot Gap
@@ -549,7 +549,7 @@ export class LineChart extends StackMixin {
     /**
      * Turn on/off the mouseover behavior of an individual data point which renders a circle and x/y axis
      * dashed lines back to each respective axis.
-     * This is ignored if the chart {@link ICoordinateGridMixinConf.brushOn brush} is on.
+     * This is ignored if the chart {@link ICoordinateGridMixinConf.brushOn | brush} is on.
      * Set it to a special value ` 'always' ` to force it.
      *
      * It is on by default.
@@ -585,7 +585,7 @@ export class LineChart extends StackMixin {
      * current `options` values are instead returned.
      *
      * By default it uses `{fillOpacity: 0.8, strokeOpacity: 0.0, radius: 2}`
-     * 
+     *
      * @example
      * ```
      * chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.0})

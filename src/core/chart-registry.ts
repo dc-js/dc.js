@@ -8,8 +8,8 @@ import { IMinimalChart } from './i-minimal-chart';
  *
  * A chart group often corresponds to a crossfilter instance. It specifies
  * the set of charts which should be updated when a filter changes on one of the charts or when the
- * global functions {@link filterAll filterAll}, {@link refocusAll refocusAll},
- * {@link renderAll renderAll}, {@link redrawAll redrawAll}, or chart functions
+ * global functions {@link filterAll | filterAll}, {@link refocusAll | refocusAll},
+ * {@link renderAll | renderAll}, {@link redrawAll | redrawAll}, or chart functions
  * {@link BaseMixin.renderGroup},
  * {@link BaseMixin.redrawGroup} are called.
  */

@@ -43,10 +43,10 @@ function defaultWhiskersIQR(k: number): (d) => [number, number] {
  * A box plot is a chart that depicts numerical data via their quartile ranges.
  *
  * Examples:
- * - {@link http://dc-js.github.io/dc.js/examples/boxplot-basic.html Boxplot Basic example}
- * - {@link http://dc-js.github.io/dc.js/examples/boxplot-enhanced.html Boxplot Enhanced example}
- * - {@link http://dc-js.github.io/dc.js/examples/boxplot-render-data.html Boxplot Render Data example}
- * - {@link http://dc-js.github.io/dc.js/examples/boxplot-time.html Boxplot time example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-basic.html | Boxplot Basic example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-enhanced.html | Boxplot Enhanced example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-render-data.html | Boxplot Render Data example}
+ * - {@link http://dc-js.github.io/dc.js/examples/boxplot-time.html | Boxplot time example}
  */
 export class BoxPlot extends CoordinateGridMixin {
     public _conf: IBoxPlotConf;
@@ -65,7 +65,7 @@ export class BoxPlot extends CoordinateGridMixin {
      * var boxPlot1 = new BoxPlot('#chart-container1');
      * // create a box plot under #chart-container2 element using chart group A
      * var boxPlot2 = new BoxPlot('#chart-container2', 'chartGroupA');
-     * @param parent - Any valid {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
+     * @param parent - Any valid {@link https://github.com/d3/d3-selection/blob/master/README.md#select | d3 single selector} specifying
      * a dom block element such as a div; or a dom element or d3 selection.
      * @param chartGroup - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
@@ -133,9 +133,9 @@ export class BoxPlot extends CoordinateGridMixin {
     }
     /**
      * Get or set the spacing between boxes as a fraction of box size. Valid values are within 0-1.
-     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3 docs}
+     * See the {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand | d3 docs}
      * for a visual description of how the padding is applied.
-     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand d3.scaleBand}
+     * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#scaleBand | d3.scaleBand}
      * @param {Number} [padding=0.8]
      */
     public boxPadding(): number;
@@ -149,7 +149,7 @@ export class BoxPlot extends CoordinateGridMixin {
 
     /**
      * Get or set the outer padding on an ordinal box chart. This setting has no effect on non-ordinal charts
-     * or on charts with a custom {@link BoxPlot.boxWidth .boxWidth}. Will pad the width by
+     * or on charts with a custom {@link BoxPlot.boxWidth | .boxWidth}. Will pad the width by
      * `padding * barWidth` on each side of the chart.
      * @param {Number} [padding=0.5]
      */
