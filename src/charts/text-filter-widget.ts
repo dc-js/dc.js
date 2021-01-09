@@ -23,17 +23,17 @@ export class TextFilterWidget extends BaseMixin {
 
     /**
      * Create Text Filter widget
-     * @example
      *
-     * var data = [{"firstName":"John","lastName":"Coltrane"}{"firstName":"Miles",lastName:"Davis"}]
-     * var ndx = crossfilter(data);
-     * var dimension = ndx.dimension(function(d) {
-     *     return d.lastName.toLowerCase() + ' ' + d.firstName.toLowerCase();
-     * });
+     * @example
+     * ```
+     * const data = [{"firstName":"John","lastName":"Coltrane"}{"firstName":"Miles",lastName:"Davis"}]
+     * const ndx = crossfilter(data);
+     * const dimension = ndx.dimension(d => `${d.lastName.toLowerCase()} ${d.firstName.toLowerCase()}`);
      *
      * new TextFilterWidget('#search')
      *     .dimension(dimension);
      *     // you don't need the group() function
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

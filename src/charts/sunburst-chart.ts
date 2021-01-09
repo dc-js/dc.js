@@ -43,11 +43,16 @@ export class SunburstChart extends ColorMixin(BaseMixin) implements IColorMixin 
 
     /**
      * Create a Sunburst Chart
+     *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a sunburst chart under #chart-container1 element using the default global chart group
-     * var chart1 = new SunburstChart('#chart-container1');
+     * const chart1 = new SunburstChart('#chart-container1');
      * // create a sunburst chart under #chart-container2 element using chart group A
-     * var chart2 = new SunburstChart('#chart-container2', 'chartGroupA');
+     * const chart2 = new SunburstChart('#chart-container2', 'chartGroupA');
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -359,8 +364,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) implements IColorMixin 
      * Can be used as a parameter to ringSizes() to reset the default behavior, or modified for custom ring sizes.
      *
      * @example
-     *   var chart = new dc.SunburstChart(...);
+     * ```
+     *   const chart = new dc.SunburstChart(...);
      *   chart.ringSizes(chart.defaultRingSizes())
+     * ```
      */
     public defaultRingSizes(): RingSizeSpecs {
         return {
@@ -377,8 +384,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) implements IColorMixin 
      * that will make the chart rings equally wide.
      *
      * @example
-     *   var chart = new dc.SunburstChart(...);
+     * ```
+     *   const chart = new dc.SunburstChart(...);
      *   chart.ringSizes(chart.equalRingSizes())
+     * ```
      */
     public equalRingSizes(): RingSizeSpecs {
         return this.relativeRingSizes(ringCount => {
@@ -400,10 +409,12 @@ export class SunburstChart extends ColorMixin(BaseMixin) implements IColorMixin 
      * * The sum of all portions from the array must be 1 (100%).
      *
      * @example
+     * ```
      * // specific relative portions (the number of rings (3) is known in this case)
      * chart.ringSizes(chart.relativeRingSizes(function (ringCount) {
      *     return [.1, .3, .6];
      * });
+     * ```
      */
     public relativeRingSizes(
         relativeRingSizesFunction: (ringCount: number) => number[]

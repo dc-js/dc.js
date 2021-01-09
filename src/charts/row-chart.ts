@@ -38,11 +38,16 @@ export class RowChart extends ColorMixin(MarginMixin) implements IColorMixin {
 
     /**
      * Create a Row Chart.
+     *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a row chart under #chart-container1 element using the default global chart group
-     * var chart1 = new RowChart('#chart-container1');
+     * const chart1 = new RowChart('#chart-container1');
      * // create a row chart under #chart-container2 element using chart group A
-     * var chart2 = new RowChart('#chart-container2', 'chartGroupA');
+     * const chart2 = new RowChart('#chart-container2', 'chartGroupA');
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -311,7 +316,9 @@ export class RowChart extends ColorMixin(MarginMixin) implements IColorMixin {
      * Get or sets the x axis for the row chart instance.
      * See the {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * documention for more information.
+     *
      * @example
+     * ```
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function (v) {return v + '%';});
      * // customize x axis tick values
@@ -319,6 +326,7 @@ export class RowChart extends ColorMixin(MarginMixin) implements IColorMixin {
      * // use a top-oriented axis. Note: position of the axis and grid lines will need to
      * // be set manually, see https://dc-js.github.io/dc.js/examples/row-top-axis.html
      * chart.xAxis(d3.axisTop())
+     * ```
      */
     public xAxis(): Axis<any>;
     public xAxis(xAxis: Axis<any>): this;

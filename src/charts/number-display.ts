@@ -34,8 +34,9 @@ export class NumberDisplay extends BaseMixin {
      * Create a Number Display widget.
      *
      * @example
+     * ```
      * // create a number display under #chart-container1 element using the default global chart group
-     * var display1 = new NumberDisplay('#chart-container1');
+     * const display1 = new NumberDisplay('#chart-container1');
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -81,12 +82,16 @@ export class NumberDisplay extends BaseMixin {
      * - one: HTML template to use if the number is 1
      * - zero: HTML template to use if the number is 0
      * - some: HTML template to use otherwise
+     *
+     * by default is uses `{one: '', some: '', none: ''}`
+     *
      * @example
+     * ```
      * numberWidget.html({
      *      one:'%number record',
      *      some:'%number records',
      *      none:'no records'})
-     * @param {{one:String, some:String, none:String}} [html={one: '', some: '', none: ''}]
+     * ```
      */
     public html(): HTMLSpec;
     public html(html): this;

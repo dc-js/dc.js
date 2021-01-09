@@ -38,7 +38,9 @@ export class Config {
      * In DC 3.1 release it will change to a more appropriate default.
      *
      * @example
+     * ```
      * config.defaultColors(d3.schemeSet1)
+     * ```
      */
     public defaultColors(): ColorsList;
     public defaultColors(colors: ColorsList): this;

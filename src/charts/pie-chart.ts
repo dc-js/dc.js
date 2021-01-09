@@ -39,11 +39,15 @@ export class PieChart extends ColorMixin(BaseMixin) implements IColorMixin {
     /**
      * Create a Pie Chart
      *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a pie chart under #chart-container1 element using the default global chart group
-     * var chart1 = new PieChart('#chart-container1');
+     * const chart1 = new PieChart('#chart-container1');
      * // create a pie chart under #chart-container2 element using chart group A
-     * var chart2 = new PieChart('#chart-container2', 'chartGroupA');
+     * const chart2 = new PieChart('#chart-container2', 'chartGroupA');
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

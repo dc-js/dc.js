@@ -230,10 +230,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales ordinal scale}
      * @see {@link https://github.com/d3/d3-scale/blob/master/README.md d3.scale}
      * @example
+     * ```
      * // set x to a linear scale
      * chart.x(d3.scaleLinear().domain([-2500, 2500]))
      * // set x to a time scale to generate histogram
      * chart.x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]))
+     * ```
      */
     public x(): MinimalXYScale;
     public x(xScale: MinimalXYScale): this;
@@ -264,10 +266,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      * so attempting to call chart functions after calling `.xAxis()` will fail}.
      * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisBottom d3.axisBottom}
      * @example
+     * ```
      * // customize x axis tick format
      * chart.xAxis().tickFormat(function(v) {return v + '%';});
      * // customize x axis tick values
      * chart.xAxis().tickValues([0, 100, 200, 300]);
+     * ```
      */
     public xAxis(): Axis<any>;
     public xAxis(xAxis: Axis<any>): this;
@@ -671,10 +675,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      * or [d3.axisRight](https://github.com/d3/d3-axis/blob/master/README.md#axisRight)
      * @see {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
      * @example
+     * ```
      * // customize y axis tick format
      * chart.yAxis().tickFormat(function(v) {return v + '%';});
      * // customize y axis tick values
      * chart.yAxis().tickValues([0, 100, 200, 300]);
+     * ```
      */
     public yAxis(): Axis<any>;
     public yAxis(yAxis: Axis<any>): this;
@@ -1144,7 +1150,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      * and not try to update back the associated range chart.
      * If you are calling it manually - typically you will leave it to `false` (the default).
      *
+     * TODO: this example is no longer relevant
      * @example
+     * ```
      * chart.on('renderlet', function(chart) {
      *     // smooth the rendering through event throttling
      *     events.trigger(function(){
@@ -1152,6 +1160,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
      *          someOtherChart.focus(chart.filter());
      *     });
      * })
+     * ```
      */
     public focus(range: DCBrushSelection): void {
         if (this._conf.zoomOutRestrict) {

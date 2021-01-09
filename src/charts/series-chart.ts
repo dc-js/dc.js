@@ -21,11 +21,16 @@ export class SeriesChart extends CompositeChart {
 
     /**
      * Create a Series Chart.
+     *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a series chart under #chart-container1 element using the default global chart group
-     * var seriesChart1 = new SeriesChart("#chart-container1");
+     * const seriesChart1 = new SeriesChart("#chart-container1");
      * // create a series chart under #chart-container2 element using chart group A
-     * var seriesChart2 = new SeriesChart("#chart-container2", "chartGroupA");
+     * const seriesChart2 = new SeriesChart("#chart-container2", "chartGroupA");
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

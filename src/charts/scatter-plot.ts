@@ -29,13 +29,18 @@ export class ScatterPlot extends CoordinateGridMixin {
 
     /**
      * Create a Scatter Plot.
+     *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a scatter plot under #chart-container1 element using the default global chart group
-     * var chart1 = new ScatterPlot('#chart-container1');
+     * const chart1 = new ScatterPlot('#chart-container1');
      * // create a scatter plot under #chart-container2 element using chart group A
-     * var chart2 = new ScatterPlot('#chart-container2', 'chartGroupA');
+     * const chart2 = new ScatterPlot('#chart-container2', 'chartGroupA');
      * // create a sub-chart under a composite parent chart
-     * var chart3 = new ScatterPlot(compositeChart);
+     * const chart3 = new ScatterPlot(compositeChart);
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -357,11 +362,14 @@ export class ScatterPlot extends CoordinateGridMixin {
      * Get or set the symbol type used for each point. By default the symbol is a circle (d3.symbolCircle).
      * Type can be a constant or an accessor.
      * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#symbol_type symbol.type}
+     *
      * @example
+     * ```
      * // Circle type
      * chart.symbol(d3.symbolCircle);
      * // Square type
      * chart.symbol(d3.symbolSquare);
+     * ```
      */
     public symbol(): SymbolTypeGenerator;
     public symbol(type: SymbolTypeGenerator): this;

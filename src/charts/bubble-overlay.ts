@@ -34,17 +34,15 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) implements
      * element; therefore the bubble overlay chart will not work if svg is not explicitly set.
      * If the underlying image is a bitmap, then an empty svg will need to be created on top of the image.
      *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a bubble overlay chart on top of the '#chart-container1 svg' element using the default global chart group
      * var bubbleChart1 = new BubbleOverlay('#chart-container1').svg(d3.select('#chart-container1 svg'));
      * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
      * var bubbleChart2 = new BubbleOverlay('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
-     *
-     * @param parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param chartGroup - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

@@ -21,9 +21,13 @@ export class SelectMenu extends BaseMixin {
 
     /**
      * Create a Select Menu.
+     *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a select menu under #select-container using the default global chart group
-     * var select = new SelectMenu('#select-container')
+     * const select = new SelectMenu('#select-container')
      *                .dimension(states)
      *                .group(stateGroup);
      * // the option text can be set via the title() function
@@ -31,6 +35,7 @@ export class SelectMenu extends BaseMixin {
      * select.title(function (d){
      *     return 'STATE: ' + d.key;
      * })
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

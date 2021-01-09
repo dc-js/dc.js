@@ -8,8 +8,11 @@ import { adaptHandler } from '../core/d3compat';
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend
  * labels.
+ *
  * @example
+ * ```
  * chart.legend(HtmlLegend().container(legendContainerElement).horizontal(false))
+ * ```
  */
 export class HtmlLegend {
     private _htmlLegendDivCssClass: string;
@@ -163,15 +166,18 @@ export class HtmlLegend {
      * Set or get the legend text function. The legend widget uses this function to render the legend
      * text for each item. If no function is specified the legend widget will display the names
      * associated with each group.
+     *
      * @example
+     * ```
      * // default legendText
-     * legend.legendText(pluck('name'))
+     * legend.legendText(d => d.name)
      *
      * // create numbered legend items
      * chart.legend(new HtmlLegend().legendText(function(d, i) { return i + '. ' + d.name; }))
      *
      * // create legend displaying group counts
      * chart.legend(new HtmlLegend().legendText(function(d) { return d.name + ': ' d.data; }))
+     * ```
      */
     public legendText(): LegendTextAccessor;
     public legendText(legendText: LegendTextAccessor): this;

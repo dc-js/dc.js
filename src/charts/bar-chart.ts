@@ -33,7 +33,11 @@ export class BarChart extends StackMixin {
 
     /**
      * Create a Bar Chart
+     *
+     * TODO: update example for chartGroup
+     *
      * @example
+     * ```
      * // create a bar chart under #chart-container1 element using the default global chart group
      * var chart1 = new BarChart('#chart-container1');
      * // create a bar chart under #chart-container2 element using chart group A
@@ -45,6 +49,7 @@ export class BarChart extends StackMixin {
      * chart is a sub-chart in a {@link CompositeChart Composite Chart} then pass in the parent
      * composite chart instance instead.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

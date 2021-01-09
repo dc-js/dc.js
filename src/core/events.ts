@@ -16,14 +16,17 @@ export const events: IEvents = {
  * and invoke more renders than can be executed in time. Using this function to wrap your event
  * function allows the library to smooth out the rendering by throttling events and only responding to
  * the most recent event.
+ *
  * @example
+ * ```
  * chart.on('renderlet', function(chart) {
  *     // smooth the rendering through event throttling
  *     events.trigger(function(){
  *         // focus some other chart to the range selected by user on this chart
  *         someOtherChart.focus(chart.filter());
- *     });
+ *     }, 500);
  * })
+ * ```
  */
 events.trigger = function (closure: () => void, delay?: number) {
     if (!delay) {

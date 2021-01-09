@@ -56,9 +56,11 @@ export class BoxPlot extends CoordinateGridMixin {
     private _boxWidth: BoxWidthFn;
 
     /**
-     * Create a BoxP lot.
+     * Create a BoxPlot.
      *
+     * TODO: update example
      * @example
+     * ```
      * // create a box plot under #chart-container1 element using the default global chart group
      * var boxPlot1 = new BoxPlot('#chart-container1');
      * // create a box plot under #chart-container2 element using chart group A
@@ -67,6 +69,7 @@ export class BoxPlot extends CoordinateGridMixin {
      * a dom block element such as a div; or a dom element or d3 selection.
      * @param chartGroup - The name of the chart group this chart instance should be placed in.
      * Interaction with a chart will only trigger events and redraws within the chart's group.
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -163,12 +166,16 @@ export class BoxPlot extends CoordinateGridMixin {
      * Get or set the numerical width of the boxplot box. The width may also be a function taking as
      * parameters the chart width excluding the right and left margins, as well as the number of x
      * units.
+     *
+     * Default boxWidth is 0.5.
+     *
      * @example
+     * ```
      * // Using numerical parameter
      * chart.boxWidth(10);
      * // Using function
      * chart.boxWidth((innerChartWidth, xUnits) { ... });
-     * @param {Number|Function} [boxWidth=0.5]
+     * ```
      */
     public boxWidth(): BoxWidthFn;
     public boxWidth(boxWidth: BoxWidthFn): this;

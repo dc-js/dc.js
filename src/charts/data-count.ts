@@ -36,18 +36,17 @@ export class DataCount extends BaseMixin {
 
     /**
      * Create a Data Count widget.
+     *
+     * TODO update example
      * @example
+     * ```
      * var ndx = crossfilter(data);
      * var all = ndx.groupAll();
      *
      * new DataCount('.dc-data-count')
      *     .crossfilter(ndx)
      *     .groupAll(all);
-     * @param parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param chartGroup - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

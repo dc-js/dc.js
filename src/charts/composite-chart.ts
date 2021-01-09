@@ -35,16 +35,15 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Create a Composite Chart.
+     *
+     * TODO update example
      * @example
+     * ```
      * // create a composite chart under #chart-container1 element using the default global chart group
      * var compositeChart1 = new CompositeChart('#chart-container1');
      * // create a composite chart under #chart-container2 element using chart group A
      * var compositeChart2 = new CompositeChart('#chart-container2', 'chartGroupA');
-     * @param parent - Any valid
-     * {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3 single selector} specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * @param chartGroup - The name of the chart group this chart instance should be placed in.
-     * Interaction with a chart will only trigger events and redraws within the chart's group.
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -371,7 +370,11 @@ export class CompositeChart extends CoordinateGridMixin {
 
     /**
      * Combine the given charts into one single composite coordinate grid chart.
+     *
+     * TODO update example
+     *
      * @example
+     * ```
      * moveChart.compose([
      *     // when creating sub-chart you need to pass in the parent chart
      *     new LineChart(moveChart)
@@ -389,6 +392,7 @@ export class CompositeChart extends CoordinateGridMixin {
      *         .group(volumeByMonthGroup)
      *         .centerBar(true)
      * ]);
+     * ```
      */
     public compose(subChartArray: CoordinateGridMixin[]) {
         this._children = subChartArray;
@@ -585,11 +589,14 @@ export class CompositeChart extends CoordinateGridMixin {
      * {@link https://github.com/dc-js/dc.js/wiki/FAQ#why-does-everything-break-after-a-call-to-xaxis-or-yaxis
      * so attempting to call chart functions after calling `.yAxis()` will fail}.
      * @see {@link https://github.com/d3/d3-axis/blob/master/README.md#axisRight}
+     *
      * @example
+     * ```
      * // customize y axis tick format
      * chart.rightYAxis().tickFormat(function (v) {return v + '%';});
      * // customize y axis tick values
      * chart.rightYAxis().tickValues([0, 100, 200, 300]);
+     * ```
      */
     public rightYAxis(): Axis<any>;
     public rightYAxis(rightYAxis: Axis<any>): this;

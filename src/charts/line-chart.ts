@@ -61,13 +61,17 @@ export class LineChart extends StackMixin {
 
     /**
      * Create a Line Chart.
+     *
+     * TODO update example
      * @example
+     * ```
      * // create a line chart under #chart-container1 element using the default global chart group
      * var chart1 = new LineChart('#chart-container1');
      * // create a line chart under #chart-container2 element using chart group A
      * var chart2 = new LineChart('#chart-container2', 'chartGroupA');
      * // create a sub-chart under a composite parent chart
      * var chart3 = new LineChart(compositeChart);
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -128,12 +132,19 @@ export class LineChart extends StackMixin {
      * provided by {@link https://github.com/d3/d3-shape/blob/master/README.md#curves d3 curves}.
      *
      * Replaces the use of {@link LineChart.interpolate} and {@link LineChart.tension}
-     * in dc.js < 3.0
+     * in dc.js 3.0 onwards.
      *
      * This is passed to
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve} and
      * {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}.
+     *
+     * Default is {@link https://github.com/d3/d3-shape/blob/master/README.md#curveLinear | curveLinear}
+     *
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
+     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
+     *
      * @example
+     * ```
      * // default
      * chart
      *     .curve(d3.curveLinear);
@@ -144,9 +155,7 @@ export class LineChart extends StackMixin {
      * // https://en.wikipedia.org/wiki/Centripetal_Catmull%E2%80%93Rom_spline
      * chart
      *     .curve(d3.curveCatmullRom.alpha(0.5));
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#line_curve line.curve}
-     * @see {@link https://github.com/d3/d3-shape/blob/master/README.md#area_curve area.curve}
-     * @param  {d3.curve} [curve=d3.curveLinear]
+     * ```
      */
     public curve(): CurveFactory | CurveFactoryLineOnly;
     public curve(curve: CurveFactory | CurveFactoryLineOnly): this;
@@ -240,8 +249,10 @@ export class LineChart extends StackMixin {
      * array (solid line).
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray stroke-dasharray}
      * @example
-     * // create a Dash Dot Dot Dot
+     * ```
+     * // create a Dash Gap Dot Gap
      * chart.dashStyle([3,1,1,1]);
+     * ```
      */
     public dashStyle(): number[];
     public dashStyle(dashStyle: number[]): this;
@@ -572,10 +583,13 @@ export class LineChart extends StackMixin {
      *
      * If `options` is falsy, it disables data point rendering. If no `options` are provided, the
      * current `options` values are instead returned.
+     *
+     * By default it uses `{fillOpacity: 0.8, strokeOpacity: 0.0, radius: 2}`
+     * 
      * @example
+     * ```
      * chart.renderDataPoints({radius: 2, fillOpacity: 0.8, strokeOpacity: 0.0})
-     * @param  {{fillOpacity: Number, strokeOpacity: Number, radius: Number}} [options={fillOpacity: 0.8, strokeOpacity: 0.0, radius: 2}]
-     * @returns {{fillOpacity: Number, strokeOpacity: Number, radius: Number}|LineChart}
+     * ```
      */
     public renderDataPoints();
     public renderDataPoints(options): this;

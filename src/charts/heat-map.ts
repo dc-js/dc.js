@@ -27,11 +27,15 @@ export class HeatMap extends ColorMixin(MarginMixin) implements IColorMixin {
 
     /**
      * Create a Heat Map
+     *
+     * TODO update example
      * @example
+     * ```
      * // create a heat map under #chart-container1 element using the default global chart group
-     * var heatMap1 = new HeatMap('#chart-container1');
+     * const heatMap1 = new HeatMap('#chart-container1');
      * // create a heat map under #chart-container2 element using chart group A
-     * var heatMap2 = new HeatMap('#chart-container2', 'chartGroupA');
+     * const heatMap2 = new HeatMap('#chart-container2', 'chartGroupA');
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

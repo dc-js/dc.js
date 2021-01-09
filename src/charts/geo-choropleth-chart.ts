@@ -28,11 +28,16 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) implements IColorM
 
     /**
      * Create a Geo Choropleth Chart.
+     *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a choropleth chart under '#us-chart' element using the default global chart group
-     * var chart1 = new GeoChoroplethChart('#us-chart');
+     * const chart1 = new GeoChoroplethChart('#us-chart');
      * // create a choropleth chart under '#us-chart2' element using chart group A
-     * var chart2 = new CompositeChart('#us-chart2', 'chartGroupA');
+     * const chart2 = new CompositeChart('#us-chart2', 'chartGroupA');
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);

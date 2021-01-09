@@ -154,6 +154,7 @@ export class BaseMixin {
      * the chart to the default behavior.
      * @see {@link IBaseMixinConf.minHeight}
      * @example
+     * ```
      * // Default height
      * chart.height(function (element) {
      *     var height = element && element.getBoundingClientRect && element.getBoundingClientRect().height;
@@ -163,6 +164,7 @@ export class BaseMixin {
      * chart.height(250); // Set the chart's height to 250px;
      * chart.height(function(anchor) { return doSomethingWith(anchor); }); // set the chart's height with a function
      * chart.height(null); // reset the height to the default auto calculation
+     * ```
      */
     public height(): number;
     public height(height: number | (() => number)): this;
@@ -188,11 +190,13 @@ export class BaseMixin {
      * @see {@link BaseMixin.height height}
      * @see {@link IBaseMixinConf.minWidth}
      * @example
+     * ```
      * // Default width
      * chart.width(function (element) {
-     *     var width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
+     *     const width = element && element.getBoundingClientRect && element.getBoundingClientRect().width;
      *     return (width && width > chart.minWidth()) ? width : chart.minWidth();
      * });
+     * ```
      */
     public width(): number;
     public width(width: number | (() => number)): this;
@@ -241,10 +245,12 @@ export class BaseMixin {
      * selection result can be chained to d3 function calls.
      * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select d3.select}
      * @example
+     * ```
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
      *
-     * * @param sel CSS selector string
+     * ```
+     * @param sel CSS selector string
      */
     public select<DescElement extends BaseType>(sel) {
         return this._root.select<DescElement>(sel);
@@ -257,8 +263,10 @@ export class BaseMixin {
      * selection result can be chained to d3 function calls.
      * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll d3.selectAll}
      * @example
+     * ```
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
+     * ```
      */
     public selectAll<DescElement extends BaseType, OldDatum>(sel) {
         return this._root ? this._root.selectAll<DescElement, OldDatum>(sel) : null;
@@ -645,9 +653,12 @@ export class BaseMixin {
      *
      * This function can be replaced in order to change the click behavior (but first look at
      * @example
-     * var oldHandler = chart.onClick;
+     * ```
+     * const oldHandler = chart.onClick;
      * chart.onClick = function(datum) {
      *   // use datum.
+     * }
+     * ```
      */
     public onClick(datum: any, i?: number): void {
         const filter = this._conf.keyAccessor(datum);
@@ -729,7 +740,9 @@ export class BaseMixin {
      * Attach a Legend widget to this chart. The legend widget will automatically draw legend labels
      * based on the color setting and names associated with each group.
      * @example
+     * ```
      * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
+     * ```
      */
     public legend();
     public legend(legend): this;
@@ -752,8 +765,11 @@ export class BaseMixin {
     /**
      * Set chart options using a configuration object. Each key in the object will cause the method of
      * the same name to be called with the value to set that attribute for the chart.
+     * TODO: dimension and group are no longer set to chart directly, update the example
      * @example
+     * ```
      * chart.options({dimension: myDimension, group: myGroup});
+     * ```
      */
     public options(opts) {
         const applyOptions = [
@@ -798,6 +814,7 @@ export class BaseMixin {
      * * `zoomed` - This listener function will be invoked after a zoom is triggered.
      * @see {@link https://github.com/d3/d3-dispatch/blob/master/README.md#dispatch_on d3.dispatch.on}
      * @example
+     * ```
      * .on('renderlet', function(chart, filter){...})
      * .on('pretransition', function(chart, filter){...})
      * .on('preRender', function(chart){...})
@@ -806,6 +823,7 @@ export class BaseMixin {
      * .on('postRedraw', function(chart){...})
      * .on('filtered', function(chart, filter){...})
      * .on('zoomed', function(chart, filter){...})
+     * ```
      */
     public on(event, listener): this {
         this._listeners.on(event, listener);
@@ -823,6 +841,7 @@ export class BaseMixin {
      * Generates a random key for the renderlet, which makes it hard to remove.
      * @deprecated chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)
      * @example
+     * ```
      * // do this instead of .renderlet(function(chart) { ... })
      * chart.on("renderlet", function(chart){
      *     // mix of dc API and d3 manipulation
@@ -830,6 +849,7 @@ export class BaseMixin {
      *     // its a closure so you can also access other chart variable available in the closure scope
      *     moveChart.filter(chart.filter());
      * });
+     * ```
      */
     public renderlet(renderletFunction): this {
         logger.warnOnce(

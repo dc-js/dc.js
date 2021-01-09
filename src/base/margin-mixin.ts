@@ -30,9 +30,11 @@ export class MarginMixin extends BaseMixin {
      * Get or set the margins for a particular coordinate grid chart instance. The margins is stored as
      * an associative Javascript array.
      * @example
-     * var leftMargin = chart.margins().left; // 30 by default
+     * ```
+     * let leftMargin = chart.margins().left; // 30 by default
      * chart.margins().left = 50;
      * leftMargin = chart.margins().left; // now 50
+     * ```
      */
     public margins(): Margins;
     public margins(margins: Margins): this;

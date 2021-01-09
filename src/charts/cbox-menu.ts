@@ -25,9 +25,12 @@ export class CboxMenu extends BaseMixin {
     /**
      * Create a Cbox Menu.
      *
+     * TODO update example
+     *
      * @example
+     * ```
      * // create a cboxMenu under #cbox-container using the default global chart group
-     * var cbox = new CboxMenu('#cbox-container')
+     * const cbox = new CboxMenu('#cbox-container')
      *                .dimension(states)
      *                .group(stateGroup);
      * // the option text can be set via the title() function
@@ -35,9 +38,7 @@ export class CboxMenu extends BaseMixin {
      * cbox.title(function (d){
      *     return 'STATE: ' + d.key;
      * })
-     * [d3 single selector](https://github.com/mbostock/d3/wiki/Selections#selecting-elements) specifying
-     * a dom block element such as a div; or a dom element or d3 selection.
-     * Interaction with the widget will only trigger events and redraws within its group.
+     * ```
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
