@@ -38,6 +38,11 @@ import { select } from 'd3-selection';
 import { scaleLinear } from 'd3-scale';
 import { timerFlush } from 'd3-timer';
 
+/**
+ * Used by BoxPlot
+ *
+ * @hidden
+ */
 export const d3Box = function () {
     let width = 1;
     let height = 1;
@@ -540,10 +545,20 @@ export const d3Box = function () {
     return box;
 };
 
+/**
+ * Used by BoxPlot
+ *
+ * @hidden
+ */
 function boxWhiskers(d) {
     return [0, d.length - 1];
 }
 
+/**
+ * Used by BoxPlot
+ *
+ * @hidden
+ */
 function boxQuartiles(d) {
     return [quantile(d, 0.25), quantile(d, 0.5), quantile(d, 0.75)];
 }

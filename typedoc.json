@@ -1,7 +1,9 @@
 {
   "out": "web/html2",
-  "entryPoints": "src/index.ts",
+  "entryPoints": ["src/index.ts"],
   "excludeExternals": true,
   "excludePrivate": true,
+  "defaultCategory": "Standard",
+  "categoryOrder": ["Standard", "Intermediate", "Ninja"],
   "listInvalidSymbolLinks": true
 }

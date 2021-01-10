@@ -21,6 +21,9 @@ import { IChartGroup } from '../core/i-chart-group';
  * and available on all chart implementations in the `dc` library.
  */
 export class BaseMixin {
+    /**
+     * @hidden
+     */
     protected _conf: IBaseMixinConf;
 
     // tslint:disable-next-line:variable-name
@@ -39,8 +42,14 @@ export class BaseMixin {
     private _chartGroup: IChartGroup;
     private _listeners: Dispatch<BaseMixin>;
     private _legend; // TODO: figure out actual type
+    /**
+     * @hidden
+     */
     protected _dataProvider: CFSimpleAdapter;
 
+    /**
+     * Create a new chart
+     */
     constructor(parent, chartGroup: ChartGroupType) {
         this._anchor = undefined;
         this._root = undefined;
@@ -85,7 +94,7 @@ export class BaseMixin {
         this._width = undefined;
         this._height = undefined;
 
-        this._mandatoryAttributesList = ['dimension', 'group'];
+        this._mandatoryAttributesList = [];
 
         this._listeners = dispatch(
             'preRender',
@@ -101,22 +110,40 @@ export class BaseMixin {
         this._legend = undefined;
     }
 
-    // cleanup
+    /**
+     * An opportunity to cleanup.
+     *
+     * @category Ninja
+     */
     public dispose() {
         if (this._dataProvider) {
             this._dataProvider.dispose();
         }
     }
 
+    /**
+     * Configure this chart. The given options are merged with current options.
+     */
     public configure(conf: IBaseMixinConf): this {
         this._conf = { ...this._conf, ...conf };
         return this;
     }
 
+    /**
+     * Get the current configuration.
+     *
+     * It returns reference to the internal structure.
+     * Any changes made may have unintended consequences.
+     *
+     * @category Intermediate
+     */
     public conf(): IBaseMixinConf {
         return this._conf;
     }
 
+    /**
+     * TODO add details
+     */
     public dataProvider(): CFSimpleAdapter;
     public dataProvider(dataProvider): this;
     public dataProvider(dataProvider?) {
@@ -187,7 +214,7 @@ export class BaseMixin {
 
     /**
      * Set or get the width attribute of a chart.
-     * @see {@link BaseMixin.height | height}
+     * @see {@link height}
      * @see {@link IBaseMixinConf.minWidth}
      * @example
      * ```
@@ -220,18 +247,25 @@ export class BaseMixin {
     /**
      * Return charts data, typically `group.all()`. Some charts override this method.
      * The derived classes may even use different return type.
+     *
+     * @category Ninja
      */
     public data(): CFGrouping[] {
         return this._dataProvider.data();
     }
 
+    /**
+     * @hidden
+     */
     protected _computeOrderedGroups(data) {
         return sortBy(data, this._dataProvider.conf().ordering);
     }
 
     /**
      * Clear all filters associated with this chart. The same effect can be achieved by calling
-     * {@link BaseMixin.filter | chart.filter(null)}.
+     * {@link filter | chart.filter(null)}.
+     *
+     * @category Intermediate
      */
     public filterAll() {
         return this.filter(null);
@@ -243,13 +277,21 @@ export class BaseMixin {
      *
      * This function is **not chainable** since it does not return a chart instance; however the d3
      * selection result can be chained to d3 function calls.
+     *
+     * This is typically used in augmenting/modifying a chart.
+     *
+     * TODO link to example
+     *
      * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#select | d3.select}
+     *
      * @example
      * ```
      * // Has the same effect as d3.select('#chart-id').select(selector)
      * chart.select(selector)
      *
      * ```
+     *
+     * @category Intermediate
      * @param sel CSS selector string
      */
     public select<DescElement extends BaseType>(sel) {
@@ -261,12 +303,20 @@ export class BaseMixin {
      *
      * This function is **not chainable** since it does not return a chart instance; however the d3
      * selection result can be chained to d3 function calls.
+     *
+     * This is typically used in augmenting/modifying a chart.
+     *
+     * TODO link to example
+     *
      * @see {@link https://github.com/d3/d3-selection/blob/master/README.md#selectAll | d3.selectAll}
+     *
      * @example
      * ```
      * // Has the same effect as d3.select('#chart-id').selectAll(selector)
      * chart.selectAll(selector)
      * ```
+     * @category Intermediate
+     * @param sel CSS selector string
      */
     public selectAll<DescElement extends BaseType, OldDatum>(sel) {
         return this._root ? this._root.selectAll<DescElement, OldDatum>(sel) : null;
@@ -275,9 +325,11 @@ export class BaseMixin {
     /**
      * Set the root SVGElement to either be an existing chart's root; or any valid [d3 single
      * selector](https://github.com/d3/d3-selection/blob/master/README.md#selecting-elements) specifying a dom
-     * block element such as a div; or a dom element or d3 selection. Optionally registers the chart
-     * within the chartGroup. This class is called internally on chart initialization, but be called
-     * again to relocate the chart. However, it will orphan any previously created SVGElements.
+     * block element such as a div; or a dom element or d3 selection.
+     *
+     * This is internally managed. Invoking it directly may have unintended consequences.
+     *
+     * @category Ninja
      */
     public anchor(): string | Element;
     public anchor(parent: ChartParentType): this;
@@ -318,6 +370,7 @@ export class BaseMixin {
 
     /**
      * Returns the DOM id for the chart's anchored location.
+     * @category Intermediate
      */
     public anchorName(): string {
         const a: string | Element = this.anchor();
@@ -333,10 +386,14 @@ export class BaseMixin {
 
     /**
      * Returns the root element where a chart resides. Usually it will be the parent div element where
-     * the SVGElement was created. You can also pass in a new root element however this is usually handled by
-     * dc internally. Resetting the root element on a chart outside of dc internals may have
+     * the SVGElement was created.
+     *
+     * Resetting the root element on a chart outside of dc internals may have
      * unexpected consequences.
+     *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement | HTMLElement}
+     *
+     * @category Ninja
      */
     public root(): Selection<Element, any, any, any>;
     public root(rootElement: Selection<Element, any, any, any>): this;
@@ -349,9 +406,14 @@ export class BaseMixin {
     }
 
     /**
-     * Returns the top SVGElement for this specific chart. You can also pass in a new SVGElement,
-     * however this is usually handled by dc internally. Resetting the SVGElement on a chart outside
+     * Returns the top SVGElement for this specific chart.
+     *
+     * Usually generating an SVG Element is handled handled by dc internally.
+     * The {@link BubbleOverlay}, however, needs an SVG Element to be passed explicitly.
+     *
+     * Resetting the SVGElement on a chart outside
      * of dc internals may have unexpected consequences.
+     *
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement | SVGElement}
      */
     public svg(): Selection<SVGElement, any, any, any>;
@@ -367,13 +429,18 @@ export class BaseMixin {
     /**
      * Remove the chart's SVGElements from the dom and recreate the container SVGElement.
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement | SVGElement}
+     *
+     * @hidden
      */
-    public resetSvg(): Selection<SVGElement, any, any, any> {
+    protected resetSvg(): Selection<SVGElement, any, any, any> {
         this.select('svg').remove();
         return this.generateSvg();
     }
 
-    public sizeSvg(): void {
+    /**
+     * @hidden
+     */
+    protected sizeSvg(): void {
         if (this._svg) {
             if (!this._conf.useViewBoxResizing) {
                 this._svg.attr('width', this.width()).attr('height', this.height());
@@ -383,7 +450,10 @@ export class BaseMixin {
         }
     }
 
-    public generateSvg(): Selection<SVGElement, any, any, any> {
+    /**
+     * @hidden
+     */
+    protected generateSvg(): Selection<SVGElement, any, any, any> {
         this._svg = this.root().append('svg');
         this.sizeSvg();
         return this._svg;
@@ -398,6 +468,9 @@ export class BaseMixin {
      * * root.selectAll('.filter') elements are turned on if the chart has an active filter. The text
      * content of this element is then replaced with the current filter value using the filter printer
      * function. This type of element will be turned off automatically if the filter is cleared.
+     *
+     * @see {@link turnOffControls}
+     * @category Intermediate
      */
     public turnOnControls(): this {
         if (this._root) {
@@ -412,7 +485,9 @@ export class BaseMixin {
 
     /**
      * Turn off optional control elements within the root element.
-     * @see {@link BaseMixin.turnOnControls | turnOnControls}
+     *
+     * @see {@link turnOnControls}
+     * @category Intermediate
      */
     public turnOffControls(): this {
         if (this._root) {
@@ -424,8 +499,17 @@ export class BaseMixin {
         return this;
     }
 
+    /**
+     * @hidden
+     */
     protected _mandatoryAttributes(): string[];
+    /**
+     * @hidden
+     */
     protected _mandatoryAttributes(_: string[]): this;
+    /**
+     * @hidden
+     */
     protected _mandatoryAttributes(_?) {
         if (!arguments.length) {
             return this._mandatoryAttributesList;
@@ -434,7 +518,10 @@ export class BaseMixin {
         return this;
     }
 
-    public checkForMandatoryAttributes(a): void {
+    /**
+     * @hidden
+     */
+    protected checkForMandatoryAttributes(a): void {
         if (!this[a] || !this[a]()) {
             throw new InvalidStateException(
                 `Mandatory attribute chart.${a} is missing on chart[#${this.anchorName()}]`
@@ -447,6 +534,8 @@ export class BaseMixin {
      * should only be used to render the chart for the first time on the page or if you want to make
      * sure everything is redrawn from scratch instead of relying on the default incremental redrawing
      * behaviour.
+     *
+     * Typically you would invoke {@link renderGroup} which will redraw all charts within the {@link chartGroup}.
      */
     public render(): this {
         this._height = this._width = undefined; // force recalculate
@@ -467,7 +556,10 @@ export class BaseMixin {
         return result;
     }
 
-    // Needed by Composite Charts
+    /**
+     * It needs to be public as it is used by Composite Charts
+     * @hidden
+     */
     public _activateRenderlets(event?): void {
         this._listeners.call('pretransition', this, this);
         if (this._conf.transitionDuration > 0 && this._svg) {
@@ -493,10 +585,12 @@ export class BaseMixin {
      * Calling redraw will cause the chart to re-render data changes incrementally. If there is no
      * change in the underlying data dimension then calling this method will have no effect on the
      * chart. Most chart interaction in dc will automatically trigger this method through internal
-     * events (in particular {@link redrawAll | redrawAll}); therefore, you only need to
+     * events; therefore, you only need to
      * manually invoke this function if data is manipulated outside of dc's control (for example if
      * data is loaded in the background using
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add | crossfilter.add}).
+     *
+     * Typically you would invoke {@link redrawGroup} which will redraw all charts within the {@link chartGroup}.
      */
     public redraw(): this {
         this.sizeSvg();
@@ -515,8 +609,11 @@ export class BaseMixin {
 
     /**
      * Redraws all charts in the same group as this chart, typically in reaction to a filter
-     * change. If the chart has a {@link IBaseMixinConf.commitHandler | commitHandler}, it will
-     * be executed and waited for.
+     * change. If the chart has a {@link commitHandler}, it will
+     * be executed and waited for. It internally calls {@link ChartGroup.redrawAll}
+     *
+     * @see {@link redraw}
+     * @see {@link chartGroup}
      */
     public redrawGroup(): this {
         if (this._conf.commitHandler) {
@@ -535,7 +632,11 @@ export class BaseMixin {
 
     /**
      * Renders all charts in the same group as this chart. If the chart has a
-     * {@link IBaseMixinConf.commitHandler | commitHandler}, it will be executed and waited for
+     * {@link commitHandler}, it will be executed and waited for.
+     * It internally calls {@link ChartGroup.redrawAll}
+     *
+     * @see {@link render}
+     * @see {@link chartGroup}
      */
     public renderGroup(): this {
         if (this._conf.commitHandler) {
@@ -552,12 +653,18 @@ export class BaseMixin {
         return this;
     }
 
+    /**
+     * @hidden
+     */
     protected _invokeFilteredListener(f): void {
         if (f !== undefined) {
             this._listeners.call('filtered', this, this, f);
         }
     }
 
+    /**
+     * @hidden
+     */
     protected _invokeZoomedListener(): void {
         this._listeners.call('zoomed', this, this);
     }
@@ -569,6 +676,7 @@ export class BaseMixin {
      * Starting version 5, filtering is provided by DataProvider.
      *
      * @see {@link CFSimpleAdapter.hasFilter}.
+     * @category Intermediate
      */
     public hasFilter(filter?): boolean {
         return this._dataProvider.hasFilter(filter);
@@ -581,6 +689,7 @@ export class BaseMixin {
      * Starting version 5, filtering is provided by DataProvider.
      *
      * @see {@link CFSimpleAdapter.resetFilters}.
+     * @category Intermediate
      */
     public replaceFilter(filter): this {
         // The following call resets the filters without actually applying those
@@ -597,6 +706,7 @@ export class BaseMixin {
      * Starting version 5, filtering is provided by DataProvider.
      *
      * @see {@link CFSimpleAdapter.filter}.
+     * @category Intermediate
      */
     public filter();
     public filter(filter): this;
@@ -609,6 +719,11 @@ export class BaseMixin {
         return this;
     }
 
+    /**
+     * TODO check if it can be made private
+     *
+     * @hidden
+     */
     protected _filtersChanged(filters) {
         this._invokeFilteredListener(filters);
 
@@ -627,21 +742,31 @@ export class BaseMixin {
      * Starting version 5, filtering is provided by DataProvider.
      *
      * @see {@link CFSimpleAdapter.filters}.
+     * @category Intermediate
      */
     public filters() {
         return this._dataProvider.filters;
     }
 
+    /**
+     * @hidden
+     */
     public highlightSelected(e): void {
         select(e).classed(constants.SELECTED_CLASS, true);
         select(e).classed(constants.DESELECTED_CLASS, false);
     }
 
+    /**
+     * @hidden
+     */
     public fadeDeselected(e): void {
         select(e).classed(constants.SELECTED_CLASS, false);
         select(e).classed(constants.DESELECTED_CLASS, true);
     }
 
+    /**
+     * @hidden
+     */
     public resetHighlight(e): void {
         select(e).classed(constants.SELECTED_CLASS, false);
         select(e).classed(constants.DESELECTED_CLASS, false);
@@ -659,6 +784,8 @@ export class BaseMixin {
      *   // use datum.
      * }
      * ```
+     *
+     * @category Ninja
      */
     public onClick(datum: any, i?: number): void {
         const filter = this._conf.keyAccessor(datum);
@@ -668,44 +795,79 @@ export class BaseMixin {
         });
     }
 
-    // abstract function stub
+    /**
+     * abstract function stub
+     *
+     * @hidden
+     */
     protected _doRender(): this {
         // do nothing in base, should be overridden by sub-function
         return this;
     }
 
+    /**
+     * abstract function stub
+     *
+     * @hidden
+     */
     protected _doRedraw(): this {
         // do nothing in base, should be overridden by sub-function
         return this;
     }
 
-    // Legend methods are used by Composite Charts
-
+    /**
+     * Need to be public as legend methods are used by Composite Charts
+     *
+     * @hidden
+     */
     public legendables(): LegendItem[] {
         // do nothing in base, should be overridden by sub-function
         return [];
     }
 
+    /**
+     * Need to be public as legend methods are used by Composite Charts
+     *
+     * @hidden
+     */
     public legendHighlight(d?: LegendItem) {
         // do nothing in base, should be overridden by sub-function
     }
 
+    /**
+     * Need to be public as legend methods are used by Composite Charts
+     *
+     * @hidden
+     */
     public legendReset(d?: LegendItem) {
         // do nothing in base, should be overridden by sub-function
     }
 
+    /**
+     * Need to be public as legend methods are used by Composite Charts
+     *
+     * @hidden
+     */
     public legendToggle(d?: LegendItem) {
         // do nothing in base, should be overriden by sub-function
     }
 
+    /**
+     * Need to be public as legend methods are used by Composite Charts
+     *
+     * @hidden
+     */
     public isLegendableHidden(d?: LegendItem): boolean {
         // do nothing in base, should be overridden by sub-function
         return false;
     }
 
     /**
-     * Get or set the chart group to which this chart belongs. Chart groups are rendered or redrawn
-     * together since it is expected they share the same underlying crossfilter data set.
+     * Chart groups are rendered or redrawn
+     * together since it is expected they share the same underlying data set.
+     *
+     * chartGroup is passed to teh chart constructor.
+     * Setting it directly can have unintended consequences.
      */
     public chartGroup(): IChartGroup;
     public chartGroup(chartGroup: ChartGroupType): this;
@@ -730,6 +892,9 @@ export class BaseMixin {
      * {@link https://github.com/crossfilter/crossfilter/wiki/API-Reference#crossfilter_add | crossfilter.add}
      * function or reset group or dimension after rendering, it is a good idea to
      * clear the cache to make sure charts are rendered properly.
+     *
+     * TODO determine if it can be removed, does not seem to be used
+     * @category Ninja
      */
     protected expireCache(): this {
         // do nothing in base, should be overridden by sub-function
@@ -739,6 +904,7 @@ export class BaseMixin {
     /**
      * Attach a Legend widget to this chart. The legend widget will automatically draw legend labels
      * based on the color setting and names associated with each group.
+     *
      * @example
      * ```
      * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
@@ -757,6 +923,8 @@ export class BaseMixin {
 
     /**
      * Returns the internal numeric ID of the chart.
+     *
+     * @category Intermediate
      */
     public chartID(): string {
         return this.__dcFlag__;
@@ -770,6 +938,7 @@ export class BaseMixin {
      * ```
      * chart.options({dimension: myDimension, group: myGroup});
      * ```
+     * @category Ninja
      */
     public options(opts) {
         const applyOptions = [
@@ -802,7 +971,7 @@ export class BaseMixin {
      * All dc chart instance supports the following listeners.
      * Supports the following events:
      * * `renderlet` - This listener function will be invoked after transitions after redraw and render. Replaces the
-     * deprecated {@link BaseMixin.renderlet | renderlet} method.
+     * deprecated {@link renderlet} method.
      * * `pretransition` - Like `.on('renderlet', ...)` but the event is fired before transitions start.
      * * `preRender` - This listener function will be invoked before chart rendering.
      * * `postRender` - This listener function will be invoked after chart finish rendering including
@@ -824,6 +993,7 @@ export class BaseMixin {
      * .on('filtered', function(chart, filter){...})
      * .on('zoomed', function(chart, filter){...})
      * ```
+     * @category Intermediate
      */
     public on(event, listener): this {
         this._listeners.on(event, listener);
@@ -837,7 +1007,7 @@ export class BaseMixin {
      * Renderlet functions take the chart instance as the only input parameter and you can
      * use the dc API or use raw d3 to achieve pretty much any effect.
      *
-     * Use {@link BaseMixin.on | on} with a 'renderlet' prefix.
+     * Use {@link on} with a 'renderlet' prefix.
      * Generates a random key for the renderlet, which makes it hard to remove.
      * @deprecated chart.renderlet has been deprecated. Please use chart.on("renderlet.<renderletKey>", renderletFunction)
      * @example
@@ -850,6 +1020,8 @@ export class BaseMixin {
      *     moveChart.filter(chart.filter());
      * });
      * ```
+     *
+     * TODO move to compat
      */
     public renderlet(renderletFunction): this {
         logger.warnOnce(
