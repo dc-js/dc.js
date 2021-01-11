@@ -337,7 +337,7 @@ module.exports = function (grunt) {
                 command: 'rm -rf dist/',
             },
             'web-clean': {
-                command: 'rm -rf web/',
+                command: 'rm -rf web/js/ web/css/',
             },
             'specs-clean': {
                 command: 'rm -rf spec/3rd-party',
