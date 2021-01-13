@@ -73,7 +73,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         public colors(colorScale: BaseAccessor<string>): this;
         public colors(colorScale?) {
             if (!arguments.length) {
-                return (this.colorHelper() as ColorScaleHelper).scale;
+                return (this.colorHelper() as ColorScaleHelper).colorScale;
             }
             let newScale;
             if (colorScale instanceof Array) {
@@ -84,7 +84,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
 
             this.colorHelper(
                 new ColorScaleHelper({
-                    scale: newScale,
+                    colorScale: newScale,
                     colorAccessor: this._conf.colorAccessor,
                 })
             );
@@ -129,7 +129,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         public colorDomain(): string[];
         public colorDomain(domain: string[]): this;
         public colorDomain(domain?) {
-            const scale = (this.colorHelper() as ColorScaleHelper).scale as MinimalColorScale;
+            const scale = (this.colorHelper() as ColorScaleHelper).colorScale as MinimalColorScale;
             if (!arguments.length) {
                 return scale.domain();
             }

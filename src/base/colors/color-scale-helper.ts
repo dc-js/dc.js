@@ -1,26 +1,33 @@
-import { IColorHelper } from './i-color-helper';
+import { AbstractColorHelper } from './abstract-color-helper';
 import { BaseAccessor } from '../../core/types';
 
-export class ColorScaleHelper implements IColorHelper {
+export class ColorScaleHelper extends AbstractColorHelper {
     public colorAccessor: BaseAccessor<string>;
-    public scale: BaseAccessor<string>;
+    public colorScale: BaseAccessor<string>;
 
     constructor({
-        scale,
+        colorScale,
         colorAccessor,
     }: {
-        scale: BaseAccessor<string>;
+        colorScale: BaseAccessor<string>;
         colorAccessor?: BaseAccessor<string>;
     }) {
+        super();
         this.colorAccessor = colorAccessor;
-        this.scale = scale;
+        this.colorScale = colorScale;
     }
 
     getColor(d, i?: number): string {
-        return this.scale(this.colorAccessor(d, i));
+        return this.colorScale(this.colorAccessor(d, i));
     }
 
-    share(colorAccessor: BaseAccessor<string>): IColorHelper {
-        return new ColorScaleHelper({ scale: this.scale, colorAccessor });
+    /**
+     * It is unlikely that it will be used directly.
+     *
+     * @category Ninja
+     * @see {@link AbstractColorHelper.share}
+     */
+    share(colorAccessor: BaseAccessor<string>): AbstractColorHelper {
+        return new ColorScaleHelper({ colorScale: this.colorScale, colorAccessor });
     }
 }

@@ -3,7 +3,7 @@ import { extent } from 'd3-array';
 import { config } from '../core/config';
 import { Constructor, MinimalColorScale } from '../core/types';
 import { IColorMixinConf } from './i-color-mixin-conf';
-import { IColorHelper } from './colors/i-color-helper';
+import { AbstractColorHelper } from './colors/abstract-color-helper';
 import { ColorScaleHelper } from './colors/color-scale-helper';
 import { OrdinalColors } from './colors/ordinal-colors';
 import { IBaseMixinConf } from './i-base-mixin-conf';
@@ -16,14 +16,10 @@ interface MinimalBase {
 
 export interface IColorMixin extends BaseMixin {
     configure(conf: IColorMixinConf): this;
-
     conf(): IColorMixinConf;
 
-    colorHelper(): IColorHelper;
-
-    colorHelper(colorHelper: IColorHelper): this;
-
-    colorHelper(colorHelper?): any;
+    colorHelper(): AbstractColorHelper;
+    colorHelper(colorHelper: AbstractColorHelper): this;
 
     /**
      * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
@@ -47,7 +43,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
     return class extends Base {
         public _conf: IColorMixinConf;
 
-        public _colorHelper: IColorHelper;
+        public _colorHelper: AbstractColorHelper;
 
         constructor(...args: any[]) {
             super(...args);
@@ -74,8 +70,27 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
             return this._conf;
         }
 
-        public colorHelper(): IColorHelper;
-        public colorHelper(colorHelper: IColorHelper): this;
+        /**
+         * `dc` charts use on the ColorHelpers for color.
+         * To color chart elements (like Pie slice, a row, a bar, etc.), typically
+         * the underlying data element will be used to determine the color.
+         * In most of the cases output of {@linkcode colorAccessor | colorAccessor(d, i)} will be used to determine the color.
+         *
+         * Different implementations of ColorAccessors provide different functionality:
+         *
+         * * {@link OrdinalColors} - this is the default. It needs fixed list of colors.
+         * * {@link LinearColors} - it provides interpolated colors.
+         * * {@link ColorScaleHelper} - it allows any of {@link https://github.com/d3/d3-scale | d3-scales} to be used.
+         *   {@link OrdinalColors} and {@link LinearColors} are specialization of this.
+         * * {@link ColorCalculator} - It allows skipping {@link colorAccessor} while computing the color.
+         *   It ignores even if a {@link colorAccessor} is provided.
+         *
+         * ```
+         * // TODO example
+         * ```
+         */
+        public colorHelper(): AbstractColorHelper;
+        public colorHelper(colorHelper: AbstractColorHelper): this;
         public colorHelper(colorHelper?) {
             if (!arguments.length) {
                 return this._colorHelper;
@@ -86,7 +101,6 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
 
         /**
          * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
-         * @method getColor
          */
         public getColor(d, i?: number): string {
             return this._colorHelper.getColor(d, i);
@@ -98,7 +112,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          */
         public calculateColorDomain(): this {
             const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper)
-                .scale as MinimalColorScale;
+                .colorScale as MinimalColorScale;
 
             if (scale && scale.domain) {
                 scale.domain(extent(this.data(), this._conf.colorAccessor));

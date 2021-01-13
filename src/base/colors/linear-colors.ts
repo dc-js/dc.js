@@ -12,6 +12,6 @@ export class LinearColors extends ColorScaleHelper {
         colorAccessor?: BaseAccessor<string>;
     }) {
         const scale = scaleLinear<any, string>().range(range).interpolate(interpolateHcl);
-        super({ scale, colorAccessor });
+        super({ colorScale: scale, colorAccessor });
     }
 }

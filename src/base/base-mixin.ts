@@ -933,7 +933,7 @@ export class BaseMixin {
     /**
      * Set chart options using a configuration object. Each key in the object will cause the method of
      * the same name to be called with the value to set that attribute for the chart.
-     * TODO: dimension and group are no longer set to chart directly, update the example
+     * TODO: With concept of conf, this is less relevant now, consider moving it to compat.
      * @example
      * ```
      * chart.options({dimension: myDimension, group: myGroup});
