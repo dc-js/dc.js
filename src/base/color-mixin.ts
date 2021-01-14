@@ -52,10 +52,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
                 colorAccessor: (d, i?) => this._conf.keyAccessor(d),
             });
 
-            this._colorHelper = new OrdinalColors({
-                colors: config.defaultColors(),
-                colorAccessor: this._conf.colorAccessor,
-            });
+            this.colorHelper(new OrdinalColors(config.defaultColors()));
         }
 
         public configure(conf: IColorMixinConf): this {

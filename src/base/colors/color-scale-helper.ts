@@ -5,15 +5,8 @@ export class ColorScaleHelper extends AbstractColorHelper {
     public colorAccessor: BaseAccessor<string>;
     public colorScale: BaseAccessor<string>;
 
-    constructor({
-        colorScale,
-        colorAccessor,
-    }: {
-        colorScale: BaseAccessor<string>;
-        colorAccessor?: BaseAccessor<string>;
-    }) {
+    constructor(colorScale: BaseAccessor<string>) {
         super();
-        this.colorAccessor = colorAccessor;
         this.colorScale = colorScale;
     }
 
@@ -28,6 +21,8 @@ export class ColorScaleHelper extends AbstractColorHelper {
      * @see {@link AbstractColorHelper.share}
      */
     share(colorAccessor: BaseAccessor<string>): AbstractColorHelper {
-        return new ColorScaleHelper({ colorScale: this.colorScale, colorAccessor });
+        const clonedScale = new ColorScaleHelper(this.colorScale);
+        clonedScale.colorAccessor = colorAccessor;
+        return clonedScale;
     }
 }

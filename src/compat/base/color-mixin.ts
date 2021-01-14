@@ -82,12 +82,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
                 newScale = typeof colorScale === 'function' ? colorScale : () => colorScale;
             }
 
-            this.colorHelper(
-                new ColorScaleHelper({
-                    colorScale: newScale,
-                    colorAccessor: this._conf.colorAccessor,
-                })
-            );
+            this.colorHelper(new ColorScaleHelper(newScale));
             return this;
         }
 
@@ -97,12 +92,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * range `r`.
          */
         public ordinalColors(r: string[]): this {
-            this.colorHelper(
-                new OrdinalColors({
-                    colors: r,
-                    colorAccessor: this._conf.colorAccessor,
-                })
-            );
+            this.colorHelper(new OrdinalColors(r));
             return this;
         }
 
@@ -110,12 +100,7 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
          * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
          */
         public linearColors(r: [string, string]): this {
-            this.colorHelper(
-                new LinearColors({
-                    range: r,
-                    colorAccessor: this._conf.colorAccessor,
-                })
-            );
+            this.colorHelper(new LinearColors(r));
             return this;
         }
 

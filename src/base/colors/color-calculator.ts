@@ -21,13 +21,4 @@ export class ColorCalculator extends AbstractColorHelper {
         super();
         this.getColor = colorCalculator;
     }
-
-    /**
-     * Special case, used by Composite charts
-     *
-     * @hidden
-     */
-    public share(colorAccessor: BaseAccessor<string>): AbstractColorHelper {
-        return this;
-    }
 }

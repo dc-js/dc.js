@@ -2,22 +2,16 @@ import { BaseAccessor } from '../../core/types';
 
 export class AbstractColorHelper {
     /**
-     * Set or the get color accessor function. This function will be used to map a data point
-     * to a color value on the color scale. The default function uses the key accessor.
+     * Set or the get color accessor function.
+     * Chart will assign this, not assigned in user code.
      *
-     * @example
-     * ```
-     * // index based color accessor
-     * chart.colorAccessor((d, i) => i)
-     *
-     * // color accessor for a multi-value crossfilter reduction
-     * chart.colorAccessor(d => d.value.absGain)
-     * ```
+     * @category Intermediate
      */
     public colorAccessor: BaseAccessor<string>;
 
     /**
      * Charts call this method to lookup actual colors.
+     * Rarely called in user code.
      *
      * @category Intermediate
      */
@@ -31,7 +25,7 @@ export class AbstractColorHelper {
      *
      * @category Ninja
      */
-    public share(colorAccessor: BaseAccessor<string>): AbstractColorHelper{
+    public share(colorAccessor: BaseAccessor<string>): AbstractColorHelper {
         return this;
     }
 }

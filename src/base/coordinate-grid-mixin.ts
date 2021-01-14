@@ -71,9 +71,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements ICol
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
-        this.colorHelper(
-            new OrdinalColors({ colors: schemeCategory10, colorAccessor: this._conf.colorAccessor })
-        );
+        this.colorHelper(new OrdinalColors(schemeCategory10));
         this._mandatoryAttributes().push('x');
         this._parent = undefined;
         this._g = undefined;
