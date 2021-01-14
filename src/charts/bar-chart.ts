@@ -290,7 +290,7 @@ export class BarChart extends StackMixin {
                 bars.classed(constants.DESELECTED_CLASS, false);
             }
         } else if (this._conf.brushOn || this._conf.parentBrushOn) {
-            if (!this.brushIsEmpty(brushSelection)) {
+            if (!this._brushIsEmpty(brushSelection)) {
                 const start = brushSelection[0];
                 const end = brushSelection[1];
 
@@ -341,7 +341,7 @@ export class BarChart extends StackMixin {
         return this;
     }
 
-    public extendBrush(brushSelection) {
+    public _extendBrush(brushSelection) {
         if (
             brushSelection &&
             this._conf.round &&

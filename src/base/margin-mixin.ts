@@ -7,6 +7,9 @@ import { IMarginMixinConf } from './i-margin-mixin-conf';
  * Charts.
  */
 export class MarginMixin extends BaseMixin {
+    /**
+     * @hidden
+     */
     protected _conf: IMarginMixinConf;
 
     private _margins: Margins;
@@ -48,7 +51,6 @@ export class MarginMixin extends BaseMixin {
 
     /**
      * Effective width of the chart excluding margins (in pixels).
-     *
      */
     public effectiveWidth(): number {
         return this.width() - this.margins().left - this.margins().right;
@@ -56,7 +58,6 @@ export class MarginMixin extends BaseMixin {
 
     /**
      * Effective height of the chart excluding margins (in pixels).
-     *
      */
     public effectiveHeight(): number {
         return this.height() - this.margins().top - this.margins().bottom;

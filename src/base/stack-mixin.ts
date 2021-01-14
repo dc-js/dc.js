@@ -11,6 +11,9 @@ import { CFMultiAdapter } from '../data/c-f-multi-adapter';
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.
  */
 export class StackMixin extends CoordinateGridMixin {
+    /**
+     * @hidden
+     */
     public _conf: IStackMixinConf;
 
     private _stackLayout: Stack<any, { [p: string]: number }, string>;
@@ -43,6 +46,9 @@ export class StackMixin extends CoordinateGridMixin {
         return this._conf;
     }
 
+    /**
+     * Stack based charts need specialized data provider that can provide more than one series.
+     */
     public dataProvider(): CFMultiAdapter;
     public dataProvider(dataProvider): this;
     public dataProvider(dataProvider?) {
@@ -52,6 +58,10 @@ export class StackMixin extends CoordinateGridMixin {
         return super.dataProvider(dataProvider);
     }
 
+    /**
+     * @category Ninja
+     * @see {@link BaseMixin.data}
+     */
     public data() {
         let layers: any[] = this.dataProvider().data();
         layers = layers.filter(l => this._isLayerVisible(l.name));
@@ -107,7 +117,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     /**
-     * Hide all stacks on the chart with the given name.
+     * Hide the stack with the given name.
      * The chart must be re-rendered for this change to appear.
      */
     public hideStack(stackName) {
@@ -116,7 +126,7 @@ export class StackMixin extends CoordinateGridMixin {
     }
 
     /**
-     * Show all stacks on the chart with the given name.
+     * Make stack with the given name visible.
      * The chart must be re-rendered for this change to appear.
      */
     public showStack(stackName) {
@@ -154,6 +164,9 @@ export class StackMixin extends CoordinateGridMixin {
         return add(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
 
+    /**
+     * @hidden
+     */
     protected titleFn(stackName: string): TitleAccessor {
         return (this._conf.titles && this._conf.titles[stackName]) || this._conf.title;
     }
@@ -173,6 +186,9 @@ export class StackMixin extends CoordinateGridMixin {
         return this;
     }
 
+    /**
+     * @hidden
+     */
     protected _ordinalXDomain() {
         const flat = this._flattenStack().map(d => d.data);
         const ordered = this._computeOrderedGroups(flat);

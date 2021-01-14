@@ -455,11 +455,11 @@ export class ScatterPlot extends CoordinateGridMixin {
         this._symbol.size(oldSize);
     }
 
-    public createBrushHandlePaths(): void {
+    public _createBrushHandlePaths(): void {
         // no handle paths for poly-brushes
     }
 
-    public extendBrush(brushSelection) {
+    public _extendBrush(brushSelection) {
         if (this._conf.round) {
             brushSelection[0] = brushSelection[0].map(this._conf.round);
             brushSelection[1] = brushSelection[1].map(this._conf.round);
@@ -467,7 +467,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         return brushSelection;
     }
 
-    public brushIsEmpty(brushSelection) {
+    public _brushIsEmpty(brushSelection) {
         return (
             !brushSelection ||
             brushSelection[0][0] >= brushSelection[1][0] ||
@@ -485,7 +485,7 @@ export class ScatterPlot extends CoordinateGridMixin {
         // TODO: data type of brush selection changes after scale.invert, need to introduce one more variable
 
         // Testing with pixels is more reliable
-        let brushIsEmpty = this.brushIsEmpty(brushSelection);
+        let brushIsEmpty = this._brushIsEmpty(brushSelection);
 
         if (brushSelection) {
             brushSelection = brushSelection.map(point =>
@@ -495,13 +495,13 @@ export class ScatterPlot extends CoordinateGridMixin {
                 })
             );
 
-            brushSelection = this.extendBrush(brushSelection);
+            brushSelection = this._extendBrush(brushSelection);
 
             // The rounding process might have made brushSelection empty, so we need to recheck
-            brushIsEmpty = brushIsEmpty && this.brushIsEmpty(brushSelection);
+            brushIsEmpty = brushIsEmpty && this._brushIsEmpty(brushSelection);
         }
 
-        this.redrawBrush(brushSelection, false);
+        this._redrawBrush(brushSelection, false);
 
         const ranged2DFilter = brushIsEmpty ? null : new RangedTwoDimensionalFilter(brushSelection);
 
@@ -511,13 +511,13 @@ export class ScatterPlot extends CoordinateGridMixin {
         }, constants.EVENT_DELAY);
     }
 
-    public redrawBrush(brushSelection, doTransition) {
+    public _redrawBrush(brushSelection, doTransition) {
         // override default x axis brush from parent chart
-        const gBrush = this.gBrush();
+        const gBrush = this._gBrush;
 
         if (this._conf.brushOn && gBrush) {
             if (this.resizing()) {
-                this.setBrushExtents(doTransition);
+                this._setBrushExtents(doTransition);
             }
 
             if (!brushSelection) {
