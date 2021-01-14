@@ -20,8 +20,14 @@ interface MinimalBase {
 // tslint:disable-next-line:variable-name
 export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     return class extends Base {
+        /**
+         * @hidden
+         */
         public _conf: IColorMixinConf;
 
+        /**
+         * @hidden
+         */
         public _colorHelper: AbstractColorHelper;
 
         constructor(...args: any[]) {
