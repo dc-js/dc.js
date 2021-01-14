@@ -96,6 +96,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
                 return this._colorHelper;
             }
             this._colorHelper = colorHelper;
+            this._colorHelper.colorAccessor = this._conf.colorAccessor;
             return this;
         }
 
