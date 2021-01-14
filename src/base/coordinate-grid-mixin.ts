@@ -7,7 +7,7 @@ import { zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
 import { BrushBehavior, brushX } from 'd3-brush';
 import { Selection } from 'd3-selection';
 
-import { ColorMixin, IColorMixin } from './color-mixin';
+import { ColorMixin } from './color-mixin';
 import { MarginMixin } from './margin-mixin';
 import { optionalTransition, transition } from '../core/core';
 import { UnitsInteger, UnitsOrdinal } from '../core/units';
@@ -39,7 +39,7 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * Coordinate Grid is an abstract base chart designed to support a number of coordinate grid based
  * concrete chart types, e.g. bar chart, line chart, and bubble chart.
  */
-export class CoordinateGridMixin extends ColorMixin(MarginMixin) implements IColorMixin {
+export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     public _conf: ICoordinateGridMixinConf;
 
     private _parent: Selection<SVGElement, any, any, any>;

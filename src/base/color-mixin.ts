@@ -7,31 +7,10 @@ import { AbstractColorHelper } from './colors/abstract-color-helper';
 import { ColorScaleHelper } from './colors/color-scale-helper';
 import { OrdinalColors } from './colors/ordinal-colors';
 import { IBaseMixinConf } from './i-base-mixin-conf';
-import { BaseMixin } from './base-mixin';
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);
     data();
-}
-
-export interface IColorMixin extends BaseMixin {
-    configure(conf: IColorMixinConf): this;
-    conf(): IColorMixinConf;
-
-    colorHelper(): AbstractColorHelper;
-    colorHelper(colorHelper: AbstractColorHelper): this;
-
-    /**
-     * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
-     * @method getColor
-     */
-    getColor(d, i?: number): string;
-
-    /**
-     * Set the domain by determining the min and max values as retrieved by
-     * {@link IColorMixinConf.colorAccessor | .colorAccessor} over the chart's dataset.
-     */
-    calculateColorDomain(): this;
 }
 
 /**

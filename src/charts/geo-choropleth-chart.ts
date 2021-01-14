@@ -2,7 +2,7 @@ import { geoAlbersUsa, geoPath, GeoPath, GeoProjection } from 'd3-geo';
 import { select, Selection } from 'd3-selection';
 
 import { BaseMixin } from '../base/base-mixin';
-import { ColorMixin, IColorMixin } from '../base/color-mixin';
+import { ColorMixin } from '../base/color-mixin';
 import { transition } from '../core/core';
 import { logger } from '../core/logger';
 import { events } from '../core/events';
@@ -19,7 +19,7 @@ import { adaptHandler } from '../core/d3compat';
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/vc/index.html | US Venture Capital Landscape 2011}
  */
-export class GeoChoroplethChart extends ColorMixin(BaseMixin) implements IColorMixin {
+export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
     public _conf: IGeoChoroplethChartConf;
 
     private _geoPath: GeoPath;

@@ -5,7 +5,7 @@ import { BubbleMixin } from '../base/bubble-mixin';
 import { transition } from '../core/core';
 import { constants } from '../core/constants';
 import { nameToId } from '../core/utils';
-import { ColorMixin, IColorMixin } from '../base/color-mixin';
+import { ColorMixin } from '../base/color-mixin';
 import { ChartGroupType, ChartParentType, SVGGElementSelection } from '../core/types';
 import { IBubbleOverlayConf } from './i-bubble-overlay-conf';
 import { adaptHandler } from '../core/d3compat';
@@ -23,7 +23,7 @@ const BUBBLE_CLASS = 'bubble';
  * Examples:
  * - {@link http://dc-js.github.com/dc.js/crime/index.html | Canadian City Crime Stats}
  */
-export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) implements IColorMixin {
+export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
     public _conf: IBubbleOverlayConf;
 
     private _g: Selection<SVGGElement, any, any, any>;

@@ -3,7 +3,7 @@ import { Arc, arc, DefaultArcObject, Pie, pie } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 
-import { ColorMixin, IColorMixin } from '../base/color-mixin';
+import { ColorMixin } from '../base/color-mixin';
 import { BaseMixin } from '../base/base-mixin';
 import { transition } from '../core/core';
 import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
@@ -23,7 +23,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
  */
 
-export class PieChart extends ColorMixin(BaseMixin) implements IColorMixin {
+export class PieChart extends ColorMixin(BaseMixin) {
     public _conf: IPieChartConf;
 
     private _sliceCssClass: string;

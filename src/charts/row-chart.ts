@@ -3,7 +3,7 @@ import { Axis, axisBottom } from 'd3-axis';
 import { scaleLinear } from 'd3-scale';
 
 import { MarginMixin } from '../base/margin-mixin';
-import { ColorMixin, IColorMixin } from '../base/color-mixin';
+import { ColorMixin } from '../base/color-mixin';
 import { transition } from '../core/core';
 import { Selection } from 'd3-selection';
 import {
@@ -23,7 +23,7 @@ import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
  * - {@link http://dc-js.github.com/dc.js/ | Nasdaq 100 Index}
  */
 
-export class RowChart extends ColorMixin(MarginMixin) implements IColorMixin {
+export class RowChart extends ColorMixin(MarginMixin) {
     public _conf: IRowChartConf;
 
     private _g: Selection<SVGGElement, any, any, any>;

@@ -7,7 +7,7 @@ import { interpolate } from 'd3-interpolate';
 import { transition } from '../core/core';
 import { arraysIdentical, toHierarchy } from '../core/utils';
 import { events } from '../core/events';
-import { ColorMixin, IColorMixin } from '../base/color-mixin';
+import { ColorMixin } from '../base/color-mixin';
 import { BaseMixin } from '../base/base-mixin';
 import { constants } from '../core/constants';
 import { BadArgumentException } from '../core/bad-argument-exception';
@@ -29,7 +29,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * When filtering, the sunburst chart creates instances of {@link HierarchyFilter}.
  *
  */
-export class SunburstChart extends ColorMixin(BaseMixin) implements IColorMixin {
+export class SunburstChart extends ColorMixin(BaseMixin) {
     public _conf: ISunburstChartConf;
 
     private _sliceCssClass: string;
