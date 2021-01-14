@@ -172,15 +172,15 @@ export class CompositeChart extends CoordinateGridMixin {
         }
     }
 
-    public renderYAxis() {
+    public _renderYAxis() {
         if (this._leftYAxisChildren().length !== 0) {
-            this.renderYAxisAt('y', this.yAxis(), this.margins().left);
-            this.renderYAxisLabel('y', this.yAxisLabel(), -90);
+            this._renderYAxisAt('y', this.yAxis(), this.margins().left);
+            this._renderYAxisLabel('y', this.yAxisLabel(), -90);
         }
 
         if (this._rightYAxisChildren().length !== 0) {
-            this.renderYAxisAt('yr', this.rightYAxis(), this.width() - this.margins().right);
-            this.renderYAxisLabel(
+            this._renderYAxisAt('yr', this.rightYAxis(), this.width() - this.margins().right);
+            this._renderYAxisLabel(
                 'yr',
                 this.rightYAxisLabel(),
                 90,
@@ -243,10 +243,10 @@ export class CompositeChart extends CoordinateGridMixin {
             this.rightY().domain([ranges.ryAxisMin, ranges.ryAxisMax]);
         }
         if (needRange) {
-            this.rightY().rangeRound([this.yAxisHeight(), 0]);
+            this.rightY().rangeRound([this._yAxisHeight(), 0]);
         }
 
-        this.rightY().range([this.yAxisHeight(), 0]);
+        this.rightY().range([this._yAxisHeight(), 0]);
         this.rightYAxis(this.rightYAxis().scale(this.rightY()));
 
         // In D3v4 create a RightAxis
@@ -264,10 +264,10 @@ export class CompositeChart extends CoordinateGridMixin {
             this.y().domain([ranges.lyAxisMin, ranges.lyAxisMax]);
         }
         if (needRange) {
-            this.y().rangeRound([this.yAxisHeight(), 0]);
+            this.y().rangeRound([this._yAxisHeight(), 0]);
         }
 
-        this.y().range([this.yAxisHeight(), 0]);
+        this.y().range([this._yAxisHeight(), 0]);
         this.yAxis(this.yAxis().scale(this.y()));
 
         // In D3v4 create a LeftAxis

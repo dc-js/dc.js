@@ -52,7 +52,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
 
     public plotData(): void {
         this.calculateRadiusDomain();
-        this.r().range([this.MIN_RADIUS, this.xAxisLength() * this._conf.maxBubbleRelativeSize]);
+        this.r().range([this.MIN_RADIUS, this._xAxisLength() * this._conf.maxBubbleRelativeSize]);
 
         const data = this.data();
         let bubbleG: SVGGElementSelection = this.chartBodyG()

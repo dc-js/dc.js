@@ -164,6 +164,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * and redraw the axes. (`.rescale()` is called automatically when the x or y scale is replaced
      * with {@link CoordinateGridMixin.x | .x()} or {@link CoordinateGridMixin.y | .y()}, and has
      * no effect on elastic scales.)
+     *
+     * @category Intermediate
      */
     public rescale(): this {
         this._unitCount = undefined;
@@ -173,6 +175,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     /**
      * Get or set if the chart is currently resizing.
+     *
+     * @category Intermediate
      */
     public resizing(): boolean;
     public resizing(resizing: boolean): this;
@@ -394,11 +398,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         // please can't we always use rangeBands for bar charts?
         if (this.isOrdinal()) {
             this._x
-                .range([0, this.xAxisLength()])
+                .range([0, this._xAxisLength()])
                 .paddingInner(this._fRangeBandPadding)
                 .paddingOuter(this._useOuterPadding() ? this._fOuterRangeBandPadding : 0);
         } else {
-            this._x.range([0, this.xAxisLength()]);
+            this._x.range([0, this._xAxisLength()]);
         }
 
         this._xAxis = this._xAxis.scale(this.x());
@@ -407,10 +411,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * TODO check if it needs to be public
      * @hidden
      */
-    public renderXAxis(g: SVGGElementSelection): void {
+    protected _renderXAxis(g: SVGGElementSelection): void {
         let axisXG = g.select('g.x');
 
         if (axisXG.empty()) {
@@ -427,7 +430,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('class', X_AXIS_LABEL_CLASS)
                 .attr(
                     'transform',
-                    `translate(${this.margins().left + this.xAxisLength() / 2},${
+                    `translate(${this.margins().left + this._xAxisLength() / 2},${
                         this.height() - this._xAxisLabelPadding
                     })`
                 )
@@ -442,7 +445,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             .call(this._xAxis);
         transition(axisXLab, this._conf.transitionDuration, this._conf.transitionDelay).attr(
             'transform',
-            `translate(${this.margins().left + this.xAxisLength() / 2},${
+            `translate(${this.margins().left + this._xAxisLength() / 2},${
                 this.height() - this._xAxisLabelPadding
             })`
         );
@@ -503,9 +506,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * TODO do we need this public
+     * @hidden
      */
-    public xAxisLength(): number {
+    protected _xAxisLength(): number {
         return this.effectiveWidth();
     }
 
@@ -530,6 +533,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this._conf.useRightYAxis ? axisRight(undefined) : axisLeft(undefined);
     }
 
+    /**
+     * @hidden
+     */
     protected _prepareYAxis(g: SVGGElementSelection) {
         if (this._y === undefined || this._conf.elasticY) {
             if (this._y === undefined) {
@@ -537,10 +543,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             }
             const _min = this.yAxisMin() || 0;
             const _max = this.yAxisMax() || 0;
-            this._y.domain([_min, _max]).rangeRound([this.yAxisHeight(), 0]);
+            this._y.domain([_min, _max]).rangeRound([this._yAxisHeight(), 0]);
         }
 
-        this._y.range([this.yAxisHeight(), 0]);
+        this._y.range([this._yAxisHeight(), 0]);
 
         if (!this._yAxis) {
             this._yAxis = this._createYAxis();
@@ -552,9 +558,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * TODO do we need this public
+     * Composite chart needs it, hence public
+     *
+     * @hidden
      */
-    public renderYAxisLabel(
+    public _renderYAxisLabel(
         axisClass: string,
         text: string,
         rotation: number,
@@ -563,7 +571,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         labelXPosition = labelXPosition || this._yAxisLabelPadding;
 
         let axisYLab = this.g().select(`text.${Y_AXIS_LABEL_CLASS}.${axisClass}-label`);
-        const labelYPosition = this.margins().top + this.yAxisHeight() / 2;
+        const labelYPosition = this.margins().top + this._yAxisHeight() / 2;
         if (axisYLab.empty() && text) {
             axisYLab = this.g()
                 .append('text')
@@ -585,9 +593,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * TODO do we need this public
+     * Composite chart needs it, hence public
+     *
+     * @hidden
      */
-    public renderYAxisAt(axisClass: string, axis: Axis<any>, position: number): void {
+    public _renderYAxisAt(axisClass: string, axis: Axis<any>, position: number): void {
         let axisYG: SVGGElementSelection = this.g().select(`g.${axisClass}`);
         if (axisYG.empty()) {
             axisYG = this.g()
@@ -602,18 +612,20 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * TODO do we need this public
+     * Composite chart needs it, hence public
+     *
+     * @hidden
      */
-    public renderYAxis() {
+    public _renderYAxis() {
         const axisPosition: number = this._conf.useRightYAxis
             ? this.width() - this.margins().right
             : this._yAxisX();
-        this.renderYAxisAt('y', this._yAxis, axisPosition);
+        this._renderYAxisAt('y', this._yAxis, axisPosition);
         const labelPosition: number = this._conf.useRightYAxis
             ? this.width() - this._yAxisLabelPadding
             : this._yAxisLabelPadding;
         const rotation: number = this._conf.useRightYAxis ? 90 : -90;
-        this.renderYAxisLabel('y', this.yAxisLabel(), rotation, labelPosition);
+        this._renderYAxisLabel('y', this.yAxisLabel(), rotation, labelPosition);
     }
 
     /**
@@ -652,7 +664,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .append('line')
                 .attr('x1', 1)
                 .attr('y1', d => scale(d))
-                .attr('x2', this.xAxisLength())
+                .attr('x2', this._xAxisLength())
                 .attr('y2', d => scale(d))
                 .attr('opacity', 0);
             transition(linesGEnter, this._conf.transitionDuration, this._conf.transitionDelay).attr(
@@ -664,7 +676,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             transition(lines, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('x1', 1)
                 .attr('y1', d => scale(d))
-                .attr('x2', this.xAxisLength())
+                .attr('x2', this._xAxisLength())
                 .attr('y2', d => scale(d));
 
             // exit
@@ -800,9 +812,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
-     * TODO do we need this public
+     * @hidden
      */
-    public yAxisHeight() {
+    protected _yAxisHeight() {
         return this.effectiveHeight();
     }
 
@@ -1061,8 +1073,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         const padding = this._conf.clipPadding * 2;
 
         appendOrSelect(chartBodyClip, 'rect')
-            .attr('width', this.xAxisLength() + padding)
-            .attr('height', this.yAxisHeight() + padding)
+            .attr('width', this._xAxisLength() + padding)
+            .attr('height', this._yAxisHeight() + padding)
             .attr('transform', `translate(-${this._conf.clipPadding}, -${this._conf.clipPadding})`);
     }
 
@@ -1112,11 +1124,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this.plotData();
 
         if (this._conf.elasticX || this._resizing || render) {
-            this.renderXAxis(this.g());
+            this._renderXAxis(this.g());
         }
 
         if (this._conf.elasticY || this._resizing || render) {
-            this.renderYAxis();
+            this._renderYAxis();
         }
 
         if (render) {
@@ -1314,6 +1326,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      *
      * @see {@link focus}
      * @see {@link ICoordinateGridMixinConf.autoFocus}
+     *
+     * @category Intermediate
      */
     public refocused(): boolean {
         return !arraysEqual(this.x().domain(), this._xOriginalDomain);

@@ -51,6 +51,8 @@ export class MarginMixin extends BaseMixin {
 
     /**
      * Effective width of the chart excluding margins (in pixels).
+     *
+     * @category Intermediate
      */
     public effectiveWidth(): number {
         return this.width() - this.margins().left - this.margins().right;
@@ -58,6 +60,8 @@ export class MarginMixin extends BaseMixin {
 
     /**
      * Effective height of the chart excluding margins (in pixels).
+     *
+     * @category Intermediate
      */
     public effectiveHeight(): number {
         return this.height() - this.margins().top - this.margins().bottom;

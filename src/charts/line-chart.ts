@@ -519,7 +519,7 @@ export class LineChart extends StackMixin {
         const y = dot.attr('cy');
         const yAxisX = this._yAxisX() - this.margins().left;
         const yAxisRefPathD = `M${yAxisX} ${y}L${x} ${y}`;
-        const xAxisRefPathD = `M${x} ${this.yAxisHeight()}L${x} ${y}`;
+        const xAxisRefPathD = `M${x} ${this._yAxisHeight()}L${x} ${y}`;
         g.select(`path.${Y_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', yAxisRefPathD);
         g.select(`path.${X_AXIS_REF_LINE_CLASS}`).style('display', '').attr('d', xAxisRefPathD);
     }

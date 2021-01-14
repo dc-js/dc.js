@@ -43,6 +43,8 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
      * // create a bubble overlay chart on top of the '#chart-container2 svg' element using chart group A
      * var bubbleChart2 = new BubbleOverlay('#chart-container2', 'chartGroupA').svg(d3.select('#chart-container2 svg'));
      * ```
+     *
+     * @see {@link BaseMixin.constructor}
      */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
@@ -70,6 +72,25 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return this._conf;
     }
 
+    /**
+     * Usually generating an SVG Element is handled handled by dc internally.
+     * This chart, however, needs an SVG Element to be passed explicitly.
+     *
+     * @example
+     * ```
+     *   const caChart = new dc.BubbleOverlay("#ca-chart").svg(d3.select("#ca-chart svg"));
+     * ```
+     */
+    public svg(): Selection<SVGElement, any, any, any>;
+    public svg(svgElement): this;
+    public svg(svgElement?) {
+        if (!arguments.length) {
+            return super.svg();
+        }
+        super.svg(svgElement);
+        return this;
+    }
+    
     protected _doRender(): this {
         this._g = this._initOverlayG();
 

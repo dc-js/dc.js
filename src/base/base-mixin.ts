@@ -414,6 +414,7 @@ export class BaseMixin {
      * Resetting the SVGElement on a chart outside
      * of dc internals may have unexpected consequences.
      *
+     * @category Ninja
      * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/SVGElement | SVGElement}
      */
     public svg(): Selection<SVGElement, any, any, any>;
@@ -816,9 +817,10 @@ export class BaseMixin {
     }
 
     /**
-     * Need to be public as legend methods are used by Composite Charts
+     * List of items that will show as legends.
+     * The charts implement this method.
      *
-     * @hidden
+     * @category Ninja
      */
     public legendables(): LegendItem[] {
         // do nothing in base, should be overridden by sub-function

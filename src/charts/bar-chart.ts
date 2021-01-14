@@ -210,7 +210,7 @@ export class BarChart extends StackMixin {
             .attr('class', 'bar')
             .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .attr('x', d => this._barXPos(d))
-            .attr('y', this.yAxisHeight())
+            .attr('y', this._yAxisHeight())
             .attr('height', 0);
 
         // prettier-ignore
@@ -259,11 +259,11 @@ export class BarChart extends StackMixin {
                 this._barWidth = Math.floor(this.x().bandwidth());
             } else if (this._gap) {
                 this._barWidth = Math.floor(
-                    (this.xAxisLength() - (numberOfBars - 1) * this._gap) / numberOfBars
+                    (this._xAxisLength() - (numberOfBars - 1) * this._gap) / numberOfBars
                 );
             } else {
                 this._barWidth = Math.floor(
-                    this.xAxisLength() / (1 + this.barPadding()) / numberOfBars
+                    this._xAxisLength() / (1 + this.barPadding()) / numberOfBars
                 );
             }
 

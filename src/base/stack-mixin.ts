@@ -21,6 +21,11 @@ export class StackMixin extends CoordinateGridMixin {
 
     protected _dataProvider: CFMultiAdapter;
 
+    /**
+     * Create a new instance.
+     *
+     * @see {@link BaseMixin.constructor}
+     */
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
         super(parent, chartGroup);
 
@@ -37,17 +42,25 @@ export class StackMixin extends CoordinateGridMixin {
         this._hiddenStacks = {};
     }
 
+    /**
+     * @see {@link BaseMixin.configure}
+     */
     public configure(conf: IStackMixinConf): this {
         super.configure(conf);
         return this;
     }
 
+    /**
+     * @see {@link BaseMixin.conf}
+     */
     public conf(): IStackMixinConf {
         return this._conf;
     }
 
     /**
-     * Stack based charts need specialized data provider that can provide more than one series.
+     * Stack based charts need specialized data provider that can provide more than one series
+     *
+     * @see {@link BaseMixin.dataProvider}.
      */
     public dataProvider(): CFMultiAdapter;
     public dataProvider(dataProvider): this;
@@ -119,6 +132,8 @@ export class StackMixin extends CoordinateGridMixin {
     /**
      * Hide the stack with the given name.
      * The chart must be re-rendered for this change to appear.
+     *
+     * @category Intermediate
      */
     public hideStack(stackName) {
         this._hiddenStacks[stackName] = true;
@@ -128,6 +143,8 @@ export class StackMixin extends CoordinateGridMixin {
     /**
      * Make stack with the given name visible.
      * The chart must be re-rendered for this change to appear.
+     *
+     * @category Intermediate
      */
     public showStack(stackName) {
         this._hiddenStacks[stackName] = false;
@@ -138,11 +155,21 @@ export class StackMixin extends CoordinateGridMixin {
         return !this._hiddenStacks[layerName];
     }
 
+    /**
+     * @see {@link CoordinateGridMixin.yAxisMin}
+     *
+     * @category Intermediate
+     */
     public yAxisMin() {
         const m = min(this._flattenStack(), p => (p.y < 0 ? p.y + p.y0 : p.y0));
         return subtract(m, this._conf.yAxisPadding);
     }
 
+    /**
+     * @see {@link CoordinateGridMixin.yAxisMax}
+     *
+     * @category Intermediate
+     */
     public yAxisMax() {
         const m = max(this._flattenStack(), p => (p.y > 0 ? p.y + p.y0 : p.y0));
         return add(m, this._conf.yAxisPadding);
@@ -154,11 +181,21 @@ export class StackMixin extends CoordinateGridMixin {
         return this.data().flatMap(layer => layer.domainValues);
     }
 
+    /**
+     * @see {@link CoordinateGridMixin.xAxisMin}
+     *
+     * @category Intermediate
+     */
     public xAxisMin() {
         const m = min(this._flattenStack(), d => d.x);
         return subtract(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
     }
 
+    /**
+     * @see {@link CoordinateGridMixin.xAxisMax}
+     *
+     * @category Intermediate
+     */
     public xAxisMax() {
         const m = max(this._flattenStack(), d => d.x);
         return add(m, this._conf.xAxisPadding, this._conf.xAxisPaddingUnit);
@@ -175,6 +212,8 @@ export class StackMixin extends CoordinateGridMixin {
      * Gets or sets the stack layout algorithm, which computes a baseline for each stack and
      * propagates it to the next.
      * @see {@link https://github.com/d3/d3-3.x-api-reference/blob/master/Stack-Layout.md | d3.stackD3v3}
+     *
+     * @category Ninja
      */
     public stackLayout();
     public stackLayout(_stack): this;
@@ -195,6 +234,9 @@ export class StackMixin extends CoordinateGridMixin {
         return ordered.map(this._conf.keyAccessor);
     }
 
+    /**
+     * @see {@link BaseMixin.legendables}
+     */
     public legendables(): LegendItem[] {
         return this.dataProvider()
             .layers()
@@ -206,10 +248,16 @@ export class StackMixin extends CoordinateGridMixin {
             }));
     }
 
+    /**
+     * @hidden
+     */
     public isLegendableHidden(d: LegendItem) {
         return !this._isLayerVisible(d.name);
     }
 
+    /**
+     * @hidden
+     */
     public legendToggle(d: LegendItem) {
         if (this._conf.hidableStacks) {
             if (this.isLegendableHidden(d)) {
