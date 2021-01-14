@@ -253,7 +253,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             } else if (this._conf.excludedColor && !isFiltered) {
                 cColor = this._conf.excludedColor;
             } else {
-                cColor = this.getColor(d);
+                cColor = this._colorHelper.getColor(d, undefined);
             }
 
             let cSize: number = this._canvasElementSize(d, isFiltered);
@@ -309,7 +309,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             .append('path')
             .attr('class', 'symbol')
             .attr('opacity', 0)
-            .attr('fill', (d, i) => this.getColor(d, i))
+            .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .attr('transform', d => this._locator(d))
             .merge(symbols);
 
@@ -336,7 +336,7 @@ export class ScatterPlot extends CoordinateGridMixin {
                 } else if (this._conf.excludedColor && !this._filtered[i]) {
                     return this._conf.excludedColor;
                 } else {
-                    return this.getColor(d);
+                    return this._colorHelper.getColor(d, undefined);
                 }
             })
             .attr('transform', d => this._locator(d))
@@ -407,7 +407,7 @@ export class ScatterPlot extends CoordinateGridMixin {
             {
                 chart: this,
                 name: this.dataProvider().conf().groupName,
-                color: this.getColor(this.dataProvider().conf().groupName),
+                color: this._colorHelper.getColor(this.dataProvider().conf().groupName, undefined),
             },
         ];
     }

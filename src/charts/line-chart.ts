@@ -341,7 +341,7 @@ export class LineChart extends StackMixin {
         const path = layersEnter
             .append<SVGPathElement>('path')
             .attr('class', 'line')
-            .attr('stroke', (d, i) => this.getColor(d, i));
+            .attr('stroke', (d, i) => this._colorHelper.getColor(d, i));
 
         if (this._dashStyle) {
             // TODO: see https://github.com/dc-js/dc.js/issues/1723
@@ -355,7 +355,7 @@ export class LineChart extends StackMixin {
             this._conf.transitionDelay
         )
             // .ease('linear')
-            .attr('stroke', (d, i) => this.getColor(d, i))
+            .attr('stroke', (d, i) => this._colorHelper.getColor(d, i))
             .attr('d', d => this._safeD(_line(d.values)));
     }
 
@@ -374,7 +374,7 @@ export class LineChart extends StackMixin {
             layersEnter
                 .append('path')
                 .attr('class', 'area')
-                .attr('fill', (d, i) => this.getColor(d, i))
+                .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
 
             transition(
@@ -383,7 +383,7 @@ export class LineChart extends StackMixin {
                 this._conf.transitionDelay
             )
                 // .ease('linear')
-                .attr('fill', (d, i) => this.getColor(d, i))
+                .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
                 .attr('d', d => this._safeD(_area(d.values)));
         }
     }
@@ -431,8 +431,8 @@ export class LineChart extends StackMixin {
                     .attr('r', this._getDotRadius())
                     .style('fill-opacity', this._dataPointFillOpacity)
                     .style('stroke-opacity', this._dataPointStrokeOpacity)
-                    .attr('fill', (d, i) => this.getColor(d, i))
-                    .attr('stroke', (d, i) => this.getColor(d, i))
+                    .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
+                    .attr('stroke', (d, i) => this._colorHelper.getColor(d, i))
                     .on('mousemove', function () {
                         const dot = select(this);
                         chart._showDot(dot);
@@ -450,7 +450,7 @@ export class LineChart extends StackMixin {
                 transition(dotsEnterModify, this._conf.transitionDuration)
                     .attr('cx', d => safeNumber(this.x()(d.x)))
                     .attr('cy', d => safeNumber(this.y()(d.y + d.y0)))
-                    .attr('fill', (d, i) => this.getColor(d, i));
+                    .attr('fill', (d, i) => this._colorHelper.getColor(d, i));
 
                 dots.exit().remove();
             });

@@ -84,7 +84,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
                 'click',
                 adaptHandler(d => this.onClick(d))
             )
-            .attr('fill', (d, i) => this.getColor(d, i))
+            .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .attr('r', 0);
 
         bubbleG = bubbleGEnter.merge(bubbleG);
@@ -105,7 +105,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         transition(bubbleG, this._conf.transitionDuration, this._conf.transitionDelay)
             .attr('transform', d => this._bubbleLocator(d))
             .select(`circle.${this.BUBBLE_CLASS}`)
-            .attr('fill', (d, i) => this.getColor(d, i))
+            .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .attr('r', d => this.bubbleR(d))
             .attr('opacity', d => (this.bubbleR(d) > 0 ? 1 : 0));
 

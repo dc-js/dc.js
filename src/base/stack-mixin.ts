@@ -186,7 +186,7 @@ export class StackMixin extends CoordinateGridMixin {
                 chart: this,
                 name: layer.name,
                 hidden: !this._isLayerVisible(layer.name),
-                color: this.getColor(layer, i),
+                color: this._colorHelper.getColor(layer, i),
             }));
     }
 

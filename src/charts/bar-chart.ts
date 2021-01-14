@@ -208,7 +208,7 @@ export class BarChart extends StackMixin {
             .enter()
             .append('rect')
             .attr('class', 'bar')
-            .attr('fill', (d, i) => this.getColor(d, i))
+            .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .attr('x', d => this._barXPos(d))
             .attr('y', this.yAxisHeight())
             .attr('height', 0);
@@ -240,7 +240,7 @@ export class BarChart extends StackMixin {
             })
             .attr('width', this._barWidth)
             .attr('height', d => this._barHeight(d))
-            .attr('fill', (d, i) => this.getColor(d, i))
+            .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .select('title')
             .text(pluck2('data', this.titleFn(data.name)));
 

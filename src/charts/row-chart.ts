@@ -214,7 +214,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
             .attr('transform', (d, i) => `translate(0,${(i + 1) * this._conf.gap + i * height})`)
             .select('rect')
             .attr('height', height)
-            .attr('fill', (d, i) => this.getColor(d, i))
+            .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .on(
                 'click',
                 adaptHandler(d => this._onClick(d))

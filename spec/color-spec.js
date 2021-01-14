@@ -2,7 +2,7 @@
 describe('dc.colorMixin', () => {
     function colorTest(chart, domain, test) {
         chart.colorDomain(domain);
-        return (test || domain).map((d, i) => chart.getColor(d, i));
+        return (test || domain).map((d, i) => chart.colorHelper().getColor(d, i));
     }
 
     function identity (d) { return d; }

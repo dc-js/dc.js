@@ -250,7 +250,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
             .each(function (d) {
-                const color = chart.getColor(d, 0);
+                const color = chart._colorHelper.getColor(d, 0);
                 select(this).select('rect.box').attr('fill', color);
                 select(this).selectAll('circle.data').attr('fill', color);
             });

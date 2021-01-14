@@ -536,7 +536,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
     }
 
     private _fill(d, i?: number): string {
-        return this.getColor(d.data, i);
+        return this._colorHelper.getColor(d.data, i);
     }
 
     public onClick(d, i?): void {
@@ -601,7 +601,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 others: d.others,
                 chart: this,
             };
-            legendable.color = this.getColor(d, i);
+            legendable.color = this._colorHelper.getColor(d, i);
             return legendable;
         });
     }

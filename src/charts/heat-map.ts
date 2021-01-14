@@ -186,7 +186,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('y', (d, i) => rows(d._value))
             .attr('rx', this._conf.xBorderRadius)
             .attr('ry', this._conf.yBorderRadius)
-            .attr('fill', (d, i) => this.getColor(d, i))
+            .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
             .attr('width', boxWidth)
             .attr('height', boxHeight);
 

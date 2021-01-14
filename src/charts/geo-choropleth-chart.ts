@@ -175,7 +175,7 @@ export class GeoChoroplethChart extends ColorMixin(BaseMixin) {
 
         transition(paths, this._conf.transitionDuration, this._conf.transitionDelay).attr(
             'fill',
-            (d, i) => this.getColor(data[this._geoJson(layerIndex).keyAccessor(d)], i)
+            (d, i) => this._colorHelper.getColor(data[this._geoJson(layerIndex).keyAccessor(d)], i)
         );
     }
 

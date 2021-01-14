@@ -104,7 +104,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
                     .append('circle')
                     .attr('class', BUBBLE_CLASS)
                     .attr('r', 0)
-                    .attr('fill', (d, i) => this.getColor(d, i))
+                    .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
                     .on(
                         'click',
                         adaptHandler(d => this.onClick(d))
@@ -166,7 +166,7 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
 
             transition(circle, this._conf.transitionDuration, this._conf.transitionDelay)
                 .attr('r', d => this.bubbleR(d))
-                .attr('fill', (d, i) => this.getColor(d, i));
+                .attr('fill', (d, i) => this._colorHelper.getColor(d, i));
 
             this.doUpdateLabels(nodeG);
 

@@ -77,13 +77,6 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
         }
 
         /**
-         * Get the color for the datum d and counter i. This is used internally by charts to retrieve a color.
-         */
-        public getColor(d, i?: number): string {
-            return this._colorHelper.getColor(d, i);
-        }
-
-        /**
          * Set the domain by determining the min and max values as retrieved by
          * {@link IColorMixinConf.colorAccessor | .colorAccessor} over the chart's dataset.
          */

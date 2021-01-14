@@ -475,7 +475,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
     }
 
     private _fill(d, i: number): string {
-        return this.getColor(d.data, i);
+        return this._colorHelper.getColor(d.data, i);
     }
 
     private _onClick(d): void {
@@ -526,7 +526,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
                 others: d.others,
                 chart: this,
             };
-            legendable.color = this.getColor(d, i);
+            legendable.color = this._colorHelper.getColor(d, i);
             return legendable;
         });
     }
