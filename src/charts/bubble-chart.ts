@@ -50,6 +50,9 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         this._bubbleLocator = d => `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
     }
 
+    /**
+     * hidden
+     */
     public plotData(): void {
         this.calculateRadiusDomain();
         this.r().range([this.MIN_RADIUS, this._xAxisLength() * this._conf.maxBubbleRelativeSize]);
@@ -133,10 +136,16 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
         return y;
     }
 
+    /**
+     * @hidden
+     */
     public renderBrush(): void {
         // override default x axis brush from parent chart
     }
 
+    /**
+     * @hidden
+     */
     public redrawBrush(brushSelection: DCBrushSelection, doTransition: boolean): void {
         // override default x axis brush from parent chart
         this.fadeDeselectedArea(brushSelection);

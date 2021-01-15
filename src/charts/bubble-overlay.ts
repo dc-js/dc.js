@@ -24,6 +24,9 @@ const BUBBLE_CLASS = 'bubble';
  * - {@link http://dc-js.github.com/dc.js/crime/index.html | Canadian City Crime Stats}
  */
 export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
+    /**
+     * @hidden
+     */
     public _conf: IBubbleOverlayConf;
 
     private _g: Selection<SVGGElement, any, any, any>;
@@ -63,11 +66,17 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         });
     }
 
+    /**
+     * @see {@link BaseMixin.configure}
+     */
     public configure(conf: IBubbleOverlayConf): this {
         super.configure(conf);
         return this;
     }
 
+    /**
+     * @see {@link BaseMixin.conf}
+     */
     public conf(): IBubbleOverlayConf {
         return this._conf;
     }
@@ -90,7 +99,10 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         super.svg(svgElement);
         return this;
     }
-    
+
+    /**
+     * @hidden
+     */
     protected _doRender(): this {
         this._g = this._initOverlayG();
 
@@ -168,6 +180,9 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         return nodeG;
     }
 
+    /**
+     * @hidden
+     */
     protected _doRedraw(): this {
         this._updateBubbles();
 
@@ -195,7 +210,14 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
         });
     }
 
-    public debug(flag: boolean): this {
+    /**
+     * While creating a new chart, sometimes it may be tricky to find intended coordinates
+     * of the bubbles.
+     * Calling this method with `true` will enable displaying x/y coordinates on mouse move.
+     *
+     * It is intended to be used only during development.
+     */
+    public debug(flag: boolean = false): this {
         if (flag) {
             let debugG: SVGGElementSelection = this.select(`g.${constants.DEBUG_GROUP_CLASS}`);
 

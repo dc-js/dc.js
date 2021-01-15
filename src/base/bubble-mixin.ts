@@ -15,8 +15,17 @@ interface MinimalBase {
     filter(filter: any);
     selectAll(arg0: string);
     hasFilter(f?);
+    /**
+     * @hidden
+     */
     highlightSelected(e): void;
+    /**
+     * @hidden
+     */
     fadeDeselected(e): void;
+    /**
+     * @hidden
+     */
     resetHighlight(e): void;
 }
 
@@ -27,11 +36,26 @@ interface MinimalBase {
 export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     // @ts-ignore
     return class extends Base {
+        /**
+         * @hidden
+         */
         public _conf: IBubbleMixinConf;
 
+        /**
+         * @hidden
+         */
         public BUBBLE_NODE_CLASS: string;
+        /**
+         * @hidden
+         */
         public BUBBLE_CLASS: string;
+        /**
+         * @hidden
+         */
         public MIN_RADIUS: number;
+        /**
+         * @hidden
+         */
         public _r: MinimalRadiusScale;
 
         constructor(...args: any[]) {
@@ -55,15 +79,24 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             this._r = scaleLinear().domain([0, 100]);
         }
 
+        /**
+         * @see {@link BaseMixin.configure}
+         */
         public configure(conf: IBubbleMixinConf): this {
             super.configure(conf);
             return this;
         }
 
+        /**
+         * @see {@link BaseMixin.conf}
+         */
         public conf(): IBubbleMixinConf {
             return this._conf;
         }
 
+        /**
+         * @category Ninja
+         */
         public data() {
             const data = super.data();
             if (this._conf.sortBubbleSize) {
@@ -90,12 +123,18 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             return this;
         }
 
+        /**
+         * @hidden
+         */
         public calculateRadiusDomain(): void {
             if (this._conf.elasticRadius) {
                 this.r().domain([this.rMin(), this.rMax()]);
             }
         }
 
+        /**
+         * @hidden
+         */
         public rMin(): number {
             let values: number[] = this.data().map(this._conf.radiusValueAccessor);
             if (this._conf.excludeElasticZero) {
@@ -104,10 +143,16 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             return min(values);
         }
 
+        /**
+         * @hidden
+         */
         public rMax(): number {
             return max(this.data(), e => this._conf.radiusValueAccessor(e));
         }
 
+        /**
+         * @hidden
+         */
         public bubbleR(d): number {
             const value = this._conf.radiusValueAccessor(d);
             let r = this.r()(value);
@@ -117,22 +162,37 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             return r;
         }
 
+        /**
+         * @hidden
+         */
         public _labelFunction(d): string | number {
             return this._conf.label(d);
         }
 
+        /**
+         * @hidden
+         */
         public _shouldLabel(d): boolean {
             return this.bubbleR(d) > this._conf.minRadiusWithLabel;
         }
 
+        /**
+         * @hidden
+         */
         public _labelOpacity(d): number {
             return this._shouldLabel(d) ? 1 : 0;
         }
 
+        /**
+         * @hidden
+         */
         public _labelPointerEvent(d): string {
             return this._shouldLabel(d) ? 'all' : 'none';
         }
 
+        /**
+         * @hidden
+         */
         public _doRenderLabel(bubbleGEnter): void {
             if (this._conf.renderLabel) {
                 let label = bubbleGEnter.select('text');
@@ -160,6 +220,9 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             }
         }
 
+        /**
+         * @hidden
+         */
         public doUpdateLabels(bubbleGEnter): void {
             if (this._conf.renderLabel) {
                 const labels = bubbleGEnter
@@ -174,10 +237,16 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             }
         }
 
+        /**
+         * @hidden
+         */
         public _titleFunction(d): string | number {
             return this._conf.title(d);
         }
 
+        /**
+         * @hidden
+         */
         public _doRenderTitles(g): void {
             if (this._conf.renderTitle) {
                 const title = g.select('title');
@@ -188,6 +257,9 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             }
         }
 
+        /**
+         * @hidden
+         */
         public doUpdateTitles(g): void {
             if (this._conf.renderTitle) {
                 g.select('title').text(d => this._titleFunction(d));
@@ -207,6 +279,9 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             return this;
         }
 
+        /**
+         * @hidden
+         */
         public fadeDeselectedArea(selection: SVGGElementSelection): void {
             if (this.hasFilter()) {
                 const chart = this;
@@ -225,10 +300,17 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             }
         }
 
+        /**
+         * @hidden
+         */
         public isSelectedNode(d: any) {
             return this.hasFilter(d.key);
         }
 
+        /**
+         * @category Ninja
+         * @see {@link BaseMixin.onClick}
+         */
         public onClick(d: any) {
             const filter = d.key;
             events.trigger(() => {
