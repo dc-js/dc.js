@@ -96,6 +96,23 @@ library by Mikola Lysenko.</p>
           projectCostDimension = ndx.dimension(function(d) { return d.Cost; }),
           projectCostGroup = projectCostDimension.group();
 
+      class MyDataAdapter extends dc.CFMultiAdapter {
+          applyFilters () {
+              const filters = this.filters;
+              const dim = this.conf().dimension;
+
+              if(filters.length > 0) {
+                  if(filters.length !== 1)
+                      throw new Error('not expecting more than one range filter');
+                  var range = filters[0];
+                  dim.filterFunction(function(i) {
+                      return !(i[1] < range[0].getTime() || i[0] > range[1].getTime());
+                  })
+              }
+              else dim.filterAll();
+          }
+      }
+
       monthChart
           .width(400)
           .height(300)
@@ -107,23 +124,11 @@ library by Mikola Lysenko.</p>
           .brushOn(true)
           .yAxisLabel("Number of Projects")
           .xAxisLabel("Month")
-          .dimension(intervalDimension)
-          .group(projectsPerMonthGroup)
+          .dataProvider(new MyDataAdapter({
+              dimension: intervalDimension,
+              group: projectsPerMonthGroup
+          }))
           .controlsUseVisibility(true);
-
-      monthChart.filterHandler(function(dim, filters) {
-          if(filters && filters.length) {
-              if(filters.length !== 1)
-                  throw new Error('not expecting more than one range filter');
-              var range = filters[0];
-              dim.filterFunction(function(i) {
-                  return !(i[1] < range[0].getTime() || i[0] > range[1].getTime());
-              })
-          }
-          else dim.filterAll();
-          return filters;
-      });
-
 
       costChart
           .width(400)

@@ -34,6 +34,12 @@ d3.csv("morley.csv").then(function(experiments) {
       runDimension        = ndx.dimension(function(d) {return +d.Run;}),
       speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
 
+    class MyDataAdapter extends dc.CFMultiAdapter {
+        addFilter(filter) {
+            this.filters = [filter];
+        }
+    }
+
   chart
     .width(768)
     .height(480)
@@ -41,10 +47,11 @@ d3.csv("morley.csv").then(function(experiments) {
     .xUnits(dc.units.ordinal)
     .brushOn(true)
     .yAxisLabel("This is the Y Axis!")
-    .dimension(runDimension)
-    .group(speedSumGroup)
+    .dataProvider(new MyDataAdapter({
+          dimension: runDimension,
+          group: speedSumGroup
+    }))
     .controlsUseVisibility(true)
-    .addFilterHandler(function(filters, filter) {return [filter];}); // this
     chart.render();
 });
 

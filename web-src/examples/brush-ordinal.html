@@ -83,10 +83,12 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
 
         class MyDataAdapter extends dc.CFMultiAdapter {
             applyFilters() {
-                var filters = this._filters;
+                var filters = this.filters;
+                const dimension = this.conf().dimension;
 
-                if(!filters || !filters.length) {
+                if(filters.length === 0) {
                     dimension.filter(null);
+                    return;
                 }
                 console.assert(filters.length === 1);
                 console.assert(filters[0].filterType === 'RangedFilter');
@@ -103,7 +105,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
         bar = new dc.BarChart('#bar');
         var linear_domain = [-0.5, short.length - 0.5];
         bar
-            .dataProvider(new MyDataAdapter())
+            .dataProvider(new MyDataAdapter({dimension, group}))
             .width(1000).height(300)
             .margins({left: 75, top: 0, right: 10, bottom: 140})
             .x(d3.scaleLinear().domain(linear_domain))
@@ -113,8 +115,6 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
             .yAxisLabel('counts')
             .elasticY(true)
             .brushOn(true)
-            .dimension(dimension)
-            .group(group)
             .title(kv => kv.key);
 
         bar.xAxis()
