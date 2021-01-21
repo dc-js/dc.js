@@ -87,16 +87,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
         }
 
         /**
-         * Convenience method to set the color scale to
-         * {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales d3.scaleOrdinal} with
-         * range `r`.
-         */
-        public ordinalColors(r: string[]): this {
-            this.colorHelper(new OrdinalColors(r));
-            return this;
-        }
-
-        /**
          * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
          */
         public linearColors(r: [string, string]): this {

@@ -83,8 +83,28 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
         }
 
         /**
+         * Ordinal colors are used most commonly in `dc` charts.
+         * This call is a shorthand for using an {@linkcode OrdinalColors} instance
+         * as {@linkcode colorHelper}.
+         *
+         * ```
+         * chart.ordinalColors(colorList); // same as chart.colorHelper(new OrdinalColors(colorList));
+         * ```
+         *
+         * @see {@link OrdinalColors}
+         * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales}
+         */
+        public ordinalColors(colorList: string[]): this {
+            this.colorHelper(new OrdinalColors(colorList));
+            return this;
+        }
+
+        /**
          * Set the domain by determining the min and max values as retrieved by
          * {@link IColorMixinConf.colorAccessor | .colorAccessor} over the chart's dataset.
+         *
+         * This is useful only for certain type of color scales.
+         * In particular it will not work with {@linkcode ordinalColors}.
          *
          * @category Intermediate
          */
