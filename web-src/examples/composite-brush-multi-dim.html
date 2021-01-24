@@ -59,16 +59,22 @@ var ndx = crossfilter(data),
     }),
     groupX = dimX.group();
 
+// If you need brushing you need to use dimension from any chart type other than scatter plot
+// in the parent chart. Alternatively you need to stop using `shareFilters` (which is the default):
+// `chart.dataProvider.configure({shareFilters: false});`.
+// See https://github.com/dc-js/dc.js/issues/1788#issuecomment-766388520
 chart.width(768)
     .height(480)
     .x(d3.scaleLinear().domain([0, 16]))
     .yAxisLabel("y")
     .xAxisLabel("x")
     .clipPadding(10)
-    .dimension(dimXY)
-    .group(groupXY)
+    .dimension(dimX)
+    .group(groupX)
     .compose([
         new dc.ScatterPlot(chart)
+            .dimension(dimXY)
+            .group(groupXY)
             .symbol(d3.symbolStar)
             .ordinalColors(['red'])
             .symbolSize(8)
