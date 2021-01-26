@@ -1,5 +1,6 @@
 {
   "out": "web/html2",
+  "readme": "docs/welcome.base.md",
   "entryPoints": ["src/index.ts"],
   "excludeExternals": true,
   "excludePrivate": true,
