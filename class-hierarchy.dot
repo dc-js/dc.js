@@ -1,5 +1,5 @@
 digraph dcHierarchy {
-graph [rankdir=LR, ranksep=0.5]
+graph [rankdir=LR, ranksep=0.35]
 node [fontname="sans-serif", fontsize=9.5, margin="0.05,0.05"]
 node [style=filled, fillcolor=palegreen]
 { node [style=filled, fillcolor=lightblue] BaseMixin ColorMixin MarginMixin BubbleMixin CoordinateGridMixin StackMixin }
