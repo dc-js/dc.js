@@ -411,6 +411,7 @@ module.exports = function (grunt) {
         grunt.config('watch', {
             typedoc: grunt.config('watch').typedoc,
             docco: grunt.config('watch').docco,
+            websrc: grunt.config('watch').websrc,
         });
         grunt.task.run('watch');
     });
