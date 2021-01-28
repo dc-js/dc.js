@@ -182,9 +182,9 @@ export function CoordinateGridMixinExt<TBase extends Constructor<Intermediate>>(
         public renderHorizontalGridLines(renderHorizontalGridLines: boolean): this;
         public renderHorizontalGridLines(renderHorizontalGridLines?) {
             if (!arguments.length) {
-                return this._conf.renderHorizontalGridLine;
+                return this._conf.renderHorizontalGridLines;
             }
-            this.configure({ renderHorizontalGridLine: renderHorizontalGridLines });
+            this.configure({ renderHorizontalGridLines: renderHorizontalGridLines });
             return this;
         }
 

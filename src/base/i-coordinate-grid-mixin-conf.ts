@@ -12,7 +12,7 @@ export interface ICoordinateGridMixinConf extends IMarginMixinConf, IColorMixinC
     readonly autoFocus?: boolean;
     readonly zoomOutRestrict?: boolean;
     readonly zoomScale?: [number, number];
-    readonly renderHorizontalGridLine?: boolean;
+    readonly renderHorizontalGridLines?: boolean;
     readonly renderVerticalGridLines?: boolean;
     readonly round?: RoundFn;
     readonly elasticY?: boolean;

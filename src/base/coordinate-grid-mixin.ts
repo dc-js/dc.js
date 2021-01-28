@@ -94,7 +94,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             yAxisPadding: 0,
             elasticY: false,
             round: undefined,
-            renderHorizontalGridLine: false,
+            renderHorizontalGridLines: false,
             renderVerticalGridLines: false,
             zoomScale: [1, Infinity],
             zoomOutRestrict: true,
@@ -638,7 +638,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     ) {
         let gridLineG: SVGGElementSelection = g.select(`g.${HORIZONTAL_CLASS}`);
 
-        if (this._conf.renderHorizontalGridLine) {
+        if (this._conf.renderHorizontalGridLines) {
             // see https://github.com/d3/d3-axis/blob/master/src/axis.js#L48
             let ticks: any;
             if (axis.tickValues()) {
