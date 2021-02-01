@@ -68,7 +68,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
             innerRadius: 0,
             ringSizes: this.defaultRingSizes(),
             minAngleForLabel: DEFAULT_MIN_ANGLE_FOR_LABEL,
-            externalLabelRadius: undefined,
+            externalLabels: undefined,
         });
 
         this.dataProvider().configure({
@@ -254,7 +254,7 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
                 .append('text')
                 .attr('class', (d, i) => {
                     let classes = `${this._sliceCssClass} _${i}`;
-                    if (this._conf.externalLabelRadius) {
+                    if (this._conf.externalLabels) {
                         classes += ' external';
                     }
                     return classes;
@@ -578,10 +578,10 @@ export class SunburstChart extends ColorMixin(BaseMixin) {
 
     private _labelPosition(d, _arc) {
         let centroid;
-        if (this._conf.externalLabelRadius) {
+        if (this._conf.externalLabels) {
             centroid = arc()
-                .outerRadius(this._computedRadius + this._conf.externalLabelRadius)
-                .innerRadius(this._computedRadius + this._conf.externalLabelRadius)
+                .outerRadius(this._computedRadius + this._conf.externalLabels)
+                .innerRadius(this._computedRadius + this._conf.externalLabels)
                 .centroid(d);
         } else {
             centroid = _arc.centroid(d);

@@ -64,7 +64,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
             innerRadius: 0,
             externalRadiusPadding: 0,
             minAngleForLabel: DEFAULT_MIN_ANGLE_FOR_LABEL,
-            externalLabelRadius: undefined,
+            externalLabels: undefined,
             drawPaths: false,
         });
 
@@ -248,7 +248,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
                 .append('text')
                 .attr('class', (d, i) => {
                     let classes = `${this._sliceCssClass} ${this._labelCssClass} _${i}`;
-                    if (this._conf.externalLabelRadius) {
+                    if (this._conf.externalLabels) {
                         classes += ' external';
                     }
                     return classes;
@@ -270,7 +270,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
                     })
                 );
             this._positionLabels(labelsEnter, arcs);
-            if (this._conf.externalLabelRadius && this._conf.drawPaths) {
+            if (this._conf.externalLabels && this._conf.drawPaths) {
                 this._updateLabelPaths(pieData, arcs);
             }
         }
@@ -309,7 +309,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
             .outerRadius(
                 this._computedRadius -
                     this._conf.externalRadiusPadding +
-                    this._conf.externalLabelRadius
+                    this._conf.externalLabels
             )
             .innerRadius(this._computedRadius - this._conf.externalRadiusPadding);
         const tranNodes = transition(
@@ -369,7 +369,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
                 .selectAll<SVGTextElement, any>(`text.${this._labelCssClass}`)
                 .data(pieData);
             this._positionLabels(labels, arcs);
-            if (this._conf.externalLabelRadius && this._conf.drawPaths) {
+            if (this._conf.externalLabels && this._conf.drawPaths) {
                 this._updateLabelPaths(pieData, arcs);
             }
         }
@@ -494,17 +494,17 @@ export class PieChart extends ColorMixin(BaseMixin) {
 
     private _labelPosition(d, _arc: Arc<any, DefaultArcObject>) {
         let centroid: number[];
-        if (this._conf.externalLabelRadius) {
+        if (this._conf.externalLabels) {
             centroid = arc()
                 .outerRadius(
                     this._computedRadius -
                         this._conf.externalRadiusPadding +
-                        this._conf.externalLabelRadius
+                        this._conf.externalLabels
                 )
                 .innerRadius(
                     this._computedRadius -
                         this._conf.externalRadiusPadding +
-                        this._conf.externalLabelRadius
+                        this._conf.externalLabels
                 )
                 .centroid(d);
         } else {

@@ -10,7 +10,7 @@ export interface RingSizeSpecs {
 
 export interface ISunburstChartConf extends IColorMixinConf {
     readonly emptyTitle?: string;
-    readonly externalLabelRadius?: number;
+    readonly externalLabels?: number;
     readonly minAngleForLabel?: number;
     readonly ringSizes?: RingSizeSpecs;
     readonly innerRadius?: number;

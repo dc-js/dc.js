@@ -95,15 +95,15 @@ export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo
      * The argument specifies the extra radius to be added for slice labels.
      */
     public externalLabels(): number;
-    public externalLabels(externalLabelRadius: number): this;
-    public externalLabels(externalLabelRadius?) {
+    public externalLabels(externalLabels: number): this;
+    public externalLabels(externalLabels?) {
         if (arguments.length === 0) {
-            return this._conf.externalLabelRadius;
-        } else if (externalLabelRadius) {
+            return this._conf.externalLabels;
+        } else if (externalLabels) {
             // TODO: figure out why there is special handling, do we need it?
-            this.configure({ externalLabelRadius: externalLabelRadius });
+            this.configure({ externalLabels: externalLabels });
         } else {
-            this.configure({ externalLabelRadius: undefined });
+            this.configure({ externalLabels: undefined });
         }
 
         return this;
