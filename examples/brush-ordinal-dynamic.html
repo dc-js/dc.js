@@ -11,7 +11,8 @@
 <div class="container">
 <script type="text/javascript" src="header.js"></script>
 <p>This example demonstrates brushing on an ordinal bar chart, by mapping the values to
-integers and specifying a linear scale. The data is sorted alphabetically.</p>
+integers and specifying a linear scale. The data is sorted by descending value in one
+fake group, and then another fake group provides the integer/ordinal mapping.</p>
 <div id="bar"></div>
 <div id="first-letters"></div>
 
@@ -31,65 +32,92 @@ integers and specifying a linear scale. The data is sorted alphabetically.</p>
   }
   </style>
   <script type="text/javascript">
-      // index a key -> i and i -> key
-      class Mapper {
-          constructor (keys) {
-              this._int2ord = [];
-              this._ord2int = {};
+    function sort_group(group, sort) {
+        return {
+            all: function() {
+                return group.all().slice().sort(sort);
+            }
+        };
+    }
 
-              keys.forEach(key => {
-                  if(!this._ord2int.hasOwnProperty(key)) {
-                      this._ord2int[key] = this._int2ord.length;
-                      this._int2ord.push(key);
-                  }
-              });
-          }
-
-          ord2int(ord) {
-              return this._ord2int[ord];
-          }
-
-          int2ord(i) {
-              return this._int2ord[i];
-          }
-
-          length() {
-              return this._int2ord.length;
-          }
-      }
+    // index a group key -> i and i -> key
+    function ordinal_to_linear_group(group, sort) {
+        var _ord2int, _int2ord;
+        return {
+            all: function() {
+                var ret = group.all();
+                _ord2int = {};
+                _int2ord = [];
+                ret.forEach(function(d, i) {
+                    _ord2int[d.key] = i;
+                    _int2ord[i] = d.key;
+                });
+                return ret;
+            },
+            ord2int: function(o) {
+                if(!_ord2int)
+                    this.all();
+                return _ord2int[o];
+            },
+            int2ord: function(i) {
+                if(!_int2ord)
+                    this.all();
+                return _int2ord[i];
+            }
+        };
+    }
 
     // phrases generated with https://www.fourmilab.ch/javascrypt/pass_phrase.html
     var bar;
     d3.json("wide-ordinal.json").then(function(wide) {
         var short = wide.slice(0, 50);
 
-        const keys = short.map(d => d.key).sort((a,b) => d3.ascending(a,b));
-        const mappings =  new Mapper(keys);
-
         // dummy crossfilter taking group data and regrouping it to the same thing
         var cf = crossfilter(short),
-            dimension = cf.dimension(function(d) {return mappings.ord2int(d.key);}),
+            dimension = cf.dimension(function(d) {return d.key;}),
             group = dimension.group().reduceSum(function(d) {return d.value;});
 
+        group = ordinal_to_linear_group(sort_group(group, function(a, b) {
+            return d3.descending(a.value, b.value);
+        }));
+
         bar = new dc.BarChart('#bar');
-        var linear_domain = [-0.5, mappings.length() - 0.5];
+        var linear_domain = [-0.5, short.length - 0.5];
         bar
             .width(1000).height(300)
             .margins({left: 75, top: 0, right: 10, bottom: 140})
             .x(d3.scaleLinear().domain(linear_domain))
             .xUnits(dc.units.integers)
+            .keyAccessor(kv => group.ord2int(kv.key))
             .centerBar(true)
             .yAxisLabel('counts')
             .elasticY(true)
             .brushOn(true)
             .dimension(dimension)
             .group(group)
-            .title(kv => mappings.int2ord(kv.key)); // Titles would not show with brush on
+            .title(kv => kv.key);
 
         bar.xAxis()
-            .tickValues(d3.range(mappings.length()))
-            .tickFormat(function(d) { return mappings.int2ord(d); });
+            .tickValues(d3.range(short.length))
+            .tickFormat(function(d) { return group.int2ord(d); });
 
+        bar.filterHandler(function(dimension, filters) {
+            if(!filters || !filters.length) {
+                dimension.filter(null);
+                return filters;
+            }
+            console.assert(filters.length === 1);
+            console.assert(filters[0].filterType === 'RangedFilter');
+            var inside = group.all().filter(function(kv) {
+                var i = group.ord2int(kv.key);
+                return filters[0][0] <= i && i < filters[0][1];
+            }).map(function(kv) { return kv.key; });
+            dimension.filterFunction(function(d) {
+                return inside.includes(d);
+            });
+            return filters;
+        });
+        bar.on('preRedraw', chart =>  chart.rescale());
         // display a row chart of first letters, to test filtering
         var letterDimension = cf.dimension(function(d) {
             return d.key.split(' ').map(function(s) { return s[0]; });
@@ -105,6 +133,7 @@ integers and specifying a linear scale. The data is sorted alphabetically.</p>
             .group(letterGroup);
 
         dc.renderAll();
+
     });
 
 </script>

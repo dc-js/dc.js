@@ -1,7 +1,7 @@
 /*!
- *  dc 4.2.3
+ *  dc 4.2.4
  *  http://dc-js.github.io/dc.js/
- *  Copyright 2012-2020 Nick Zhu & the dc.js Developers
+ *  Copyright 2012-2021 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +23,7 @@
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
 }(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Collection, d3Array, d3Dispatch, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.2.3";
+  const version = "4.2.4";
 
   class BadArgumentException extends Error { }
 
@@ -1191,6 +1191,10 @@
       _f.resolution = precision;
       return _f;
   };
+
+  // d3v6 has removed `d3.mouse` in favor of `d3.pointer`
+  const d3compatPointer =
+      typeof d3Selection.pointer === 'function' ? (evt, elem) => d3Selection.pointer(evt, elem) : (evt, elem) => d3Selection.mouse(elem);
 
   // d3v6 has changed the arguments for event handlers.
   // We are creating a wrapper which detects if the first argument is an event, which indicated d3@v6
@@ -6716,11 +6720,11 @@
                   .append('rect')
                   .attr('width', this.width())
                   .attr('height', this.height())
-                  .on('mousemove', () => {
-                      const position = d3Selection.mouse(debugG.node());
+                  .on('mousemove', adaptHandler((d, evt) => {
+                      const position = d3compatPointer(evt, debugG.node());
                       const msg = `${position[0]}, ${position[1]}`;
                       debugText.text(msg);
-                  });
+                  }));
           } else {
               this.selectAll('.debug').remove();
           }
@@ -13423,6 +13427,7 @@
   exports.config = config;
   exports.constants = constants;
   exports.d3Box = d3Box;
+  exports.d3compatPointer = d3compatPointer;
   exports.dataCount = dataCount;
   exports.dataGrid = dataGrid;
   exports.dataTable = dataTable;
