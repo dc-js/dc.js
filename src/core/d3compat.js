@@ -1,6 +1,10 @@
-import {event} from 'd3-selection';
+import {event, mouse, pointer} from 'd3-selection';
 import {nest} from 'd3-collection';
 import {groups} from 'd3-array';
+
+// d3v6 has removed `d3.mouse` in favor of `d3.pointer`
+export const d3compatPointer =
+    typeof pointer === 'function' ? (evt, elem) => pointer(evt, elem) : (evt, elem) => mouse(elem);
 
 // d3v6 has changed the arguments for event handlers.
 // We are creating a wrapper which detects if the first argument is an event, which indicated d3@v6

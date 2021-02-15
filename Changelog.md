@@ -1,3 +1,7 @@
+## 4.2.4
+* Fix use of `d3.mouse` removed in d3@6, by Deepak Kumar ([#1807](https://github.com/dc-js/dc.js/issues/1807) / [#1808](https://github.com/dc-js/dc.js/pull/1808))
+* Simpler example of ordinal brushing, by Deepak Kumar ([#1809](https://github.com/dc-js/dc.js/pull/1809))
+
 ## 4.2.3
 * Fix undefined this on SeriesChart redraw, by Maxime Rouyrre ([#1800](https://github.com/dc-js/dc.js/pull/1800))
 * Export d3 compat functions allowing it to be used to simplify d3@6 compatibility in examples.

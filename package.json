@@ -1,6 +1,6 @@
 {
   "name": "dc",
-  "version": "4.2.3",
+  "version": "4.2.4",
   "license": "Apache-2.0",
   "copyright": "2020",
   "description": "A multi-dimensional charting library built to work natively with crossfilter and rendered using d3.js ",

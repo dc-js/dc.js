@@ -1,11 +1,9 @@
-import {mouse} from 'd3-selection';
-
 import {BaseMixin} from '../base/base-mixin';
 import {BubbleMixin} from '../base/bubble-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
-import {adaptHandler} from '../core/d3compat';
+import {adaptHandler, d3compatPointer} from '../core/d3compat';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -202,11 +200,11 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
                 .append('rect')
                 .attr('width', this.width())
                 .attr('height', this.height())
-                .on('mousemove', () => {
-                    const position = mouse(debugG.node());
+                .on('mousemove', adaptHandler((d, evt) => {
+                    const position = d3compatPointer(evt, debugG.node());
                     const msg = `${position[0]}, ${position[1]}`;
                     debugText.text(msg);
-                });
+                }));
         } else {
             this.selectAll('.debug').remove();
         }
