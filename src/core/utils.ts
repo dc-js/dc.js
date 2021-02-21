@@ -20,7 +20,6 @@ export function sortBy(data, ordering: (d: any) => any) {
 
 /**
  * Print a single value filter.
- * @method printSingleValue
  */
 export function printSingleValue(filter): string {
     let s: string = `${filter}`;
@@ -30,15 +29,13 @@ export function printSingleValue(filter): string {
     } else if (typeof filter === 'string') {
         s = filter;
     } else if (isFloat(filter)) {
-        s = printSingleValue.fformat(filter);
+        s = config.floatFormat(filter);
     } else if (isInteger(filter)) {
         s = `${Math.round(filter)}`;
     }
 
     return s;
 }
-// TODO: move it to config
-printSingleValue.fformat = format('.2f');
 
 // convert 'day' to d3.timeDay and similar
 function _toTimeFunc(t) {

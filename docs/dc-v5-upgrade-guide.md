@@ -302,6 +302,7 @@ List of accessors that have moved to conf:
   - utils.isNumber -> {@link isNumber}
   - utils.nameToId -> {@link nameToId}
   - utils.printSingleValue -> {@link printSingleValue}
+  - utils.printSingleValue.fformat -> {@link Config.floatFormat | config.floatFormat}
   - utils.safeNumber -> {@link safeNumber}
   - utils.subtract -> {@link subtract}
   - utils.toHierarchy -> {@link toHierarchy}

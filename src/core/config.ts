@@ -2,6 +2,7 @@ import { timeFormat } from 'd3-time-format';
 
 import { logger } from './logger';
 import { ColorsList } from './types';
+import { format } from 'd3-format';
 
 /**
  * General configuration
@@ -12,6 +13,11 @@ export class Config {
      * by default d3.timeFormat('%m/%d/%Y')
      */
     public dateFormat: (date: Date) => string;
+
+    /**
+     * The default floating point format for dc.js.
+     */
+    public floatFormat = format('.2f');
 
     /**
      * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
