@@ -5415,6 +5415,7 @@ concrete chart types, e.g. bar chart, line chart, and bubble chart.
     * [.xAxisPaddingUnit([unit])](#CoordinateGridMixin+xAxisPaddingUnit) ⇒ <code>String</code> \| [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)
     * [.xUnitCount()](#CoordinateGridMixin+xUnitCount) ⇒ <code>Number</code>
     * [.useRightYAxis([useRightYAxis])](#CoordinateGridMixin+useRightYAxis) ⇒ <code>Boolean</code> \| [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)
+    * [.useTopXAxis([useTopXAxis])](#CoordinateGridMixin+useTopXAxis) ⇒ <code>Boolean</code> \| [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)
     * [.isOrdinal()](#CoordinateGridMixin+isOrdinal) ⇒ <code>Boolean</code>
     * [.xAxisLabel([labelText], [padding])](#CoordinateGridMixin+xAxisLabel) ⇒ <code>String</code>
     * [.yAxisLabel([labelText], [padding])](#CoordinateGridMixin+yAxisLabel) ⇒ <code>String</code> \| [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)
@@ -5686,6 +5687,19 @@ chart.
 | Param | Type | Default |
 | --- | --- | --- |
 | [useRightYAxis] | <code>Boolean</code> | <code>false</code> | 
+
+<a name="CoordinateGridMixin+useTopXAxis"></a>
+
+### coordinateGridMixin.useTopXAxis([useTopXAxis]) ⇒ <code>Boolean</code> \| [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)
+Gets or sets whether the chart should be drawn with a top axis instead of a bottom axis. When
+used with a chart in a composite chart, allows both top and bottom X axes to be shown on a
+chart.
+
+**Kind**: instance method of [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)  
+
+| Param | Type | Default |
+| --- | --- | --- |
+| [useTopXAxis] | <code>Boolean</code> | <code>false</code> | 
 
 <a name="CoordinateGridMixin+isOrdinal"></a>
 

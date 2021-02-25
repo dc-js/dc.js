@@ -2,7 +2,7 @@ import {schemeCategory10} from 'd3-scale-chromatic';
 import {timeDay} from 'd3-time';
 import {max, min} from 'd3-array';
 import {scaleBand, scaleLinear, scaleOrdinal} from 'd3-scale';
-import {axisBottom, axisLeft, axisRight} from 'd3-axis';
+import {axisTop, axisBottom, axisLeft, axisRight} from 'd3-axis';
 import {zoom, zoomIdentity} from 'd3-zoom';
 import {brushX} from 'd3-brush';
 
@@ -45,7 +45,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._x = undefined;
         this._origX = undefined; // Will hold original scale in case of zoom
         this._xOriginalDomain = undefined;
-        this._xAxis = axisBottom();
+        this._xAxis = null;
         this._xUnits = units.integers;
         this._xAxisPadding = 0;
         this._xAxisPaddingUnit = timeDay;
@@ -93,6 +93,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._fRangeBandPadding = 0;
 
         this._useRightYAxis = false;
+        this._useTopXAxis = false;
     }
 
     /**
@@ -430,6 +431,35 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     /**
+     * Gets or sets whether the chart should be drawn with a top axis instead of a bottom axis. When
+     * used with a chart in a composite chart, allows both top and bottom X axes to be shown on a
+     * chart.
+     * @param {Boolean} [useTopXAxis=false]
+     * @returns {Boolean|CoordinateGridMixin}
+     */
+    useTopXAxis (useTopXAxis) {
+        if (!arguments.length) {
+            return this._useTopXAxis;
+        }
+
+        // We need to warn if value is changing after self._yAxis was created
+        if (this._useTopXAxis !== useTopXAxis && this._xAxis) {
+            logger.warn('Value of useTopXAxis has been altered, after xAxis was created. ' +
+                'You might get unexpected yAxis behavior. ' +
+                'Make calls to useTopXAxis sooner in your chart creation process.');
+        }
+
+        this._useTopXAxis = useTopXAxis;
+
+        // adjust default top margin to make room for the labels
+        if (this._useTopXAxis) {
+            this.margins().top = 30;
+        }
+
+        return this;
+    }
+
+    /**
      * Returns true if the chart is using ordinal xUnits ({@link units.ordinal units.ordinal}, or false
      * otherwise. Most charts behave differently with ordinal data and use the result of this method to
      * trigger the appropriate logic.
@@ -448,6 +478,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return groups.map(this.keyAccessor());
     }
 
+    _createXAxis () {
+        return this._useTopXAxis ? axisTop() : axisBottom();
+    }
+
+    // eslint-disable-next-line complexity
     _prepareXAxis (g, render) {
         if (!this.isOrdinal()) {
             if (this.elasticX()) {
@@ -488,6 +523,10 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             this._x.range([0, this.xAxisLength()]);
         }
 
+        if (!this._xAxis) {
+            this._xAxis = this._createXAxis()
+        }
+
         this._xAxis = this._xAxis.scale(this.x());
 
         this._renderVerticalGridLines(g);
@@ -503,11 +542,12 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
 
         let axisXLab = g.select(`text.${X_AXIS_LABEL_CLASS}`);
+        const axisXLabY = (this._useTopXAxis ? 0 : this.height()) +
+            this._xAxisLabelPadding * (this._useTopXAxis ? 1 : -1);
         if (axisXLab.empty() && this.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
-                .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${ 
-                    this.height() - this._xAxisLabelPadding})`)
+                .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${axisXLabY})`)
                 .attr('text-anchor', 'middle');
         }
         if (this.xAxisLabel() && axisXLab.text() !== this.xAxisLabel()) {
@@ -518,8 +558,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
             .attr('transform', `translate(${this.margins().left},${this._xAxisY()})`)
             .call(this._xAxis);
         transition(axisXLab, this.transitionDuration(), this.transitionDelay())
-            .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${ 
-                this.height() - this._xAxisLabelPadding})`);
+            .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${axisXLabY})`);
     }
 
     _renderVerticalGridLines (g) {
@@ -564,7 +603,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
     }
 
     _xAxisY () {
-        return (this.height() - this.margins().bottom);
+        return this._useTopXAxis ? this.margins().top : this.height() - this.margins().bottom;
     }
 
     xAxisLength () {
