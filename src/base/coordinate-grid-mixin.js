@@ -455,7 +455,8 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._useTopXAxis = useTopXAxis;
 
         // adjust default top margin to make room for the labels
-        if (this._useTopXAxis) {
+        if (this._useTopXAxis && this.margins().top < 30)
+        {
             this.margins().top = 30;
         }
 
