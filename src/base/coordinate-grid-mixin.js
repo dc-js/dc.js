@@ -323,6 +323,9 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     xAxis (xAxis) {
         if (!arguments.length) {
+            if (!this._xAxis) {
+                this._xAxis = this._createXAxis();
+            }
             return this._xAxis;
         }
         this._xAxis = xAxis;
