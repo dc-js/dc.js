@@ -546,8 +546,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
 
         let axisXLab = g.select(`text.${X_AXIS_LABEL_CLASS}`);
-        const axisXLabY = (this._useTopXAxis ? 0 : this.height()) +
-            this._xAxisLabelPadding * (this._useTopXAxis ? 1 : -1);
+        const axisXLabY = this._useTopXAxis ? this._xAxisLabelPadding : (this.height() - this._xAxisLabelPadding);
         if (axisXLab.empty() && this.xAxisLabel()) {
             axisXLab = g.append('text')
                 .attr('class', X_AXIS_LABEL_CLASS)
