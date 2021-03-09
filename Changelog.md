@@ -1,3 +1,7 @@
+## 4.2.5
+* Option [useTopXAxis](https://dc-js.github.io/dc.js/docs/html/CoordinateGridMixin.html#useTopXAxis) to show coordinate grid X axis at top of chart, by BERÉNYI Attila ([#1815](https://github.com/dc-js/dc.js/issues/1815) / [#1816](https://github.com/dc-js/dc.js/pull/1816))
+* Add source for bar colors example ([#1817](https://github.com/dc-js/dc.js/issues/1817))
+
 ## 4.2.4
 * Fix use of `d3.mouse` removed in d3@6, by Deepak Kumar ([#1807](https://github.com/dc-js/dc.js/issues/1807) / [#1808](https://github.com/dc-js/dc.js/pull/1808))
 * Simpler example of ordinal brushing, by Deepak Kumar ([#1809](https://github.com/dc-js/dc.js/pull/1809))
