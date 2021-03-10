@@ -1,11 +1,11 @@
-// https://d3js.org v6.3.1 Copyright 2020 Mike Bostock
+// https://d3js.org v6.5.0 Copyright 2021 Mike Bostock
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
 typeof define === 'function' && define.amd ? define(['exports'], factory) :
 (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.d3 = global.d3 || {}));
 }(this, (function (exports) { 'use strict';
 
-var version = "6.3.1";
+var version = "6.5.0";
 
 function ascending(a, b) {
   return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
@@ -268,6 +268,68 @@ function fsum(values, valueof) {
   return +adder;
 }
 
+class InternMap extends Map {
+  constructor(entries = [], key = keyof) {
+    super();
+    Object.defineProperties(this, {_intern: {value: new Map()}, _key: {value: key}});
+    for (const [key, value] of entries) this.set(key, value);
+  }
+  get(key) {
+    return super.get(intern_get(this, key));
+  }
+  has(key) {
+    return super.has(intern_get(this, key));
+  }
+  set(key, value) {
+    return super.set(intern_set(this, key), value);
+  }
+  delete(key) {
+    return super.delete(intern_delete(this, key));
+  }
+}
+
+class InternSet extends Set {
+  constructor(values = [], key = keyof) {
+    super();
+    Object.defineProperties(this, {_intern: {value: new Map()}, _key: {value: key}});
+    for (const value of values) this.add(value);
+  }
+  has(value) {
+    return super.has(intern_get(this, value));
+  }
+  add(value) {
+    return super.add(intern_set(this, value));
+  }
+  delete(value) {
+    return super.delete(intern_delete(this, value));
+  }
+}
+
+function intern_get({_intern, _key}, value) {
+  const key = _key(value);
+  return _intern.has(key) ? _intern.get(key) : value;
+}
+
+function intern_set({_intern, _key}, value) {
+  const key = _key(value);
+  if (_intern.has(key)) return _intern.get(key);
+  _intern.set(key, value);
+  return value;
+}
+
+function intern_delete({_intern, _key}, value) {
+  const key = _key(value);
+  if (_intern.has(key)) {
+    value = _intern.get(value);
+    _intern.delete(key);
+  }
+  return value;
+}
+
+function keyof(value) {
+  return value !== null && typeof value === "object" ? value.valueOf() : value;
+}
+
 function identity(x) {
   return x;
 }
@@ -304,7 +366,7 @@ function unique(values) {
 function nest(values, map, reduce, keys) {
   return (function regroup(values, i) {
     if (i >= keys.length) return reduce(values);
-    const groups = new Map();
+    const groups = new InternMap();
     const keyof = keys[i++];
     let index = -1;
     for (const value of values) {
@@ -318,6 +380,40 @@ function nest(values, map, reduce, keys) {
     }
     return map(groups);
   })(values, 0);
+}
+
+function permute(source, keys) {
+  return Array.from(keys, key => source[key]);
+}
+
+function sort(values, ...F) {
+  if (typeof values[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
+  values = Array.from(values);
+  let [f = ascending] = F;
+  if (f.length === 1 || F.length > 1) {
+    const index = Uint32Array.from(values, (d, i) => i);
+    if (F.length > 1) {
+      F = F.map(f => values.map(f));
+      index.sort((i, j) => {
+        for (const f of F) {
+          const c = ascending(f[i], f[j]);
+          if (c) return c;
+        }
+      });
+    } else {
+      f = values.map(f);
+      index.sort((i, j) => ascending(f[i], f[j]));
+    }
+    return permute(values, index);
+  }
+  return values.sort(f);
+}
+
+function groupSort(values, reduce, key) {
+  return (reduce.length === 1
+    ? sort(rollup(values, reduce, key), (([ak, av], [bk, bv]) => ascending(av, bv) || ascending(ak, bk)))
+    : sort(group(values, key), (([ak, av], [bk, bv]) => reduce(av, bv) || ascending(ak, bk))))
+    .map(([key]) => key);
 }
 
 var array = Array.prototype;
@@ -711,10 +807,6 @@ function pair(a, b) {
   return [a, b];
 }
 
-function permute(source, keys) {
-  return Array.from(keys, key => source[key]);
-}
-
 function sequence(start, stop, step) {
   start = +start, stop = +stop, step = (n = arguments.length) < 2 ? (stop = start, start = 0, 1) : n < 3 ? 1 : +step;
 
@@ -933,16 +1025,6 @@ function reduce(values, reducer, value) {
 function reverse(values) {
   if (typeof values[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
   return Array.from(values).reverse();
-}
-
-function sort(values, f = ascending) {
-  if (typeof values[Symbol.iterator] !== "function") throw new TypeError("values is not iterable");
-  values = Array.from(values);
-  if (f.length === 1) {
-    f = values.map(f);
-    return permute(values, values.map((d, i) => i).sort((i, j) => ascending(f[i], f[j])));
-  }
-  return values.sort(f);
 }
 
 function difference(values, ...others) {
@@ -19027,6 +19109,8 @@ function zoom() {
 exports.Adder = Adder;
 exports.Delaunay = Delaunay;
 exports.FormatSpecifier = FormatSpecifier;
+exports.InternMap = InternMap;
+exports.InternSet = InternSet;
 exports.Voronoi = Voronoi;
 exports.active = active;
 exports.arc = arc;
@@ -19204,6 +19288,7 @@ exports.gray = gray;
 exports.greatest = greatest;
 exports.greatestIndex = greatestIndex;
 exports.group = group;
+exports.groupSort = groupSort;
 exports.groups = groups;
 exports.hcl = hcl;
 exports.hierarchy = hierarchy;

@@ -1,5 +1,5 @@
 /*!
- *  dc 4.2.4
+ *  dc 4.2.5
  *  http://dc-js.github.io/dc.js/
  *  Copyright 2012-2021 Nick Zhu & the dc.js Developers
  *  https://github.com/dc-js/dc.js/blob/master/AUTHORS
@@ -23,7 +23,7 @@
   (global = global || self, factory(global.dc = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3));
 }(this, (function (exports, d3TimeFormat, d3Time, d3Format, d3Selection, d3Collection, d3Array, d3Dispatch, d3Scale, d3Interpolate, d3ScaleChromatic, d3Axis, d3Zoom, d3Brush, d3Timer, d3Shape, d3Geo, d3Ease, d3Hierarchy) { 'use strict';
 
-  const version = "4.2.4";
+  const version = "4.2.5";
 
   class BadArgumentException extends Error { }
 
@@ -3481,7 +3481,7 @@
           this._x = undefined;
           this._origX = undefined; // Will hold original scale in case of zoom
           this._xOriginalDomain = undefined;
-          this._xAxis = d3Axis.axisBottom();
+          this._xAxis = null;
           this._xUnits = units.integers;
           this._xAxisPadding = 0;
           this._xAxisPaddingUnit = d3Time.timeDay;
@@ -3529,6 +3529,7 @@
           this._fRangeBandPadding = 0;
 
           this._useRightYAxis = false;
+          this._useTopXAxis = false;
       }
 
       /**
@@ -3758,6 +3759,9 @@
        */
       xAxis (xAxis) {
           if (!arguments.length) {
+              if (!this._xAxis) {
+                  this._xAxis = this._createXAxis();
+              }
               return this._xAxis;
           }
           this._xAxis = xAxis;
@@ -3866,6 +3870,29 @@
       }
 
       /**
+       * Gets or sets whether the chart should be drawn with a top axis instead of a bottom axis. When
+       * used with a chart in a composite chart, allows both top and bottom X axes to be shown on a
+       * chart.
+       * @param {Boolean} [useTopXAxis=false]
+       * @returns {Boolean|CoordinateGridMixin}
+       */
+      useTopXAxis (useTopXAxis) {
+          if (!arguments.length) {
+              return this._useTopXAxis;
+          }
+
+          // We need to warn if value is changing after self._yAxis was created
+          if (this._useTopXAxis !== useTopXAxis && this._xAxis) {
+              logger.warn('Value of useTopXAxis has been altered, after xAxis was created. ' +
+                  'You might get unexpected yAxis behavior. ' +
+                  'Make calls to useTopXAxis sooner in your chart creation process.');
+          }
+
+          this._useTopXAxis = useTopXAxis;
+          return this;
+      }
+
+      /**
        * Returns true if the chart is using ordinal xUnits ({@link units.ordinal units.ordinal}, or false
        * otherwise. Most charts behave differently with ordinal data and use the result of this method to
        * trigger the appropriate logic.
@@ -3884,6 +3911,11 @@
           return groups.map(this.keyAccessor());
       }
 
+      _createXAxis () {
+          return this._useTopXAxis ? d3Axis.axisTop() : d3Axis.axisBottom();
+      }
+
+      // eslint-disable-next-line complexity
       _prepareXAxis (g, render) {
           if (!this.isOrdinal()) {
               if (this.elasticX()) {
@@ -3924,6 +3956,10 @@
               this._x.range([0, this.xAxisLength()]);
           }
 
+          if (!this._xAxis) {
+              this._xAxis = this._createXAxis();
+          }
+
           this._xAxis = this._xAxis.scale(this.x());
 
           this._renderVerticalGridLines(g);
@@ -3939,11 +3975,11 @@
           }
 
           let axisXLab = g.select(`text.${X_AXIS_LABEL_CLASS}`);
+          const axisXLabY = this._useTopXAxis ? this._xAxisLabelPadding : (this.height() - this._xAxisLabelPadding);
           if (axisXLab.empty() && this.xAxisLabel()) {
               axisXLab = g.append('text')
                   .attr('class', X_AXIS_LABEL_CLASS)
-                  .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${ 
-                    this.height() - this._xAxisLabelPadding})`)
+                  .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${axisXLabY})`)
                   .attr('text-anchor', 'middle');
           }
           if (this.xAxisLabel() && axisXLab.text() !== this.xAxisLabel()) {
@@ -3954,8 +3990,7 @@
               .attr('transform', `translate(${this.margins().left},${this._xAxisY()})`)
               .call(this._xAxis);
           transition(axisXLab, this.transitionDuration(), this.transitionDelay())
-              .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${ 
-                this.height() - this._xAxisLabelPadding})`);
+              .attr('transform', `translate(${this.margins().left + this.xAxisLength() / 2},${axisXLabY})`);
       }
 
       _renderVerticalGridLines (g) {
@@ -4000,7 +4035,7 @@
       }
 
       _xAxisY () {
-          return (this.height() - this.margins().bottom);
+          return this._useTopXAxis ? this.margins().top : this.height() - this.margins().bottom;
       }
 
       xAxisLength () {
