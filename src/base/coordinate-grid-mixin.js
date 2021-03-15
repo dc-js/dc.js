@@ -579,7 +579,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('x1', d => this._x(d))
                 .attr('y1', this._xAxisY() - this.margins().top)
                 .attr('x2', d => this._x(d))
-                .attr('y2', 0)
+                .attr('y2', this._useTopXAxis ? this.height() - this.margins().top - this.margins().bottom : 0)
                 .attr('opacity', 0);
             transition(linesGEnter, this.transitionDuration(), this.transitionDelay())
                 .attr('opacity', 0.5);
@@ -589,7 +589,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
                 .attr('x1', d => this._x(d))
                 .attr('y1', this._xAxisY() - this.margins().top)
                 .attr('x2', d => this._x(d))
-                .attr('y2', 0);
+                .attr('y2', this._useTopXAxis ? this.height() - this.margins().top - this.margins().bottom : 0);
 
             // exit
             lines.exit().remove();
