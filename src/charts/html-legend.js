@@ -1,8 +1,8 @@
 import {select} from 'd3-selection';
-import {event} from 'd3-selection';
+//import {event} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
-import {adaptHandler} from '../core/d3compat';
+import {config} from '../core/config';
 import {constants} from '../core/constants';
 
 /**
@@ -55,9 +55,9 @@ export class HtmlLegend {
             .data(legendables).enter()
             .append('div')
             .classed(legendItemClassName, true)
-            .on('mouseover', adaptHandler(d => this._parent.legendHighlight(d)))
-            .on('mouseout', adaptHandler(d => this._parent.legendReset(d)))
-            .on('click', adaptHandler(d => this._parent.legendToggle(d)));
+            .on('mouseover', config._d3compat.eventHandler(d => this._parent.legendHighlight(d)))
+            .on('mouseout', config._d3compat.eventHandler(d => this._parent.legendReset(d)))
+            .on('click', config._d3compat.eventHandler(d => this._parent.legendToggle(d)));
 
         if (this._highlightSelected) {
             itemEnter.classed(constants.SELECTED_CLASS, d => filters.indexOf(d.name) !== -1);

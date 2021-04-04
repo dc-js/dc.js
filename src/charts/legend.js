@@ -1,5 +1,5 @@
 import {pluck, utils} from '../core/utils';
-import {adaptHandler} from '../core/d3compat';
+import {config} from '../core/config';
 import {constants} from '../core/constants';
 
 const LABEL_GAP = 2;
@@ -241,7 +241,7 @@ export class Legend {
             .attr('tabindex', 0);
 
         tabElements
-            .on('keydown', adaptHandler((d, event) => {
+            .on('keydown', config._d3compat.eventHandler((d, event) => {
                 // trigger only if d is an object
                 if (event.keyCode === 13 && typeof d === 'object') {
                     d.chart.legendToggle(d)
@@ -252,10 +252,10 @@ export class Legend {
                     event.preventDefault();            
                 }
             }))
-            .on('focus', adaptHandler(d => {
+            .on('focus', config._d3compat.eventHandler(d => {
                 this._parent.legendHighlight(d);
             }))
-            .on('blur', adaptHandler(d => {
+            .on('blur', config._d3compat.eventHandler(d => {
                 this._parent.legendReset(d);
             }));
     }
@@ -277,13 +277,13 @@ export class Legend {
             .enter()
             .append('g')
             .attr('class', 'dc-legend-item')
-            .on('mouseover', adaptHandler(d => {
+            .on('mouseover', config._d3compat.eventHandler(d => {
                 this._parent.legendHighlight(d);
             }))
-            .on('mouseout', adaptHandler(d => {
+            .on('mouseout', config._d3compat.eventHandler(d => {
                 this._parent.legendReset(d);
             }))
-            .on('click', adaptHandler(d => {
+            .on('click', config._d3compat.eventHandler(d => {
                 d.chart.legendToggle(d);
             }));
 
