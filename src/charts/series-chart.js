@@ -3,7 +3,7 @@ import {ascending} from 'd3-array';
 import {CompositeChart} from './composite-chart';
 import {lineChart} from './line-chart';
 import {utils} from '../core/utils';
-import {config} from '../core/config';
+import {d3compat} from '../core/config';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -56,7 +56,7 @@ export class SeriesChart extends CompositeChart {
         const keep = [];
         let childrenChanged;
 
-        const nesting = config._d3compat.nester({
+        const nesting = d3compat.nester({
             key: this._seriesAccessor,
             sortKeys: this._seriesSort,
             sortValues: this._valueSort,

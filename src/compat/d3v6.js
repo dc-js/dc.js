@@ -3,12 +3,12 @@ import { version } from 'd3';
 import { pointer } from 'd3-selection';
 import { groups } from 'd3-array';
 
-import { config } from './config';
+import { d3compat } from '../core/config';
 
 const majorVer = +version[0];
 
 if (majorVer > 5) {
-    Object.assign(config._d3compat, {
+    Object.assign(d3compat, {
         eventHandler: handler => function (a, b) {
             if (a && a.target) {
                 // d3@v6 - b is __data__, a is the event

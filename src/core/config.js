@@ -80,3 +80,8 @@ Config._schemeCategory20c = [
  * General configuration object; see {@link Config} for members.
  */
 export const config = new Config();
+
+/**
+ * d3.js compatiblity layer
+ */
+export const d3compat = {};

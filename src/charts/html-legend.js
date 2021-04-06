@@ -1,7 +1,7 @@
 import {select} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
-import {config} from '../core/config';
+import {d3compat} from '../core/config';
 import {constants} from '../core/constants';
 
 /**
@@ -54,9 +54,9 @@ export class HtmlLegend {
             .data(legendables).enter()
             .append('div')
             .classed(legendItemClassName, true)
-            .on('mouseover', config._d3compat.eventHandler(d => this._parent.legendHighlight(d)))
-            .on('mouseout', config._d3compat.eventHandler(d => this._parent.legendReset(d)))
-            .on('click', config._d3compat.eventHandler(d => this._parent.legendToggle(d)));
+            .on('mouseover', d3compat.eventHandler(d => this._parent.legendHighlight(d)))
+            .on('mouseout', d3compat.eventHandler(d => this._parent.legendReset(d)))
+            .on('click', d3compat.eventHandler(d => this._parent.legendToggle(d)));
 
         if (this._highlightSelected) {
             itemEnter.classed(constants.SELECTED_CLASS, d => filters.indexOf(d.name) !== -1);
@@ -208,7 +208,7 @@ export class HtmlLegend {
             .attr('tabindex', 0);
 
         tabElements
-            .on('keydown', config._d3compat.eventHandler((d, event) => {
+            .on('keydown', d3compat.eventHandler((d, event) => {
                 // trigger only if d is an object
                 if (event.keyCode === 13 && typeof d === 'object') {
                     d.chart.legendToggle(d)
@@ -219,10 +219,10 @@ export class HtmlLegend {
                     event.preventDefault();            
                 }
             }))
-            .on('focus', config._d3compat.eventHandler(d => {
+            .on('focus', d3compat.eventHandler(d => {
                 this._parent.legendHighlight(d);
             }))
-            .on('blur', config._d3compat.eventHandler(d => {
+            .on('blur', d3compat.eventHandler(d => {
                 this._parent.legendReset(d);
             }));
     }

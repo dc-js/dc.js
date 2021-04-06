@@ -3,12 +3,12 @@ import { version } from 'd3';
 import { event, mouse } from 'd3-selection';
 import { nest } from 'd3-collection';
 
-import { config } from './config';
+import { d3compat } from '../core/config';
 
 const majorVer = +version[0];
 
 if (majorVer < 6) {
-    Object.assign(config._d3compat, {
+    Object.assign(d3compat, {
         eventHandler: handler => function eventHandler (a ,b) {
             if (a && a.target) {
                 // d3@v6 - b is __data__, a is the event

@@ -12,7 +12,7 @@ import {optionalTransition, transition} from '../core/core';
 import {units} from '../core/units';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
-import {config} from '../core/config';
+import {d3compat} from '../core/config';
 import {logger} from '../core/logger';
 import {filters} from '../core/filters';
 import {events} from '../core/events';
@@ -78,7 +78,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._zoomScale = [1, Infinity];
         this._zoomOutRestrict = true;
 
-        this._zoom = zoom().on('zoom', config._d3compat.eventHandler((d, evt) => this._onZoom(evt)));
+        this._zoom = zoom().on('zoom', d3compat.eventHandler((d, evt) => this._onZoom(evt)));
         this._nullZoom = zoom().on('zoom', null);
         this._hasBeenMouseZoomable = false;
         this._ignoreZoomEvents = false; // ignore when carrying out programmatic zoom operations
@@ -969,7 +969,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
 
     renderBrush (g, doTransition) {
         if (this._brushOn) {
-            this._brush.on('start brush end', config._d3compat.eventHandler((d, evt) => this._brushing(evt)));
+            this._brush.on('start brush end', d3compat.eventHandler((d, evt) => this._brushing(evt)));
 
             // To retrieve selection we need self._gBrush
             this._gBrush = g.append('g')

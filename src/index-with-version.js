@@ -2,5 +2,5 @@
 export {version} from '../package.json';
 
 export * from './index';
-import './core/d3compat-v5.js';
-import './core/d3compat-v6.js';
+import './compat/d3v5';
+import './compat/d3v6';
