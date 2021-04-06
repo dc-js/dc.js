@@ -219,12 +219,12 @@ export class HtmlLegend {
                     event.preventDefault();            
                 }
             }))
-            .on('focus', d => {
+            .on('focus', config._d3compat.eventHandler(d => {
                 this._parent.legendHighlight(d);
-            })
-            .on('blur', d => {
+            }))
+            .on('blur', config._d3compat.eventHandler(d => {
                 this._parent.legendReset(d);
-            });
+            }));
     }
 }
 
