@@ -1,5 +1,4 @@
 import {select} from 'd3-selection';
-//import {event} from 'd3-selection';
 
 import {pluck, utils} from '../core/utils';
 import {config} from '../core/config';
@@ -209,7 +208,7 @@ export class HtmlLegend {
             .attr('tabindex', 0);
 
         tabElements
-            .on('keydown', d => {
+            .on('keydown', config._d3compat.eventHandler((d, event) => {
                 // trigger only if d is an object
                 if (event.keyCode === 13 && typeof d === 'object') {
                     d.chart.legendToggle(d)
@@ -219,7 +218,7 @@ export class HtmlLegend {
                     d.chart.legendToggle(d)
                     event.preventDefault();            
                 }
-            })
+            }))
             .on('focus', d => {
                 this._parent.legendHighlight(d);
             })
