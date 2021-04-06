@@ -18,17 +18,6 @@ export class Config {
 
         this._renderlet = null;
 
-        this._d3compat = {
-            eventHandler: handler => function eventHandler (a, b) {
-                console.warn('No d3.js compatbility event handler registered, defaulting to v6 behavior.');
-                handler.call(this, b, a);
-            },
-            nester: ({key, sortKeys, sortValues, entries}) => {
-                throw new Error('No d3.js compatbility nester registered, load v5 or v6 compability layer.');
-            },
-            pointer: () => { throw new Error('No d3.js compatbility pointer registered, load v5 or v6 compability layer.'); }
-        };
-
         /**
          * If this boolean is set truthy, all transitions will be disabled, and changes to the charts will happen
          * immediately.
@@ -84,4 +73,13 @@ export const config = new Config();
 /**
  * d3.js compatiblity layer
  */
-export const d3compat = {};
+export const d3compat = {
+    eventHandler: handler => function eventHandler (a, b) {
+        console.warn('No d3.js compatbility event handler registered, defaulting to v6 behavior.');
+        handler.call(this, b, a);
+    },
+    nester: ({key, sortKeys, sortValues, entries}) => {
+        throw new Error('No d3.js compatbility nester registered, load v5 or v6 compability layer.');
+    },
+    pointer: () => { throw new Error('No d3.js compatbility pointer registered, load v5 or v6 compability layer.'); }
+};
