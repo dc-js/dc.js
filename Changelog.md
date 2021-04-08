@@ -1,3 +1,9 @@
+## 4.2.7
+* Remove lax `d3compat.eventHandler` workarounds, not necessary if code consistently uses d3@5 or d3@6 event handler signatures
+* Remove extra `d3compat.eventHandler` identified with strict event handler
+* Fix event handling in focus ordinal bar example ([#1826](https://github.com/dc-js/dc.js/issues/1826))
+* Change composite bar line example to illustrate using `xAxisPadding` with `centerBar` to draw compoisite bar/line properly ([#1827](https://github.com/dc-js/dc.js/issues/1827))
+
 ## 4.2.6
 * Isolate D3 compatibility layers, allowing more efficient module imports, by Patrik Kullman ([#1822](https://github.com/dc-js/dc.js/issues/1822) / [#1823](https://github.com/dc-js/dc.js/issues/1823) / [#1824](https://github.com/dc-js/dc.js/issues/1824))
 

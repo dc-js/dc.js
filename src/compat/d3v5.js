@@ -9,14 +9,14 @@ const majorVer = +version[0];
 
 if (majorVer < 6) {
     Object.assign(d3compat, {
-        eventHandler: handler => function eventHandler (a ,b) {
-            if (a && a.target) {
-                // d3@v6 - b is __data__, a is the event
-                handler.call(this, b, a);
-            } else {
-                // older d3 - a is __data__, event from global d3.event
-                handler.call(this, a, event);
-            }
+        eventHandler: handler => function eventHandler (d, _) {
+            handler.call(this, d, event);
+        },
+        // manual firing of event, usu for tests
+        callHandler: function callHandler (handler, that, _, d) {
+            // note: dropping event as well as any extra args
+            // d3@6 does not pass extra args anymore, so we can't use them and remain compatible
+            handler.call(that, d);
         },
         nester: ({key, sortKeys, sortValues, entries}) => {
             const nester = nest().key(key);

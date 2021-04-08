@@ -282,7 +282,7 @@ describe('dc.BoxPlot', () => {
 
         describe('clicking on a box', () => {
             beforeEach(() => {
-                box(0).on('click').call(chart, box(0).datum());
+                dc.d3compat.callHandler(box(0).on('click'), chart, {}, box(0).datum());
             });
 
             it('should apply a filter to the chart', () => {

@@ -450,7 +450,7 @@ describe('dc.scatterPlot', () => {
 
         describe('hovering', () => {
             beforeEach(() => {
-                firstItem.on('mouseover')(firstItem.datum());
+                dc.d3compat.callHandler(firstItem.on('mouseover'), null, {}, firstItem.datum());
             });
 
             describe('when a legend item is hovered over', () => {
@@ -466,7 +466,7 @@ describe('dc.scatterPlot', () => {
 
             describe('when a legend item is hovered out', () => {
                 beforeEach(() => {
-                    firstItem.on('mouseout')(firstItem.datum());
+                    dc.d3compat.callHandler(firstItem.on('mouseout'), null, {}, firstItem.datum());
                 });
 
                 it('should remove highlighting from corresponding lines and areas', () => {
