@@ -2,7 +2,7 @@ import {ascending} from 'd3-array';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
-import {compatNestHelper} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
 const ROW_CSS_CLASS = 'dc-table-row';
@@ -176,7 +176,7 @@ export class DataTable extends BaseMixin {
 
         entries = entries.sort((a, b) => this._order(this._sortBy(a), this._sortBy(b))).slice(this._beginSlice, this._endSlice)
 
-        return compatNestHelper({
+        return d3compat.nester({
             key: this.section(),
             sortKeys: this._order,
             entries

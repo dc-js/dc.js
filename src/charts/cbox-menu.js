@@ -3,7 +3,7 @@ import {select} from 'd3-selection';
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {utils} from '../core/utils'
-import {adaptHandler} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -121,7 +121,7 @@ export class CboxMenu extends BaseMixin {
                 .append('input')
                 .attr('type', 'reset')
                 .text(this._promptText)
-                .on('click', adaptHandler(function (d, evt) {
+                .on('click', d3compat.eventHandler(function (d, evt) {
                     return chart._onChange(d, evt, this);
                 }));
         } else {
@@ -141,7 +141,7 @@ export class CboxMenu extends BaseMixin {
             .selectAll(`li.${ITEM_CSS_CLASS}`)
             .sort(this._order);
 
-        this._cbox.on('change', adaptHandler(function (d, evt) {
+        this._cbox.on('change', d3compat.eventHandler(function (d, evt) {
             return chart._onChange(d, evt, this);
         }));
         return options;

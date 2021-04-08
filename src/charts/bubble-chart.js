@@ -1,7 +1,7 @@
 import {BubbleMixin} from '../base/bubble-mixin';
 import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
-import {adaptHandler} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 /**
  * A concrete implementation of a general purpose bubble chart that allows data visualization using the
@@ -74,7 +74,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
             .attr('class', this.BUBBLE_NODE_CLASS)
             .attr('transform', d => this._bubbleLocator(d))
             .append('circle').attr('class', (d, i) => `${this.BUBBLE_CLASS} _${i}`)
-            .on('click', adaptHandler(d => this.onClick(d)))
+            .on('click', d3compat.eventHandler(d => this.onClick(d)))
             .classed('dc-tabbable', this._keyboardAccessible)
             .attr('fill', this.getColor)
             .attr('r', 0);

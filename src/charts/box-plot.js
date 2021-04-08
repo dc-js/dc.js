@@ -7,7 +7,7 @@ import {CoordinateGridMixin} from '../base/coordinate-grid-mixin';
 import {transition} from '../core/core';
 import {units} from '../core/units';
 import {utils} from '../core/utils';
-import {adaptHandler} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 // Returns a function to compute the interquartile range.
 function defaultWhiskersIQR (k) {
@@ -198,7 +198,7 @@ export class BoxPlot extends CoordinateGridMixin {
             .classed('dc-tabbable', this._keyboardAccessible)
             .attr('transform', (d, i) => this._boxTransform(d, i))
             .call(this._box)
-            .on('click', adaptHandler(d => {
+            .on('click', d3compat.eventHandler(d => {
                 this.filter(this.keyAccessor()(d));
                 this.redrawGroup();
             }))

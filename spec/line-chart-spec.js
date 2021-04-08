@@ -562,7 +562,7 @@ describe('dc.lineChart', () => {
                         return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]);
                     };
 
-                    expect(nthText(0).text()).toBe('−20');
+                    expect(nthText(0).text()).toMatch(/[\-−]20/);
                     expect(nthText(1).text()).toBe('0');
                     expect(nthText(2).text()).toBe('20');
                 });
@@ -598,9 +598,10 @@ describe('dc.lineChart', () => {
                         return d3.select(chart.selectAll('g.axis.y .tick text').nodes()[n]);
                     };
 
-                    expect(nthText(0).text()).toBe('−30');
-                    expect(nthText(1).text()).toBe('−20');
-                    expect(nthText(2).text()).toBe('−10');
+                    // d3@5 and d3@6 uses different characters to format negative numbers
+                    expect(nthText(0).text()).toMatch(/[\-−]30/);
+                    expect(nthText(1).text()).toMatch(/[\-−]20/);
+                    expect(nthText(2).text()).toMatch(/[\-−]10/);
                     expect(nthText(3).text()).toBe('0');
                 });
             });

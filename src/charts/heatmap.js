@@ -7,7 +7,7 @@ import {filters} from '../core/filters';
 import {events} from '../core/events';
 import {ColorMixin} from '../base/color-mixin';
 import {MarginMixin} from '../base/margin-mixin';
-import {adaptHandler} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 
@@ -233,7 +233,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('fill', 'white')
             .attr('x', (d, i) => cols(this.keyAccessor()(d, i)))
             .attr('y', (d, i) => rows(this.valueAccessor()(d, i)))
-            .on('click', adaptHandler(this.boxOnClick()));
+            .on('click', d3compat.eventHandler(this.boxOnClick()));
 
         if (this._keyboardAccessible) {
             this._makeKeyboardAccessible(this.boxOnClick);
@@ -270,7 +270,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .style('text-anchor', 'middle')
             .attr('y', this.effectiveHeight())
             .attr('dy', 12)
-            .on('click', adaptHandler(this.xAxisOnClick()))
+            .on('click', d3compat.eventHandler(this.xAxisOnClick()))
             .text(this.colsLabel())
             .merge(gColsText);
 
@@ -296,7 +296,7 @@ export class HeatMap extends ColorMixin(MarginMixin) {
             .attr('dx', -2)
             .attr('y', d => rows(d) + boxHeight / 2)
             .attr('dy', 6)
-            .on('click', adaptHandler(this.yAxisOnClick()))
+            .on('click', d3compat.eventHandler(this.yAxisOnClick()))
             .text(this.rowsLabel())
             .merge(gRowsText);
 

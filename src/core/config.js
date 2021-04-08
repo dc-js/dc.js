@@ -69,3 +69,17 @@ Config._schemeCategory20c = [
  * General configuration object; see {@link Config} for members.
  */
 export const config = new Config();
+
+/**
+ * d3.js compatiblity layer
+ */
+export const d3compat = {
+    eventHandler: handler => function eventHandler (a, b) {
+        console.warn('No d3.js compatbility event handler registered, defaulting to v6 behavior.');
+        handler.call(this, b, a);
+    },
+    nester: ({key, sortKeys, sortValues, entries}) => {
+        throw new Error('No d3.js compatbility nester registered, load v5 or v6 compability layer.');
+    },
+    pointer: () => { throw new Error('No d3.js compatbility pointer registered, load v5 or v6 compability layer.'); }
+};

@@ -485,7 +485,8 @@ describe('dc.rowChart', () => {
                         const nthText = function (n) { return d3.select(chart.selectAll('g.axis .tick text').nodes()[n]); };
 
                         for (let i = 0; i < xAxisTicks.length; i++) {
-                            expect(nthText(i).text()).toBe(xAxisTicks[i]);
+                            // d3@5 and d3@6 uses different characters to format negative numbers
+                            expect(nthText(i).text().replace('-','−')).toBe(xAxisTicks[i].replace('-','−'));
                         }
                     });
                 });

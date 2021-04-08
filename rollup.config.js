@@ -13,6 +13,7 @@ const licensePlugin = license({
 });
 
 const d3Modules = {
+    'd3': 'd3',
     'd3-array': 'd3',
     'd3-axis': 'd3',
     'd3-brush': 'd3',

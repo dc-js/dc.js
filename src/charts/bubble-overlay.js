@@ -3,7 +3,7 @@ import {BubbleMixin} from '../base/bubble-mixin';
 import {transition} from '../core/core';
 import {constants} from '../core/constants';
 import {utils} from '../core/utils';
-import {adaptHandler, d3compatPointer} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';
@@ -115,7 +115,7 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
                     .classed('dc-tabbable', this._keyboardAccessible)
                     .attr('r', 0)
                     .attr('fill', this.getColor)
-                    .on('click', adaptHandler(d => this.onClick(d)));
+                    .on('click', d3compat.eventHandler(d => this.onClick(d)));
             }
 
             if (this._keyboardAccessible) {
@@ -200,8 +200,8 @@ export class BubbleOverlay extends BubbleMixin(BaseMixin) {
                 .append('rect')
                 .attr('width', this.width())
                 .attr('height', this.height())
-                .on('mousemove', adaptHandler((d, evt) => {
-                    const position = d3compatPointer(evt, debugG.node());
+                .on('mousemove', d3compat.eventHandler((d, evt) => {
+                    const position = d3compat.pointer(evt, debugG.node());
                     const msg = `${position[0]}, ${position[1]}`;
                     debugText.text(msg);
                 }));

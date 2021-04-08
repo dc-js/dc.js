@@ -1,7 +1,7 @@
 import {events} from '../core/events';
 import {BaseMixin} from '../base/base-mixin';
 import {logger} from '../core/logger';
-import {adaptHandler} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';
@@ -96,7 +96,7 @@ export class SelectMenu extends BaseMixin {
 
         this._select.selectAll(`option.${OPTION_CSS_CLASS}`).sort(this._order);
 
-        this._select.on('change', adaptHandler((d, evt) => this._onChange(d, evt)));
+        this._select.on('change', d3compat.eventHandler((d, evt) => this._onChange(d, evt)));
     }
 
     _onChange (_d, evt) {

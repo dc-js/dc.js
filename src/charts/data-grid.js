@@ -2,7 +2,7 @@ import {ascending} from 'd3-array';
 
 import {logger} from '../core/logger';
 import {BaseMixin} from '../base/base-mixin';
-import {compatNestHelper} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 const LABEL_CSS_CLASS = 'dc-grid-label';
 const ITEM_CSS_CLASS = 'dc-grid-item';
@@ -86,7 +86,7 @@ export class DataGrid extends BaseMixin {
             .sort((a, b) => this._order(this._sortBy(a), this._sortBy(b)))
             .slice(this._beginSlice, this._endSlice)
 
-        return compatNestHelper({
+        return d3compat.nester({
             key: this.section(),
             sortKeys: this._order,
             entries

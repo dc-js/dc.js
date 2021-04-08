@@ -1,3 +1,6 @@
+## 4.2.6
+* Isolate D3 compatibility layers, allowing more efficient module imports, by Patrik Kullman ([#1822](https://github.com/dc-js/dc.js/issues/1822) / [#1823](https://github.com/dc-js/dc.js/issues/1823) / [#1824](https://github.com/dc-js/dc.js/issues/1824))
+
 ## 4.2.5
 * Option [useTopXAxis](https://dc-js.github.io/dc.js/docs/html/CoordinateGridMixin.html#useTopXAxis) to show coordinate grid X axis at top of chart, by BERÉNYI Attila ([#1815](https://github.com/dc-js/dc.js/issues/1815) / [#1816](https://github.com/dc-js/dc.js/pull/1816))
 * Add source for bar colors example ([#1817](https://github.com/dc-js/dc.js/issues/1817))

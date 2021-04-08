@@ -11,7 +11,7 @@ import {logger} from '../core/logger';
 import {printers} from '../core/printers';
 import {InvalidStateException} from '../core/invalid-state-exception';
 import {BadArgumentException} from '../core/bad-argument-exception';
-import {adaptHandler} from '../core/d3compat';
+import {d3compat} from '../core/config';
 
 const _defaultFilterHandler = (dimension, filters) => {
     if (filters.length === 0) {
@@ -723,7 +723,7 @@ export class BaseMixin {
             .attr('tabindex', 0);
                 
         if (onClickFunction) {
-            tabElements.on('keydown', adaptHandler((d, event) => {
+            tabElements.on('keydown', d3compat.eventHandler((d, event) => {
                 // trigger only if d is an object undestood by KeyAccessor()
                 if (event.keyCode === 13 && typeof d === 'object') {
                     onClickFunction.call(this, d, ...onClickArgs)
