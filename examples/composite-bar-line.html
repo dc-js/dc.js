@@ -44,7 +44,7 @@ Promise.all([d3.csv("morley.csv"), d3.csv("morley2.csv")]).then(function(results
     composite
         .width(768)
         .height(480)
-        .x(d3.scaleLinear().domain([2.9,16.1]))
+        .x(d3.scaleLinear()).xAxisPadding(0.5).elasticX(true)
         .yAxisLabel("The Y Axis")
         .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
         .renderHorizontalGridLines(true)

@@ -121,7 +121,7 @@
                       var key = multikey(d.x, d.layer);
                       return chart.filter() && chart.filters().indexOf(key)===-1;
                   })
-                  .on('click', dc.adaptHandler(function(d) {
+                  .on('click', dc.d3compat.eventHandler(function(d) {
                       chart.filter(multikey(d.x, d.layer));
                       dc.redrawAll();
                   }));
