@@ -190,7 +190,7 @@ describe('dc.rowChart', () => {
             event.keyCode = 13;
                      
             chart.selectAll('rect').each(function (d) {
-                this.dispatchEvent(event, d);
+                this.dispatchEvent(event);
                 expect(clickHandlerSpy).toHaveBeenCalledWith(d);
                 clickHandlerSpy.calls.reset();
             });
