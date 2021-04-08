@@ -66,7 +66,8 @@ describe('dc.htmlLegend', () => {
             });
 
             it('not allow hiding stacks be default', () => {
-                legendItem(0, 'vertical').on('click').call(legendItem(0).nodes()[0], legendItem(0, 'vertical').datum());
+                dc.d3compat.callHandler(legendItem(0, 'vertical').on('click'),
+                                        legendItem(0).nodes()[0], {}, legendItem(0, 'vertical').datum());
                 expect(chart.selectAll('path.line').size()).toBe(3);
             });
 
@@ -100,7 +101,7 @@ describe('dc.htmlLegend', () => {
 
             it('not allow hiding stacks be default', () => {
                 const firstLegendItem = legendItem(0, 'horizontal');
-                firstLegendItem.on('click').call(firstLegendItem.nodes()[0], firstLegendItem.datum());
+                dc.d3compat.callHandler(firstLegendItem.on('click'), firstLegendItem.nodes()[0], {}, firstLegendItem.datum());
                 expect(chart.selectAll('path.line').size()).toBe(3);
             });
         });

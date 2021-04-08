@@ -271,7 +271,7 @@ describe('dc.BarChart', () => {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     // fake a click
                     const abar = chart.selectAll('rect.bar:nth-child(3)');
-                    abar.on('click')(abar.datum());
+                    dc.d3compat.callHandler(abar.on('click'), null, {}, abar.datum());
                     expect(dimension.top(Infinity).length).toEqual(1);
                 });
             });
@@ -285,7 +285,7 @@ describe('dc.BarChart', () => {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     // fake a click
                     const alabel = chart.select('text.barLabel');
-                    alabel.on('click')(alabel.datum());
+                    dc.d3compat.callHandler(alabel.on('click'), null, {}, alabel.datum());
                     expect(dimension.top(Infinity).length).toEqual(3);
                 });
             });
@@ -356,14 +356,14 @@ describe('dc.BarChart', () => {
                 beforeEach(() => {
                     chart.brushOn(false)
                         .on('renderlet', _chart => {
-                            _chart.selectAll('rect.bar').on('click', d => _chart.onClick(d));
+                            _chart.selectAll('rect.bar').on('click', dc.d3compat.eventHandler(d => _chart.onClick(d)));
                         })
                         .render();
                 });
                 it('clicking causes another dimension to be filtered', () => {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     const abar = chart.selectAll('rect.bar:nth-child(3)');
-                    abar.on('click')(abar.datum());
+                    dc.d3compat.callHandler(abar.on('click'), null, {}, abar.datum());
                     expect(dimension.top(Infinity).length).toEqual(3);
                 });
             });
@@ -688,7 +688,7 @@ describe('dc.BarChart', () => {
                     .render();
 
                 firstItem = chart.select('g.dc-legend g.dc-legend-item');
-                firstItem.on('mouseover')(firstItem.datum());
+                dc.d3compat.callHandler(firstItem.on('mouseover'), null, {}, firstItem.datum());
             });
 
             describe('when a legend item is hovered over', () => {
@@ -707,14 +707,14 @@ describe('dc.BarChart', () => {
 
             describe('when a legend item is hovered out', () => {
                 it('should remove highlighting from corresponding lines and areas', () => {
-                    firstItem.on('mouseout')(firstItem.datum());
+                    dc.d3compat.callHandler(firstItem.on('mouseout'), null, {}, firstItem.datum());
                     nthStack(0).forEachBar(bar => {
                         expect(bar.classed('highlight')).toBeFalsy();
                     });
                 });
 
                 it('should fade in non-corresponding lines and areas', () => {
-                    firstItem.on('mouseout')(firstItem.datum());
+                    dc.d3compat.callHandler(firstItem.on('mouseout'), null, {}, firstItem.datum());
                     nthStack(1).forEachBar(bar => {
                         expect(bar.classed('fadeout')).toBeFalsy();
                     });

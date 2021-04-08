@@ -297,7 +297,7 @@ describe('dc.heatmap', () => {
 
         function clickCellOnChart (_chart, x, y) {
             const oneCell = _chart.selectAll('.box-group').filter(d => d.key[0] === x && d.key[1] === y);
-            oneCell.select('rect').on('click')(oneCell.datum());
+            dc.d3compat.callHandler(oneCell.select('rect').on('click'), null, {}, oneCell.datum());
             return oneCell;
         }
 
@@ -339,9 +339,9 @@ describe('dc.heatmap', () => {
         it('should toggle a filter for the clicked box', () => {
             chart.selectAll('.box-group').each(function (d) {
                 const cell = d3.select(this).select('rect');
-                cell.on('click')(d);
+                dc.d3compat.callHandler(cell.on('click'), null, {}, d);
                 expect(chart.hasFilter(d.key)).toBeTruthy();
-                cell.on('click')(d);
+                dc.d3compat.callHandler(cell.on('click'), null, {}, d);
                 expect(chart.hasFilter(d.key)).toBeFalsy();
             });
         });
@@ -360,15 +360,15 @@ describe('dc.heatmap', () => {
                 it('should filter all cells on that axis', () => {
                     chart.selectAll('.cols.axis text').each(function (d) {
                         const axisLabel = d3.select(this);
-                        axisLabel.on('click')(d);
+                        dc.d3compat.callHandler(axisLabel.on('click'), null, {}, d);
                         assertOnlyThisAxisIsFiltered(chart, 0, d);
-                        axisLabel.on('click')(d);
+                        dc.d3compat.callHandler(axisLabel.on('click'), null, {}, d);
                     });
                     chart.selectAll('.rows.axis text').each(function (d) {
                         const axisLabel = d3.select(this);
-                        axisLabel.on('click')(d);
+                        dc.d3compat.callHandler(axisLabel.on('click'), null, {}, d);
                         assertOnlyThisAxisIsFiltered(chart, 1, d);
-                        axisLabel.on('click')(d);
+                        dc.d3compat.callHandler(axisLabel.on('click'), null, {}, d);
                     });
                 });
             });
@@ -377,7 +377,7 @@ describe('dc.heatmap', () => {
                     const boxNodes = chart.selectAll('.box-group').nodes();
                     const box = d3.select(boxNodes[Math.floor(Math.random() * boxNodes.length)]);
 
-                    box.select('rect').on('click')(box.datum());
+                    dc.d3compat.callHandler(box.select('rect').on('click'), null, {}, box.datum());
 
                     expect(chart.hasFilter(box.datum().key)).toBeTruthy();
 
@@ -386,11 +386,11 @@ describe('dc.heatmap', () => {
                     const columns = chart.selectAll('.cols.axis text');
                     const column = columns.filter(columnData => columnData === xVal);
 
-                    column.on('click')(column.datum());
+                    dc.d3compat.callHandler(column.on('click'), null, {}, column.datum());
 
                     assertOnlyThisAxisIsFiltered(chart, 0, xVal);
 
-                    column.on('click')(column.datum());
+                    dc.d3compat.callHandler(column.on('click'), null, {}, column.datum());
                 });
             });
             describe('with all cells on that axis already filtered', () => {
@@ -399,7 +399,7 @@ describe('dc.heatmap', () => {
                     chart.selectAll('.box-group').each(function (d) {
                         const box = d3.select(this);
                         if (d.key[0] === xVal) {
-                            box.select('rect').on('click')(box.datum());
+                            dc.d3compat.callHandler(box.select('rect').on('click'), null, {}, box.datum());
                         }
                     });
 
@@ -408,7 +408,7 @@ describe('dc.heatmap', () => {
                     const columns = chart.selectAll('.cols.axis text');
                     const column = columns.filter(columnData => columnData === xVal);
 
-                    column.on('click')(column.datum());
+                    dc.d3compat.callHandler(column.on('click'), null, {}, column.datum());
 
                     chart.select('.box-group').each(d => {
                         expect(chart.hasFilter(d.key)).toBeFalsy();
