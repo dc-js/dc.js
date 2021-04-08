@@ -197,7 +197,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
             .classed('selected', d => (this.hasFilter()) ? this._isSelectedRow(d) : false);
 
         if (this._keyboardAccessible) {
-            this._makeKeyboardAccessible(d3compat.eventHandler(d => this._onClick(d)));
+            this._makeKeyboardAccessible(d => this._onClick(d));
         }
 
         transition(rect, this.transitionDuration(), this.transitionDelay())
