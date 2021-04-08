@@ -132,7 +132,7 @@
             }
         };
         focus.on('pretransition', function(chart) {
-            chart.selectAll('rect.bar').on('click.ordinal-select', function(d) {
+            chart.selectAll('rect.bar').on('click.ordinal-select', dc.d3compat.eventHandler(function(d) {
                 var i = focusFilter.indexOf(d.data.key);
                 if(i >= 0)
                     focusFilter.splice(i, 1);
@@ -140,7 +140,7 @@
                     focusFilter.push(d.data.key);
                 chart.applyFilter();
                 chart.redrawGroup();
-            });
+            }));
         });
 
         focus.on('preRedraw', function(chart) {
