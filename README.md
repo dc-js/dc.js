@@ -13,7 +13,7 @@ attributes through the position, size, and color of its elements, and also prese
 which can be filtered. When the filter or brush changes, all other charts are updated dynamically,
 using animated transitions.
 
-Check out the [example page](http://dc-js.github.com/dc.js/)
+Check out the [example page](http://dc-js.github.io/dc.js/)
 and its [annotated source](http://dc-js.github.io/dc.js/docs/stock.html) for a quick five minute
 how-to guide. The detailed [API reference is here](http://dc-js.github.io/dc.js/docs/html/)
 ([markdown version](https://github.com/dc-js/dc.js/blob/master/docs/api-latest.md)). For
@@ -22,7 +22,7 @@ more examples and hints please visit the [Wiki](https://github.com/dc-js/dc.js/w
 
 Support
 --------------------
-* [Example Site](http://dc-js.github.com/dc.js/)
+* [Example Site](http://dc-js.github.io/dc.js/)
 * [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
 * [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
 * [v4.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/docs/api-latest.md))</sup> <sup>([last - v3.1.9](https://github.com/dc-js/dc.js/blob/master/docs/old-api-docs/api-3.1.9.md))</sup>
