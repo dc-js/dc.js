@@ -74,9 +74,9 @@
     "time-grunt": "~1.4",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
-    "typedoc": "^0.20.26",
-    "typedoc-plugin-pages-fork": "0.0.1",
-    "typescript": "^3.9.5"
+    "typedoc": "^0.21.9",
+    "typedoc-plugin-pages-fork-fork": "^0.0.3",
+    "typescript": "^4.4.2"
   },
   "scripts": {
     "test": "grunt test"
