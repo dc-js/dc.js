@@ -8,18 +8,18 @@ const umdMinConf = Object.assign({}, umdConf, {
 
 export default [
     {
-        input: 'src/compat/index-compat.ts',
+        input: 'src/index-with-version.ts',
         external: Object.keys(d3Modules),
         plugins: plugins,
         output: [umdConf, umdMinConf],
     },
     {
-        input: 'src/index-with-version.ts',
+        input: 'src/compat/index-compat.ts',
         external: Object.keys(d3Modules),
         plugins: plugins,
         output: [
-            Object.assign({}, umdConf, { file: 'dist/dc-neo.js' }),
-            Object.assign({}, umdMinConf, { file: 'dist/dc-neo.min.js' }),
+            Object.assign({}, umdConf, { file: 'dist/dc-compat.js' }),
+            Object.assign({}, umdMinConf, { file: 'dist/dc-compat.min.js' }),
         ],
     },
 ];

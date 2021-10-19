@@ -22,7 +22,7 @@ module.exports = function (config) {
             // JS code dependencies
             'spec/3rd-party/*.js',
             // Code to be tested
-            'dist/dc.js',
+            'dist/dc-compat.js',
             // Jasmine spec files
             'spec/*spec.js'
         ],

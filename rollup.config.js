@@ -58,7 +58,7 @@ export const plugins = [
 
 export default [
     {
-        input: 'src/compat/index-compat.ts',
+        input: 'src/index-with-version.ts',
         external: Object.keys(d3Modules),
         plugins: plugins,
         output: [umdConf],

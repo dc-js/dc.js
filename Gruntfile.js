@@ -114,7 +114,7 @@ module.exports = function (grunt) {
                     outfile: 'spec/index.html',
                     keepRunner: true,
                 },
-                src: ['dist/dc.js'],
+                src: ['dist/dc-compat.js'],
             },
         },
         karma: {
@@ -428,7 +428,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'shell:dist-clean',
         'shell:tsc',
-        'shell:rollup',
+        'shell:rollup-full',
         'sass',
         'cssmin',
     ]);
