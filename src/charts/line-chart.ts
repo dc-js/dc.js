@@ -30,6 +30,7 @@ import {
     LegendItem,
     SVGGElementSelection,
 } from '../core/types';
+import { ILineChartConf } from './i-line-chart-conf';
 
 const DEFAULT_DOT_RADIUS = 5;
 const TOOLTIP_G_CLASS = 'dc-tooltip';
@@ -47,6 +48,8 @@ const LABEL_PADDING = 3;
  * - {@link http://dc-js.github.com/dc.js/crime/index.html | Canadian City Crime Stats}
  */
 export class LineChart extends StackMixin {
+    public _conf: ILineChartConf;
+
     private _renderArea: boolean;
     private _dotRadius: number;
     private _dataPointRadius: number;
@@ -81,9 +84,9 @@ export class LineChart extends StackMixin {
             transitionDelay: 0,
             label: d => printSingleValue(d.y0 + d.y),
             renderLabel: false,
+            renderArea: false,
         });
 
-        this._renderArea = false;
         this._dotRadius = DEFAULT_DOT_RADIUS;
         this._dataPointRadius = null;
         this._dataPointFillOpacity = DEFAULT_DOT_OPACITY;
@@ -97,7 +100,16 @@ export class LineChart extends StackMixin {
 
         this._rangeBandPadding(1);
     }
+    
+    public configure(conf: ILineChartConf): this {
+        super.configure(conf);
+        return this;
+    }
 
+    public conf(): ILineChartConf {
+        return this._conf;
+    }
+    
     public plotData() {
         const chartBody: SVGGElementSelection = this.chartBodyG();
         let layersList = chartBody.select<SVGGElement>('g.stack-list');
@@ -273,9 +285,9 @@ export class LineChart extends StackMixin {
     public renderArea(renderArea: boolean): this;
     public renderArea(renderArea?) {
         if (!arguments.length) {
-            return this._renderArea;
+            return this._conf.renderArea;
         }
-        this._renderArea = renderArea;
+        this.configure({renderArea: renderArea});
         return this;
     }
 
@@ -360,7 +372,7 @@ export class LineChart extends StackMixin {
     }
 
     private _drawArea(layersEnter: SVGGElementSelection, layers: SVGGElementSelection): void {
-        if (this._renderArea) {
+        if (this._conf.renderArea) {
             const _area = area()
                 .x((d: any) => this.x()(d.x)) // TODO: revisit later to put proper type
                 .y1((d: any) => this.y()(d.y + d.y0)) // TODO: revisit later to put proper type
