@@ -45,6 +45,7 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
             // TODO: move following two to Mixin, BubbleOverlay has exactly same setup
             transitionDuration: 750,
             transitionDelay: 0,
+            brushOn: false,
         });
 
         this._bubbleLocator = d => `translate(${this._bubbleX(d)},${this._bubbleY(d)})`;
@@ -134,20 +135,5 @@ export class BubbleChart extends BubbleMixin(CoordinateGridMixin) {
             y = 0;
         }
         return y;
-    }
-
-    /**
-     * @hidden
-     */
-    public renderBrush(): void {
-        // override default x axis brush from parent chart
-    }
-
-    /**
-     * @hidden
-     */
-    public redrawBrush(brushSelection: DCBrushSelection, doTransition: boolean): void {
-        // override default x axis brush from parent chart
-        this.fadeDeselectedArea(brushSelection);
     }
 }
