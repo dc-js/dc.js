@@ -1,4 +1,5 @@
 export * from './d3.box';
+export * from './colors/index'
 
 export * from './base-mixin';
 export * from './bubble-mixin';
