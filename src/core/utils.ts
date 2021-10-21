@@ -1,5 +1,4 @@
 import { timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear } from 'd3-time';
-import { format } from 'd3-format';
 
 import { constants } from './constants';
 import { config } from './config';

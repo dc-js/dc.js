@@ -1,13 +1,7 @@
 import { BubbleMixin } from '../base/bubble-mixin';
 import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
 import { transition } from '../core/core';
-import {
-    BaseAccessor,
-    ChartGroupType,
-    ChartParentType,
-    DCBrushSelection,
-    SVGGElementSelection,
-} from '../core/types';
+import { BaseAccessor, ChartGroupType, ChartParentType, SVGGElementSelection } from '../core/types';
 import { adaptHandler } from '../core/d3compat';
 
 /**
