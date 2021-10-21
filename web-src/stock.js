@@ -253,7 +253,7 @@ d3.csv('ndx.csv').then(data => {
         .margins({ top: 10, right: 50, bottom: 30, left: 40 })
         // (_optional_) define color function or array for bubbles: [ColorBrewer](http://colorbrewer2.org/)
         // (optional) define color domain to match your data domain if you want to bind data or color
-        .scaledColors(new d3.scaleQuantize(d3.schemeRdYlGn[9]).domain([-500, 500]))
+        .colorScale(new d3.scaleQuantize(d3.schemeRdYlGn[9]).domain([-500, 500]))
 
         //Accessor functions are applied to each value returned by the grouping
         .x(d3.scaleLinear().domain([-2500, 2500]))

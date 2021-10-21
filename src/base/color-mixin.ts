@@ -117,7 +117,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * @see {@link ColorScaleHelper}
          * @see {@link https://github.com/d3/d3-scale/}
          */
-        public scaledColors(scale: BaseAccessor<string>): this {
+        public colorScale(scale: BaseAccessor<string>): this {
             return this.colorHelper(new ColorScaleHelper(scale));
         }
 
