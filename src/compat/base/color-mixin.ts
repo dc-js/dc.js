@@ -1,12 +1,9 @@
-import { BaseAccessor, ColorAccessor, Constructor, MinimalColorScale } from '../../core/types';
+import { BaseAccessor, ColorAccessor, Constructor } from '../../core/types';
 import { BaseMixinExt } from './base-mixin';
 import { ColorMixin as ColorMixinNeo } from '../../base/color-mixin';
 import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
-import { ColorCalculator } from '../../base/colors/color-calculator';
 import { ColorScaleHelper } from '../../base/colors/color-scale-helper';
 import { scaleQuantize } from 'd3-scale';
-import { OrdinalColors } from '../../base/colors/ordinal-colors';
-import { LinearColors } from '../../base/colors/linear-colors';
 
 class Intermediate extends BaseMixinExt(ColorMixinNeo(BaseMixinNeo)) {}
 
@@ -33,25 +30,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
                 return this._conf.colorAccessor;
             }
             this.configure({ colorAccessor: colorAccessor });
-            return this;
-        }
-
-        /**
-         * Overrides the color selection algorithm, replacing it with a simple function.
-         *
-         * Normally colors will be determined by calling the `colorAccessor` to get a value, and then passing that
-         * value through the `colorScale`.
-         *
-         * But sometimes it is difficult to get a color scale to produce the desired effect. The `colorCalculator`
-         * takes the datum and index and returns a color directly.
-         */
-        public colorCalculator(): ColorAccessor;
-        public colorCalculator(colorCalculator: ColorAccessor): this;
-        public colorCalculator(colorCalculator?) {
-            if (!arguments.length) {
-                return this.colorHelper().getColor;
-            }
-            this.colorHelper(new ColorCalculator(colorCalculator));
             return this;
         }
 
@@ -83,32 +61,6 @@ export function ColorMixinExt<TBase extends Constructor<Intermediate>>(Base: TBa
             }
 
             this.colorHelper(new ColorScaleHelper(newScale));
-            return this;
-        }
-
-        /**
-         * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
-         */
-        public linearColors(r: [string, string]): this {
-            this.colorHelper(new LinearColors(r));
-            return this;
-        }
-
-        /**
-         * Set or get the current domain for the color mapping function. The domain must be supplied as an
-         * array.
-         *
-         * Note: previously this method accepted a callback function. Instead you may use a custom scale
-         * set by {@link ColorMixin.colors .colors}.
-         */
-        public colorDomain(): string[];
-        public colorDomain(domain: string[]): this;
-        public colorDomain(domain?) {
-            const scale = (this.colorHelper() as ColorScaleHelper).colorScale as MinimalColorScale;
-            if (!arguments.length) {
-                return scale.domain();
-            }
-            scale.domain(domain);
             return this;
         }
     };
