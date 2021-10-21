@@ -100,7 +100,7 @@ export class LineChart extends StackMixin {
 
         this._rangeBandPadding(1);
     }
-    
+
     public configure(conf: ILineChartConf): this {
         super.configure(conf);
         return this;
@@ -109,7 +109,7 @@ export class LineChart extends StackMixin {
     public conf(): ILineChartConf {
         return this._conf;
     }
-    
+
     public plotData() {
         const chartBody: SVGGElementSelection = this.chartBodyG();
         let layersList = chartBody.select<SVGGElement>('g.stack-list');
@@ -287,7 +287,7 @@ export class LineChart extends StackMixin {
         if (!arguments.length) {
             return this._conf.renderArea;
         }
-        this.configure({renderArea: renderArea});
+        this.configure({ renderArea: renderArea });
         return this;
     }
 

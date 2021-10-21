@@ -307,9 +307,7 @@ export class PieChart extends ColorMixin(BaseMixin) {
 
         const arc2 = arc()
             .outerRadius(
-                this._computedRadius -
-                    this._conf.externalRadiusPadding +
-                    this._conf.externalLabels
+                this._computedRadius - this._conf.externalRadiusPadding + this._conf.externalLabels
             )
             .innerRadius(this._computedRadius - this._conf.externalRadiusPadding);
         const tranNodes = transition(
