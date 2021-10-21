@@ -194,6 +194,9 @@ d3.csv('ndx.csv').then(data => {
         .configure({
             // (_optional_) define chart transition duration, `default = 750`
             transitionDuration: 1500,
+
+            //##### Accessors
+
             // `.colorAccessor` - the returned value will be passed to the `.colors()` scale to determine a fill color
             colorAccessor: d => d.value.absGain,
             // `.keyAccessor` - the `X` value will be passed to the `.x()` scale to determine pixel location
@@ -201,22 +204,26 @@ d3.csv('ndx.csv').then(data => {
             // `.radiusValueAccessor` - the value will be passed to the `.r()` scale to determine radius size;
             //   by default this maps linearly to [0,100]
             radiusValueAccessor: p => p.value.fluctuationPercentage,
+
             maxBubbleRelativeSize: 0.3,
+
             //`.elasticY` and `.elasticX` determine whether the chart should rescale each axis to fit the data.
             elasticY: true,
             elasticX: true,
+
             //`.yAxisPadding` and `.xAxisPadding` add padding to data above and below their max values in the same unit
             //domains as the Accessors.
             yAxisPadding: 100,
             xAxisPadding: 500,
+
             // (_optional_) render horizontal grid lines, `default=false`
             renderHorizontalGridLines: true,
             // (_optional_) render vertical grid lines, `default=false`
             renderVerticalGridLines: true,
-            //Labels are displayed on the chart for each bubble. Titles displayed on mouseover.
-            // (_optional_) whether chart should render labels, `default = true`
 
             //##### Labels and  Titles
+            //Labels are displayed on the chart for each bubble. Titles displayed on mouseover.
+            // (_optional_) whether chart should render labels, `default = true`
             renderLabel: true,
             label: p => p.key,
             // (_optional_) whether chart should render titles, `default = false`
@@ -246,10 +253,7 @@ d3.csv('ndx.csv').then(data => {
         .margins({ top: 10, right: 50, bottom: 30, left: 40 })
         // (_optional_) define color function or array for bubbles: [ColorBrewer](http://colorbrewer2.org/)
         // (optional) define color domain to match your data domain if you want to bind data or color
-        .colorHelper(
-            new dc.ColorScaleHelper(new d3.scaleQuantize(d3.schemeRdYlGn[9]).domain([-500, 500]))
-        )
-        //##### Accessors
+        .scaledColors(new d3.scaleQuantize(d3.schemeRdYlGn[9]).domain([-500, 500]))
 
         //Accessor functions are applied to each value returned by the grouping
         .x(d3.scaleLinear().domain([-2500, 2500]))
@@ -262,12 +266,11 @@ d3.csv('ndx.csv').then(data => {
         // (_optional_) render a vertical axis lable left of the y axis
         .yAxisLabel('Index Gain %');
 
-        //#### Customize Axes
+    //#### Customize Axes
 
-        // Set a custom tick format. Both `.yAxis()` and `.xAxis()` return an axis object,
-        // so any additional method chaining applies to the axis, not the chart.
-    yearlyBubbleChart        .yAxis()
-        .tickFormat(v => `${v}%`);
+    // Set a custom tick format. Both `.yAxis()` and `.xAxis()` return an axis object,
+    // so any additional method chaining applies to the axis, not the chart.
+    yearlyBubbleChart.yAxis().tickFormat(v => `${v}%`);
 
     // #### Pie/Donut Charts
 
@@ -417,11 +420,11 @@ d3.csv('ndx.csv').then(data => {
             renderHorizontalGridLines: true,
             xUnits: d3.timeMonths,
 
-            // Switching off brush, switching on autoFocus, and making mouseZoomable makes it a Focus chart 
+            // Switching off brush, switching on autoFocus, and making mouseZoomable makes it a Focus chart
             mouseZoomable: true,
             autoFocus: true,
             brushOn: false,
-            
+
             // Title can be called by any stack layer.
             title: d => {
                 let value = d.value.avg ? d.value.avg : d.value;
