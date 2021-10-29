@@ -1,5 +1,5 @@
 // @ts-ignore, TODO, not supported in d3v6
-import { mouse, Selection } from 'd3-selection';
+import { pointer, Selection } from 'd3-selection';
 
 import { BaseMixin } from '../base/base-mixin';
 import { BubbleMixin } from '../base/bubble-mixin';
@@ -232,8 +232,8 @@ export class BubbleOverlay extends BubbleMixin(ColorMixin(BaseMixin)) {
                 .append('rect')
                 .attr('width', this.width())
                 .attr('height', this.height())
-                .on('mousemove', () => {
-                    const position = mouse(debugG.node());
+                .on('mousemove', (evt, d) => {
+                    const position = pointer(evt, debugG.node());
                     const msg = `${position[0]}, ${position[1]}`;
                     debugText.text(msg);
                 });
