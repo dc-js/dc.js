@@ -39,6 +39,7 @@ export interface CompareFn {
     (a: number, b: number): number;
     (a: string, b: string): number;
     (a: Date, b: Date): number;
+    <T>(a: T, b: T): number;
 }
 
 export type GroupingFn = (d) => any;

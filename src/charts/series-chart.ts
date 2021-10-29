@@ -1,10 +1,9 @@
-import { ascending } from 'd3-array';
+import { ascending, groups } from 'd3-array';
 
 import { CompositeChart } from './composite-chart';
 import { LineChart } from './line-chart';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { ISeriesChartConf } from './i-series-chart-conf';
-import { compatNestHelper } from '../core/d3compat';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the
@@ -78,12 +77,16 @@ export class SeriesChart extends CompositeChart {
         const keep: string[] = [];
         let childrenChanged: boolean;
 
-        const nesting = compatNestHelper({
-            key: this._conf.seriesAccessor,
-            sortKeys: this._conf.seriesSort,
-            sortValues: this._conf.valueSort,
-            entries: this.data(),
-        });
+        // create a defensive copy before sorting
+        let entries = [...this.data()].sort(this._conf.valueSort);
+
+        const nesting = groups(entries, this._conf.seriesAccessor)
+            .sort(this._conf.seriesSort)
+            .map(e => ({
+                // The code expects key and values as attributes
+                key: `${e[0]}`, // force key to be a string
+                values: e[1],
+            }));
 
         const children = nesting.map((sub, i) => {
             const subChart =

@@ -1,10 +1,9 @@
-import { ascending } from 'd3-array';
+import { ascending, groups } from 'd3-array';
 
 import { BaseMixin } from '../base/base-mixin';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { Selection } from 'd3-selection';
 import { IDataGridConf } from './i-data-grid-conf';
-import { compatNestHelper } from '../core/d3compat';
 
 const LABEL_CSS_CLASS = 'dc-grid-label';
 const ITEM_CSS_CLASS = 'dc-grid-item';
@@ -87,11 +86,13 @@ export class DataGrid extends BaseMixin {
             .sort((a, b) => this._conf.order(this._conf.sortBy(a), this._conf.sortBy(b)))
             .slice(this._conf.beginSlice, this._conf.endSlice);
 
-        return compatNestHelper({
-            key: this._conf.section,
-            sortKeys: this._conf.order,
-            entries,
-        });
+        return groups(entries, this._conf.section)
+            .sort(this._conf.order)
+            .map(e => ({
+                // The code expects key and values as attributes
+                key: `${e[0]}`, // force key to be a string
+                values: e[1],
+            }));
     }
 
     private _renderItems(sections: Selection<HTMLDivElement, any, Element, any>) {

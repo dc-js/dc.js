@@ -1,3 +1,4 @@
+// @ts-ignore, TODO, not supported in d3v6
 import { mouse, Selection } from 'd3-selection';
 
 import { BaseMixin } from '../base/base-mixin';
