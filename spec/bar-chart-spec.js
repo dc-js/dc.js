@@ -358,14 +358,15 @@ describe('dc.BarChart', () => {
                 beforeEach(() => {
                     chart.brushOn(false)
                         .on('renderlet', _chart => {
-                            _chart.selectAll('rect.bar').on('click', d => _chart.onClick(d));
+                            _chart.selectAll('rect.bar').on('click', (evt, d) => _chart.onClick(d));
                         })
                         .render();
                 });
                 it('clicking causes another dimension to be filtered', () => {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     const abar = chart.selectAll('rect.bar:nth-child(3)');
-                    abar.on('click')(abar.datum());
+                    const dummyEvt = {};
+                    abar.on('click')(dummyEvt, abar.datum());
                     expect(dimension.top(Infinity).length).toEqual(3);
                 });
             });
@@ -709,14 +710,16 @@ describe('dc.BarChart', () => {
 
             describe('when a legend item is hovered out', () => {
                 it('should remove highlighting from corresponding lines and areas', () => {
-                    firstItem.on('mouseout')(firstItem.datum());
+                    const dummyEvt = {};
+                    firstItem.on('mouseout')(dummyEvt, firstItem.datum());
                     nthStack(0).forEachBar(bar => {
                         expect(bar.classed('highlight')).toBeFalsy();
                     });
                 });
 
                 it('should fade in non-corresponding lines and areas', () => {
-                    firstItem.on('mouseout')(firstItem.datum());
+                    const dummyEvt = {};
+                    firstItem.on('mouseout')(dummyEvt, firstItem.datum());
                     nthStack(1).forEachBar(bar => {
                         expect(bar.classed('fadeout')).toBeFalsy();
                     });

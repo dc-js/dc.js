@@ -634,13 +634,15 @@ describe('dc.lineChart', () => {
 
             describe('when a legend item is hovered out', () => {
                 it('should remove highlighting from corresponding lines and areas', () => {
-                    firstItem.on('mouseout')(firstItem.datum());
+                    const dummyEvt = {};
+                    firstItem.on('mouseout')(dummyEvt, firstItem.datum());
                     expect(nthLine(0).classed('highlight')).toBeFalsy();
                     expect(nthArea(0).classed('highlight')).toBeFalsy();
                 });
 
                 it('should fade in non-corresponding lines and areas', () => {
-                    firstItem.on('mouseout')(firstItem.datum());
+                    const dummyEvt = {};
+                    firstItem.on('mouseout')(dummyEvt, firstItem.datum());
                     expect(nthLine(1).classed('fadeout')).toBeFalsy();
                     expect(nthArea(1).classed('fadeout')).toBeFalsy();
                 });

@@ -53,7 +53,8 @@ describe('dc.textFilterWidget', () => {
         const mockTyping = function (q) {
             const i = d3.select('input');
             i.nodes()[0].value = q;
-            i.on('input').call(i.node(), i.datum());
+            const dummyEvt = {};
+            i.on('input').call(i.node(), dummyEvt, i.datum());
         };
 
         beforeEach(() => {
