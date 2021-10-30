@@ -5,7 +5,6 @@ import { transition } from '../core/core';
 import { events } from '../core/events';
 import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/types';
 import { IBubbleMixinConf } from './i-bubble-mixin-conf';
-import { adaptHandler } from '../core/d3compat';
 import { IBaseMixinConf } from './i-base-mixin-conf';
 
 interface MinimalBase {
@@ -202,10 +201,7 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
                         .append('text')
                         .attr('text-anchor', 'middle')
                         .attr('dy', '.3em')
-                        .on(
-                            'click',
-                            adaptHandler(d => this.onClick(d))
-                        );
+                        .on('click', (evt, d) => this.onClick(d));
                 }
 
                 label

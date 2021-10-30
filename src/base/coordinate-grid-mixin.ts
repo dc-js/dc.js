@@ -24,7 +24,6 @@ import {
 } from '../core/types';
 import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
 import { OrdinalColors } from './colors/ordinal-colors';
-import { adaptHandler } from '../core/d3compat';
 import { RangedFilter } from '../core/filters/ranged-filter';
 
 const GRID_LINE_CLASS = 'grid-line';
@@ -132,10 +131,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         this._resizing = false;
         this._unitCount = undefined;
 
-        this._zoom = zoom().on(
-            'zoom',
-            adaptHandler((d, evt) => this._onZoom(evt))
-        );
+        this._zoom = zoom().on('zoom', (evt, d) => this._onZoom(evt));
         this._nullZoom = zoom().on('zoom', null);
         this._hasBeenMouseZoomable = false;
         this._ignoreZoomEvents = false; // ignore when carrying out programmatic zoom operations
@@ -882,10 +878,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      */
     protected _renderBrush(g: SVGGElementSelection, doTransition: boolean) {
         if (this._conf.brushOn) {
-            this._brush.on(
-                'start brush end',
-                adaptHandler((d, evt) => this._brushing(evt))
-            );
+            this._brush.on('start brush end', (evt, d) => this._brushing(evt));
 
             // To retrieve selection we need self._gBrush
             this._gBrush = g

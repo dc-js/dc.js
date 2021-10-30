@@ -616,7 +616,8 @@ describe('dc.lineChart', () => {
                     .render();
 
                 firstItem = chart.select('g.dc-legend g.dc-legend-item');
-                firstItem.on('mouseover')(firstItem.datum());
+                const dummyEvt = {};
+                firstItem.on('mouseover')(dummyEvt, firstItem.datum());
             });
 
             describe('when a legend item is hovered over', () => {

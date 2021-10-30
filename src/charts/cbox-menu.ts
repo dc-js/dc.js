@@ -6,7 +6,6 @@ import { uniqueId } from '../core/utils';
 import { ChartGroupType, ChartParentType } from '../core/types';
 import { ICboxMenuConf } from './i-cbox-menu-conf';
 import { ascending } from 'd3-array';
-import { adaptHandler } from '../core/d3compat';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';
 const ITEM_CSS_CLASS = 'dc-cbox-item';
@@ -129,12 +128,9 @@ export class CboxMenu extends BaseMixin {
                 .append('input')
                 .attr('type', 'reset')
                 .text(this._conf.promptText)
-                .on(
-                    'click',
-                    adaptHandler(function (d, evt) {
-                        return chart._onChange(d, evt, this);
-                    })
-                );
+                .on('click', function (evt, d) {
+                    return chart._onChange(d, evt, this);
+                });
         } else {
             const li = this._cbox.append('li');
             li.append('input')
@@ -150,12 +146,9 @@ export class CboxMenu extends BaseMixin {
 
         this._cbox.selectAll(`li.${ITEM_CSS_CLASS}`).sort(this._conf.order);
 
-        this._cbox.on(
-            'change',
-            adaptHandler(function (d, evt) {
-                return chart._onChange(d, evt, this);
-            })
-        );
+        this._cbox.on('change', function (evt, d) {
+            return chart._onChange(d, evt, this);
+        });
         return options;
     }
 

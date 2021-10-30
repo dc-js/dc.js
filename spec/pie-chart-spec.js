@@ -708,38 +708,42 @@ describe('dc.pieChart', () => {
             });
         });
         it('hovering on label should highlight corresponding slice', () => {
+            const dummyEvt = {};
             chart.selectAll('#pie-chart-external-labeling text.pie-slice').each(function (d, i) {
-                const legendItem = d3.select(this);
-                legendItem.on('mouseover')(legendItem.datum(), i);
+                const labelItem = d3.select(this);
+                labelItem.on('mouseover')(dummyEvt, labelItem.datum());
 
                 expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeTruthy();
-                legendItem.on('mouseout')(legendItem.datum());
+                labelItem.on('mouseout')(dummyEvt, labelItem.datum());
             });
         });
         it('unhovering label removes highlight from corresponding slice', () => {
+            const dummyEvt = {};
             chart.selectAll('#pie-chart-external-labeling text.pie-slice').each(function (d, i) {
-                const legendItem = d3.select(this);
-                legendItem.on('mouseover')(legendItem.datum(), i);
-                legendItem.on('mouseout')(legendItem.datum(), i);
+                const labelItem = d3.select(this);
+                labelItem.on('mouseover')(dummyEvt, labelItem.datum());
+                labelItem.on('mouseout')(dummyEvt, labelItem.datum());
 
                 expect(chart.select(`.pie-slice._${i}`).classed('highlight')).toBeFalsy();
             });
         });
 
         it('hovering on path should highlight corresponding slice', () => {
+            const dummyEvt = {};
             chart.selectAll('#pie-chart-external-labeling polyline.pie-path').each(function (d, i) {
-                const legendItem = d3.select(this);
-                legendItem.on('mouseover')(legendItem.datum(), i);
+                const pathItem = d3.select(this);
+                pathItem.on('mouseover')(dummyEvt, pathItem.datum());
 
                 expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeTruthy();
-                legendItem.on('mouseout')(legendItem.datum());
+                pathItem.on('mouseout')(dummyEvt, pathItem.datum());
             });
         });
-        it('unhovering label removes highlight from corresponding slice', () => {
+        it('unhovering path removes highlight from corresponding slice', () => {
+            const dummyEvt = {};
             chart.selectAll('#pie-chart-external-labeling polyline.pie-path').each(function (d, i) {
-                const legendItem = d3.select(this);
-                legendItem.on('mouseover')(legendItem.datum(), i);
-                legendItem.on('mouseout')(legendItem.datum(), i);
+                const pathItem = d3.select(this);
+                pathItem.on('mouseover')(dummyEvt, pathItem.datum());
+                pathItem.on('mouseout')(dummyEvt, pathItem.datum());
 
                 expect(chart.select(`.pie-slice._${i}`).classed('highlight')).toBeFalsy();
             });
@@ -768,19 +772,21 @@ describe('dc.pieChart', () => {
             });
         });
         it('hovering on items should highlight corresponding slice', () => {
+            const dummyEvt = {};
             chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
                 const legendItem = d3.select(this);
-                legendItem.on('mouseover')(legendItem.datum());
+                legendItem.on('mouseover')(dummyEvt, legendItem.datum());
 
                 expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeTruthy();
-                legendItem.on('mouseout')(legendItem.datum());
+                legendItem.on('mouseout')(dummyEvt, legendItem.datum());
             });
         });
         it('unhovering removes highlight from corresponding slice', () => {
+            const dummyEvt = {};
             chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
                 const legendItem = d3.select(this);
-                legendItem.on('mouseover')(legendItem.datum());
-                legendItem.on('mouseout')(legendItem.datum());
+                legendItem.on('mouseover')(dummyEvt, legendItem.datum());
+                legendItem.on('mouseout')(dummyEvt, legendItem.datum());
 
                 expect(chart.select(`g.pie-slice._${i}`).classed('highlight')).toBeFalsy();
             });
@@ -788,7 +794,8 @@ describe('dc.pieChart', () => {
         it('clicking on items filters them', () => {
             chart.selectAll('g.dc-legend g.dc-legend-item').each(function (d, i) {
                 const legendItem = d3.select(this);
-                legendItem.on('click')(legendItem.datum());
+                const dummyEvt = {};
+                legendItem.on('click')(dummyEvt, legendItem.datum());
 
                 expect(chart.hasFilter(d.name)).toBeTruthy();
 

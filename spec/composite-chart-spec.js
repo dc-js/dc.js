@@ -368,10 +368,11 @@ describe('dc.compositeChart', () => {
             it('should properly delegate highlighting to its children', () => {
                 const firstItem = chart.select('g.dc-legend g.dc-legend-item');
 
-                firstItem.on('mouseover')(firstItem.datum());
+                const dummyEvt = {};
+                firstItem.on('mouseover')(dummyEvt, firstItem.datum());
                 expect(chart.selectAll('rect.highlight').size()).toBe(6);
                 expect(chart.selectAll('path.fadeout').size()).toBe(4);
-                firstItem.on('mouseout')(firstItem.datum());
+                firstItem.on('mouseout')(dummyEvt, firstItem.datum());
                 expect(chart.selectAll('rect.highlight').size()).toBe(0);
                 expect(chart.selectAll('path.fadeout').size()).toBe(0);
             });
@@ -379,7 +380,8 @@ describe('dc.compositeChart', () => {
             it('should hide hidable child stacks', () => {
                 const dateValueGroupLine2 = d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[3]);
 
-                dateValueGroupLine2.on('click')(dateValueGroupLine2.datum());
+                const dummyEvt = {};
+                dateValueGroupLine2.on('click')(dummyEvt, dateValueGroupLine2.datum());
                 expect(dateValueGroupLine2.text()).toBe('Date Value Group Line 2');
                 expect(d3.select(chart.selectAll('g.dc-legend g.dc-legend-item').nodes()[3]).classed('fadeout')).toBeTruthy();
                 expect(chart.selectAll('path.line').size()).toEqual(3);

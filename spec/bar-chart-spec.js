@@ -271,7 +271,8 @@ describe('dc.BarChart', () => {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     // fake a click
                     const abar = chart.selectAll('rect.bar:nth-child(3)');
-                    abar.on('click')(abar.datum());
+                    const dummyEvt = {};
+                    abar.on('click')(dummyEvt, abar.datum());
                     expect(dimension.top(Infinity).length).toEqual(1);
                 });
             });
@@ -285,7 +286,8 @@ describe('dc.BarChart', () => {
                     expect(dimension.top(Infinity).length).toEqual(10);
                     // fake a click
                     const alabel = chart.select('text.barLabel');
-                    alabel.on('click')(alabel.datum());
+                    const dummyEvt = {};
+                    alabel.on('click')(dummyEvt, alabel.datum());
                     expect(dimension.top(Infinity).length).toEqual(3);
                 });
             });
@@ -682,12 +684,13 @@ describe('dc.BarChart', () => {
             let firstItem;
 
             beforeEach(() => {
+                const dummyEvt = {};
                 chart.stack(group)
                     .legend(new dc.Legend().x(400).y(10).itemHeight(13).gap(5))
                     .render();
 
                 firstItem = chart.select('g.dc-legend g.dc-legend-item');
-                firstItem.on('mouseover')(firstItem.datum());
+                firstItem.on('mouseover')(dummyEvt, firstItem.datum());
             });
 
             describe('when a legend item is hovered over', () => {

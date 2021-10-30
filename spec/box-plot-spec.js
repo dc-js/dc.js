@@ -281,8 +281,9 @@ describe('dc.BoxPlot', () => {
         });
 
         describe('clicking on a box', () => {
+            const dummyEvt = {};
             beforeEach(() => {
-                box(0).on('click').call(chart, box(0).datum());
+                box(0).on('click').call(chart, dummyEvt, box(0).datum());
             });
 
             it('should apply a filter to the chart', () => {

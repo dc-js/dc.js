@@ -13,7 +13,6 @@ import {
     SVGGElementSelection,
 } from '../core/types';
 import { IRowChartConf } from './i-row-chart-conf';
-import { adaptHandler } from '../core/d3compat';
 import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
 
 /**
@@ -215,10 +214,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
             .select('rect')
             .attr('height', height)
             .attr('fill', (d, i) => this._colorHelper.getColor(d, i))
-            .on(
-                'click',
-                adaptHandler(d => this._onClick(d))
-            )
+            .on('click', (evt, d) => this._onClick(d))
             .classed('deselected', d => (this.hasFilter() ? !this._isSelectedRow(d) : false))
             .classed('selected', d => (this.hasFilter() ? this._isSelectedRow(d) : false));
 
@@ -239,19 +235,13 @@ export class RowChart extends ColorMixin(MarginMixin) {
 
     private _createLabels(rowEnter: SVGGElementSelection): void {
         if (this._conf.renderLabel) {
-            rowEnter.append('text').on(
-                'click',
-                adaptHandler(d => this._onClick(d))
-            );
+            rowEnter.append('text').on('click', (evt, d) => this._onClick(d));
         }
         if (this._conf.renderTitleLabel) {
             rowEnter
                 .append('text')
                 .attr('class', this._titleRowCssClass)
-                .on(
-                    'click',
-                    adaptHandler(d => this._onClick(d))
-                );
+                .on('click', (evt, d) => this._onClick(d));
         }
     }
 
@@ -262,10 +252,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
                 .attr('x', this._conf.labelOffsetX)
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
-                .on(
-                    'click',
-                    adaptHandler(d => this._onClick(d))
-                )
+                .on('click', (evt, d) => this._onClick(d))
                 .attr('class', (d, i) => `${this._rowCssClass} _${i}`)
                 .text(d => this._conf.label(d));
 
@@ -283,7 +270,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
                 .attr('y', this._labelOffsetY)
                 .attr('dy', this._dyOffset)
                 .attr('text-anchor', 'end')
-                .on('click', d => adaptHandler(this._onClick(d)))
+                .on('click', (evt, d) => this._onClick(d))
                 .attr('class', (d, i) => `${this._titleRowCssClass} _${i}`)
                 .text(d => this._conf.title(d));
 

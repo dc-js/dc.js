@@ -2,7 +2,6 @@ import { isNumber } from '../core/utils';
 import { constants } from '../core/constants';
 import { LegendItem, LegendTextAccessor, ParentOfLegend } from '../core/types';
 import { Selection } from 'd3-selection';
-import { adaptHandler } from '../core/d3compat';
 
 const LABEL_GAP = 2;
 
@@ -245,24 +244,15 @@ export class Legend {
             .enter()
             .append('g')
             .attr('class', 'dc-legend-item')
-            .on(
-                'mouseover',
-                adaptHandler(d => {
-                    this._parent.legendHighlight(d);
-                })
-            )
-            .on(
-                'mouseout',
-                adaptHandler(d => {
-                    this._parent.legendReset(d);
-                })
-            )
-            .on(
-                'click',
-                adaptHandler(d => {
-                    d.chart.legendToggle(d);
-                })
-            );
+            .on('mouseover', (evt, d) => {
+                this._parent.legendHighlight(d);
+            })
+            .on('mouseout', (evt, d) => {
+                this._parent.legendReset(d);
+            })
+            .on('click', (evt, d) => {
+                d.chart.legendToggle(d);
+            });
 
         if (this._highlightSelected) {
             // TODO: fragile code - there may be other types of filters
