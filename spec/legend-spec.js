@@ -69,8 +69,7 @@ describe('dc.legend', () => {
         });
 
         it('not allow hiding stacks be default', () => {
-            const dummyEvt = {};
-            legendItem(0).on('click')(dummyEvt, legendItem(0).datum());
+            legendItem(0).on('click')({}, legendItem(0).datum());
             expect(chart.selectAll('path.line').size()).toBe(3);
         });
 
@@ -242,8 +241,7 @@ describe('dc.legend', () => {
 
         describe('clicking on a legend item', () => {
             beforeEach(() => {
-                const dummyEvt = {};
-                legendItem(0).on('click')(dummyEvt, legendItem(0).datum());
+                legendItem(0).on('click')({}, legendItem(0).datum());
             });
 
             it('should fade out the legend item', () => {
@@ -255,15 +253,13 @@ describe('dc.legend', () => {
             });
 
             it('disable hover highlighting for that legend item', () => {
-                const dummyEvt = {};
-                legendItem(0).on('mouseover')(dummyEvt, legendItem(0).datum());
+                legendItem(0).on('mouseover')({}, legendItem(0).datum());
                 expect(d3.select(chart.selectAll('path.line').nodes()[1]).classed('fadeout')).toBeFalsy();
             });
 
             describe('clicking on a faded out legend item', () => {
                 beforeEach(() => {
-                    const dummyEvt = {};
-                    legendItem(0).on('click')(dummyEvt, legendItem(0).datum());
+                    legendItem(0).on('click')({}, legendItem(0).datum());
                 });
 
                 it('should unfade the legend item', () => {

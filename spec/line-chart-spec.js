@@ -616,8 +616,7 @@ describe('dc.lineChart', () => {
                     .render();
 
                 firstItem = chart.select('g.dc-legend g.dc-legend-item');
-                const dummyEvt = {};
-                firstItem.on('mouseover')(dummyEvt, firstItem.datum());
+                firstItem.on('mouseover')({}, firstItem.datum());
             });
 
             describe('when a legend item is hovered over', () => {
@@ -634,15 +633,13 @@ describe('dc.lineChart', () => {
 
             describe('when a legend item is hovered out', () => {
                 it('should remove highlighting from corresponding lines and areas', () => {
-                    const dummyEvt = {};
-                    firstItem.on('mouseout')(dummyEvt, firstItem.datum());
+                    firstItem.on('mouseout')({}, firstItem.datum());
                     expect(nthLine(0).classed('highlight')).toBeFalsy();
                     expect(nthArea(0).classed('highlight')).toBeFalsy();
                 });
 
                 it('should fade in non-corresponding lines and areas', () => {
-                    const dummyEvt = {};
-                    firstItem.on('mouseout')(dummyEvt, firstItem.datum());
+                    firstItem.on('mouseout')({}, firstItem.datum());
                     expect(nthLine(1).classed('fadeout')).toBeFalsy();
                     expect(nthArea(1).classed('fadeout')).toBeFalsy();
                 });

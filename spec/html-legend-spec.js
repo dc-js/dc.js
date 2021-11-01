@@ -66,8 +66,7 @@ describe('dc.htmlLegend', () => {
             });
 
             it('not allow hiding stacks be default', () => {
-                const dummyEvt = {};
-                legendItem(0, 'vertical').on('click')(dummyEvt, legendItem(0, 'vertical').datum());
+                legendItem(0, 'vertical').on('click')({}, legendItem(0, 'vertical').datum());
                 expect(chart.selectAll('path.line').size()).toBe(3);
             });
 
@@ -101,8 +100,7 @@ describe('dc.htmlLegend', () => {
 
             it('not allow hiding stacks be default', () => {
                 const firstLegendItem = legendItem(0, 'horizontal');
-                const dummyEvt = {};
-                firstLegendItem.on('click')(dummyEvt, firstLegendItem.datum());
+                firstLegendItem.on('click')({}, firstLegendItem.datum());
                 expect(chart.selectAll('path.line').size()).toBe(3);
             });
         });

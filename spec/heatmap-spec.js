@@ -296,9 +296,8 @@ describe('dc.heatmap', () => {
         });
 
         function clickCellOnChart (_chart, x, y) {
-            const dummyEvt = {};
             const oneCell = _chart.selectAll('.box-group').filter(d => d.key[0] === x && d.key[1] === y);
-            oneCell.select('rect').on('click')(dummyEvt, oneCell.datum());
+            oneCell.select('rect').on('click')({}, oneCell.datum());
             return oneCell;
         }
 
@@ -340,12 +339,11 @@ describe('dc.heatmap', () => {
             chart.render();
         });
         it('should toggle a filter for the clicked box', () => {
-            const dummyEvt = {};
             chart.selectAll('.box-group').each(function (d) {
                 const cell = d3.select(this).select('rect');
-                cell.on('click')(dummyEvt, d);
+                cell.on('click')({}, d);
                 expect(chart.hasFilter(d.key)).toBeTruthy();
-                cell.on('click')(dummyEvt, d);
+                cell.on('click')({}, d);
                 expect(chart.hasFilter(d.key)).toBeFalsy();
             });
         });
@@ -362,28 +360,26 @@ describe('dc.heatmap', () => {
 
             describe('with nothing previously filtered', () => {
                 it('should filter all cells on that axis', () => {
-                    const dummyEvt = {};
                     chart.selectAll('.cols.axis text').each(function (d) {
                         const axisLabel = d3.select(this);
-                        axisLabel.on('click')(dummyEvt, d);
+                        axisLabel.on('click')({}, d);
                         assertOnlyThisAxisIsFiltered(chart, 0, d);
-                        axisLabel.on('click')(dummyEvt, d);
+                        axisLabel.on('click')({}, d);
                     });
                     chart.selectAll('.rows.axis text').each(function (d) {
                         const axisLabel = d3.select(this);
-                        axisLabel.on('click')(dummyEvt, d);
+                        axisLabel.on('click')({}, d);
                         assertOnlyThisAxisIsFiltered(chart, 1, d);
-                        axisLabel.on('click')(dummyEvt, d);
+                        axisLabel.on('click')({}, d);
                     });
                 });
             });
             describe('with one cell on that axis already filtered', () => {
                 it('should filter all cells on that axis (and the original cell should remain filtered)', () => {
-                    const dummyEvt = {};
                     const boxNodes = chart.selectAll('.box-group').nodes();
                     const box = d3.select(boxNodes[Math.floor(Math.random() * boxNodes.length)]);
 
-                    box.select('rect').on('click')(dummyEvt, box.datum());
+                    box.select('rect').on('click')({}, box.datum());
 
                     expect(chart.hasFilter(box.datum().key)).toBeTruthy();
 
@@ -392,21 +388,20 @@ describe('dc.heatmap', () => {
                     const columns = chart.selectAll('.cols.axis text');
                     const column = columns.filter(columnData => columnData === xVal);
 
-                    column.on('click')(dummyEvt, column.datum());
+                    column.on('click')({}, column.datum());
 
                     assertOnlyThisAxisIsFiltered(chart, 0, xVal);
 
-                    column.on('click')(dummyEvt, column.datum());
+                    column.on('click')({}, column.datum());
                 });
             });
             describe('with all cells on that axis already filtered', () => {
                 it('should remove all filters on that axis', () => {
                     const xVal = 1;
-                    const dummyEvt = {};
                     chart.selectAll('.box-group').each(function (d) {
                         const box = d3.select(this);
                         if (d.key[0] === xVal) {
-                            box.select('rect').on('click')(dummyEvt, box.datum());
+                            box.select('rect').on('click')({}, box.datum());
                         }
                     });
 
@@ -415,7 +410,7 @@ describe('dc.heatmap', () => {
                     const columns = chart.selectAll('.cols.axis text');
                     const column = columns.filter(columnData => columnData === xVal);
 
-                    column.on('click')(dummyEvt, column.datum());
+                    column.on('click')({}, column.datum());
 
                     chart.select('.box-group').each(d => {
                         expect(chart.hasFilter(d.key)).toBeFalsy();
