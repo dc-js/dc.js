@@ -16,7 +16,7 @@ const BUBBLE_CLASS = 'bubble';
  * and coloring.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * - {@link https://dc-js.github.io/dc.js/crime/index.html Canadian City Crime Stats}
  * @mixes BubbleMixin
  * @mixes BaseMixin
  */

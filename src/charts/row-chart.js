@@ -12,7 +12,7 @@ import {d3compat} from '../core/config';
  * Concrete row chart implementation.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link https://dc-js.github.io/dc.js/ Nasdaq 100 Index}
  * @mixes CapMixin
  * @mixes MarginMixin
  * @mixes ColorMixin

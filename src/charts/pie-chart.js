@@ -18,7 +18,7 @@ const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
  * which defaults to sorting by key.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link https://dc-js.github.io/dc.js/ Nasdaq 100 Index}
  * @mixes CapMixin
  * @mixes ColorMixin
  * @mixes BaseMixin

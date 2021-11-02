@@ -9,8 +9,8 @@ const LABEL_GAP = 2;
  * labels.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * - {@link https://dc-js.github.io/dc.js/ Nasdaq 100 Index}
+ * - {@link https://dc-js.github.io/dc.js/crime/index.html Canadian City Crime Stats}
  * @example
  * chart.legend(new Legend().x(400).y(10).itemHeight(13).gap(5))
  * @returns {Legend}

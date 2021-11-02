@@ -127,7 +127,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
      * boundaries for the focus chart, so its dimension values must be compatible with the domain of
      * the focus chart.
      *
-     * See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
+     * See the [Nasdaq 100 Index](https://dc-js.github.io/dc.js/) example for this effect in action.
      * @param {CoordinateGridMixin} [rangeChart]
      * @returns {CoordinateGridMixin}
      */

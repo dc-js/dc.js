@@ -12,8 +12,8 @@ import {d3compat} from '../core/config';
  * - color
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
+ * - {@link https://dc-js.github.io/dc.js/ Nasdaq 100 Index}
+ * - {@link https://dc-js.github.io/dc.js/vc/index.html US Venture Capital Landscape 2011}
  * @mixes BubbleMixin
  * @mixes CoordinateGridMixin
  */

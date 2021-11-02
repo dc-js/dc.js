@@ -34,8 +34,8 @@ const LABEL_PADDING = 3;
  * Concrete line/area chart implementation.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
- * - {@link http://dc-js.github.com/dc.js/crime/index.html Canadian City Crime Stats}
+ * - {@link https://dc-js.github.io/dc.js/ Nasdaq 100 Index}
+ * - {@link https://dc-js.github.io/dc.js/crime/index.html Canadian City Crime Stats}
  * @mixes StackMixin
  * @mixes CoordinateGridMixin
  */

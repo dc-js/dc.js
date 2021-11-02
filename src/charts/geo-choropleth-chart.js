@@ -15,7 +15,7 @@ import {d3compat} from '../core/config';
  * {@link http://bl.ocks.org/4060606 the great d3 choropleth example}.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/vc/index.html US Venture Capital Landscape 2011}
+ * - {@link https://dc-js.github.io/dc.js/vc/index.html US Venture Capital Landscape 2011}
  * @mixes ColorMixin
  * @mixes BaseMixin
  */

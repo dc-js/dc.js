@@ -16,7 +16,7 @@ import {BaseMixin} from '../base/base-mixin';
  * {@link NumberDisplay} widget instead.
  *
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link https://dc-js.github.io/dc.js/ Nasdaq 100 Index}
  * @mixes BaseMixin
  */
 export class DataCount extends BaseMixin {

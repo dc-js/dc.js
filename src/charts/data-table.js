@@ -28,7 +28,7 @@ const HEAD_CSS_CLASS = 'dc-table-head';
  * keying function for {@link https://github.com/d3/d3-collection/blob/master/README.md#nest nesting} the data
  * together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
  * Examples:
- * - {@link http://dc-js.github.com/dc.js/ Nasdaq 100 Index}
+ * - {@link https://dc-js.github.io/dc.js/ Nasdaq 100 Index}
  * - {@link http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html dataTable on a crossfilter group}
  * ({@link https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html source})
  *
