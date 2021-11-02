@@ -21,8 +21,8 @@ global functions <a href="#filterAll">filterAll</a>, <a href="#refocusAll">refoc
 <dd><p>Concrete bar chart/histogram implementation.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
-<li><a href="http://dc-js.github.com/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
 </ul>
 </dd>
 <dt><a href="#BoxPlot">BoxPlot</a></dt>
@@ -46,8 +46,8 @@ following dimensions:</p>
 </ul>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
-<li><a href="http://dc-js.github.com/dc.js/vc/index.html">US Venture Capital Landscape 2011</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/vc/index.html">US Venture Capital Landscape 2011</a></li>
 </ul>
 </dd>
 <dt><a href="#BubbleOverlay">BubbleOverlay</a></dt>
@@ -57,7 +57,7 @@ typical x and y positioning while retaining the capability to visualize data usi
 and coloring.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
+<li><a href="https://dc-js.github.io/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
 </ul>
 </dd>
 <dt><a href="#CboxMenu">CboxMenu</a></dt>
@@ -83,7 +83,7 @@ total. If you want a more general-purpose numeric display, please use the
 <a href="#NumberDisplay">NumberDisplay</a> widget instead.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
 </ul>
 </dd>
 <dt><a href="#DataGrid">DataGrid</a></dt>
@@ -113,7 +113,7 @@ keying function for <a href="https://github.com/d3/d3-collection/blob/master/REA
 together in sections.  This was confusing so it has been renamed to <code>section</code>, although <code>group</code> still works.
 Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
 <li><a href="http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html">dataTable on a crossfilter group</a>
 (<a href="https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html">source</a>)</li>
 </ul>
@@ -124,7 +124,7 @@ from GeoJson data. This chart implementation was inspired by
 <a href="http://bl.ocks.org/4060606">the great d3 choropleth example</a>.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/vc/index.html">US Venture Capital Landscape 2011</a></li>
+<li><a href="https://dc-js.github.io/dc.js/vc/index.html">US Venture Capital Landscape 2011</a></li>
 </ul>
 </dd>
 <dt><a href="#HeatMap">HeatMap</a></dt>
@@ -139,16 +139,16 @@ labels.</p>
 labels.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
-<li><a href="http://dc-js.github.com/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
 </ul>
 </dd>
 <dt><a href="#LineChart">LineChart</a></dt>
 <dd><p>Concrete line/area chart implementation.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
-<li><a href="http://dc-js.github.com/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/crime/index.html">Canadian City Crime Stats</a></li>
 </ul>
 </dd>
 <dt><a href="#NumberDisplay">NumberDisplay</a></dt>
@@ -169,14 +169,14 @@ slice relative to the sum of all values. Slices are ordered by <a href="#BaseMix
 which defaults to sorting by key.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
 </ul>
 </dd>
 <dt><a href="#RowChart">RowChart</a></dt>
 <dd><p>Concrete row chart implementation.</p>
 <p>Examples:</p>
 <ul>
-<li><a href="http://dc-js.github.com/dc.js/">Nasdaq 100 Index</a></li>
+<li><a href="https://dc-js.github.io/dc.js/">Nasdaq 100 Index</a></li>
 </ul>
 </dd>
 <dt><a href="#ScatterPlot">ScatterPlot</a></dt>
@@ -527,8 +527,8 @@ If no group is provided, the charts in the default group are returned.
 Concrete bar chart/histogram implementation.
 
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
+- [Canadian City Crime Stats](https://dc-js.github.io/dc.js/crime/index.html)
 
 **Kind**: global class  
 **Mixes**: [<code>StackMixin</code>](#StackMixin)  
@@ -848,8 +848,8 @@ following dimensions:
 - color
 
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-- [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
+- [US Venture Capital Landscape 2011](https://dc-js.github.io/dc.js/vc/index.html)
 
 **Kind**: global class  
 **Mixes**: [<code>BubbleMixin</code>](#BubbleMixin), [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)  
@@ -897,7 +897,7 @@ typical x and y positioning while retaining the capability to visualize data usi
 and coloring.
 
 Examples:
-- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+- [Canadian City Crime Stats](https://dc-js.github.io/dc.js/crime/index.html)
 
 **Kind**: global class  
 **Mixes**: [<code>BubbleMixin</code>](#BubbleMixin), [<code>BaseMixin</code>](#BaseMixin)  
@@ -1299,7 +1299,7 @@ total. If you want a more general-purpose numeric display, please use the
 [NumberDisplay](#NumberDisplay) widget instead.
 
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
 
 **Kind**: global class  
 **Mixes**: [<code>BaseMixin</code>](#BaseMixin)  
@@ -1575,7 +1575,7 @@ Note: Formerly the data table (and data grid chart) used the [group](#DataTable+
 keying function for [nesting](https://github.com/d3/d3-collection/blob/master/README.md#nest) the data
 together in sections.  This was confusing so it has been renamed to `section`, although `group` still works.
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
 - [dataTable on a crossfilter group](http://dc-js.github.io/dc.js/examples/table-on-aggregated-data.html)
 ([source](https://github.com/dc-js/dc.js/blob/master/web-src/examples/table-on-aggregated-data.html))
 
@@ -1835,7 +1835,7 @@ from GeoJson data. This chart implementation was inspired by
 [the great d3 choropleth example](http://bl.ocks.org/4060606).
 
 Examples:
-- [US Venture Capital Landscape 2011](http://dc-js.github.com/dc.js/vc/index.html)
+- [US Venture Capital Landscape 2011](https://dc-js.github.io/dc.js/vc/index.html)
 
 **Kind**: global class  
 **Mixes**: [<code>ColorMixin</code>](#ColorMixin), [<code>BaseMixin</code>](#BaseMixin)  
@@ -2263,8 +2263,8 @@ Legend is a attachable widget that can be added to other dc charts to render hor
 labels.
 
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
+- [Canadian City Crime Stats](https://dc-js.github.io/dc.js/crime/index.html)
 
 **Kind**: global class  
 
@@ -2440,8 +2440,8 @@ SVG focusable.
 Concrete line/area chart implementation.
 
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
-- [Canadian City Crime Stats](http://dc-js.github.com/dc.js/crime/index.html)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
+- [Canadian City Crime Stats](https://dc-js.github.io/dc.js/crime/index.html)
 
 **Kind**: global class  
 **Mixes**: [<code>StackMixin</code>](#StackMixin), [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)  
@@ -2759,7 +2759,7 @@ slice relative to the sum of all values. Slices are ordered by [ordering](#BaseM
 which defaults to sorting by key.
 
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
 
 **Kind**: global class  
 **Mixes**: [<code>CapMixin</code>](#CapMixin), [<code>ColorMixin</code>](#ColorMixin), [<code>BaseMixin</code>](#BaseMixin)  
@@ -2918,7 +2918,7 @@ Get or set whether to draw lines from pie slices to their labels.
 Concrete row chart implementation.
 
 Examples:
-- [Nasdaq 100 Index](http://dc-js.github.com/dc.js/)
+- [Nasdaq 100 Index](https://dc-js.github.io/dc.js/)
 
 **Kind**: global class  
 **Mixes**: [<code>CapMixin</code>](#CapMixin), [<code>MarginMixin</code>](#MarginMixin), [<code>ColorMixin</code>](#ColorMixin), [<code>BaseMixin</code>](#BaseMixin)  
@@ -5457,7 +5457,7 @@ Usually the range and focus charts will share a dimension. The range chart will 
 boundaries for the focus chart, so its dimension values must be compatible with the domain of
 the focus chart.
 
-See the [Nasdaq 100 Index](http://dc-js.github.com/dc.js/) example for this effect in action.
+See the [Nasdaq 100 Index](https://dc-js.github.io/dc.js/) example for this effect in action.
 
 **Kind**: instance method of [<code>CoordinateGridMixin</code>](#CoordinateGridMixin)  
 
