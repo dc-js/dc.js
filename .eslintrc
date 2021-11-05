@@ -4,6 +4,9 @@
     "es6": true,
     "node": true
   },
+  "plugins": [
+    "html"
+  ],
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module"
@@ -36,7 +39,7 @@
   },
   "overrides": [
     {
-      "files": ["spec/**/*.js", "web-src/**/*.js"],
+      "files": ["spec/**/*.js", "web-src/**/*.*"],
       "globals": {
         "crossfilter": false,
         "d3": false,
