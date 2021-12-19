@@ -28,18 +28,14 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.SunburstChart("#test");
+const chart = new dc.SunburstChart("#test");
 
-d3.csv("morley.csv").then(function(experiments) {
+d3.csv("morley.csv").then((experiments) => {
 
-    var ndx = crossfilter(experiments),
-        runDimension = ndx.dimension(function (d) {
-            return [d.Expt, d.Run];
-        });
+    const ndx = crossfilter(experiments),
+        runDimension = ndx.dimension((d) => [d.Expt, d.Run]);
 
-    var speedSumGroup = runDimension.group().reduceSum(function (d) {
-        return d.Speed;
-    });
+    const speedSumGroup = runDimension.group().reduceSum((d) => d.Speed);
 
     chart
         .width(768)

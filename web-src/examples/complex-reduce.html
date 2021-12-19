@@ -58,20 +58,20 @@
   // instead of calculating the desired metric on every change, which is slow, we'll just maintain
   // these arrays of rows and calculate the metrics when needed in the accessor
   function groupArrayAdd(keyfn) {
-      var bisect = d3.bisector(keyfn);
+      const bisect = d3.bisector(keyfn);
       return function(elements, item) {
-          var pos = bisect.right(elements, keyfn(item));
+          const pos = bisect.right(elements, keyfn(item));
           elements.splice(pos, 0, item);
           return elements;
       };
   }
 
   function groupArrayRemove(keyfn) {
-      var bisect = d3.bisector(keyfn);
+      const bisect = d3.bisector(keyfn);
       return function(elements, item) {
-          var pos = bisect.left(elements, keyfn(item));
+          const pos = bisect.left(elements, keyfn(item));
           if(keyfn(elements[pos])===keyfn(item))
-              elements.splice(pos, 1);
+              {elements.splice(pos, 1);}
           return elements;
       };
   }
@@ -82,87 +82,87 @@
 
   // adapted from Code Review: Finding the mode of an array
   // http://codereview.stackexchange.com/a/68431/108362
-  var mode = function mode(arr, acc) {
-      return arr.reduce(function(current, item) {
-          item = acc(item);
-          var val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
-          if (val > current.greatestFreq) {
-              current.greatestFreq = val;
-              current.mode = item;
-          }
-          return current;
-      }, {mode: null, greatestFreq: -Infinity, numMapping: {}}, arr).mode;
+  const mode = function mode(arr, acc) {
+      return arr.reduce((current, item) => {
+        item = acc(item);
+        const val = current.numMapping[item] = (current.numMapping[item] || 0) + 1;
+        if (val > current.greatestFreq) {
+            current.greatestFreq = val;
+            current.mode = item;
+        }
+        return current;
+    }, {mode: null, greatestFreq: -Infinity, numMapping: {}}, arr).mode;
   };
 
-  var runChart = new dc.BarChart("#test-run"), exptChart = new dc.BarChart("#test-expt");
-  d3.csv("morley.csv").then(function(experiments) {
-      experiments.forEach(function(x) {
-          x.Speed = +x.Speed;
-      });
-
-      var ndx = crossfilter(experiments),
-          runKey = function(d) {return +d.Run;},
-          exptKey = function(d) {return +d.Expt;},
-          speedValue = function(d) {return d.Speed;},
-          runDimension = ndx.dimension(runKey),
-          exptDimension = ndx.dimension(exptKey),
-          runAvgGroup = runDimension.group().reduce(groupArrayAdd(exptKey), groupArrayRemove(exptKey), groupArrayInit),
-          exptAvgGroup = exptDimension.group().reduce(groupArrayAdd(runKey), groupArrayRemove(runKey), groupArrayInit);
-
-      function medianSpeed(kv) {
-          return d3.median(kv.value, speedValue);
-      }
-      function modeSpeed(kv) {
-          return mode(kv.value, speedValue);
-      }
-      function minSpeed(kv) {
-          return d3.min(kv.value, speedValue);
-      }
-      function maxSpeed(kv) {
-          return d3.max(kv.value, speedValue);
-      }
-      var accessors = {
-          median: medianSpeed,
-          mode: modeSpeed,
-          min: minSpeed,
-          max: maxSpeed
-      };
-
-      d3.selectAll('#select-operation input')
-          .on('click', function() {
-              runChart.valueAccessor(accessors[this.value]);
-              exptChart.valueAccessor(accessors[this.value]);
-              dc.redrawAll();
-          });
-
-      runChart
-          .width(400)
-          .height(300)
-          .x(d3.scaleBand())
-          .xUnits(dc.units.ordinal)
-          .valueAccessor(medianSpeed)
-          .elasticY(true)
-          .brushOn(true)
-          .controlsUseVisibility(true)
-          .dimension(runDimension)
-          .group(runAvgGroup);
-
-      exptChart
-          .width(400)
-          .height(300)
-          .x(d3.scaleBand())
-          .xUnits(dc.units.ordinal)
-          .valueAccessor(medianSpeed)
-          .elasticY(true)
-          .brushOn(true)
-          .controlsUseVisibility(true)
-          .dimension(exptDimension)
-          .group(exptAvgGroup);
-
-      runChart.margins().left = exptChart.margins().left = 35;
-
-      dc.renderAll();
+  const runChart = new dc.BarChart("#test-run"), exptChart = new dc.BarChart("#test-expt");
+  d3.csv("morley.csv").then((experiments) => {
+    experiments.forEach((x) => {
+      x.Speed = +x.Speed;
   });
+
+    const ndx = crossfilter(experiments),
+        runKey = function(d) {return +d.Run;},
+        exptKey = function(d) {return +d.Expt;},
+        speedValue = function(d) {return d.Speed;},
+        runDimension = ndx.dimension(runKey),
+        exptDimension = ndx.dimension(exptKey),
+        runAvgGroup = runDimension.group().reduce(groupArrayAdd(exptKey), groupArrayRemove(exptKey), groupArrayInit),
+        exptAvgGroup = exptDimension.group().reduce(groupArrayAdd(runKey), groupArrayRemove(runKey), groupArrayInit);
+
+    function medianSpeed(kv) {
+        return d3.median(kv.value, speedValue);
+    }
+    function modeSpeed(kv) {
+        return mode(kv.value, speedValue);
+    }
+    function minSpeed(kv) {
+        return d3.min(kv.value, speedValue);
+    }
+    function maxSpeed(kv) {
+        return d3.max(kv.value, speedValue);
+    }
+    const accessors = {
+        median: medianSpeed,
+        mode: modeSpeed,
+        min: minSpeed,
+        max: maxSpeed
+    };
+
+    d3.selectAll('#select-operation input')
+        .on('click', function() {
+            runChart.valueAccessor(accessors[this.value]);
+            exptChart.valueAccessor(accessors[this.value]);
+            dc.redrawAll();
+        });
+
+    runChart
+        .width(400)
+        .height(300)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .valueAccessor(medianSpeed)
+        .elasticY(true)
+        .brushOn(true)
+        .controlsUseVisibility(true)
+        .dimension(runDimension)
+        .group(runAvgGroup);
+
+    exptChart
+        .width(400)
+        .height(300)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .valueAccessor(medianSpeed)
+        .elasticY(true)
+        .brushOn(true)
+        .controlsUseVisibility(true)
+        .dimension(exptDimension)
+        .group(exptAvgGroup);
+
+    runChart.margins().left = exptChart.margins().left = 35;
+
+    dc.renderAll();
+});
 
 </script>
 

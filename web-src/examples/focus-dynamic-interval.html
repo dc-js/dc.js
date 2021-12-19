@@ -80,8 +80,8 @@
             function choose_group (extent) {
                 const d = extent[1].getTime() - extent[0].getTime();
                 const found = groups_by_min_interval.find(mg => mg.threshold < d);
-                console.log('interval ' + d + ' is more than ' + found.threshold + ' ms; choosing ' + found.name +
-                    ' for ' + found.interval.range(extent[0], extent[1]).length + ' points');
+                console.log(`interval ${  d  } is more than ${  found.threshold  } ms; choosing ${  found.name 
+            } for ${  found.interval.range(extent[0], extent[1]).length  } points`);
                 if (!found.group) {
                     found.group = make_group(found.interval);
                 }

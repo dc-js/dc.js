@@ -32,12 +32,12 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var yearRingChart   = new dc.PieChart("#chart-ring-year"),
+const yearRingChart   = new dc.PieChart("#chart-ring-year"),
     spendHistChart  = new dc.BarChart("#chart-hist-spend"),
     spenderRowChart = new dc.RowChart("#chart-row-spenders");
 
 // use static or load via d3.csv("spendData.csv", function(error, spendData) {/* do stuff */});
-var spendData = [
+const spendData = [
     {Name: 'Mr A', Spent: '$40', Year: 2011},
     {Name: 'Mr B', Spent: '$10', Year: 2011},
     {Name: 'Mr C', Spent: '$40', Year: 2011},
@@ -48,17 +48,17 @@ var spendData = [
 ];
 
 // normalize/parse data
-spendData.forEach(function(d) {
+spendData.forEach((d) => {
     d.Spent = d.Spent.match(/\d+/);
 });
 
 // set crossfilter
-var ndx = crossfilter(spendData),
-    yearDim  = ndx.dimension(function(d) {return +d.Year;}),
-    spendDim = ndx.dimension(function(d) {return Math.floor(d.Spent/10);}),
-    nameDim  = ndx.dimension(function(d) {return d.Name;}),
-    spendPerYear = yearDim.group().reduceSum(function(d) {return +d.Spent;}),
-    spendPerName = nameDim.group().reduceSum(function(d) {return +d.Spent;}),
+const ndx = crossfilter(spendData),
+    yearDim  = ndx.dimension((d) => +d.Year),
+    spendDim = ndx.dimension((d) => Math.floor(d.Spent/10)),
+    nameDim  = ndx.dimension((d) => d.Name),
+    spendPerYear = yearDim.group().reduceSum((d) => +d.Spent),
+    spendPerName = nameDim.group().reduceSum((d) => +d.Spent),
     spendHist    = spendDim.group().reduceCount();
 
 yearRingChart
@@ -74,7 +74,7 @@ yearRingChart
     .elasticY(true)
     .controlsUseVisibility(true);
 
-spendHistChart.xAxis().tickFormat(function(d) {return d*10}); // convert back to base unit
+spendHistChart.xAxis().tickFormat((d) => d*10); // convert back to base unit
 spendHistChart.yAxis().ticks(2);
 
 spenderRowChart
@@ -84,9 +84,9 @@ spenderRowChart
     .controlsUseVisibility(true);
 
   function show_empty_message(chart) {
-      var is_empty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
-      var data = is_empty ? [1] : [];
-      var empty = chart.svg().selectAll('.empty-message').data(data);
+      const is_empty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
+      const data = is_empty ? [1] : [];
+      let empty = chart.svg().selectAll('.empty-message').data(data);
       empty.exit().remove();
       empty = empty
           .enter()

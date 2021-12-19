@@ -19,34 +19,32 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.boxPlot("#box-test"),
+const chart = dc.boxPlot("#box-test"),
     pie = new dc.PieChart("#pie-chart");
 
-d3.csv("monthly-move.csv").then(function(data) {
+d3.csv("monthly-move.csv").then((data) => {
 
-  data.forEach(function(x) {
+  data.forEach((x) => {
     x.date = new Date(x.date);
     x.close = +x.close;
   });
 
   data = data.slice(0, 200);
 
-  var ndx             = crossfilter(data),
-      openDimension   = ndx.dimension(function(d) {return parseInt(d.open/10)*10;}),
+  const ndx             = crossfilter(data),
+      openDimension   = ndx.dimension((d) => parseInt(d.open/10)*10),
       openGroup       = openDimension.group(),
-      monthDimension  = ndx.dimension(function(d) {return d3.timeMonth(d.date); }),
+      monthDimension  = ndx.dimension((d) => d3.timeMonth(d.date)),
       closeGroup      = monthDimension.group().reduce(
-        function(p,v) {
+        (p,v) => {
           p.splice(d3.bisectLeft(p, v.close), 0, v.close);
           return p;
         },
-        function(p,v) {
+        (p,v) => {
           p.splice(d3.bisectLeft(p, v.close), 1);
           return p;
         },
-        function() {
-          return [];
-        }
+        () => []
       );
 
   chart
@@ -63,8 +61,8 @@ d3.csv("monthly-move.csv").then(function(data) {
   // this demonstrates solving elasticX manually, avoiding the
   // bug where the rightmost bar/box is not displayed, #792
   function calc_domain(chart) {
-      var min = d3.min(chart.group().all(), function(kv) { return kv.key; }),
-          max = d3.max(chart.group().all(), function(kv) { return kv.key; });
+      let min = d3.min(chart.group().all(), (kv) => kv.key),
+          max = d3.max(chart.group().all(), (kv) => kv.key);
       max = d3.timeMonth.offset(max, 1);
       chart.x().domain([min, max]);
   }

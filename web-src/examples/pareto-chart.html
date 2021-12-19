@@ -21,10 +21,10 @@
     <div id="pie-chart" ></div>
 
     <script type="text/javascript">
-      var chart = dc.compositeChart("#test_composed"),
+      const chart = dc.compositeChart("#test_composed"),
           speed_pie = dc.pieChart("#pie-chart");
 
-      var sample_data = [
+      const sample_data = [
           { reason: "A", time: 1 },
           { reason: "B", time: 6 },
           { reason: "C", time: 6 },
@@ -41,12 +41,12 @@
           { reason: "B", time: 4 },
           { reason: "C", time: 2 }];
 
-      var ndx_ = crossfilter(sample_data),
-          dim_  = ndx_.dimension( function(d) {return d.reason;} ),
+      const ndx_ = crossfilter(sample_data),
+          dim_  = ndx_.dimension( (d) => d.reason ),
           allTime_ = dim_.groupAll().reduceSum(d => d.time),
-          grp1_ = dim_.group().reduceSum(function(d){ return d.time;});
+          grp1_ = dim_.group().reduceSum((d) => d.time);
 
-      var speedDim_ = ndx_.dimension(d => Math.floor(d.time/3));
+      const speedDim_ = ndx_.dimension(d => Math.floor(d.time/3));
 
       speed_pie
         .width(300)
@@ -57,7 +57,7 @@
       function pareto_group(group, groupall) {
           return {
               all: function() {
-                  var total = groupall.value(), cumulate = 0;
+                  let total = groupall.value(), cumulate = 0;
                   return group.all().slice(0)
                       .sort((a,b) => d3.descending(a.value, b.value))
                       .map(({key,value}) => ({
@@ -72,7 +72,7 @@
           };
       }
 
-      var pg = pareto_group(grp1_, allTime_);
+      const pg = pareto_group(grp1_, allTime_);
 
       chart
         .width(500)
@@ -104,7 +104,7 @@
         ])
         .brushOn(false);
 
-      chart.rightYAxis().tickFormat(d => d + '%')
+      chart.rightYAxis().tickFormat(d => `${d  }%`)
 
       chart.render();
       speed_pie.render();

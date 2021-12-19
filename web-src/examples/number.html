@@ -42,35 +42,35 @@ We have seen a mean of <span id="mean"></span> over <span id="expn"></span> expe
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var inlineND = new dc.NumberDisplay("#test"),
+const inlineND = new dc.NumberDisplay("#test"),
     boxND    = new dc.NumberDisplay("#number-box"),
     meanND   = new dc.NumberDisplay("#mean"),
     expnND   = new dc.NumberDisplay("#expn");
-d3.csv("morley.csv").then(function(experiments) {
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed * 1000;
   });
 
-  var ndx            = crossfilter(experiments),
-      runDimension   = ndx.dimension(function(d) {return +d.Run;})
+  const ndx            = crossfilter(experiments),
+      runDimension   = ndx.dimension((d) => +d.Run)
       meanSpeedGroup = ndx.groupAll().reduce(
-          function (p, v) {
+          (p, v) => {
               ++p.n;
               p.tot += v.Speed;
               return p;
           },
-          function (p, v) {
+          (p, v) => {
               --p.n;
               p.tot -= v.Speed;
               return p;
           },
-          function () { return {n:0,tot:0}; }
+          () => ({n:0,tot:0})
       );
-  var average = function(d) {
+  const average = function(d) {
       return d.n ? d.tot / d.n : 0;
   };
-  var expCount = function(d) {
+  const expCount = function(d) {
       return d.n;
   };
 
@@ -90,8 +90,8 @@ d3.csv("morley.csv").then(function(experiments) {
   meanND.group(meanSpeedGroup).valueAccessor(average).formatNumber(d3.format(".3g"));
   expnND.group(meanSpeedGroup).valueAccessor(expCount);
 
-  var i=18;
-  setInterval(function() {
+  let i=18;
+  setInterval(() => {
       runDimension.filter(i++ % 20);
       dc.redrawAll();
   }, 3000);

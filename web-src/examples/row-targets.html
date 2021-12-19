@@ -17,19 +17,19 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.RowChart("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.RowChart("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+  const ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension((d) => +d.Run),
+      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
 
   // use your keys in this map. or your could reduce these in your data
-  var _targets = {
+  const _targets = {
       5: 20,
       7: 15,
       9: 22,
@@ -45,29 +45,21 @@ d3.csv("morley.csv").then(function(experiments) {
     .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .on('pretransition', function(chart) {
+    .on('pretransition', (chart) => {
         // read height from one of the row rects, because it's difficult to calculate
-        var height = chart.select('g.row rect').attr('height');
+        const height = chart.select('g.row rect').attr('height');
         // add vertical target line for any row which does not have one
-        var target = chart.selectAll('g.row')
-            .selectAll('path.target').data(function(d) { return [d]; });
+        let target = chart.selectAll('g.row')
+            .selectAll('path.target').data((d) => [d]);
         target = target.enter().append('path')
             .attr('class', 'target')
             .attr('stroke', 'red')
-            .attr('visibility', function(d) {
-                return (d.value.target !== undefined || _targets[d.key] !== undefined) ? 'visible' : 'hidden';
-            })
-            .attr('d', function(d) {
-                return 'M0,0 v' + height;
-            }).merge(target);
+            .attr('visibility', (d) => (d.value.target !== undefined || _targets[d.key] !== undefined) ? 'visible' : 'hidden')
+            .attr('d', (d) => `M0,0 v${  height}`).merge(target);
         // move into position (also move any targets that changed)
         target.transition().duration(chart.transitionDuration())
-            .attr('visibility', function(d) {
-                return (d.value.target !== undefined || _targets[d.key] !== undefined) ? 'visible' : 'hidden';
-            })
-            .attr('d', function(d) {
-                return 'M' + (chart.x()(d.value.target || _targets[d.key] || 0)+0.5) + ',0 v' + height;
-            });
+            .attr('visibility', (d) => (d.value.target !== undefined || _targets[d.key] !== undefined) ? 'visible' : 'hidden')
+            .attr('d', (d) => `M${  chart.x()(d.value.target || _targets[d.key] || 0)+0.5  },0 v${  height}`);
     });
     chart.render();
 });

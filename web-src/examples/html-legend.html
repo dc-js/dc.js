@@ -35,7 +35,7 @@
 
     <script type="text/javascript">
 
-      var spendData = [
+      const spendData = [
         { Name: 'Mr A', Spent: '$40', Year: 2010 },
         { Name: 'Mr B', Spent: '$10', Year: 2011 },
         { Name: 'Mr C', Spent: '$40', Year: 2012 },
@@ -49,24 +49,18 @@
         { Name: 'Mr G', Spent: '$30', Year: 2020 }
       ];
       // normalize/parse data
-      spendData.forEach(function (d) {
-        d.Spent = d.Spent.match(/\d+/)[0];
-      });
+      spendData.forEach((d) => {
+  d.Spent = d.Spent.match(/\d+/)[0];
+});
       // set crossfilter
-      var ndx = crossfilter(spendData),
-        yearDim = ndx.dimension(function (d) {
-          return +d.Year;
-        }),
-        nameDim = ndx.dimension(function (d) {
-          return d.Name;
-        }),
-        spendPerYearGroup = yearDim.group().reduceSum(function (d) {
-          return +d.Spent;
-        }),
+      const ndx = crossfilter(spendData),
+        yearDim = ndx.dimension((d) => +d.Year),
+        nameDim = ndx.dimension((d) => d.Name),
+        spendPerYearGroup = yearDim.group().reduceSum((d) => +d.Spent),
         nameGroup = nameDim.group().reduceCount();
 
 
-      var yearChart = new dc.PieChart("#year"),
+      const yearChart = new dc.PieChart("#year"),
         nameChart = new dc.PieChart("#name");
 
       yearChart

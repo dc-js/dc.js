@@ -17,18 +17,18 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.LineChart("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.LineChart("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+  const ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension((d) => +d.Run),
+      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
 
-  var x_vert;
+  let x_vert;
 
   chart
     .width(768)
@@ -41,25 +41,25 @@ d3.csv("morley.csv").then(function(experiments) {
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
-    .on('pretransition', function(chart) {
-        chart.svg().on('click', function(event) {
-            var bound = chart.root().node().getBoundingClientRect();
+    .on('pretransition', (chart) => {
+        chart.svg().on('click', (event) => {
+            const bound = chart.root().node().getBoundingClientRect();
             x_vert = chart.x().invert(event.clientX - bound.left - chart.margins().left);
             console.log('clicked', x_vert);
             chart.redraw();
         });
 
         // draw a line if x_vert is set
-        var extra_data = x_vert !== undefined ? [
+        const extra_data = x_vert !== undefined ? [
             {x: chart.x()(x_vert) + chart.margins().left, y: chart.margins().top},
             {x: chart.x()(x_vert) + chart.margins().left, y: chart.margins().top + chart.effectiveHeight()}
         ] : [];
-        var line = d3.line()
-            .x(function(d) { return d.x; })
-            .y(function(d) { return d.y; })
+        const line = d3.line()
+            .x((d) => d.x)
+            .y((d) => d.y)
             .curve(d3.curveLinear);
-        var chartBody = chart.select('g');
-        var path = chartBody.selectAll('path.extra').data([extra_data]);
+        const chartBody = chart.select('g');
+        let path = chartBody.selectAll('path.extra').data([extra_data]);
         path = path.enter()
                 .append('path')
                 .attr('class', 'extra')

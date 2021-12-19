@@ -17,14 +17,13 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.PieChart("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.PieChart("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  var ndx           = crossfilter(experiments),
-      runDimension  = ndx.dimension(function(d) {
-        return "run-"+String.fromCharCode(90 - +d.Run);})
-      speedSumGroup = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run;});
-var chart = new dc.PieChart("#test");
+  const ndx           = crossfilter(experiments),
+      runDimension  = ndx.dimension((d) => `run-${String.fromCharCode(90 - +d.Run)}`)
+      speedSumGroup = runDimension.group().reduceSum((d) => d.Speed * d.Run);
+const chart = new dc.PieChart("#test");
 
   chart
     .width(768)
@@ -35,14 +34,12 @@ var chart = new dc.PieChart("#test");
     .group(speedSumGroup)
     .legend(dc.legend())
     // workaround for #703: not enough data is accessible through .label() to display percentages
-    .on('pretransition', function(chart) {
-        chart.selectAll('text.pie-slice').text(function(d) {
-            return d.data.key + ' ' + dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100) + '%';
-        })
+    .on('pretransition', (chart) => {
+        chart.selectAll('text.pie-slice').text((d) => `${d.data.key  } ${  dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100)  }%`)
     });
 
-  chart.data(function(group) {
-    var items = group.all(), rest;
+  chart.data((group) => {
+    let items = group.all(), rest;
     items = chart._computeOrderedGroups(items); // sort by baseMixin.ordering
 
     if (chart.cap()) {
@@ -50,7 +47,7 @@ var chart = new dc.PieChart("#test");
         rest = items.slice(chart.cap());
         items = items.slice(0, chart.cap());
       } else {
-        var start = Math.max(0, items.length - chart.cap());
+        const start = Math.max(0, items.length - chart.cap());
         rest = items.slice(0, start);
         items = items.slice(start);
       }

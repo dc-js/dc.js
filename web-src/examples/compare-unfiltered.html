@@ -105,10 +105,10 @@
 
   dc.config.defaultColors(d3.schemeSet1);
 
-  var data_count = new dc.DataCount('.dc-data-count');
+  const data_count = new dc.DataCount('.dc-data-count');
 
   function static_copy_group(group) {
-      var all = group.all().map(kv => ({key: kv.key, value: kv.value}));
+      const all = group.all().map(kv => ({key: kv.key, value: kv.value}));
       return {
           all: function() {
               return all;
@@ -116,7 +116,7 @@
       }
   }
 
-  var chart_specs = [
+  const chart_specs = [
       {
           variable: 'x',
           selector: '#chart-11',
@@ -149,93 +149,89 @@
       }
   ];
 
-  var charts;
+  let charts;
 
-  d3.csv('six-dim.csv').then(function(data) {
-      data.forEach(function(d) {
-          chart_specs.forEach(function(spec) {
-              d[spec.variable] = +d[spec.variable];
-          });
-      });
-
-      var cf = crossfilter(data),
-          all = cf.groupAll();
-
-      data_count.crossfilter(cf)
-          .groupAll(all);
-
-      charts = chart_specs.map(function(spec) {
-          return new dc.CompositeChart(spec.selector);
-      });
-
-      var breathing_room = 0.05;
-      var show_unfiltered = true;
-
-      chart_specs.forEach(function(spec, i) {
-          d3.select(spec.selector).select('h5.chart-title').text(spec.variable);
-
-          var dim = cf.dimension(function(d) { return d[spec.variable]; }),
-              group = dim.group(function(d) {
-                  return Math.floor(d / spec.resolution) * spec.resolution;
-              }).reduceCount(),
-              static_group = static_copy_group(group);
-
-          charts[i]
-              .compose([
-                  new dc.BarChart(charts[i])
-                      .dimension(dim)
-                      .group(static_group)
-                      .colors('#ccc') // same as .deselected
-                      .controlsUseVisibility(true),
-                  new dc.BarChart(charts[i])
-                      .dimension(dim)
-                      .group(group)
-                      .controlsUseVisibility(true)
-                      .brushOn(false)
-              ]);
-
-          var min = dim.bottom(1)[0][spec.variable],
-              max = dim.top(1)[0][spec.variable];
-
-          charts[i]
-              .dimension(dim)
-              .group(group)
-              .round(Math.floor)
-              .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
-              .xUnits(function(start, end, xDomain) { return (end - start) / spec.resolution; })
-              .controlsUseVisibility(true);
-      });
-
-      function ydomain_from_child1(chart) {
-          chart.y().domain([0, chart.children()[1].yAxisMax()]);
-          chart.resizing(true);
-      }
-      // hide/unhide the unfiltered layer after any render/redraw
-      charts.forEach(
-          chart => chart.on(
-              'pretransition.hide-unfiltered',
-              chart => chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')
-          ));
-      d3.select('#unfiltered').on('change', function() {
-          show_unfiltered = this.checked;
-          charts.forEach(chart => {
-              chart.elasticY(show_unfiltered);
-              if(!show_unfiltered) {
-                  ydomain_from_child1(chart);
-                  chart.children()[1].colors(d3.schemeCategory10);
-                  chart.on('preRedraw.hide-unfiltered', ydomain_from_child1);
-                  chart.on('preRender.hide-unfiltered', ydomain_from_child1);
-              }
-              else {
-                  chart.on('preRedraw.hide-unfiltered', null);
-                  chart.on('preRender.hide-unfiltered', null);
-              }
-         })
-          dc.redrawAll();
-      });
-
-      dc.renderAll();
+  d3.csv('six-dim.csv').then((data) => {
+    data.forEach((d) => {
+      chart_specs.forEach((spec) => {
+        d[spec.variable] = +d[spec.variable];
+    });
   });
+
+    const cf = crossfilter(data),
+        all = cf.groupAll();
+
+    data_count.crossfilter(cf)
+        .groupAll(all);
+
+    charts = chart_specs.map((spec) => new dc.CompositeChart(spec.selector));
+
+    const breathing_room = 0.05;
+    let show_unfiltered = true;
+
+    chart_specs.forEach((spec, i) => {
+      d3.select(spec.selector).select('h5.chart-title').text(spec.variable);
+
+      const dim = cf.dimension((d) => d[spec.variable]),
+          group = dim.group((d) => Math.floor(d / spec.resolution) * spec.resolution).reduceCount(),
+          static_group = static_copy_group(group);
+
+      charts[i]
+          .compose([
+              new dc.BarChart(charts[i])
+                  .dimension(dim)
+                  .group(static_group)
+                  .colors('#ccc') // same as .deselected
+                  .controlsUseVisibility(true),
+              new dc.BarChart(charts[i])
+                  .dimension(dim)
+                  .group(group)
+                  .controlsUseVisibility(true)
+                  .brushOn(false)
+          ]);
+
+      const min = dim.bottom(1)[0][spec.variable],
+          max = dim.top(1)[0][spec.variable];
+
+      charts[i]
+          .dimension(dim)
+          .group(group)
+          .round(Math.floor)
+          .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
+          .xUnits((start, end, xDomain) => (end - start) / spec.resolution)
+          .controlsUseVisibility(true);
+  });
+
+    function ydomain_from_child1(chart) {
+        chart.y().domain([0, chart.children()[1].yAxisMax()]);
+        chart.resizing(true);
+    }
+    // hide/unhide the unfiltered layer after any render/redraw
+    charts.forEach(
+        chart => chart.on(
+            'pretransition.hide-unfiltered',
+            chart => chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')
+        ));
+    d3.select('#unfiltered').on('change', function() {
+        show_unfiltered = this.checked;
+        charts.forEach(chart => {
+            chart.elasticY(show_unfiltered);
+            if(!show_unfiltered) {
+                ydomain_from_child1(chart);
+                chart.children()[1].colors(d3.schemeCategory10);
+                chart.on('preRedraw.hide-unfiltered', ydomain_from_child1);
+                chart.on('preRender.hide-unfiltered', ydomain_from_child1);
+            }
+            else {
+                chart.on('preRedraw.hide-unfiltered', null);
+                chart.on('preRender.hide-unfiltered', null);
+            }
+       })
+        dc.redrawAll();
+    });
+
+    dc.renderAll();
+});
 </script>
 
 </div>

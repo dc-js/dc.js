@@ -59,7 +59,7 @@
                 .brushOn(false)
                 .clipPadding(10)
                 .title(function (d) {
-                    return d.key + '[' + this.layer + ']: ' + d.value[this.layer];
+                    return `${d.key  }[${  this.layer  }]: ${  d.value[this.layer]}`;
                 })
                 .dimension(runDimension)
                 .group(speedSumGroup, '1', sel_stack('1'))
@@ -67,8 +67,8 @@
 
             chart.legend(dc.legend());
 
-            for (var i = 2; i < 6; ++i) {
-                chart.stack(speedSumGroup, '' + i, sel_stack(i));
+            for (let i = 2; i < 6; ++i) {
+                chart.stack(speedSumGroup, `${  i}`, sel_stack(i));
             }
 
             chart.render();

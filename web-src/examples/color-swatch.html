@@ -40,14 +40,14 @@ groupAll value and maps it to a color using a color scale.</p>
 
       groupAll(groupAll) {
           if(!arguments.length)
-              return this._groupAll;
+              {return this._groupAll;}
           this._groupAll = groupAll;
           return this;
       }
 
       colors(colors) {
           if(!arguments.length)
-              return this._colors;
+              {return this._colors;}
           this._colors = colors;
           return this;
       }
@@ -56,7 +56,7 @@ groupAll value and maps it to a color using a color scale.</p>
 
       render() {
           const width = 200, height = 200;
-          let svg = this._root.selectAll('svg')
+          const svg = this._root.selectAll('svg')
               .data([0])
               .join('svg')
               .attr('width', width)
@@ -76,32 +76,32 @@ groupAll value and maps it to a color using a color scale.</p>
               .attr('fill', this._colors(this._groupAll.value()));
       }
   }
-  var swatch = new ColorSwatch('#swatch'), bar = new dc.BarChart("#bar")
-  d3.csv("morley.csv").then(function(experiments) {
+  const swatch = new ColorSwatch('#swatch'), bar = new dc.BarChart("#bar")
+  d3.csv("morley.csv").then((experiments) => {
 
-      experiments.forEach(function(x) {
-          x.Speed = +x.Speed;
-      });
-
-      const cf = crossfilter(experiments),
-            groupAllSpeed = cf.groupAll().reduceSum(d => d.Speed);
-
-      swatch
-          .groupAll(groupAllSpeed)
-          .colors(d3.scaleSequential([0, groupAllSpeed.value()], d3.interpolateRdYlGn))
-      const runDimension        = cf.dimension(function(d) {return +d.Run;}),
-            speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-
-      bar
-          .width(768)
-          .height(480)
-          .x(d3.scaleLinear().domain([6,20]))
-          .dimension(runDimension)
-          .group(speedSumGroup)
-          .renderLabel(true);
-
-      dc.renderAll();
+    experiments.forEach((x) => {
+      x.Speed = +x.Speed;
   });
+
+    const cf = crossfilter(experiments),
+          groupAllSpeed = cf.groupAll().reduceSum(d => d.Speed);
+
+    swatch
+        .groupAll(groupAllSpeed)
+        .colors(d3.scaleSequential([0, groupAllSpeed.value()], d3.interpolateRdYlGn))
+    const runDimension        = cf.dimension((d) => +d.Run),
+          speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
+
+    bar
+        .width(768)
+        .height(480)
+        .x(d3.scaleLinear().domain([6,20]))
+        .dimension(runDimension)
+        .group(speedSumGroup)
+        .renderLabel(true);
+
+    dc.renderAll();
+});
 
 </script>
 

@@ -23,38 +23,38 @@
 </style>
 <script type="text/javascript">
 
-  var barChart = new dc.BarChart("#bartest");
-  var lineChart = new dc.LineChart("#linetest");
-  d3.csv("morley.csv").then(function(experiments) {
+  const barChart = new dc.BarChart("#bartest");
+  const lineChart = new dc.LineChart("#linetest");
+  d3.csv("morley.csv").then((experiments) => {
 
-      experiments.forEach(function(x) {
-          x.Speed = +x.Speed;
-      });
-
-      var ndx                 = crossfilter(experiments),
-          runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-          runDimension2        = ndx.dimension(function(d) {return +d.Run;}),
-          speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;}),
-          speedSumGroup2       = runDimension2.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
-
-      barChart
-          .width(100)
-          .height(20)
-          .margins({left: 0, top: 0, right: 0, bottom: 0})
-          .x(d3.scaleLinear().domain([6,20]))
-          .brushOn(true)
-          .dimension(runDimension)
-          .group(speedSumGroup);
-      lineChart
-          .width(100)
-          .height(20)
-          .margins({left: 0, top: 0, right: 0, bottom: 0})
-          .x(d3.scaleLinear().domain([6,20]))
-          .brushOn(true)
-          .dimension(runDimension2)
-          .group(speedSumGroup2);
-      dc.renderAll();
+    experiments.forEach((x) => {
+      x.Speed = +x.Speed;
   });
+
+    const ndx                 = crossfilter(experiments),
+        runDimension        = ndx.dimension((d) => +d.Run),
+        runDimension2        = ndx.dimension((d) => +d.Run),
+        speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000),
+        speedSumGroup2       = runDimension2.group().reduceSum((d) => d.Speed * d.Run / 1000);
+
+    barChart
+        .width(100)
+        .height(20)
+        .margins({left: 0, top: 0, right: 0, bottom: 0})
+        .x(d3.scaleLinear().domain([6,20]))
+        .brushOn(true)
+        .dimension(runDimension)
+        .group(speedSumGroup);
+    lineChart
+        .width(100)
+        .height(20)
+        .margins({left: 0, top: 0, right: 0, bottom: 0})
+        .x(d3.scaleLinear().domain([6,20]))
+        .brushOn(true)
+        .dimension(runDimension2)
+        .group(speedSumGroup2);
+    dc.renderAll();
+});
 
 </script>
 

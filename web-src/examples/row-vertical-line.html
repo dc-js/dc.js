@@ -17,16 +17,16 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.RowChart("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.RowChart("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+  const ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension((d) => +d.Run),
+      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
 
   chart
     .width(768)
@@ -35,18 +35,18 @@ d3.csv("morley.csv").then(function(experiments) {
     .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
-    .on('pretransition', function(chart) {
-        var x_vert = 45;
-        var extra_data = [
+    .on('pretransition', (chart) => {
+        const x_vert = 45;
+        const extra_data = [
             {x: chart.x()(x_vert), y: 0},
             {x: chart.x()(x_vert), y: chart.effectiveHeight()}
         ];
-        var line = d3.line()
-            .x(function(d) { return d.x; })
-            .y(function(d) { return d.y; })
+        const line = d3.line()
+            .x((d) => d.x)
+            .y((d) => d.y)
             .curve(d3.curveLinear);
-        var chartBody = chart.select('g');
-        var path = chartBody.selectAll('path.extra').data([extra_data]);
+        const chartBody = chart.select('g');
+        let path = chartBody.selectAll('path.extra').data([extra_data]);
         path = path.enter()
                 .append('path')
                 .attr('class', 'oeExtra')

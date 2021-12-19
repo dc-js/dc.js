@@ -19,31 +19,29 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = dc.boxPlot("#box-test"),
+const chart = dc.boxPlot("#box-test"),
     pie = new dc.PieChart("#pie-chart");
-d3.csv("morley.csv").then(function(experiments) {
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
+  const ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension((d) => +d.Run),
       runGroup            = runDimension.group(),
-      experimentDimension = ndx.dimension(function(d) {return "exp-" + d.Expt;}),
+      experimentDimension = ndx.dimension((d) => `exp-${  d.Expt}`),
       speedArrayGroup     = experimentDimension.group().reduce(
-        function(p,v) {
+        (p,v) => {
           // keep array sorted for efficiency
           p.splice(d3.bisectLeft(p, v.Speed), 0, v.Speed);
           return p;
         },
-        function(p,v) {
+        (p,v) => {
           p.splice(d3.bisectLeft(p, v.Speed), 1);
           return p;
         },
-        function() {
-          return [];
-        }
+        () => []
       );
 
   chart

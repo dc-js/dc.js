@@ -24,7 +24,7 @@
     <div id="dc-score-barchart"></div>
 
     <script type="text/javascript">
-    var data = [
+    const data = [
                 { "book": "A", "scores": 45 },
                 { "book": "B", "scores": 34 },
                 { "book": "C", "scores": 54 },
@@ -39,16 +39,16 @@
                ];
 
     //## Create Chart Objects
-    var scoreChart = new dc.BarChart("#dc-score-barchart")
+    const scoreChart = new dc.BarChart("#dc-score-barchart")
                         .xAxisLabel('book_id')
                         .yAxisLabel('score');
-    var goodYesNoPieChart = new dc.PieChart('#dc-coreAcc-piechart');
+    const goodYesNoPieChart = new dc.PieChart('#dc-coreAcc-piechart');
 
     //### Create Crossfilter Dimensions and Groups
-    var ndx = crossfilter(data);
-    var all = ndx.groupAll();
-    var bookDimension = ndx.dimension(function (d) {return d.book;}),
-        bookscoresGroup = bookDimension.group().reduceSum(function(d) {return d.scores;});
+    const ndx = crossfilter(data);
+    const all = ndx.groupAll();
+    const bookDimension = ndx.dimension((d) => d.book),
+        bookscoresGroup = bookDimension.group().reduceSum((d) => d.scores);
 
     //## score bar chart
     scoreChart.width(320)
@@ -64,22 +64,22 @@
     //## pie chart
     // reusable function to create threshold dimension
     function coreCount_from_threshold() {
-        var scoreThreshold=document.getElementById('slideRange').value;
+        let scoreThreshold=document.getElementById('slideRange').value;
         scoreThreshold=parseFloat(scoreThreshold);
         if (isNaN(scoreThreshold)) {
             scoreThreshold=0.5
         }
-        return ndx.dimension(function (d) {
-            var maxNumber=80;
-            if (d.scores >maxNumber*scoreThreshold) {
-                return 'High';
-            } else {
-                return 'Low';
-            }
-        });
+        return ndx.dimension((d) => {
+        const maxNumber=80;
+        if (d.scores >maxNumber*scoreThreshold) {
+            return 'High';
+        } else {
+            return 'Low';
+        }
+    });
     }
-    var coreCount = coreCount_from_threshold();
-    var coreCountGroup = coreCount.group();
+    let coreCount = coreCount_from_threshold();
+    let coreCountGroup = coreCount.group();
 
     goodYesNoPieChart
         .width(320)
@@ -87,24 +87,24 @@
         .radius(120)
         .innerRadius(40)
         .dimension(coreCount)
-        .title(function(d){return d.value;})
+        .title((d) => d.value)
         .group(coreCountGroup)
-        .label(function (d) {
-            if (goodYesNoPieChart.hasFilter() && !goodYesNoPieChart.hasFilter(d.key)) {
-                return d.key + '(0%)';
-            }
-            var label = d.key;
-            if (all.value()) {
-                label += '(' + Math.floor(d.value / all.value() * 100) + '%)';
-            }
-            return label;
-        })
+        .label((d) => {
+        if (goodYesNoPieChart.hasFilter() && !goodYesNoPieChart.hasFilter(d.key)) {
+            return `${d.key  }(0%)`;
+        }
+        let label = d.key;
+        if (all.value()) {
+            label += `(${  Math.floor(d.value / all.value() * 100)  }%)`;
+        }
+        return label;
+    })
 
     dc.renderAll();
 
     //## change slider score value to re-assign the data in pie chart
     function updateSlider(slideValue) {
-        var sliderDiv = document.getElementById("sliderValue");
+        const sliderDiv = document.getElementById("sliderValue");
         sliderDiv.innerHTML = slideValue;
         coreCount.dispose();
         coreCount = coreCount_from_threshold();

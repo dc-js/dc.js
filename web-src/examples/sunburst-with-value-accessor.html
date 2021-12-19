@@ -35,48 +35,40 @@
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
 
-    d3.csv('ordered_returned.csv').then(function (dataset){
-        dataset.forEach(function(d){
-            d.number_ordered = +d.number_ordered;
-            d.number_returned = +d.number_returned;
-            d.amount = +d.amount;
-        })
-        var ndx = crossfilter(dataset);
+    d3.csv('ordered_returned.csv').then((dataset) => {
+    dataset.forEach((d) => {
+    d.number_ordered = +d.number_ordered;
+    d.number_returned = +d.number_returned;
+    d.amount = +d.amount;
+})
+    const ndx = crossfilter(dataset);
 
-        var dimension = ndx.dimension(function (d) {
-            return [d.category, d.sub_category];
-        });
-        var group = dimension.group();
-        var reducer = reductio();
+    const dimension = ndx.dimension((d) => [d.category, d.sub_category]);
+    const group = dimension.group();
+    const reducer = reductio();
 
-        reducer
-            .value('_ordered')
-            .exception(
-                function (d) {
-                    return d.item_id;
-                }
-            )
-            .exceptionSum(function (d) {
-                return d.number_ordered;
-            });
+    reducer
+        .value('_ordered')
+        .exception(
+            (d) => d.item_id
+        )
+        .exceptionSum((d) => d.number_ordered);
 
-        reducer(group);
+    reducer(group);
 
-        var sunBurstChart = new dc.SunburstChart("#test");
+    const sunBurstChart = new dc.SunburstChart("#test");
 
-        sunBurstChart
-            .width(800)
-            .height(600)
-            .innerRadius(100)
-            .dimension(dimension)
-            .group(group)
-            .valueAccessor(function (d) {
-                return d.value._ordered.exceptionSum;
-            })
-            .legend(dc.legend());
+    sunBurstChart
+        .width(800)
+        .height(600)
+        .innerRadius(100)
+        .dimension(dimension)
+        .group(group)
+        .valueAccessor((d) => d.value._ordered.exceptionSum)
+        .legend(dc.legend());
 
-        dc.renderAll();
-    });
+    dc.renderAll();
+});
 
     </script>
 

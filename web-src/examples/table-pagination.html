@@ -32,45 +32,45 @@
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
 
-      var chart = new dc.DataTable("#test");
-      var piechart = new dc.PieChart("#piechart");
+      const chart = new dc.DataTable("#test");
+      const piechart = new dc.PieChart("#piechart");
 
-      var ndx;
-      d3.csv("morley.csv").then(function(experiments) {
-        ndx = crossfilter(experiments);
-        var fmt = d3.format('02d');
-        var runDimension = ndx.dimension(function(d) {return [fmt(+d.Expt),fmt(+d.Run)];}),
-        experimentDimension = ndx.dimension(function(d) {return d.Expt;}),
-        experimentGroup = experimentDimension.group().reduceCount();
+      let ndx;
+      d3.csv("morley.csv").then((experiments) => {
+  ndx = crossfilter(experiments);
+  const fmt = d3.format('02d');
+  const runDimension = ndx.dimension((d) => [fmt(+d.Expt),fmt(+d.Run)]),
+  experimentDimension = ndx.dimension((d) => d.Expt),
+  experimentGroup = experimentDimension.group().reduceCount();
 
-        piechart.width(300).height(280)
-          .innerRadius(100).externalLabels(50).externalRadiusPadding(50).drawPaths(true)
-          .dimension(experimentDimension).group(experimentGroup)
-          .legend(dc.legend())
-          .controlsUseVisibility(true);
+  piechart.width(300).height(280)
+    .innerRadius(100).externalLabels(50).externalRadiusPadding(50).drawPaths(true)
+    .dimension(experimentDimension).group(experimentGroup)
+    .legend(dc.legend())
+    .controlsUseVisibility(true);
 
-        chart
-          .width(300)
-          .height(480)
-          .dimension(runDimension)
-          .size(Infinity)
-          .showSections(false)
-          .columns(['Expt', 'Run', 'Speed'])
-          .sortBy(function (d) { return [fmt(+d.Expt),fmt(+d.Run)]; })
-          .order(d3.ascending)
-          .on('preRender', update_offset)
-          .on('preRedraw', update_offset)
-          .on('pretransition', display);
+  chart
+    .width(300)
+    .height(480)
+    .dimension(runDimension)
+    .size(Infinity)
+    .showSections(false)
+    .columns(['Expt', 'Run', 'Speed'])
+    .sortBy((d) => [fmt(+d.Expt),fmt(+d.Run)])
+    .order(d3.ascending)
+    .on('preRender', update_offset)
+    .on('preRedraw', update_offset)
+    .on('pretransition', display);
 
-        dc.renderAll();
-      });
+  dc.renderAll();
+});
 
       // use odd page size to show the effect better
-      var ofs = 0, pag = 17;
+      let ofs = 0, pag = 17;
 
       function update_offset() {
-          var totFilteredRecs = ndx.groupAll().value();
-          var end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
+          const totFilteredRecs = ndx.groupAll().value();
+          const end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
           ofs = ofs >= totFilteredRecs ? Math.floor((totFilteredRecs - 1) / pag) * pag : ofs;
           ofs = ofs < 0 ? 0 : ofs;
 
@@ -78,8 +78,8 @@
           chart.endSlice(ofs+pag);
       }
       function display() {
-          var totFilteredRecs = ndx.groupAll().value();
-          var end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
+          const totFilteredRecs = ndx.groupAll().value();
+          const end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
           d3.select('#begin')
               .text(end === 0? ofs : ofs + 1);
           d3.select('#end')
@@ -90,7 +90,7 @@
               .attr('disabled', ofs+pag>=totFilteredRecs ? 'true' : null);
           d3.select('#size').text(totFilteredRecs);
           if(totFilteredRecs != ndx.size()){
-            d3.select('#totalsize').text("(filtered Total: " + ndx.size() + " )");
+            d3.select('#totalsize').text(`(filtered Total: ${  ndx.size()  } )`);
           }else{
             d3.select('#totalsize').text('');
           }

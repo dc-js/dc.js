@@ -23,21 +23,17 @@
 <script type="text/javascript">
 
 //  var composite = dc.compositeChart("#test_composed");
-var composite = new dc.CompositeChart(d3.select('div.container').append('div'));
+const composite = new dc.CompositeChart(d3.select('div.container').append('div'));
 
-Promise.all([d3.csv("morley.csv"), d3.csv("morley2.csv")]).then(function(results) {
-    var exp1 = results[0],
+Promise.all([d3.csv("morley.csv"), d3.csv("morley2.csv")]).then((results) => {
+    const exp1 = results[0],
         exp2 = results[1];
 
-    var ndx = crossfilter();
-    ndx.add(exp1.map(function(d) {
-        return {x: +d.Run, y2:0, y1: 20 - d.Speed * d.Run / 1000};
-    }));
-    ndx.add(exp2.map(function(d) {
-        return {x: +d.Run, y1:0, y2: d.Speed * d.Run / 1000};
-    }));
+    const ndx = crossfilter();
+    ndx.add(exp1.map((d) => ({x: +d.Run, y2:0, y1: 20 - d.Speed * d.Run / 1000})));
+    ndx.add(exp2.map((d) => ({x: +d.Run, y1:0, y2: d.Speed * d.Run / 1000})));
 
-    var dim  = ndx.dimension(dc.pluck('x')),
+    const dim  = ndx.dimension(dc.pluck('x')),
         grp1 = dim.group().reduceSum(dc.pluck('y1')),
         grp2 = dim.group().reduceSum(dc.pluck('y2'));
 

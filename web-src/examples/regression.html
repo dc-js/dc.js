@@ -33,10 +33,10 @@
 <script type="text/javascript" src="../js/regression.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.ScatterPlot("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.ScatterPlot("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-    experiments.forEach(function(x) {
+    experiments.forEach((x) => {
         x.Speed = +x.Speed;
         x.Run = +x.Run;
     });
@@ -54,20 +54,20 @@ d3.csv("morley.csv").then(function(experiments) {
         .clipPadding(10);
 
     chart
-        .on('pretransition', function() {
-            var xext = d3.extent(chart.group().all(), kv => kv.key[0]);
-            var r = regression.linear(chart.group().all().map(kv => [kv.key[0], kv.key[1]])),
+        .on('pretransition', () => {
+            const xext = d3.extent(chart.group().all(), kv => kv.key[0]);
+            let r = regression.linear(chart.group().all().map(kv => [kv.key[0], kv.key[1]])),
                 m = r.equation[0], b = r.equation[1],
                 [x1, x2] = chart.x().domain();
-            var points = [[
+            const points = [[
                 x1,
                 m * x1 + b
             ], [
                 x2,
                 m * x2 + b
             ]];
-            var xScale = chart.x(), yScale = chart.y(), margins = chart.margins();
-            var line = chart.g().selectAll('line.regression').data([points]);
+            const xScale = chart.x(), yScale = chart.y(), margins = chart.margins();
+            let line = chart.g().selectAll('line.regression').data([points]);
             function do_points(line) {
                 line
                     .attr('x1', d => xScale(d[0][0]) + margins.left)
@@ -94,7 +94,7 @@ d3.csv("morley.csv").then(function(experiments) {
         }
     }
     function display(metric) {
-        let runDimension = cf.dimension(key_function(metric)),
+        const runDimension = cf.dimension(key_function(metric)),
             speedSumGroup = runDimension.group();
 
         chart
@@ -106,7 +106,7 @@ d3.csv("morley.csv").then(function(experiments) {
             rendered = true;
         }
         else
-            chart.redraw();
+            {chart.redraw();}
     }
     display('flat');
 

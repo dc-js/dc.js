@@ -17,16 +17,16 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.BarChart("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.BarChart("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+  const ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension((d) => +d.Run),
+      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
 
   chart
     .width(768)
@@ -36,8 +36,8 @@ d3.csv("morley.csv").then(function(experiments) {
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
-    .on('renderlet', function(chart) {
-        chart.selectAll('rect').on("click", function(d) {
+    .on('renderlet', (chart) => {
+        chart.selectAll('rect').on("click", (d) => {
             console.log("click!", d);
         });
     });

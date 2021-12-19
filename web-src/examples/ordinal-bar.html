@@ -17,28 +17,28 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-  var chart = new dc.BarChart('#test');
+  const chart = new dc.BarChart('#test');
 
-  d3.json('fruits.json').then(function(counts) {
-      var ndx            = crossfilter(counts),
-          fruitDimension = ndx.dimension(function(d) {return d.name;}),
-          sumGroup       = fruitDimension.group().reduceSum(function(d) {return d.cnt;});
+  d3.json('fruits.json').then((counts) => {
+    const ndx            = crossfilter(counts),
+        fruitDimension = ndx.dimension((d) => d.name),
+        sumGroup       = fruitDimension.group().reduceSum((d) => d.cnt);
 
-      chart
-          .width(768)
-          .height(380)
-          .x(d3.scaleBand())
-          .xUnits(dc.units.ordinal)
-          .brushOn(false)
-          .xAxisLabel('Fruit')
-          .yAxisLabel('Quantity Sold')
-          .dimension(fruitDimension)
-          .barPadding(0.1)
-          .outerPadding(0.05)
-          .group(sumGroup);
+    chart
+        .width(768)
+        .height(380)
+        .x(d3.scaleBand())
+        .xUnits(dc.units.ordinal)
+        .brushOn(false)
+        .xAxisLabel('Fruit')
+        .yAxisLabel('Quantity Sold')
+        .dimension(fruitDimension)
+        .barPadding(0.1)
+        .outerPadding(0.05)
+        .group(sumGroup);
 
-      chart.render();
-  });
+    chart.render();
+});
 
 </script>
 

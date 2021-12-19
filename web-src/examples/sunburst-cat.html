@@ -29,27 +29,19 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var fileChart = new dc.SunburstChart("#file_chart");
-var typeChart = new dc.PieChart("#type_chart");
+const fileChart = new dc.SunburstChart("#file_chart");
+const typeChart = new dc.PieChart("#type_chart");
 
-d3.tsv("cat.tsv").then(function (cats) {
-    var ndx = crossfilter(cats);
-    var picturesDimension = ndx.dimension(function (d) {
-        return d.file.split('/');
-    });
-    var picturesGroup = picturesDimension.group().reduceSum(function (d) {
-        return d.size;
-    });
+d3.tsv("cat.tsv").then((cats) => {
+    const ndx = crossfilter(cats);
+    const picturesDimension = ndx.dimension((d) => d.file.split('/'));
+    const picturesGroup = picturesDimension.group().reduceSum((d) => d.size);
 
-    var typeDimension = ndx.dimension(function (d) {
-        return d.type;
-    });
-    var typeGroup = typeDimension.group().reduceSum(function (d) {
-        return d.size;
-    });
+    const typeDimension = ndx.dimension((d) => d.type);
+    const typeGroup = typeDimension.group().reduceSum((d) => d.size);
 
     // d3.schemeCategory20b has been removed from D3v5
-    var d3SchemeCategory20b = [
+    const d3SchemeCategory20b = [
         '#393b79','#5254a3','#6b6ecf','#9c9ede','#637939',
         '#8ca252','#b5cf6b','#cedb9c','#8c6d31','#bd9e39',
         '#e7ba52','#e7cb94','#843c39','#ad494a','#d6616b',

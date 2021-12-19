@@ -17,15 +17,15 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.ScatterPlot("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.ScatterPlot("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return [+d.Run, +d.Speed]; }),
+  const ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension((d) => [+d.Run, +d.Speed]),
       speedSumGroup       = runDimension.group();
 
   chart

@@ -20,8 +20,8 @@
   <script type="text/javascript" src="../js/dc.js"></script>
   <script type="text/javascript">
 
-var chart1 = new dc.ScatterPlot("#test1");
-var chart2 = new dc.ScatterPlot("#test2");
+const chart1 = new dc.ScatterPlot("#test1");
+const chart2 = new dc.ScatterPlot("#test2");
 var data = "x,y,z\n" +
     "1,1,3\n" +
     "5,2,11\n" +
@@ -35,19 +35,15 @@ var data = "x,y,z\n" +
     "8,8,12\n";
 var data = d3.csvParse(data);
 
-data.forEach(function (x) {
+data.forEach((x) => {
     x.x = +x.x;
     x.y = +x.y;
     x.z = +x.z;
 });
 
-var ndx = crossfilter(data),
-    dim1 = ndx.dimension(function (d) {
-        return [+d.x, +d.y];
-    }),
-    dim2 = ndx.dimension(function (d) {
-        return [+d.y, +d.z];
-    }),
+const ndx = crossfilter(data),
+    dim1 = ndx.dimension((d) => [+d.x, +d.y]),
+    dim2 = ndx.dimension((d) => [+d.y, +d.z]),
     group1 = dim1.group(),
     group2 = dim2.group();
 

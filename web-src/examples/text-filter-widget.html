@@ -30,7 +30,7 @@
 <script type="text/javascript">
 
 
-    var data = [
+    const data = [
         {'first_name': 'John', 'last_name': 'Coltrane'},
         {'first_name': 'Miles', 'last_name': 'Davis'},
         {'first_name': 'Ornette', 'last_name': 'Coleman'},
@@ -43,15 +43,13 @@
         {'first_name': 'Max', 'last_name': 'Roach'}
     ];
 
-    var ndx = crossfilter(data),
-        dimension = ndx.dimension(function (d) {
-            return d.last_name + ' ' + d.first_name;
-        });
+    const ndx = crossfilter(data),
+        dimension = ndx.dimension((d) => `${d.last_name  } ${  d.first_name}`);
 
-    var chart = new dc.TextFilterWidget("#search")
+    const chart = new dc.TextFilterWidget("#search")
         .dimension(dimension);
 
-    var i = 0;
+    let i = 0;
     new dc.DataTable('.dc-data-grid')
         .dimension(dimension)
         .showSections(false)
@@ -66,9 +64,9 @@
             function (d) {
                 return d.last_name;
             }])
-        .on('renderlet', function (c) {
-            i = 0;
-        });
+        .on('renderlet', (c) => {
+        i = 0;
+    });
 
     dc.renderAll();
 

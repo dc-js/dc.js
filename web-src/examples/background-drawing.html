@@ -34,31 +34,31 @@ function safe_division(numerator, denominator){
 }
 function generateFmeasureContours(width, height, beta){
   //x axis is recall, y axis is precision
-  var betasquared = beta * beta;
-  var values = new Array(height * width);
-  for (var prec = height, k = 0; prec > 0; --prec) {
-    for (var rec = 0; rec < width; ++rec, ++k) {
-      var newPrec = prec/height;
-      var newRec = rec/width;
+  const betasquared = beta * beta;
+  const values = new Array(height * width);
+  for (let prec = height, k = 0; prec > 0; --prec) {
+    for (let rec = 0; rec < width; ++rec, ++k) {
+      const newPrec = prec/height;
+      const newRec = rec/width;
       values[k] = safe_division((1 + betasquared) * (newPrec * newRec), (betasquared * newPrec) + newRec);
     }
   }
-  var thresholds = d3.range(0.0, 1.0, 0.05);
-  var color = d3.scaleLinear()
+  const thresholds = d3.range(0.0, 1.0, 0.05);
+  const color = d3.scaleLinear()
   .domain(d3.extent(thresholds))
   .interpolate(d => d3.interpolateRdYlGn)
-  var contours = d3.contours()
+  const contours = d3.contours()
   .size([width, height])
   .thresholds(thresholds)
   (values);
   return [contours, color];
 }
 
-var chart = new dc.ScatterPlot("#test");
+const chart = new dc.ScatterPlot("#test");
 
-var experiments = d3.csvParse(d3.select('pre#data').text());
-var ndx                 = crossfilter(experiments),
-    scatterDim          = ndx.dimension(function(d) {return [d.Prec, d.Recall];}),
+const experiments = d3.csvParse(d3.select('pre#data').text());
+const ndx                 = crossfilter(experiments),
+    scatterDim          = ndx.dimension((d) => [d.Prec, d.Recall]),
     scatterGroup        = scatterDim.group();
 
 chart
@@ -70,16 +70,16 @@ chart
   .x(d3.scaleLinear().domain([0,1]))
   .yAxisLabel("Precision")
   .y(d3.scaleLinear().domain([0,1]))
-  .on('pretransition', function (chart) {
+  .on('pretransition', (chart) => {
     // add contour layer to back (beginning of svg) only if it doesn't exist
-    var contourLayer = chart.g().selectAll('g.contour-layer').data([0]);
+    let contourLayer = chart.g().selectAll('g.contour-layer').data([0]);
     contourLayer = contourLayer
         .enter().insert('g', ':first-child')
         .attr('class', 'contour-layer')
-        .attr('transform', 'translate(' + [chart.margins().left,chart.margins().top].join(',') + ')')
+        .attr('transform', `translate(${  [chart.margins().left,chart.margins().top].join(',')  })`)
         .merge(contourLayer);
 
-    var width = chart.effectiveWidth(), height = chart.effectiveHeight();
+    const width = chart.effectiveWidth(), height = chart.effectiveHeight();
     [contours, color] = generateFmeasureContours(width,height, 1);
 
     contourLayer

@@ -81,19 +81,17 @@
     </div>
 
       <script type="text/javascript">
-        var posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
+        const posiness = ['heading', 'above', 'upward', 'even', 'downward', 'below'];
 
-        var N = 20;
-        var gen = d3.randomNormal();
+        const N = 20;
+        const gen = d3.randomNormal();
         function distribute(vals, min, max) {
-            var ext = d3.extent(vals);
-            return vals.map(function(x) {
-                return min + (x-ext[0]) * (max-min)
-                    / (ext[1]-ext[0]);
-            });
+            const ext = d3.extent(vals);
+            return vals.map((x) => min + (x-ext[0]) * (max-min)
+    / (ext[1]-ext[0]));
         }
         function distribution(posi, scale) {
-            var vals = d3.range(N).map(gen);
+            const vals = d3.range(N).map(gen);
             switch(posi) {
             case 'above': return distribute(vals, scale*0.2, scale*1.2);
             case 'upward': return distribute(vals, -scale*0.1, scale*0.9);
@@ -105,54 +103,50 @@
         }
 
         function dataset(lposi, rposi) {
-            var ldist = distribution(lposi, 10),
+            const ldist = distribution(lposi, 10),
                 rdist = distribution(rposi, 100);
-            return ldist.map(function(v, i) { return {key: i, lvalue: v, rvalue: rdist[i]}; });
+            return ldist.map((v, i) => ({key: i, lvalue: v, rvalue: rdist[i]}));
         }
 
-        var line = d3.line()
+        const line = d3.line()
             .curve(d3.curveLinear);
 
         function draw_horizontals(chart, hz) {
             chart.g().select('g.chart-body')
                 .selectAll('path.horizontal').data(hz).enter()
-                .append('path').attr('class', function(d) { return d.classes.concat(['horizontal']).join(' '); })
-                .attr('d', function(d) {
-                    var y = chart.y()(d.y);
-                    return line([[chart.x().range()[0], y], [chart.x().range()[1], y]]);
-                });
+                .append('path').attr('class', (d) => d.classes.concat(['horizontal']).join(' '))
+                .attr('d', (d) => {
+            const y = chart.y()(d.y);
+            return line([[chart.x().range()[0], y], [chart.x().range()[1], y]]);
+        });
         }
 
-        var get_value = dc.pluck('value');
+        const get_value = dc.pluck('value');
 
         function init() {
             d3.select('#content')
                 .selectAll('tr').data(posiness)
-                .enter().append('tr').attr('class', function(d) {
-                    return d === 'heading' ? 'heading row' : 'row';
-                })
+                .enter().append('tr').attr('class', (d) => d === 'heading' ? 'heading row' : 'row')
                 .each(function(rposi) {
                     d3.select(this).selectAll('td').data(posiness)
-                        .enter().append('td').attr('class', function(d) {
-                            return d === 'heading' ? 'heading entry' : 'entry';
-                        })
+                        .enter().append('td').attr('class', (d) => d === 'heading' ? 'heading entry' : 'entry')
                         .each(function(lposi) {
-                            var cdiv = d3.select(this).append('div')
+                            const cdiv = d3.select(this).append('div')
                             if(lposi === 'heading') {
                                 if(rposi !== 'heading')
-                                    cdiv.text('right ' + rposi)
+                                    {cdiv.text(`right ${  rposi}`)}
                                 return;
                             }
                             else if(rposi === 'heading') {
-                                cdiv.text('left ' + lposi)
+                                cdiv.text(`left ${  lposi}`)
                                 return;
                             }
                             cdiv.attr('class', 'chart-holder');
-                            var chart = new dc.CompositeChart(cdiv);
-                            var ndx = crossfilter(dataset(lposi, rposi)),
-                                dim = ndx.dimension(function(d) { return d.key; }),
-                                lgroup = dim.group().reduceSum(function(d) { return d.lvalue; }),
-                                rgroup = dim.group().reduceSum(function(d) { return d.rvalue; });
+                            const chart = new dc.CompositeChart(cdiv);
+                            const ndx = crossfilter(dataset(lposi, rposi)),
+                                dim = ndx.dimension((d) => d.key),
+                                lgroup = dim.group().reduceSum((d) => d.lvalue),
+                                rgroup = dim.group().reduceSum((d) => d.rvalue);
                             chart
                                 .width(200)
                                 .height(200)
@@ -168,13 +162,13 @@
                                         .group(lgroup)
                                         .x(d3.scaleLinear())
                                         .yAxisPadding(1)
-                                        .on('pretransition', function(chart) {
-                                            draw_horizontals(chart, [
-                                                {classes: ['left','zero'], y: 0},
-                                                {classes: ['left','extreme'], y: d3.min(lgroup.all(), get_value)},
-                                                {classes: ['left','extreme'], y: d3.max(lgroup.all(), get_value)}
-                                            ]);
-                                        }),
+                                        .on('pretransition', (chart) => {
+                                    draw_horizontals(chart, [
+                                        {classes: ['left','zero'], y: 0},
+                                        {classes: ['left','extreme'], y: d3.min(lgroup.all(), get_value)},
+                                        {classes: ['left','extreme'], y: d3.max(lgroup.all(), get_value)}
+                                    ]);
+                                }),
                                     new dc.LineChart(chart)
                                         .dimension(dim)
                                         .group(rgroup)
@@ -182,13 +176,13 @@
                                         .ordinalColors(["darkorange"])
                                         .yAxisPadding(10)
                                         .useRightYAxis(true)
-                                        .on('pretransition', function(chart) {
-                                            draw_horizontals(chart, [
-                                                {classes: ['right','zero'], y: 0},
-                                                {classes: ['right','extreme'], y: d3.min(rgroup.all(), get_value)},
-                                                {classes: ['right','extreme'], y: d3.max(rgroup.all(), get_value)}
-                                            ]);
-                                        })
+                                        .on('pretransition', (chart) => {
+                                    draw_horizontals(chart, [
+                                        {classes: ['right','zero'], y: 0},
+                                        {classes: ['right','extreme'], y: d3.min(rgroup.all(), get_value)},
+                                        {classes: ['right','extreme'], y: d3.max(rgroup.all(), get_value)}
+                                    ]);
+                                })
                                 ]);
                         });
                 });

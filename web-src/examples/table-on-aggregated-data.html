@@ -31,8 +31,8 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.DataTable("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.DataTable("#test");
+d3.csv("morley.csv").then((experiments) => {
   /* Ordinarily a data table will show raw rows of data. But it can also show
      aggregated data, by passing a group as the dimension.
 
@@ -51,24 +51,22 @@ d3.csv("morley.csv").then(function(experiments) {
 
      https://github.com/dc-js/dc.js/wiki/FAQ#fake-dimensions
   */
-  var ndx              = crossfilter(experiments),
-      exptDimension    = ndx.dimension(function(d) {return +d.Expt;}),
+  const ndx              = crossfilter(experiments),
+      exptDimension    = ndx.dimension((d) => +d.Expt),
       avgGroup = exptDimension.group().reduce(
-          function (p, v) {
+          (p, v) => {
               ++p.number;
               p.total += +v.Speed;
               p.avg = Math.round(p.total / p.number);
               return p;
           },
-          function (p, v) {
+          (p, v) => {
               --p.number;
               p.total -= +v.Speed;
               p.avg = (p.number == 0) ? 0 : Math.round(p.total / p.number);
               return p;
           },
-          function () {
-              return {number: 0, total: 0, avg: 0}
-          });
+          () => ({number: 0, total: 0, avg: 0}));
 
   chart
     .width(768)
@@ -78,7 +76,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .columns([function (d) { return d.key },
               function (d) { return d.value.number },
               function (d) { return d.value.avg }])
-    .sortBy(function (d) { return d.value.avg })
+    .sortBy((d) => d.value.avg)
     .order(d3.descending)
   chart.render();
 

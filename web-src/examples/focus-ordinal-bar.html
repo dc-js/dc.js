@@ -67,81 +67,79 @@
     }
 
     // phrases generated with https://www.fourmilab.ch/javascrypt/pass_phrase.html
-    var focus, range;
-    d3.json("wide-ordinal.json").then(function(wide) {
-        // extract and sort keys, these will be assigned indices starting from 0 by the mapper
-        const keys = wide.map(d => d.key).sort((a,b) => d3.ascending(a,b));
-        const mappings =  new Mapper(keys);
+    let focus, range;
+    d3.json("wide-ordinal.json").then((wide) => {
+    // extract and sort keys, these will be assigned indices starting from 0 by the mapper
+    const keys = wide.map(d => d.key).sort((a,b) => d3.ascending(a,b));
+    const mappings =  new Mapper(keys);
 
-        // dummy crossfilter taking group data and regrouping it to the same thing
-        var cf = crossfilter(wide),
-            dimension = cf.dimension(function(d) {return mappings.ord2int(d.key);}),
-            group = dimension.group().reduceSum(function(d) {return d.value;});
+    // dummy crossfilter taking group data and regrouping it to the same thing
+    const cf = crossfilter(wide),
+        dimension = cf.dimension((d) => mappings.ord2int(d.key)),
+        group = dimension.group().reduceSum((d) => d.value);
 
-        focus = new dc.BarChart('#focus');
-        var linear_domain = [-0.5, mappings.length() - 0.5];
-        focus
-            .width(1000).height(330)
-            .margins({left: 60, top: 0, right: 10, bottom: 145})
-            .x(d3.scaleLinear().domain(linear_domain))
-            .xUnits(dc.units.integers)
-            .controlsUseVisibility(true)
-            .centerBar(true)
-            .yAxisLabel('counts')
-            .elasticY(true)
-            .brushOn(false)
-            .dimension(dimension)
-            .mouseZoomable(true)
-            .zoomScale([4,8])
-            .configure({autoFocus: true})
-            .group(group)
-            .title(kv => mappings.int2ord(kv.key))
-            .transitionDuration(0);
+    focus = new dc.BarChart('#focus');
+    const linear_domain = [-0.5, mappings.length() - 0.5];
+    focus
+        .width(1000).height(330)
+        .margins({left: 60, top: 0, right: 10, bottom: 145})
+        .x(d3.scaleLinear().domain(linear_domain))
+        .xUnits(dc.units.integers)
+        .controlsUseVisibility(true)
+        .centerBar(true)
+        .yAxisLabel('counts')
+        .elasticY(true)
+        .brushOn(false)
+        .dimension(dimension)
+        .mouseZoomable(true)
+        .zoomScale([4,8])
+        .configure({autoFocus: true})
+        .group(group)
+        .title(kv => mappings.int2ord(kv.key))
+        .transitionDuration(0);
 
-        focus.xAxis()
-            .tickFormat(function(d) { return mappings.int2ord(d); });
+    focus.xAxis()
+        .tickFormat((d) => mappings.int2ord(d));
 
-        focus.on('preRedraw', function(chart) {
-            var domain = chart.x().domain(),
-                min = Math.ceil(domain[0]), max = Math.floor(domain[1]);
-            chart.xAxis().tickValues(d3.range(min, max+1));
-        });
+    focus.on('preRedraw', (chart) => {
+    const domain = chart.x().domain(),
+        min = Math.ceil(domain[0]), max = Math.floor(domain[1]);
+    chart.xAxis().tickValues(d3.range(min, max+1));
+});
 
-        range = new dc.BarChart('#range');
-        range
-            .margins({left: 74, top: 0, right: 20, bottom: 2})
-            .width(1000).height(20)
-            .x(d3.scaleLinear().domain(linear_domain))
-            .xUnits(dc.units.integers)
-            .elasticY(true)
-            .brushOn(true)
-            .dimension(dimension)
-            .group(group)
-            .transitionDuration(0);
+    range = new dc.BarChart('#range');
+    range
+        .margins({left: 74, top: 0, right: 20, bottom: 2})
+        .width(1000).height(20)
+        .x(d3.scaleLinear().domain(linear_domain))
+        .xUnits(dc.units.integers)
+        .elasticY(true)
+        .brushOn(true)
+        .dimension(dimension)
+        .group(group)
+        .transitionDuration(0);
 
-        // display a row chart of first letters, to test filtering
-        var letterDimension = cf.dimension(function(d) {
-            return d.key.split(' ').map(function(s) { return s[0]; });
-        }, true);
-        var letterGroup = letterDimension.group();
+    // display a row chart of first letters, to test filtering
+    const letterDimension = cf.dimension((d) => d.key.split(' ').map((s) => s[0]), true);
+    const letterGroup = letterDimension.group();
 
-        var row = new dc.RowChart('#first-letters');
-        row
-            .width(1000)
-            .height(350)
-            .gap(1)
-            .elasticX(true)
-            .dimension(letterDimension)
-            .transitionDuration(200)
-            .group(letterGroup);
+    const row = new dc.RowChart('#first-letters');
+    row
+        .width(1000)
+        .height(350)
+        .gap(1)
+        .elasticX(true)
+        .dimension(letterDimension)
+        .transitionDuration(200)
+        .group(letterGroup);
 
-        dc.renderAll();
+    dc.renderAll();
 
-        // Set initial focus
-        focus
-            .focus([200,260])
+    // Set initial focus
+    focus
+        .focus([200,260])
 
-    });
+});
 
 </script>
 

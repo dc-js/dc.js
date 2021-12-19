@@ -50,14 +50,14 @@
 <script type="text/javascript" src="../js/FileSaver.js"></script>
 <script type="text/javascript">
 
-var yearRingChart   = new dc.PieChart("#chart-ring-year"),
+const yearRingChart   = new dc.PieChart("#chart-ring-year"),
     spendHistChart  = new dc.BarChart("#chart-hist-spend"),
     spenderRowChart = new dc.RowChart("#chart-row-spenders");
 
-var table = new dc.DataTable('#table');
+const table = new dc.DataTable('#table');
 
 // use static or load via d3.csv("spendData.csv").then(function(spendData) {/* do stuff */});
-var spendData = [
+const spendData = [
     {Name: 'Mr A', Spent: '$40', Year: 2011},
     {Name: 'Mr B', Spent: '$10', Year: 2011},
     {Name: 'Mr C', Spent: '$40', Year: 2011},
@@ -68,17 +68,17 @@ var spendData = [
 ];
 
 // normalize/parse data
-spendData.forEach(function(d) {
+spendData.forEach((d) => {
     d.Spent = d.Spent.match(/\d+/)[0];
 });
 
 // set crossfilter
-var ndx = crossfilter(spendData),
-    yearDim  = ndx.dimension(function(d) {return +d.Year;}),
-    spendDim = ndx.dimension(function(d) {return Math.floor(d.Spent/10);}),
-    nameDim  = ndx.dimension(function(d) {return d.Name;}),
-    spendPerYear = yearDim.group().reduceSum(function(d) {return +d.Spent;}),
-    spendPerName = nameDim.group().reduceSum(function(d) {return +d.Spent;}),
+const ndx = crossfilter(spendData),
+    yearDim  = ndx.dimension((d) => +d.Year),
+    spendDim = ndx.dimension((d) => Math.floor(d.Spent/10)),
+    nameDim  = ndx.dimension((d) => d.Name),
+    spendPerYear = yearDim.group().reduceSum((d) => +d.Spent),
+    spendPerName = nameDim.group().reduceSum((d) => +d.Spent),
     spendHist    = spendDim.group().reduceCount();
 
   yearRingChart
@@ -96,7 +96,7 @@ var ndx = crossfilter(spendData),
     .elasticY(true)
     .controlsUseVisibility(true);
 
-spendHistChart.xAxis().tickFormat(function(d) {return d*10}); // convert back to base unit
+spendHistChart.xAxis().tickFormat((d) => d*10); // convert back to base unit
 spendHistChart.yAxis().ticks(2);
 
 spenderRowChart
@@ -105,43 +105,41 @@ spenderRowChart
     .elasticX(true)
     .controlsUseVisibility(true);
 
-var allDollars = ndx.groupAll().reduceSum(function(d) { return +d.Spent; });
+const allDollars = ndx.groupAll().reduceSum((d) => +d.Spent);
 
 table
     .dimension(spendDim)
-    .sortBy(function(d) { return +d.Spent; })
+    .sortBy((d) => +d.Spent)
     .showSections(false)
     .columns(['Name',
               {
                   label: 'Spent',
                   format: function(d) {
-                      return '$' + d.Spent;
+                      return `$${  d.Spent}`;
                   }
               },
               'Year',
               {
                   label: 'Percent of Total',
                   format: function(d) {
-                      return Math.floor((d.Spent / allDollars.value()) * 100) + '%';
+                      return `${Math.floor((d.Spent / allDollars.value()) * 100)  }%`;
                   }
               }]);
 
 d3.select('#download')
-    .on('click', function() {
-        var data = nameDim.top(Infinity);
+    .on('click', () => {
+        let data = nameDim.top(Infinity);
         if(d3.select('#download-type input:checked').node().value==='table') {
-            data = data.sort(function(a, b) {
-                return table.order()(table.sortBy()(a), table.sortBy()(b));
-            });
-            data = data.map(function(d) {
-                var row = {};
-                table.columns().forEach(function(c) {
+            data = data.sort((a, b) => table.order()(table.sortBy()(a), table.sortBy()(b)));
+            data = data.map((d) => {
+                const row = {};
+                table.columns().forEach((c) => {
                     row[table._doColumnHeaderFormat(c)] = table._doColumnValueFormat(c, d);
                 });
                 return row;
             });
         }
-        var blob = new Blob([d3.csvFormat(data)], {type: "text/csv;charset=utf-8"});
+        const blob = new Blob([d3.csvFormat(data)], {type: "text/csv;charset=utf-8"});
         saveAs(blob, 'data.csv');
     });
 

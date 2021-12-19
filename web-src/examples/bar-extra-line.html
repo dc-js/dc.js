@@ -23,16 +23,16 @@ dc.js for such "derived" values, but this example is here to tide folks over unt
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.BarChart("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.BarChart("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-      speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run / 1000;});
+  const ndx                 = crossfilter(experiments),
+      runDimension        = ndx.dimension((d) => +d.Run),
+      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
 
   chart
     .width(768)
@@ -43,18 +43,18 @@ d3.csv("morley.csv").then(function(experiments) {
     .dimension(runDimension)
     .group(speedSumGroup)
     .renderLabel(true)
-    .on('renderlet', function(chart) {
-        chart.selectAll('rect').on("click", function(d) {
+    .on('renderlet', (chart) => {
+        chart.selectAll('rect').on("click", (d) => {
             console.log("click!", d);
         });
-        var left_y = 10, right_y = 70; // use real statistics here!
-        var extra_data = [{x: chart.x().range()[0], y: chart.y()(left_y)}, {x: chart.x().range()[1], y: chart.y()(right_y)}];
-        var line = d3.line()
-            .x(function(d) { return d.x; })
-            .y(function(d) { return d.y; })
+        const left_y = 10, right_y = 70; // use real statistics here!
+        const extra_data = [{x: chart.x().range()[0], y: chart.y()(left_y)}, {x: chart.x().range()[1], y: chart.y()(right_y)}];
+        const line = d3.line()
+            .x((d) => d.x)
+            .y((d) => d.y)
             .curve(d3.curveLinear);
-        var chartBody = chart.select('g.chart-body');
-        var path = chartBody.selectAll('path.extra').data([extra_data]);
+        const chartBody = chart.select('g.chart-body');
+        let path = chartBody.selectAll('path.extra').data([extra_data]);
         path = path
             .enter()
                 .append('path')
@@ -65,7 +65,7 @@ d3.csv("morley.csv").then(function(experiments) {
         path.attr('d', line);
 
         // and perhaps you'd like to label it?
-        var text = chartBody.selectAll('text.extra-label').data([0]);
+        const text = chartBody.selectAll('text.extra-label').data([0]);
         text.enter()
             .append('text')
                 .attr('text-anchor', 'middle')

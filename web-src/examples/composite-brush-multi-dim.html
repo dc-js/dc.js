@@ -29,10 +29,10 @@
   <script type="text/javascript" src="../js/dc.js"></script>
   <script type="text/javascript">
 
-var chart = new dc.CompositeChart("#test1");
-var dataTable = new dc.DataTable("#test2");
+const chart = new dc.CompositeChart("#test1");
+const dataTable = new dc.DataTable("#test2");
 
-var data = [
+const data = [
     {x: 1, y: 1, z: 3},
     {x: 5, y: 2, z: 11},
     {x: 13, y: 13, z: 14},
@@ -45,18 +45,12 @@ var data = [
     {x: 8, y: 8, z: 12}
 ];
 
-var ndx = crossfilter(data),
-    dimXY = ndx.dimension(function (d) {
-        return [d.x, d.y];
-    }),
+const ndx = crossfilter(data),
+    dimXY = ndx.dimension((d) => [d.x, d.y]),
     groupXY = dimXY.group(),
-    dimXZ = ndx.dimension(function (d) {
-        return [d.x, d.z];
-    }),
+    dimXZ = ndx.dimension((d) => [d.x, d.z]),
     groupXZ = dimXZ.group(),
-    dimX = ndx.dimension(function (d) {
-        return d.x;
-    }),
+    dimX = ndx.dimension((d) => d.x),
     groupX = dimX.group();
 
 // If you need brushing you need to use dimension from any chart type other than scatter plot
@@ -89,16 +83,16 @@ chart.width(768)
         new dc.BarChart(chart)
             .dimension(dimX)
             .group(groupX)
-            .valueAccessor(function (d) { return d.value * 3; })
+            .valueAccessor((d) => d.value * 3)
             .ordinalColors(['#e7e4ff'])
             .barPadding(8)
     ]);
 
 dataTable
     .dimension(dimX)
-    .section(function (d) { return d.x; })
+    .section((d) => d.x)
     .columns(['x', 'y', 'z'])
-    .on('renderlet', function (table) {
+    .on('renderlet', (table) => {
         table.selectAll('.dc-table-group').classed('info', true);
     });
 

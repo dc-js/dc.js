@@ -23,19 +23,19 @@
 // may cause problems if there is a lot of data
 dc.constants.EVENT_DELAY = 0;
 
-var chart1 = dc.barChart("#test1");
-var chart2 = dc.barChart("#test2");
-var chart3 = dc.barChart("#test3");
-var chart4 = dc.barChart("#test4");
+const chart1 = dc.barChart("#test1");
+const chart2 = dc.barChart("#test2");
+const chart3 = dc.barChart("#test3");
+const chart4 = dc.barChart("#test4");
 
-d3.csv("morley.csv").then(function(experiments) {
-    experiments.forEach(function(x) {
+d3.csv("morley.csv").then((experiments) => {
+    experiments.forEach((x) => {
         x.Speed = +x.Speed;
     });
 
-    var ndx                 = crossfilter(experiments),
-        runDimension        = ndx.dimension(function(d) {return +d.Run;}),
-        speedSumGroup       = runDimension.group().reduceSum(function(d) {return d.Speed/100 + +d.Run/2;});
+    const ndx                 = crossfilter(experiments),
+        runDimension        = ndx.dimension((d) => +d.Run),
+        speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed/100 + +d.Run/2);
 
 
     function bar_chart(chart) {

@@ -40,10 +40,10 @@ if (!Array.prototype.find) {
         throw new TypeError('"this" is null or not defined');
       }
 
-      var o = Object(this);
+      const o = Object(this);
 
       // 2. Let len be ? ToLength(? Get(O, "length")).
-      var len = o.length >>> 0;
+      const len = o.length >>> 0;
 
       // 3. If IsCallable(predicate) is false, throw a TypeError exception.
       if (typeof predicate !== 'function') {
@@ -51,10 +51,10 @@ if (!Array.prototype.find) {
       }
 
       // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-      var thisArg = arguments[1];
+      const thisArg = arguments[1];
 
       // 5. Let k be 0.
-      var k = 0;
+      let k = 0;
 
       // 6. Repeat, while k < len
       while (k < len) {
@@ -62,7 +62,7 @@ if (!Array.prototype.find) {
         // b. Let kValue be ? Get(O, Pk).
         // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
         // d. If testResult is true, return kValue.
-        var kValue = o[k];
+        const kValue = o[k];
         if (predicate.call(thisArg, kValue, k, o)) {
           return kValue;
         }
@@ -78,9 +78,9 @@ if (!Array.prototype.find) {
   });
 }
 
-    let genderColors = [{'value': 'Female', 'color': '#efc3e2'}, {'value': 'Male', 'color': '#76bbe1'}];
+    const genderColors = [{'value': 'Female', 'color': '#efc3e2'}, {'value': 'Male', 'color': '#76bbe1'}];
 
-    let data = [
+    const data = [
         {"_id":  1, "club": 'Tiny Tots',   "sport": "Soccer",     "gender": "Male",   "age" : 5},
         {"_id":  2, "club": 'Tiny Tots',   "sport": "Soccer",     "gender": "Male",   "age" : 6},
         {"_id":  3, "club": 'Tiny Tots',   "sport": "Gymnastics", "gender": "Male",   "age" : 7},
@@ -128,31 +128,29 @@ if (!Array.prototype.find) {
         {"_id": 45, "club": 'High Flyers', "sport": "Baseball",   "gender": "Male",   "age" : 14},
     ];
 
-    let ndx = crossfilter(data);
+    const ndx = crossfilter(data);
 
 
     // -----------------------------------------------
-    let bpGenderDim = ndx.dimension(function (d) {return d.gender;});
-    let bpGenderGroup = bpGenderDim.group().reduce(
-        function (p, v) {
+    const bpGenderDim = ndx.dimension((d) => d.gender);
+    const bpGenderGroup = bpGenderDim.group().reduce(
+        (p, v) => {
             // Retrieve the data value, if not Infinity or null add it.
-            let dv = v.age;
-            if (dv != Infinity && dv != null) p.splice(d3.bisectLeft(p, dv), 0, dv);
+            const dv = v.age;
+            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 0, dv);}
             return p;
         },
-        function (p, v) {
+        (p, v) => {
             // Retrieve the data value, if not Infinity or null remove it.
-            let dv = v.age;
-            if (dv != Infinity && dv != null) p.splice(d3.bisectLeft(p, dv), 1);
+            const dv = v.age;
+            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 1);}
             return p;
         },
-        function () {
-            return [];
-        }
+        () => []
     );
 
     // -----------------------------------------------
-    var bp01 = dc.boxPlot("#boxPlot01");
+    const bp01 = dc.boxPlot("#boxPlot01");
 
     bp01
         .width(320)
@@ -170,13 +168,11 @@ if (!Array.prototype.find) {
         .elasticX(true)
     ;
 
-    bp01.colorAccessor(function(data) { return data.key; })
-        .colors(function(data) {
-            return colorSchema(genderColors, data);
-        });
+    bp01.colorAccessor((data) => data.key)
+        .colors((data) => colorSchema(genderColors, data));
 
     // -----------------------------------------------
-    var bp02 = dc.boxPlot("#boxPlot02");
+    const bp02 = dc.boxPlot("#boxPlot02");
 
     bp02
         .width(320)
@@ -194,13 +190,11 @@ if (!Array.prototype.find) {
         .elasticX(true)
     ;
 
-    bp02.colorAccessor(function(data) { return data.key; })
-        .colors(function(data) {
-            return colorSchema(genderColors, data);
-        });
+    bp02.colorAccessor((data) => data.key)
+        .colors((data) => colorSchema(genderColors, data));
 
     // -----------------------------------------------
-    var bp03 = dc.boxPlot("#boxPlot03");
+    const bp03 = dc.boxPlot("#boxPlot03");
 
     bp03
         .width(320)
@@ -218,16 +212,14 @@ if (!Array.prototype.find) {
         .elasticX(true)
     ;
 
-    bp03.colorAccessor(function(data) { return data.key; })
-        .colors(function(data) {
-            return colorSchema(genderColors, data);
-        });
+    bp03.colorAccessor((data) => data.key)
+        .colors((data) => colorSchema(genderColors, data));
 
     // -----------------------------------------------
     dc.renderAll();
 
     function colorSchema(pref, aa) {
-        a = pref.find(function(i) { return i.value === aa; });
+        a = pref.find((i) => i.value === aa);
         return a.color;
     }
 

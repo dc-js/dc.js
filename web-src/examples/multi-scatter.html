@@ -17,20 +17,18 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-var chart = new dc.CompositeChart("#test");
-d3.csv("morley.csv").then(function(experiments) {
+const chart = new dc.CompositeChart("#test");
+d3.csv("morley.csv").then((experiments) => {
 
-  experiments.forEach(function(x) {
+  experiments.forEach((x) => {
     x.Speed = +x.Speed;
   });
 
-  var ndx                 = crossfilter(experiments),
-      scatterDimension    = ndx.dimension(function(d) { return [+d.Run, d.Speed * d.Run / 1000]; }),
+  const ndx                 = crossfilter(experiments),
+      scatterDimension    = ndx.dimension((d) => [+d.Run, d.Speed * d.Run / 1000]),
       scatterGroup        = scatterDimension.group(),
-      lineDimension       = ndx.dimension(function(d) { return +d.Run; }),
-      lineGroup           = lineDimension.group().reduceSum(function (d) {
-          return d.Speed * d.Run / 4000;
-      });
+      lineDimension       = ndx.dimension((d) => +d.Run),
+      lineGroup           = lineDimension.group().reduceSum((d) => d.Speed * d.Run / 4000);
 
     chart
         .width(768)
@@ -48,7 +46,7 @@ d3.csv("morley.csv").then(function(experiments) {
             new dc.ScatterPlot(chart)
                 .group(scatterGroup, "Red Group")
                 .colors("red")
-                .valueAccessor(function (d) { return d.key[1] + 5; }),
+                .valueAccessor((d) => d.key[1] + 5),
             new dc.LineChart(chart)
                 .dimension(lineDimension)
                 .group(lineGroup, "Line Group")
