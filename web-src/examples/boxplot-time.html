@@ -60,14 +60,15 @@ d3.csv("monthly-move.csv").then((data) => {
 
   // this demonstrates solving elasticX manually, avoiding the
   // bug where the rightmost bar/box is not displayed, #792
-  function calc_domain(chart) {
-      let min = d3.min(chart.group().all(), (kv) => kv.key),
-          max = d3.max(chart.group().all(), (kv) => kv.key);
+    // eslint-disable-next-line no-shadow
+  function calcDomain(chart) {
+      const min = d3.min(chart.group().all(), (kv) => kv.key);
+      let max = d3.max(chart.group().all(), (kv) => kv.key);
       max = d3.timeMonth.offset(max, 1);
       chart.x().domain([min, max]);
   }
-  chart.on('preRender', calc_domain);
-  chart.on('preRedraw', calc_domain);
+  chart.on('preRender', calcDomain);
+  chart.on('preRedraw', calcDomain);
 
   pie
     .width(140)

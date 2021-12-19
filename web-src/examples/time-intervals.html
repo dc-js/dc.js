@@ -35,13 +35,16 @@ library by Mikola Lysenko.</p>
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript" src="lysenko-interval-tree.js"></script>
 <script type="text/javascript">
+    /* globals lysenkoIntervalTree */
 
   function intervalTreeGroup(tree, firstDate, lastDate) {
       return {
           all: function() {
               const begin = d3.timeMonth(firstDate), end = d3.timeMonth(lastDate);
               let i = new Date(begin);
-              let ret = [], count;
+              const ret = [];
+              let  count;
+              let next;
               do {
                   next = new Date(i);
                   next.setMonth(next.getMonth()+1);
@@ -59,7 +62,6 @@ library by Mikola Lysenko.</p>
   }
 
   const dateFormatSpecifier = '%x';
-  const timeFormat = d3.timeFormat(dateFormatSpecifier);
   const dateFormatParser = d3.timeParse(dateFormatSpecifier);
   const monthChart = new dc.BarChart("#month");
   const costChart = new dc.BarChart("#cost");

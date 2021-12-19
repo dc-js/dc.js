@@ -46,6 +46,7 @@
             this._ord2int = {};
 
             keys.forEach(key => {
+                // eslint-disable-next-line no-prototype-builtins
                 if(!this._ord2int.hasOwnProperty(key)) {
                     this._ord2int[key] = this._int2ord.length;
                     this._int2ord.push(key);
@@ -79,11 +80,11 @@
         group = dimension.group().reduceSum((d) => d.value);
 
     focus = new dc.BarChart('#focus');
-    const linear_domain = [-0.5, mappings.length() - 0.5];
+    const linearDomain = [-0.5, mappings.length() - 0.5];
     focus
         .width(1000).height(330)
         .margins({left: 60, top: 0, right: 10, bottom: 145})
-        .x(d3.scaleLinear().domain(linear_domain))
+        .x(d3.scaleLinear().domain(linearDomain))
         .xUnits(dc.units.integers)
         .controlsUseVisibility(true)
         .centerBar(true)
@@ -111,7 +112,7 @@
     range
         .margins({left: 74, top: 0, right: 20, bottom: 2})
         .width(1000).height(20)
-        .x(d3.scaleLinear().domain(linear_domain))
+        .x(d3.scaleLinear().domain(linearDomain))
         .xUnits(dc.units.integers)
         .elasticY(true)
         .brushOn(true)

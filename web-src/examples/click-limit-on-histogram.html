@@ -28,7 +28,7 @@ d3.csv("morley.csv").then((experiments) => {
       runDimension        = ndx.dimension((d) => +d.Run),
       speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
 
-  let x_vert;
+  let xVert;
 
   chart
     .width(768)
@@ -41,25 +41,26 @@ d3.csv("morley.csv").then((experiments) => {
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
+      // eslint-disable-next-line no-shadow
     .on('pretransition', (chart) => {
         chart.svg().on('click', (event) => {
             const bound = chart.root().node().getBoundingClientRect();
-            x_vert = chart.x().invert(event.clientX - bound.left - chart.margins().left);
-            console.log('clicked', x_vert);
+            xVert = chart.x().invert(event.clientX - bound.left - chart.margins().left);
+            console.log('clicked', xVert);
             chart.redraw();
         });
 
-        // draw a line if x_vert is set
-        const extra_data = x_vert !== undefined ? [
-            {x: chart.x()(x_vert) + chart.margins().left, y: chart.margins().top},
-            {x: chart.x()(x_vert) + chart.margins().left, y: chart.margins().top + chart.effectiveHeight()}
+        // draw a line if xVert is set
+        const extraData = xVert !== undefined ? [
+            {x: chart.x()(xVert) + chart.margins().left, y: chart.margins().top},
+            {x: chart.x()(xVert) + chart.margins().left, y: chart.margins().top + chart.effectiveHeight()}
         ] : [];
         const line = d3.line()
             .x((d) => d.x)
             .y((d) => d.y)
             .curve(d3.curveLinear);
         const chartBody = chart.select('g');
-        let path = chartBody.selectAll('path.extra').data([extra_data]);
+        let path = chartBody.selectAll('path.extra').data([extraData]);
         path = path.enter()
                 .append('path')
                 .attr('class', 'extra')

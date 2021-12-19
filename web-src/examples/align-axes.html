@@ -111,7 +111,7 @@
         const line = d3.line()
             .curve(d3.curveLinear);
 
-        function draw_horizontals(chart, hz) {
+        function drawHorizontals(chart, hz) {
             chart.g().select('g.chart-body')
                 .selectAll('path.horizontal').data(hz).enter()
                 .append('path').attr('class', (d) => d.classes.concat(['horizontal']).join(' '))
@@ -121,7 +121,7 @@
         });
         }
 
-        const get_value = dc.pluck('value');
+        const getValue = d => d.value;
 
         function init() {
             d3.select('#content')
@@ -162,11 +162,12 @@
                                         .group(lgroup)
                                         .x(d3.scaleLinear())
                                         .yAxisPadding(1)
+                                        // eslint-disable-next-line no-shadow
                                         .on('pretransition', (chart) => {
-                                    draw_horizontals(chart, [
+                                    drawHorizontals(chart, [
                                         {classes: ['left','zero'], y: 0},
-                                        {classes: ['left','extreme'], y: d3.min(lgroup.all(), get_value)},
-                                        {classes: ['left','extreme'], y: d3.max(lgroup.all(), get_value)}
+                                        {classes: ['left','extreme'], y: d3.min(lgroup.all(), getValue)},
+                                        {classes: ['left','extreme'], y: d3.max(lgroup.all(), getValue)}
                                     ]);
                                 }),
                                     new dc.LineChart(chart)
@@ -176,11 +177,12 @@
                                         .ordinalColors(["darkorange"])
                                         .yAxisPadding(10)
                                         .useRightYAxis(true)
+                                        // eslint-disable-next-line no-shadow
                                         .on('pretransition', (chart) => {
-                                    draw_horizontals(chart, [
+                                    drawHorizontals(chart, [
                                         {classes: ['right','zero'], y: 0},
-                                        {classes: ['right','extreme'], y: d3.min(rgroup.all(), get_value)},
-                                        {classes: ['right','extreme'], y: d3.max(rgroup.all(), get_value)}
+                                        {classes: ['right','extreme'], y: d3.min(rgroup.all(), getValue)},
+                                        {classes: ['right','extreme'], y: d3.max(rgroup.all(), getValue)}
                                     ]);
                                 })
                                 ]);

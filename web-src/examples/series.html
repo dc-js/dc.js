@@ -53,8 +53,8 @@ d3.csv("morley.csv").then((experiments) => {
 
 });
 
-function load_button(file) {
-    return function load_it() {
+function loadButton(file) {
+    return function loaaIt() {
         d3.csv(file).then((experiments) => {
             ndx.remove(() => true);
             ndx.add(experiments);
@@ -63,9 +63,11 @@ function load_button(file) {
     };
 }
 
-const button1 = load_button("morley.csv"),
-    button2 = load_button("morley2.csv"),
-    button3 = load_button("morley3.csv");
+/* eslint-disable no-unused-vars */
+const button1 = loadButton("morley.csv");
+const button2 = loadButton("morley2.csv");
+const button3 = loadButton("morley3.csv");
+/* eslint-enable no-unused-vars */
 
 </script>
 

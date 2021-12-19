@@ -49,54 +49,6 @@
 <script type="text/javascript">
 
 
-// polyfill Array.find for IE
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-if (!Array.prototype.find) {
-  Object.defineProperty(Array.prototype, 'find', {
-    value: function(predicate) {
-     // 1. Let O be ? ToObject(this value).
-      if (this == null) {
-        throw new TypeError('"this" is null or not defined');
-      }
-
-      const o = Object(this);
-
-      // 2. Let len be ? ToLength(? Get(O, "length")).
-      const len = o.length >>> 0;
-
-      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-      if (typeof predicate !== 'function') {
-        throw new TypeError('predicate must be a function');
-      }
-
-      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-      const thisArg = arguments[1];
-
-      // 5. Let k be 0.
-      let k = 0;
-
-      // 6. Repeat, while k < len
-      while (k < len) {
-        // a. Let Pk be ! ToString(k).
-        // b. Let kValue be ? Get(O, Pk).
-        // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-        // d. If testResult is true, return kValue.
-        const kValue = o[k];
-        if (predicate.call(thisArg, kValue, k, o)) {
-          return kValue;
-        }
-        // e. Increase k by 1.
-        k++;
-      }
-
-      // 7. Return undefined.
-      return undefined;
-    },
-    configurable: true,
-    writable: true
-  });
-}
-
     const clubColors = [{'value': 'Tiny Tots', 'color': '#9be199'}, {'value': 'High Flyers', 'color': '#e17f7e'}];
     const genderColors = [{'value': 'Female', 'color': '#efc3e2'}, {'value': 'Male', 'color': '#76bbe1'}];
 
@@ -163,8 +115,8 @@ if (!Array.prototype.find) {
         .group(pie01Group)
     ;
 
-    pie01.colorAccessor((data) => data.key)
-        .colors((data) => colorSchema(clubColors, data))
+    pie01.colorAccessor((d) => d.key)
+        .colors((d) => colorSchema(clubColors, d))
 
     // -----------------------------------------------
     const pie02 = new dc.PieChart("#pie02");
@@ -179,8 +131,8 @@ if (!Array.prototype.find) {
         .group(pie02Group)
     ;
 
-    pie02.colorAccessor((data) => data.key)
-        .colors((data) => colorSchema(genderColors, data))
+    pie02.colorAccessor((d) => d.key)
+        .colors((d) => colorSchema(genderColors, d))
 
     // -----------------------------------------------
     const pie03 = new dc.PieChart("#pie03");
@@ -201,13 +153,13 @@ if (!Array.prototype.find) {
         (p, v) => {
             // Retrieve the data value, if not Infinity or null add it.
             const dv = v.age;
-            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 0, dv);}
+            if (dv !== Infinity && dv !== null) {p.splice(d3.bisectLeft(p, dv), 0, dv);}
             return p;
         },
         (p, v) => {
             // Retrieve the data value, if not Infinity or null remove it.
             const dv = v.age;
-            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 1);}
+            if (dv !== Infinity && dv !== null) {p.splice(d3.bisectLeft(p, dv), 1);}
             return p;
         },
         () => []
@@ -253,13 +205,13 @@ if (!Array.prototype.find) {
         (p, v) => {
             // Retrieve the data value, if not Infinity or null add it.
             const dv = v.age;
-            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 0, dv);}
+            if (dv !== Infinity && dv !== null) {p.splice(d3.bisectLeft(p, dv), 0, dv);}
             return p;
         },
         (p, v) => {
             // Retrieve the data value, if not Infinity or null remove it.
             const dv = v.age;
-            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 1);}
+            if (dv !== Infinity && dv !== null) {p.splice(d3.bisectLeft(p, dv), 1);}
             return p;
         },
         () => []
@@ -280,8 +232,8 @@ if (!Array.prototype.find) {
         .elasticX(true)
     ;
 
-    bp03.colorAccessor((data) => data.key)
-        .colors((data) => colorSchema(genderColors, data));
+    bp03.colorAccessor((d) => d.key)
+        .colors((d) => colorSchema(genderColors, d));
 
     // -----------------------------------------------
     const bp04 = dc.boxPlot("#boxPlot04");
@@ -305,22 +257,22 @@ if (!Array.prototype.find) {
 
     // Code to add/update number of rendered data points to the xAxis label
     bp04
-        .on('preRender', () => {get_counts(bp04, bp04Counts)})
-        .on('preRedraw', () => {get_counts(bp04, bp04Counts)})
+        .on('preRender', () => {getCounts(bp04, bp04Counts)})
+        .on('preRedraw', () => {getCounts(bp04, bp04Counts)})
         .xAxis().tickFormat((v) => `${v  } [${  bp04Counts[v]  }]`);
 
-    bp04.colorAccessor((data) => data.key)
-        .colors((data) => colorSchema(genderColors, data));
+    bp04.colorAccessor((d) => d.key)
+        .colors((d) => colorSchema(genderColors, d));
 
     // -----------------------------------------------
     dc.renderAll();
 
     function colorSchema(pref, aa) {
-        a = pref.find((i) => i.value === aa);
+        const a = pref.find((i) => i.value === aa);
         return a.color;
     }
 
-    function get_counts(chart, counts) {
+    function getCounts(chart, counts) {
         chart.group().all().forEach((kv) => {
             counts[kv.key] = kv.value.length;
         });

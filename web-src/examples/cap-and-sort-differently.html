@@ -17,13 +17,16 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
+    /* TODO: redo this example 
+    *   sorting using dataProvider
+    *   percentage using dataProvider */
+    
 const chart = new dc.PieChart("#test");
 d3.csv("morley.csv").then((experiments) => {
 
   const ndx           = crossfilter(experiments),
-      runDimension  = ndx.dimension((d) => `run-${String.fromCharCode(90 - +d.Run)}`)
+      runDimension  = ndx.dimension((d) => `run-${String.fromCharCode(90 - +d.Run)}`),
       speedSumGroup = runDimension.group().reduceSum((d) => d.Speed * d.Run);
-const chart = new dc.PieChart("#test");
 
   chart
     .width(768)
@@ -34,6 +37,7 @@ const chart = new dc.PieChart("#test");
     .group(speedSumGroup)
     .legend(dc.legend())
     // workaround for #703: not enough data is accessible through .label() to display percentages
+      // eslint-disable-next-line no-shadow
     .on('pretransition', (chart) => {
         chart.selectAll('text.pie-slice').text((d) => `${d.data.key  } ${  dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100)  }%`)
     });

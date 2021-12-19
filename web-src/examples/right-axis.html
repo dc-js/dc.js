@@ -46,7 +46,7 @@
             (p, v) => {
             --p.days;
             p.total -= (+v.open + +v.close) / 2;
-            p.avg = (p.days == 0) ? 0 : Math.round(p.total / p.days);
+            p.avg = (p.days === 0) ? 0 : Math.round(p.total / p.days);
             return p;
         },
             () => ({days: 0, total: 0, avg: 0})

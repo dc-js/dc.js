@@ -36,6 +36,7 @@ d3.csv("morley.csv").then((experiments) => {
     .yAxisLabel("This is the Y Axis!")
     .dimension(runDimension)
     .group(speedSumGroup)
+      // eslint-disable-next-line no-shadow
     .on('renderlet', (chart) => {
         chart.selectAll('rect').on("click", (d) => {
             console.log("click!", d);

@@ -78,7 +78,7 @@
     // create a bunch of crosslinked categorical data
 
     const letters = [];
-    for (var i = 0; i < 26; ++i)
+    for (let i = 0; i < 26; ++i)
         {letters.push(String.fromCharCode(i + 65));}
 
     const colors = ['AliceBlue', 'AntiqueWhite', 'Aqua', 'Aquamarine', 'Azure', 'Beige', 'Bisque', 'Black',
@@ -112,7 +112,7 @@
         return a[Math.floor(Math.random() * a.length)];
     }
 
-    for (i = 0; i < SIZE; ++i)
+    for (let i = 0; i < SIZE; ++i)
         {data.push({letter: rnd(letters), color: rnd(colors), state: rnd(states)});}
 
     const ndx = crossfilter(data),

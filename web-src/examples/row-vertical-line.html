@@ -35,18 +35,19 @@ d3.csv("morley.csv").then((experiments) => {
     .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
+      // eslint-disable-next-line no-shadow
     .on('pretransition', (chart) => {
-        const x_vert = 45;
-        const extra_data = [
-            {x: chart.x()(x_vert), y: 0},
-            {x: chart.x()(x_vert), y: chart.effectiveHeight()}
+        const xVert = 45;
+        const extraData = [
+            {x: chart.x()(xVert), y: 0},
+            {x: chart.x()(xVert), y: chart.effectiveHeight()}
         ];
         const line = d3.line()
             .x((d) => d.x)
             .y((d) => d.y)
             .curve(d3.curveLinear);
         const chartBody = chart.select('g');
-        let path = chartBody.selectAll('path.extra').data([extra_data]);
+        let path = chartBody.selectAll('path.extra').data([extraData]);
         path = path.enter()
                 .append('path')
                 .attr('class', 'oeExtra')

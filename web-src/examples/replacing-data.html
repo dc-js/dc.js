@@ -48,59 +48,31 @@ const data2 = [
     {Name: 'Mr C', Spent: 50, Year: 2013}
 ];
 
-// Prior to crossfilter 1.4, the following workaround was necessary: 
-// "Grab the filters from the charts, set the filters on the charts to null,
-// do your Crossfilter data removal, then add the filters back to the charts.
-// The exact filter format is kind of screwy, and the fact that you have to put
-// the output of .filters() in an array to make it work with .filter() is a bit strange."
-// function resetData(ndx, dimensions) {
-//     var yearChartFilters = yearRingChart.filters();
-//     var spenderChartFilters = spenderRowChart.filters();
-//     yearRingChart.filter(null);
-//     spenderRowChart.filter(null);
-//     ndx.remove();
-//     yearRingChart.filter([yearChartFilters]);
-//     spenderRowChart.filter([spenderChartFilters]);
-//     console.log(spenderRowChart.filters());
-// }
-
-// As of crossfilter 1.4, there is no need for this messy (and potentially buggy) workaround.
-// Use the predicate form and there is no need to mess with dimension filters:
-function resetData(ndx) {
-    ndx.remove(() => true);
-}
-
 // set crossfilter with first dataset
 const ndx = crossfilter(data1),
     yearDim  = ndx.dimension((d) => +d.Year),
-    spendDim = ndx.dimension((d) => Math.floor(d.Spent/10)),
     nameDim  = ndx.dimension((d) => d.Name),
     spendPerYear = yearDim.group().reduceSum((d) => +d.Spent),
-    spendPerName = nameDim.group().reduceSum((d) => +d.Spent),
-    spendHist    = spendDim.group().reduceCount();
+    spendPerName = nameDim.group().reduceSum((d) => +d.Spent);
 
-function render_plots(){
-    yearRingChart
-        .width(200).height(200)
-        .dimension(yearDim)
-        .group(spendPerYear)
-        .innerRadius(50);
+yearRingChart
+    .width(200).height(200)
+    .dimension(yearDim)
+    .group(spendPerYear)
+    .innerRadius(50);
 
-    spenderRowChart
-        .width(250).height(200)
-        .dimension(nameDim)
-        .group(spendPerName)
-        .elasticX(true);
+spenderRowChart
+    .width(250).height(200)
+    .dimension(nameDim)
+    .group(spendPerName)
+    .elasticX(true);
 
-    dc.renderAll();
-}
-
-render_plots();
+dc.renderAll();
 
 // REFRESH DATA AFTER 5 SECONDS
 setTimeout(() => {
     console.log("data reset");
-    resetData(ndx, [yearDim, spendDim, nameDim]);
+    ndx.remove(() => true);
     ndx.add(data2);
     dc.redrawAll();
 }, 5000);

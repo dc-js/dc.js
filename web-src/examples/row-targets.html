@@ -45,6 +45,7 @@ d3.csv("morley.csv").then((experiments) => {
     .elasticX(true)
     .dimension(runDimension)
     .group(speedSumGroup)
+      // eslint-disable-next-line no-shadow
     .on('pretransition', (chart) => {
         // read height from one of the row rects, because it's difficult to calculate
         const height = chart.select('g.row rect').attr('height');

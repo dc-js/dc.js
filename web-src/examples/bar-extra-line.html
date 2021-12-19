@@ -43,18 +43,19 @@ d3.csv("morley.csv").then((experiments) => {
     .dimension(runDimension)
     .group(speedSumGroup)
     .renderLabel(true)
+      // eslint-disable-next-line no-shadow
     .on('renderlet', (chart) => {
         chart.selectAll('rect').on("click", (d) => {
             console.log("click!", d);
         });
-        const left_y = 10, right_y = 70; // use real statistics here!
-        const extra_data = [{x: chart.x().range()[0], y: chart.y()(left_y)}, {x: chart.x().range()[1], y: chart.y()(right_y)}];
+        const leftY = 10, rightY = 70; // use real statistics here!
+        const extraData = [{x: chart.x().range()[0], y: chart.y()(leftY)}, {x: chart.x().range()[1], y: chart.y()(rightY)}];
         const line = d3.line()
             .x((d) => d.x)
             .y((d) => d.y)
             .curve(d3.curveLinear);
         const chartBody = chart.select('g.chart-body');
-        let path = chartBody.selectAll('path.extra').data([extra_data]);
+        let path = chartBody.selectAll('path.extra').data([extraData]);
         path = path
             .enter()
                 .append('path')

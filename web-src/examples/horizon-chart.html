@@ -95,7 +95,7 @@
       }
   }
 
-  function sort_multikey_group(group) {
+  function sortMultikeyGroup(group) {
       return {
           all: () => 
              group.all().slice().sort(
@@ -139,7 +139,7 @@
     const runFilterDim = cf.dimension(d => d.Run);
 
     horizonChart
-        .group(sort_multikey_group(exptRunGroup))
+        .group(sortMultikeyGroup(exptRunGroup))
         .colors(n => [d3.schemeBlues, d3.schemeOranges, d3.schemeGreens, d3.schemeReds, d3.schemePurples][n-1][6]) // levels * 2
         .seriesAccessor(d => d.key[0])
         .valueAccessor(d => d.value - 500)

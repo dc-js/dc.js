@@ -63,7 +63,7 @@ d3.csv("morley.csv").then((experiments) => {
           (p, v) => {
               --p.number;
               p.total -= +v.Speed;
-              p.avg = (p.number == 0) ? 0 : Math.round(p.total / p.number);
+              p.avg = (p.number === 0) ? 0 : Math.round(p.total / p.number);
               return p;
           },
           () => ({number: 0, total: 0, avg: 0}));
@@ -72,7 +72,7 @@ d3.csv("morley.csv").then((experiments) => {
     .width(768)
     .height(480)
     .showSections(false)
-    .dimension(reversible_group(avgGroup))
+    .dimension(reversibleGroup(avgGroup))
     .columns([function (d) { return d.key },
               function (d) { return d.value.number },
               function (d) { return d.value.avg }])
@@ -80,7 +80,7 @@ d3.csv("morley.csv").then((experiments) => {
     .order(d3.descending)
   chart.render();
 
-  function reversible_group(group) {
+  function reversibleGroup(group) {
       return {
           top: function(N) {
               return group.top(N);

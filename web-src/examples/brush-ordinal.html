@@ -38,6 +38,7 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
             this._ord2int = {};
 
             keys.forEach(key => {
+                // eslint-disable-next-line no-prototype-builtins
                 if(!this._ord2int.hasOwnProperty(key)) {
                     this._ord2int[key] = this._int2ord.length;
                     this._int2ord.push(key);
@@ -72,11 +73,11 @@ fake group, and then another fake group provides the integer/ordinal mapping.</p
         group = dimension.group().reduceSum((d) => d.value);
 
     bar = new dc.BarChart('#bar');
-    const linear_domain = [-0.5, mappings.length() - 0.5];
+    const linearDomain = [-0.5, mappings.length() - 0.5];
     bar
         .width(1000).height(300)
         .margins({left: 75, top: 0, right: 10, bottom: 140})
-        .x(d3.scaleLinear().domain(linear_domain))
+        .x(d3.scaleLinear().domain(linearDomain))
         .xUnits(dc.units.integers)
         .centerBar(true)
         .yAxisLabel('counts')

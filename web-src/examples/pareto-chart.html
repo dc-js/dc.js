@@ -22,9 +22,9 @@
 
     <script type="text/javascript">
       const chart = dc.compositeChart("#test_composed"),
-          speed_pie = dc.pieChart("#pie-chart");
+          speedPie = dc.pieChart("#pie-chart");
 
-      const sample_data = [
+      const sampleData = [
           { reason: "A", time: 1 },
           { reason: "B", time: 6 },
           { reason: "C", time: 6 },
@@ -41,23 +41,24 @@
           { reason: "B", time: 4 },
           { reason: "C", time: 2 }];
 
-      const ndx_ = crossfilter(sample_data),
+      const ndx_ = crossfilter(sampleData),
           dim_  = ndx_.dimension( (d) => d.reason ),
           allTime_ = dim_.groupAll().reduceSum(d => d.time),
           grp1_ = dim_.group().reduceSum((d) => d.time);
 
       const speedDim_ = ndx_.dimension(d => Math.floor(d.time/3));
 
-      speed_pie
+      speedPie
         .width(300)
         .height(300)
         .dimension(speedDim_)
         .group(speedDim_.group());
 
-      function pareto_group(group, groupall) {
+      function paretoGroup(group, groupall) {
           return {
               all: function() {
-                  let total = groupall.value(), cumulate = 0;
+                const total = groupall.value();
+                let cumulate = 0;
                   return group.all().slice(0)
                       .sort((a,b) => d3.descending(a.value, b.value))
                       .map(({key,value}) => ({
@@ -72,7 +73,7 @@
           };
       }
 
-      const pg = pareto_group(grp1_, allTime_);
+      const pg = paretoGroup(grp1_, allTime_);
 
       chart
         .width(500)
@@ -107,7 +108,7 @@
       chart.rightYAxis().tickFormat(d => `${d  }%`)
 
       chart.render();
-      speed_pie.render();
+      speedPie.render();
 </script>
 </div>
 </body>

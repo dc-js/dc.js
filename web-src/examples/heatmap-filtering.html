@@ -28,7 +28,6 @@
     d3.csv("../ndx.csv").then((data) => {
 
     const dateFormatSpecifier = "%m/%d/%Y";
-    const dateFormat = d3.timeFormat(dateFormatSpecifier);
     const dateFormatParser = d3.timeParse(dateFormatSpecifier);
 
     data.forEach((d) => {

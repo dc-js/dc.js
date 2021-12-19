@@ -34,11 +34,14 @@
     <script type="text/javascript" src="../js/reductio.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
-
+        /* globals reductio */
+        
     d3.csv('ordered_returned.csv').then((dataset) => {
     dataset.forEach((d) => {
+        /* eslint-disable camelcase */
     d.number_ordered = +d.number_ordered;
     d.number_returned = +d.number_returned;
+        /* eslint-enable camelcase */
     d.amount = +d.amount;
 })
     const ndx = crossfilter(dataset);

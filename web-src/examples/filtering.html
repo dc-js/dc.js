@@ -83,9 +83,9 @@ spenderRowChart
     .elasticX(true)
     .controlsUseVisibility(true);
 
-  function show_empty_message(chart) {
-      const is_empty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
-      const data = is_empty ? [1] : [];
+  function showEmptyMessage(chart) {
+      const isEmpty = d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
+      const data = isEmpty ? [1] : [];
       let empty = chart.svg().selectAll('.empty-message').data(data);
       empty.exit().remove();
       empty = empty
@@ -102,8 +102,8 @@ spenderRowChart
       empty.transition().duration(1000).style('opacity', 1);
   }
 
-  spendHistChart.on('pretransition', show_empty_message);
-  spenderRowChart.on('pretransition', show_empty_message);
+  spendHistChart.on('pretransition', showEmptyMessage);
+  spenderRowChart.on('pretransition', showEmptyMessage);
 
 dc.renderAll();
 

@@ -53,7 +53,7 @@ d3.csv("morley.csv").then((experiments) => {
   });
 
   const ndx            = crossfilter(experiments),
-      runDimension   = ndx.dimension((d) => +d.Run)
+      runDimension   = ndx.dimension((d) => +d.Run),
       meanSpeedGroup = ndx.groupAll().reduce(
           (p, v) => {
               ++p.n;

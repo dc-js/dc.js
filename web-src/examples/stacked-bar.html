@@ -47,7 +47,7 @@
                     return p;
                 }, () => ({}));
 
-            function sel_stack (i) {
+            function selStack (i) {
                 return d => d.value[i];
             }
 
@@ -62,13 +62,13 @@
                     return `${d.key  }[${  this.layer  }]: ${  d.value[this.layer]}`;
                 })
                 .dimension(runDimension)
-                .group(speedSumGroup, '1', sel_stack('1'))
+                .group(speedSumGroup, '1', selStack('1'))
                 .renderLabel(true);
 
             chart.legend(dc.legend());
 
             for (let i = 2; i < 6; ++i) {
-                chart.stack(speedSumGroup, `${  i}`, sel_stack(i));
+                chart.stack(speedSumGroup, `${  i}`, selStack(i));
             }
 
             chart.render();

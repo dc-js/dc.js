@@ -206,6 +206,7 @@
     <script type="text/javascript" src="../stock.js"></script>
 
     <script type="application/javascript">
+      /* global chartGroup */
       const filterStorage = chartGroup.filterStorage;
 
       // Save/restore filter state
@@ -213,6 +214,7 @@
       let savedFilterStates = [];
       let counter = 0;
 
+      // eslint-disable-next-line no-unused-vars
       const saveFilterState = function () {
         savedFilterStates.unshift({
           label: `state ${++counter}`,
@@ -259,6 +261,7 @@
 
       // Current Filters Widget
 
+      // eslint-disable-next-line no-unused-vars
       const clearAllFilters = () => {
         filterStorage.restore([]);
         chartGroup.redrawAll();

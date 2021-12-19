@@ -21,7 +21,7 @@
     <div class="row">
       <div id="paging">
         Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span> <span id="totalsize"></span>
-        <input id="last" class="btn" type="Button" value="Last" onclick="javascript:last()" />
+        <input id="last" class="btn" type="Button" value="Prev" onclick="javascript:prev()" />
         <input id="next" class="btn" type="button" value="Next" onclick="javascript:next()"/>
       </div>
       <table id="test" class="table table-striped"></table>
@@ -58,19 +58,19 @@
     .columns(['Expt', 'Run', 'Speed'])
     .sortBy((d) => [fmt(+d.Expt),fmt(+d.Run)])
     .order(d3.ascending)
-    .on('preRender', update_offset)
-    .on('preRedraw', update_offset)
+    .on('preRender', updateOffset)
+    .on('preRedraw', updateOffset)
     .on('pretransition', display);
 
   dc.renderAll();
 });
 
       // use odd page size to show the effect better
-      let ofs = 0, pag = 17;
+      let ofs = 0;
+      const pag = 17;
 
-      function update_offset() {
+      function updateOffset() {
           const totFilteredRecs = ndx.groupAll().value();
-          const end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
           ofs = ofs >= totFilteredRecs ? Math.floor((totFilteredRecs - 1) / pag) * pag : ofs;
           ofs = ofs < 0 ? 0 : ofs;
 
@@ -89,20 +89,22 @@
           d3.select('#next')
               .attr('disabled', ofs+pag>=totFilteredRecs ? 'true' : null);
           d3.select('#size').text(totFilteredRecs);
-          if(totFilteredRecs != ndx.size()){
+          if(totFilteredRecs !== ndx.size()){
             d3.select('#totalsize').text(`(filtered Total: ${  ndx.size()  } )`);
           }else{
             d3.select('#totalsize').text('');
           }
       }
+      // eslint-disable-next-line no-unused-vars
       function next() {
           ofs += pag;
-          update_offset();
+          updateOffset();
           chart.redraw();
       }
-      function last() {
+      // eslint-disable-next-line no-unused-vars
+      function prev() {
           ofs -= pag;
-          update_offset();
+          updateOffset();
           chart.redraw();
       }
 

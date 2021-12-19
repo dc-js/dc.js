@@ -60,13 +60,13 @@ groupAll value and maps it to a color using a color scale.</p>
               .data([0])
               .join('svg')
               .attr('width', width)
-              .attr('height', width);
+              .attr('height', height);
           this._rect = svg.selectAll('rect.swatch')
               .data([0])
               .join('rect')
               .attr('class', 'swatch')
               .attr('width', width)
-              .attr('height', width);
+              .attr('height', height);
           this.redraw();
       }
 

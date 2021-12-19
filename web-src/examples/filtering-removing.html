@@ -46,10 +46,10 @@ spendData.forEach((d) => {
     d.Spent = d.Spent.match(/\d+/);
 });
 
-function remove_empty_bins(source_group) {
+function removeEmptyBins(sourceGroup) {
     return {
         all:function () {
-            return source_group.all().filter((d) => d.value != 0);
+            return sourceGroup.all().filter((d) => d.value !== 0);
         }
     };
 }
@@ -62,7 +62,7 @@ const ndx = crossfilter(spendData),
     spendPerYear = yearDim.group().reduceSum((d) => +d.Spent),
     spendPerName = nameDim.group().reduceSum((d) => +d.Spent),
     spendHist    = spendDim.group().reduceCount(),
-    nonEmptyHist = remove_empty_bins(spendHist)
+    nonEmptyHist = removeEmptyBins(spendHist)
 
 yearRingChart
     .width(200).height(200)

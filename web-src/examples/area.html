@@ -34,7 +34,7 @@
       return p;
   }, () => ({}));
 
-    function sel_stack(i) {
+    function selStack(i) {
         return function(d) {
             return d.value[i];
         };
@@ -51,10 +51,10 @@
         .clipPadding(10)
         .yAxisLabel("This is the Y Axis!")
         .dimension(runDimension)
-        .group(speedSumGroup, "1", sel_stack('1'));
+        .group(speedSumGroup, "1", selStack('1'));
 
     for(let i = 2; i<6; ++i)
-        {chart.stack(speedSumGroup, `${i}`, sel_stack(i));}
+        {chart.stack(speedSumGroup, `${i}`, selStack(i));}
     chart.render();
 
 });

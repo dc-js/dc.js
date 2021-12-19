@@ -25,15 +25,13 @@ dc.constants.EVENT_DELAY = 0;
 
 const focusChart = new dc.SeriesChart("#test");
 const overviewChart = new dc.SeriesChart("#test-overview");
-let ndx, runDimension, runGroup, overviewRunDimension, overviewRunGroup;
+let ndx, runDimension, runGroup;
 
 d3.csv("morley.csv").then((experiments) => {
 
   ndx = crossfilter(experiments);
   runDimension = ndx.dimension((d) => [+d.Expt, +d.Run]);
-  overviewRunDimension = ndx.dimension((d) => [+d.Expt, +d.Run]);
   runGroup = runDimension.group().reduceSum((d) => +d.Speed);
-  overviewRunGroup = overviewRunDimension.group().reduceSum((d) => +d.Speed);
 
   focusChart
     .width(768)

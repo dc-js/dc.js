@@ -63,7 +63,7 @@
 
     //## pie chart
     // reusable function to create threshold dimension
-    function coreCount_from_threshold() {
+    function coreCountFromThreshold() {
         let scoreThreshold=document.getElementById('slideRange').value;
         scoreThreshold=parseFloat(scoreThreshold);
         if (isNaN(scoreThreshold)) {
@@ -78,7 +78,7 @@
         }
     });
     }
-    let coreCount = coreCount_from_threshold();
+    let coreCount = coreCountFromThreshold();
     let coreCountGroup = coreCount.group();
 
     goodYesNoPieChart
@@ -103,11 +103,12 @@
     dc.renderAll();
 
     //## change slider score value to re-assign the data in pie chart
+    // eslint-disable-next-line no-unused-vars
     function updateSlider(slideValue) {
         const sliderDiv = document.getElementById("sliderValue");
         sliderDiv.innerHTML = slideValue;
         coreCount.dispose();
-        coreCount = coreCount_from_threshold();
+        coreCount = coreCountFromThreshold();
         coreCountGroup = coreCount.group();
         goodYesNoPieChart
             .dimension(coreCount)

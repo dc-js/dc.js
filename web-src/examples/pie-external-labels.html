@@ -21,7 +21,7 @@
   d3.csv("morley.csv").then((experiments) => {
 
     const ndx           = crossfilter(experiments),
-        runDimension  = ndx.dimension((d) => `run-${d.Run}`)
+        runDimension  = ndx.dimension((d) => `run-${d.Run}`),
     speedSumGroup = runDimension.group().reduceSum((d) => d.Speed * d.Run);
 
     chart
@@ -38,6 +38,7 @@
 
     // example of formatting the legend via svg
     // http://stackoverflow.com/questions/38430632/how-can-we-add-legends-value-beside-of-legend-with-proper-alignment
+      // eslint-disable-next-line no-shadow
     chart.on('pretransition', (chart) => {
       chart.selectAll('.dc-legend-item text')
           .text('')

@@ -91,7 +91,7 @@
       </div>
     </div>
     <div class="span4">
-      <div id="chart-23"style="width:100%;">
+      <div id="chart-23" style="width:100%;">
         <h5 class="chart-title"></h5>
         <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
           <a href="javascript:charts[5].filterAll();dc.redrawAll();">reset</a>
@@ -105,9 +105,9 @@
 
   dc.config.defaultColors(d3.schemeSet1);
 
-  const data_count = new dc.DataCount('.dc-data-count');
+  const dataCount = new dc.DataCount('.dc-data-count');
 
-  function static_copy_group(group) {
+  function staticCopyGroup(group) {
       const all = group.all().map(kv => ({key: kv.key, value: kv.value}));
       return {
           all: function() {
@@ -116,7 +116,7 @@
       }
   }
 
-  const chart_specs = [
+  const chartSpecs = [
       {
           variable: 'x',
           selector: '#chart-11',
@@ -153,7 +153,7 @@
 
   d3.csv('six-dim.csv').then((data) => {
     data.forEach((d) => {
-      chart_specs.forEach((spec) => {
+      chartSpecs.forEach((spec) => {
         d[spec.variable] = +d[spec.variable];
     });
   });
@@ -161,26 +161,26 @@
     const cf = crossfilter(data),
         all = cf.groupAll();
 
-    data_count.crossfilter(cf)
+    dataCount.crossfilter(cf)
         .groupAll(all);
 
-    charts = chart_specs.map((spec) => new dc.CompositeChart(spec.selector));
+    charts = chartSpecs.map((spec) => new dc.CompositeChart(spec.selector));
 
-    const breathing_room = 0.05;
-    let show_unfiltered = true;
+    const breathingRoom = 0.05;
+    let showUnfiltered = true;
 
-    chart_specs.forEach((spec, i) => {
+    chartSpecs.forEach((spec, i) => {
       d3.select(spec.selector).select('h5.chart-title').text(spec.variable);
 
       const dim = cf.dimension((d) => d[spec.variable]),
           group = dim.group((d) => Math.floor(d / spec.resolution) * spec.resolution).reduceCount(),
-          static_group = static_copy_group(group);
+          staticGroup = staticCopyGroup(group);
 
       charts[i]
           .compose([
               new dc.BarChart(charts[i])
                   .dimension(dim)
-                  .group(static_group)
+                  .group(staticGroup)
                   .colors('#ccc') // same as .deselected
                   .controlsUseVisibility(true),
               new dc.BarChart(charts[i])
@@ -197,12 +197,12 @@
           .dimension(dim)
           .group(group)
           .round(Math.floor)
-          .x(d3.scaleLinear().domain([min - ((max - min) * breathing_room), max + ((max - min) * breathing_room)]))
+          .x(d3.scaleLinear().domain([min - ((max - min) * breathingRoom), max + ((max - min) * breathingRoom)]))
           .xUnits((start, end, xDomain) => (end - start) / spec.resolution)
           .controlsUseVisibility(true);
   });
 
-    function ydomain_from_child1(chart) {
+    function ydomainFromChild1(chart) {
         chart.y().domain([0, chart.children()[1].yAxisMax()]);
         chart.resizing(true);
     }
@@ -210,17 +210,18 @@
     charts.forEach(
         chart => chart.on(
             'pretransition.hide-unfiltered',
-            chart => chart.select('.sub._0').attr('visibility', show_unfiltered ? 'visible' : 'hidden')
+            // eslint-disable-next-line no-shadow
+            chart => chart.select('.sub._0').attr('visibility', showUnfiltered ? 'visible' : 'hidden')
         ));
     d3.select('#unfiltered').on('change', function() {
-        show_unfiltered = this.checked;
+        showUnfiltered = this.checked;
         charts.forEach(chart => {
-            chart.elasticY(show_unfiltered);
-            if(!show_unfiltered) {
-                ydomain_from_child1(chart);
+            chart.elasticY(showUnfiltered);
+            if(!showUnfiltered) {
+                ydomainFromChild1(chart);
                 chart.children()[1].colors(d3.schemeCategory10);
-                chart.on('preRedraw.hide-unfiltered', ydomain_from_child1);
-                chart.on('preRender.hide-unfiltered', ydomain_from_child1);
+                chart.on('preRedraw.hide-unfiltered', ydomainFromChild1);
+                chart.on('preRender.hide-unfiltered', ydomainFromChild1);
             }
             else {
                 chart.on('preRedraw.hide-unfiltered', null);
@@ -234,6 +235,5 @@
 });
 </script>
 
-</div>
 </body>
 </html>

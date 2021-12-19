@@ -32,7 +32,7 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript" src="../js/regression.js"></script>
 <script type="text/javascript">
-
+/* global regression */
 const chart = new dc.ScatterPlot("#test");
 d3.csv("morley.csv").then((experiments) => {
 
@@ -55,9 +55,8 @@ d3.csv("morley.csv").then((experiments) => {
 
     chart
         .on('pretransition', () => {
-            const xext = d3.extent(chart.group().all(), kv => kv.key[0]);
-            let r = regression.linear(chart.group().all().map(kv => [kv.key[0], kv.key[1]])),
-                m = r.equation[0], b = r.equation[1],
+            const r = regression.linear(chart.group().all().map(kv => [kv.key[0], kv.key[1]])),
+                [m, b] = r.equation,
                 [x1, x2] = chart.x().domain();
             const points = [[
                 x1,
@@ -68,7 +67,8 @@ d3.csv("morley.csv").then((experiments) => {
             ]];
             const xScale = chart.x(), yScale = chart.y(), margins = chart.margins();
             let line = chart.g().selectAll('line.regression').data([points]);
-            function do_points(line) {
+            // eslint-disable-next-line no-shadow
+            function doPoints(line) {
                 line
                     .attr('x1', d => xScale(d[0][0]) + margins.left)
                     .attr('y1', d => yScale(d[0][1]) + margins.top)
@@ -77,12 +77,12 @@ d3.csv("morley.csv").then((experiments) => {
             }
             line = line.enter().append('line')
                 .attr('class', 'regression')
-                .call(do_points)
+                .call(doPoints)
                 .merge(line);
-            line.transition().duration(chart.transitionDuration()).call(do_points);
+            line.transition().duration(chart.transitionDuration()).call(doPoints);
         });
 
-    function key_function(metric) {
+    function keyFunction(metric) {
         switch(metric) {
         default:
         case 'flat':
@@ -94,7 +94,7 @@ d3.csv("morley.csv").then((experiments) => {
         }
     }
     function display(metric) {
-        const runDimension = cf.dimension(key_function(metric)),
+        const runDimension = cf.dimension(keyFunction(metric)),
             speedSumGroup = runDimension.group();
 
         chart

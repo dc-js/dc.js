@@ -50,7 +50,7 @@ x.Speed = +x.Speed;
         .group(speedSumGroup)
         .rangeChart(zoom);
 
-    function expand_focus() {
+    function expandFocus() {
         // if the chart were not storing the original domain, this is all we'd
         // need to do have the focus chart elasticX when not zoomed:
         //focus.elasticX(!zoom.filters().length);
@@ -61,8 +61,8 @@ x.Speed = +x.Speed;
             focus.x(focus.x().domain(xExtent));
         }
     }
-    focus.on('preRender', expand_focus);
-    focus.on('preRedraw', expand_focus);
+    focus.on('preRender', expandFocus);
+    focus.on('preRedraw', expandFocus);
 
     zoom
         .width(768)

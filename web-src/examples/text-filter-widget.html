@@ -46,6 +46,7 @@
     const ndx = crossfilter(data),
         dimension = ndx.dimension((d) => `${d.last_name  } ${  d.first_name}`);
 
+    // eslint-disable-next-line no-unused-vars
     const chart = new dc.TextFilterWidget("#search")
         .dimension(dimension);
 

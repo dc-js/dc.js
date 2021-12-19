@@ -38,7 +38,7 @@ d3.csv("morley.csv").then((experiments) => {
         speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed/100 + +d.Run/2);
 
 
-    function bar_chart(chart) {
+    function barChart(chart) {
         chart
             .width(400)
             .height(300)
@@ -56,10 +56,10 @@ d3.csv("morley.csv").then((experiments) => {
     }
 
 
-    bar_chart(chart1)
-    bar_chart(chart2);
-    bar_chart(chart3);
-    bar_chart(chart4);
+    barChart(chart1)
+    barChart(chart2);
+    barChart(chart3);
+    barChart(chart4);
 
     dc.renderAll();
 });

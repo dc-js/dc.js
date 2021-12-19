@@ -100,10 +100,10 @@ d[fields[ab]] = +d[fields[ab]];
     });
     const data = crossfilter(iris);
 
-    function make_dimension(var1, var2) {
+    function makeDimension(var1, var2) {
         return data.dimension((d) => [d[var1], d[var2], d.species]);
     }
-    function key_part(i) {
+    function keyPart(i) {
         return function(kv) {
             return kv.key[i];
         };
@@ -130,7 +130,7 @@ d[fields[ab]] = +d[fields[ab]];
                     }
                     cdiv.attr('class', 'chart-holder');
                     const chart = new dc.ScatterPlot(cdiv);
-                    const dim = make_dimension(col,row),
+                    const dim = makeDimension(col,row),
                         group = dim.group();
                     const showYAxis = x === 1, showXAxis = y === 4;
                     chart
@@ -144,9 +144,9 @@ d[fields[ab]] = +d[fields[ab]];
                             bottom: showXAxis ? 20 : 5
                         })
                         .dimension(dim).group(group)
-                        .keyAccessor(key_part(0))
-                        .valueAccessor(key_part(1))
-                        .colorAccessor(key_part(2))
+                        .keyAccessor(keyPart(0))
+                        .valueAccessor(keyPart(1))
+                        .colorAccessor(keyPart(2))
                         .colorDomain(['setosa', 'versicolor', 'virginica'])
                         .x(d3.scaleLinear()).xAxisPadding("0.001%")
                         .y(d3.scaleLinear()).yAxisPadding("0.001%")
@@ -165,6 +165,7 @@ d[fields[ab]] = +d[fields[ab]];
                         .renderVerticalGridLines(true);
                     chart.xAxis().ticks(6);
                     chart.yAxis().ticks(6);
+                  // eslint-disable-next-line no-shadow
                     chart.on('postRender', (chart) => {
                   // remove axes unless at left or bottom
                   if(!showXAxis)

@@ -29,55 +29,6 @@
 <script type="text/javascript" src="../js/dc.js"></script>
 <script type="text/javascript">
 
-
-// polyfill Array.find for IE
-// https://tc39.github.io/ecma262/#sec-array.prototype.find
-if (!Array.prototype.find) {
-  Object.defineProperty(Array.prototype, 'find', {
-    value: function(predicate) {
-     // 1. Let O be ? ToObject(this value).
-      if (this == null) {
-        throw new TypeError('"this" is null or not defined');
-      }
-
-      const o = Object(this);
-
-      // 2. Let len be ? ToLength(? Get(O, "length")).
-      const len = o.length >>> 0;
-
-      // 3. If IsCallable(predicate) is false, throw a TypeError exception.
-      if (typeof predicate !== 'function') {
-        throw new TypeError('predicate must be a function');
-      }
-
-      // 4. If thisArg was supplied, let T be thisArg; else let T be undefined.
-      const thisArg = arguments[1];
-
-      // 5. Let k be 0.
-      let k = 0;
-
-      // 6. Repeat, while k < len
-      while (k < len) {
-        // a. Let Pk be ! ToString(k).
-        // b. Let kValue be ? Get(O, Pk).
-        // c. Let testResult be ToBoolean(? Call(predicate, T, « kValue, k, O »)).
-        // d. If testResult is true, return kValue.
-        const kValue = o[k];
-        if (predicate.call(thisArg, kValue, k, o)) {
-          return kValue;
-        }
-        // e. Increase k by 1.
-        k++;
-      }
-
-      // 7. Return undefined.
-      return undefined;
-    },
-    configurable: true,
-    writable: true
-  });
-}
-
     const genderColors = [{'value': 'Female', 'color': '#efc3e2'}, {'value': 'Male', 'color': '#76bbe1'}];
 
     const data = [
@@ -137,13 +88,13 @@ if (!Array.prototype.find) {
         (p, v) => {
             // Retrieve the data value, if not Infinity or null add it.
             const dv = v.age;
-            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 0, dv);}
+            if (dv !== Infinity && dv !== null) {p.splice(d3.bisectLeft(p, dv), 0, dv);}
             return p;
         },
         (p, v) => {
             // Retrieve the data value, if not Infinity or null remove it.
             const dv = v.age;
-            if (dv != Infinity && dv != null) {p.splice(d3.bisectLeft(p, dv), 1);}
+            if (dv !== Infinity && dv !== null) {p.splice(d3.bisectLeft(p, dv), 1);}
             return p;
         },
         () => []
@@ -168,8 +119,8 @@ if (!Array.prototype.find) {
         .elasticX(true)
     ;
 
-    bp01.colorAccessor((data) => data.key)
-        .colors((data) => colorSchema(genderColors, data));
+    bp01.colorAccessor((d) => d.key)
+        .colors((d) => colorSchema(genderColors, d));
 
     // -----------------------------------------------
     const bp02 = dc.boxPlot("#boxPlot02");
@@ -190,8 +141,8 @@ if (!Array.prototype.find) {
         .elasticX(true)
     ;
 
-    bp02.colorAccessor((data) => data.key)
-        .colors((data) => colorSchema(genderColors, data));
+    bp02.colorAccessor((d) => d.key)
+        .colors((d) => colorSchema(genderColors, d));
 
     // -----------------------------------------------
     const bp03 = dc.boxPlot("#boxPlot03");
@@ -212,19 +163,18 @@ if (!Array.prototype.find) {
         .elasticX(true)
     ;
 
-    bp03.colorAccessor((data) => data.key)
-        .colors((data) => colorSchema(genderColors, data));
+    bp03.colorAccessor((d) => d.key)
+        .colors((d) => colorSchema(genderColors, d));
 
     // -----------------------------------------------
     dc.renderAll();
 
     function colorSchema(pref, aa) {
-        a = pref.find((i) => i.value === aa);
+        const a = pref.find((i) => i.value === aa);
         return a.color;
     }
 
 </script>
 
-</div>
 </body>
 </html>
