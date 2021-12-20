@@ -1,72 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Linked Filter Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test1"></div>
+      <div id="test2"></div>
+      <div id="test3"></div>
+      <div id="test4"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test1"></div>
-<div id="test2"></div>
-<div id="test3"></div>
-<div id="test4"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        // may cause problems if there is a lot of data
+        dc.constants.EVENT_DELAY = 0;
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+        const chart1 = dc.barChart('#test1');
+        const chart2 = dc.barChart('#test2');
+        const chart3 = dc.barChart('#test3');
+        const chart4 = dc.barChart('#test4');
 
-// may cause problems if there is a lot of data
-dc.constants.EVENT_DELAY = 0;
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-const chart1 = dc.barChart("#test1");
-const chart2 = dc.barChart("#test2");
-const chart3 = dc.barChart("#test3");
-const chart4 = dc.barChart("#test4");
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            speedSumGroup = runDimension
+              .group()
+              .reduceSum(d => d.Speed / 100 + +d.Run / 2);
 
-d3.csv("morley.csv").then((experiments) => {
-    experiments.forEach((x) => {
-        x.Speed = +x.Speed;
-    });
+          function barChart(chart) {
+            chart
+              .width(400)
+              .height(300)
+              .x(d3.scaleLinear())
+              .elasticX(true)
+              .brushOn(true)
+              .dimension(runDimension)
+              .group(speedSumGroup);
 
-    const ndx                 = crossfilter(experiments),
-        runDimension        = ndx.dimension((d) => +d.Run),
-        speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed/100 + +d.Run/2);
-
-
-    function barChart(chart) {
-        chart
-            .width(400)
-            .height(300)
-            .x(d3.scaleLinear()).elasticX(true)
-            .brushOn(true)
-            .dimension(runDimension)
-            .group(speedSumGroup);
-
-        /*
+            /*
           Linked filters is the default in dc@5; to disable use
         chart
             .dataProvider().configure({shareFilters: false});
         */
-        return chart;
-    }
+            return chart;
+          }
 
+          barChart(chart1);
+          barChart(chart2);
+          barChart(chart3);
+          barChart(chart4);
 
-    barChart(chart1)
-    barChart(chart2);
-    barChart(chart3);
-    barChart(chart4);
-
-    dc.renderAll();
-});
-
-</script>
-
-</div>
-</body>
+          dc.renderAll();
+        });
+      </script>
+    </div>
+  </body>
 </html>

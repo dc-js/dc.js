@@ -1,61 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Sunburst Chart Example with equally sized rings</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css" />
     <style>
-        .pie-slice path {
-            stroke:#fff;
-        }
-        .dc-chart .selected path {
-            stroke-width: 1;
-            stroke:#fff;
-        }
+      .pie-slice path {
+        stroke: #fff;
+      }
+      .dc-chart .selected path {
+        stroke-width: 1;
+        stroke: #fff;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
 
-<div class="container">
-<div id="header"></div>
+      <div id="test"></div>
 
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.SunburstChart('#test');
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+        d3.csv('morley.csv').then(experiments => {
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => [d.Expt, d.Run]);
 
-const chart = new dc.SunburstChart("#test");
+          const speedSumGroup = runDimension.group().reduceSum(d => d.Speed);
 
-d3.csv("morley.csv").then((experiments) => {
-
-    const ndx = crossfilter(experiments),
-        runDimension = ndx.dimension((d) => [d.Expt, d.Run]);
-
-    const speedSumGroup = runDimension.group().reduceSum((d) => d.Speed);
-
-    chart
-        .width(768)
-        .height(480)
-        .innerRadius(100)
-        .dimension(runDimension)
-        .group(speedSumGroup)
-        .legend(dc.legend())
-        .ringSizes(chart.equalRingSizes())
-        // example for using concrete percentage values of the radius when knowing the number of rings beforehand
-        // .ringSizes(dc.sunburstChart.relativeRingSizes(
-        //     function(){return [.3,.7]}
-        // ))
-    ;
-    dc.renderAll();
-});
-
-</script>
-
-</div>
-</body>
+          chart
+            .width(768)
+            .height(480)
+            .innerRadius(100)
+            .dimension(runDimension)
+            .group(speedSumGroup)
+            .legend(dc.legend())
+            .ringSizes(chart.equalRingSizes());
+          // example for using concrete percentage values of the radius when knowing the number of rings beforehand
+          // .ringSizes(dc.sunburstChart.relativeRingSizes(
+          //     function(){return [.3,.7]}
+          // ))
+          dc.renderAll();
+        });
+      </script>
+    </div>
+  </body>
 </html>

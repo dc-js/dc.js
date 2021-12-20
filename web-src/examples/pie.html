@@ -1,51 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Pie Chart Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.PieChart('#test');
+        d3.csv('morley.csv').then(experiments => {
+          // TODO: better way to handle % in label
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => `run-${d.Run}`),
+            speedSumGroup = runDimension
+              .group()
+              .reduceSum(d => d.Speed * d.Run);
 
-const chart = new dc.PieChart("#test");
-d3.csv("morley.csv").then((experiments) => {
+          chart
+            .width(768)
+            .height(480)
+            .slicesCap(4)
+            .innerRadius(100)
+            .dimension(runDimension)
+            .group(speedSumGroup)
+            .legend(dc.legend().highlightSelected(true))
+            // workaround for #703: not enough data is accessible through .label() to display percentages
+            // eslint-disable-next-line no-shadow
+            .on('pretransition', chart => {
+              chart
+                .selectAll('text.pie-slice')
+                .text(
+                  d =>
+                    `${d.data.key} ${dc.utils.printSingleValue(
+                      ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
+                    )}%`
+                );
+            });
 
-    // TODO: better way to handle % in label
-    
-  const ndx           = crossfilter(experiments),
-      runDimension  = ndx.dimension((d) => `run-${d.Run}`),
-      speedSumGroup = runDimension.group().reduceSum((d) => d.Speed * d.Run);
-
-  chart
-    .width(768)
-    .height(480)
-    .slicesCap(4)
-    .innerRadius(100)
-    .dimension(runDimension)
-    .group(speedSumGroup)
-    .legend(dc.legend().highlightSelected(true))
-    // workaround for #703: not enough data is accessible through .label() to display percentages
-      // eslint-disable-next-line no-shadow
-    .on('pretransition', (chart) => {
-        chart.selectAll('text.pie-slice').text((d) => `${d.data.key  } ${  dc.utils.printSingleValue((d.endAngle - d.startAngle) / (2*Math.PI) * 100)  }%`)
-    });
-
-  chart.render();
-});
-
-</script>
-
-</div>
-</body>
+          chart.render();
+        });
+      </script>
+    </div>
+  </body>
 </html>

@@ -1,114 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Brushing on an Ordinal Bar Chart</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <p>
+        This example demonstrates brushing on an ordinal bar chart, by mapping
+        the values to integers and specifying a linear scale. The data is sorted
+        by descending value in one fake group, and then another fake group
+        provides the integer/ordinal mapping.
+      </p>
+      <div id="bar"></div>
+      <div id="first-letters"></div>
 
-<div class="container">
-<div id="header"></div>
-<p>This example demonstrates brushing on an ordinal bar chart, by mapping the values to
-integers and specifying a linear scale. The data is sorted by descending value in one
-fake group, and then another fake group provides the integer/ordinal mapping.</p>
-<div id="bar"></div>
-<div id="first-letters"></div>
-
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-  <style>
-  #bar .axis.x .tick text {
-    text-anchor: end;
-    transform: rotate(-60deg) translate(-10px,-12px);
-  }
-  #range.dc-chart .axis {
-    display: none;
-  }
-  #range svg {
-      display: block; /* default inline causes padding? */
-  }
-  </style>
-  <script type="text/javascript">
-    class Mapper {
-        constructor (keys) {
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <style>
+        #bar .axis.x .tick text {
+          text-anchor: end;
+          transform: rotate(-60deg) translate(-10px, -12px);
+        }
+        #range.dc-chart .axis {
+          display: none;
+        }
+        #range svg {
+          display: block; /* default inline causes padding? */
+        }
+      </style>
+      <script type="text/javascript">
+        class Mapper {
+          constructor(keys) {
             this._int2ord = [];
             this._ord2int = {};
 
             keys.forEach(key => {
-                // eslint-disable-next-line no-prototype-builtins
-                if(!this._ord2int.hasOwnProperty(key)) {
-                    this._ord2int[key] = this._int2ord.length;
-                    this._int2ord.push(key);
-                }
+              // eslint-disable-next-line no-prototype-builtins
+              if (!this._ord2int.hasOwnProperty(key)) {
+                this._ord2int[key] = this._int2ord.length;
+                this._int2ord.push(key);
+              }
             });
-        }
+          }
 
-        ord2int(ord) {
+          ord2int(ord) {
             return this._ord2int[ord];
-        }
+          }
 
-        int2ord(i) {
+          int2ord(i) {
             return this._int2ord[i];
-        }
+          }
 
-        length() {
+          length() {
             return this._int2ord.length;
+          }
         }
-    }
 
-    // phrases generated with https://www.fourmilab.ch/javascrypt/pass_phrase.html
-    let bar;
-    d3.json("wide-ordinal.json").then((wide) => {
-    const short = wide.slice(0, 50);
+        // phrases generated with https://www.fourmilab.ch/javascrypt/pass_phrase.html
+        let bar;
+        d3.json('wide-ordinal.json').then(wide => {
+          const short = wide.slice(0, 50);
 
-    const keys = short.map(d => d.key).sort((a,b) => d3.ascending(a,b));
-    const mappings =  new Mapper(keys);
+          const keys = short.map(d => d.key).sort((a, b) => d3.ascending(a, b));
+          const mappings = new Mapper(keys);
 
-    // dummy crossfilter taking group data and regrouping it to the same thing
-    const cf = crossfilter(short),
-        dimension = cf.dimension((d) => mappings.ord2int(d.key)),
-        group = dimension.group().reduceSum((d) => d.value);
+          // dummy crossfilter taking group data and regrouping it to the same thing
+          const cf = crossfilter(short),
+            dimension = cf.dimension(d => mappings.ord2int(d.key)),
+            group = dimension.group().reduceSum(d => d.value);
 
-    bar = new dc.BarChart('#bar');
-    const linearDomain = [-0.5, mappings.length() - 0.5];
-    bar
-        .width(1000).height(300)
-        .margins({left: 75, top: 0, right: 10, bottom: 140})
-        .x(d3.scaleLinear().domain(linearDomain))
-        .xUnits(dc.units.integers)
-        .centerBar(true)
-        .yAxisLabel('counts')
-        .elasticY(true)
-        .brushOn(true)
-        .dimension(dimension)
-        .group(group)
-        .title(kv => mappings.int2ord(kv.key)); // Titles would not show with brush on
+          bar = new dc.BarChart('#bar');
+          const linearDomain = [-0.5, mappings.length() - 0.5];
+          bar
+            .width(1000)
+            .height(300)
+            .margins({ left: 75, top: 0, right: 10, bottom: 140 })
+            .x(d3.scaleLinear().domain(linearDomain))
+            .xUnits(dc.units.integers)
+            .centerBar(true)
+            .yAxisLabel('counts')
+            .elasticY(true)
+            .brushOn(true)
+            .dimension(dimension)
+            .group(group)
+            .title(kv => mappings.int2ord(kv.key)); // Titles would not show with brush on
 
-    bar.xAxis()
-        .tickValues(d3.range(mappings.length()))
-        .tickFormat((d) => mappings.int2ord(d));
+          bar
+            .xAxis()
+            .tickValues(d3.range(mappings.length()))
+            .tickFormat(d => mappings.int2ord(d));
 
-    // display a row chart of first letters, to test filtering
-    const letterDimension = cf.dimension((d) => d.key.split(' ').map((s) => s[0]), true);
-    const letterGroup = letterDimension.group();
+          // display a row chart of first letters, to test filtering
+          const letterDimension = cf.dimension(
+            d => d.key.split(' ').map(s => s[0]),
+            true
+          );
+          const letterGroup = letterDimension.group();
 
-    const row = new dc.RowChart('#first-letters');
-    row
-        .width(1000)
-        .height(350)
-        .gap(1)
-        .dimension(letterDimension)
-        .group(letterGroup);
+          const row = new dc.RowChart('#first-letters');
+          row
+            .width(1000)
+            .height(350)
+            .gap(1)
+            .dimension(letterDimension)
+            .group(letterGroup);
 
-    dc.renderAll();
-});
-
-</script>
-
-</div>
-</body>
+          dc.renderAll();
+        });
+      </script>
+    </div>
+  </body>
 </html>

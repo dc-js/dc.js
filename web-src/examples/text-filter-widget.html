@@ -1,79 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Text Filter Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
-<div class="container">
-<div id="header"></div>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
 
-<div id="search"></div>
-<div style="clear:both;">
-<table class="table dc-data-grid">
-  <thead>
-    <tr class=header>
-      <th>Nb</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-    </tr>
-  </thead>
-</table>
-</div>
+      <div id="search"></div>
+      <div style="clear: both;">
+        <table class="table dc-data-grid">
+          <thead>
+            <tr class="header">
+              <th>Nb</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
 
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        // prettier-ignore
+        const data = [
+          { 'first_name': 'John', 'last_name': 'Coltrane' },
+          { 'first_name': 'Miles', 'last_name': 'Davis' },
+          { 'first_name': 'Ornette', 'last_name': 'Coleman' },
+          { 'first_name': 'Louis', 'last_name': 'Armstrong' },
+          { 'first_name': 'Fela', 'last_name': 'Kuti' },
+          { 'first_name': 'Charlie', 'last_name': 'Parker' },
+          { 'first_name': 'Wayne', 'last_name': 'Shorter' },
+          { 'first_name': 'Thelonious', 'last_name': 'Monk' },
+          { 'first_name': 'Herbie', 'last_name': 'Hancock' },
+          { 'first_name': 'Max', 'last_name': 'Roach' },
+        ];
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+        const ndx = crossfilter(data),
+          dimension = ndx.dimension(d => `${d.last_name} ${d.first_name}`);
 
+        // eslint-disable-next-line no-unused-vars
+        const chart = new dc.TextFilterWidget('#search').dimension(dimension);
 
-    const data = [
-        {'first_name': 'John', 'last_name': 'Coltrane'},
-        {'first_name': 'Miles', 'last_name': 'Davis'},
-        {'first_name': 'Ornette', 'last_name': 'Coleman'},
-        {'first_name': 'Louis', 'last_name': 'Armstrong'},
-        {'first_name': 'Fela', 'last_name': 'Kuti'},
-        {'first_name': 'Charlie', 'last_name': 'Parker'},
-        {'first_name': 'Wayne', 'last_name': 'Shorter'},
-        {'first_name': 'Thelonious', 'last_name': 'Monk'},
-        {'first_name': 'Herbie', 'last_name': 'Hancock'},
-        {'first_name': 'Max', 'last_name': 'Roach'}
-    ];
-
-    const ndx = crossfilter(data),
-        dimension = ndx.dimension((d) => `${d.last_name  } ${  d.first_name}`);
-
-    // eslint-disable-next-line no-unused-vars
-    const chart = new dc.TextFilterWidget("#search")
-        .dimension(dimension);
-
-    let i = 0;
-    new dc.DataTable('.dc-data-grid')
-        .dimension(dimension)
-        .showSections(false)
-        .columns([
+        let i = 0;
+        new dc.DataTable('.dc-data-grid')
+          .dimension(dimension)
+          .showSections(false)
+          .columns([
             function (d) {
-                i = i + 1;
-                return i;
+              i = i + 1;
+              return i;
             },
             function (d) {
-                return d.first_name;
+              return d.first_name;
             },
             function (d) {
-                return d.last_name;
-            }])
-        .on('renderlet', (c) => {
-        i = 0;
-    });
+              return d.last_name;
+            },
+          ])
+          .on('renderlet', c => {
+            i = 0;
+          });
 
-    dc.renderAll();
-
-</script>
-
-</div>
-</body>
+        dc.renderAll();
+      </script>
+    </div>
+  </body>
 </html>

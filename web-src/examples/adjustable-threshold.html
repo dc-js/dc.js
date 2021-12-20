@@ -2,121 +2,135 @@
 <html>
   <head>
     <title>dc.js - Adjustable Threshold Example</title>
-    <link type="text/css" rel="stylesheet" href="../css/dc.css"/>
-    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <script type="text/javascript" src="../js/d3.js" ></script>
-    <script type="text/javascript" src="../js/crossfilter.js"  ></script>
+    <link type="text/css" rel="stylesheet" href="../css/dc.css" />
+    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
-</head>
+  </head>
 
-<body>
+  <body>
+    <div class="container">
+      <div id="header"></div>
 
-<div class="container">
-<div id="header"></div>
+      <p>
+        This example demonstrates assigning a threshold dynamically to a pie
+        chart by creating a new dimension based on slider input.
+      </p>
+      <div id="inputSlider">
+        <div>
+          <input
+            type="range"
+            id="slideRange"
+            value="0.5"
+            min="0"
+            max="1.0"
+            step="0.1"
+            onchange="updateSlider(this.value)"
+          />
+        </div>
+        Score threshold: <span id="sliderValue">0.5</span>
+      </div>
+      <div id="dc-coreAcc-piechart"></div>
+      <div id="dc-score-barchart"></div>
 
-  <p>This example demonstrates assigning a threshold dynamically to a pie chart by creating a new dimension based on slider input.</p>
-    <div id="inputSlider">
-        <div><input type="range" id="slideRange" value="0.5" min="0" max="1.0" step="0.1" onchange="updateSlider(this.value)"></div>
-        Score threshold: <span id="sliderValue">0.5</label>
-    </div>
-    <div id="dc-coreAcc-piechart"></div>
-    <div id="dc-score-barchart"></div>
+      <script type="text/javascript">
+        const data = [
+          { book: 'A', scores: 45 },
+          { book: 'B', scores: 34 },
+          { book: 'C', scores: 54 },
+          { book: 'D', scores: 27 },
+          { book: 'E', scores: 70 },
+          { book: 'F', scores: 25 },
+          { book: 'G', scores: 92 },
+          { book: 'H', scores: 22 },
+          { book: 'I', scores: 40 },
+          { book: 'J', scores: 10 },
+          { book: 'K', scores: 40 },
+        ];
 
-    <script type="text/javascript">
-    const data = [
-                { "book": "A", "scores": 45 },
-                { "book": "B", "scores": 34 },
-                { "book": "C", "scores": 54 },
-                { "book": "D", "scores": 27 },
-                { "book": "E", "scores": 70 },
-                { "book": "F", "scores": 25 },
-                { "book": "G", "scores": 92 },
-                { "book": "H", "scores": 22 },
-                { "book": "I", "scores": 40 },
-                { "book": "J", "scores": 10 },
-                { "book": "K", "scores": 40 }
-               ];
+        //## Create Chart Objects
+        const scoreChart = new dc.BarChart('#dc-score-barchart')
+          .xAxisLabel('book_id')
+          .yAxisLabel('score');
+        const goodYesNoPieChart = new dc.PieChart('#dc-coreAcc-piechart');
 
-    //## Create Chart Objects
-    const scoreChart = new dc.BarChart("#dc-score-barchart")
-                        .xAxisLabel('book_id')
-                        .yAxisLabel('score');
-    const goodYesNoPieChart = new dc.PieChart('#dc-coreAcc-piechart');
+        //### Create Crossfilter Dimensions and Groups
+        const ndx = crossfilter(data);
+        const all = ndx.groupAll();
+        const bookDimension = ndx.dimension(d => d.book),
+          bookscoresGroup = bookDimension.group().reduceSum(d => d.scores);
 
-    //### Create Crossfilter Dimensions and Groups
-    const ndx = crossfilter(data);
-    const all = ndx.groupAll();
-    const bookDimension = ndx.dimension((d) => d.book),
-        bookscoresGroup = bookDimension.group().reduceSum((d) => d.scores);
+        //## score bar chart
+        scoreChart
+          .width(320)
+          .height(320)
+          .dimension(bookDimension)
+          .group(bookscoresGroup)
+          .elasticY(true)
+          .x(d3.scaleBand())
+          .xUnits(dc.units.ordinal)
+          .ordinalColors(['orange'])
+          .yAxis()
+          .ticks(5);
 
-    //## score bar chart
-    scoreChart.width(320)
-        .height(320)
-        .dimension(bookDimension)
-        .group(bookscoresGroup)
-        .elasticY(true)
-        .x(d3.scaleBand())
-        .xUnits(dc.units.ordinal)
-        .ordinalColors(["orange"])
-        .yAxis().ticks(5);
-
-    //## pie chart
-    // reusable function to create threshold dimension
-    function coreCountFromThreshold() {
-        let scoreThreshold=document.getElementById('slideRange').value;
-        scoreThreshold=parseFloat(scoreThreshold);
-        if (isNaN(scoreThreshold)) {
-            scoreThreshold=0.5
+        //## pie chart
+        // reusable function to create threshold dimension
+        function coreCountFromThreshold() {
+          let scoreThreshold = document.getElementById('slideRange').value;
+          scoreThreshold = parseFloat(scoreThreshold);
+          if (isNaN(scoreThreshold)) {
+            scoreThreshold = 0.5;
+          }
+          return ndx.dimension(d => {
+            const maxNumber = 80;
+            if (d.scores > maxNumber * scoreThreshold) {
+              return 'High';
+            } else {
+              return 'Low';
+            }
+          });
         }
-        return ndx.dimension((d) => {
-        const maxNumber=80;
-        if (d.scores >maxNumber*scoreThreshold) {
-            return 'High';
-        } else {
-            return 'Low';
-        }
-    });
-    }
-    let coreCount = coreCountFromThreshold();
-    let coreCountGroup = coreCount.group();
+        let coreCount = coreCountFromThreshold();
+        let coreCountGroup = coreCount.group();
 
-    goodYesNoPieChart
-        .width(320)
-        .height(320)
-        .radius(120)
-        .innerRadius(40)
-        .dimension(coreCount)
-        .title((d) => d.value)
-        .group(coreCountGroup)
-        .label((d) => {
-        if (goodYesNoPieChart.hasFilter() && !goodYesNoPieChart.hasFilter(d.key)) {
-            return `${d.key  }(0%)`;
-        }
-        let label = d.key;
-        if (all.value()) {
-            label += `(${  Math.floor(d.value / all.value() * 100)  }%)`;
-        }
-        return label;
-    })
-
-    dc.renderAll();
-
-    //## change slider score value to re-assign the data in pie chart
-    // eslint-disable-next-line no-unused-vars
-    function updateSlider(slideValue) {
-        const sliderDiv = document.getElementById("sliderValue");
-        sliderDiv.innerHTML = slideValue;
-        coreCount.dispose();
-        coreCount = coreCountFromThreshold();
-        coreCountGroup = coreCount.group();
         goodYesNoPieChart
-            .dimension(coreCount)
-            .group(coreCountGroup);
-        dc.redrawAll();
-    }
+          .width(320)
+          .height(320)
+          .radius(120)
+          .innerRadius(40)
+          .dimension(coreCount)
+          .title(d => d.value)
+          .group(coreCountGroup)
+          .label(d => {
+            if (
+              goodYesNoPieChart.hasFilter() &&
+              !goodYesNoPieChart.hasFilter(d.key)
+            ) {
+              return `${d.key}(0%)`;
+            }
+            let label = d.key;
+            if (all.value()) {
+              label += `(${Math.floor((d.value / all.value()) * 100)}%)`;
+            }
+            return label;
+          });
 
-    </script>
-</div>
-</body>
+        dc.renderAll();
+
+        //## change slider score value to re-assign the data in pie chart
+        // eslint-disable-next-line no-unused-vars
+        function updateSlider(slideValue) {
+          const sliderDiv = document.getElementById('sliderValue');
+          sliderDiv.innerHTML = slideValue;
+          coreCount.dispose();
+          coreCount = coreCountFromThreshold();
+          coreCountGroup = coreCount.group();
+          goodYesNoPieChart.dimension(coreCount).group(coreCountGroup);
+          dc.redrawAll();
+        }
+      </script>
+    </div>
+  </body>
 </html>

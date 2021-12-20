@@ -1,79 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Sunburst Chart Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css" />
     <style>
-        .pie-slice path {
-            stroke:#fff;
-        }
-        .dc-chart .selected path {
-            stroke-width: 1;
-            stroke:#fff;
-        }
+      .pie-slice path {
+        stroke: #fff;
+      }
+      .dc-chart .selected path {
+        stroke-width: 1;
+        stroke: #fff;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
 
-<div class="container">
-<div id="header"></div>
+      <div id="test"></div>
+      <div id="test2"></div>
+      <div id="test3"></div>
 
-<div id="test"></div>
-<div id="test2"></div>
-<div id="test3"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart3 = new dc.RowChart('#test3');
+        const chart2 = new dc.RowChart('#test2');
+        const chart = new dc.SunburstChart('#test');
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+        d3.csv('morley.csv').then(experiments => {
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => [d.Expt, d.Run]);
 
-const chart3 = new dc.RowChart("#test3");
-const chart2 = new dc.RowChart("#test2");
-const chart = new dc.SunburstChart("#test");
+          const speedSumGroup = runDimension.group().reduceSum(d => d.Speed);
 
-d3.csv("morley.csv").then((experiments) => {
+          const runOnlyDimension = ndx.dimension(d => d.Run);
+          const runOnlySpeedGroup = runOnlyDimension
+            .group()
+            .reduceSum(d => d.Speed);
 
-    const ndx = crossfilter(experiments),
-        runDimension = ndx.dimension((d) => [d.Expt, d.Run]);
+          const exptOnlyDimension = ndx.dimension(d => d.Expt);
+          const exptOnlySpeedGroup = exptOnlyDimension
+            .group()
+            .reduceSum(d => d.Speed);
 
-    const speedSumGroup = runDimension.group().reduceSum((d) => d.Speed);
+          chart3
+            .width(200)
+            .height(200)
+            .dimension(exptOnlyDimension)
+            .group(exptOnlySpeedGroup);
 
-    const runOnlyDimension = ndx.dimension((d) => d.Run);
-    const runOnlySpeedGroup = runOnlyDimension.group().reduceSum((d) => d.Speed);
+          chart2
+            .width(200)
+            .height(200)
+            .dimension(runOnlyDimension)
+            .group(runOnlySpeedGroup);
 
-    const exptOnlyDimension = ndx.dimension((d) => d.Expt);
-    const exptOnlySpeedGroup = exptOnlyDimension.group().reduceSum((d) => d.Speed);
+          chart
+            .width(768)
+            .height(480)
+            .innerRadius(100)
+            .dimension(runDimension)
+            .group(speedSumGroup)
+            .legend(dc.legend());
 
-    chart3
-        .width(200)
-        .height(200)
-        .dimension(exptOnlyDimension)
-        .group(exptOnlySpeedGroup);
-
-    chart2
-        .width(200)
-        .height(200)
-        .dimension(runOnlyDimension)
-        .group(runOnlySpeedGroup);
-
-    chart
-        .width(768)
-        .height(480)
-        .innerRadius(100)
-        .dimension(runDimension)
-        .group(speedSumGroup)
-        .legend(dc.legend());
-
-    dc.renderAll();
-
-});
-
-</script>
-
-</div>
-</body>
+          dc.renderAll();
+        });
+      </script>
+    </div>
+  </body>
 </html>

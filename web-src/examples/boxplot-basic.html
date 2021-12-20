@@ -1,68 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Box Plot Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="box-test"></div>
+      <div id="pie-chart"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="box-test"></div>
-<div id="pie-chart"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = dc.boxPlot('#box-test'),
+          pie = new dc.PieChart('#pie-chart');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            runGroup = runDimension.group(),
+            experimentDimension = ndx.dimension(d => `exp-${d.Expt}`),
+            speedArrayGroup = experimentDimension.group().reduce(
+              (p, v) => {
+                // keep array sorted for efficiency
+                p.splice(d3.bisectLeft(p, v.Speed), 0, v.Speed);
+                return p;
+              },
+              (p, v) => {
+                p.splice(d3.bisectLeft(p, v.Speed), 1);
+                return p;
+              },
+              () => []
+            );
 
-const chart = dc.boxPlot("#box-test"),
-    pie = new dc.PieChart("#pie-chart");
-d3.csv("morley.csv").then((experiments) => {
+          chart
+            .width(768)
+            .height(480)
+            .margins({ top: 10, right: 50, bottom: 30, left: 50 })
+            .dimension(experimentDimension)
+            .group(speedArrayGroup)
+            .elasticY(true)
+            .elasticX(true);
 
-  experiments.forEach((x) => {
-    x.Speed = +x.Speed;
-  });
+          pie
+            .width(140)
+            .height(140)
+            .radius(70)
+            .dimension(runDimension)
+            .group(runGroup);
 
-  const ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension((d) => +d.Run),
-      runGroup            = runDimension.group(),
-      experimentDimension = ndx.dimension((d) => `exp-${  d.Expt}`),
-      speedArrayGroup     = experimentDimension.group().reduce(
-        (p,v) => {
-          // keep array sorted for efficiency
-          p.splice(d3.bisectLeft(p, v.Speed), 0, v.Speed);
-          return p;
-        },
-        (p,v) => {
-          p.splice(d3.bisectLeft(p, v.Speed), 1);
-          return p;
-        },
-        () => []
-      );
-
-  chart
-    .width(768)
-    .height(480)
-    .margins({top: 10, right: 50, bottom: 30, left: 50})
-    .dimension(experimentDimension)
-    .group(speedArrayGroup)
-    .elasticY(true)
-    .elasticX(true);
-
-  pie
-    .width(140)
-    .height(140)
-    .radius(70)
-    .dimension(runDimension)
-    .group(runGroup);
-
-  dc.renderAll();
-/*
+          dc.renderAll();
+          /*
   var i=0;
   setInterval(function() {
     runDimension.filterAll();
@@ -70,10 +67,8 @@ d3.csv("morley.csv").then((experiments) => {
     dc.renderAll();
   }, 2000);
 */
-});
-
-</script>
-
-</div>
-</body>
+        });
+      </script>
+    </div>
+  </body>
 </html>

@@ -2,66 +2,65 @@
 <html lang="en">
   <head>
     <title>dc.js - Area Chart Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
   </head>
   <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-    <div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.LineChart('#test');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-    <script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-    <script type="text/javascript" src="../js/crossfilter.js"></script>
-    <script type="text/javascript" src="../js/dc.js"></script>
-    <script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            speedSumGroup = runDimension.group().reduce(
+              (p, v) => {
+                p[v.Expt] = (p[v.Expt] || 0) + v.Speed;
+                return p;
+              },
+              (p, v) => {
+                p[v.Expt] = (p[v.Expt] || 0) - v.Speed;
+                return p;
+              },
+              () => ({})
+            );
 
-      const chart = new dc.LineChart("#test");
-      d3.csv("morley.csv").then((experiments) => {
+          function selStack(i) {
+            return function (d) {
+              return d.value[i];
+            };
+          }
 
-    experiments.forEach((x) => {
-  x.Speed = +x.Speed;
-    });
+          chart
+            .width(768)
+            .height(480)
+            .x(d3.scaleLinear().domain([1, 20]))
+            .margins({ left: 50, top: 10, right: 10, bottom: 20 })
+            .renderArea(true)
+            .brushOn(false)
+            .renderDataPoints(true)
+            .clipPadding(10)
+            .yAxisLabel('This is the Y Axis!')
+            .dimension(runDimension)
+            .group(speedSumGroup, '1', selStack('1'));
 
-    const ndx                 = crossfilter(experiments),
-        runDimension        = ndx.dimension((d) => +d.Run),
-        speedSumGroup       = runDimension.group().reduce((p, v) => {
-      p[v.Expt] = (p[v.Expt] || 0) + v.Speed;
-      return p;
-  }, (p, v) => {
-      p[v.Expt] = (p[v.Expt] || 0) - v.Speed;
-      return p;
-  }, () => ({}));
-
-    function selStack(i) {
-        return function(d) {
-            return d.value[i];
-        };
-    }
-
-    chart
-        .width(768)
-        .height(480)
-        .x(d3.scaleLinear().domain([1,20]))
-        .margins({left: 50, top: 10, right: 10, bottom: 20})
-        .renderArea(true)
-        .brushOn(false)
-        .renderDataPoints(true)
-        .clipPadding(10)
-        .yAxisLabel("This is the Y Axis!")
-        .dimension(runDimension)
-        .group(speedSumGroup, "1", selStack('1'));
-
-    for(let i = 2; i<6; ++i)
-        {chart.stack(speedSumGroup, `${i}`, selStack(i));}
-    chart.render();
-
-});
-
-    </script>
-
-</div>
+          for (let i = 2; i < 6; ++i) {
+            chart.stack(speedSumGroup, `${i}`, selStack(i));
+          }
+          chart.render();
+        });
+      </script>
+    </div>
   </body>
 </html>

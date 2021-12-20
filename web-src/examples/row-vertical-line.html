@@ -1,69 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Row Chart with Vertical Line</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.RowChart('#test');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            speedSumGroup = runDimension
+              .group()
+              .reduceSum(d => (d.Speed * d.Run) / 1000);
 
-const chart = new dc.RowChart("#test");
-d3.csv("morley.csv").then((experiments) => {
-
-  experiments.forEach((x) => {
-    x.Speed = +x.Speed;
-  });
-
-  const ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension((d) => +d.Run),
-      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
-
-  chart
-    .width(768)
-    .height(480)
-    .x(d3.scaleLinear().domain([6,20]))
-    .elasticX(true)
-    .dimension(runDimension)
-    .group(speedSumGroup)
-      // eslint-disable-next-line no-shadow
-    .on('pretransition', (chart) => {
-        const xVert = 45;
-        const extraData = [
-            {x: chart.x()(xVert), y: 0},
-            {x: chart.x()(xVert), y: chart.effectiveHeight()}
-        ];
-        const line = d3.line()
-            .x((d) => d.x)
-            .y((d) => d.y)
-            .curve(d3.curveLinear);
-        const chartBody = chart.select('g');
-        let path = chartBody.selectAll('path.extra').data([extraData]);
-        path = path.enter()
+          chart
+            .width(768)
+            .height(480)
+            .x(d3.scaleLinear().domain([6, 20]))
+            .elasticX(true)
+            .dimension(runDimension)
+            .group(speedSumGroup)
+            // eslint-disable-next-line no-shadow
+            .on('pretransition', chart => {
+              const xVert = 45;
+              const extraData = [
+                { x: chart.x()(xVert), y: 0 },
+                { x: chart.x()(xVert), y: chart.effectiveHeight() },
+              ];
+              const line = d3
+                .line()
+                .x(d => d.x)
+                .y(d => d.y)
+                .curve(d3.curveLinear);
+              const chartBody = chart.select('g');
+              let path = chartBody.selectAll('path.extra').data([extraData]);
+              path = path
+                .enter()
                 .append('path')
                 .attr('class', 'oeExtra')
                 .attr('stroke', 'red')
                 .attr('id', 'oeLine')
-                .attr("stroke-width", 1)
-                .style("stroke-dasharray", ("10,3"))
-            .merge(path);
-        path.attr('d', line);
-    });
-    chart.render();
-});
-
-</script>
-
-</div>
-</body>
+                .attr('stroke-width', 1)
+                .style('stroke-dasharray', '10,3')
+                .merge(path);
+              path.attr('d', line);
+            });
+          chart.render();
+        });
+      </script>
+    </div>
+  </body>
 </html>

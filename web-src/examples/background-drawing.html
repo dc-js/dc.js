@@ -1,102 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Background Drawing Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
-
-<pre id="data" style="display: none;">
+      <pre id="data" style="display: none;">
 Prec,Recall,System
 0.5,0.5,Test
 0.7,0.3,Foo
 0.95,0.87,Bar
 0.1,0.1,Bad
 0.2,0.9,Good
-</pre>
+</pre
+      >
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
-//helper functions
-function safeDivision(numerator, denominator){
-  if (!denominator) {  // Matches +0, -0, NaN
-    return 0.0;
-  }
-  return numerator/denominator;
-}
-function generateFmeasureContours(width, height, beta){
-  //x axis is recall, y axis is precision
-  const betasquared = beta * beta;
-  const values = new Array(height * width);
-  for (let prec = height, k = 0; prec > 0; --prec) {
-    for (let rec = 0; rec < width; ++rec, ++k) {
-      const newPrec = prec/height;
-      const newRec = rec/width;
-      values[k] = safeDivision((1 + betasquared) * (newPrec * newRec), (betasquared * newPrec) + newRec);
-    }
-  }
-  const thresholds = d3.range(0.0, 1.0, 0.05);
-  const color = d3.scaleLinear()
-  .domain(d3.extent(thresholds))
-  .interpolate(d => d3.interpolateRdYlGn)
-  const contours = d3.contours()
-  .size([width, height])
-  .thresholds(thresholds)
-  (values);
-  return [contours, color];
-}
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        //helper functions
+        function safeDivision(numerator, denominator) {
+          if (!denominator) {
+            // Matches +0, -0, NaN
+            return 0.0;
+          }
+          return numerator / denominator;
+        }
+        function generateFmeasureContours(width, height, beta) {
+          //x axis is recall, y axis is precision
+          const betasquared = beta * beta;
+          const values = new Array(height * width);
+          for (let prec = height, k = 0; prec > 0; --prec) {
+            for (let rec = 0; rec < width; ++rec, ++k) {
+              const newPrec = prec / height;
+              const newRec = rec / width;
+              values[k] = safeDivision(
+                (1 + betasquared) * (newPrec * newRec),
+                betasquared * newPrec + newRec
+              );
+            }
+          }
+          const thresholds = d3.range(0.0, 1.0, 0.05);
+          const color = d3
+            .scaleLinear()
+            .domain(d3.extent(thresholds))
+            .interpolate(d => d3.interpolateRdYlGn);
+          const contours = d3
+            .contours()
+            .size([width, height])
+            .thresholds(thresholds)(values);
+          return [contours, color];
+        }
 
-const chart = new dc.ScatterPlot("#test");
+        const chart = new dc.ScatterPlot('#test');
 
-const experiments = d3.csvParse(d3.select('pre#data').text());
-const ndx                 = crossfilter(experiments),
-    scatterDim          = ndx.dimension((d) => [d.Prec, d.Recall]),
-    scatterGroup        = scatterDim.group();
+        const experiments = d3.csvParse(d3.select('pre#data').text());
+        const ndx = crossfilter(experiments),
+          scatterDim = ndx.dimension(d => [d.Prec, d.Recall]),
+          scatterGroup = scatterDim.group();
 
-chart
-  .width(808)
-  .height(768)
-  .dimension(scatterDim)
-  .group(scatterGroup)
-  .xAxisLabel("Recall")
-  .x(d3.scaleLinear().domain([0,1]))
-  .yAxisLabel("Precision")
-  .y(d3.scaleLinear().domain([0,1]))
-    // eslint-disable-next-line no-shadow
-    .on('pretransition', (chart) => {
-    // add contour layer to back (beginning of svg) only if it doesn't exist
-    let contourLayer = chart.g().selectAll('g.contour-layer').data([0]);
-    contourLayer = contourLayer
-        .enter().insert('g', ':first-child')
-        .attr('class', 'contour-layer')
-        .attr('transform', `translate(${  [chart.margins().left,chart.margins().top].join(',')  })`)
-        .merge(contourLayer);
+        chart
+          .width(808)
+          .height(768)
+          .dimension(scatterDim)
+          .group(scatterGroup)
+          .xAxisLabel('Recall')
+          .x(d3.scaleLinear().domain([0, 1]))
+          .yAxisLabel('Precision')
+          .y(d3.scaleLinear().domain([0, 1]))
+          // eslint-disable-next-line no-shadow
+          .on('pretransition', chart => {
+            // add contour layer to back (beginning of svg) only if it doesn't exist
+            let contourLayer = chart.g().selectAll('g.contour-layer').data([0]);
+            contourLayer = contourLayer
+              .enter()
+              .insert('g', ':first-child')
+              .attr('class', 'contour-layer')
+              .attr(
+                'transform',
+                `translate(${[chart.margins().left, chart.margins().top].join(
+                  ','
+                )})`
+              )
+              .merge(contourLayer);
 
-    const width = chart.effectiveWidth(), height = chart.effectiveHeight();
-    const [contours, color] = generateFmeasureContours(width,height, 1);
+            const width = chart.effectiveWidth(),
+              height = chart.effectiveHeight();
+            const [contours, color] = generateFmeasureContours(
+              width,
+              height,
+              1
+            );
 
-    contourLayer
-      .selectAll("path")
-      .data(contours)
-      .enter()
-      .append("path")
-      .attr("d", d3.geoPath())
-      .attr("fill",  d => color(d.value));
-  });
+            contourLayer
+              .selectAll('path')
+              .data(contours)
+              .enter()
+              .append('path')
+              .attr('d', d3.geoPath())
+              .attr('fill', d => color(d.value));
+          });
 
-chart.render();
-
-</script>
-
-</div>
-</body>
+        chart.render();
+      </script>
+    </div>
+  </body>
 </html>

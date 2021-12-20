@@ -1,54 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Row Chart with a Top Axis</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.RowChart('#test');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            speedSumGroup = runDimension
+              .group()
+              .reduceSum(d => (d.Speed * d.Run) / 1000);
 
-const chart = new dc.RowChart("#test");
-d3.csv("morley.csv").then((experiments) => {
+          chart
+            .width(768)
+            .height(480)
+            .margins({ top: 20, right: 20, bottom: 20, left: 20 })
+            .x(d3.scaleLinear().domain([6, 20]))
+            .xAxis(d3.axisTop())
+            .elasticX(true)
+            .dimension(runDimension)
+            .group(speedSumGroup);
 
-  experiments.forEach((x) => {
-    x.Speed = +x.Speed;
-  });
-
-  const ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension((d) => +d.Run),
-      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
-
-  chart
-    .width(768)
-    .height(480)
-    .margins({top: 20, right: 20, bottom: 20, left: 20})
-    .x(d3.scaleLinear().domain([6,20]))
-    .xAxis(d3.axisTop())
-    .elasticX(true)
-    .dimension(runDimension)
-    .group(speedSumGroup);
-
-  chart.on('pretransition', () => {
-    chart.select('g.axis').attr('transform', 'translate(0,0)');
-    chart.selectAll('line.grid-line').attr('y2', chart.effectiveHeight());
-  });
-  chart
-    .render();
-});
-
-</script>
-
-</div>
-</body>
+          chart.on('pretransition', () => {
+            chart.select('g.axis').attr('transform', 'translate(0,0)');
+            chart
+              .selectAll('line.grid-line')
+              .attr('y2', chart.effectiveHeight());
+          });
+          chart.render();
+        });
+      </script>
+    </div>
+  </body>
 </html>

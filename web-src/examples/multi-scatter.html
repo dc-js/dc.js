@@ -1,63 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Scatter Composite with Legend</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.CompositeChart('#test');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            scatterDimension = ndx.dimension(d => [
+              +d.Run,
+              (d.Speed * d.Run) / 1000,
+            ]),
+            scatterGroup = scatterDimension.group(),
+            lineDimension = ndx.dimension(d => +d.Run),
+            lineGroup = lineDimension
+              .group()
+              .reduceSum(d => (d.Speed * d.Run) / 4000);
 
-const chart = new dc.CompositeChart("#test");
-d3.csv("morley.csv").then((experiments) => {
-
-  experiments.forEach((x) => {
-    x.Speed = +x.Speed;
-  });
-
-  const ndx                 = crossfilter(experiments),
-      scatterDimension    = ndx.dimension((d) => [+d.Run, d.Speed * d.Run / 1000]),
-      scatterGroup        = scatterDimension.group(),
-      lineDimension       = ndx.dimension((d) => +d.Run),
-      lineGroup           = lineDimension.group().reduceSum((d) => d.Speed * d.Run / 4000);
-
-    chart
-        .width(768)
-        .height(480)
-        .x(d3.scaleLinear().domain([6,20]))
-        .yAxisLabel("This is the Y Axis!")
-        .clipPadding(10)
-        .dimension(scatterDimension)
-        .brushOn(false)
-        .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
-        .compose([
-            new dc.ScatterPlot(chart)
-                .group(scatterGroup, "Blue Group")
-                .colors("blue"),
-            new dc.ScatterPlot(chart)
-                .group(scatterGroup, "Red Group")
-                .colors("red")
-                .valueAccessor((d) => d.key[1] + 5),
-            new dc.LineChart(chart)
+          chart
+            .width(768)
+            .height(480)
+            .x(d3.scaleLinear().domain([6, 20]))
+            .yAxisLabel('This is the Y Axis!')
+            .clipPadding(10)
+            .dimension(scatterDimension)
+            .brushOn(false)
+            .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
+            .compose([
+              new dc.ScatterPlot(chart)
+                .group(scatterGroup, 'Blue Group')
+                .colors('blue'),
+              new dc.ScatterPlot(chart)
+                .group(scatterGroup, 'Red Group')
+                .colors('red')
+                .valueAccessor(d => d.key[1] + 5),
+              new dc.LineChart(chart)
                 .dimension(lineDimension)
-                .group(lineGroup, "Line Group")
-        ]);
+                .group(lineGroup, 'Line Group'),
+            ]);
 
-  chart.render();
-});
-
-</script>
-
-</div>
-</body>
+          chart.render();
+        });
+      </script>
+    </div>
+  </body>
 </html>

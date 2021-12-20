@@ -1,116 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Table Pagination Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
 
-  <div class="container">
-    <div id="header"></div>
-
-    <div class="row">
-      <div id="piechart"><h4>Expt:</h4>
-        <div class="reset" style="visibility: hidden;">selected: <span class="filter"></span>
-          <a href="javascript:piechart.filterAll();dc.redrawAll();">reset</a>
+      <div class="row">
+        <div id="piechart">
+          <h4>Expt:</h4>
+          <div class="reset" style="visibility: hidden;">
+            selected: <span class="filter"></span>
+            <a href="javascript:piechart.filterAll();dc.redrawAll();">reset</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div id="paging">
-        Showing <span id="begin"></span>-<span id="end"></span> of <span id="size"></span> <span id="totalsize"></span>
-        <input id="last" class="btn" type="Button" value="Prev" onclick="javascript:prev()" />
-        <input id="next" class="btn" type="button" value="Next" onclick="javascript:next()"/>
+      <div class="row">
+        <div id="paging">
+          Showing <span id="begin"></span>-<span id="end"></span> of
+          <span id="size"></span> <span id="totalsize"></span>
+          <input
+            id="last"
+            class="btn"
+            type="Button"
+            value="Prev"
+            onclick="javascript:prev()"
+          />
+          <input
+            id="next"
+            class="btn"
+            type="button"
+            value="Next"
+            onclick="javascript:next()"
+          />
+        </div>
+        <table id="test" class="table table-striped"></table>
       </div>
-      <table id="test" class="table table-striped"></table>
-    </div>
 
-    <script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-    <script type="text/javascript" src="../js/crossfilter.js"></script>
-    <script type="text/javascript" src="../js/dc.js"></script>
-    <script type="text/javascript">
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.DataTable('#test');
+        const piechart = new dc.PieChart('#piechart');
 
-      const chart = new dc.DataTable("#test");
-      const piechart = new dc.PieChart("#piechart");
+        let ndx;
+        d3.csv('morley.csv').then(experiments => {
+          ndx = crossfilter(experiments);
+          const fmt = d3.format('02d');
+          const runDimension = ndx.dimension(d => [fmt(+d.Expt), fmt(+d.Run)]),
+            experimentDimension = ndx.dimension(d => d.Expt),
+            experimentGroup = experimentDimension.group().reduceCount();
 
-      let ndx;
-      d3.csv("morley.csv").then((experiments) => {
-  ndx = crossfilter(experiments);
-  const fmt = d3.format('02d');
-  const runDimension = ndx.dimension((d) => [fmt(+d.Expt),fmt(+d.Run)]),
-  experimentDimension = ndx.dimension((d) => d.Expt),
-  experimentGroup = experimentDimension.group().reduceCount();
+          piechart
+            .width(300)
+            .height(280)
+            .innerRadius(100)
+            .externalLabels(50)
+            .externalRadiusPadding(50)
+            .drawPaths(true)
+            .dimension(experimentDimension)
+            .group(experimentGroup)
+            .legend(dc.legend())
+            .controlsUseVisibility(true);
 
-  piechart.width(300).height(280)
-    .innerRadius(100).externalLabels(50).externalRadiusPadding(50).drawPaths(true)
-    .dimension(experimentDimension).group(experimentGroup)
-    .legend(dc.legend())
-    .controlsUseVisibility(true);
+          chart
+            .width(300)
+            .height(480)
+            .dimension(runDimension)
+            .size(Infinity)
+            .showSections(false)
+            .columns(['Expt', 'Run', 'Speed'])
+            .sortBy(d => [fmt(+d.Expt), fmt(+d.Run)])
+            .order(d3.ascending)
+            .on('preRender', updateOffset)
+            .on('preRedraw', updateOffset)
+            .on('pretransition', display);
 
-  chart
-    .width(300)
-    .height(480)
-    .dimension(runDimension)
-    .size(Infinity)
-    .showSections(false)
-    .columns(['Expt', 'Run', 'Speed'])
-    .sortBy((d) => [fmt(+d.Expt),fmt(+d.Run)])
-    .order(d3.ascending)
-    .on('preRender', updateOffset)
-    .on('preRedraw', updateOffset)
-    .on('pretransition', display);
+          dc.renderAll();
+        });
 
-  dc.renderAll();
-});
+        // use odd page size to show the effect better
+        let ofs = 0;
+        const pag = 17;
 
-      // use odd page size to show the effect better
-      let ofs = 0;
-      const pag = 17;
-
-      function updateOffset() {
+        function updateOffset() {
           const totFilteredRecs = ndx.groupAll().value();
-          ofs = ofs >= totFilteredRecs ? Math.floor((totFilteredRecs - 1) / pag) * pag : ofs;
+          ofs =
+            ofs >= totFilteredRecs
+              ? Math.floor((totFilteredRecs - 1) / pag) * pag
+              : ofs;
           ofs = ofs < 0 ? 0 : ofs;
 
           chart.beginSlice(ofs);
-          chart.endSlice(ofs+pag);
-      }
-      function display() {
+          chart.endSlice(ofs + pag);
+        }
+        function display() {
           const totFilteredRecs = ndx.groupAll().value();
           const end = ofs + pag > totFilteredRecs ? totFilteredRecs : ofs + pag;
-          d3.select('#begin')
-              .text(end === 0? ofs : ofs + 1);
-          d3.select('#end')
-              .text(end);
-          d3.select('#last')
-              .attr('disabled', ofs-pag<0 ? 'true' : null);
-          d3.select('#next')
-              .attr('disabled', ofs+pag>=totFilteredRecs ? 'true' : null);
+          d3.select('#begin').text(end === 0 ? ofs : ofs + 1);
+          d3.select('#end').text(end);
+          d3.select('#last').attr('disabled', ofs - pag < 0 ? 'true' : null);
+          d3.select('#next').attr(
+            'disabled',
+            ofs + pag >= totFilteredRecs ? 'true' : null
+          );
           d3.select('#size').text(totFilteredRecs);
-          if(totFilteredRecs !== ndx.size()){
-            d3.select('#totalsize').text(`(filtered Total: ${  ndx.size()  } )`);
-          }else{
+          if (totFilteredRecs !== ndx.size()) {
+            d3.select('#totalsize').text(`(filtered Total: ${ndx.size()} )`);
+          } else {
             d3.select('#totalsize').text('');
           }
-      }
-      // eslint-disable-next-line no-unused-vars
-      function next() {
+        }
+        // eslint-disable-next-line no-unused-vars
+        function next() {
           ofs += pag;
           updateOffset();
           chart.redraw();
-      }
-      // eslint-disable-next-line no-unused-vars
-      function prev() {
+        }
+        // eslint-disable-next-line no-unused-vars
+        function prev() {
           ofs -= pag;
           updateOffset();
           chart.redraw();
-      }
-
-    </script>
-
-  </div>
-</body>
+        }
+      </script>
+    </div>
+  </body>
 </html>

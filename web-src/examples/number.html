@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Number Display Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
     <style>
       #number-box {
         background: orange;
@@ -17,91 +17,93 @@
         line-height: normal;
       }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test" style="float: none;">
+        Inline Number Display. We have
+        <span class="number-display"></span> jumping on the bed.
+      </div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test" style="float: none">
-  Inline Number Display. We have <span class="number-display"></span> jumping on the bed.
-</div>
+      <br />
 
-<br />
+      <p>
+        We have seen a mean of <span id="mean"></span> over
+        <span id="expn"></span> experiments!
+      </p>
 
-<p>
-We have seen a mean of <span id="mean"></span> over <span id="expn"></span> experiments!
-</p>
+      <br />
 
-<br />
+      <div id="number-box"></div>
 
-<div id="number-box"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const inlineND = new dc.NumberDisplay('#test'),
+          boxND = new dc.NumberDisplay('#number-box'),
+          meanND = new dc.NumberDisplay('#mean'),
+          expnND = new dc.NumberDisplay('#expn');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed * 1000;
+          });
 
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            meanSpeedGroup = ndx.groupAll().reduce(
+              (p, v) => {
+                ++p.n;
+                p.tot += v.Speed;
+                return p;
+              },
+              (p, v) => {
+                --p.n;
+                p.tot -= v.Speed;
+                return p;
+              },
+              () => ({ n: 0, tot: 0 })
+            );
+          const average = function (d) {
+            return d.n ? d.tot / d.n : 0;
+          };
+          const expCount = function (d) {
+            return d.n;
+          };
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          inlineND
+            .valueAccessor(average)
+            .html({
+              one:
+                '<span style="color:steelblue; font-size: 26px;">%number</span> Monkey',
+              some:
+                '<span style="color:steelblue; font-size: 26px;">%number</span> Total Monkeys',
+              none:
+                '<span style="color:steelblue; font-size: 26px;">No</span> Monkeys',
+            })
+            .group(meanSpeedGroup);
+          boxND
+            .formatNumber(d3.format('.3s'))
+            .valueAccessor(average)
+            .group(meanSpeedGroup);
 
-const inlineND = new dc.NumberDisplay("#test"),
-    boxND    = new dc.NumberDisplay("#number-box"),
-    meanND   = new dc.NumberDisplay("#mean"),
-    expnND   = new dc.NumberDisplay("#expn");
-d3.csv("morley.csv").then((experiments) => {
+          meanND
+            .group(meanSpeedGroup)
+            .valueAccessor(average)
+            .formatNumber(d3.format('.3g'));
+          expnND.group(meanSpeedGroup).valueAccessor(expCount);
 
-  experiments.forEach((x) => {
-    x.Speed = +x.Speed * 1000;
-  });
+          let i = 18;
+          setInterval(() => {
+            runDimension.filter(i++ % 20);
+            dc.redrawAll();
+          }, 3000);
 
-  const ndx            = crossfilter(experiments),
-      runDimension   = ndx.dimension((d) => +d.Run),
-      meanSpeedGroup = ndx.groupAll().reduce(
-          (p, v) => {
-              ++p.n;
-              p.tot += v.Speed;
-              return p;
-          },
-          (p, v) => {
-              --p.n;
-              p.tot -= v.Speed;
-              return p;
-          },
-          () => ({n:0,tot:0})
-      );
-  const average = function(d) {
-      return d.n ? d.tot / d.n : 0;
-  };
-  const expCount = function(d) {
-      return d.n;
-  };
-
-  inlineND
-      .valueAccessor(average)
-      .html({
-        one:"<span style=\"color:steelblue; font-size: 26px;\">%number</span> Monkey",
-        some:"<span style=\"color:steelblue; font-size: 26px;\">%number</span> Total Monkeys",
-        none:"<span style=\"color:steelblue; font-size: 26px;\">No</span> Monkeys"
-      })
-      .group(meanSpeedGroup);
-  boxND
-      .formatNumber(d3.format(".3s"))
-      .valueAccessor(average)
-      .group(meanSpeedGroup);
-
-  meanND.group(meanSpeedGroup).valueAccessor(average).formatNumber(d3.format(".3g"));
-  expnND.group(meanSpeedGroup).valueAccessor(expCount);
-
-  let i=18;
-  setInterval(() => {
-      runDimension.filter(i++ % 20);
-      dc.redrawAll();
-  }, 3000);
-
-  dc.renderAll();
-});
-
-</script>
-
-</div>
-</body>
+          dc.renderAll();
+        });
+      </script>
+    </div>
+  </body>
 </html>

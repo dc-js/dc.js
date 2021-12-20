@@ -1,53 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Line Chart Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.LineChart('#test');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            speedSumGroup = runDimension
+              .group()
+              .reduceSum(d => (d.Speed * d.Run) / 1000);
 
-const chart = new dc.LineChart("#test");
-d3.csv("morley.csv").then((experiments) => {
+          chart
+            .width(768)
+            .height(480)
+            .x(d3.scaleLinear().domain([0, 20]))
+            .curve(d3.curveStepBefore)
+            .renderArea(true)
+            .brushOn(false)
+            .renderDataPoints(true)
+            .clipPadding(10)
+            .yAxisLabel('This is the Y Axis!')
+            .dimension(runDimension)
+            .group(speedSumGroup);
 
-  experiments.forEach((x) => {
-    x.Speed = +x.Speed;
-  });
-
-  const ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension((d) => +d.Run),
-      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
-
-  chart
-    .width(768)
-    .height(480)
-    .x(d3.scaleLinear().domain([0,20]))
-    .curve(d3.curveStepBefore)
-    .renderArea(true)
-    .brushOn(false)
-    .renderDataPoints(true)
-    .clipPadding(10)
-    .yAxisLabel("This is the Y Axis!")
-    .dimension(runDimension)
-    .group(speedSumGroup);
-
-  chart.render();
-
-});
-
-</script>
-
-</div>
-</body>
+          chart.render();
+        });
+      </script>
+    </div>
+  </body>
 </html>

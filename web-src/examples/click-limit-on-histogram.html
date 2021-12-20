@@ -1,84 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Click a limit on a histogram</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.LineChart('#test');
+        d3.csv('morley.csv').then(experiments => {
+          experiments.forEach(x => {
+            x.Speed = +x.Speed;
+          });
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+          const ndx = crossfilter(experiments),
+            runDimension = ndx.dimension(d => +d.Run),
+            speedSumGroup = runDimension
+              .group()
+              .reduceSum(d => (d.Speed * d.Run) / 1000);
 
-const chart = new dc.LineChart("#test");
-d3.csv("morley.csv").then((experiments) => {
+          let xVert;
 
-  experiments.forEach((x) => {
-    x.Speed = +x.Speed;
-  });
+          chart
+            .width(768)
+            .height(480)
+            .x(d3.scaleLinear().domain([0, 20]))
+            .renderArea(true)
+            .brushOn(false)
+            .renderDataPoints(true)
+            .clipPadding(10)
+            .yAxisLabel('This is the Y Axis!')
+            .dimension(runDimension)
+            .group(speedSumGroup)
+            // eslint-disable-next-line no-shadow
+            .on('pretransition', chart => {
+              chart.svg().on('click', event => {
+                const bound = chart.root().node().getBoundingClientRect();
+                xVert = chart
+                  .x()
+                  .invert(event.clientX - bound.left - chart.margins().left);
+                console.log('clicked', xVert);
+                chart.redraw();
+              });
 
-  const ndx                 = crossfilter(experiments),
-      runDimension        = ndx.dimension((d) => +d.Run),
-      speedSumGroup       = runDimension.group().reduceSum((d) => d.Speed * d.Run / 1000);
-
-  let xVert;
-
-  chart
-    .width(768)
-    .height(480)
-    .x(d3.scaleLinear().domain([0,20]))
-    .renderArea(true)
-    .brushOn(false)
-    .renderDataPoints(true)
-    .clipPadding(10)
-    .yAxisLabel("This is the Y Axis!")
-    .dimension(runDimension)
-    .group(speedSumGroup)
-      // eslint-disable-next-line no-shadow
-    .on('pretransition', (chart) => {
-        chart.svg().on('click', (event) => {
-            const bound = chart.root().node().getBoundingClientRect();
-            xVert = chart.x().invert(event.clientX - bound.left - chart.margins().left);
-            console.log('clicked', xVert);
-            chart.redraw();
-        });
-
-        // draw a line if xVert is set
-        const extraData = xVert !== undefined ? [
-            {x: chart.x()(xVert) + chart.margins().left, y: chart.margins().top},
-            {x: chart.x()(xVert) + chart.margins().left, y: chart.margins().top + chart.effectiveHeight()}
-        ] : [];
-        const line = d3.line()
-            .x((d) => d.x)
-            .y((d) => d.y)
-            .curve(d3.curveLinear);
-        const chartBody = chart.select('g');
-        let path = chartBody.selectAll('path.extra').data([extraData]);
-        path = path.enter()
+              // draw a line if xVert is set
+              const extraData =
+                xVert !== undefined
+                  ? [
+                      {
+                        x: chart.x()(xVert) + chart.margins().left,
+                        y: chart.margins().top,
+                      },
+                      {
+                        x: chart.x()(xVert) + chart.margins().left,
+                        y: chart.margins().top + chart.effectiveHeight(),
+                      },
+                    ]
+                  : [];
+              const line = d3
+                .line()
+                .x(d => d.x)
+                .y(d => d.y)
+                .curve(d3.curveLinear);
+              const chartBody = chart.select('g');
+              let path = chartBody.selectAll('path.extra').data([extraData]);
+              path = path
+                .enter()
                 .append('path')
                 .attr('class', 'extra')
                 .attr('stroke', 'red')
                 .attr('id', 'oeLine')
-                .attr("stroke-width", 1)
-                .style("stroke-dasharray", ("10,3"))
-            .merge(path);
-        path.attr('d', line);
-    });
+                .attr('stroke-width', 1)
+                .style('stroke-dasharray', '10,3')
+                .merge(path);
+              path.attr('d', line);
+            });
 
-  chart.render();
-
-});
-
-</script>
-
-</div>
-</body>
+          chart.render();
+        });
+      </script>
+    </div>
+  </body>
 </html>

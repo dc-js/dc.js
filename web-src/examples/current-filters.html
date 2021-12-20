@@ -76,8 +76,8 @@
   <body>
     <div class="container">
       <div id="header"></div>
-        <h3>dc.js - Current filters and saving filter states</h3>
-        <div class="row">
+      <h3>dc.js - Current filters and saving filter states</h3>
+      <div class="row">
         <div id="filter-states-widget-wrapper">
           <strong>Saved Filter States</strong>
           <a href="javascript:saveFilterState();">save current</a>
@@ -202,7 +202,7 @@
     </div>
 
     <script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
 
@@ -307,7 +307,6 @@
           .data(data, d => d.chartId)
           .text(d => d.values.toString());
       });
-
     </script>
   </body>
 </html>

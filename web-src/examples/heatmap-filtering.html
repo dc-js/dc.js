@@ -1,124 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Heatmap Filtering Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <style>
-    </style>
-</head>
-<body>
-<div class="container">
-<div id="header"></div>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+    <style></style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
 
-<h2>Nasdaq 100 Percentage Gain by Month of Year</h2>
-<div id="heatmap"></div>
-<div id="barchart"></div>
+      <h2>Nasdaq 100 Percentage Gain by Month of Year</h2>
+      <div id="heatmap"></div>
+      <div id="barchart"></div>
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chartGroup = 'chartGroup';
+        const heatmapChart = new dc.HeatMap('#heatmap', chartGroup);
+        const barChart = new dc.BarChart('#barchart', chartGroup);
 
-    const chartGroup = "chartGroup";
-    const heatmapChart = new dc.HeatMap("#heatmap", chartGroup);
-    const barChart = new dc.BarChart("#barchart", chartGroup);
+        d3.csv('../ndx.csv').then(data => {
+          const dateFormatSpecifier = '%m/%d/%Y';
+          const dateFormatParser = d3.timeParse(dateFormatSpecifier);
 
-    d3.csv("../ndx.csv").then((data) => {
+          data.forEach(d => {
+            d.dd = dateFormatParser(d.date);
+            d.month = d3.timeMonth(d.dd).getMonth(); // pre-calculate month for better performance
+            d.year = d3.timeYear(d.dd).getFullYear();
+            d.close = +d.close; // coerce to number
+            d.open = +d.open;
+          });
 
-    const dateFormatSpecifier = "%m/%d/%Y";
-    const dateFormatParser = d3.timeParse(dateFormatSpecifier);
+          const ndx = crossfilter(data),
+            monthOfTheYearDimension = ndx.dimension(d => [+d.month, +d.year]),
+            percentageGainByMonthOfYearGroup = monthOfTheYearDimension
+              .group()
+              .reduce(
+                /* callback for when data is added to the current filter results */
+                (p, v) => {
+                  ++p.count;
+                  p.absGain += v.close - v.open;
+                  p.fluctuation += Math.abs(v.close - v.open);
+                  p.sumIndex += (v.open + v.close) / 2;
+                  p.avgIndex = p.count ? p.sumIndex / p.count : 0;
+                  p.percentageGain = p.avgIndex
+                    ? (p.absGain / p.avgIndex) * 100
+                    : 0;
+                  p.fluctuationPercentage = p.avgIndex
+                    ? (p.fluctuation / p.avgIndex) * 100
+                    : 0;
+                  return p;
+                },
+                /* callback for when data is removed from the current filter results */
+                (p, v) => {
+                  --p.count;
+                  p.absGain -= v.close - v.open;
+                  p.fluctuation -= Math.abs(v.close - v.open);
+                  p.sumIndex -= (v.open + v.close) / 2;
+                  p.avgIndex = p.count ? p.sumIndex / p.count : 0;
+                  p.percentageGain = p.avgIndex
+                    ? (p.absGain / p.avgIndex) * 100
+                    : 0;
+                  p.fluctuationPercentage = p.avgIndex
+                    ? (p.fluctuation / p.avgIndex) * 100
+                    : 0;
+                  return p;
+                },
+                /* initialize p */
+                () => ({
+                  count: 0,
+                  absGain: 0,
+                  fluctuation: 0,
+                  fluctuationPercentage: 0,
+                  sumIndex: 0,
+                  avgIndex: 0,
+                  percentageGain: 0,
+                })
+              );
 
-    data.forEach((d) => {
-    d.dd = dateFormatParser(d.date);
-    d.month = d3.timeMonth(d.dd).getMonth(); // pre-calculate month for better performance
-    d.year = d3.timeYear(d.dd).getFullYear();
-    d.close = +d.close; // coerce to number
-    d.open = +d.open;
-});
+          const heatColorMapping = d3
+            .scaleLinear()
+            .domain([-23, 0, 23])
+            .range(['red', '#e5e5e5', 'green']);
 
-    const ndx = crossfilter(data),
-        monthOfTheYearDimension = ndx.dimension((d) => [+d.month, +d.year]),
-        percentageGainByMonthOfYearGroup = monthOfTheYearDimension.group().reduce(
-            /* callback for when data is added to the current filter results */
-            (p, v) => {
-            ++p.count;
-            p.absGain += v.close - v.open;
-            p.fluctuation += Math.abs(v.close - v.open);
-            p.sumIndex += (v.open + v.close) / 2;
-            p.avgIndex = p.count ? p.sumIndex / p.count : 0;
-            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
-            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
-            return p;
-        },
-            /* callback for when data is removed from the current filter results */
-            (p, v) => {
-            --p.count;
-            p.absGain -= v.close - v.open;
-            p.fluctuation -= Math.abs(v.close - v.open);
-            p.sumIndex -= (v.open + v.close) / 2;
-            p.avgIndex = p.count ? p.sumIndex / p.count : 0;
-            p.percentageGain = p.avgIndex ? (p.absGain / p.avgIndex) * 100 : 0;
-            p.fluctuationPercentage = p.avgIndex ? (p.fluctuation / p.avgIndex) * 100 : 0;
-            return p;
-        },
-            /* initialize p */
-            () => ({count: 0, absGain: 0, fluctuation: 0, fluctuationPercentage: 0, sumIndex: 0, avgIndex: 0, percentageGain: 0})
-        );
-
-    const heatColorMapping = d3.scaleLinear()
-        .domain([-23, 0, 23])
-        .range(["red", "#e5e5e5", "green"]);
-
-    heatmapChart
+          heatmapChart
             .width(12 * 80 + 80)
             .height(27 * 10 + 40)
             .dimension(monthOfTheYearDimension)
             .group(percentageGainByMonthOfYearGroup)
-            .keyAccessor((d) => +d.key[0])
-            .valueAccessor((d) => +d.key[1])
-            .colorAccessor((d) => +d.value.percentageGain)
-            .title((d) => ` Month:   ${  d.key[0]  }\n` +
-           `  Year:   ${  d.key[1]  }\n` +
-           `  Gain:   ${  d.value.percentageGain  }%`)
+            .keyAccessor(d => +d.key[0])
+            .valueAccessor(d => +d.key[1])
+            .colorAccessor(d => +d.value.percentageGain)
+            .title(
+              d =>
+                ` Month:   ${d.key[0]}\n` +
+                `  Year:   ${d.key[1]}\n` +
+                `  Gain:   ${d.value.percentageGain}%`
+            )
             .colors(heatColorMapping);
 
-    heatmapChart.xBorderRadius(0);
-    heatmapChart.yBorderRadius(0);
+          heatmapChart.xBorderRadius(0);
+          heatmapChart.yBorderRadius(0);
 
-    heatmapChart.render();
+          heatmapChart.render();
 
-    const monthlyDimension = ndx.dimension((d) => +d.month);
-    const percentageGainByMonthArrayGroup = monthlyDimension.group().reduce(
-        (p,v) => {
-        const absGain = v.close - v.open;
-        const percentageGain = v.open ? (absGain / v.open) * 100 : 0;
-        return p + percentageGain;
-    },
-        (p,v) => {
-        const absGain = v.close - v.open;
-        const percentageGain = v.open ? (absGain / v.open) * 100 : 0;
-        return p - percentageGain;
-    },
-        () => 0
-    );
+          const monthlyDimension = ndx.dimension(d => +d.month);
+          const percentageGainByMonthArrayGroup = monthlyDimension
+            .group()
+            .reduce(
+              (p, v) => {
+                const absGain = v.close - v.open;
+                const percentageGain = v.open ? (absGain / v.open) * 100 : 0;
+                return p + percentageGain;
+              },
+              (p, v) => {
+                const absGain = v.close - v.open;
+                const percentageGain = v.open ? (absGain / v.open) * 100 : 0;
+                return p - percentageGain;
+              },
+              () => 0
+            );
 
-    barChart
+          barChart
             .dimension(monthlyDimension)
             .group(percentageGainByMonthArrayGroup)
             .width(12 * 80 + 80)
             .height(480)
-            .y(d3.scaleLinear().domain([-10.0,100.0]))
-            .x(d3.scaleLinear().domain([-0.5,11.5]))
+            .y(d3.scaleLinear().domain([-10.0, 100.0]))
+            .x(d3.scaleLinear().domain([-0.5, 11.5]))
             .elasticY(true)
             .centerBar(true);
-    barChart.render();
-});
-
-</script>
-
-</div>
-</body>
+          barChart.render();
+        });
+      </script>
+    </div>
+  </body>
 </html>

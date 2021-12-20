@@ -1,67 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Series Scatter Plot Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="test"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="test"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = new dc.SeriesChart('#test');
+        let ndx, runDimension, runGroup;
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+        d3.csv('morley.csv').then(experiments => {
+          ndx = crossfilter(experiments);
+          runDimension = ndx.dimension(d => [+d.Expt, +d.Run]);
+          runGroup = runDimension.group().reduceSum(d => +d.Speed);
 
-const chart = new dc.SeriesChart("#test");
-let ndx, runDimension, runGroup;
+          const symbolScale = d3.scaleOrdinal().range(d3.symbols);
+          const symbolAccessor = function (d) {
+            return symbolScale(d.key[0]);
+          };
+          const subChart = function (c) {
+            return new dc.ScatterPlot(c)
+              .symbol(symbolAccessor)
+              .symbolSize(8)
+              .highlightedSize(10);
+          };
 
-d3.csv("morley.csv").then((experiments) => {
+          chart
+            .width(768)
+            .height(480)
+            .chart(subChart)
+            .x(d3.scaleLinear().domain([0, 20]))
+            .brushOn(true)
+            .yAxisLabel('Measured Speed km/s')
+            .xAxisLabel('Run')
+            .clipPadding(10)
+            .elasticY(true)
+            .dimension(runDimension)
+            .group(runGroup)
+            .mouseZoomable(false)
+            .shareTitle(false) // allow default scatter title to work
+            .seriesAccessor(d => `Expt: ${d.key[0]}`)
+            .keyAccessor(d => +d.key[1])
+            .valueAccessor(d => +d.value - 500)
+            .legend(
+              dc
+                .legend()
+                .x(350)
+                .y(350)
+                .itemHeight(13)
+                .gap(5)
+                .horizontal(1)
+                .legendWidth(140)
+                .itemWidth(70)
+            );
+          chart.yAxis().tickFormat(d => d3.format(',d')(d + 299500));
+          chart.margins().left += 40;
 
-  ndx = crossfilter(experiments);
-  runDimension = ndx.dimension((d) => [+d.Expt, +d.Run]);
-  runGroup = runDimension.group().reduceSum((d) => +d.Speed);
-
-  const symbolScale = d3.scaleOrdinal().range(d3.symbols);
-  const symbolAccessor = function(d) { return symbolScale(d.key[0]); };
-  const subChart = function(c) {
-    return new dc.ScatterPlot(c)
-        .symbol(symbolAccessor)
-        .symbolSize(8)
-        .highlightedSize(10)
-  };
-
-  chart
-    .width(768)
-    .height(480)
-    .chart(subChart)
-    .x(d3.scaleLinear().domain([0,20]))
-    .brushOn(true)
-    .yAxisLabel("Measured Speed km/s")
-    .xAxisLabel("Run")
-    .clipPadding(10)
-    .elasticY(true)
-    .dimension(runDimension)
-    .group(runGroup)
-    .mouseZoomable(false)
-    .shareTitle(false) // allow default scatter title to work
-    .seriesAccessor((d) => `Expt: ${  d.key[0]}`)
-    .keyAccessor((d) => +d.key[1])
-    .valueAccessor((d) => +d.value - 500)
-    .legend(dc.legend().x(350).y(350).itemHeight(13).gap(5).horizontal(1).legendWidth(140).itemWidth(70));
-  chart.yAxis().tickFormat((d) => d3.format(',d')(d+299500));
-  chart.margins().left += 40;
-
-  dc.renderAll();
-
-});
-
-</script>
-</div>
-</body>
+          dc.renderAll();
+        });
+      </script>
+    </div>
+  </body>
 </html>

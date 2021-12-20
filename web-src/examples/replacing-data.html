@@ -1,85 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Replacing Data Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-</head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+  </head>
 
-<body>
-<link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-<div class="container">
-<div id="header"></div>
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
+  <body>
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+    <div class="container">
+      <div id="header"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
 
-<div id="chart-ring-year"></div>
-<div id="chart-row-spenders"></div>
+      <div id="chart-ring-year"></div>
+      <div id="chart-row-spenders"></div>
 
-<p>This page will replace the crossfilter data in 5 seconds. If you modify the filters before then, the filters will be restored.<p>
+      <p>
+        This page will replace the crossfilter data in 5 seconds. If you modify
+        the filters before then, the filters will be restored.
+      </p>
+      <p></p>
 
-<p>It's based on <a href="//stackoverflow.com/questions/32770830/updating-dc-js-data-and-reapplying-original-filters">a question
-    and answer on Stack Overflow</a>; question by geotheory, answer by Ethan Jewett.</p>
+      <p>
+        It's based on
+        <a
+          href="//stackoverflow.com/questions/32770830/updating-dc-js-data-and-reapplying-original-filters"
+          >a question and answer on Stack Overflow</a
+        >; question by geotheory, answer by Ethan Jewett.
+      </p>
 
-<script type="text/javascript">
+      <script type="text/javascript">
+        const yearRingChart = new dc.PieChart('#chart-ring-year'),
+          spenderRowChart = new dc.RowChart('#chart-row-spenders');
 
-const yearRingChart   = new dc.PieChart("#chart-ring-year"),
-    spenderRowChart = new dc.RowChart("#chart-row-spenders");
+        const data1 = [
+          { Name: 'Mr A', Spent: 40, Year: 2011 },
+          { Name: 'Mr B', Spent: 10, Year: 2011 },
+          { Name: 'Mr C', Spent: 40, Year: 2011 },
+          { Name: 'Mr A', Spent: 70, Year: 2012 },
+          { Name: 'Mr B', Spent: 20, Year: 2012 },
+          { Name: 'Mr B', Spent: 50, Year: 2013 },
+          { Name: 'Mr C', Spent: 30, Year: 2013 },
+        ];
 
-const data1 = [
-    {Name: 'Mr A', Spent: 40, Year: 2011},
-    {Name: 'Mr B', Spent: 10, Year: 2011},
-    {Name: 'Mr C', Spent: 40, Year: 2011},
-    {Name: 'Mr A', Spent: 70, Year: 2012},
-    {Name: 'Mr B', Spent: 20, Year: 2012},
-    {Name: 'Mr B', Spent: 50, Year: 2013},
-    {Name: 'Mr C', Spent: 30, Year: 2013}
-];
+        const data2 = [
+          { Name: 'Mr A', Spent: 10, Year: 2011 },
+          { Name: 'Mr B', Spent: 20, Year: 2011 },
+          { Name: 'Mr C', Spent: 50, Year: 2011 },
+          { Name: 'Mr A', Spent: 20, Year: 2012 },
+          { Name: 'Mr B', Spent: 40, Year: 2012 },
+          { Name: 'Mr B', Spent: 50, Year: 2013 },
+          { Name: 'Mr C', Spent: 50, Year: 2013 },
+        ];
 
-const data2 = [
-    {Name: 'Mr A', Spent: 10, Year: 2011},
-    {Name: 'Mr B', Spent: 20, Year: 2011},
-    {Name: 'Mr C', Spent: 50, Year: 2011},
-    {Name: 'Mr A', Spent: 20, Year: 2012},
-    {Name: 'Mr B', Spent: 40, Year: 2012},
-    {Name: 'Mr B', Spent: 50, Year: 2013},
-    {Name: 'Mr C', Spent: 50, Year: 2013}
-];
+        // set crossfilter with first dataset
+        const ndx = crossfilter(data1),
+          yearDim = ndx.dimension(d => +d.Year),
+          nameDim = ndx.dimension(d => d.Name),
+          spendPerYear = yearDim.group().reduceSum(d => +d.Spent),
+          spendPerName = nameDim.group().reduceSum(d => +d.Spent);
 
-// set crossfilter with first dataset
-const ndx = crossfilter(data1),
-    yearDim  = ndx.dimension((d) => +d.Year),
-    nameDim  = ndx.dimension((d) => d.Name),
-    spendPerYear = yearDim.group().reduceSum((d) => +d.Spent),
-    spendPerName = nameDim.group().reduceSum((d) => +d.Spent);
+        yearRingChart
+          .width(200)
+          .height(200)
+          .dimension(yearDim)
+          .group(spendPerYear)
+          .innerRadius(50);
 
-yearRingChart
-    .width(200).height(200)
-    .dimension(yearDim)
-    .group(spendPerYear)
-    .innerRadius(50);
+        spenderRowChart
+          .width(250)
+          .height(200)
+          .dimension(nameDim)
+          .group(spendPerName)
+          .elasticX(true);
 
-spenderRowChart
-    .width(250).height(200)
-    .dimension(nameDim)
-    .group(spendPerName)
-    .elasticX(true);
+        dc.renderAll();
 
-dc.renderAll();
-
-// REFRESH DATA AFTER 5 SECONDS
-setTimeout(() => {
-    console.log("data reset");
-    ndx.remove(() => true);
-    ndx.add(data2);
-    dc.redrawAll();
-}, 5000);
-
-</script>
-
-</div>
-</body>
+        // REFRESH DATA AFTER 5 SECONDS
+        setTimeout(() => {
+          console.log('data reset');
+          ndx.remove(() => true);
+          ndx.add(data2);
+          dc.redrawAll();
+        }, 5000);
+      </script>
+    </div>
+  </body>
 </html>

@@ -1,88 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Box Plot with a Time Scale</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
-    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css"/>
-</head>
-<body>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+    <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div id="header"></div>
+      <div id="box-test"></div>
+      <div id="pie-chart"></div>
 
-<div class="container">
-<div id="header"></div>
-<div id="box-test"></div>
-<div id="pie-chart"></div>
+      <script type="text/javascript" src="header.js"></script>
+      <script type="text/javascript" src="../js/d3.js"></script>
+      <script type="text/javascript" src="../js/crossfilter.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript">
+        const chart = dc.boxPlot('#box-test'),
+          pie = new dc.PieChart('#pie-chart');
 
-<script type="text/javascript" src="header.js"></script>
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript">
+        d3.csv('monthly-move.csv').then(data => {
+          data.forEach(x => {
+            x.date = new Date(x.date);
+            x.close = +x.close;
+          });
 
-const chart = dc.boxPlot("#box-test"),
-    pie = new dc.PieChart("#pie-chart");
+          data = data.slice(0, 200);
 
-d3.csv("monthly-move.csv").then((data) => {
+          const ndx = crossfilter(data),
+            openDimension = ndx.dimension(d => parseInt(d.open / 10) * 10),
+            openGroup = openDimension.group(),
+            monthDimension = ndx.dimension(d => d3.timeMonth(d.date)),
+            closeGroup = monthDimension.group().reduce(
+              (p, v) => {
+                p.splice(d3.bisectLeft(p, v.close), 0, v.close);
+                return p;
+              },
+              (p, v) => {
+                p.splice(d3.bisectLeft(p, v.close), 1);
+                return p;
+              },
+              () => []
+            );
 
-  data.forEach((x) => {
-    x.date = new Date(x.date);
-    x.close = +x.close;
-  });
+          chart
+            .width(768)
+            .height(480)
+            .margins({ top: 10, right: 50, bottom: 30, left: 50 })
+            .dimension(monthDimension)
+            .group(closeGroup)
+            .x(d3.scaleTime())
+            .round(d3.timeMonth.round)
+            .xUnits(d3.timeMonths)
+            .elasticY(true);
 
-  data = data.slice(0, 200);
+          // this demonstrates solving elasticX manually, avoiding the
+          // bug where the rightmost bar/box is not displayed, #792
+          // eslint-disable-next-line no-shadow
+          function calcDomain(chart) {
+            const min = d3.min(chart.group().all(), kv => kv.key);
+            let max = d3.max(chart.group().all(), kv => kv.key);
+            max = d3.timeMonth.offset(max, 1);
+            chart.x().domain([min, max]);
+          }
+          chart.on('preRender', calcDomain);
+          chart.on('preRedraw', calcDomain);
 
-  const ndx             = crossfilter(data),
-      openDimension   = ndx.dimension((d) => parseInt(d.open/10)*10),
-      openGroup       = openDimension.group(),
-      monthDimension  = ndx.dimension((d) => d3.timeMonth(d.date)),
-      closeGroup      = monthDimension.group().reduce(
-        (p,v) => {
-          p.splice(d3.bisectLeft(p, v.close), 0, v.close);
-          return p;
-        },
-        (p,v) => {
-          p.splice(d3.bisectLeft(p, v.close), 1);
-          return p;
-        },
-        () => []
-      );
+          pie
+            .width(140)
+            .height(140)
+            .radius(70)
+            .dimension(openDimension)
+            .group(openGroup);
 
-  chart
-    .width(768)
-    .height(480)
-    .margins({top: 10, right: 50, bottom: 30, left: 50})
-    .dimension(monthDimension)
-    .group(closeGroup)
-    .x(d3.scaleTime())
-    .round(d3.timeMonth.round)
-    .xUnits(d3.timeMonths)
-    .elasticY(true);
-
-  // this demonstrates solving elasticX manually, avoiding the
-  // bug where the rightmost bar/box is not displayed, #792
-    // eslint-disable-next-line no-shadow
-  function calcDomain(chart) {
-      const min = d3.min(chart.group().all(), (kv) => kv.key);
-      let max = d3.max(chart.group().all(), (kv) => kv.key);
-      max = d3.timeMonth.offset(max, 1);
-      chart.x().domain([min, max]);
-  }
-  chart.on('preRender', calcDomain);
-  chart.on('preRedraw', calcDomain);
-
-  pie
-    .width(140)
-    .height(140)
-    .radius(70)
-    .dimension(openDimension)
-    .group(openGroup);
-
-  dc.renderAll();
-});
-
-</script>
-
-</div>
-</body>
+          dc.renderAll();
+        });
+      </script>
+    </div>
+  </body>
 </html>
