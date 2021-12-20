@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
  This code pulled from
  https://github.com/mikolalysenko/binary-search-bounds
@@ -28,7 +30,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
  */
-
 // search-bounds.js
 
 "use strict"
