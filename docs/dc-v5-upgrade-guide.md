@@ -269,7 +269,6 @@ List of accessors that have moved to conf:
   - registerChart -> {@link ChartGroup.register}
   - deregisterChart -> {@link ChartGroup.deregister}
   - hasChart -> {@link ChartGroup.has}
-  - hasChart -> {@link ChartGroup.has}
   - deregisterAllCharts -> {@link ChartGroup.clear}, probably no longer needed, see [ChartGroup example](#chartgroup)
   - filterAll -> {@link ChartGroup.filterAll}
   - refocusAll -> {@link ChartGroup.refocusAll}
