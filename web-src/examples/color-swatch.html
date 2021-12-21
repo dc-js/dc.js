@@ -30,13 +30,12 @@
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
         class ColorSwatch {
-          constructor(parent, group) {
+          constructor(parent, chartGroup) {
             this._groupAll = null;
-            this._colors = null;
-            this._width = this._height = 200;
+            this._colorScale = null;
             this._duration = 500;
             this._root = d3.select(parent);
-            dc.registerChart(this, group);
+            chartGroup.register(this);
             this._rect = null;
           }
 
@@ -50,11 +49,11 @@
             return this;
           }
 
-          colors(colors) {
+          colorScale(scale) {
             if (!arguments.length) {
-              return this._colors;
+              return this._colorScale;
             }
-            this._colors = colors;
+            this._colorScale = scale;
             return this;
           }
 
@@ -83,11 +82,14 @@
             this._rect
               .transition()
               .duration(this._duration)
-              .attr('fill', this._colors(this._groupAll.value()));
+              .attr('fill', this._colorScale(this._groupAll.value()));
           }
         }
-        const swatch = new ColorSwatch('#swatch'),
-          bar = new dc.BarChart('#bar');
+
+        const chartGroup = new dc.ChartGroup();
+        const swatch = new ColorSwatch('#swatch', chartGroup),
+          bar = new dc.BarChart('#bar', chartGroup);
+
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -98,26 +100,37 @@
 
           swatch
             .groupAll(groupAllSpeed)
-            .colors(
+            .colorScale(
               d3.scaleSequential(
                 [0, groupAllSpeed.value()],
                 d3.interpolateRdYlGn
               )
             );
+
           const runDimension = cf.dimension(d => +d.Run),
             speedSumGroup = runDimension
               .group()
               .reduceSum(d => (d.Speed * d.Run) / 1000);
 
           bar
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: runDimension,
+                layers: [
+                  {
+                    group: speedSumGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              renderLabel: true,
+            })
             .width(768)
             .height(480)
-            .x(d3.scaleLinear().domain([6, 20]))
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            .renderLabel(true);
+            .x(d3.scaleLinear().domain([6, 20]));
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
