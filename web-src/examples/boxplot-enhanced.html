@@ -58,14 +58,17 @@
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
         const chartGroup = new dc.ChartGroup();
-        const clubColors = [
-          { value: 'Tiny Tots', color: '#9be199' },
-          { value: 'High Flyers', color: '#e17f7e' },
-        ];
-        const genderColors = [
-          { value: 'Female', color: '#efc3e2' },
-          { value: 'Male', color: '#76bbe1' },
-        ];
+
+        // prettier-ignore
+        const clubColors = {
+          'Tiny Tots': '#9be199',
+          'High Flyers': '#e17f7e',
+        };
+        // prettier-ignore
+        const genderColors = {
+          'Female': '#efc3e2',
+          'Male': '#76bbe1'
+        };
 
         // prettier-ignore
         const data = [
@@ -140,7 +143,7 @@
           .configure({
             colorAccessor: d => d.key,
           })
-          .colorScale(d => colorSchema(clubColors, d));
+          .colorScale(d => clubColors[d]);
 
         // -----------------------------------------------
         const pie02 = new dc.PieChart('#pie02', chartGroup);
@@ -164,7 +167,7 @@
           .configure({
             colorAccessor: d => d.key,
           })
-          .colorScale(d => colorSchema(genderColors, d));
+          .colorScale(d => genderColors[d]);
 
         // -----------------------------------------------
         const pie03 = new dc.PieChart('#pie03', chartGroup);
@@ -296,11 +299,10 @@
           .configure({
             colorAccessor: d => d.key,
           })
-          .colorScale(d => colorSchema(genderColors, d));
+          .colorScale(d => genderColors[d]);
 
         // -----------------------------------------------
         const bp04 = new dc.BoxPlot('#boxPlot04', chartGroup);
-        const bp04Counts = {};
 
         bp04
           .dataProvider(
@@ -325,36 +327,18 @@
 
         // Code to add/update number of rendered data points to the xAxis label
         bp04
-          .on('preRender', () => {
-            getCounts(bp04, bp04Counts);
-          })
-          .on('preRedraw', () => {
-            getCounts(bp04, bp04Counts);
-          })
           .xAxis()
-          .tickFormat(v => `${v} [${bp04Counts[v]}]`);
+          .tickFormat(
+            v => `${v} [${bp04.data().find(kv => kv.key === v).value.length}]`
+          );
 
         bp04
           .configure({
             colorAccessor: d => d.key,
           })
-          .colorScale(d => colorSchema(genderColors, d));
+          .colorScale(d => genderColors[d]);
 
-        // -----------------------------------------------
         chartGroup.renderAll();
-
-        function colorSchema(pref, aa) {
-          const a = pref.find(i => i.value === aa);
-          return a.color;
-        }
-
-        function getCounts(chart, counts) {
-          chart
-            .data()
-            .forEach(kv => {
-              counts[kv.key] = kv.value.length;
-            });
-        }
       </script>
     </div>
   </body>
