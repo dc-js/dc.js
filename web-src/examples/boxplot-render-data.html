@@ -30,10 +30,11 @@
     <script type="text/javascript">
       const chartGroup = new dc.ChartGroup();
 
-      const genderColors = [
-        { value: 'Female', color: '#efc3e2' },
-        { value: 'Male', color: '#76bbe1' },
-      ];
+      // prettier-ignore
+      const genderColors = {
+        'Female': '#efc3e2',
+        'Male': '#76bbe1'
+      };
 
       // prettier-ignore
       const data = [
@@ -136,7 +137,7 @@
         .configure({
           colorAccessor: d => d.key,
         })
-        .colorScale(d => colorSchema(genderColors, d));
+        .colorScale(d => genderColors[d]);
 
       // -----------------------------------------------
       const bp02 = new dc.BoxPlot('#boxPlot02', chartGroup);
@@ -166,7 +167,7 @@
         .configure({
           colorAccessor: d => d.key,
         })
-        .colorScale(d => colorSchema(genderColors, d));
+        .colorScale(d => genderColors[d]);
 
       // -----------------------------------------------
       const bp03 = new dc.BoxPlot('#boxPlot03', chartGroup);
@@ -196,15 +197,9 @@
         .configure({
           colorAccessor: d => d.key,
         })
-        .colorScale(d => colorSchema(genderColors, d));
+        .colorScale(d => genderColors[d]);
 
-      // -----------------------------------------------
       chartGroup.renderAll();
-
-      function colorSchema(pref, aa) {
-        const a = pref.find(i => i.value === aa);
-        return a.color;
-      }
     </script>
   </body>
 </html>
