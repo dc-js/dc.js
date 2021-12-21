@@ -57,6 +57,7 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         const clubColors = [
           { value: 'Tiny Tots', color: '#9be199' },
           { value: 'High Flyers', color: '#e17f7e' },
@@ -118,46 +119,70 @@
         const ndx = crossfilter(data);
 
         // -----------------------------------------------
-        const pie01 = new dc.PieChart('#pie01');
+        const pie01 = new dc.PieChart('#pie01', chartGroup);
         const pie01Dim = ndx.dimension(d => d.club);
         const pie01Group = pie01Dim.group();
 
         pie01
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: pie01Dim,
+              group: pie01Group,
+            })
+          )
+          .configure({
+            radius: 70,
+          })
           .width(180)
-          .height(150)
-          .radius(70)
-          .dimension(pie01Dim)
-          .group(pie01Group);
+          .height(150);
 
-        pie01.colorAccessor(d => d.key).colors(d => colorSchema(clubColors, d));
+        pie01
+          .configure({
+            colorAccessor: d => d.key,
+          })
+          .colorScale(d => colorSchema(clubColors, d));
 
         // -----------------------------------------------
-        const pie02 = new dc.PieChart('#pie02');
+        const pie02 = new dc.PieChart('#pie02', chartGroup);
         const pie02Dim = ndx.dimension(d => d.gender);
         const pie02Group = pie02Dim.group();
 
         pie02
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: pie02Dim,
+              group: pie02Group,
+            })
+          )
+          .configure({
+            radius: 70,
+          })
           .width(180)
-          .height(150)
-          .radius(70)
-          .dimension(pie02Dim)
-          .group(pie02Group);
+          .height(150);
 
         pie02
-          .colorAccessor(d => d.key)
-          .colors(d => colorSchema(genderColors, d));
+          .configure({
+            colorAccessor: d => d.key,
+          })
+          .colorScale(d => colorSchema(genderColors, d));
 
         // -----------------------------------------------
-        const pie03 = new dc.PieChart('#pie03');
+        const pie03 = new dc.PieChart('#pie03', chartGroup);
         const pie03Dim = ndx.dimension(d => d.sport);
         const pie03Group = pie03Dim.group();
 
         pie03
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: pie03Dim,
+              group: pie03Group,
+            })
+          )
+          .configure({
+            radius: 70,
+          })
           .width(180)
-          .height(150)
-          .radius(70)
-          .dimension(pie03Dim)
-          .group(pie03Group);
+          .height(150);
 
         // -----------------------------------------------
         const bpSportDim = ndx.dimension(d => d.sport);
@@ -182,36 +207,48 @@
         );
 
         // -----------------------------------------------
-        const bp01 = dc.boxPlot('#boxPlot01');
+        const bp01 = new dc.BoxPlot('#boxPlot01', chartGroup);
 
         bp01
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: bpSportDim,
+              group: bpSportGroup,
+            })
+          )
+          .configure({
+            tickFormat: d3.format('.1f'),
+            elasticY: true,
+            elasticX: true,
+          })
           .width(480)
           .height(300)
-          .dimension(bpSportDim)
-          .group(bpSportGroup)
-          .tickFormat(d3.format('.1f'))
           .yAxisLabel('Age (years)')
-          .xAxisLabel('Sport')
-          .elasticY(true)
-          .elasticX(true);
+          .xAxisLabel('Sport');
 
         // -----------------------------------------------
-        const bp02 = dc.boxPlot('#boxPlot02');
+        const bp02 = new dc.BoxPlot('#boxPlot02', chartGroup);
 
         bp02
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: bpSportDim,
+              group: bpSportGroup,
+            })
+          )
+          .configure({
+            tickFormat: d3.format('.1f'),
+            renderDataPoints: true,
+            renderTitle: true,
+            dataWidthPortion: 0.5,
+            boldOutlier: true,
+            elasticY: true,
+            elasticX: true,
+          })
           .width(480)
           .height(300)
-          .dimension(bpSportDim)
-          .group(bpSportGroup)
-          .tickFormat(d3.format('.1f'))
-          .renderDataPoints(true)
-          .renderTitle(true)
-          .dataWidthPortion(0.5)
-          .boldOutlier(true)
           .yAxisLabel('Age (years)')
-          .xAxisLabel('Sport')
-          .elasticY(true)
-          .elasticX(true);
+          .xAxisLabel('Sport');
 
         // -----------------------------------------------
         const bpGenderDim = ndx.dimension(d => d.gender);
@@ -236,41 +273,55 @@
         );
 
         // -----------------------------------------------
-        const bp03 = dc.boxPlot('#boxPlot03');
+        const bp03 = new dc.BoxPlot('#boxPlot03', chartGroup);
 
         bp03
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: bpGenderDim,
+              group: bpGenderGroup,
+            })
+          )
+          .configure({
+            tickFormat: d3.format('.1f'),
+            elasticY: true,
+            elasticX: true,
+          })
           .width(480)
           .height(250)
-          .dimension(bpGenderDim)
-          .group(bpGenderGroup)
-          .tickFormat(d3.format('.1f'))
           .yAxisLabel('Age (years)')
-          .xAxisLabel('Gender', 0)
-          .elasticY(true)
-          .elasticX(true);
+          .xAxisLabel('Gender', 0);
 
         bp03
-          .colorAccessor(d => d.key)
-          .colors(d => colorSchema(genderColors, d));
+          .configure({
+            colorAccessor: d => d.key,
+          })
+          .colorScale(d => colorSchema(genderColors, d));
 
         // -----------------------------------------------
-        const bp04 = dc.boxPlot('#boxPlot04');
+        const bp04 = new dc.BoxPlot('#boxPlot04', chartGroup);
         const bp04Counts = {};
 
         bp04
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: bpGenderDim,
+              group: bpGenderGroup,
+            })
+          )
+          .configure({
+            tickFormat: d3.format('.1f'),
+            renderDataPoints: true,
+            renderTitle: true,
+            dataWidthPortion: 0.5,
+            boldOutlier: true,
+            elasticY: true,
+            elasticX: true,
+          })
           .width(480)
           .height(250)
-          .dimension(bpGenderDim)
-          .group(bpGenderGroup)
-          .tickFormat(d3.format('.1f'))
-          .renderDataPoints(true)
-          .renderTitle(true)
-          .dataWidthPortion(0.5)
-          .boldOutlier(true)
           .yAxisLabel('Age (years)')
-          .xAxisLabel('Gender', 0)
-          .elasticY(true)
-          .elasticX(true);
+          .xAxisLabel('Gender', 0);
 
         // Code to add/update number of rendered data points to the xAxis label
         bp04
@@ -284,11 +335,13 @@
           .tickFormat(v => `${v} [${bp04Counts[v]}]`);
 
         bp04
-          .colorAccessor(d => d.key)
-          .colors(d => colorSchema(genderColors, d));
+          .configure({
+            colorAccessor: d => d.key,
+          })
+          .colorScale(d => colorSchema(genderColors, d));
 
         // -----------------------------------------------
-        dc.renderAll();
+        chartGroup.renderAll();
 
         function colorSchema(pref, aa) {
           const a = pref.find(i => i.value === aa);
@@ -297,8 +350,7 @@
 
         function getCounts(chart, counts) {
           chart
-            .group()
-            .all()
+            .data()
             .forEach(kv => {
               counts[kv.key] = kv.value.length;
             });
