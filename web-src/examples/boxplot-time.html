@@ -18,8 +18,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = dc.boxPlot('#box-test'),
-          pie = new dc.PieChart('#pie-chart');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.BoxPlot('#box-test', chartGroup),
+          pie = new dc.PieChart('#pie-chart', chartGroup);
 
         d3.csv('monthly-move.csv').then(data => {
           data.forEach(x => {
@@ -46,36 +47,46 @@
             );
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: monthDimension,
+                group: closeGroup,
+              })
+            )
+            .configure({
+              round: d3.timeMonth.round,
+              xUnits: d3.timeMonths,
+              elasticY: true,
+            })
             .width(768)
             .height(480)
             .margins({ top: 10, right: 50, bottom: 30, left: 50 })
-            .dimension(monthDimension)
-            .group(closeGroup)
-            .x(d3.scaleTime())
-            .round(d3.timeMonth.round)
-            .xUnits(d3.timeMonths)
-            .elasticY(true);
+            .x(d3.scaleTime());
 
           // this demonstrates solving elasticX manually, avoiding the
           // bug where the rightmost bar/box is not displayed, #792
           // eslint-disable-next-line no-shadow
           function calcDomain(chart) {
-            const min = d3.min(chart.group().all(), kv => kv.key);
-            let max = d3.max(chart.group().all(), kv => kv.key);
-            max = d3.timeMonth.offset(max, 1);
-            chart.x().domain([min, max]);
+            const [min, max] = d3.extent(chart.data(), kv => kv.key);
+            chart.x().domain([min, d3.timeMonth.offset(max, 1)]);
           }
           chart.on('preRender', calcDomain);
           chart.on('preRedraw', calcDomain);
 
           pie
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: openDimension,
+                group: openGroup,
+              })
+            )
+            .configure({
+              radius: 70,
+            })
             .width(140)
-            .height(140)
-            .radius(70)
-            .dimension(openDimension)
-            .group(openGroup);
+            .height(140);
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
