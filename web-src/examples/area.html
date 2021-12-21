@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.LineChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.LineChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -56,16 +57,9 @@
             .x(d3.scaleLinear().domain([1, 20]))
             .margins({ left: 50, top: 10, right: 10, bottom: 20 })
             .renderArea(true)
-            .brushOn(false)
             .renderDataPoints(true)
-            .clipPadding(10)
-            .yAxisLabel('This is the Y Axis!')
-            .dimension(runDimension)
-            .group(speedSumGroup, '1', selStack('1'));
+            .yAxisLabel('This is the Y Axis!');
 
-          for (let i = 2; i < 6; ++i) {
-            chart.stack(speedSumGroup, `${i}`, selStack(i));
-          }
           chart.render();
         });
       </script>
