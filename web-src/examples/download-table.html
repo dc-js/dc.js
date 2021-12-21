@@ -71,13 +71,14 @@
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript" src="../js/FileSaver.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         /* global saveAs */
 
-        const yearRingChart = new dc.PieChart('#chart-ring-year'),
-          spendHistChart = new dc.BarChart('#chart-hist-spend'),
-          spenderRowChart = new dc.RowChart('#chart-row-spenders');
+        const yearRingChart = new dc.PieChart('#chart-ring-year', chartGroup),
+          spendHistChart = new dc.BarChart('#chart-hist-spend', chartGroup),
+          spenderRowChart = new dc.RowChart('#chart-row-spenders', chartGroup);
 
-        const table = new dc.DataTable('#table');
+        const table = new dc.DataTable('#table', chartGroup);
 
         // use static or load via d3.csv("spendData.csv").then(function(spendData) {/* do stuff */});
         const spendData = [
@@ -105,51 +106,81 @@
           spendHist = spendDim.group().reduceCount();
 
         yearRingChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: yearDim,
+              group: spendPerYear,
+            })
+          )
+          .configure({
+            innerRadius: 50,
+            controlsUseVisibility: true,
+          })
           .width(300)
-          .height(300)
-          .dimension(yearDim)
-          .group(spendPerYear)
-          .innerRadius(50)
-          .controlsUseVisibility(true);
+          .height(300);
 
         spendHistChart
-          .dimension(spendDim)
-          .group(spendHist)
-          .x(d3.scaleLinear().domain([0, 10]))
-          .elasticY(true)
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFMultiAdapter({
+              dimension: spendDim,
+
+              layers: [
+                {
+                  group: spendHist,
+                },
+              ],
+            })
+          )
+          .configure({
+            elasticY: true,
+            controlsUseVisibility: true,
+          })
+          .x(d3.scaleLinear().domain([0, 10]));
 
         spendHistChart.xAxis().tickFormat(d => d * 10); // convert back to base unit
         spendHistChart.yAxis().ticks(2);
 
         spenderRowChart
-          .dimension(nameDim)
-          .group(spendPerName)
-          .elasticX(true)
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: nameDim,
+              group: spendPerName,
+            })
+          )
+          .configure({
+            elasticX: true,
+            controlsUseVisibility: true,
+          });
 
         const allDollars = ndx.groupAll().reduceSum(d => +d.Spent);
 
         table
-          .dimension(spendDim)
-          .sortBy(d => +d.Spent)
-          .showSections(false)
-          .columns([
-            'Name',
-            {
-              label: 'Spent',
-              format: function (d) {
-                return `$${d.Spent}`;
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: spendDim,
+            })
+          )
+          .configure({
+            sortBy: d => +d.Spent,
+            showSections: false,
+
+            columns: [
+              'Name',
+              {
+                label: 'Spent',
+                format: function (d) {
+                  return `$${d.Spent}`;
+                },
               },
-            },
-            'Year',
-            {
-              label: 'Percent of Total',
-              format: function (d) {
-                return `${Math.floor((d.Spent / allDollars.value()) * 100)}%`;
+              'Year',
+              {
+                label: 'Percent of Total',
+                format: function (d) {
+                  return `${Math.floor((d.Spent / allDollars.value()) * 100)}%`;
+                },
               },
-            },
-          ]);
+            ],
+          });
 
         d3.select('#download').on('click', () => {
           let data = nameDim.top(Infinity);
@@ -175,7 +206,7 @@
           saveAs(blob, 'data.csv');
         });
 
-        dc.renderAll();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>

@@ -42,10 +42,11 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const inlineND = new dc.NumberDisplay('#test'),
-          boxND = new dc.NumberDisplay('#number-box'),
-          meanND = new dc.NumberDisplay('#mean'),
-          expnND = new dc.NumberDisplay('#expn');
+        const chartGroup = new dc.ChartGroup();
+        const inlineND = new dc.NumberDisplay('#test', chartGroup),
+          boxND = new dc.NumberDisplay('#number-box', chartGroup),
+          meanND = new dc.NumberDisplay('#mean', chartGroup),
+          expnND = new dc.NumberDisplay('#expn', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed * 1000;
@@ -74,7 +75,12 @@
           };
 
           inlineND
-            .valueAccessor(average)
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                valueAccessor: average,
+                group: meanSpeedGroup,
+              })
+            )
             .html({
               one:
                 '<span style="color:steelblue; font-size: 26px;">%number</span> Monkey',
@@ -82,26 +88,42 @@
                 '<span style="color:steelblue; font-size: 26px;">%number</span> Total Monkeys',
               none:
                 '<span style="color:steelblue; font-size: 26px;">No</span> Monkeys',
-            })
-            .group(meanSpeedGroup);
+            });
           boxND
-            .formatNumber(d3.format('.3s'))
-            .valueAccessor(average)
-            .group(meanSpeedGroup);
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                valueAccessor: average,
+                group: meanSpeedGroup,
+              })
+            )
+            .configure({
+              formatNumber: d3.format('.3s'),
+            });
 
           meanND
-            .group(meanSpeedGroup)
-            .valueAccessor(average)
-            .formatNumber(d3.format('.3g'));
-          expnND.group(meanSpeedGroup).valueAccessor(expCount);
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                group: meanSpeedGroup,
+                valueAccessor: average,
+              })
+            )
+            .configure({
+              formatNumber: d3.format('.3g'),
+            });
+          expnND.dataProvider(
+            new dc.CFSimpleAdapter({
+              group: meanSpeedGroup,
+              valueAccessor: expCount,
+            })
+          );
 
           let i = 18;
           setInterval(() => {
             runDimension.filter(i++ % 20);
-            dc.redrawAll();
+            chartGroup.redrawAll();
           }, 3000);
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>

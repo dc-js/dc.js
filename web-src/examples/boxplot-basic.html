@@ -18,8 +18,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = dc.boxPlot('#box-test'),
-          pie = new dc.PieChart('#pie-chart');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.BoxPlot('#box-test', chartGroup),
+          pie = new dc.PieChart('#pie-chart', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -43,22 +44,34 @@
             );
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: experimentDimension,
+                group: speedArrayGroup,
+              })
+            )
+            .configure({
+              elasticY: true,
+              elasticX: true,
+            })
             .width(768)
             .height(480)
-            .margins({ top: 10, right: 50, bottom: 30, left: 50 })
-            .dimension(experimentDimension)
-            .group(speedArrayGroup)
-            .elasticY(true)
-            .elasticX(true);
+            .margins({ top: 10, right: 50, bottom: 30, left: 50 });
 
           pie
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+                group: runGroup,
+              })
+            )
+            .configure({
+              radius: 70,
+            })
             .width(140)
-            .height(140)
-            .radius(70)
-            .dimension(runDimension)
-            .group(runGroup);
+            .height(140);
 
-          dc.renderAll();
+          chartGroup.renderAll();
           /*
   var i=0;
   setInterval(function() {

@@ -42,6 +42,7 @@
       <script type="text/javascript" src="../js/dc.js"></script>
 
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         const spendData = [
           { Name: 'Mr A', Spent: '$40', Year: 2010 },
           { Name: 'Mr B', Spent: '$10', Year: 2011 },
@@ -66,14 +67,18 @@
           spendPerYearGroup = yearDim.group().reduceSum(d => +d.Spent),
           nameGroup = nameDim.group().reduceCount();
 
-        const yearChart = new dc.PieChart('#year'),
-          nameChart = new dc.PieChart('#name');
+        const yearChart = new dc.PieChart('#year', chartGroup),
+          nameChart = new dc.PieChart('#name', chartGroup);
 
         yearChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: yearDim,
+              group: spendPerYearGroup,
+            })
+          )
           .width(200)
           .height(200)
-          .dimension(yearDim)
-          .group(spendPerYearGroup)
           .turnOnControls(true)
           .legend(
             new dc.HtmlLegend()
@@ -83,10 +88,14 @@
           );
 
         nameChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: nameDim,
+              group: nameGroup,
+            })
+          )
           .width(200)
           .height(200)
-          .dimension(nameDim)
-          .group(nameGroup)
           .legend(
             new dc.HtmlLegend()
               .container('#name-legend')

@@ -46,8 +46,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.DataTable('#test');
-        const piechart = new dc.PieChart('#piechart');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.DataTable('#test', chartGroup);
+        const piechart = new dc.PieChart('#piechart', chartGroup);
 
         let ndx;
         d3.csv('morley.csv').then(experiments => {
@@ -58,31 +59,43 @@
             experimentGroup = experimentDimension.group().reduceCount();
 
           piechart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: experimentDimension,
+                group: experimentGroup,
+              })
+            )
+            .configure({
+              innerRadius: 100,
+              externalLabels: 50,
+              externalRadiusPadding: 50,
+              drawPaths: true,
+              controlsUseVisibility: true,
+            })
             .width(300)
             .height(280)
-            .innerRadius(100)
-            .externalLabels(50)
-            .externalRadiusPadding(50)
-            .drawPaths(true)
-            .dimension(experimentDimension)
-            .group(experimentGroup)
-            .legend(dc.legend())
-            .controlsUseVisibility(true);
+            .legend(new dc.Legend());
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+              })
+            )
+            .configure({
+              size: Infinity,
+              showSections: false,
+              columns: ['Expt', 'Run', 'Speed'],
+              sortBy: d => [fmt(+d.Expt), fmt(+d.Run)],
+              order: d3.ascending,
+            })
             .width(300)
             .height(480)
-            .dimension(runDimension)
-            .size(Infinity)
-            .showSections(false)
-            .columns(['Expt', 'Run', 'Speed'])
-            .sortBy(d => [fmt(+d.Expt), fmt(+d.Run)])
-            .order(d3.ascending)
             .on('preRender', updateOffset)
             .on('preRedraw', updateOffset)
             .on('pretransition', display);
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
 
         // use odd page size to show the effect better
@@ -97,8 +110,12 @@
               : ofs;
           ofs = ofs < 0 ? 0 : ofs;
 
-          chart.beginSlice(ofs);
-          chart.endSlice(ofs + pag);
+          chart.configure({
+            beginSlice: ofs,
+          });
+          chart.configure({
+            endSlice: ofs + pag,
+          });
         }
         function display() {
           const totFilteredRecs = ndx.groupAll().value();

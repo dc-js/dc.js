@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.LineChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.LineChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -31,17 +32,27 @@
           let xVert;
 
           chart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: runDimension,
+
+                layers: [
+                  {
+                    group: speedSumGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              brushOn: false,
+              clipPadding: 10,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleLinear().domain([0, 20]))
             .renderArea(true)
-            .brushOn(false)
             .renderDataPoints(true)
-            .clipPadding(10)
             .yAxisLabel('This is the Y Axis!')
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            // eslint-disable-next-line no-shadow
             .on('pretransition', chart => {
               chart.svg().on('click', event => {
                 const bound = chart.root().node().getBoundingClientRect();

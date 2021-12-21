@@ -45,6 +45,7 @@
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript" src="lysenko-interval-tree.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         /* globals lysenkoIntervalTree */
 
         function intervalTreeGroup(tree, firstDate, lastDate) {
@@ -73,8 +74,8 @@
 
         const dateFormatSpecifier = '%x';
         const dateFormatParser = d3.timeParse(dateFormatSpecifier);
-        const monthChart = new dc.BarChart('#month');
-        const costChart = new dc.BarChart('#cost');
+        const monthChart = new dc.BarChart('#month', chartGroup);
+        const costChart = new dc.BarChart('#cost', chartGroup);
         // data from http://stackoverflow.com/questions/22603788/crossfilter-how-to-extract-time-information-from-start-date-and-end-date-column
         d3.csv('intervals.csv').then(projects => {
           projects.forEach(x => {
@@ -129,14 +130,17 @@
           }
 
           monthChart
+            .configure({
+              xUnits: d3.timeMonths,
+              elasticX: true,
+              brushOn: true,
+              controlsUseVisibility: true,
+            })
             .width(400)
             .height(300)
             .x(d3.scaleTime())
             .y(d3.scaleLinear().domain([0, 25]))
-            .xUnits(d3.timeMonths)
             .gap(5)
-            .elasticX(true)
-            .brushOn(true)
             .yAxisLabel('Number of Projects')
             .xAxisLabel('Month')
             .dataProvider(
@@ -144,22 +148,32 @@
                 dimension: intervalDimension,
                 group: projectsPerMonthGroup,
               })
-            )
-            .controlsUseVisibility(true);
+            );
 
           costChart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: projectCostDimension,
+
+                layers: [
+                  {
+                    group: projectCostGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              brushOn: true,
+              controlsUseVisibility: true,
+            })
             .width(400)
             .height(300)
             .x(d3.scaleLinear().domain([0, 24]))
             .y(d3.scaleLinear().domain([0, 25]))
-            .brushOn(true)
             .yAxisLabel('Number of Projects')
-            .xAxisLabel('Cost')
-            .dimension(projectCostDimension)
-            .group(projectCostGroup)
-            .controlsUseVisibility(true);
+            .xAxisLabel('Cost');
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>

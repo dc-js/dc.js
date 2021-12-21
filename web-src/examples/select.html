@@ -1,4 +1,4 @@
-let i; <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <title>dc.js - Select Menu Example</title>
@@ -6,6 +6,22 @@ let i; <!DOCTYPE html>
     <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="../css/dc.css" />
     <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css" />
+    <style type="text/css">
+      .dc-chart th {
+        text-align: left;
+      }
+      .dc-chart th,
+      .dc-chart td {
+        padding-left: 10px;
+      }
+      .dc-chart tr.dc-table-group td {
+        padding-top: 4px;
+        border-bottom: 1px solid black;
+      }
+      .dc-chart select {
+        width: 150px;
+      }
+    </style>
   </head>
   <body>
     <div class="container">
@@ -51,28 +67,12 @@ let i; <!DOCTYPE html>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
 
-      <style type="text/css">
-        .dc-chart th {
-          text-align: left;
-        }
-        .dc-chart th,
-        .dc-chart td {
-          padding-left: 10px;
-        }
-        .dc-chart tr.dc-table-group td {
-          padding-top: 4px;
-          border-bottom: 1px solid black;
-        }
-        .dc-chart select {
-          width: 150px;
-        }
-      </style>
-
       <script type="text/javascript">
-        const select1 = new dc.SelectMenu('#select1'),
-          select2 = new dc.SelectMenu('#select2'),
-          select3 = new dc.SelectMenu('#select3'),
-          datatable = new dc.DataTable('#datatable');
+        const chartGroup = new dc.ChartGroup();
+        const select1 = new dc.SelectMenu('#select1', chartGroup),
+          select2 = new dc.SelectMenu('#select2', chartGroup),
+          select3 = new dc.SelectMenu('#select3', chartGroup),
+          datatable = new dc.DataTable('#datatable', chartGroup);
 
         // create a bunch of crosslinked categorical data
 
@@ -134,29 +134,55 @@ let i; <!DOCTYPE html>
           letterDimension2 = ndx.dimension(d => d.letter);
 
         select1
-          .dimension(letterDimension)
-          .group(letterDimension.group())
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: letterDimension,
+              group: letterDimension.group(),
+            })
+          )
+          .configure({
+            controlsUseVisibility: true,
+          });
+
         select2
-          .dimension(colorDimension)
-          .group(colorDimension.group())
-          .multiple(true)
-          .numberVisible(10)
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: colorDimension,
+              group: colorDimension.group(),
+            })
+          )
+          .configure({
+            multiple: true,
+            numberVisible: 10,
+            controlsUseVisibility: true,
+          });
+
         select3
-          .dimension(stateDimension)
-          .group(stateDimension.group())
-          .multiple(true)
-          .numberVisible(10)
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: stateDimension,
+              group: stateDimension.group(),
+            })
+          )
+          .configure({
+            multiple: true,
+            numberVisible: 10,
+            controlsUseVisibility: true,
+          });
 
         datatable
-          .dimension(letterDimension2)
-          .section(d => d.letter)
-          .columns(['color', 'state'])
-          .size(data.length);
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: letterDimension2,
+            })
+          )
+          .configure({
+            section: d => d.letter,
+            columns: ['color', 'state'],
+            size: data.length,
+          });
 
-        dc.renderAll();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>

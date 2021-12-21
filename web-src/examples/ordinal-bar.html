@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.BarChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.BarChart('#test', chartGroup);
 
         d3.json('fruits.json').then(counts => {
           const ndx = crossfilter(counts),
@@ -24,17 +25,28 @@
             sumGroup = fruitDimension.group().reduceSum(d => d.cnt);
 
           chart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: fruitDimension,
+
+                layers: [
+                  {
+                    group: sumGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              xUnits: dc.UnitsOrdinal,
+              brushOn: false,
+            })
             .width(768)
             .height(380)
             .x(d3.scaleBand())
-            .xUnits(dc.units.ordinal)
-            .brushOn(false)
             .xAxisLabel('Fruit')
             .yAxisLabel('Quantity Sold')
-            .dimension(fruitDimension)
             .barPadding(0.1)
-            .outerPadding(0.05)
-            .group(sumGroup);
+            .outerPadding(0.05);
 
           chart.render();
         });

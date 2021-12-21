@@ -36,13 +36,21 @@
               () => ({})
             );
 
-          function selStack(i) {
-            return function (d) {
-              return d.value[i];
-            };
-          }
-
           chart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: runDimension,
+                layers: [1, 2, 3, 4, 5].map(i => ({
+                  group: speedSumGroup,
+                  name: `${i}`,
+                  valueAccessor: d => d.value[i],
+                })),
+              })
+            )
+            .configure({
+              brushOn: false,
+              clipPadding: 10,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleLinear().domain([1, 20]))

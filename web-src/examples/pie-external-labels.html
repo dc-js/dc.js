@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.PieChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.PieChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           const ndx = crossfilter(experiments),
             runDimension = ndx.dimension(d => `run-${d.Run}`),
@@ -25,16 +26,22 @@
               .reduceSum(d => d.Speed * d.Run);
 
           chart
+            .dataProvider(
+              new dc.CFDataCapHelper({
+                cap: 4,
+                dimension: runDimension,
+                group: speedSumGroup,
+              })
+            )
+            .configure({
+              innerRadius: 100,
+              externalLabels: 50,
+              externalRadiusPadding: 50,
+              drawPaths: true,
+            })
             .width(768)
             .height(480)
-            .slicesCap(4)
-            .innerRadius(100)
-            .externalLabels(50)
-            .externalRadiusPadding(50)
-            .drawPaths(true)
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            .legend(dc.legend());
+            .legend(new dc.Legend());
 
           // example of formatting the legend via svg
           // http://stackoverflow.com/questions/38430632/how-can-we-add-legends-value-beside-of-legend-with-proper-alignment

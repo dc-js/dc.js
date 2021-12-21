@@ -36,6 +36,7 @@
       <div id="dc-score-barchart"></div>
 
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         const data = [
           { book: 'A', scores: 45 },
           { book: 'B', scores: 34 },
@@ -51,10 +52,13 @@
         ];
 
         //## Create Chart Objects
-        const scoreChart = new dc.BarChart('#dc-score-barchart')
+        const scoreChart = new dc.BarChart('#dc-score-barchart', chartGroup)
           .xAxisLabel('book_id')
           .yAxisLabel('score');
-        const goodYesNoPieChart = new dc.PieChart('#dc-coreAcc-piechart');
+        const goodYesNoPieChart = new dc.PieChart(
+          '#dc-coreAcc-piechart',
+          chartGroup
+        );
 
         //### Create Crossfilter Dimensions and Groups
         const ndx = crossfilter(data);
@@ -64,13 +68,23 @@
 
         //## score bar chart
         scoreChart
+          .dataProvider(
+            new dc.CFMultiAdapter({
+              dimension: bookDimension,
+              layers: [
+                {
+                  group: bookscoresGroup,
+                },
+              ],
+            })
+          )
+          .configure({
+            elasticY: true,
+            xUnits: dc.UnitsOrdinal,
+          })
           .width(320)
           .height(320)
-          .dimension(bookDimension)
-          .group(bookscoresGroup)
-          .elasticY(true)
           .x(d3.scaleBand())
-          .xUnits(dc.units.ordinal)
           .ordinalColors(['orange'])
           .yAxis()
           .ticks(5);
@@ -96,28 +110,34 @@
         let coreCountGroup = coreCount.group();
 
         goodYesNoPieChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: coreCount,
+              group: coreCountGroup,
+            })
+          )
+          .configure({
+            radius: 120,
+            innerRadius: 40,
+            title: d => d.value,
+            label: d => {
+              if (
+                goodYesNoPieChart.hasFilter() &&
+                !goodYesNoPieChart.hasFilter(d.key)
+              ) {
+                return `${d.key}(0%)`;
+              }
+              let label = d.key;
+              if (all.value()) {
+                label += `(${Math.floor((d.value / all.value()) * 100)}%)`;
+              }
+              return label;
+            },
+          })
           .width(320)
-          .height(320)
-          .radius(120)
-          .innerRadius(40)
-          .dimension(coreCount)
-          .title(d => d.value)
-          .group(coreCountGroup)
-          .label(d => {
-            if (
-              goodYesNoPieChart.hasFilter() &&
-              !goodYesNoPieChart.hasFilter(d.key)
-            ) {
-              return `${d.key}(0%)`;
-            }
-            let label = d.key;
-            if (all.value()) {
-              label += `(${Math.floor((d.value / all.value()) * 100)}%)`;
-            }
-            return label;
-          });
+          .height(320);
 
-        dc.renderAll();
+        chartGroup.renderAll();
 
         //## change slider score value to re-assign the data in pie chart
         // eslint-disable-next-line no-unused-vars
@@ -127,8 +147,13 @@
           coreCount.dispose();
           coreCount = coreCountFromThreshold();
           coreCountGroup = coreCount.group();
-          goodYesNoPieChart.dimension(coreCount).group(coreCountGroup);
-          dc.redrawAll();
+          goodYesNoPieChart.dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: coreCount,
+              group: coreCountGroup,
+            })
+          );
+          chartGroup.redrawAll();
         }
       </script>
     </div>

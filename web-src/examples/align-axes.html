@@ -93,6 +93,7 @@
     </div>
 
     <script type="text/javascript">
+      const chartGroup = new dc.ChartGroup();
       const posiness = [
         'heading',
         'above',
@@ -182,26 +183,39 @@
                   return;
                 }
                 cdiv.attr('class', 'chart-holder');
-                const chart = new dc.CompositeChart(cdiv);
+                const chart = new dc.CompositeChart(cdiv, chartGroup);
                 const ndx = crossfilter(dataset(lposi, rposi)),
                   dim = ndx.dimension(d => d.key),
                   lgroup = dim.group().reduceSum(d => d.lvalue),
                   rgroup = dim.group().reduceSum(d => d.rvalue);
                 chart
+                  .configure({
+                    brushOn: false,
+                    elasticX: true,
+                    elasticY: true,
+                  })
                   .width(200)
                   .height(200)
                   .margins({ left: 25, top: 20, right: 30, bottom: 20 })
                   .x(d3.scaleLinear())
-                  .brushOn(false)
                   .alignYAxes(true)
-                  .elasticX(true)
-                  .elasticY(true)
                   .compose([
-                    new dc.LineChart(chart)
-                      .dimension(dim)
-                      .group(lgroup)
+                    new dc.LineChart(chart, chartGroup)
+                      .dataProvider(
+                        new dc.CFMultiAdapter({
+                          dimension: dim,
+
+                          layers: [
+                            {
+                              group: lgroup,
+                            },
+                          ],
+                        })
+                      )
+                      .configure({
+                        yAxisPadding: 1,
+                      })
                       .x(d3.scaleLinear())
-                      .yAxisPadding(1)
                       // eslint-disable-next-line no-shadow
                       .on('pretransition', chart => {
                         drawHorizontals(chart, [
@@ -216,13 +230,24 @@
                           },
                         ]);
                       }),
-                    new dc.LineChart(chart)
-                      .dimension(dim)
-                      .group(rgroup)
+                    new dc.LineChart(chart, chartGroup)
+                      .dataProvider(
+                        new dc.CFMultiAdapter({
+                          dimension: dim,
+
+                          layers: [
+                            {
+                              group: rgroup,
+                            },
+                          ],
+                        })
+                      )
+                      .configure({
+                        yAxisPadding: 10,
+                        useRightYAxis: true,
+                      })
                       .x(d3.scaleLinear())
                       .ordinalColors(['darkorange'])
-                      .yAxisPadding(10)
-                      .useRightYAxis(true)
                       // eslint-disable-next-line no-shadow
                       .on('pretransition', chart => {
                         drawHorizontals(chart, [
@@ -242,7 +267,7 @@
           });
       }
       init();
-      dc.renderAll();
+      chartGroup.renderAll();
     </script>
   </body>
 </html>

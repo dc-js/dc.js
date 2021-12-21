@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.PieChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.PieChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           // TODO: better way to handle % in label
 
@@ -27,13 +28,19 @@
               .reduceSum(d => d.Speed * d.Run);
 
           chart
+            .dataProvider(
+              new dc.CFDataCapHelper({
+                cap: 4,
+                dimension: runDimension,
+                group: speedSumGroup,
+              })
+            )
+            .configure({
+              innerRadius: 100,
+            })
             .width(768)
             .height(480)
-            .slicesCap(4)
-            .innerRadius(100)
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            .legend(dc.legend().highlightSelected(true))
+            .legend(new dc.Legend().highlightSelected(true))
             // workaround for #703: not enough data is accessible through .label() to display percentages
             // eslint-disable-next-line no-shadow
             .on('pretransition', chart => {
@@ -41,7 +48,7 @@
                 .selectAll('text.pie-slice')
                 .text(
                   d =>
-                    `${d.data.key} ${dc.utils.printSingleValue(
+                    `${d.data.key} ${dc.printSingleValue(
                       ((d.endAngle - d.startAngle) / (2 * Math.PI)) * 100
                     )}%`
                 );

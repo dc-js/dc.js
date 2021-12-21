@@ -46,6 +46,7 @@
         }
       </style>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         // we need a slight delay to enable debounce, but a large delay is annoying for brushing
         dc.constants.EVENT_DELAY = 10;
 
@@ -88,26 +89,37 @@
             dimension = cf.dimension(d => mappings.ord2int(d.key)),
             group = dimension.group().reduceSum(d => d.value);
 
-          focus = new dc.BarChart('#focus');
+          focus = new dc.BarChart('#focus', chartGroup);
           const linearDomain = [-0.5, mappings.length() - 0.5];
           focus
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: dimension,
+
+                layers: [
+                  {
+                    group: group,
+                  },
+                ],
+              })
+            )
+            .configure({
+              xUnits: dc.UnitsInteger,
+              controlsUseVisibility: true,
+              centerBar: true,
+              elasticY: true,
+              brushOn: false,
+              mouseZoomable: true,
+              zoomScale: [4, 8],
+              title: kv => mappings.int2ord(kv.key),
+              transitionDuration: 0,
+            })
             .width(1000)
             .height(330)
             .margins({ left: 60, top: 0, right: 10, bottom: 145 })
             .x(d3.scaleLinear().domain(linearDomain))
-            .xUnits(dc.units.integers)
-            .controlsUseVisibility(true)
-            .centerBar(true)
             .yAxisLabel('counts')
-            .elasticY(true)
-            .brushOn(false)
-            .dimension(dimension)
-            .mouseZoomable(true)
-            .zoomScale([4, 8])
-            .configure({ autoFocus: true })
-            .group(group)
-            .title(kv => mappings.int2ord(kv.key))
-            .transitionDuration(0);
+            .configure({ autoFocus: true });
 
           focus.xAxis().tickFormat(d => mappings.int2ord(d));
 
@@ -118,18 +130,29 @@
             chart.xAxis().tickValues(d3.range(min, max + 1));
           });
 
-          range = new dc.BarChart('#range');
+          range = new dc.BarChart('#range', chartGroup);
           range
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: dimension,
+
+                layers: [
+                  {
+                    group: group,
+                  },
+                ],
+              })
+            )
+            .configure({
+              xUnits: dc.UnitsInteger,
+              elasticY: true,
+              brushOn: true,
+              transitionDuration: 0,
+            })
             .margins({ left: 74, top: 0, right: 20, bottom: 2 })
             .width(1000)
             .height(20)
-            .x(d3.scaleLinear().domain(linearDomain))
-            .xUnits(dc.units.integers)
-            .elasticY(true)
-            .brushOn(true)
-            .dimension(dimension)
-            .group(group)
-            .transitionDuration(0);
+            .x(d3.scaleLinear().domain(linearDomain));
 
           // display a row chart of first letters, to test filtering
           const letterDimension = cf.dimension(
@@ -138,17 +161,23 @@
           );
           const letterGroup = letterDimension.group();
 
-          const row = new dc.RowChart('#first-letters');
+          const row = new dc.RowChart('#first-letters', chartGroup);
           row
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: letterDimension,
+                group: letterGroup,
+              })
+            )
+            .configure({
+              gap: 1,
+              elasticX: true,
+              transitionDuration: 200,
+            })
             .width(1000)
-            .height(350)
-            .gap(1)
-            .elasticX(true)
-            .dimension(letterDimension)
-            .transitionDuration(200)
-            .group(letterGroup);
+            .height(350);
 
-          dc.renderAll();
+          chartGroup.renderAll();
 
           // Set initial focus
           focus.focus([200, 260]);

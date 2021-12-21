@@ -30,7 +30,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.BarChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.BarChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -49,19 +50,21 @@
           }
 
           chart
+            .configure({
+              xUnits: dc.UnitsOrdinal,
+              brushOn: true,
+              controlsUseVisibility: true,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleBand())
-            .xUnits(dc.units.ordinal)
-            .brushOn(true)
             .yAxisLabel('This is the Y Axis!')
             .dataProvider(
               new MyDataAdapter({
                 dimension: runDimension,
                 group: speedSumGroup,
               })
-            )
-            .controlsUseVisibility(true);
+            );
           chart.render();
         });
       </script>

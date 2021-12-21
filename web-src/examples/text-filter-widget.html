@@ -28,6 +28,7 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         // prettier-ignore
         const data = [
           { 'first_name': 'John', 'last_name': 'Coltrane' },
@@ -46,29 +47,43 @@
           dimension = ndx.dimension(d => `${d.last_name} ${d.first_name}`);
 
         // eslint-disable-next-line no-unused-vars
-        const chart = new dc.TextFilterWidget('#search').dimension(dimension);
+        const chart = new dc.TextFilterWidget(
+          '#search',
+          chartGroup
+        ).dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: dimension,
+          })
+        );
 
         let i = 0;
-        new dc.DataTable('.dc-data-grid')
-          .dimension(dimension)
-          .showSections(false)
-          .columns([
-            function (d) {
-              i = i + 1;
-              return i;
-            },
-            function (d) {
-              return d.first_name;
-            },
-            function (d) {
-              return d.last_name;
-            },
-          ])
+        new dc.DataTable('.dc-data-grid', chartGroup)
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: dimension,
+            })
+          )
+          .configure({
+            showSections: false,
+
+            columns: [
+              function (d) {
+                i = i + 1;
+                return i;
+              },
+              function (d) {
+                return d.first_name;
+              },
+              function (d) {
+                return d.last_name;
+              },
+            ],
+          })
           .on('renderlet', c => {
             i = 0;
           });
 
-        dc.renderAll();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>

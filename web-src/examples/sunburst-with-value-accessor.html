@@ -37,6 +37,7 @@
       <script type="text/javascript" src="../js/reductio.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         /* globals reductio */
 
         d3.csv('ordered_returned.csv').then(dataset => {
@@ -60,18 +61,24 @@
 
           reducer(group);
 
-          const sunBurstChart = new dc.SunburstChart('#test');
+          const sunBurstChart = new dc.SunburstChart('#test', chartGroup);
 
           sunBurstChart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: dimension,
+                group: group,
+                valueAccessor: d => d.value._ordered.exceptionSum,
+              })
+            )
+            .configure({
+              innerRadius: 100,
+            })
             .width(800)
             .height(600)
-            .innerRadius(100)
-            .dimension(dimension)
-            .group(group)
-            .valueAccessor(d => d.value._ordered.exceptionSum)
-            .legend(dc.legend());
+            .legend(new dc.Legend());
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>

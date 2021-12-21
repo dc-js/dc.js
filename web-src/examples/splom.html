@@ -86,6 +86,7 @@
     </div>
 
     <script type="text/javascript">
+      const chartGroup = new dc.ChartGroup();
       const fields = [
         'petal_width',
         'petal_length',
@@ -154,13 +155,39 @@
                   return;
                 }
                 cdiv.attr('class', 'chart-holder');
-                const chart = new dc.ScatterPlot(cdiv);
+                const chart = new dc.ScatterPlot(cdiv, chartGroup);
                 const dim = makeDimension(col, row),
                   group = dim.group();
                 const showYAxis = x === 1,
                   showXAxis = y === 4;
                 chart
-                  .transitionDuration(0)
+                  .dataProvider(
+                    new dc.CFSimpleAdapter({
+                      dimension: dim,
+                      group: group,
+                      valueAccessor: keyPart(1),
+                    })
+                  )
+                  .configure({
+                    transitionDuration: 0,
+                    keyAccessor: keyPart(0),
+                    colorAccessor: keyPart(2),
+                    xAxisPadding: '0.001%',
+                    yAxisPadding: '0.001%',
+                    brushOn: true,
+                    elasticX: true,
+                    elasticY: true,
+                    symbolSize: 7,
+                    nonemptyOpacity: 0.7,
+                    emptySize: 7,
+                    emptyColor: '#ccc',
+                    emptyOpacity: 0.7,
+                    excludedSize: 7,
+                    excludedColor: '#ccc',
+                    excludedOpacity: 0.7,
+                    renderHorizontalGridLines: true,
+                    renderVerticalGridLines: true,
+                  })
                   .width(200 + (showYAxis ? 25 : 0))
                   .height(200 + (showXAxis ? 20 : 0))
                   .margins({
@@ -169,29 +196,9 @@
                     right: 0,
                     bottom: showXAxis ? 20 : 5,
                   })
-                  .dimension(dim)
-                  .group(group)
-                  .keyAccessor(keyPart(0))
-                  .valueAccessor(keyPart(1))
-                  .colorAccessor(keyPart(2))
                   .colorDomain(['setosa', 'versicolor', 'virginica'])
                   .x(d3.scaleLinear())
-                  .xAxisPadding('0.001%')
-                  .y(d3.scaleLinear())
-                  .yAxisPadding('0.001%')
-                  .brushOn(true)
-                  .elasticX(true)
-                  .elasticY(true)
-                  .symbolSize(7)
-                  .nonemptyOpacity(0.7)
-                  .emptySize(7)
-                  .emptyColor('#ccc')
-                  .emptyOpacity(0.7)
-                  .excludedSize(7)
-                  .excludedColor('#ccc')
-                  .excludedOpacity(0.7)
-                  .renderHorizontalGridLines(true)
-                  .renderVerticalGridLines(true);
+                  .y(d3.scaleLinear());
                 chart.xAxis().ticks(6);
                 chart.yAxis().ticks(6);
                 // eslint-disable-next-line no-shadow
@@ -220,7 +227,7 @@
                 charts.push(chart);
               });
           });
-        dc.renderAll();
+        chartGroup.renderAll();
       });
     </script>
   </body>

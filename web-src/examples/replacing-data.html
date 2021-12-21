@@ -34,8 +34,9 @@
       </p>
 
       <script type="text/javascript">
-        const yearRingChart = new dc.PieChart('#chart-ring-year'),
-          spenderRowChart = new dc.RowChart('#chart-row-spenders');
+        const chartGroup = new dc.ChartGroup();
+        const yearRingChart = new dc.PieChart('#chart-ring-year', chartGroup),
+          spenderRowChart = new dc.RowChart('#chart-row-spenders', chartGroup);
 
         const data1 = [
           { Name: 'Mr A', Spent: 40, Year: 2011 },
@@ -65,27 +66,39 @@
           spendPerName = nameDim.group().reduceSum(d => +d.Spent);
 
         yearRingChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: yearDim,
+              group: spendPerYear,
+            })
+          )
+          .configure({
+            innerRadius: 50,
+          })
           .width(200)
-          .height(200)
-          .dimension(yearDim)
-          .group(spendPerYear)
-          .innerRadius(50);
+          .height(200);
 
         spenderRowChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: nameDim,
+              group: spendPerName,
+            })
+          )
+          .configure({
+            elasticX: true,
+          })
           .width(250)
-          .height(200)
-          .dimension(nameDim)
-          .group(spendPerName)
-          .elasticX(true);
+          .height(200);
 
-        dc.renderAll();
+        chartGroup.renderAll();
 
         // REFRESH DATA AFTER 5 SECONDS
         setTimeout(() => {
           console.log('data reset');
           ndx.remove(() => true);
           ndx.add(data2);
-          dc.redrawAll();
+          chartGroup.redrawAll();
         }, 5000);
       </script>
     </div>

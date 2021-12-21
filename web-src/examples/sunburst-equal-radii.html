@@ -27,7 +27,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.SunburstChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.SunburstChart('#test', chartGroup);
 
         d3.csv('morley.csv').then(experiments => {
           const ndx = crossfilter(experiments),
@@ -36,18 +37,24 @@
           const speedSumGroup = runDimension.group().reduceSum(d => d.Speed);
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+                group: speedSumGroup,
+              })
+            )
+            .configure({
+              innerRadius: 100,
+              ringSizes: chart.equalRingSizes(),
+            })
             .width(768)
             .height(480)
-            .innerRadius(100)
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            .legend(dc.legend())
-            .ringSizes(chart.equalRingSizes());
+            .legend(new dc.Legend());
           // example for using concrete percentage values of the radius when knowing the number of rings beforehand
           // .ringSizes(dc.sunburstChart.relativeRingSizes(
           //     function(){return [.3,.7]}
           // ))
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>

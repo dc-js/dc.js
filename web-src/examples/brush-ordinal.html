@@ -35,6 +35,7 @@
         }
       </style>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         class Mapper {
           constructor(keys) {
             this._int2ord = [];
@@ -75,21 +76,32 @@
             dimension = cf.dimension(d => mappings.ord2int(d.key)),
             group = dimension.group().reduceSum(d => d.value);
 
-          bar = new dc.BarChart('#bar');
+          bar = new dc.BarChart('#bar', chartGroup);
           const linearDomain = [-0.5, mappings.length() - 0.5];
           bar
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: dimension,
+
+                layers: [
+                  {
+                    group: group,
+                  },
+                ],
+              })
+            )
+            .configure({
+              xUnits: dc.UnitsInteger,
+              centerBar: true,
+              elasticY: true,
+              brushOn: true,
+              title: kv => mappings.int2ord(kv.key),
+            })
             .width(1000)
             .height(300)
             .margins({ left: 75, top: 0, right: 10, bottom: 140 })
             .x(d3.scaleLinear().domain(linearDomain))
-            .xUnits(dc.units.integers)
-            .centerBar(true)
-            .yAxisLabel('counts')
-            .elasticY(true)
-            .brushOn(true)
-            .dimension(dimension)
-            .group(group)
-            .title(kv => mappings.int2ord(kv.key)); // Titles would not show with brush on
+            .yAxisLabel('counts'); // Titles would not show with brush on
 
           bar
             .xAxis()
@@ -103,15 +115,21 @@
           );
           const letterGroup = letterDimension.group();
 
-          const row = new dc.RowChart('#first-letters');
+          const row = new dc.RowChart('#first-letters', chartGroup);
           row
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: letterDimension,
+                group: letterGroup,
+              })
+            )
+            .configure({
+              gap: 1,
+            })
             .width(1000)
-            .height(350)
-            .gap(1)
-            .dimension(letterDimension)
-            .group(letterGroup);
+            .height(350);
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>

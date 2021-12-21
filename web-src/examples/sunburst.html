@@ -29,9 +29,10 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart3 = new dc.RowChart('#test3');
-        const chart2 = new dc.RowChart('#test2');
-        const chart = new dc.SunburstChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart3 = new dc.RowChart('#test3', chartGroup);
+        const chart2 = new dc.RowChart('#test2', chartGroup);
+        const chart = new dc.SunburstChart('#test', chartGroup);
 
         d3.csv('morley.csv').then(experiments => {
           const ndx = crossfilter(experiments),
@@ -50,26 +51,40 @@
             .reduceSum(d => d.Speed);
 
           chart3
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: exptOnlyDimension,
+                group: exptOnlySpeedGroup,
+              })
+            )
             .width(200)
-            .height(200)
-            .dimension(exptOnlyDimension)
-            .group(exptOnlySpeedGroup);
+            .height(200);
 
           chart2
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runOnlyDimension,
+                group: runOnlySpeedGroup,
+              })
+            )
             .width(200)
-            .height(200)
-            .dimension(runOnlyDimension)
-            .group(runOnlySpeedGroup);
+            .height(200);
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+                group: speedSumGroup,
+              })
+            )
+            .configure({
+              innerRadius: 100,
+            })
             .width(768)
             .height(480)
-            .innerRadius(100)
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            .legend(dc.legend());
+            .legend(new dc.Legend());
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>

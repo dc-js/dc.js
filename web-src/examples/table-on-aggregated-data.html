@@ -43,7 +43,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.DataTable('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.DataTable('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           /* Ordinarily a data table will show raw rows of data. But it can also show
      aggregated data, by passing a group as the dimension.
@@ -82,23 +83,31 @@
             );
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: reversibleGroup(avgGroup),
+              })
+            )
+            .configure({
+              showSections: false,
+
+              columns: [
+                function (d) {
+                  return d.key;
+                },
+                function (d) {
+                  return d.value.number;
+                },
+                function (d) {
+                  return d.value.avg;
+                },
+              ],
+
+              sortBy: d => d.value.avg,
+              order: d3.descending,
+            })
             .width(768)
-            .height(480)
-            .showSections(false)
-            .dimension(reversibleGroup(avgGroup))
-            .columns([
-              function (d) {
-                return d.key;
-              },
-              function (d) {
-                return d.value.number;
-              },
-              function (d) {
-                return d.value.avg;
-              },
-            ])
-            .sortBy(d => d.value.avg)
-            .order(d3.descending);
+            .height(480);
           chart.render();
 
           function reversibleGroup(group) {
@@ -114,7 +123,11 @@
 
           d3.selectAll('#select-direction input').on('click', function () {
             // this.value is 'ascending' or 'descending'
-            chart.order(d3[this.value]).redraw();
+            chart
+              .configure({
+                order: d3[this.value],
+              })
+              .redraw();
           });
         });
       </script>

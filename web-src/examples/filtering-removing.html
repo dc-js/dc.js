@@ -38,9 +38,10 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const yearRingChart = new dc.PieChart('#chart-ring-year'),
-          spendHistChart = new dc.BarChart('#chart-hist-spend'),
-          spenderRowChart = new dc.RowChart('#chart-row-spenders');
+        const chartGroup = new dc.ChartGroup();
+        const yearRingChart = new dc.PieChart('#chart-ring-year', chartGroup),
+          spendHistChart = new dc.BarChart('#chart-hist-spend', chartGroup),
+          spenderRowChart = new dc.RowChart('#chart-row-spenders', chartGroup);
 
         // use static or load via d3.csv("spendData.csv").then(function(spendData) {/* do stuff */});
         const spendData = [
@@ -75,33 +76,56 @@
           nonEmptyHist = removeEmptyBins(spendHist);
 
         yearRingChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: yearDim,
+              group: spendPerYear,
+            })
+          )
+          .configure({
+            innerRadius: 50,
+          })
           .width(200)
-          .height(200)
-          .dimension(yearDim)
-          .group(spendPerYear)
-          .innerRadius(50);
+          .height(200);
 
         spendHistChart
+          .dataProvider(
+            new dc.CFMultiAdapter({
+              dimension: spendDim,
+
+              layers: [
+                {
+                  group: nonEmptyHist,
+                },
+              ],
+            })
+          )
+          .configure({
+            xUnits: dc.UnitsOrdinal,
+            elasticX: true,
+            elasticY: true,
+          })
           .width(300)
           .height(200)
-          .dimension(spendDim)
-          .group(nonEmptyHist)
-          .x(d3.scaleBand())
-          .xUnits(dc.units.ordinal)
-          .elasticX(true)
-          .elasticY(true);
+          .x(d3.scaleBand());
 
         spendHistChart.xAxis().tickFormat(d => d * 10); // convert back to base unit
         spendHistChart.yAxis().ticks(2);
 
         spenderRowChart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: nameDim,
+              group: spendPerName,
+            })
+          )
+          .configure({
+            elasticX: true,
+          })
           .width(350)
-          .height(200)
-          .dimension(nameDim)
-          .group(spendPerName)
-          .elasticX(true);
+          .height(200);
 
-        dc.renderAll();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>

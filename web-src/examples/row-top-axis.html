@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.RowChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.RowChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -29,14 +30,20 @@
               .reduceSum(d => (d.Speed * d.Run) / 1000);
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+                group: speedSumGroup,
+              })
+            )
+            .configure({
+              elasticX: true,
+            })
             .width(768)
             .height(480)
             .margins({ top: 20, right: 20, bottom: 20, left: 20 })
             .x(d3.scaleLinear().domain([6, 20]))
-            .xAxis(d3.axisTop())
-            .elasticX(true)
-            .dimension(runDimension)
-            .group(speedSumGroup);
+            .xAxis(d3.axisTop());
 
           chart.on('pretransition', () => {
             chart.select('g.axis').attr('transform', 'translate(0,0)');

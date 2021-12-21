@@ -19,7 +19,11 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const moveChart = new dc.CompositeChart('#monthly-move-chart');
+        const chartGroup = new dc.ChartGroup();
+        const moveChart = new dc.CompositeChart(
+          '#monthly-move-chart',
+          chartGroup
+        );
 
         d3.csv('monthly-move.csv').then(data => {
           const dateFormatSpecifier = '%m/%d/%Y';
@@ -55,46 +59,77 @@
           );
 
           moveChart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: moveMonths,
+              })
+            )
+            .configure({
+              transitionDuration: 1000,
+              mouseZoomable: true,
+              shareTitle: false,
+              round: d3.timeMonth.round,
+              xUnits: d3.timeMonths,
+              elasticY: true,
+              renderHorizontalGridLines: true,
+              brushOn: false,
+            })
             .width(600)
             .height(300)
-            .transitionDuration(1000)
             .margins({ top: 30, right: 50, bottom: 25, left: 60 })
-            .dimension(moveMonths)
-            .mouseZoomable(true)
-            .shareTitle(false)
             .x(
               d3
                 .scaleTime()
                 .domain([new Date(1985, 0, 1), new Date(2012, 11, 31)])
             )
-            .round(d3.timeMonth.round)
-            .xUnits(d3.timeMonths)
-            .elasticY(true)
-            .renderHorizontalGridLines(true)
-            .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
-            .brushOn(false)
+            .legend(new dc.Legend().x(70).y(10).itemHeight(13).gap(5))
             .compose([
-              new dc.LineChart(moveChart)
-                .group(indexAvgByMonthGroup, 'Monthly Index Average')
-                .valueAccessor(d => d.value.avg),
-              new dc.LineChart(moveChart)
-                .group(monthlyMoveGroup, 'Monthly Index Move')
-                .valueAccessor(d => Math.sqrt(d.value))
-                .title(d => {
-                  let value = d.value.avg ? d.value.avg : d.value;
-                  if (isNaN(value)) {
-                    value = 0;
-                  }
-                  return `${dateFormat(d.key)}\n${numberFormat(value)}`;
+              new dc.LineChart(moveChart, chartGroup)
+                .dataProvider(
+                  new dc.CFMultiAdapter({
+                    valueAccessor: d => d.value.avg,
+
+                    layers: [
+                      {
+                        group: indexAvgByMonthGroup,
+                        name: 'Monthly Index Average',
+                      },
+                    ],
+                  })
+                )
+                .configure({
+                  renderHorizontalGridLines: true,
+                }),
+              new dc.LineChart(moveChart, chartGroup)
+                .dataProvider(
+                  new dc.CFMultiAdapter({
+                    valueAccessor: d => Math.sqrt(d.value),
+
+                    layers: [
+                      {
+                        group: monthlyMoveGroup,
+                        name: 'Monthly Index Move',
+                      },
+                    ],
+                  })
+                )
+                .configure({
+                  title: d => {
+                    let value = d.value.avg ? d.value.avg : d.value;
+                    if (isNaN(value)) {
+                      value = 0;
+                    }
+                    return `${dateFormat(d.key)}\n${numberFormat(value)}`;
+                  },
+
+                  useRightYAxis: true,
                 })
-                .ordinalColors(['orange'])
-                .useRightYAxis(true),
+                .ordinalColors(['orange']),
             ])
             .yAxisLabel('Monthly Index Average')
-            .rightYAxisLabel('Monthly Index Move')
-            .renderHorizontalGridLines(true);
+            .rightYAxisLabel('Monthly Index Move');
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
