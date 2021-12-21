@@ -28,6 +28,8 @@
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
     <script type="text/javascript">
+      const chartGroup = new dc.ChartGroup();
+
       const genderColors = [
         { value: 'Female', color: '#efc3e2' },
         { value: 'Male', color: '#76bbe1' },
@@ -107,67 +109,97 @@
       );
 
       // -----------------------------------------------
-      const bp01 = dc.boxPlot('#boxPlot01');
+      const bp01 = new dc.BoxPlot('#boxPlot01', chartGroup);
 
       bp01
+        .dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: bpGenderDim,
+            group: bpGenderGroup,
+          })
+        )
+        .configure({
+          tickFormat: d3.format('.1f'),
+          renderDataPoints: true,
+          renderTitle: true,
+          dataOpacity: 1,
+          dataWidthPortion: 0.9,
+          elasticY: true,
+          elasticX: true,
+        })
         .width(320)
         .height(250)
-        .dimension(bpGenderDim)
-        .group(bpGenderGroup)
-        .tickFormat(d3.format('.1f'))
-        .renderDataPoints(true)
-        .renderTitle(true)
-        .dataOpacity(1)
-        .dataWidthPortion(0.9)
         .yAxisLabel('Age (years)')
-        .xAxisLabel('Gender', 0)
-        .elasticY(true)
-        .elasticX(true);
+        .xAxisLabel('Gender', 0);
 
-      bp01.colorAccessor(d => d.key).colors(d => colorSchema(genderColors, d));
+      bp01
+        .configure({
+          colorAccessor: d => d.key,
+        })
+        .colorScale(d => colorSchema(genderColors, d));
 
       // -----------------------------------------------
-      const bp02 = dc.boxPlot('#boxPlot02');
+      const bp02 = new dc.BoxPlot('#boxPlot02', chartGroup);
 
       bp02
+        .dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: bpGenderDim,
+            group: bpGenderGroup,
+          })
+        )
+        .configure({
+          tickFormat: d3.format('.1f'),
+          renderDataPoints: true,
+          renderTitle: true,
+          dataOpacity: 0.5,
+          dataWidthPortion: 0.5,
+          elasticY: true,
+          elasticX: true,
+        })
         .width(320)
         .height(250)
-        .dimension(bpGenderDim)
-        .group(bpGenderGroup)
-        .tickFormat(d3.format('.1f'))
-        .renderDataPoints(true)
-        .renderTitle(true)
-        .dataOpacity(0.5)
-        .dataWidthPortion(0.5)
         .yAxisLabel('Age (years)')
-        .xAxisLabel('Gender', 0)
-        .elasticY(true)
-        .elasticX(true);
+        .xAxisLabel('Gender', 0);
 
-      bp02.colorAccessor(d => d.key).colors(d => colorSchema(genderColors, d));
+      bp02
+        .configure({
+          colorAccessor: d => d.key,
+        })
+        .colorScale(d => colorSchema(genderColors, d));
 
       // -----------------------------------------------
-      const bp03 = dc.boxPlot('#boxPlot03');
+      const bp03 = new dc.BoxPlot('#boxPlot03', chartGroup);
 
       bp03
+        .dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: bpGenderDim,
+            group: bpGenderGroup,
+          })
+        )
+        .configure({
+          tickFormat: d3.format('.1f'),
+          renderDataPoints: true,
+          renderTitle: true,
+          dataOpacity: 0.4,
+          dataWidthPortion: 0.1,
+          elasticY: true,
+          elasticX: true,
+        })
         .width(320)
         .height(250)
-        .dimension(bpGenderDim)
-        .group(bpGenderGroup)
-        .tickFormat(d3.format('.1f'))
-        .renderDataPoints(true)
-        .renderTitle(true)
-        .dataOpacity(0.4)
-        .dataWidthPortion(0.1)
         .yAxisLabel('Age (years)')
-        .xAxisLabel('Gender', 0)
-        .elasticY(true)
-        .elasticX(true);
+        .xAxisLabel('Gender', 0);
 
-      bp03.colorAccessor(d => d.key).colors(d => colorSchema(genderColors, d));
+      bp03
+        .configure({
+          colorAccessor: d => d.key,
+        })
+        .colorScale(d => colorSchema(genderColors, d));
 
       // -----------------------------------------------
-      dc.renderAll();
+      chartGroup.renderAll();
 
       function colorSchema(pref, aa) {
         const a = pref.find(i => i.value === aa);
