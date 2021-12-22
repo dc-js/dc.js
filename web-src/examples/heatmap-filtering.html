@@ -20,7 +20,7 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chartGroup = 'chartGroup';
+        const chartGroup = new dc.ChartGroup();
         const heatmapChart = new dc.HeatMap('#heatmap', chartGroup);
         const barChart = new dc.BarChart('#barchart', chartGroup);
 
@@ -83,31 +83,32 @@
                 })
               );
 
-          const heatColorMapping = d3
-            .scaleLinear()
-            .domain([-23, 0, 23])
-            .range(['red', '#e5e5e5', 'green']);
-
           heatmapChart
-            .width(12 * 80 + 80)
-            .height(27 * 10 + 40)
-            .dimension(monthOfTheYearDimension)
-            .group(percentageGainByMonthOfYearGroup)
-            .keyAccessor(d => +d.key[0])
-            .valueAccessor(d => +d.key[1])
-            .colorAccessor(d => +d.value.percentageGain)
-            .title(
-              d =>
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: monthOfTheYearDimension,
+                group: percentageGainByMonthOfYearGroup,
+                valueAccessor: d => +d.key[1],
+              })
+            )
+            .configure({
+              keyAccessor: d => +d.key[0],
+              colorAccessor: d => +d.value.percentageGain,
+              xBorderRadius: 0,
+              yBorderRadius: 0,
+              title: d =>
                 ` Month:   ${d.key[0]}\n` +
                 `  Year:   ${d.key[1]}\n` +
-                `  Gain:   ${d.value.percentageGain}%`
-            )
-            .colors(heatColorMapping);
-
-          heatmapChart.xBorderRadius(0);
-          heatmapChart.yBorderRadius(0);
-
-          heatmapChart.render();
+                `  Gain:   ${d.value.percentageGain}%`,
+            })
+            .width(12 * 80 + 80)
+            .height(27 * 10 + 40)
+            .colorScale(
+              d3
+                .scaleLinear()
+                .domain([-23, 0, 23])
+                .range(['red', '#e5e5e5', 'green'])
+            );
 
           const monthlyDimension = ndx.dimension(d => +d.month);
           const percentageGainByMonthArrayGroup = monthlyDimension
@@ -127,15 +128,26 @@
             );
 
           barChart
-            .dimension(monthlyDimension)
-            .group(percentageGainByMonthArrayGroup)
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: monthlyDimension,
+                layers: [
+                  {
+                    group: percentageGainByMonthArrayGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              elasticY: true,
+              centerBar: true,
+            })
             .width(12 * 80 + 80)
             .height(480)
             .y(d3.scaleLinear().domain([-10.0, 100.0]))
-            .x(d3.scaleLinear().domain([-0.5, 11.5]))
-            .elasticY(true)
-            .centerBar(true);
-          barChart.render();
+            .x(d3.scaleLinear().domain([-0.5, 11.5]));
+
+          chartGroup.renderAll();
         });
       </script>
     </div>
