@@ -28,8 +28,9 @@
       <div id="pie-chart"></div>
 
       <script type="text/javascript">
-        const chart = dc.compositeChart('#test_composed'),
-          speedPie = dc.pieChart('#pie-chart');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.CompositeChart('#test_composed', chartGroup),
+          speedPie = new dc.PieChart('#pie-chart', chartGroup);
 
         const sampleData = [
           { reason: 'A', time: 1 },
@@ -57,10 +58,14 @@
         const speedDim_ = ndx_.dimension(d => Math.floor(d.time / 3));
 
         speedPie
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: speedDim_,
+              group: speedDim_.group(),
+            })
+          )
           .width(300)
-          .height(300)
-          .dimension(speedDim_)
-          .group(speedDim_.group());
+          .height(300);
 
         function paretoGroup(group, groupall) {
           return {
@@ -86,43 +91,69 @@
         const pg = paretoGroup(grp1_, allTime_);
 
         chart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              group: pg,
+              ordering: kv => -kv.value.value,
+            })
+          )
+          .configure({
+            elasticX: true,
+            clipPadding: 2,
+            xUnits: dc.UnitsOrdinal,
+            renderHorizontalGridLines: true,
+          })
           .width(500)
           .height(360)
           .x(d3.scaleBand())
-          .elasticX(true)
-          .clipPadding(2)
-          .xUnits(dc.units.ordinal)
-          .group(pg)
           ._rangeBandPadding(1)
           .yAxisLabel('The Y Axis')
-          .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
-          .renderHorizontalGridLines(true)
-          .ordering(kv => -kv.value.value)
+          .legend(new dc.Legend().x(80).y(20).itemHeight(13).gap(5))
           .compose([
-            dc
-              .barChart(chart)
-              .dimension(dim_)
-              .barPadding(1)
-              .gap(1)
-              .centerBar(true)
-              .clipPadding(10)
-              .group(pg, 'Contribution', kv => kv.value.value),
-            dc
-              .lineChart(chart)
-              .dimension(dim_)
-              .colors('red')
-              .group(pg, 'Cumulative %', kv =>
-                Math.floor(kv.value.cumulative * 100)
+            new dc.BarChart(chart, chartGroup)
+              .dataProvider(
+                new dc.CFMultiAdapter({
+                  dimension: dim_,
+                  layers: [
+                    {
+                      group: pg,
+                      name: 'Contribution',
+                      valueAccessor: kv => kv.value.value,
+                    },
+                  ],
+                })
               )
-              .useRightYAxis(true)
+              .configure({
+                centerBar: true,
+                clipPadding: 10,
+                brushOn: false,
+              })
+              .barPadding(1)
+              .gap(1),
+            new dc.LineChart(chart, chartGroup)
+              .dataProvider(
+                new dc.CFMultiAdapter({
+                  dimension: dim_,
+                  layers: [
+                    {
+                      group: pg,
+                      name: 'Cumulative %',
+                      valueAccessor: kv =>
+                        Math.floor(kv.value.cumulative * 100),
+                    },
+                  ],
+                })
+              )
+              .configure({
+                useRightYAxis: true,
+              })
+              .colorScale(() => 'red')
               .dashStyle([2, 2]),
-          ])
-          .brushOn(false);
+          ]);
 
         chart.rightYAxis().tickFormat(d => `${d}%`);
 
-        chart.render();
-        speedPie.render();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>
