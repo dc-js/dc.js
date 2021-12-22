@@ -31,12 +31,12 @@
       <script src="https://unpkg.com/d3-horizon-chart"></script>
       <script type="text/javascript">
         class HorizonChart {
-          constructor(parent, group) {
+          constructor(parent, chartGroup) {
             this._group = null;
             this._colors = null;
             this._seriesAccessor = null;
             this._root = d3.select(parent);
-            dc.registerChart(this, group);
+            chartGroup.register(this);
           }
 
           // initialization functions for user
@@ -125,11 +125,12 @@
           };
         }
 
-        const horizonChart = new HorizonChart('#horizon'),
-          seriesChart = new dc.SeriesChart('#series'),
-          exptPie = new dc.PieChart('#expt-pie'),
-          speedPie = new dc.PieChart('#speed-pie'),
-          runPie = new dc.PieChart('#run-pie');
+        const chartGroup = new dc.ChartGroup();
+        const horizonChart = new HorizonChart('#horizon', chartGroup),
+          seriesChart = new dc.SeriesChart('#series', chartGroup),
+          exptPie = new dc.PieChart('#expt-pie', chartGroup),
+          speedPie = new dc.PieChart('#speed-pie', chartGroup),
+          runPie = new dc.PieChart('#run-pie', chartGroup);
 
         d3.csv('morley.csv').then(experiments => {
           // stretch out the data by a factor of mult
@@ -174,31 +175,36 @@
             .valueAccessor(d => d.value - 500);
 
           seriesChart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runFilterDim,
+                group: seriesRunGroup,
+                valueAccessor: d => d.value - 500,
+              })
+            )
+            .configure({
+              transitionDuration: 0,
+              chartFunction: c =>
+                new dc.LineChart(c, chartGroup)
+                  .curve(d3.curveCardinal)
+                  .defined(d => d.data.value),
+
+              brushOn: true,
+              clipPadding: 10,
+              seriesAccessor: d => d.key[0],
+              keyAccessor: d => d.key[1],
+            })
             .width(760)
             .height(250)
-            .transitionDuration(0)
             .margins({ left: 0, right: 0, top: 0, bottom: 0 })
-            .chart(c =>
-              new dc.LineChart(c)
-                .curve(d3.curveCardinal)
-                .defined(d => d.data.value)
-            )
             .x(d3.scaleLinear().domain([1, 20]))
             .y(
               d3
                 .scaleLinear()
                 .domain(d3.extent(seriesRunGroup.all(), d => d.value - 500))
             )
-            .brushOn(true)
-            .clipPadding(10)
-            .dimension(runFilterDim)
-            .group(seriesRunGroup)
-            .seriesAccessor(d => d.key[0])
-            .keyAccessor(d => d.key[1])
-            .valueAccessor(d => d.value - 500)
             .legend(
-              dc
-                .legend()
+              new dc.Legend()
                 .x(350)
                 .y(180)
                 .itemHeight(13)
@@ -212,11 +218,17 @@
             exptGroup = exptDim.group();
 
           exptPie
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: exptDim,
+                group: exptGroup,
+              })
+            )
             .width(250)
             .height(250)
-            .colors(d3.scaleOrdinal().domain([1, 6]).range(d3.schemeCategory10))
-            .dimension(exptDim)
-            .group(exptGroup);
+            .colorScale(
+              d3.scaleOrdinal().domain([1, 6]).range(d3.schemeCategory10)
+            );
 
           const speeds = ['low', 'medium low', 'medium', 'medium high', 'high'];
           const quantizeSpeed = d3
@@ -226,20 +238,26 @@
           const quantizeSpeedDim = cf.dimension(d => quantizeSpeed(d.Speed)),
             quantizeSpeedGroup = quantizeSpeedDim.group();
 
+          // range(d3.range(0, 1, 1/speeds.length).map(d3.interpolateTurbo)))
           speedPie
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                ordering: d => speeds.indexOf(d.key),
+                dimension: quantizeSpeedDim,
+                group: quantizeSpeedGroup,
+              })
+            )
+            .configure({
+              minAngleForLabel: 0,
+            })
             .width(250)
             .height(250)
-            .ordering(d => speeds.indexOf(d.key))
-            .colors(
+            .colorScale(
               d3
                 .scaleOrdinal()
                 .domain(speeds)
                 .range(d3.schemeRdYlGn[speeds.length].slice().reverse())
-            )
-            // range(d3.range(0, 1, 1/speeds.length).map(d3.interpolateTurbo)))
-            .minAngleForLabel(0)
-            .dimension(quantizeSpeedDim)
-            .group(quantizeSpeedGroup);
+            );
 
           speedPie.on('pretransition', c => {
             c.select('.pie-label._2').style('fill', '#422518');
@@ -249,9 +267,19 @@
             runGroup = runDim.group();
 
           runPie
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                ordering: d => d.key,
+                dimension: runDim,
+                group: runGroup,
+              })
+            )
+            .configure({
+              minAngleForLabel: 0,
+            })
             .width(250)
             .height(250)
-            .colors(
+            .colorScale(
               d3
                 .scaleOrdinal()
                 .domain(d3.range(1, 21))
@@ -261,18 +289,14 @@
                     return `rgb(${x},${x},${x})`;
                   })
                 )
-            )
-            .ordering(d => d.key)
-            .minAngleForLabel(0)
-            .dimension(runDim)
-            .group(runGroup);
+            );
           runPie.on('pretransition', c => {
             for (const i of d3.range(15, 20)) {
               c.select(`.pie-label._${i}`).style('fill', 'darkgrey');
             }
           });
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
