@@ -21,13 +21,15 @@
       <div id="test">
         <div class="reset" style="visibility: hidden;">
           selected: <span class="filter"></span>
-          <a href="javascript:chart.filterAll();dc.redrawAll();">reset</a>
+          <a href="javascript:chart.filterAll();chartGroup.redrawAll();"
+            >reset</a
+          >
         </div>
       </div>
       <div id="pie">
         <div class="reset" style="visibility: hidden;">
           range: <span class="filter"></span>
-          <a href="javascript:pie.filterAll();dc.redrawAll();">reset</a>
+          <a href="javascript:pie.filterAll();chartGroup.redrawAll();">reset</a>
         </div>
       </div>
 
@@ -36,8 +38,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.BarChart('#test'),
-          pie = new dc.PieChart('#pie');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.BarChart('#test', chartGroup),
+          pie = new dc.PieChart('#pie', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -85,30 +88,32 @@
           const quantizeSpeedDim = ndx.dimension(d => quantizeSpeed(d.Speed)),
             quantizeSpeedGroup = quantizeSpeedDim.group();
 
-          function selStack(i) {
-            return function (d) {
-              return d.value[i];
-            };
-          }
-
           chart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: runExptDim,
+                layers: [1, 2, 3, 4, 5].map(i => ({
+                  group: stackedGroup,
+                  name: `${i}`,
+                  valueAccessor: d => d.value[i],
+                })),
+              })
+            )
+            .configure({
+              controlsUseVisibility: true,
+              brushOn: false,
+              clipPadding: 10,
+
+              title: function (d) {
+                return `${d.key}[${this.name}]: ${d.value[this.name]}`;
+              },
+
+              renderLabel: true,
+            })
             .width(600)
             .height(400)
-            .controlsUseVisibility(true)
             .x(d3.scaleLinear().domain([1, 21]))
-            .margins({ left: 80, top: 20, right: 10, bottom: 20 })
-            .brushOn(false)
-            .clipPadding(10)
-            .title(function (d) {
-              return `${d.key}[${this.name}]: ${d.value[this.name]}`;
-            })
-            .dimension(runExptDim)
-            .group(stackedGroup, '1', selStack('1'))
-            .renderLabel(true);
-
-          for (let i = 2; i < 6; ++i) {
-            chart.stack(stackedGroup, `${i}`, selStack(i));
-          }
+            .margins({ left: 80, top: 20, right: 10, bottom: 20 });
 
           // eslint-disable-next-line no-shadow
           chart.on('pretransition', chart => {
@@ -122,18 +127,24 @@
               })
               .on('click', (evt, d) => {
                 chart.filter(multikey(d.x, d.name));
-                dc.redrawAll();
+                chartGroup.redrawAll();
               });
           });
 
           pie
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: quantizeSpeedDim,
+                group: quantizeSpeedGroup,
+              })
+            )
+            .configure({
+              controlsUseVisibility: true,
+            })
             .width(300)
-            .height(300)
-            .controlsUseVisibility(true)
-            .dimension(quantizeSpeedDim)
-            .group(quantizeSpeedGroup);
+            .height(300);
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
