@@ -21,9 +21,11 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         //  var composite = dc.compositeChart("#test_composed");
         const composite = new dc.CompositeChart(
-          d3.select('div.container').append('div')
+          d3.select('div.container').append('div'),
+          chartGroup
         );
 
         Promise.all([d3.csv('morley.csv'), d3.csv('morley2.csv')]).then(
@@ -47,30 +49,52 @@
               }))
             );
 
-            const dim = ndx.dimension(dc.pluck('x')),
-              grp1 = dim.group().reduceSum(dc.pluck('y1')),
-              grp2 = dim.group().reduceSum(dc.pluck('y2'));
+            const dim = ndx.dimension(d => d.x),
+              grp1 = dim.group().reduceSum(d => d.y1),
+              grp2 = dim.group().reduceSum(d => d.y2);
 
             composite
+              .configure({
+                renderHorizontalGridLines: true,
+              })
               .width(768)
               .height(480)
               .x(d3.scaleLinear().domain([2.9, 16.1]))
               .yAxisLabel('The Y Axis')
-              .legend(dc.legend().x(80).y(20).itemHeight(13).gap(5))
-              .renderHorizontalGridLines(true)
+              .legend(new dc.Legend().x(80).y(20).itemHeight(13).gap(5))
               .compose([
-                new dc.BarChart(composite)
-                  .dimension(dim)
-                  .colors('blue')
-                  .group(grp2, 'Bars')
-                  .centerBar(true),
-                new dc.LineChart(composite)
-                  .dimension(dim)
-                  .colors('red')
-                  .group(grp1, 'Dots')
+                new dc.BarChart(composite, chartGroup)
+                  .dataProvider(
+                    new dc.CFMultiAdapter({
+                      dimension: dim,
+                      layers: [
+                        {
+                          group: grp2,
+                          name: 'Bars',
+                        },
+                      ],
+                    })
+                  )
+                  .configure({
+                    centerBar: true,
+                    brushOn: false,
+                  })
+                  .colorScale(() => 'blue'),
+                new dc.LineChart(composite, chartGroup)
+                  .dataProvider(
+                    new dc.CFMultiAdapter({
+                      dimension: dim,
+                      layers: [
+                        {
+                          group: grp1,
+                          name: 'Dots',
+                        },
+                      ],
+                    })
+                  )
+                  .colorScale(() => 'red')
                   .dashStyle([2, 2]),
               ])
-              .brushOn(false)
               .render();
           }
         );
