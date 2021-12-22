@@ -13,7 +13,7 @@
       <div id="chart-ring-year" style="width: 300px; height: 300px;">
         <div class="reset" style="visibility: hidden;">
           selected: <span class="filter"></span>
-          <a href="javascript:yearRingChart.filterAll();dc.redrawAll();"
+          <a href="javascript:yearRingChart.filterAll();chartGroup.redrawAll();"
             >reset</a
           >
         </div>
@@ -21,7 +21,8 @@
       <div id="chart-hist-spend" style="width: 300px; height: 300px;">
         <div class="reset" style="visibility: hidden;">
           range: <span class="filter"></span>
-          <a href="javascript:spendHistChart.filterAll();dc.redrawAll();"
+          <a
+            href="javascript:spendHistChart.filterAll();chartGroup.redrawAll();"
             >reset</a
           >
         </div>
@@ -29,7 +30,8 @@
       <div id="chart-row-spenders">
         <div class="reset" style="visibility: hidden;">
           selected: <span class="filter"></span>
-          <a href="javascript:spenderRowChart.filterAll();dc.redrawAll();"
+          <a
+            href="javascript:spenderRowChart.filterAll();chartGroup.redrawAll();"
             >reset</a
           >
         </div>
@@ -40,9 +42,10 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const yearRingChart = new dc.PieChart('#chart-ring-year'),
-          spendHistChart = new dc.BarChart('#chart-hist-spend'),
-          spenderRowChart = new dc.RowChart('#chart-row-spenders');
+        const chartGroup = new dc.ChartGroup();
+        const yearRingChart = new dc.PieChart('#chart-ring-year', chartGroup),
+          spendHistChart = new dc.BarChart('#chart-hist-spend', chartGroup),
+          spenderRowChart = new dc.RowChart('#chart-row-spenders', chartGroup);
 
         // use static or load via d3.csv("spendData.csv", function(error, spendData) {/* do stuff */});
         const spendData = [
@@ -70,30 +73,62 @@
           spendHist = spendDim.group().reduceCount();
 
         yearRingChart
-          .dimension(yearDim)
-          .group(spendPerYear)
-          .innerRadius(50)
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: yearDim,
+              group: spendPerYear,
+            })
+          )
+          .configure({
+            innerRadius: 50,
+            controlsUseVisibility: true,
+          });
 
         spendHistChart
-          .dimension(spendDim)
-          .group(spendHist)
-          .x(d3.scaleLinear().domain([0, 10]))
-          .elasticY(true)
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFMultiAdapter({
+              dimension: spendDim,
+              layers: [
+                {
+                  group: spendHist,
+                },
+              ],
+            })
+          )
+          .configure({
+            elasticY: true,
+            controlsUseVisibility: true,
+          })
+          .x(d3.scaleLinear().domain([0, 10]));
 
         spendHistChart.xAxis().tickFormat(d => d * 10); // convert back to base unit
         spendHistChart.yAxis().ticks(2);
 
         spenderRowChart
-          .dimension(nameDim)
-          .group(spendPerName)
-          .elasticX(true)
-          .controlsUseVisibility(true);
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: nameDim,
+              group: spendPerName,
+            })
+          )
+          .configure({
+            elasticX: true,
+            controlsUseVisibility: true,
+          });
+
+        function isNotEmpty(chart) {
+          const data = chart.data();
+          // In case of data has layers
+          if (data[0].rawData) {
+            return data.some(layerData =>
+              layerData.rawData.some(d => d._value !== 0)
+            );
+          }
+          return data.some(d => d._value !== 0);
+        }
 
         function showEmptyMessage(chart) {
-          const isEmpty =
-            d3.sum(chart.group().all().map(chart.valueAccessor())) === 0;
+          const isEmpty = !isNotEmpty(chart);
           const data = isEmpty ? [1] : [];
           let empty = chart.svg().selectAll('.empty-message').data(data);
           empty.exit().remove();
@@ -114,7 +149,7 @@
         spendHistChart.on('pretransition', showEmptyMessage);
         spenderRowChart.on('pretransition', showEmptyMessage);
 
-        dc.renderAll();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>
