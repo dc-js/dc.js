@@ -28,11 +28,12 @@
       <script type="text/javascript" src="../js/dc.js"></script>
       <style></style>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         const urlParams = new URLSearchParams(window.location.search),
           remove = urlParams.get('remove');
 
-        const focus = new dc.LineChart('#focus');
-        const zoom = new dc.LineChart('#range');
+        const focus = new dc.LineChart('#focus', chartGroup);
+        const zoom = new dc.LineChart('#range', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -45,16 +46,26 @@
               .reduceSum(d => (d.Speed * d.Run) / 1000);
 
           focus
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: runDimension,
+                layers: [
+                  {
+                    group: speedSumGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              evadeDomainFilter: true,
+              elasticY: true,
+              brushOn: false,
+              autoFocus: true,
+            })
             .width(768)
             .height(400)
             .x(d3.scaleLinear().domain([6, 20]))
-            .evadeDomainFilter(true)
-            .elasticY(true)
-            .brushOn(false)
-            .yAxisLabel('This is the Y Axis!')
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            .rangeChart(zoom);
+            .yAxisLabel('This is the Y Axis!');
 
           function expandFocus() {
             // if the chart were not storing the original domain, this is all we'd
@@ -71,17 +82,27 @@
           focus.on('preRedraw', expandFocus);
 
           zoom
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: runDimension,
+                layers: [
+                  {
+                    group: speedSumGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              elasticX: true,
+              elasticY: true,
+              brushOn: true,
+            })
             .width(768)
             .height(80)
             .x(d3.scaleLinear().domain([6, 20]))
-            .elasticX(true)
-            .elasticY(true)
-            .brushOn(true)
-            .yAxisLabel('')
-            .dimension(runDimension)
-            .group(speedSumGroup);
+            .yAxisLabel('');
 
-          dc.renderAll();
+          chartGroup.renderAll();
 
           let run = 21;
           setInterval(() => {
@@ -89,7 +110,7 @@
             if (remove) {
               ndx.remove(d => d.Run < run - 20);
             }
-            dc.redrawAll();
+            chartGroup.redrawAll();
           }, 5000);
         });
       </script>
