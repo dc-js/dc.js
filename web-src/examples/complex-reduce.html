@@ -70,6 +70,7 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         // reduction functions that keep a sorted array of rows. the rows must either have a unique key,
         // or it must not matter if the same row is removed as was added previously
 
@@ -118,8 +119,9 @@
           ).mode;
         };
 
-        const runChart = new dc.BarChart('#test-run'),
-          exptChart = new dc.BarChart('#test-expt');
+        const runChart = new dc.BarChart('#test-run', chartGroup),
+          exptChart = new dc.BarChart('#test-expt', chartGroup);
+
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -166,38 +168,62 @@
           };
 
           d3.selectAll('#select-operation input').on('click', function () {
-            runChart.valueAccessor(accessors[this.value]);
-            exptChart.valueAccessor(accessors[this.value]);
-            dc.redrawAll();
+            runChart.dataProvider().configure({
+              valueAccessor: accessors[this.value],
+            });
+            exptChart.dataProvider().configure({
+              valueAccessor: accessors[this.value],
+            });
+            chartGroup.redrawAll();
           });
 
           runChart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                valueAccessor: medianSpeed,
+                dimension: runDimension,
+                layers: [
+                  {
+                    group: runAvgGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              xUnits: dc.UnitsOrdinal,
+              elasticY: true,
+              brushOn: true,
+              controlsUseVisibility: true,
+            })
             .width(400)
             .height(300)
-            .x(d3.scaleBand())
-            .xUnits(dc.units.ordinal)
-            .valueAccessor(medianSpeed)
-            .elasticY(true)
-            .brushOn(true)
-            .controlsUseVisibility(true)
-            .dimension(runDimension)
-            .group(runAvgGroup);
+            .x(d3.scaleBand());
 
           exptChart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                valueAccessor: medianSpeed,
+                dimension: exptDimension,
+                layers: [
+                  {
+                    group: exptAvgGroup,
+                  },
+                ],
+              })
+            )
+            .configure({
+              xUnits: dc.UnitsOrdinal,
+              elasticY: true,
+              brushOn: true,
+              controlsUseVisibility: true,
+            })
             .width(400)
             .height(300)
-            .x(d3.scaleBand())
-            .xUnits(dc.units.ordinal)
-            .valueAccessor(medianSpeed)
-            .elasticY(true)
-            .brushOn(true)
-            .controlsUseVisibility(true)
-            .dimension(exptDimension)
-            .group(exptAvgGroup);
+            .x(d3.scaleBand());
 
           runChart.margins().left = exptChart.margins().left = 35;
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
