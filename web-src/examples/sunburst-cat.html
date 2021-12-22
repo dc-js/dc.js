@@ -28,8 +28,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const fileChart = new dc.SunburstChart('#file_chart');
-        const typeChart = new dc.PieChart('#type_chart');
+        const chartGroup = new dc.ChartGroup();
+        const fileChart = new dc.SunburstChart('#file_chart', chartGroup);
+        const typeChart = new dc.PieChart('#type_chart', chartGroup);
 
         d3.tsv('cat.tsv').then(cats => {
           const ndx = crossfilter(cats);
@@ -42,45 +43,40 @@
           const typeGroup = typeDimension.group().reduceSum(d => d.size);
 
           // d3.schemeCategory20b has been removed from D3v5
+          // prettier-ignore
           const d3SchemeCategory20b = [
-            '#393b79',
-            '#5254a3',
-            '#6b6ecf',
-            '#9c9ede',
-            '#637939',
-            '#8ca252',
-            '#b5cf6b',
-            '#cedb9c',
-            '#8c6d31',
-            '#bd9e39',
-            '#e7ba52',
-            '#e7cb94',
-            '#843c39',
-            '#ad494a',
-            '#d6616b',
-            '#e7969c',
-            '#7b4173',
-            '#a55194',
-            '#ce6dbd',
-            '#de9ed6',
+              '#393b79','#5254a3','#6b6ecf','#9c9ede','#637939',
+              '#8ca252','#b5cf6b','#cedb9c','#8c6d31','#bd9e39',
+              '#e7ba52','#e7cb94','#843c39','#ad494a','#d6616b',
+              '#e7969c','#7b4173','#a55194','#ce6dbd','#de9ed6'
           ];
 
           fileChart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: picturesDimension,
+                group: picturesGroup,
+              })
+            )
             .width(700)
             .height(640)
-            .dimension(picturesDimension)
-            .group(picturesGroup)
-            .colors(d3.scaleOrdinal(d3SchemeCategory20b))
-            .legend(dc.legend());
+            .colorScale(d3.scaleOrdinal(d3SchemeCategory20b))
+            .legend(new dc.Legend());
 
           typeChart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: typeDimension,
+                group: typeGroup,
+              })
+            )
+            .configure({
+              innerRadius: 50,
+            })
             .width(200)
-            .height(200)
-            .innerRadius(50)
-            .dimension(typeDimension)
-            .group(typeGroup);
+            .height(200);
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
