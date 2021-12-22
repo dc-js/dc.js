@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.RowChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.RowChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -39,13 +40,19 @@
           };
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+                group: speedSumGroup,
+              })
+            )
+            .configure({
+              elasticX: true,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleLinear().domain([6, 20]))
-            .elasticX(true)
-            .dimension(runDimension)
-            .group(speedSumGroup)
-            // eslint-disable-next-line no-shadow
+              // eslint-disable-next-line no-shadow
             .on('pretransition', chart => {
               // read height from one of the row rects, because it's difficult to calculate
               const height = chart.select('g.row rect').attr('height');
@@ -69,7 +76,7 @@
               // move into position (also move any targets that changed)
               target
                 .transition()
-                .duration(chart.transitionDuration())
+                .duration(chart.conf().transitionDuration)
                 .attr('visibility', d =>
                   d.value.target !== undefined || _targets[d.key] !== undefined
                     ? 'visible'
