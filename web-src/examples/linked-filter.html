@@ -19,13 +19,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         // may cause problems if there is a lot of data
         dc.constants.EVENT_DELAY = 0;
-
-        const chart1 = dc.barChart('#test1');
-        const chart2 = dc.barChart('#test2');
-        const chart3 = dc.barChart('#test3');
-        const chart4 = dc.barChart('#test4');
 
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
@@ -38,30 +34,31 @@
               .group()
               .reduceSum(d => d.Speed / 100 + +d.Run / 2);
 
-          function barChart(chart) {
+          ['#test1', '#test2', '#test3', '#test4'].forEach(anchor => {
+            const chart = new dc.BarChart(anchor, chartGroup);
             chart
+              .dataProvider(
+                new dc.CFMultiAdapter({
+                  dimension: runDimension,
+                  layers: [
+                    {
+                      group: speedSumGroup,
+                    },
+                  ],
+                })
+              )
+              .configure({
+                elasticX: true,
+                brushOn: true,
+              })
               .width(400)
               .height(300)
-              .x(d3.scaleLinear())
-              .elasticX(true)
-              .brushOn(true)
-              .dimension(runDimension)
-              .group(speedSumGroup);
+              .x(d3.scaleLinear());
 
-            /*
-          Linked filters is the default in dc@5; to disable use
-        chart
-            .dataProvider().configure({shareFilters: false});
-        */
             return chart;
-          }
+          });
 
-          barChart(chart1);
-          barChart(chart2);
-          barChart(chart3);
-          barChart(chart4);
-
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>
