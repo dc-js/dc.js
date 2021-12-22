@@ -24,37 +24,47 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.HeatMap('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.HeatMap('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           const ndx = crossfilter(experiments),
             runDim = ndx.dimension(d => [+d.Run, +d.Expt]),
             runGroup = runDim.group().reduceSum(d => +d.Speed);
 
           chart
-            .width(45 * 20 + 80)
-            .height(45 * 5 + 40)
-            .dimension(runDim)
-            .group(runGroup)
-            .keyAccessor(d => +d.key[0])
-            .valueAccessor(d => +d.key[1])
-            .colorAccessor(d => +d.value)
-            .title(
-              d =>
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDim,
+                group: runGroup,
+                valueAccessor: d => +d.key[1],
+              })
+            )
+            .configure({
+              keyAccessor: d => +d.key[0],
+              colorAccessor: d => +d.value,
+
+              title: d =>
                 `Run:   ${d.key[0]}\n` +
                 `Expt:  ${d.key[1]}\n` +
-                `Speed: ${299000 + d.value} km/s`
+                `Speed: ${299000 + d.value} km/s`,
+            })
+            .width(45 * 20 + 80)
+            .height(45 * 5 + 40)
+            .colorScale(
+              d3
+                .scaleQuantize()
+                .range([
+                  '#ffffd9',
+                  '#edf8b1',
+                  '#c7e9b4',
+                  '#7fcdbb',
+                  '#41b6c4',
+                  '#1d91c0',
+                  '#225ea8',
+                  '#253494',
+                  '#081d58',
+                ])
             )
-            .colors([
-              '#ffffd9',
-              '#edf8b1',
-              '#c7e9b4',
-              '#7fcdbb',
-              '#41b6c4',
-              '#1d91c0',
-              '#225ea8',
-              '#253494',
-              '#081d58',
-            ])
             .calculateColorDomain();
 
           chart.render();
