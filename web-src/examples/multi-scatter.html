@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.CompositeChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.CompositeChart('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -34,25 +35,50 @@
               .reduceSum(d => (d.Speed * d.Run) / 4000);
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: scatterDimension,
+              })
+            )
+            .configure({
+              clipPadding: 10,
+              brushOn: false,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleLinear().domain([6, 20]))
             .yAxisLabel('This is the Y Axis!')
-            .clipPadding(10)
-            .dimension(scatterDimension)
-            .brushOn(false)
-            .legend(dc.legend().x(70).y(10).itemHeight(13).gap(5))
+            .legend(new dc.Legend().x(70).y(10).itemHeight(13).gap(5))
             .compose([
-              new dc.ScatterPlot(chart)
-                .group(scatterGroup, 'Blue Group')
-                .colors('blue'),
-              new dc.ScatterPlot(chart)
-                .group(scatterGroup, 'Red Group')
-                .colors('red')
-                .valueAccessor(d => d.key[1] + 5),
-              new dc.LineChart(chart)
-                .dimension(lineDimension)
-                .group(lineGroup, 'Line Group'),
+              new dc.ScatterPlot(chart, chartGroup)
+                .dataProvider(
+                  new dc.CFSimpleAdapter({
+                    group: scatterGroup,
+                    groupName: 'Blue Group',
+                    valueAccessor: d => d.key[1],
+                  })
+                )
+                .colorScale(() => 'blue'),
+              new dc.ScatterPlot(chart, chartGroup)
+                .dataProvider(
+                  new dc.CFSimpleAdapter({
+                    group: scatterGroup,
+                    groupName: 'Red Group',
+                    valueAccessor: d => d.key[1] + 5,
+                  })
+                )
+                .colorScale(() => 'red'),
+              new dc.LineChart(chart, chartGroup).dataProvider(
+                new dc.CFMultiAdapter({
+                  dimension: lineDimension,
+                  layers: [
+                    {
+                      group: lineGroup,
+                      name: 'Line Group',
+                    },
+                  ],
+                })
+              ),
             ]);
 
           chart.render();
