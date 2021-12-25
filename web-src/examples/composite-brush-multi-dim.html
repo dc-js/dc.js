@@ -38,8 +38,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.CompositeChart('#test1');
-        const dataTable = new dc.DataTable('#test2');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.CompositeChart('#test1', chartGroup);
+        const dataTable = new dc.DataTable('#test2', chartGroup);
 
         const data = [
           { x: 1, y: 1, z: 3 },
@@ -67,46 +68,80 @@
         // `chart.dataProvider.configure({shareFilters: false});`.
         // See https://github.com/dc-js/dc.js/issues/1788#issuecomment-766388520
         chart
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: dimX,
+              group: groupX,
+            })
+          )
+          .configure({
+            clipPadding: 10,
+          })
           .width(768)
           .height(480)
           .x(d3.scaleLinear().domain([0, 16]))
           .yAxisLabel('y')
           .xAxisLabel('x')
-          .clipPadding(10)
-          .dimension(dimX)
-          .group(groupX)
           .compose([
-            new dc.ScatterPlot(chart)
-              .dimension(dimXY)
-              .group(groupXY)
+            new dc.ScatterPlot(chart, chartGroup)
+              .dataProvider(
+                new dc.CFSimpleAdapter({
+                  dimension: dimXY,
+                  group: groupXY,
+                  valueAccessor: d => d.key[1],
+                })
+              )
+              .configure({
+                symbolSize: 8,
+                excludedOpacity: 0.5,
+              })
               .symbol(d3.symbolStar)
-              .ordinalColors(['red'])
-              .symbolSize(8)
-              .excludedOpacity(0.5),
-            new dc.ScatterPlot(chart)
-              .dimension(dimXZ)
-              .group(groupXZ)
+              .ordinalColors(['red']),
+            new dc.ScatterPlot(chart, chartGroup)
+              .dataProvider(
+                new dc.CFSimpleAdapter({
+                  dimension: dimXZ,
+                  group: groupXZ,
+                  valueAccessor: d => d.key[1],
+                })
+              )
+              .configure({
+                symbolSize: 8,
+                excludedOpacity: 0.5,
+              })
               .symbol(d3.symbolSquare)
-              .ordinalColors(['green'])
-              .symbolSize(8)
-              .excludedOpacity(0.5),
-            new dc.BarChart(chart)
-              .dimension(dimX)
-              .group(groupX)
-              .valueAccessor(d => d.value * 3)
+              .ordinalColors(['green']),
+            new dc.BarChart(chart, chartGroup)
+              .dataProvider(
+                new dc.CFMultiAdapter({
+                  dimension: dimX,
+                  valueAccessor: d => d.value * 3,
+                  layers: [
+                    {
+                      group: groupX,
+                    },
+                  ],
+                })
+              )
               .ordinalColors(['#e7e4ff'])
               .barPadding(8),
           ]);
 
         dataTable
-          .dimension(dimX)
-          .section(d => d.x)
-          .columns(['x', 'y', 'z'])
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: dimX,
+            })
+          )
+          .configure({
+            section: d => d.x,
+            columns: ['x', 'y', 'z'],
+          })
           .on('renderlet', table => {
             table.selectAll('.dc-table-group').classed('info', true);
           });
 
-        dc.renderAll();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>

@@ -16,7 +16,8 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart = new dc.ScatterPlot('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new dc.ScatterPlot('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -27,15 +28,22 @@
             speedSumGroup = runDimension.group();
 
           chart
+            .dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+                group: speedSumGroup,
+                valueAccessor: d => d.key[1],
+              })
+            )
+            .configure({
+              brushOn: false,
+              symbolSize: 8,
+              clipPadding: 10,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleLinear().domain([6, 20]))
-            .brushOn(false)
-            .symbolSize(8)
-            .clipPadding(10)
-            .yAxisLabel('This is the Y Axis!')
-            .dimension(runDimension)
-            .group(speedSumGroup);
+            .yAxisLabel('This is the Y Axis!');
 
           chart.render();
         });

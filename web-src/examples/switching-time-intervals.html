@@ -32,12 +32,13 @@
       <script type="text/javascript" src="header.js"></script>
       <script type="text/javascript" src="../js/d3.js"></script>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
-      <script type="text/javascript" src="../js/dc-compat.js"></script>
+      <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         const defaultInterval = 'Weeks';
 
-        const chart = new dc.BarChart('#test'),
-          counter = new dc.NumberDisplay('#counter');
+        const chart = new dc.BarChart('#test', chartGroup),
+          counter = new dc.NumberDisplay('#counter', chartGroup);
 
         d3.csv('monthly-move.csv').then(posts => {
           posts.forEach(d => {
@@ -66,7 +67,7 @@
 
           d3.select('#interval').on('change', () => {
             setupDataProvider();
-            dc.redrawAll();
+            chartGroup.redrawAll();
           });
 
           function setupDataProvider() {
@@ -96,36 +97,49 @@
               );
 
             chart
-              .dimension(dateDim)
-              .group(postsGroup)
-              .valueAccessor(kv => kv.value.total)
-              .xUnits(interval.range)
-              .transitionDuration(postsGroup.all().length > 2000 ? 0 : 1000);
-
-            console.log(`Setup for ${intervalName}completed.`);
+              .dataProvider(
+                new dc.CFMultiAdapter({
+                  dimension: dateDim,
+                  valueAccessor: kv => kv.value.total,
+                  layers: [
+                    {
+                      group: postsGroup,
+                    },
+                  ],
+                })
+              )
+              .configure({
+                xUnits: interval.range,
+                transitionDuration: postsGroup.all().length > 2000 ? 0 : 1000,
+              });
           }
 
           chart
+            .configure({
+              xUnits: d3.timeWeeks,
+              elasticX: true,
+              elasticY: true,
+              clipPadding: 10,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleTime())
-            .xUnits(d3.timeWeeks)
-            .margins({ left: 50, top: 0, right: 0, bottom: 20 })
-            .elasticX(true)
-            .elasticY(true)
-            .clipPadding(10);
+            .margins({ left: 50, top: 0, right: 0, bottom: 20 });
           chart.yAxis().tickFormat(d3.format('.3s'));
 
           setupDataProvider();
 
           const groupAll = ndx.groupAll().reduceSum(d => d.volume);
 
-          counter
-            .dimension({})
-            .group(groupAll)
-            .valueAccessor(x => x);
+          counter.dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: {},
+              group: groupAll,
+              valueAccessor: x => x,
+            })
+          );
 
-          dc.renderAll();
+          chartGroup.renderAll();
         });
       </script>
     </div>

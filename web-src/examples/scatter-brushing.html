@@ -20,8 +20,9 @@
       <script type="text/javascript" src="../js/crossfilter.js"></script>
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript">
-        const chart1 = new dc.ScatterPlot('#test1');
-        const chart2 = new dc.ScatterPlot('#test2');
+        const chartGroup = new dc.ChartGroup();
+        const chart1 = new dc.ScatterPlot('#test1', chartGroup);
+        const chart2 = new dc.ScatterPlot('#test2', chartGroup);
         const rawData =
           'x,y,z\n' +
           '1,1,3\n' +
@@ -49,28 +50,42 @@
           group2 = dim2.group();
 
         chart1
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: dim1,
+              group: group1,
+              valueAccessor: d => d.key[1],
+            })
+          )
+          .configure({
+            clipPadding: 10,
+            excludedOpacity: 0.5,
+          })
           .width(300)
           .height(300)
           .x(d3.scaleLinear().domain([0, 20]))
           .yAxisLabel('y')
-          .xAxisLabel('x')
-          .clipPadding(10)
-          .dimension(dim1)
-          .excludedOpacity(0.5)
-          .group(group1);
+          .xAxisLabel('x');
 
         chart2
+          .dataProvider(
+            new dc.CFSimpleAdapter({
+              dimension: dim2,
+              group: group2,
+              valueAccessor: d => d.key[1],
+            })
+          )
+          .configure({
+            clipPadding: 10,
+            excludedColor: '#ddd',
+          })
           .width(300)
           .height(300)
           .x(d3.scaleLinear().domain([0, 20]))
           .yAxisLabel('z')
-          .xAxisLabel('y')
-          .clipPadding(10)
-          .dimension(dim2)
-          .excludedColor('#ddd')
-          .group(group2);
+          .xAxisLabel('y');
 
-        dc.renderAll();
+        chartGroup.renderAll();
       </script>
     </div>
   </body>
