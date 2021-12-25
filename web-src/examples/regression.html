@@ -36,8 +36,9 @@
       <script type="text/javascript" src="../js/dc.js"></script>
       <script type="text/javascript" src="../js/regression.js"></script>
       <script type="text/javascript">
+        const chartGroup = new dc.ChartGroup();
         /* global regression */
-        const chart = new dc.ScatterPlot('#test');
+        const chart = new dc.ScatterPlot('#test', chartGroup);
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
             x.Speed = +x.Speed;
@@ -47,22 +48,21 @@
           let rendered = false;
 
           chart
+            .configure({
+              elasticX: true,
+              elasticY: true,
+              brushOn: false,
+              symbolSize: 8,
+              clipPadding: 10,
+            })
             .width(768)
             .height(480)
             .margins({ top: 0, right: 10, bottom: 20, left: 50 })
-            .x(d3.scaleLinear())
-            .elasticX(true)
-            .elasticY(true)
-            .brushOn(false)
-            .symbolSize(8)
-            .clipPadding(10);
+            .x(d3.scaleLinear());
 
           chart.on('pretransition', () => {
             const r = regression.linear(
-                chart
-                  .group()
-                  .all()
-                  .map(kv => [kv.key[0], kv.key[1]])
+                chart.data().map(kv => [kv.key[0], kv.key[1]])
               ),
               [m, b] = r.equation,
               [x1, x2] = chart.x().domain();
@@ -90,7 +90,7 @@
               .merge(line);
             line
               .transition()
-              .duration(chart.transitionDuration())
+              .duration(chart.conf().transitionDuration)
               .call(doPoints);
           });
 
@@ -109,7 +109,13 @@
             const runDimension = cf.dimension(keyFunction(metric)),
               speedSumGroup = runDimension.group();
 
-            chart.dimension(runDimension).group(speedSumGroup);
+            chart.dataProvider(
+              new dc.CFSimpleAdapter({
+                dimension: runDimension,
+                group: speedSumGroup,
+                valueAccessor: d => d.key[1],
+              })
+            );
 
             if (!rendered) {
               chart.render();
