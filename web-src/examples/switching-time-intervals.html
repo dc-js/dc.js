@@ -9,6 +9,10 @@
       dl {
         margin-left: 2em;
       }
+
+      #counter-text {
+        display: inline;
+      }
     </style>
   </head>
   <body>
@@ -24,59 +28,25 @@
       ><span id="counter-text" style="display: none;"> selected.</span>
       <br />
       <div id="test" style="min-height: 500px;"></div>
-      <div style="clear: both;">
-        <p>You can supply your own data source with query string parameters:</p>
-        <dl>
-          <dt>data</dt>
-          <dd>URL to load</dd>
-          <dt>aggregate</dt>
-          <dd>
-            Aggregation method: <code>average</code> or <code>total</code>
-          </dd>
-          <dt>date</dt>
-          <dd>Date column name</dd>
-          <dt>val</dt>
-          <dd>Value column name</dd>
-        </dl>
-      </div>
 
       <script type="text/javascript" src="header.js"></script>
       <script type="text/javascript" src="../js/d3.js"></script>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
-      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript" src="../js/dc-compat.js"></script>
       <script type="text/javascript">
-        const findQuery = (function () {
-          const _map = window.location.search
-            .substr(1)
-            .split('&')
-            .map(a => a.split('='))
-            .reduce((p, v) => {
-              if (v.length > 1) {
-                p[v[0]] = decodeURIComponent(v[1].replace(/\+/g, ' '));
-              } else {
-                p[v[0]] = true;
-              }
-              return p;
-            }, {});
-          return function (field) {
-            return _map[field] || null;
-          };
-        })();
-        const data = findQuery('data') || 'monthly-move.csv';
-        const dateCol = findQuery('date') || 'date';
-        const valCol = findQuery('val') || 'volume';
-        const aggregate = findQuery('aggregate') || 'average';
+        const defaultInterval = 'Weeks';
 
         const chart = new dc.BarChart('#test'),
           counter = new dc.NumberDisplay('#counter');
-        d3.csv(data).then(posts => {
+
+        d3.csv('monthly-move.csv').then(posts => {
           posts.forEach(d => {
-            d[dateCol] = new Date(d[dateCol]);
-            d[valCol] = +d[valCol];
+            d.date = new Date(d.date);
+            d.volume = +d.volume;
           });
 
           const ndx = crossfilter(posts);
-          const dateDim = ndx.dimension(d => d[dateCol]);
+          const dateDim = ndx.dimension(d => d.date);
           let postsGroup;
 
           const intervals = {
@@ -85,33 +55,38 @@
             Months: d3.timeMonth,
             Years: d3.timeYear,
           };
-          const defint = findQuery('interval') || 'Weeks';
+
           d3.select('#interval')
             .selectAll('option')
             .data(Object.keys(intervals))
             .enter()
             .append('option')
             .text(d => d)
-            .attr('selected', d => (d === defint ? '' : null));
-          function setup() {
-            const startTime = window.performance.now();
+            .attr('selected', d => (d === defaultInterval ? '' : null));
+
+          d3.select('#interval').on('change', () => {
+            setupDataProvider();
+            dc.redrawAll();
+          });
+
+          function setupDataProvider() {
             if (postsGroup) {
               postsGroup.dispose();
             }
             const intervalName = d3.select('#interval').nodes()[0].value;
             const interval = intervals[intervalName];
-            chart.xUnits(interval.range);
+
             postsGroup = dateDim
               .group(k => interval(k))
               .reduce(
                 (p, v) => {
                   ++p.count;
-                  p.total += v[valCol];
+                  p.total += v.volume;
                   return p;
                 },
                 (p, v) => {
                   --p.count;
-                  p.total -= v[valCol];
+                  p.total -= v.volume;
                   return p;
                 },
                 () => ({
@@ -119,32 +94,15 @@
                   total: 0,
                 })
               );
-            switch (aggregate) {
-              case 'average':
-                chart.valueAccessor(kv => kv.value.total / kv.value.count);
-                break;
-              case 'total':
-              default:
-                chart.valueAccessor(kv => kv.value.total);
-            }
+
             chart
               .dimension(dateDim)
               .group(postsGroup)
-              .transitionDuration(
-                !findQuery('unsafe') && postsGroup.all().length > 2000
-                  ? 0
-                  : 1000
-              )
-              .render();
-            console.log(
-              [
-                'setup for',
-                intervalName,
-                'took',
-                window.performance.now() - startTime,
-                'ms',
-              ].join(' ')
-            );
+              .valueAccessor(kv => kv.value.total)
+              .xUnits(interval.range)
+              .transitionDuration(postsGroup.all().length > 2000 ? 0 : 1000);
+
+            console.log(`Setup for ${intervalName}completed.`);
           }
 
           chart
@@ -153,40 +111,19 @@
             .x(d3.scaleTime())
             .xUnits(d3.timeWeeks)
             .margins({ left: 50, top: 0, right: 0, bottom: 20 })
+            .elasticX(true)
             .elasticY(true)
             .clipPadding(10);
           chart.yAxis().tickFormat(d3.format('.3s'));
 
-          // this demonstrates solving elasticX manually, avoiding the
-          // bug where the rightmost bar/box is not displayed, #792
-          // eslint-disable-next-line no-shadow
-          function calcDomain(chart) {
-            const min = d3.min(chart.group().all(), kv => kv.key);
-            let max = d3.max(chart.group().all(), kv => kv.key);
-            max = d3.timeMonth.offset(max, 1);
-            chart.x().domain([min, max]);
-          }
-          chart.on('preRender', calcDomain);
-          chart.on('preRedraw', calcDomain);
+          setupDataProvider();
 
-          const countAll = ndx.groupAll(),
-            groupAll = ndx.groupAll().reduceSum(d => d[valCol]);
-          counter.dimension({}).group(groupAll);
-          switch (aggregate) {
-            case 'average':
-              counter.valueAccessor(x => x / countAll.value());
-              break;
-            case 'total':
-            default:
-              counter.valueAccessor(x => x);
-          }
-          d3.select('#interval').on('change', () => {
-            setup();
-          });
-          counter.on('postRender', () => {
-            d3.select('#counter-text').style('display', 'inline');
-          });
-          setup();
+          const groupAll = ndx.groupAll().reduceSum(d => d.volume);
+
+          counter
+            .dimension({})
+            .group(groupAll)
+            .valueAccessor(x => x);
 
           dc.renderAll();
         });
