@@ -67,7 +67,7 @@
   <body>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
-    <script type="text/javascript" src="../js/dc-compat.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
 
     <script
       type="text/javascript"
@@ -94,7 +94,9 @@
         <div class="dc-data-count">
           <span class="filter-count"></span> selected out of
           <span class="total-count"></span> MEPs |
-          <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+          <a href="javascript:chartGroup.filterAll(); chartGroup.renderAll();"
+            >Reset All</a
+          >
         </div>
       </div>
       <div class="dc-data-grid"></div>
@@ -103,8 +105,16 @@
   <script>
     /* globals _, $ */
     const tpl = _.template(
-      "<h2 title='MEP from <%= country %> in <%= eugroup %>'> <%= first_name %> <%= last_name %></h2><img class='lazy-load' dsrc='blank.gif' data-original='https://www.europarl.europa.eu/mepphoto/<%= epid %>.jpg' alt='<%= last_name %>, <%= first_name %> member of <%= eugroup %>' title='MEP from <%= country %> in <%= eugroup %>' width=170 height=216 />"
+      "<h2 title='MEP from <%= country %> in <%= eugroup %>'> <%= first_name %> <%= last_name %></h2>" +
+        "<img class='lazy-load' " +
+        "dsrc='blank.gif' " +
+        "data-original='https://www.europarl.europa.eu/mepphoto/<%= epid %>.jpg' " +
+        "alt='<%= last_name %>, <%= first_name %> member of <%= eugroup %>' " +
+        "title='MEP from <%= country %> in <%= eugroup %>' " +
+        'width=170 height=216 >'
     );
+
+    const chartGroup = new dc.ChartGroup();
 
     d3.csv('mep.csv').then(data => {
       const ndx = crossfilter(data),
@@ -117,12 +127,16 @@
 
       data.forEach(e => {
         birthdate = dateParse(e.birthdate);
-        e.age = ~~((now - birthdate) / 31557600000); // 24 * 3600 * 365.25 * 1000
+        e.age = Math.floor((now - birthdate) / 31557600000); // 24 * 3600 * 365.25 * 1000
       });
 
-      const pieGroup = new dc.PieChart(`${'#ep2014list'} .group`)
-        .innerRadius(20)
-        .radius(70);
+      const pieGroup = new dc.PieChart(
+        `${'#ep2014list'} .group`,
+        chartGroup
+      ).configure({
+        innerRadius: 20,
+        radius: 70,
+      });
       const group = ndx.dimension(d => {
         if (typeof d.eugroup === 'undefined') {
           return '';
@@ -132,7 +146,7 @@
 
       const groupGroup = group.group().reduceSum(d => 1);
 
-      const chartAge = new dc.LineChart(`${'#ep2014list'} .age`);
+      const chartAge = new dc.LineChart(`${'#ep2014list'} .age`, chartGroup);
 
       const age = ndx.dimension(d => {
         if (typeof d.age === 'undefined') {
@@ -144,18 +158,33 @@
       const ageGroup = age.group().reduceSum(d => 1);
 
       chartAge
+        .dataProvider(
+          new dc.CFMultiAdapter({
+            dimension: age,
+            layers: [
+              {
+                group: ageGroup,
+              },
+            ],
+          })
+        )
+        .configure({
+          brushOn: true,
+          elasticY: true,
+        })
         .width(444)
         .height(200)
         .margins({ top: 0, right: 0, bottom: 95, left: 30 })
         .x(d3.scaleLinear().domain([20, 100]))
-        .brushOn(true)
         .renderArea(true)
-        .elasticY(true)
-        .yAxisLabel('#MEPs')
-        .dimension(age)
-        .group(ageGroup);
+        .yAxisLabel('#MEPs');
 
-      const pieGender = new dc.PieChart(`${'#ep2014list'} .gender`).radius(70);
+      const pieGender = new dc.PieChart(
+        `${'#ep2014list'} .gender`,
+        chartGroup
+      ).configure({
+        radius: 70,
+      });
       const gender = ndx.dimension(d => {
         if (typeof d.gender === 'undefined') {
           return '';
@@ -165,7 +194,10 @@
 
       const groupGender = gender.group().reduceSum(d => 1);
 
-      const barCountry = new dc.BarChart(`${'#ep2014list'} .country`);
+      const barCountry = new dc.BarChart(
+        `${'#ep2014list'} .country`,
+        chartGroup
+      );
       const country = ndx.dimension(d => {
         if (typeof d.country === 'undefined') {
           return '';
@@ -178,34 +210,53 @@
       const SymbolGender = { M: '\u2642', F: '\u2640', '': '' };
 
       pieGender
+        .dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: gender,
+            group: groupGender,
+          })
+        )
+        .configure({
+          label: d => SymbolGender[d.key],
+          title: d => `${NameGender[d.key]}: ${d.value}`,
+        })
         .width(200)
-        .height(200)
-        .dimension(gender)
-        .label(d => SymbolGender[d.key])
-        .title(d => `${NameGender[d.key]}: ${d.value}`)
-        .group(groupGender);
+        .height(200);
 
       pieGroup
+        .dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: group,
+            group: groupGroup,
+          })
+        )
         .width(200)
         .height(200)
-        .dimension(group)
-        .colors(d3.scaleOrdinal(d3.schemeCategory10))
-        .group(groupGroup)
-        .on('renderlet', chart => {});
+        .colorScale(d3.scaleOrdinal(d3.schemeCategory10));
 
       barCountry
+        .dataProvider(
+          new dc.CFMultiAdapter({
+            dimension: country,
+            layers: [
+              {
+                group: countryGroup,
+              },
+            ],
+          })
+        )
+        .configure({
+          xUnits: dc.UnitsOrdinal,
+          brushOn: false,
+          elasticY: true,
+        })
         .width(444)
         .height(200)
         .outerPadding(0)
         .gap(1)
         .margins({ top: 0, right: 0, bottom: 95, left: 30 })
         .x(d3.scaleBand())
-        .xUnits(dc.units.ordinal)
-        .brushOn(false)
-        .elasticY(true)
-        .yAxisLabel('#MEPs')
-        .dimension(country)
-        .group(countryGroup);
+        .yAxisLabel('#MEPs');
 
       barCountry.on('postRender', c => {
         rotateBarChartLabels();
@@ -217,15 +268,23 @@
           .attr('transform', d => 'rotate(-90, -4, 9) ');
       }
 
-      new dc.DataCount('.dc-data-count').crossfilter(ndx).groupAll(all);
+      new dc.DataCount('.dc-data-count', chartGroup)
+        .crossfilter(ndx)
+        .groupAll(all);
 
-      new dc.DataGrid('.dc-data-grid')
-        .dimension(country)
-        .section(d => d.country)
-        .size(1000)
-        .html(d => tpl(d))
-        .sortBy(d => d.last_name)
-        .order(d3.ascending)
+      new dc.DataGrid('.dc-data-grid', chartGroup)
+        .dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: country,
+          })
+        )
+        .configure({
+          section: d => d.country,
+          size: 1000,
+          html: d => tpl(d),
+          sortBy: d => d.last_name,
+          order: d3.ascending,
+        })
         .on('renderlet', grid => {
           $('img.lazy-load')
             .lazyload({
@@ -234,7 +293,7 @@
             .removeClass('lazy-load');
         });
 
-      dc.renderAll();
+      chartGroup.renderAll();
     });
   </script>
 </html>
