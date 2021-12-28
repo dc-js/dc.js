@@ -387,17 +387,18 @@
 
   <script type="text/javascript" src="../js/d3.js"></script>
   <script type="text/javascript" src="../js/crossfilter.js"></script>
-  <script type="text/javascript" src="../js/dc-compat.js"></script>
+  <script type="text/javascript" src="../js/dc.js"></script>
   <script type="text/javascript">
+    const chartGroup = new dc.ChartGroup();
     const numberFormat = d3.format('.2f');
 
-    const caChart = new dc.BubbleOverlay('#ca-chart').svg(
+    const caChart = new dc.BubbleOverlay('#ca-chart', chartGroup).svg(
       d3.select('#ca-chart svg')
     );
 
-    const incidentChart = new dc.BarChart('#incident-chart');
+    const incidentChart = new dc.BarChart('#incident-chart', chartGroup);
 
-    const homicideChart = new dc.LineChart('#homicide-chart');
+    const homicideChart = new dc.LineChart('#homicide-chart', chartGroup);
 
     function isTotalCrimeRateRecord(v) {
       return (
@@ -512,90 +513,174 @@
       );
 
       caChart
-        .width(600)
-        .height(450)
-        .dimension(cities)
-        .group(totalCrimeRateByCity)
-        .radiusValueAccessor(p => p.value.avgTotalCrimeRate)
-        .r(d3.scaleLinear().domain([0, 200000]))
-        .colors(['#ff7373', '#ff4040', '#ff0000', '#bf3030', '#a60000'])
-        .colorDomain([13, 30])
-        .colorAccessor(p => p.value.violentCrimeRatio)
-        .title(
-          d =>
+        .dataProvider(
+          new dc.CFSimpleAdapter({
+            dimension: cities,
+            group: totalCrimeRateByCity,
+          })
+        )
+        .configure({
+          radiusValueAccessor: p => p.value.avgTotalCrimeRate,
+          colorAccessor: p => p.value.violentCrimeRatio,
+          title: d =>
             `City: ${d.key}\nTotal crime per 100k population: ${numberFormat(
               d.value.avgTotalCrimeRate
             )}\nViolent crime per 100k population: ${numberFormat(
               d.value.avgViolentCrimeRate
             )}\nViolent/Total crime ratio: ${numberFormat(
               d.value.violentCrimeRatio
-            )}%`
+            )}%`,
+          points: [
+            {
+              name: 'Toronto',
+              x: 364,
+              y: 400,
+            },
+            {
+              name: 'Ottawa',
+              x: 395.5,
+              y: 383,
+            },
+            {
+              name: 'Vancouver',
+              x: 40.5,
+              y: 316,
+            },
+            {
+              name: 'Montreal',
+              x: 417,
+              y: 370,
+            },
+            {
+              name: 'Edmonton',
+              x: 120,
+              y: 299,
+            },
+            {
+              name: 'Saskatoon',
+              x: 163,
+              y: 322,
+            },
+            {
+              name: 'Winnipeg',
+              x: 229,
+              y: 345,
+            },
+            {
+              name: 'Calgary',
+              x: 119,
+              y: 329,
+            },
+            {
+              name: 'Quebec',
+              x: 431,
+              y: 351,
+            },
+            {
+              name: 'Halifax',
+              x: 496,
+              y: 367,
+            },
+            {
+              name: "St. John's",
+              x: 553,
+              y: 323,
+            },
+            {
+              name: 'Yukon',
+              x: 44,
+              y: 176,
+            },
+            {
+              name: 'Northwest Territories',
+              x: 125,
+              y: 195,
+            },
+            {
+              name: 'Nunavut',
+              x: 273,
+              y: 188,
+            },
+          ],
+        })
+        .width(600)
+        .height(450)
+        .r(d3.scaleLinear().domain([0, 200000]))
+        .colorScale(
+          d3
+            .scaleQuantize()
+            .range(['#ff7373', '#ff4040', '#ff0000', '#bf3030', '#a60000'])
         )
-        .point('Toronto', 364, 400)
-        .point('Ottawa', 395.5, 383)
-        .point('Vancouver', 40.5, 316)
-        .point('Montreal', 417, 370)
-        .point('Edmonton', 120, 299)
-        .point('Saskatoon', 163, 322)
-        .point('Winnipeg', 229, 345)
-        .point('Calgary', 119, 329)
-        .point('Quebec', 431, 351)
-        .point('Halifax', 496, 367)
-        .point("St. John's", 553, 323)
-        .point('Yukon', 44, 176)
-        .point('Northwest Territories', 125, 195)
-        .point('Nunavut', 273, 188)
+        .colorDomain([13, 30])
         .debug(false);
 
       incidentChart
-        .width(360)
-        .height(180)
-        .margins({ top: 40, right: 50, bottom: 30, left: 60 })
-        .dimension(years)
-        .group(crimeIncidentByYear, 'Non-Violent Crime')
-        .valueAccessor(d => d.value.nonViolentCrimeAvg)
-        .stack(
-          crimeIncidentByYear,
-          'Violent Crime',
-          d => d.value.violentCrimeAvg
+        .dataProvider(
+          new dc.CFMultiAdapter({
+            dimension: years,
+            valueAccessor: d => d.value.nonViolentCrimeAvg,
+            layers: [
+              {
+                group: crimeIncidentByYear,
+                name: 'Non-Violent Crime',
+              },
+              {
+                group: crimeIncidentByYear,
+                name: 'Violent Crime',
+                valueAccessor: d => d.value.violentCrimeAvg,
+              },
+            ],
+          })
         )
-        .x(d3.scaleLinear().domain([1997, 2012]))
-        .renderHorizontalGridLines(true)
-        .centerBar(true)
-        .elasticY(true)
-        .brushOn(false)
-        .legend(new dc.Legend().x(250).y(10))
-        .title(
-          d =>
+        .configure({
+          renderHorizontalGridLines: true,
+          centerBar: true,
+          elasticY: true,
+          brushOn: false,
+          title: d =>
             `${d.key}\nViolent crime per 100k population: ${Math.round(
               d.value.violentCrimeAvg
             )}\nNon-Violent crime per 100k population: ${Math.round(
               d.value.nonViolentCrimeAvg
-            )}`
-        )
+            )}`,
+        })
+        .width(360)
+        .height(180)
+        .margins({ top: 40, right: 50, bottom: 30, left: 60 })
+        .x(d3.scaleLinear().domain([1997, 2012]))
+        .legend(new dc.Legend().x(250).y(10))
         .xAxis()
         .ticks(5)
         .tickFormat(d3.format('d'));
 
       homicideChart
+        .dataProvider(
+          new dc.CFMultiAdapter({
+            dimension: years,
+            valueAccessor: d => d.value.homicide,
+            layers: [
+              {
+                group: crimeIncidentByYear,
+              },
+            ],
+          })
+        )
+        .configure({
+          renderHorizontalGridLines: true,
+          elasticY: true,
+          brushOn: true,
+          title: d =>
+            `${d.key}\nHomicide incidents: ${Math.round(d.value.homicide)}`,
+        })
         .width(360)
         .height(150)
         .margins({ top: 10, right: 50, bottom: 30, left: 60 })
-        .dimension(years)
-        .group(crimeIncidentByYear)
-        .valueAccessor(d => d.value.homicide)
         .x(d3.scaleLinear().domain([1997, 2012]))
-        .renderHorizontalGridLines(true)
-        .elasticY(true)
-        .brushOn(true)
-        .title(
-          d => `${d.key}\nHomicide incidents: ${Math.round(d.value.homicide)}`
-        )
         .xAxis()
         .ticks(5)
         .tickFormat(d3.format('d'));
 
-      dc.renderAll();
+      chartGroup.renderAll();
     });
   </script>
   <script type="text/javascript">
