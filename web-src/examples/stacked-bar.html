@@ -28,7 +28,8 @@
           }
         }
 
-        const chart = new MyBarChart('#test');
+        const chartGroup = new dc.ChartGroup();
+        const chart = new MyBarChart('#test', chartGroup);
 
         d3.csv('morley.csv').then(experiments => {
           experiments.forEach(x => {
@@ -49,29 +50,35 @@
               () => ({})
             );
 
-          function selStack(i) {
-            return d => d.value[i];
-          }
-
           chart
+            .dataProvider(
+              new dc.CFMultiAdapter({
+                dimension: runDimension,
+                layers: [1, 2, 3, 4, 5].map(i => ({
+                  group: speedSumGroup,
+                  name: i,
+                  valueAccessor: d => d.value[i],
+                })),
+              })
+            )
+            .configure({
+              brushOn: false,
+              clipPadding: 10,
+              // TODO: attach layer name to d to simplify these cases
+              titles: [1, 2, 3, 4, 5].reduce(
+                (acc, i) => ({
+                  ...acc,
+                  [i]: d => `${d.key}[${i}]: ${d._value}`,
+                }),
+                {}
+              ),
+              renderLabel: true,
+            })
             .width(768)
             .height(480)
             .x(d3.scaleLinear().domain([1, 21]))
             .margins({ left: 80, top: 20, right: 10, bottom: 20 })
-            .brushOn(false)
-            .clipPadding(10)
-            .title(function (d) {
-              return `${d.key}[${this.layer}]: ${d.value[this.layer]}`;
-            })
-            .dimension(runDimension)
-            .group(speedSumGroup, '1', selStack('1'))
-            .renderLabel(true);
-
-          chart.legend(dc.legend());
-
-          for (let i = 2; i < 6; ++i) {
-            chart.stack(speedSumGroup, `${i}`, selStack(i));
-          }
+            .legend(new dc.Legend());
 
           chart.render();
         });
