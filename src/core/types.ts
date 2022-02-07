@@ -8,6 +8,8 @@ export type ChartGroupType = string | IChartGroup;
 
 export type ColorsList = string[];
 
+export type SizeT = { width: number; height: number };
+
 export interface MinimalCFDimension {
     filter(value): this;
     filterExact(value): this;

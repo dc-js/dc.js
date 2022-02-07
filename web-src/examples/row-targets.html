@@ -40,6 +40,10 @@
           };
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -49,10 +53,8 @@
             .configure({
               elasticX: true,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleLinear().domain([6, 20]))
-              // eslint-disable-next-line no-shadow
+            // eslint-disable-next-line no-shadow
             .on('pretransition', chart => {
               // read height from one of the row rects, because it's difficult to calculate
               const height = chart.select('g.row rect').attr('height');

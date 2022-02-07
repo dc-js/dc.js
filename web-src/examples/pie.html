@@ -28,6 +28,10 @@
               .reduceSum(d => d.Speed * d.Run);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFDataCapHelper({
                 cap: 4,
@@ -38,8 +42,6 @@
             .configure({
               innerRadius: 100,
             })
-            .width(768)
-            .height(480)
             .legend(new dc.Legend().highlightSelected(true))
             // workaround for #703: not enough data is accessible through .label() to display percentages
             // eslint-disable-next-line no-shadow

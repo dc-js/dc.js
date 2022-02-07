@@ -28,6 +28,10 @@
             speedSumGroup = runDimension.group();
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -40,8 +44,6 @@
               symbolSize: 8,
               clipPadding: 10,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleLinear().domain([6, 20]))
             .yAxisLabel('This is the Y Axis!');
 

@@ -30,6 +30,10 @@
               .reduceSum(d => (d.Speed * d.Run) / 1000);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -39,8 +43,6 @@
             .configure({
               elasticX: true,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleLinear().domain([6, 20]))
             .on('pretransition', chart => {
               const xVert = 45;

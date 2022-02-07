@@ -84,6 +84,10 @@
               );
 
           heatmapChart
+            .configure({
+              width: 12 * 80 + 80,
+              height: 27 * 10 + 40,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: monthOfTheYearDimension,
@@ -101,8 +105,6 @@
                 `  Year:   ${d.key[1]}\n` +
                 `  Gain:   ${d.value.percentageGain}%`,
             })
-            .width(12 * 80 + 80)
-            .height(27 * 10 + 40)
             .colorScale(
               d3
                 .scaleLinear()
@@ -128,6 +130,10 @@
             );
 
           barChart
+            .configure({
+              width: 12 * 80 + 80,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: monthlyDimension,
@@ -142,8 +148,6 @@
               elasticY: true,
               centerBar: true,
             })
-            .width(12 * 80 + 80)
-            .height(480)
             .y(d3.scaleLinear().domain([-10.0, 100.0]))
             .x(d3.scaleLinear().domain([-0.5, 11.5]));
 

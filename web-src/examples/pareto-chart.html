@@ -58,14 +58,16 @@
         const speedDim_ = ndx_.dimension(d => Math.floor(d.time / 3));
 
         speedPie
+          .configure({
+            width: 300,
+            height: 300,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: speedDim_,
               group: speedDim_.group(),
             })
-          )
-          .width(300)
-          .height(300);
+          );
 
         function paretoGroup(group, groupall) {
           return {
@@ -91,6 +93,10 @@
         const pg = paretoGroup(grp1_, allTime_);
 
         chart
+          .configure({
+            width: 500,
+            height: 360,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               group: pg,
@@ -103,8 +109,6 @@
             xUnits: dc.UnitsOrdinal,
             renderHorizontalGridLines: true,
           })
-          .width(500)
-          .height(360)
           .x(d3.scaleBand())
           ._rangeBandPadding(1)
           .yAxisLabel('The Y Axis')

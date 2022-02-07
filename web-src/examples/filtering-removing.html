@@ -76,6 +76,10 @@
           nonEmptyHist = removeEmptyBins(spendHist);
 
         yearRingChart
+          .configure({
+            width: 200,
+            height: 200,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: yearDim,
@@ -84,11 +88,13 @@
           )
           .configure({
             innerRadius: 50,
-          })
-          .width(200)
-          .height(200);
+          });
 
         spendHistChart
+          .configure({
+            width: 300,
+            height: 200,
+          })
           .dataProvider(
             new dc.CFMultiAdapter({
               dimension: spendDim,
@@ -105,14 +111,16 @@
             elasticX: true,
             elasticY: true,
           })
-          .width(300)
-          .height(200)
           .x(d3.scaleBand());
 
         spendHistChart.xAxis().tickFormat(d => d * 10); // convert back to base unit
         spendHistChart.yAxis().ticks(2);
 
         spenderRowChart
+          .configure({
+            width: 350,
+            height: 200,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: nameDim,
@@ -121,9 +129,7 @@
           )
           .configure({
             elasticX: true,
-          })
-          .width(350)
-          .height(200);
+          });
 
         chartGroup.renderAll();
       </script>

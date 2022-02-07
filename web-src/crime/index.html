@@ -512,7 +512,10 @@
         })
       );
 
-      caChart
+      caChart.configure({
+        width: 600,
+        height: 450
+      })
         .dataProvider(
           new dc.CFSimpleAdapter({
             dimension: cities,
@@ -603,8 +606,6 @@
             },
           ],
         })
-        .width(600)
-        .height(450)
         .r(d3.scaleLinear().domain([0, 200000]))
         .colorScale(
           d3
@@ -614,7 +615,10 @@
         .colorDomain([13, 30])
         .debug(false);
 
-      incidentChart
+      incidentChart.configure({
+        width: 360,
+        height: 180
+      })
         .dataProvider(
           new dc.CFMultiAdapter({
             dimension: years,
@@ -644,8 +648,6 @@
               d.value.nonViolentCrimeAvg
             )}`,
         })
-        .width(360)
-        .height(180)
         .margins({ top: 40, right: 50, bottom: 30, left: 60 })
         .x(d3.scaleLinear().domain([1997, 2012]))
         .legend(new dc.Legend().x(250).y(10))
@@ -653,7 +655,10 @@
         .ticks(5)
         .tickFormat(d3.format('d'));
 
-      homicideChart
+      homicideChart.configure({
+        width: 360,
+        height: 150
+      })
         .dataProvider(
           new dc.CFMultiAdapter({
             dimension: years,
@@ -672,8 +677,6 @@
           title: d =>
             `${d.key}\nHomicide incidents: ${Math.round(d.value.homicide)}`,
         })
-        .width(360)
-        .height(150)
         .margins({ top: 10, right: 50, bottom: 30, left: 60 })
         .x(d3.scaleLinear().domain([1997, 2012]))
         .xAxis()
@@ -682,8 +685,7 @@
 
       chartGroup.renderAll();
     });
-  </script>
-  <script type="text/javascript">
+  </script>  <script type="text/javascript">
     /* eslint-disable */
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-33628816-1']);

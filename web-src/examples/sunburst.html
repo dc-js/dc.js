@@ -51,26 +51,34 @@
             .reduceSum(d => d.Speed);
 
           chart3
+            .configure({
+              width: 200,
+              height: 200,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: exptOnlyDimension,
                 group: exptOnlySpeedGroup,
               })
-            )
-            .width(200)
-            .height(200);
+            );
 
           chart2
+            .configure({
+              width: 200,
+              height: 200,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runOnlyDimension,
                 group: runOnlySpeedGroup,
               })
-            )
-            .width(200)
-            .height(200);
+            );
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -80,8 +88,6 @@
             .configure({
               innerRadius: 100,
             })
-            .width(768)
-            .height(480)
             .legend(new dc.Legend());
 
           chartGroup.renderAll();

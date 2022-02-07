@@ -83,6 +83,10 @@
             );
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: reversibleGroup(avgGroup),
@@ -105,9 +109,7 @@
 
               sortBy: d => d.value.avg,
               order: d3.descending,
-            })
-            .width(768)
-            .height(480);
+            });
           chart.render();
 
           function reversibleGroup(group) {

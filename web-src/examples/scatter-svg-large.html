@@ -73,6 +73,11 @@
 
         const plotColorMap = { 0: '#ff7f0e', 1: '#2ca02c' };
         const chart1 = new dc.ScatterPlot('#test1', chartGroup)
+          .configure({
+            width: 300,
+            height: 300,
+            width: 350,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               valueAccessor: d => d.key[1],
@@ -91,9 +96,6 @@
             excludedColor: '#ddd',
             colorAccessor: d => d.key[2],
           })
-          .width(300)
-          .height(300)
-          .width(350)
           .x(d3.scaleLinear().domain([-8, 8]))
           .yAxisLabel('Feature 2')
           .xAxisLabel('Feature 1')
@@ -117,6 +119,11 @@
         );
 
         const chart2 = new dc.ScatterPlot('#test2', chartGroup)
+          .configure({
+            width: 300,
+            height: 300,
+            width: 350,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: dim2,
@@ -134,9 +141,6 @@
             excludedColor: '#ddd',
             colorAccessor: d => d.key[2],
           })
-          .width(300)
-          .height(300)
-          .width(350)
           .x(d3.scaleLinear().domain([-8, 8]))
           .yAxisLabel('Feature 2')
           .xAxisLabel('Feature 3')

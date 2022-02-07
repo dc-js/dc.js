@@ -35,6 +35,10 @@
               .reduceSum(d => (d.Speed * d.Run) / 4000);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: scatterDimension,
@@ -44,8 +48,6 @@
               clipPadding: 10,
               brushOn: false,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleLinear().domain([6, 20]))
             .yAxisLabel('This is the Y Axis!')
             .legend(new dc.Legend().x(70).y(10).itemHeight(13).gap(5))

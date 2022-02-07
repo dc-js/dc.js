@@ -89,6 +89,10 @@
             quantizeSpeedGroup = quantizeSpeedDim.group();
 
           chart
+            .configure({
+              width: 600,
+              height: 400,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: runExptDim,
@@ -110,8 +114,6 @@
 
               renderLabel: true,
             })
-            .width(600)
-            .height(400)
             .x(d3.scaleLinear().domain([1, 21]))
             .margins({ left: 80, top: 20, right: 10, bottom: 20 });
 
@@ -132,6 +134,10 @@
           });
 
           pie
+            .configure({
+              width: 300,
+              height: 300,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: quantizeSpeedDim,
@@ -140,9 +146,7 @@
             )
             .configure({
               controlsUseVisibility: true,
-            })
-            .width(300)
-            .height(300);
+            });
 
           chartGroup.renderAll();
         });

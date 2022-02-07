@@ -30,6 +30,10 @@
               .reduceSum(d => (d.Speed * d.Run) / 1000);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: runDimension,
@@ -45,8 +49,6 @@
               brushOn: false,
               clipPadding: 10,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleLinear().domain([0, 20]))
             .curve(d3.curveStepBefore)
             .renderArea(true)

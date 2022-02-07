@@ -37,6 +37,10 @@
           ['#test1', '#test2', '#test3', '#test4'].forEach(anchor => {
             const chart = new dc.BarChart(anchor, chartGroup);
             chart
+              .configure({
+                width: 400,
+                height: 300,
+              })
               .dataProvider(
                 new dc.CFMultiAdapter({
                   dimension: runDimension,
@@ -51,8 +55,6 @@
                 elasticX: true,
                 brushOn: true,
               })
-              .width(400)
-              .height(300)
               .x(d3.scaleLinear());
 
             return chart;

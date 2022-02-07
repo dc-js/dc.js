@@ -161,6 +161,10 @@
                 const showYAxis = x === 1,
                   showXAxis = y === 4;
                 chart
+                  .configure({
+                    width: 200 + (showYAxis ? 25 : 0),
+                    height: 200 + (showXAxis ? 20 : 0),
+                  })
                   .dataProvider(
                     new dc.CFSimpleAdapter({
                       dimension: dim,
@@ -188,8 +192,6 @@
                     renderHorizontalGridLines: true,
                     renderVerticalGridLines: true,
                   })
-                  .width(200 + (showYAxis ? 25 : 0))
-                  .height(200 + (showXAxis ? 20 : 0))
                   .margins({
                     left: showYAxis ? 25 : 8,
                     top: 5,

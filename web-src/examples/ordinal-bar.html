@@ -25,6 +25,10 @@
             sumGroup = fruitDimension.group().reduceSum(d => d.cnt);
 
           chart
+            .configure({
+              width: 768,
+              height: 380,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: fruitDimension,
@@ -40,8 +44,6 @@
               xUnits: dc.UnitsOrdinal,
               brushOn: false,
             })
-            .width(768)
-            .height(380)
             .x(d3.scaleBand())
             .xAxisLabel('Fruit')
             .yAxisLabel('Quantity Sold')

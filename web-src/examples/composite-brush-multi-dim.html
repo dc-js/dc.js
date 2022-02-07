@@ -68,6 +68,10 @@
         // `chart.dataProvider.configure({shareFilters: false});`.
         // See https://github.com/dc-js/dc.js/issues/1788#issuecomment-766388520
         chart
+          .configure({
+            width: 768,
+            height: 480,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: dimX,
@@ -77,8 +81,6 @@
           .configure({
             clipPadding: 10,
           })
-          .width(768)
-          .height(480)
           .x(d3.scaleLinear().domain([0, 16]))
           .yAxisLabel('y')
           .xAxisLabel('x')

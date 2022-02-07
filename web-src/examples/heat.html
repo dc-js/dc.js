@@ -32,6 +32,10 @@
             runGroup = runDim.group().reduceSum(d => +d.Speed);
 
           chart
+            .configure({
+              width: 45 * 20 + 80,
+              height: 45 * 5 + 40,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDim,
@@ -48,8 +52,6 @@
                 `Expt:  ${d.key[1]}\n` +
                 `Speed: ${299000 + d.value} km/s`,
             })
-            .width(45 * 20 + 80)
-            .height(45 * 5 + 40)
             .colorScale(
               d3
                 .scaleQuantize()

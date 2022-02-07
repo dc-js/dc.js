@@ -475,23 +475,6 @@ describe('dc.baseMixin', () => {
                 expect(chart.width()).toEqual(300);
             });
         });
-
-        describe('when set to a callback function', () => {
-            let setterSpy;
-            beforeEach(() => {
-                setterSpy = jasmine.createSpy().and.returnValue(800);
-                chart.width(setterSpy).render();
-            });
-
-            it('should not execute callback before width() is called', () => {
-                expect(setterSpy).not.toHaveBeenCalled();
-            });
-
-            it('should ask the callback for the width', () => {
-                expect(chart.width()).toEqual(800);
-                expect(setterSpy).toHaveBeenCalled();
-            });
-        });
     });
 
     describe('viewbox resizing strategy', () => {

@@ -47,6 +47,10 @@
             );
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: monthDimension,
@@ -58,8 +62,6 @@
               xUnits: d3.timeMonths,
               elasticY: true,
             })
-            .width(768)
-            .height(480)
             .margins({ top: 10, right: 50, bottom: 30, left: 50 })
             .x(d3.scaleTime());
 
@@ -74,6 +76,10 @@
           chart.on('preRedraw', calcDomain);
 
           pie
+            .configure({
+              width: 140,
+              height: 140,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: openDimension,
@@ -82,9 +88,7 @@
             )
             .configure({
               radius: 70,
-            })
-            .width(140)
-            .height(140);
+            });
 
           chartGroup.renderAll();
         });

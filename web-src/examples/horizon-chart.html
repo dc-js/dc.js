@@ -175,6 +175,10 @@
             .valueAccessor(d => d.value - 500);
 
           seriesChart
+            .configure({
+              width: 760,
+              height: 250,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runFilterDim,
@@ -194,8 +198,6 @@
               seriesAccessor: d => d.key[0],
               keyAccessor: d => d.key[1],
             })
-            .width(760)
-            .height(250)
             .margins({ left: 0, right: 0, top: 0, bottom: 0 })
             .x(d3.scaleLinear().domain([1, 20]))
             .y(
@@ -218,14 +220,16 @@
             exptGroup = exptDim.group();
 
           exptPie
+            .configure({
+              width: 250,
+              height: 250,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: exptDim,
                 group: exptGroup,
               })
             )
-            .width(250)
-            .height(250)
             .colorScale(
               d3.scaleOrdinal().domain([1, 6]).range(d3.schemeCategory10)
             );
@@ -240,6 +244,10 @@
 
           // range(d3.range(0, 1, 1/speeds.length).map(d3.interpolateTurbo)))
           speedPie
+            .configure({
+              width: 250,
+              height: 250,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 ordering: d => speeds.indexOf(d.key),
@@ -250,8 +258,6 @@
             .configure({
               minAngleForLabel: 0,
             })
-            .width(250)
-            .height(250)
             .colorScale(
               d3
                 .scaleOrdinal()
@@ -267,6 +273,10 @@
             runGroup = runDim.group();
 
           runPie
+            .configure({
+              width: 250,
+              height: 250,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 ordering: d => d.key,
@@ -277,8 +287,6 @@
             .configure({
               minAngleForLabel: 0,
             })
-            .width(250)
-            .height(250)
             .colorScale(
               d3
                 .scaleOrdinal()

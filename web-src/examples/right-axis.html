@@ -59,6 +59,10 @@
           );
 
           moveChart
+            .configure({
+              width: 600,
+              height: 300,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: moveMonths,
@@ -74,8 +78,6 @@
               renderHorizontalGridLines: true,
               brushOn: false,
             })
-            .width(600)
-            .height(300)
             .margins({ top: 30, right: 50, bottom: 25, left: 60 })
             .x(
               d3

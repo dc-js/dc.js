@@ -116,13 +116,15 @@
 
           chart
             .configure({
+              width: 768,
+              height: 480,
+            })
+            .configure({
               xUnits: d3.timeWeeks,
               elasticX: true,
               elasticY: true,
               clipPadding: 10,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleTime())
             .margins({ left: 50, top: 0, right: 0, bottom: 20 });
           chart.yAxis().tickFormat(d3.format('.3s'));

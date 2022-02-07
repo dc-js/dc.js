@@ -52,18 +52,24 @@
           ];
 
           fileChart
+            .configure({
+              width: 700,
+              height: 640,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: picturesDimension,
                 group: picturesGroup,
               })
             )
-            .width(700)
-            .height(640)
             .colorScale(d3.scaleOrdinal(d3SchemeCategory20b))
             .legend(new dc.Legend());
 
           typeChart
+            .configure({
+              width: 200,
+              height: 200,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: typeDimension,
@@ -72,9 +78,7 @@
             )
             .configure({
               innerRadius: 50,
-            })
-            .width(200)
-            .height(200);
+            });
 
           chartGroup.renderAll();
         });

@@ -55,10 +55,12 @@
 
             composite
               .configure({
+                width: 768,
+                height: 480,
+              })
+              .configure({
                 renderHorizontalGridLines: true,
               })
-              .width(768)
-              .height(480)
               .x(d3.scaleLinear().domain([2.9, 16.1]))
               .yAxisLabel('The Y Axis')
               .legend(new dc.Legend().x(80).y(20).itemHeight(13).gap(5))

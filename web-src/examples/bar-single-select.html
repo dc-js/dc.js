@@ -51,12 +51,14 @@
 
           chart
             .configure({
+              width: 768,
+              height: 480,
+            })
+            .configure({
               xUnits: dc.UnitsOrdinal,
               brushOn: true,
               controlsUseVisibility: true,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleBand())
             .yAxisLabel('This is the Y Axis!')
             .dataProvider(
