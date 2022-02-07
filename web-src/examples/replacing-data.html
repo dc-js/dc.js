@@ -66,6 +66,10 @@
           spendPerName = nameDim.group().reduceSum(d => +d.Spent);
 
         yearRingChart
+          .configure({
+            width: 200,
+            height: 200,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: yearDim,
@@ -74,11 +78,13 @@
           )
           .configure({
             innerRadius: 50,
-          })
-          .width(200)
-          .height(200);
+          });
 
         spenderRowChart
+          .configure({
+            width: 250,
+            height: 200,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: nameDim,
@@ -87,9 +93,7 @@
           )
           .configure({
             elasticX: true,
-          })
-          .width(250)
-          .height(200);
+          });
 
         chartGroup.renderAll();
 

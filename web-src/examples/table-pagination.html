@@ -59,6 +59,10 @@
             experimentGroup = experimentDimension.group().reduceCount();
 
           piechart
+            .configure({
+              width: 300,
+              height: 280,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: experimentDimension,
@@ -72,11 +76,13 @@
               drawPaths: true,
               controlsUseVisibility: true,
             })
-            .width(300)
-            .height(280)
             .legend(new dc.Legend());
 
           chart
+            .configure({
+              width: 300,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -89,8 +95,6 @@
               sortBy: d => [fmt(+d.Expt), fmt(+d.Run)],
               order: d3.ascending,
             })
-            .width(300)
-            .height(480)
             .on('preRender', updateOffset)
             .on('preRedraw', updateOffset)
             .on('pretransition', display);

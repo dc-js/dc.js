@@ -397,9 +397,10 @@ export class CompositeChart extends CoordinateGridMixin {
     public compose(subChartArray: CoordinateGridMixin[]) {
         this._children = subChartArray;
         this._children.forEach(child => {
-            child.height(this.height());
-            child.width(this.width());
-            child.margins(this.margins());
+            child.height = () => this.height();
+            child.width = () => this.width();
+            // @ts-ignore
+            child.margins = () => this.margins();
 
             if (this._conf.shareTitle) {
                 child.configure({
@@ -413,44 +414,11 @@ export class CompositeChart extends CoordinateGridMixin {
         return this;
     }
 
-    public _setChildrenProperty(prop, value) {
-        this._children.forEach(child => {
-            child[prop](value);
-        });
-    }
-
-    // properties passed through in compose()
-    public height(): number;
-    public height(height: number | (() => number)): this;
-    public height(height?) {
-        if (!arguments.length) {
-            return super.height();
-        }
-        super.height(height);
-        this._setChildrenProperty('height', height);
-        return this;
-    }
-
-    public width(): number;
-    public width(width: number | (() => number)): this;
-    public width(width?) {
-        if (!arguments.length) {
-            return super.width();
-        }
-        super.width(width);
-        this._setChildrenProperty('width', width);
-        return this;
-    }
-
-    public margins(): Margins;
-    public margins(margins: Margins): this;
-    public margins(margins?) {
-        if (!arguments.length) {
-            return super.margins();
-        }
-        super.margins(margins);
-        this._setChildrenProperty('margins', margins);
-        return this;
+    public withoutTransitions(callback) {
+        const oldVals = this._children.map(child => child.conf().transitionDuration);
+        this._children.forEach(child => child.configure({ transitionDuration: 0 }));
+        super.withoutTransitions(callback);
+        this._children.forEach((child, i) => child.configure({ transitionDuration: oldVals[i] }));
     }
 
     /**

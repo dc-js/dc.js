@@ -55,6 +55,10 @@
               .reduceSum(d => (d.Speed * d.Run) / 1000);
 
           barChart
+            .configure({
+              width: 100,
+              height: 20,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: runDimension,
@@ -69,12 +73,14 @@
             .configure({
               brushOn: true,
             })
-            .width(100)
-            .height(20)
             .margins({ left: 0, top: 0, right: 0, bottom: 0 })
             .x(d3.scaleLinear().domain([6, 20]));
 
           lineChart
+            .configure({
+              width: 100,
+              height: 20,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: runDimension2,
@@ -88,8 +94,6 @@
             .configure({
               brushOn: true,
             })
-            .width(100)
-            .height(20)
             .margins({ left: 0, top: 0, right: 0, bottom: 0 })
             .x(d3.scaleLinear().domain([6, 20]));
 

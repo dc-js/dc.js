@@ -144,7 +144,10 @@
         );
 
         d3.json('../geo/us-states.json').then(statesJson => {
-          usChart
+          usChart.configure({
+            width: 990,
+            height: 500
+          })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: states,
@@ -163,8 +166,6 @@
                   d.value ? d.value : 0
                 )}M`,
             })
-            .width(990)
-            .height(500)
             .colorScale(
               d3
                 .scaleQuantize()
@@ -184,7 +185,10 @@
             .colorDomain([0, 200])
             .projection(d3.geoAlbersUsa());
 
-          industryChart
+          industryChart.configure({
+            width: 990,
+            height: 200
+          })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: industries,
@@ -210,8 +214,6 @@
                 `Amount Raised: ${numberFormat(p.value.amountRaised)}M\n` +
                 `Number of Deals: ${numberFormat(p.value.deals)}`,
             })
-            .width(990)
-            .height(200)
             .margins({ top: 10, right: 50, bottom: 30, left: 60 })
             .colorScale(d3.scaleOrdinal(d3.schemeCategory10))
             .x(d3.scaleLinear().domain([0, 5000]))
@@ -219,7 +221,10 @@
           industryChart.yAxis().tickFormat(s => `${s} deals`);
           industryChart.xAxis().tickFormat(s => `${s}M`);
 
-          roundChart
+          roundChart.configure({
+            width: 990,
+            height: 200
+          })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: rounds,
@@ -245,8 +250,6 @@
                 `Amount Raised: ${numberFormat(p.value.amountRaised)}M\n` +
                 `Number of Deals: ${numberFormat(p.value.deals)}`,
             })
-            .width(990)
-            .height(200)
             .margins({ top: 10, right: 50, bottom: 30, left: 60 })
             .colorScale(d3.scaleOrdinal(d3.schemeCategory10))
             .x(d3.scaleLinear().domain([0, 5000]))
@@ -257,8 +260,7 @@
           chartGroup.renderAll();
         });
       });
-    </script>
-    <script type="text/javascript">
+    </script>    <script type="text/javascript">
       /* eslint-disable */
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-33628816-1']);

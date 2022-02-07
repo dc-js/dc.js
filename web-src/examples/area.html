@@ -38,6 +38,10 @@
             );
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: runDimension,
@@ -52,8 +56,6 @@
               brushOn: false,
               clipPadding: 10,
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleLinear().domain([1, 20]))
             .margins({ left: 50, top: 10, right: 10, bottom: 20 })
             .renderArea(true)

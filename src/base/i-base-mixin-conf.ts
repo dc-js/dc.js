@@ -1,4 +1,4 @@
-import { KeyAccessor, LabelAccessor, TitleAccessor } from '../core/types';
+import { KeyAccessor, LabelAccessor, SizeT, TitleAccessor } from '../core/types';
 
 export interface IBaseMixinConf {
     readonly keyAccessor?: KeyAccessor;
@@ -12,6 +12,9 @@ export interface IBaseMixinConf {
     readonly transitionDuration?: number;
     readonly filterPrinter?: (filters: any) => string;
     readonly useViewBoxResizing?: boolean;
+    readonly width?: number;
+    readonly height?: number;
     readonly minWidth?: number;
     readonly minHeight?: number;
+    readonly beforeResize?: (rect: SizeT) => SizeT;
 }

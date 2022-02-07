@@ -184,6 +184,11 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         return this;
     }
 
+    protected handleResize(rect: { width: number; height: number }) {
+        this.rescale();
+        super.handleResize(rect);
+    }
+
     /**
      * @hidden
      */

@@ -79,6 +79,10 @@
           bar = new dc.BarChart('#bar', chartGroup);
           const linearDomain = [-0.5, mappings.length() - 0.5];
           bar
+            .configure({
+              width: 1000,
+              height: 300,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: dimension,
@@ -97,8 +101,6 @@
               brushOn: true,
               title: kv => mappings.int2ord(kv.key),
             })
-            .width(1000)
-            .height(300)
             .margins({ left: 75, top: 0, right: 10, bottom: 140 })
             .x(d3.scaleLinear().domain(linearDomain))
             .yAxisLabel('counts'); // Titles would not show with brush on
@@ -117,6 +119,10 @@
 
           const row = new dc.RowChart('#first-letters', chartGroup);
           row
+            .configure({
+              width: 1000,
+              height: 350,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: letterDimension,
@@ -125,9 +131,7 @@
             )
             .configure({
               gap: 1,
-            })
-            .width(1000)
-            .height(350);
+            });
 
           chartGroup.renderAll();
         });

@@ -30,6 +30,10 @@
               .reduceSum(d => (d.Speed * d.Run) / 1000);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -39,8 +43,6 @@
             .configure({
               elasticX: true,
             })
-            .width(768)
-            .height(480)
             .margins({ top: 20, right: 20, bottom: 20, left: 20 })
             .x(d3.scaleLinear().domain([6, 20]))
             .xAxis(d3.axisTop());

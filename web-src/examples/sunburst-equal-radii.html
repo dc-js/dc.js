@@ -37,6 +37,10 @@
           const speedSumGroup = runDimension.group().reduceSum(d => d.Speed);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -47,8 +51,6 @@
               innerRadius: 100,
               ringSizes: chart.equalRingSizes(),
             })
-            .width(768)
-            .height(480)
             .legend(new dc.Legend());
           // example for using concrete percentage values of the radius when knowing the number of rings beforehand
           // .ringSizes(dc.sunburstChart.relativeRingSizes(

@@ -49,14 +49,16 @@
 
           chart
             .configure({
+              width: 768,
+              height: 480,
+            })
+            .configure({
               elasticX: true,
               elasticY: true,
               brushOn: false,
               symbolSize: 8,
               clipPadding: 10,
             })
-            .width(768)
-            .height(480)
             .margins({ top: 0, right: 10, bottom: 20, left: 50 })
             .x(d3.scaleLinear());
 

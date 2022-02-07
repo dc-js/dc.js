@@ -106,6 +106,10 @@
           spendHist = spendDim.group().reduceCount();
 
         yearRingChart
+          .configure({
+            width: 300,
+            height: 300,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: yearDim,
@@ -115,9 +119,7 @@
           .configure({
             innerRadius: 50,
             controlsUseVisibility: true,
-          })
-          .width(300)
-          .height(300);
+          });
 
         spendHistChart
           .dataProvider(

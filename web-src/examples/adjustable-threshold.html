@@ -68,6 +68,10 @@
 
         //## score bar chart
         scoreChart
+          .configure({
+            width: 320,
+            height: 320,
+          })
           .dataProvider(
             new dc.CFMultiAdapter({
               dimension: bookDimension,
@@ -82,8 +86,6 @@
             elasticY: true,
             xUnits: dc.UnitsOrdinal,
           })
-          .width(320)
-          .height(320)
           .x(d3.scaleBand())
           .ordinalColors(['orange'])
           .yAxis()
@@ -110,6 +112,10 @@
         let coreCountGroup = coreCount.group();
 
         goodYesNoPieChart
+          .configure({
+            width: 320,
+            height: 320,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: coreCount,
@@ -133,9 +139,7 @@
               }
               return label;
             },
-          })
-          .width(320)
-          .height(320);
+          });
 
         chartGroup.renderAll();
 

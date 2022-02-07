@@ -113,6 +113,10 @@
       const bp01 = new dc.BoxPlot('#boxPlot01', chartGroup);
 
       bp01
+        .configure({
+          width: 320,
+          height: 250,
+        })
         .dataProvider(
           new dc.CFSimpleAdapter({
             dimension: bpGenderDim,
@@ -128,8 +132,6 @@
           elasticY: true,
           elasticX: true,
         })
-        .width(320)
-        .height(250)
         .yAxisLabel('Age (years)')
         .xAxisLabel('Gender', 0);
 
@@ -143,6 +145,10 @@
       const bp02 = new dc.BoxPlot('#boxPlot02', chartGroup);
 
       bp02
+        .configure({
+          width: 320,
+          height: 250,
+        })
         .dataProvider(
           new dc.CFSimpleAdapter({
             dimension: bpGenderDim,
@@ -158,8 +164,6 @@
           elasticY: true,
           elasticX: true,
         })
-        .width(320)
-        .height(250)
         .yAxisLabel('Age (years)')
         .xAxisLabel('Gender', 0);
 
@@ -173,6 +177,10 @@
       const bp03 = new dc.BoxPlot('#boxPlot03', chartGroup);
 
       bp03
+        .configure({
+          width: 320,
+          height: 250,
+        })
         .dataProvider(
           new dc.CFSimpleAdapter({
             dimension: bpGenderDim,
@@ -188,8 +196,6 @@
           elasticY: true,
           elasticX: true,
         })
-        .width(320)
-        .height(250)
         .yAxisLabel('Age (years)')
         .xAxisLabel('Gender', 0);
 

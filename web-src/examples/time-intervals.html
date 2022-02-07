@@ -131,13 +131,15 @@
 
           monthChart
             .configure({
+              width: 400,
+              height: 300,
+            })
+            .configure({
               xUnits: d3.timeMonths,
               elasticX: true,
               brushOn: true,
               controlsUseVisibility: true,
             })
-            .width(400)
-            .height(300)
             .x(d3.scaleTime())
             .y(d3.scaleLinear().domain([0, 25]))
             .gap(5)
@@ -151,6 +153,10 @@
             );
 
           costChart
+            .configure({
+              width: 400,
+              height: 300,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: projectCostDimension,
@@ -166,8 +172,6 @@
               brushOn: true,
               controlsUseVisibility: true,
             })
-            .width(400)
-            .height(300)
             .x(d3.scaleLinear().domain([0, 24]))
             .y(d3.scaleLinear().domain([0, 25]))
             .yAxisLabel('Number of Projects')

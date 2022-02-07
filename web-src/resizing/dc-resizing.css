@@ -1,7 +1,6 @@
-div.fullsize {
-    position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+div.chart {
+  margin: 50px;
+  border: 1px solid red;
+  padding: 50px;
+  height: 60vh;
 }

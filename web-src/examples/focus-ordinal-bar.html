@@ -92,6 +92,10 @@
           focus = new dc.BarChart('#focus', chartGroup);
           const linearDomain = [-0.5, mappings.length() - 0.5];
           focus
+            .configure({
+              width: 1000,
+              height: 330,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: dimension,
@@ -114,8 +118,6 @@
               title: kv => mappings.int2ord(kv.key),
               transitionDuration: 0,
             })
-            .width(1000)
-            .height(330)
             .margins({ left: 60, top: 0, right: 10, bottom: 145 })
             .x(d3.scaleLinear().domain(linearDomain))
             .yAxisLabel('counts')
@@ -132,6 +134,10 @@
 
           range = new dc.BarChart('#range', chartGroup);
           range
+            .configure({
+              width: 1000,
+              height: 20,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 dimension: dimension,
@@ -150,8 +156,6 @@
               transitionDuration: 0,
             })
             .margins({ left: 74, top: 0, right: 20, bottom: 2 })
-            .width(1000)
-            .height(20)
             .x(d3.scaleLinear().domain(linearDomain));
 
           // display a row chart of first letters, to test filtering
@@ -163,6 +167,10 @@
 
           const row = new dc.RowChart('#first-letters', chartGroup);
           row
+            .configure({
+              width: 1000,
+              height: 350,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: letterDimension,
@@ -173,9 +181,7 @@
               gap: 1,
               elasticX: true,
               transitionDuration: 200,
-            })
-            .width(1000)
-            .height(350);
+            });
 
           chartGroup.renderAll();
 

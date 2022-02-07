@@ -190,12 +190,14 @@
                   rgroup = dim.group().reduceSum(d => d.rvalue);
                 chart
                   .configure({
+                    width: 200,
+                    height: 200,
+                  })
+                  .configure({
                     brushOn: false,
                     elasticX: true,
                     elasticY: true,
                   })
-                  .width(200)
-                  .height(200)
                   .margins({ left: 25, top: 20, right: 30, bottom: 20 })
                   .x(d3.scaleLinear())
                   .alignYAxes(true)

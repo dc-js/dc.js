@@ -26,6 +26,10 @@
               .reduceSum(d => d.Speed * d.Run);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFDataCapHelper({
                 cap: 4,
@@ -39,8 +43,6 @@
               externalRadiusPadding: 50,
               drawPaths: true,
             })
-            .width(768)
-            .height(480)
             .legend(new dc.Legend());
 
           // example of formatting the legend via svg

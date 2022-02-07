@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <title>dc.js - Resizing Pie Chart Example</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../css/dc.css"/>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="../css/dc.css" />
     <link rel="stylesheet" type="text/css" href="dc-resizing.css" />
-</head>
-<body>
+  </head>
+  <body>
+    <div id="test" class="chart"></div>
 
-<div id="test"></div>
+    <script type="text/javascript" src="../js/d3.js"></script>
+    <script type="text/javascript" src="../js/crossfilter.js"></script>
+    <script type="text/javascript" src="../js/dc.js"></script>
+    <script type="text/javascript">
+      const chartGroup = new dc.ChartGroup();
+      const chart = new dc.PieChart('#test', chartGroup);
+      d3.csv('../examples/morley.csv').then(experiments => {
+        const ndx = crossfilter(experiments);
+        const runDimension = ndx.dimension(d => `run-${d.Run}`);
+        const speedSumGroup = runDimension
+          .group()
+          .reduceSum(d => d.Speed * d.Run);
 
-<script type="text/javascript" src="../js/d3.js"></script>
-<script type="text/javascript" src="../js/crossfilter.js"></script>
-<script type="text/javascript" src="../js/dc.js"></script>
-<script type="text/javascript" src="dc-restore-transition-duration.js"></script>
-<script type="text/javascript" src="dc-resizing.js"></script>
-<script type="text/javascript">
+        chart
+          .dataProvider(
+            new dc.CFDataCapHelper({
+              cap: 4,
+              dimension: runDimension,
+              group: speedSumGroup,
+            })
+          )
+          .configure({
+            beforeResize: rect => {
+              const radius = d3.min([rect.width, rect.height]) / 2;
+              const innerRadius = radius * 0.4;
+              chart.configure({ innerRadius });
+            },
+          })
+          .legend(new dc.Legend());
 
-var chart = new dc.PieChart("#test");
-d3.csv("../examples/morley.csv").then(function(experiments) {
-
-  var ndx           = crossfilter(experiments),
-      runDimension  = ndx.dimension(function(d) {return "run-"+d.Run;})
-      speedSumGroup = runDimension.group().reduceSum(function(d) {return d.Speed * d.Run;});
-
-  var adjustX = 20, adjustY = 40;
-  chart
-    .width(window.innerWidth-adjustX)
-    .height(window.innerHeight-adjustY)
-    .slicesCap(4)
-    .innerRadius(100)
-    .dimension(runDimension)
-    .group(speedSumGroup)
-    .legend(dc.legend());
-
-    apply_resizing(chart, adjustX, adjustY);
-
-  chart.render();
-});
-
-</script>
-
-</body>
+        chart.render();
+      });
+    </script>
+  </body>
 </html>

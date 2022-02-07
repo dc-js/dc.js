@@ -71,14 +71,16 @@
           nameChart = new dc.PieChart('#name', chartGroup);
 
         yearChart
+          .configure({
+            width: 200,
+            height: 200,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: yearDim,
               group: spendPerYearGroup,
             })
           )
-          .width(200)
-          .height(200)
           .turnOnControls(true)
           .legend(
             new dc.HtmlLegend()
@@ -88,14 +90,16 @@
           );
 
         nameChart
+          .configure({
+            width: 200,
+            height: 200,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: nameDim,
               group: nameGroup,
             })
           )
-          .width(200)
-          .height(200)
           .legend(
             new dc.HtmlLegend()
               .container('#name-legend')

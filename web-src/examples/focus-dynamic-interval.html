@@ -124,6 +124,10 @@
           .x(d3.scaleTime().domain(fullDomain));
 
         rangeChart
+          .configure({
+            width: 800,
+            height: 100,
+          })
           .dataProvider(
             new dc.CFMultiAdapter({
               dimension: dimension,
@@ -139,8 +143,6 @@
             yAxisPadding: 1,
             xUnits: d3.timeDay,
           })
-          .width(800)
-          .height(100)
           .x(d3.scaleTime().domain(fullDomain));
 
         rangeChart.on('filtered.dynamic-interval', (_, filter) => {

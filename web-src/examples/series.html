@@ -29,6 +29,10 @@
           runGroup = runDimension.group().reduceSum(d => +d.Speed);
 
           chart
+            .configure({
+              width: 768,
+              height: 480,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: runDimension,
@@ -46,8 +50,6 @@
               seriesAccessor: d => `Expt: ${d.key[0]}`,
               keyAccessor: d => +d.key[1],
             })
-            .width(768)
-            .height(480)
             .x(d3.scaleLinear().domain([0, 20]))
             .yAxisLabel('Measured Speed km/s')
             .xAxisLabel('Run')

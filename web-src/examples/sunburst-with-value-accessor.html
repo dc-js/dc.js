@@ -64,6 +64,10 @@
           const sunBurstChart = new dc.SunburstChart('#test', chartGroup);
 
           sunBurstChart
+            .configure({
+              width: 800,
+              height: 600,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: dimension,
@@ -74,8 +78,6 @@
             .configure({
               innerRadius: 100,
             })
-            .width(800)
-            .height(600)
             .legend(new dc.Legend());
 
           chartGroup.renderAll();

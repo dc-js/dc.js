@@ -127,6 +127,10 @@
         const pie01Group = pie01Dim.group();
 
         pie01
+          .configure({
+            width: 180,
+            height: 150,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: pie01Dim,
@@ -135,9 +139,7 @@
           )
           .configure({
             radius: 70,
-          })
-          .width(180)
-          .height(150);
+          });
 
         pie01
           .configure({
@@ -151,6 +153,10 @@
         const pie02Group = pie02Dim.group();
 
         pie02
+          .configure({
+            width: 180,
+            height: 150,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: pie02Dim,
@@ -159,9 +165,7 @@
           )
           .configure({
             radius: 70,
-          })
-          .width(180)
-          .height(150);
+          });
 
         pie02
           .configure({
@@ -175,6 +179,10 @@
         const pie03Group = pie03Dim.group();
 
         pie03
+          .configure({
+            width: 180,
+            height: 150,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: pie03Dim,
@@ -183,9 +191,7 @@
           )
           .configure({
             radius: 70,
-          })
-          .width(180)
-          .height(150);
+          });
 
         // -----------------------------------------------
         const bpSportDim = ndx.dimension(d => d.sport);
@@ -213,6 +219,10 @@
         const bp01 = new dc.BoxPlot('#boxPlot01', chartGroup);
 
         bp01
+          .configure({
+            width: 480,
+            height: 300,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: bpSportDim,
@@ -224,8 +234,6 @@
             elasticY: true,
             elasticX: true,
           })
-          .width(480)
-          .height(300)
           .yAxisLabel('Age (years)')
           .xAxisLabel('Sport');
 
@@ -233,6 +241,10 @@
         const bp02 = new dc.BoxPlot('#boxPlot02', chartGroup);
 
         bp02
+          .configure({
+            width: 480,
+            height: 300,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: bpSportDim,
@@ -248,8 +260,6 @@
             elasticY: true,
             elasticX: true,
           })
-          .width(480)
-          .height(300)
           .yAxisLabel('Age (years)')
           .xAxisLabel('Sport');
 
@@ -279,6 +289,10 @@
         const bp03 = new dc.BoxPlot('#boxPlot03', chartGroup);
 
         bp03
+          .configure({
+            width: 480,
+            height: 250,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: bpGenderDim,
@@ -290,8 +304,6 @@
             elasticY: true,
             elasticX: true,
           })
-          .width(480)
-          .height(250)
           .yAxisLabel('Age (years)')
           .xAxisLabel('Gender', 0);
 
@@ -305,6 +317,10 @@
         const bp04 = new dc.BoxPlot('#boxPlot04', chartGroup);
 
         bp04
+          .configure({
+            width: 480,
+            height: 250,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: bpGenderDim,
@@ -320,8 +336,6 @@
             elasticY: true,
             elasticX: true,
           })
-          .width(480)
-          .height(250)
           .yAxisLabel('Age (years)')
           .xAxisLabel('Gender', 0);
 

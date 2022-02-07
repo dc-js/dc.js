@@ -178,6 +178,10 @@
           });
 
           runChart
+            .configure({
+              width: 400,
+              height: 300,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 valueAccessor: medianSpeed,
@@ -195,11 +199,13 @@
               brushOn: true,
               controlsUseVisibility: true,
             })
-            .width(400)
-            .height(300)
             .x(d3.scaleBand());
 
           exptChart
+            .configure({
+              width: 400,
+              height: 300,
+            })
             .dataProvider(
               new dc.CFMultiAdapter({
                 valueAccessor: medianSpeed,
@@ -217,8 +223,6 @@
               brushOn: true,
               controlsUseVisibility: true,
             })
-            .width(400)
-            .height(300)
             .x(d3.scaleBand());
 
           runChart.margins().left = exptChart.margins().left = 35;

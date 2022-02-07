@@ -190,7 +190,11 @@ d3.csv('ndx.csv').then(data => {
     //on charts within the same chart group.
     // <br>API: [Bubble Chart](https://dc-js.github.io/dc.js/docs/html/BubbleChart.html)
 
-    yearlyBubbleChart /* dc.bubbleChart('#yearly-bubble-chart', 'chartGroup') */
+    // (_optional_) define chart width, `default = 200`
+    yearlyBubbleChart /* dc.bubbleChart('#yearly-bubble-chart', 'chartGroup') */.configure({
+        width: 990,
+        height: 250
+    })
         .configure({
             // (_optional_) define chart transition duration, `default = 750`
             transitionDuration: 1500,
@@ -246,10 +250,6 @@ d3.csv('ndx.csv').then(data => {
                 valueAccessor: p => p.value.percentageGain,
             })
         )
-        // (_optional_) define chart width, `default = 200`
-        .width(990)
-        // (_optional_) define chart height, `default = 200`
-        .height(250)
         .margins({ top: 10, right: 50, bottom: 30, left: 40 })
         // (_optional_) define color function or array for bubbles: [ColorBrewer](http://colorbrewer2.org/)
         // (optional) define color domain to match your data domain if you want to bind data or color
@@ -280,7 +280,11 @@ d3.csv('ndx.csv').then(data => {
     // on other charts within the same chart group.
     // <br>API: [Pie Chart](https://dc-js.github.io/dc.js/docs/html/PieChart.html)
 
-    gainOrLossChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */
+    // (_optional_) define chart width, `default = 200`
+    gainOrLossChart /* dc.pieChart('#gain-loss-chart', 'chartGroup') */.configure({
+        width: 180,
+        height: 180
+    })
         .configure({
             // Define pie radius
             radius: 80,
@@ -303,11 +307,7 @@ d3.csv('ndx.csv').then(data => {
                 // Set group
                 group: gainOrLossGroup,
             })
-        )
-        // (_optional_) define chart width, `default = 200`
-        .width(180)
-        // (optional) define chart height, `default = 200`
-        .height(180);
+        );
     /*
         // (_optional_) whether chart should render labels, `default = true`
         .renderLabel(true)
@@ -323,7 +323,10 @@ d3.csv('ndx.csv').then(data => {
         .colorAccessor(function(d, i){return d.value;})
         */
 
-    quarterChart /* dc.pieChart('#quarter-chart', 'chartGroup') */
+    quarterChart /* dc.pieChart('#quarter-chart', 'chartGroup') */.configure({
+        width: 180,
+        height: 180
+    })
         .configure({
             radius: 80,
             innerRadius: 30,
@@ -333,9 +336,7 @@ d3.csv('ndx.csv').then(data => {
                 dimension: quarter,
                 group: quarterGroup,
             })
-        )
-        .width(180)
-        .height(180);
+        );
 
     //#### Row Chart
 
@@ -344,7 +345,10 @@ d3.csv('ndx.csv').then(data => {
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
     // <br>API: [Row Chart](https://dc-js.github.io/dc.js/docs/html/RowChart.html)
-    dayOfWeekChart /* dc.rowChart('#day-of-week-chart', 'chartGroup') */
+    dayOfWeekChart /* dc.rowChart('#day-of-week-chart', 'chartGroup') */.configure({
+        width: 180,
+        height: 180
+    })
         .configure({
             label: d => d.key.split('.')[1],
             // Title sets the row text
@@ -357,8 +361,6 @@ d3.csv('ndx.csv').then(data => {
                 dimension: dayOfWeek,
             })
         )
-        .width(180)
-        .height(180)
         .margins({ top: 20, left: 10, right: 10, bottom: 20 })
         // Assign colors to each value in the x scale domain
         .ordinalColors(['#3182bd', '#6baed6', '#9ecae1', '#c6dbef', '#dadaeb']);
@@ -372,7 +374,10 @@ d3.csv('ndx.csv').then(data => {
     // to a specific group then any interaction with such chart will only trigger redraw
     // on other charts within the same chart group.
     // <br>API: [Bar Chart](https://dc-js.github.io/dc.js/docs/html/BarChart.html)
-    fluctuationChart /* dc.barChart('#volume-month-chart', 'chartGroup') */
+    fluctuationChart /* dc.barChart('#volume-month-chart', 'chartGroup') */.configure({
+        width: 420,
+        height: 180
+    })
         .configure({
             elasticY: true,
             // (_optional_) whether bar should be center to its x value. Not needed for ordinal chart, `default=false`
@@ -395,8 +400,6 @@ d3.csv('ndx.csv').then(data => {
                 group: fluctuationGroup,
             })
         )
-        .width(420)
-        .height(180)
         .margins({ top: 10, right: 50, bottom: 30, left: 40 })
         // (_optional_) set gap between bars manually in px, `default=2`
         .gap(1)
@@ -411,7 +414,10 @@ d3.csv('ndx.csv').then(data => {
     //Specify an area chart by using a line chart with `.renderArea(true)`.
     // <br>API: [Stack Mixin](https://dc-js.github.io/dc.js/docs/html/StackMixin.html),
     // [Line Chart](https://dc-js.github.io/dc.js/docs/html/LineChart.html)
-    moveChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */
+    moveChart /* dc.lineChart('#monthly-move-chart', 'chartGroup') */.configure({
+        width: 990,
+        height: 200
+    })
         .configure({
             transitionDuration: 1000,
             round: d3.timeMonth.round,
@@ -454,8 +460,6 @@ d3.csv('ndx.csv').then(data => {
                 ],
             })
         )
-        .width(990)
-        .height(200)
         .margins({ top: 30, right: 50, bottom: 25, left: 40 })
         // Specify a "range chart" to link its brush extent with the zoom of the current "focus chart".
         //     .rangeChart(volumeChart)
@@ -469,7 +473,10 @@ d3.csv('ndx.csv').then(data => {
 
     // Since this bar chart is specified as "range chart" for the area chart, its brush extent
     // will always match the zoom of the area chart.
-    volumeChart /* dc.barChart('#monthly-volume-chart', 'chartGroup'); */
+    volumeChart /* dc.barChart('#monthly-volume-chart', 'chartGroup'); */.configure({
+        width: 990,
+        height: 40
+    })
         .configure({
             round: d3.timeMonth.round,
             alwaysUseRounding: true,
@@ -482,8 +489,6 @@ d3.csv('ndx.csv').then(data => {
                 group: volumeByMonthGroup,
             })
         )
-        .width(990)
-        .height(40)
         .margins({ top: 0, right: 50, bottom: 20, left: 40 })
         .gap(1)
         .x(d3.scaleTime().domain([new Date(1985, 0, 1), new Date(2012, 11, 31)]));

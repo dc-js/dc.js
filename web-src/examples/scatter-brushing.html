@@ -50,6 +50,10 @@
           group2 = dim2.group();
 
         chart1
+          .configure({
+            width: 300,
+            height: 300,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: dim1,
@@ -61,13 +65,15 @@
             clipPadding: 10,
             excludedOpacity: 0.5,
           })
-          .width(300)
-          .height(300)
           .x(d3.scaleLinear().domain([0, 20]))
           .yAxisLabel('y')
           .xAxisLabel('x');
 
         chart2
+          .configure({
+            width: 300,
+            height: 300,
+          })
           .dataProvider(
             new dc.CFSimpleAdapter({
               dimension: dim2,
@@ -79,8 +85,6 @@
             clipPadding: 10,
             excludedColor: '#ddd',
           })
-          .width(300)
-          .height(300)
           .x(d3.scaleLinear().domain([0, 20]))
           .yAxisLabel('z')
           .xAxisLabel('y');
