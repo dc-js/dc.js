@@ -1,6 +1,10 @@
+dist: focal
 language: node_js
 node_js:
   - '12'
+
+addons:
+  firefox: latest
 
 script:
   - npx grunt ci
