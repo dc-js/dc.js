@@ -289,9 +289,8 @@ export class Legend {
                 .text(self._legendText)
                 .attr('x', self._itemHeight + LABEL_GAP)
                 .attr('y', function () {
-                    return (
-                        self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2
-                    );
+                    const clientHeight = this.getBoundingClientRect().height || 13;
+                    return self._itemHeight / 2 + clientHeight / 2 - 2;
                 });
         }
 

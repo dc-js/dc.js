@@ -53,8 +53,7 @@ describe('dc.legend', () => {
             expect(chart.selectAll('g.dc-legend g.dc-legend-item text').size()).toBe(3);
         });
 
-        // The following test has started failing on Chrome Headless 96.0.4664.110
-        xit('should position the legend labels', () => {
+        it('should position the legend labels', () => {
             expect(legendLabel(0).attr('x')).toBeWithinDelta(15, 2);
             expect(legendLabel(0).attr('y')).toBeWithinDelta(11.75, 2);
             expect(legendLabel(1).attr('x')).toBeWithinDelta(15, 2);
