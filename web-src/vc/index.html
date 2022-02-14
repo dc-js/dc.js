@@ -144,10 +144,11 @@
         );
 
         d3.json('../geo/us-states.json').then(statesJson => {
-          usChart.configure({
-            width: 990,
-            height: 500
-          })
+          usChart
+            .configure({
+              width: 990,
+              height: 500,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: states,
@@ -156,11 +157,13 @@
               })
             )
             .configure({
-              geoJsons: [{
-                name: 'state',
-                data: statesJson.features,
-                keyAccessor: d => d.properties.name,
-              }],
+              geoJsons: [
+                {
+                  name: 'state',
+                  data: statesJson.features,
+                  keyAccessor: d => d.properties.name,
+                },
+              ],
               title: d =>
                 `State: ${d.key}\nTotal Amount Raised: ${numberFormat(
                   d.value ? d.value : 0
@@ -185,10 +188,11 @@
             .colorDomain([0, 200])
             .projection(d3.geoAlbersUsa());
 
-          industryChart.configure({
-            width: 990,
-            height: 200
-          })
+          industryChart
+            .configure({
+              width: 990,
+              height: 200,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: industries,
@@ -221,10 +225,11 @@
           industryChart.yAxis().tickFormat(s => `${s} deals`);
           industryChart.xAxis().tickFormat(s => `${s}M`);
 
-          roundChart.configure({
-            width: 990,
-            height: 200
-          })
+          roundChart
+            .configure({
+              width: 990,
+              height: 200,
+            })
             .dataProvider(
               new dc.CFSimpleAdapter({
                 dimension: rounds,
@@ -260,7 +265,8 @@
           chartGroup.renderAll();
         });
       });
-    </script>    <script type="text/javascript">
+    </script>
+    <script type="text/javascript">
       /* eslint-disable */
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-33628816-1']);

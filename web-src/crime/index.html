@@ -512,10 +512,11 @@
         })
       );
 
-      caChart.configure({
-        width: 600,
-        height: 450
-      })
+      caChart
+        .configure({
+          width: 600,
+          height: 450,
+        })
         .dataProvider(
           new dc.CFSimpleAdapter({
             dimension: cities,
@@ -615,10 +616,11 @@
         .colorDomain([13, 30])
         .debug(false);
 
-      incidentChart.configure({
-        width: 360,
-        height: 180
-      })
+      incidentChart
+        .configure({
+          width: 360,
+          height: 180,
+        })
         .dataProvider(
           new dc.CFMultiAdapter({
             dimension: years,
@@ -655,10 +657,11 @@
         .ticks(5)
         .tickFormat(d3.format('d'));
 
-      homicideChart.configure({
-        width: 360,
-        height: 150
-      })
+      homicideChart
+        .configure({
+          width: 360,
+          height: 150,
+        })
         .dataProvider(
           new dc.CFMultiAdapter({
             dimension: years,
@@ -685,7 +688,8 @@
 
       chartGroup.renderAll();
     });
-  </script>  <script type="text/javascript">
+  </script>
+  <script type="text/javascript">
     /* eslint-disable */
     var _gaq = _gaq || [];
     _gaq.push(['_setAccount', 'UA-33628816-1']);
