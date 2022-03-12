@@ -25,7 +25,7 @@
     "url": "https://github.com/dc-js/dc.js.git"
   },
   "dependencies": {
-    "crossfilter2": "^1.4.6",
+    "crossfilter2": "~1.4.8",
     "d3": "^3"
   },
   "devDependencies": {
