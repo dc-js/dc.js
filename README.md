@@ -8,7 +8,11 @@ dc.js
 =====
 
 Dimensional charting built to work natively with [crossfilter](http://crossfilter.github.io/crossfilter/)
-rendered using [d3.js](https://d3js.org/). In dc.js, each chart displays an aggregation of some
+rendered using [d3.js](https://d3js.org/). 
+
+**NOTE:** We are seeking new maintainers to join Deepak Kumar. See [#1868](https://github.com/dc-js/dc.js/issues/1868) for discussion.
+
+In dc.js, each chart displays an aggregation of some
 attributes through the position, size, and color of its elements, and also presents a dimension
 which can be filtered. When the filter or brush changes, all other charts are updated dynamically,
 using animated transitions.
