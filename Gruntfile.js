@@ -11,7 +11,7 @@ module.exports = function (grunt) {
     const formatFileList = require('./grunt/format-file-list')(grunt);
     const lintableFiles = "'spec/**/*.js' '*.js' 'grunt/*.js' 'web-src/stock.js'";
 
-    const sass = require('node-sass');
+    const sass = require('sass');
 
     grunt.initConfig({
         sass: {

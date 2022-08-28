@@ -63,7 +63,7 @@
     "karma-safari-launcher": "git+https://github.com/RLovelett/karma-safari-launcher.git#safari-webdriver",
     "karma-summary-reporter": "^1.8.0",
     "load-grunt-tasks": "~4",
-    "node-sass": "^4.14.1",
+    "sass": "^1.54.5",
     "prettier": "2.0.5",
     "reductio": "0.6.x",
     "regression": "^2.0.1",
