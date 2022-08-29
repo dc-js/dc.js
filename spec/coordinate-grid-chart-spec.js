@@ -888,15 +888,6 @@ describe('dc.coordinateGridChart', () => {
             expect(chart.x().domain()).toEqual(chart.xOriginalDomain());
         });
 
-        describe('with a range chart', () => {
-            beforeEach(() => {
-                const rangeChart = buildRangeChart();
-                chart.rangeChart(rangeChart);
-                chart.render();
-                rangeChart.render();
-                chart.focus([makeDate(2012, 8, 20), makeDate(2012, 8, 25)]);
-            });
-        });
     });
 
     describe('with zoom restriction disabled', () => {

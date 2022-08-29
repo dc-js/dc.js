@@ -22,6 +22,8 @@ describe('dc.baseMixin', () => {
             const firstRenderlet = jasmine.createSpy().and.callFake(callbackChart => {
                 expect(callbackChart).toBe(chart);
                 done();
+                // ignore subsequent calls of done()
+                done = () => {};
             });
             chart.renderlet(firstRenderlet);
             chart.render();
@@ -96,6 +98,8 @@ describe('dc.baseMixin', () => {
             const thirdRenderlet = jasmine.createSpy().and.callFake(callbackChart => {
                 expect(callbackChart).toBe(chart);
                 done();
+                // ignore subsequent calls of done()
+                done = () => {};
             });
             chart.on('renderlet.third', thirdRenderlet);
             chart.render();
@@ -134,6 +138,8 @@ describe('dc.baseMixin', () => {
             const secondRenderlet = jasmine.createSpy().and.callFake(callbackChart => {
                 expect(thirdRenderlet).not.toHaveBeenCalled();
                 done();
+                // ignore subsequent calls of done()
+                done = () => {};
             });
             chart.on('renderlet.third', secondRenderlet);
             chart.renderlet(secondRenderlet);
