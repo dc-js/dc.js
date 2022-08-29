@@ -46,7 +46,7 @@ module.exports = function (grunt) {
             },
             docco: {
                 files: ['web-src/stock.js'],
-                tasks: ['copy:web', 'docco'],
+                tasks: ['copy:web', 'shell:docco'],
                 options: {
                     atBegin: true,
                     interrupt: true,
@@ -152,20 +152,6 @@ module.exports = function (grunt) {
                 browsers: ['Safari', 'ChromeNoSandboxHeadless', 'FirefoxHeadless'],
                 concurrency: 1,
                 reporters: ['dots', 'summary'],
-            },
-        },
-        docco: {
-            options: {
-                dst: 'web/docs',
-            },
-            howto: {
-                files: [
-                    {
-                        expand: true,
-                        cwd: 'web',
-                        src: ['stock.js'],
-                    },
-                ],
             },
         },
         copy: {
@@ -372,6 +358,9 @@ module.exports = function (grunt) {
             prettier: {
                 command: 'prettier --write src',
             },
+            docco: {
+                command: 'docco -o web/docs web/stock.js',
+            }
         },
     });
 
