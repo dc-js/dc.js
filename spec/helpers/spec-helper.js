@@ -7,6 +7,7 @@
 beforeEach(() => {
     jasmine.clock().install();
     d3.select('body').append('div').attr('id', 'test-content');
+    dc.logger.enableDebugLog = false;
 });
 
 afterEach(() => {
