@@ -1127,7 +1127,7 @@ describe('dc.BarChart', () => {
 
             beforeEach(() => {
                 chart.alwaysUseRounding(false);
-                consoleWarnSpy = spyOn(console, 'warn');
+                consoleWarnSpy = spyOn(dc.logger, 'warn');
                 chart.render();
 
                 simulateChartBrushing(chart, [makeDate(2012, 6, 1), makeDate(2012, 7, 15)]);

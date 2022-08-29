@@ -1263,7 +1263,7 @@ export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
         }
 
         if (ext[0] > outerLimits[1] || ext[1] < outerLimits[0]) {
-            console.warn('Could not intersect extents, will reset');
+            logger.warn('Could not intersect extents, will reset');
         }
         // Math.max does not work (as the values may be dates as well)
         return [
