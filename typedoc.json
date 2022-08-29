@@ -6,28 +6,24 @@
   "excludePrivate": true,
   "defaultCategory": "Standard",
   "categoryOrder": ["Standard", "Intermediate", "Ninja"],
-  "listInvalidSymbolLinks": true,
-  "theme": "pages-plugin",
-  "pages": {
-    "groups": [
+  "validation": {
+    "invalidLink": true
+  },
+  "pluginPages": {
+    "source": "docs",
+    "pages": [
       {
-        "title": "Guides",
-        "pages": [
-          {
-            "title": "dc@v5 Migration Guide",
-            "source": "docs/dc-v5-upgrade-guide.md"
-          },
-          {
-            "title": "dc@v4 Migration Guide",
-            "source": "docs/dc-v4-upgrade-guide.md"
-          },
-          {
-            "title": "dc@v3 Migration Guide",
-            "source": "docs/dc-v3-upgrade-guide.md"
-          }
-        ]
+        "title": "dc@v5 Migration Guide",
+        "source": "dc-v5-upgrade-guide.md"
+      },
+      {
+        "title": "dc@v4 Migration Guide",
+        "source": "dc-v4-upgrade-guide.md"
+      },
+      {
+        "title": "dc@v3 Migration Guide",
+        "source": "dc-v3-upgrade-guide.md"
       }
-    ],
-    "output": "pages"
+    ]
   }
 }
