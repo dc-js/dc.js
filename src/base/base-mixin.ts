@@ -643,8 +643,8 @@ export class BaseMixin {
     }
 
     /**
-     * Redraws all charts in the same group as this chart, typically in reaction to a filter
-     * change. If the chart has a {@link commitHandler}, it will
+     * Redraw all charts in the same group as this chart, typically in reaction to a filter
+     * change. If the chart has a {@link IBaseMixinConf.commitHandler commitHandler}, it will
      * be executed and waited for. It internally calls {@link ChartGroup.redrawAll}
      *
      * @see {@link redraw}
@@ -667,7 +667,7 @@ export class BaseMixin {
 
     /**
      * Renders all charts in the same group as this chart. If the chart has a
-     * {@link commitHandler}, it will be executed and waited for.
+     * {@link IBaseMixinConf.commitHandler commitHandler}, it will be executed and waited for.
      * It internally calls {@link ChartGroup.redrawAll}
      *
      * @see {@link render}

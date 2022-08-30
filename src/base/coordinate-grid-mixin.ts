@@ -39,9 +39,6 @@ const DEFAULT_AXIS_LABEL_PADDING = 12;
  * concrete chart types, e.g. bar chart, line chart, and bubble chart.
  */
 export class CoordinateGridMixin extends ColorMixin(MarginMixin) {
-    /**
-     * @hidden
-     */
     public _conf: ICoordinateGridMixinConf;
 
     private _parent: Selection<SVGElement, any, any, any>;

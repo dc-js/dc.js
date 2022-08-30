@@ -35,9 +35,6 @@ interface MinimalBase {
 export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) {
     // @ts-ignore
     return class extends Base {
-        /**
-         * @hidden
-         */
         public _conf: IBubbleMixinConf;
 
         /**
@@ -93,9 +90,6 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             return this._conf;
         }
 
-        /**
-         * @category Ninja
-         */
         public data() {
             const data = super.data();
             if (this._conf.sortBubbleSize) {
@@ -275,9 +269,6 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             return this;
         }
 
-        /**
-         * @hidden
-         */
         public fadeDeselectedArea(selection: SVGGElementSelection): void {
             if (this.hasFilter()) {
                 const chart = this;
@@ -303,10 +294,6 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
             return this.hasFilter(d.key);
         }
 
-        /**
-         * @category Ninja
-         * @see {@link BaseMixin.onClick}
-         */
         public onClick(d: any) {
             const filter = d.key;
             events.trigger(() => {

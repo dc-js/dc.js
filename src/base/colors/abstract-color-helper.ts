@@ -2,7 +2,7 @@ import { BaseAccessor } from '../../core/types';
 
 export class AbstractColorHelper {
     /**
-     * Set or the get color accessor function.
+     * Set or get color accessor function.
      * Chart will assign this, not assigned in user code.
      *
      * @category Intermediate

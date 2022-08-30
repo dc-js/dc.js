@@ -94,7 +94,7 @@ export class NumberDisplay extends BaseMixin {
      * ```
      */
     public html(): HTMLSpec;
-    public html(html): this;
+    public html(html: HTMLSpec): this;
     public html(html?) {
         if (!arguments.length) {
             return this._html;

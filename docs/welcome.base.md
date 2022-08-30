@@ -19,7 +19,10 @@ The documentation includes all methods and properties supported by a chart inclu
 </div>
 
 <script type="application/javascript">
-window.fetch("../img/class-hierarchy.svg").then(result => {
-    result.text().then(content => document.getElementById('insert-svg-here').outerHTML = content);
-});
+    const renderGraph = async () => \{
+        const result = await fetch("../img/class-hierarchy.svg");
+        const content = await result.text();
+        document.getElementById('insert-svg-here').outerHTML = content;
+    \};
+    renderGraph();
 </script>

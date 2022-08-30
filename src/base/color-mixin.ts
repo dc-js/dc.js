@@ -59,7 +59,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * `dc` charts use on the ColorHelpers for color.
          * To color chart elements (like Pie slice, a row, a bar, etc.), typically
          * the underlying data element will be used to determine the color.
-         * In most of the cases output of {@linkcode colorAccessor | colorAccessor(d, i)} will be used to determine the color.
+         * In most of the cases output of {@linkcode IColorMixinConf.colorAccessor | colorAccessor(d, i)} will be used to determine the color.
          *
          * Usually charts would used use one of
          *
@@ -69,8 +69,8 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * * {@link LinearColors} - it provides interpolated colors.
          * * {@link ColorScaleHelper} - it allows any of {@link https://github.com/d3/d3-scale | d3-scales} to be used.
          *   {@link OrdinalColors} and {@link LinearColors} are specialization of this.
-         * * {@link ColorCalculator} - It allows skipping {@link colorAccessor} while computing the color.
-         *   Even if a {@link colorAccessor} is provided, it will be ignored.
+         * * {@link ColorCalculator} - It allows skipping {@link IColorMixinConf.colorAccessor} while computing the color.
+         *   Even if a {@link IColorMixinConf.colorAccessor} is provided, it will be ignored.
          *
          * ```
          * // TODO example
@@ -149,11 +149,11 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
         }
 
         /**
-         * Set or get the current domain for the color mapping function. The domain must be supplied as an
-         * array.
+         * Set or get the current domain for the color mapping function.
+         * The domain must be supplied as an array.
          *
-         * Note: previously this method accepted a callback function. Instead you may use a custom scale
-         * set by {@link ColorMixin.colors .colors}.
+         * Note: previously this method accepted a callback function.
+         * Instead, you may use a custom scale set by {@link colorScale}.
          */
         public colorDomain(): string[];
         public colorDomain(domain: string[]): this;
