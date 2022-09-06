@@ -3,7 +3,13 @@
   <head>
     <title>dc.js - Focus Chart with Dynamic Intervals</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" /> -->
     <link rel="stylesheet" type="text/css" href="../css/dc.css" />
   </head>
   <body>
@@ -17,14 +23,14 @@
       <script type="text/javascript" src="header.js"></script>
       <script type="text/javascript" src="../js/d3.js"></script>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
-      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript" src="../js/dc-compat.js"></script>
       <script type="text/javascript">
         class MyLineChart extends dc.LineChart {
           yAxisMin() {
             const min = d3.min(this.data(), layer =>
               d3.min(layer.values, p => p.y + p.y0)
             );
-            return dc.subtract(min, this.conf().yAxisPadding);
+            return dc.utils.subtract(min, this.conf().yAxisPadding);
           }
         }
 

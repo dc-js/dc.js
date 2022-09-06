@@ -3,7 +3,12 @@
   <head>
     <title>dc.js - Align Y Axes Example</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
     <link rel="stylesheet" type="text/css" href="../css/dc.css" />
     <style>
       html,
@@ -23,13 +28,13 @@
         height: 95vh;
         width: 100%;
       }
-      tr.heading td div {
+      tr.heading-row td div {
         text-align: center;
       }
       td.heading {
         position: relative;
       }
-      tr.row:not(.heading) td.heading div {
+      tr.content-row:not(.heading) td.heading div {
         white-space: nowrap;
         position: absolute;
         top: 50%;
@@ -62,14 +67,13 @@
         stroke-dashoffset: 1;
       }
     </style>
-  </head>
-  <body>
-    <script type="text/javascript" src="header.js"></script>
     <script type="text/javascript" src="../js/d3.js"></script>
     <script type="text/javascript" src="../js/crossfilter.js"></script>
     <script type="text/javascript" src="../js/dc.js"></script>
+  </head>
+  <body>
     <div class="container">
-      <script type="text/javascript" src="./header.js"></script>
+      <div id="header"></div>
 
       <p>
         This page demonstrates the
@@ -87,11 +91,12 @@
         <code>elasticY</code>, height is currently measured from the y=0 line -
         see <a href="https://github.com/dc-js/dc.js/issues/667">#667</a>.)
       </p>
-    </div>
-    <div id="hscroll">
-      <table id="content"></table>
+      <div id="hscroll">
+        <table id="content"></table>
+      </div>
     </div>
 
+    <script type="text/javascript" src="header.js"></script>
     <script type="text/javascript">
       const chartGroup = new dc.ChartGroup();
       const posiness = [
@@ -163,7 +168,7 @@
           .data(posiness)
           .enter()
           .append('tr')
-          .attr('class', d => (d === 'heading' ? 'heading row' : 'row'))
+          .attr('class', d => (d === 'heading' ? 'heading-row' : 'content-row'))
           .each(function (rposi) {
             d3.select(this)
               .selectAll('td')

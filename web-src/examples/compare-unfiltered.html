@@ -3,7 +3,13 @@
   <head>
     <title>dc.js - Comparing Against Unfiltered Data</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" /> -->
     <link rel="stylesheet" type="text/css" href="../css/dc.css" />
     <style>
       #data-count {
@@ -27,7 +33,7 @@
       <script type="text/javascript" src="header.js"></script>
       <script type="text/javascript" src="../js/d3.js"></script>
       <script type="text/javascript" src="../js/crossfilter.js"></script>
-      <script type="text/javascript" src="../js/dc.js"></script>
+      <script type="text/javascript" src="../js/dc-compat.js"></script>
 
       <div class="row">
         <h2>Comparing filtered data against unfiltered</h2>
@@ -49,7 +55,7 @@
         </p>
         <div class="col-md-3 well well-sm">
           <div class="dc-data-count" id="data-count">
-            <label style="display: inline-block;"
+            <label style="display: inline-block"
               ><input
                 type="checkbox"
                 id="unfiltered"
@@ -68,10 +74,10 @@
       </div>
       <!-- First row of charts -->
       <div class="row">
-        <div class="span4">
-          <div id="chart-11" style="width: 100%;">
+        <div class="col-sm-4">
+          <div id="chart-11" style="width: 100%; max-height: 250px">
             <h5 class="chart-title"></h5>
-            <div class="reset" style="visibility: hidden;">
+            <div class="reset" style="visibility: hidden">
               range: <span class="filter"></span>
               <a href="javascript:charts[0].filterAll();dc.redrawAll();"
                 >reset</a
@@ -79,10 +85,10 @@
             </div>
           </div>
         </div>
-        <div class="span4">
-          <div id="chart-12" style="width: 100%;">
+        <div class="col-sm-4">
+          <div id="chart-12" style="width: 100%; max-height: 250px">
             <h5 class="chart-title"></h5>
-            <div class="reset" style="visibility: hidden;">
+            <div class="reset" style="visibility: hidden">
               selected: <span class="filter"></span>
               <a href="javascript:charts[1].filterAll();dc.redrawAll();"
                 >reset</a
@@ -90,10 +96,10 @@
             </div>
           </div>
         </div>
-        <div class="span4">
-          <div id="chart-13" style="width: 100%;">
+        <div class="col-sm-4">
+          <div id="chart-13" style="width: 100%; max-height: 250px">
             <h5 class="chart-title"></h5>
-            <div class="reset" style="visibility: hidden;">
+            <div class="reset" style="visibility: hidden">
               selected: <span class="filter"></span>
               <a href="javascript:charts[2].filterAll();dc.redrawAll();"
                 >reset</a
@@ -105,10 +111,10 @@
 
       <!-- Second row of chart -->
       <div class="row">
-        <div class="span4">
-          <div id="chart-21" style="width: 100%;">
+        <div class="col-sm-4">
+          <div id="chart-21" style="width: 100%; max-height: 250px">
             <h5 class="chart-title"></h5>
-            <div class="reset" style="visibility: hidden;">
+            <div class="reset" style="visibility: hidden">
               selected: <span class="filter"></span>
               <a href="javascript:charts[3].filterAll();dc.redrawAll();"
                 >reset</a
@@ -116,10 +122,10 @@
             </div>
           </div>
         </div>
-        <div class="span4">
-          <div id="chart-22" style="width: 100%;">
+        <div class="col-sm-4">
+          <div id="chart-22" style="width: 100%; max-height: 250px">
             <h5 class="chart-title"></h5>
-            <div class="reset" style="visibility: hidden;">
+            <div class="reset" style="visibility: hidden">
               range: <span class="filter"></span>
               <a href="javascript:charts[4].filterAll();dc.redrawAll();"
                 >reset</a
@@ -127,10 +133,10 @@
             </div>
           </div>
         </div>
-        <div class="span4">
-          <div id="chart-23" style="width: 100%;">
+        <div class="col-sm-4">
+          <div id="chart-23" style="width: 100%; max-height: 250px">
             <h5 class="chart-title"></h5>
-            <div class="reset" style="visibility: hidden;">
+            <div class="reset" style="visibility: hidden">
               selected: <span class="filter"></span>
               <a href="javascript:charts[5].filterAll();dc.redrawAll();"
                 >reset</a
@@ -269,7 +275,7 @@
             chart.elasticY(showUnfiltered);
             if (!showUnfiltered) {
               ydomainFromChild1(chart);
-              chart.children()[1].colors(d3.schemeCategory10);
+              // chart.children()[1].colors(d3.schemeCategory10);
               chart.on('preRedraw.hide-unfiltered', ydomainFromChild1);
               chart.on('preRender.hide-unfiltered', ydomainFromChild1);
             } else {
