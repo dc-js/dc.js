@@ -1,13 +1,13 @@
 # dc v5 Upgrade Guide
 
-The library has been refactored significantly.
+The library has been significantly refactored in v5.
 The code has been arranged around clearer separation of responsibilities.
-This has enabled fixing of long standing issues and allows for clean support for remote data sources.
+This has enabled fixing long-standing issues and enabled clean support for remote data sources.
 
-The library is distributed in two flavors:
+The library is distributed in two variants:
 
-- dc-v5-new - only newer API, recommended for new projects.
-- dc-v5-compat - v4 compatibility mode. It is quite close to v4 API. 
+- dc-v5-new - only the newer API, recommended for new projects.
+- dc-v5-compat - v4 compatibility mode, which is quite close to the v4 API. 
   
 In certain cases, however, you would need to upgrade:
 
@@ -15,7 +15,7 @@ In certain cases, however, you would need to upgrade:
 - Support for newer features are not guaranteed in the `compat` mode.
   Mixing of newer APIs with older ones may produce unexpected results.
 - Some APIs are not available in compat mode as well. Notably `filterHandler`, `hasFilterHandler`, `addFilterHandler`
-  and `removeFilterHandler`. If your code relied on any of these you should do a proper upgrade.
+  and `removeFilterHandler`. If your code relies on any of these you should do a proper upgrade.
   
 Please raise an issue on GitHub if you run into problems not covered here!
 
@@ -317,10 +317,10 @@ List of accessors that have moved to conf:
 
 ChartGroup is a key concept in dc.
 This links all charts so that filtering one of the charts causes updates in all linked charts.
-Upto dc@v4 ChartRegistry maintained these lists as global variables.
+Up to dc@v4 ChartRegistry maintained these lists as global variables.
 This required `deregisterAllCharts` to be called to clear those references so that charts could be garbage collected.
 dc@v5 introduces {@link ChartGroup}, an instance of {@link ChartGroup} maintains list of all related charts.
-References to charts are no longer kept in global variables, so, that as soon as the `chartObject` instance 
+References to charts are no longer kept in global variables, so as soon as the `chartObject` instance 
 and all chart instances go out of scope, these should get garbage collected without needing an explicit call to
 clear the list.
 
