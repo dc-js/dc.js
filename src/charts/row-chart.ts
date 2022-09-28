@@ -69,7 +69,7 @@ export class RowChart extends ColorMixin(MarginMixin) {
         this._g = undefined;
 
         this._dyOffset = '0.35em'; // this helps center labels https://github.com/d3/d3-3.x-api-reference/blob/master/SVG-Shapes.md#svg_text
-        this._rowCssClass = 'row';
+        this._rowCssClass = 'dc_row';
         this._titleRowCssClass = 'titlerow';
 
         this._x = undefined;
@@ -256,11 +256,10 @@ export class RowChart extends ColorMixin(MarginMixin) {
                 .attr('class', (d, i) => `${this._rowCssClass} _${i}`)
                 .text(d => this._conf.label(d));
 
-            transition(
-                lab,
-                this._conf.transitionDuration,
-                this._conf.transitionDelay
-            ).attr('transform', d => this._translateX(d));
+            transition(lab, this._conf.transitionDuration, this._conf.transitionDelay).attr(
+                'transform',
+                d => this._translateX(d)
+            );
         }
 
         if (this._conf.renderTitleLabel) {
@@ -274,11 +273,10 @@ export class RowChart extends ColorMixin(MarginMixin) {
                 .attr('class', (d, i) => `${this._titleRowCssClass} _${i}`)
                 .text(d => this._conf.title(d));
 
-            transition(
-                titlelab,
-                this._conf.transitionDuration,
-                this._conf.transitionDelay
-            ).attr('transform', d => this._translateX(d));
+            transition(titlelab, this._conf.transitionDuration, this._conf.transitionDelay).attr(
+                'transform',
+                d => this._translateX(d)
+            );
         }
     }
 
