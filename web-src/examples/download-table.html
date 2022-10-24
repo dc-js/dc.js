@@ -3,7 +3,13 @@
   <head>
     <title>dc.js - Downloading Data Table Contents</title>
     <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous"
+    />
+    <!-- <link rel="stylesheet" type="text/css" href="../css/bootstrap.min.css" /> -->
     <link rel="stylesheet" type="text/css" href="../css/dc.css" />
     <link type="text/css" rel="stylesheet" href="../css/dc-floatleft.css" />
     <style>
@@ -15,34 +21,36 @@
   <body>
     <div class="container">
       <div id="header"></div>
-      <div id="chart-ring-year" style="width: 300px; height: 330px;">
-        <div class="reset" style="visibility: hidden;">
+      <div id="chart-ring-year" style="width: 300px; height: 330px">
+        <div class="reset" style="visibility: hidden">
           selected: <span class="filter"></span>
-          <a href="javascript:yearRingChart.filterAll();dc.redrawAll();"
+          <a href="javascript:yearRingChart.filterAll();chartGroup.redrawAll();"
             >reset</a
           >
         </div>
       </div>
-      <div id="chart-hist-spend" style="width: 300px; height: 330px;">
-        <div class="reset" style="visibility: hidden;">
+      <div id="chart-hist-spend" style="width: 300px; height: 330px">
+        <div class="reset" style="visibility: hidden">
           range: <span class="filter"></span>
-          <a href="javascript:spendHistChart.filterAll();dc.redrawAll();"
+          <a
+            href="javascript:spendHistChart.filterAll();chartGroup.redrawAll();"
             >reset</a
           >
         </div>
       </div>
       <div id="chart-row-spenders">
-        <div class="reset" style="visibility: hidden;">
+        <div class="reset" style="visibility: hidden">
           selected: <span class="filter"></span>
-          <a href="javascript:spenderRowChart.filterAll();dc.redrawAll();"
+          <a
+            href="javascript:spenderRowChart.filterAll();chartGroup.redrawAll();"
             >reset</a
           >
         </div>
       </div>
       <!-- not sure why all these styles necessary, not the point of this -->
-      <div style="clear: both; margin: 30px; float: left;">
+      <div style="clear: both; margin: 30px; float: left">
         <div id="table"></div>
-        <div id="download-type" style="clear: both; float: left;">
+        <div id="download-type" style="clear: both; float: left">
           <div>
             <label
               ><input
@@ -60,7 +68,7 @@
             >
           </div>
         </div>
-        <div style="float: left;">
+        <div style="float: left">
           <button class="btn" id="download">download</button>
         </div>
       </div>
@@ -150,6 +158,7 @@
             })
           )
           .configure({
+            width: 270,
             elasticX: true,
             controlsUseVisibility: true,
           });
@@ -195,9 +204,8 @@
             data = data.map(d => {
               const row = {};
               table.columns().forEach(c => {
-                row[
-                  table._doColumnHeaderFormat(c)
-                ] = table._doColumnValueFormat(c, d);
+                row[table._doColumnHeaderFormat(c)] =
+                  table._doColumnValueFormat(c, d);
               });
               return row;
             });
