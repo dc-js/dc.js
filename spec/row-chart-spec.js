@@ -57,11 +57,11 @@ describe('dc.rowChart', () => {
         });
 
         it('should use the default function to dynamically generate the label', () => {
-            expect(chart.select('text.row').text()).toBe('22');
+            expect(chart.select('text.dc_row').text()).toBe('22');
         });
 
         it('should use the default function to dynamically generate the title', () => {
-            expect(chart.select('g.row title').text()).toBe('22: 108');
+            expect(chart.select('g.dc_row title').text()).toBe('22: 108');
         });
     });
 
@@ -74,7 +74,7 @@ describe('dc.rowChart', () => {
         });
 
         it('should render valid rect widths', () => {
-            expect(chart.select('g.row rect').attr('width')).toBeWithinDelta(1, 0.5);
+            expect(chart.select('g.dc_row rect').attr('width')).toBeWithinDelta(1, 0.5);
         });
     });
 
@@ -88,7 +88,7 @@ describe('dc.rowChart', () => {
         });
 
         it('should render fixed rect height', () => {
-            expect(chart.select('g.row rect').attr('height')).toBeWithinDelta(10, 0.0);
+            expect(chart.select('g.dc_row rect').attr('height')).toBeWithinDelta(10, 0.0);
         });
     });
 
@@ -102,7 +102,7 @@ describe('dc.rowChart', () => {
         });
 
         it('should render title label centered', () => {
-            expect(chart.select('g.row .titlerow').attr('dy')).toBeDefined();
+            expect(chart.select('g.dc_row .titlerow').attr('dy')).toBeDefined();
         });
     });
 
@@ -179,26 +179,26 @@ describe('dc.rowChart', () => {
                 });
 
                 it('should create a row group for each datum', () => {
-                    expect(chart.selectAll('svg g g.row').size()).toBe(N);
+                    expect(chart.selectAll('svg g g.dc_row').size()).toBe(N);
                 });
 
                 it('should number each row sequentially with classes', () => {
                     chart.selectAll('svg g g.row').each(function (r, i) {
-                        expect(d3.select(this).attr('class')).toBe(`row _${i}`);
+                        expect(d3.select(this).attr('class')).toBe(`dc_row _${i}`);
                     });
                 });
 
                 it('should fill each row rect with pre-defined colors', () => {
                     for (let i = 0; i < N; i++) {
-                        expect(d3.select(chart.selectAll('g.row rect').nodes()[i]).attr('fill'))
+                        expect(d3.select(chart.selectAll('g.dc_row rect').nodes()[i]).attr('fill'))
                             .toMatchColor(dc.config.defaultColors()[i]);
                     }
                 });
 
                 it('should create a row label from the data for each row', () => {
-                    expect(chart.selectAll('svg text.row').size()).toBe(N);
+                    expect(chart.selectAll('svg text.dc_row').size()).toBe(N);
 
-                    chart.selectAll('svg g text.row').call(t => {
+                    chart.selectAll('svg g text.dc_row').call(t => {
                         expect(+t.text()).toBe(t.datum().key);
                     });
                 });
@@ -206,8 +206,8 @@ describe('dc.rowChart', () => {
                 describe('row label vertical position', () => {
                     let labels, rows;
                     beforeEach(() => {
-                        labels = chart.selectAll('svg text.row');
-                        rows = chart.selectAll('g.row rect');
+                        labels = chart.selectAll('svg text.dc_row');
+                        rows = chart.selectAll('g.dc_row rect');
                     });
 
                     function itShouldVerticallyCenterLabelWithinRow (i) {
@@ -392,7 +392,7 @@ describe('dc.rowChart', () => {
                 });
 
                 it('should render a label for each datum', () => {
-                    expect(chart.selectAll('text.row').size()).toBe(N);
+                    expect(chart.selectAll('text.dc_row').size()).toBe(N);
                 });
 
                 it('should use the custom function for each label', () => {
@@ -418,7 +418,7 @@ describe('dc.rowChart', () => {
                 });
 
                 it('should render a title for each datum', () => {
-                    expect(chart.selectAll('g.row title').size()).toBe(N);
+                    expect(chart.selectAll('g.dc_row title').size()).toBe(N);
                 });
 
                 it('should use the custom function for each title', () => {
