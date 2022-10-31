@@ -8,7 +8,7 @@ module.exports = function (grunt) {
 
     grunt.loadNpmTasks('grunt-karma');
 
-    const formatFileList = require('./grunt/format-file-list')(grunt);
+    const formatFileList = require('./grunt/format-file-list.cjs')(grunt);
     const lintableFiles = "'spec/**/*.js' '*.js' 'grunt/*.js' 'web-src/stock.js'";
 
     const sass = require('sass');
@@ -119,7 +119,7 @@ module.exports = function (grunt) {
         },
         karma: {
             options: {
-                configFile: 'karma.conf.js',
+                configFile: 'karma.conf.cjs',
             },
             unit: {},
             coverage: {
