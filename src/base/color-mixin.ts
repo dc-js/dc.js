@@ -43,7 +43,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
             this.colorHelper(new OrdinalColors(config.defaultColors()));
         }
 
-        public configure(conf: IColorMixinConf): this {
+        public configure(conf: IColorMixinConf): any {
             super.configure(conf);
             if ('colorAccessor' in conf && this._colorHelper) {
                 this._colorHelper.colorAccessor = conf.colorAccessor;
@@ -77,7 +77,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * ```
          */
         public colorHelper(): AbstractColorHelper;
-        public colorHelper(colorHelper: AbstractColorHelper): this;
+        public colorHelper(colorHelper: AbstractColorHelper): any;
         public colorHelper(colorHelper?) {
             if (!arguments.length) {
                 return this._colorHelper;
@@ -99,7 +99,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * @see {@link OrdinalColors}
          * @see {@link https://github.com/d3/d3-scale/blob/master/README.md#ordinal-scales}
          */
-        public ordinalColors(colorList: string[]): this {
+        public ordinalColors(colorList: string[]): any {
             this.colorHelper(new OrdinalColors(colorList));
             return this;
         }
@@ -117,14 +117,14 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * @see {@link ColorScaleHelper}
          * @see {@link https://github.com/d3/d3-scale/}
          */
-        public colorScale(scale: BaseAccessor<string>): this {
+        public colorScale(scale: BaseAccessor<string>): any {
             return this.colorHelper(new ColorScaleHelper(scale));
         }
 
         /**
          * Convenience method to set the color scale to an Hcl interpolated linear scale with range `r`.
          */
-        public linearColors(r: [string, string]): this {
+        public linearColors(r: [string, string]): any {
             this.colorHelper(new LinearColors(r));
             return this;
         }
@@ -139,7 +139,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * takes the datum and index and returns a color directly.
          */
         public colorCalculator(): ColorAccessor;
-        public colorCalculator(colorCalculator: ColorAccessor): this;
+        public colorCalculator(colorCalculator: ColorAccessor): any;
         public colorCalculator(colorCalculator?) {
             if (!arguments.length) {
                 return this.colorHelper().getColor;
@@ -156,7 +156,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * Instead, you may use a custom scale set by {@link colorScale}.
          */
         public colorDomain(): string[];
-        public colorDomain(domain: string[]): this;
+        public colorDomain(domain: string[]): any;
         public colorDomain(domain?) {
             const scale = (this.colorHelper() as ColorScaleHelper).colorScale as MinimalColorScale;
             if (!arguments.length) {
@@ -175,7 +175,7 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          *
          * @category Intermediate
          */
-        public calculateColorDomain(): this {
+        public calculateColorDomain(): any {
             const scale: MinimalColorScale = (this._colorHelper as ColorScaleHelper)
                 .colorScale as MinimalColorScale;
 

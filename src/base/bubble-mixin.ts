@@ -1,8 +1,8 @@
 import { descending, max, min } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 
-import { transition } from '../core/core';
-import { events } from '../core/events';
+import { transition } from '../core/core.js';
+import { events } from '../core/events.js';
 import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/types';
 import { IBubbleMixinConf } from './i-bubble-mixin-conf';
 import { IBaseMixinConf } from './i-base-mixin-conf';
@@ -78,7 +78,7 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
         /**
          * @see {@link BaseMixin.configure}
          */
-        public configure(conf: IBubbleMixinConf): this {
+        public configure(conf: IBubbleMixinConf): any {
             super.configure(conf);
             return this;
         }
@@ -107,7 +107,7 @@ export function BubbleMixin<TBase extends Constructor<MinimalBase>>(Base: TBase)
          * @see {@link https://github.com/d3/d3-scale/blob/master/README.md | d3.scale}
          */
         public r(): MinimalRadiusScale;
-        public r(bubbleRadiusScale: MinimalRadiusScale): this;
+        public r(bubbleRadiusScale: MinimalRadiusScale): any;
         public r(bubbleRadiusScale?) {
             if (!arguments.length) {
                 return this._r;
