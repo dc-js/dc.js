@@ -1,5 +1,5 @@
-import { IBaseMixinConf } from '../base/i-base-mixin-conf';
-import { BaseAccessor, CompareFn } from '../core/types';
+import { IBaseMixinConf } from '../base/i-base-mixin-conf.js';
+import { BaseAccessor, CompareFn } from '../core/types.js';
 
 export interface ICboxMenuConf extends IBaseMixinConf {
     readonly order?: CompareFn;

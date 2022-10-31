@@ -1,5 +1,5 @@
-import { MinimalCFDimension } from '../core/types';
-import { FilterHandler } from './filter-handler';
+import { MinimalCFDimension } from '../core/types.js';
+import { FilterHandler } from './filter-handler.js';
 
 export interface ICFFilterHandlerConf {
     dimension?: MinimalCFDimension;

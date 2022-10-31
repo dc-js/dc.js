@@ -1,1 +1,1 @@
-export * from '../../core/logger';
+export * from '../../core/logger.js';

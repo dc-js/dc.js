@@ -1,19 +1,19 @@
 import { BaseType, select, Selection } from 'd3-selection';
 import { dispatch, Dispatch } from 'd3-dispatch';
 
-import { isNumber, sortBy, uniqueId } from '../core/utils';
-import { instanceOfChart } from '../core/core';
-import { chartRegistry } from '../core/chart-registry';
-import { constants } from '../core/constants';
-import { events } from '../core/events';
-import { logger } from '../core/logger';
-import { printFilters } from '../core/printers';
-import { InvalidStateException } from '../core/invalid-state-exception';
-import { BadArgumentException } from '../core/bad-argument-exception';
-import { CFGrouping, ChartGroupType, ChartParentType, LegendItem, SizeT } from '../core/types';
-import { IBaseMixinConf } from './i-base-mixin-conf';
-import { CFSimpleAdapter } from '../data/c-f-simple-adapter';
-import { IChartGroup } from '../core/i-chart-group';
+import { isNumber, sortBy, uniqueId } from '../core/utils.js';
+import { instanceOfChart } from '../core/core.js';
+import { chartRegistry } from '../core/chart-registry.js';
+import { constants } from '../core/constants.js';
+import { events } from '../core/events.js';
+import { logger } from '../core/logger.js';
+import { printFilters } from '../core/printers.js';
+import { InvalidStateException } from '../core/invalid-state-exception.js';
+import { BadArgumentException } from '../core/bad-argument-exception.js';
+import { CFGrouping, ChartGroupType, ChartParentType, LegendItem, SizeT } from '../core/types.js';
+import { IBaseMixinConf } from './i-base-mixin-conf.js';
+import { CFSimpleAdapter } from '../data/c-f-simple-adapter.js';
+import { IChartGroup } from '../core/i-chart-group.js';
 import { max } from 'd3-array';
 
 /**

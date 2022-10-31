@@ -2,19 +2,19 @@ import { scaleBand } from 'd3-scale';
 import { select } from 'd3-selection';
 import { max, min } from 'd3-array';
 
-import { d3Box } from '../base/d3.box';
-import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
-import { transition } from '../core/core';
-import { UnitsOrdinal } from '../core/units';
-import { add, subtract } from '../core/utils';
+import { d3Box } from '../base/d3.box.js';
+import { CoordinateGridMixin } from '../base/coordinate-grid-mixin.js';
+import { transition } from '../core/core.js';
+import { UnitsOrdinal } from '../core/units.js';
+import { add, subtract } from '../core/utils.js';
 import {
     BoxWidthFn,
     ChartGroupType,
     ChartParentType,
     DCBrushSelection,
     SVGGElementSelection,
-} from '../core/types';
-import { IBoxPlotConf } from './i-box-plot-conf';
+} from '../core/types.js';
+import { IBoxPlotConf } from './i-box-plot-conf.js';
 
 // Returns a function to compute the interquartile range.
 function defaultWhiskersIQR(k: number): (d) => [number, number] {

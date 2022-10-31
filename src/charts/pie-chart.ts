@@ -3,12 +3,12 @@ import { Arc, arc, DefaultArcObject, Pie, pie } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 
-import { ColorMixin } from '../base/color-mixin';
-import { BaseMixin } from '../base/base-mixin';
-import { transition } from '../core/core';
-import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
-import { IPieChartConf } from './i-pie-chart-conf';
-import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
+import { ColorMixin } from '../base/color-mixin.js';
+import { BaseMixin } from '../base/base-mixin.js';
+import { transition } from '../core/core.js';
+import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types.js';
+import { IPieChartConf } from './i-pie-chart-conf.js';
+import { CFDataCapHelper } from '../data/c-f-data-cap-helper.js';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 

@@ -1,6 +1,6 @@
-import { NumberDisplay as NumberDisplayNeo } from '../../charts/number-display';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType, NumberFormatFn } from '../../core/types';
+import { NumberDisplay as NumberDisplayNeo } from '../../charts/number-display.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ChartGroupType, ChartParentType, NumberFormatFn } from '../../core/types.js';
 
 export class NumberDisplay extends BaseMixinExt(NumberDisplayNeo) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

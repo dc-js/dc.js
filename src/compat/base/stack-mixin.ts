@@ -1,10 +1,10 @@
-import { BaseAccessor, Constructor, MinimalCFGroup, TitleAccessor } from '../../core/types';
-import { BaseMixinExt } from './base-mixin';
-import { StackMixin as StackMixinNeo } from '../../base/stack-mixin';
-import { MarginMixinExt } from './margin-mixin';
-import { ColorMixinExt } from './color-mixin';
-import { CoordinateGridMixinExt } from './coordinate-grid-mixin';
-import { ICFMultiAdapterConf, LayerSpec } from '../../data';
+import { BaseAccessor, Constructor, MinimalCFGroup, TitleAccessor } from '../../core/types.js';
+import { BaseMixinExt } from './base-mixin.js';
+import { StackMixin as StackMixinNeo } from '../../base/stack-mixin.js';
+import { MarginMixinExt } from './margin-mixin.js';
+import { ColorMixinExt } from './color-mixin.js';
+import { CoordinateGridMixinExt } from './coordinate-grid-mixin.js';
+import { ICFMultiAdapterConf, LayerSpec } from '../../data/index.js';
 
 class Intermediate extends CoordinateGridMixinExt(MarginMixinExt(BaseMixinExt(StackMixinNeo))) {}
 

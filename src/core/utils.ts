@@ -1,7 +1,7 @@
 import { timeDay, timeHour, timeMinute, timeMonth, timeSecond, timeWeek, timeYear } from 'd3-time';
 
-import { constants } from './constants';
-import { config } from './config';
+import { constants } from './constants.js';
+import { config } from './config.js';
 import { ascending } from 'd3-array';
 
 export const pluck2 = function (n, f) {

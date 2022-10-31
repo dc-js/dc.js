@@ -1,7 +1,7 @@
 import { timeFormat } from 'd3-time-format';
 
-import { logger } from './logger';
-import { ColorsList } from './types';
+import { logger } from './logger.js';
+import { ColorsList } from './types.js';
 import { format } from 'd3-format';
 
 /**

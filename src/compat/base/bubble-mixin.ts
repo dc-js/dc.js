@@ -1,7 +1,7 @@
-import { Constructor, RValueAccessor } from '../../core/types';
-import { BaseMixinExt } from './base-mixin';
-import { BubbleMixin as BubbleMixinNeo } from '../../base/bubble-mixin';
-import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
+import { Constructor, RValueAccessor } from '../../core/types.js';
+import { BaseMixinExt } from './base-mixin.js';
+import { BubbleMixin as BubbleMixinNeo } from '../../base/bubble-mixin.js';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin.js';
 
 class Intermediate extends BaseMixinExt(BubbleMixinNeo(BaseMixinNeo)) {}
 

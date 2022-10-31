@@ -2,16 +2,16 @@ import { max, min } from 'd3-array';
 import { scaleLinear } from 'd3-scale';
 import { Axis, axisRight } from 'd3-axis';
 
-import { add, subtract } from '../core/utils';
-import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
+import { add, subtract } from '../core/utils.js';
+import { CoordinateGridMixin } from '../base/coordinate-grid-mixin.js';
 import {
     ChartGroupType,
     ChartParentType,
     Margins,
     MinimalXYScale,
     SVGGElementSelection,
-} from '../core/types';
-import { ICompositeChartConf } from './i-composite-chart-conf';
+} from '../core/types.js';
+import { ICompositeChartConf } from './i-composite-chart-conf.js';
 
 const SUB_CHART_CLASS = 'sub';
 const DEFAULT_RIGHT_Y_AXIS_LABEL_PADDING = 12;

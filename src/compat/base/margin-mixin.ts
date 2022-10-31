@@ -1,6 +1,6 @@
-import { Constructor } from '../../core/types';
-import { BaseMixinExt } from './base-mixin';
-import { MarginMixin as MarginMixinNeo } from '../../base/margin-mixin';
+import { Constructor } from '../../core/types.js';
+import { BaseMixinExt } from './base-mixin.js';
+import { MarginMixin as MarginMixinNeo } from '../../base/margin-mixin.js';
 
 class Intermediate extends BaseMixinExt(MarginMixinNeo) {}
 

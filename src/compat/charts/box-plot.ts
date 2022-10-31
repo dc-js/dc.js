@@ -1,9 +1,9 @@
-import { BoxPlot as BoxPlotNeo } from '../../charts/box-plot';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { ChartGroupType, ChartParentType, NumberFormatFn } from '../../core/types';
-import { MarginMixinExt } from '../base/margin-mixin';
-import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
+import { BoxPlot as BoxPlotNeo } from '../../charts/box-plot.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { ChartGroupType, ChartParentType, NumberFormatFn } from '../../core/types.js';
+import { MarginMixinExt } from '../base/margin-mixin.js';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin.js';
 
 export class BoxPlot extends CoordinateGridMixinExt(
     ColorMixinExt(MarginMixinExt(BaseMixinExt(BoxPlotNeo)))

@@ -1,4 +1,4 @@
-import { UnitsInteger, UnitsOrdinal, UnitWithPrecision } from '../../core/units';
+import { UnitsInteger, UnitsOrdinal, UnitWithPrecision } from '../../core/units.js';
 
 export const units = {
     integers: UnitsInteger,

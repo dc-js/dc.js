@@ -1,5 +1,5 @@
-import { IBaseMixinConf } from '../base/i-base-mixin-conf';
-import { BaseAccessor, CompareFn, DataTableColumnSpec } from '../core/types';
+import { IBaseMixinConf } from '../base/i-base-mixin-conf.js';
+import { BaseAccessor, CompareFn, DataTableColumnSpec } from '../core/types.js';
 
 export interface IDataTableConf extends IBaseMixinConf {
     readonly section?: BaseAccessor<string>;

@@ -1,8 +1,8 @@
-import { BubbleOverlay as BubbleOverlayNeo } from '../../charts/bubble-overlay';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { ChartGroupType, ChartParentType } from '../../core/types';
-import { BubbleMixinExt } from '../base/bubble-mixin';
+import { BubbleOverlay as BubbleOverlayNeo } from '../../charts/bubble-overlay.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { ChartGroupType, ChartParentType } from '../../core/types.js';
+import { BubbleMixinExt } from '../base/bubble-mixin.js';
 
 export class BubbleOverlay extends BubbleMixinExt(ColorMixinExt(BaseMixinExt(BubbleOverlayNeo))) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

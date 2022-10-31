@@ -1,5 +1,5 @@
-import { AbstractColorHelper } from './abstract-color-helper';
-import { BaseAccessor } from '../../core/types';
+import { AbstractColorHelper } from './abstract-color-helper.js';
+import { BaseAccessor } from '../../core/types.js';
 
 /**
  * Overrides the color selection algorithm, replacing it with a simple function.

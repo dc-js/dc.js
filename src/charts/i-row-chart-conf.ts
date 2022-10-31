@@ -1,5 +1,5 @@
-import { IColorMixinConf } from '../base/i-color-mixin-conf';
-import { IMarginMixinConf } from '../base/i-margin-mixin-conf';
+import { IColorMixinConf } from '../base/i-color-mixin-conf.js';
+import { IMarginMixinConf } from '../base/i-margin-mixin-conf.js';
 
 export interface IRowChartConf extends IColorMixinConf, IMarginMixinConf {
     readonly elasticX?: boolean;

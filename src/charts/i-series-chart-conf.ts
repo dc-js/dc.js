@@ -1,6 +1,6 @@
-import { ICompositeChartConf } from './i-composite-chart-conf';
-import { LineChart } from './line-chart';
-import { BaseAccessor, CompareFn } from '../core/types';
+import { ICompositeChartConf } from './i-composite-chart-conf.js';
+import { LineChart } from './line-chart.js';
+import { BaseAccessor, CompareFn } from '../core/types.js';
 
 export type LineChartFunction = (parent, chartGroup) => LineChart;
 

@@ -1,9 +1,9 @@
-import { Constructor } from '../../core/types';
-import { CompositeChart as CompositeChartNeo } from '../../charts/composite-chart';
-import { BaseMixinExt } from '../base/base-mixin';
-import { MarginMixinExt } from '../base/margin-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
+import { Constructor } from '../../core/types.js';
+import { CompositeChart as CompositeChartNeo } from '../../charts/composite-chart.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { MarginMixinExt } from '../base/margin-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin.js';
 
 class Intermediate extends CoordinateGridMixinExt(
     ColorMixinExt(MarginMixinExt(BaseMixinExt(CompositeChartNeo)))

@@ -3,7 +3,7 @@ import {
     RangedFilter,
     RangedTwoDimensionalFilter,
     TwoDimensionalFilter,
-} from '../../core/filters/index';
+} from '../../core/filters/index.js';
 
 /**
  * The dc.js filters are functions which are passed into crossfilter to chose which records will be

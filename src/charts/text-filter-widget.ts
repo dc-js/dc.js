@@ -1,9 +1,9 @@
-import { BaseMixin } from '../base/base-mixin';
-import { constants } from '../core/constants';
-import { events } from '../core/events';
-import { ChartGroupType, ChartParentType } from '../core/types';
+import { BaseMixin } from '../base/base-mixin.js';
+import { constants } from '../core/constants.js';
+import { events } from '../core/events.js';
+import { ChartGroupType, ChartParentType } from '../core/types.js';
 import { Selection } from 'd3-selection';
-import { ITextFilterWidgetConf } from './i-text-filter-widget-conf';
+import { ITextFilterWidgetConf } from './i-text-filter-widget-conf.js';
 
 const INPUT_CSS_CLASS = 'dc-text-filter-input';
 

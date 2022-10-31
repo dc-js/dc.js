@@ -1,5 +1,5 @@
-import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler';
-import { IFilterStorage } from '../core/i-filter-storage';
+import { CFFilterHandler, ICFFilterHandlerConf } from './c-f-filter-handler.js';
+import { IFilterStorage } from '../core/i-filter-storage.js';
 
 export interface IFilterStorageConf extends ICFFilterHandlerConf {
     readonly filterStorage?: IFilterStorage;

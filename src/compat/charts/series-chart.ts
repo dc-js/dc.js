@@ -1,11 +1,11 @@
-import { SeriesChart as SeriesChartNeo } from '../../charts/series-chart';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { BaseAccessor, ChartGroupType, ChartParentType, CompareFn } from '../../core/types';
-import { MarginMixinExt } from '../base/margin-mixin';
-import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
-import { CompositeChartExt } from './composite-chart';
-import { LineChartFunction } from '../../charts/i-series-chart-conf';
+import { SeriesChart as SeriesChartNeo } from '../../charts/series-chart.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { BaseAccessor, ChartGroupType, ChartParentType, CompareFn } from '../../core/types.js';
+import { MarginMixinExt } from '../base/margin-mixin.js';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin.js';
+import { CompositeChartExt } from './composite-chart.js';
+import { LineChartFunction } from '../../charts/i-series-chart-conf.js';
 
 export class SeriesChart extends CompositeChartExt(
     CoordinateGridMixinExt(ColorMixinExt(MarginMixinExt(BaseMixinExt(SeriesChartNeo))))

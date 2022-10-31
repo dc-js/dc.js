@@ -1,9 +1,9 @@
 import { ascending, groups } from 'd3-array';
 
-import { BaseMixin } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType } from '../core/types';
+import { BaseMixin } from '../base/base-mixin.js';
+import { ChartGroupType, ChartParentType } from '../core/types.js';
 import { Selection } from 'd3-selection';
-import { IDataGridConf } from './i-data-grid-conf';
+import { IDataGridConf } from './i-data-grid-conf.js';
 
 const LABEL_CSS_CLASS = 'dc-grid-label';
 const ITEM_CSS_CLASS = 'dc-grid-item';

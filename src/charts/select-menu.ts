@@ -1,10 +1,10 @@
 import { Selection } from 'd3-selection';
 
-import { events } from '../core/events';
-import { BaseMixin } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType } from '../core/types';
+import { events } from '../core/events.js';
+import { BaseMixin } from '../base/base-mixin.js';
+import { ChartGroupType, ChartParentType } from '../core/types.js';
 import { ascending } from 'd3-array';
-import { ISelectMenuConf } from './i-select-menu-conf';
+import { ISelectMenuConf } from './i-select-menu-conf.js';
 
 const SELECT_CSS_CLASS = 'dc-select-menu';
 const OPTION_CSS_CLASS = 'dc-select-option';

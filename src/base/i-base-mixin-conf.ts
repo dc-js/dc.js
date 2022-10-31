@@ -1,4 +1,4 @@
-import { KeyAccessor, LabelAccessor, SizeT, TitleAccessor } from '../core/types';
+import { KeyAccessor, LabelAccessor, SizeT, TitleAccessor } from '../core/types.js';
 
 export interface IBaseMixinConf {
     readonly keyAccessor?: KeyAccessor;

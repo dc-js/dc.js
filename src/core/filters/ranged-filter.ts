@@ -1,4 +1,4 @@
-import { IFilter } from './i-filter';
+import { IFilter } from './i-filter.js';
 
 export class RangedFilter<T> extends Array<T> implements IFilter {
     readonly filterType = 'RangedFilter';

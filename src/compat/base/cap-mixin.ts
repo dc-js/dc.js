@@ -1,7 +1,7 @@
-import { Constructor } from '../../core/types';
-import { BaseMixinExt } from './base-mixin';
-import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
-import { CFDataCapHelper } from '../../data/c-f-data-cap-helper';
+import { Constructor } from '../../core/types.js';
+import { BaseMixinExt } from './base-mixin.js';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin.js';
+import { CFDataCapHelper } from '../../data/c-f-data-cap-helper.js';
 
 class Intermediate extends BaseMixinExt(BaseMixinNeo) {}
 

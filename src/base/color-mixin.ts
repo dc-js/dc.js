@@ -1,14 +1,14 @@
 import { extent } from 'd3-array';
 
-import { config } from '../core/config';
-import { BaseAccessor, ColorAccessor, Constructor, MinimalColorScale } from '../core/types';
-import { IColorMixinConf } from './i-color-mixin-conf';
-import { AbstractColorHelper } from './colors/abstract-color-helper';
-import { ColorScaleHelper } from './colors/color-scale-helper';
-import { OrdinalColors } from './colors/ordinal-colors';
-import { IBaseMixinConf } from './i-base-mixin-conf';
-import { LinearColors } from './colors/linear-colors';
-import { ColorCalculator } from './colors/color-calculator';
+import { config } from '../core/config.js';
+import { BaseAccessor, ColorAccessor, Constructor, MinimalColorScale } from '../core/types.js';
+import { IColorMixinConf } from './i-color-mixin-conf.js';
+import { AbstractColorHelper } from './colors/abstract-color-helper.js';
+import { ColorScaleHelper } from './colors/color-scale-helper.js';
+import { OrdinalColors } from './colors/ordinal-colors.js';
+import { IBaseMixinConf } from './i-base-mixin-conf.js';
+import { LinearColors } from './colors/linear-colors.js';
+import { ColorCalculator } from './colors/color-calculator.js';
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);

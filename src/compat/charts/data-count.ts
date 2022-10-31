@@ -1,7 +1,7 @@
-import { DataCount as DataCountNeo } from '../../charts/data-count';
-import { logger } from '../../core/logger';
-import { BaseMixinExt } from '../base/base-mixin';
-import { DataCountHTMLOptions, NumberFormatFn } from '../../core/types';
+import { DataCount as DataCountNeo } from '../../charts/data-count.js';
+import { logger } from '../../core/logger.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { DataCountHTMLOptions, NumberFormatFn } from '../../core/types.js';
 
 export class DataCount extends BaseMixinExt(DataCountNeo) {
     public dimension();

@@ -1,6 +1,6 @@
-import { BaseMixin } from './base-mixin';
-import { ChartGroupType, ChartParentType, Margins } from '../core/types';
-import { IMarginMixinConf } from './i-margin-mixin-conf';
+import { BaseMixin } from './base-mixin.js';
+import { ChartGroupType, ChartParentType, Margins } from '../core/types.js';
+import { IMarginMixinConf } from './i-margin-mixin-conf.js';
 
 /**
  * Margin is a mixin that provides margin utility functions for both the Row Chart and Coordinate Grid

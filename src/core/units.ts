@@ -1,5 +1,5 @@
-import { isNegligible } from './utils';
-import { IUnits } from './types';
+import { isNegligible } from './utils.js';
+import { IUnits } from './types.js';
 
 /**
  * The default value for {@link ICoordinateGridMixinConf.xUnits | .xUnits} for the

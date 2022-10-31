@@ -1,4 +1,4 @@
-import { IFilter } from './i-filter';
+import { IFilter } from './i-filter.js';
 
 export class TwoDimensionalFilter extends Array implements IFilter {
     public readonly filterType = 'TwoDimensionalFilter';

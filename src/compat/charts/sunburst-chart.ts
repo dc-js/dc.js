@@ -1,8 +1,8 @@
-import { SunburstChart as SunburstChartNeo } from '../../charts/sunburst-chart';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { ChartGroupType, ChartParentType } from '../../core/types';
-import { RingSizeSpecs } from '../../charts/i-sunburst-chart-conf';
+import { SunburstChart as SunburstChartNeo } from '../../charts/sunburst-chart.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { ChartGroupType, ChartParentType } from '../../core/types.js';
+import { RingSizeSpecs } from '../../charts/i-sunburst-chart-conf.js';
 
 export class SunburstChart extends ColorMixinExt(BaseMixinExt(SunburstChartNeo)) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

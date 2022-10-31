@@ -1,5 +1,5 @@
-import { MinimalCFGroup, ValueAccessor } from '../core/types';
-import { CFSimpleAdapter, ICFSimpleAdapterConf } from './c-f-simple-adapter';
+import { MinimalCFGroup, ValueAccessor } from '../core/types.js';
+import { CFSimpleAdapter, ICFSimpleAdapterConf } from './c-f-simple-adapter.js';
 
 export interface LayerSpec {
     name?: string;

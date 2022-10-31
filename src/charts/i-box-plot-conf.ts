@@ -1,5 +1,5 @@
-import { ICoordinateGridMixinConf } from '../base/i-coordinate-grid-mixin-conf';
-import { NumberFormatFn } from '../core/types';
+import { ICoordinateGridMixinConf } from '../base/i-coordinate-grid-mixin-conf.js';
+import { NumberFormatFn } from '../core/types.js';
 
 export interface IBoxPlotConf extends ICoordinateGridMixinConf {
     readonly yRangePadding?: number;

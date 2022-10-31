@@ -1,4 +1,4 @@
-import { printFilter, printFilters } from '../../core/printers';
+import { printFilter, printFilters } from '../../core/printers.js';
 
 export const printers = {
     filter: printFilter,

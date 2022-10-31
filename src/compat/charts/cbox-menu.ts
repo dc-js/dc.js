@@ -1,6 +1,6 @@
-import { CboxMenu as CboxMenuNeo } from '../../charts/cbox-menu';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType, CompareFn } from '../../core/types';
+import { CboxMenu as CboxMenuNeo } from '../../charts/cbox-menu.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ChartGroupType, ChartParentType, CompareFn } from '../../core/types.js';
 
 export class CboxMenu extends BaseMixinExt(CboxMenuNeo) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

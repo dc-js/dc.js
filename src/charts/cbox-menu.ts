@@ -1,10 +1,10 @@
 import { select, Selection } from 'd3-selection';
 
-import { events } from '../core/events';
-import { BaseMixin } from '../base/base-mixin';
-import { uniqueId } from '../core/utils';
-import { ChartGroupType, ChartParentType } from '../core/types';
-import { ICboxMenuConf } from './i-cbox-menu-conf';
+import { events } from '../core/events.js';
+import { BaseMixin } from '../base/base-mixin.js';
+import { uniqueId } from '../core/utils.js';
+import { ChartGroupType, ChartParentType } from '../core/types.js';
+import { ICboxMenuConf } from './i-cbox-menu-conf.js';
 import { ascending } from 'd3-array';
 
 const GROUP_CSS_CLASS = 'dc-cbox-group';

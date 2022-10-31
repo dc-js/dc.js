@@ -1,4 +1,4 @@
-import { ColorScaleHelper } from './color-scale-helper';
+import { ColorScaleHelper } from './color-scale-helper.js';
 import { scaleOrdinal } from 'd3-scale';
 
 /**

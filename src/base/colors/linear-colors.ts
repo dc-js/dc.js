@@ -1,4 +1,4 @@
-import { ColorScaleHelper } from './color-scale-helper';
+import { ColorScaleHelper } from './color-scale-helper.js';
 import { scaleLinear } from 'd3-scale';
 import { interpolateHcl } from 'd3-interpolate';
 

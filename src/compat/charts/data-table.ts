@@ -1,13 +1,13 @@
-import { DataTable as DataTableNeo } from '../../charts/data-table';
-import { BaseMixinExt } from '../base/base-mixin';
+import { DataTable as DataTableNeo } from '../../charts/data-table.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
 import {
     BaseAccessor,
     ChartGroupType,
     ChartParentType,
     CompareFn,
     DataTableColumnSpec,
-} from '../../core/types';
-import { logger } from '../core/logger';
+} from '../../core/types.js';
+import { logger } from '../core/logger.js';
 
 // @ts-ignore, remove after group method is moved here
 export class DataTable extends BaseMixinExt(DataTableNeo) {

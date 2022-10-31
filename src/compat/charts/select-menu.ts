@@ -1,7 +1,7 @@
-import { SelectMenu as SelectMenuNeo } from '../../charts/select-menu';
-import { BaseMixinExt } from '../base/base-mixin';
-import { BaseAccessor, ChartGroupType, ChartParentType, CompareFn } from '../../core/types';
-import { logger } from '../core/logger';
+import { SelectMenu as SelectMenuNeo } from '../../charts/select-menu.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { BaseAccessor, ChartGroupType, ChartParentType, CompareFn } from '../../core/types.js';
+import { logger } from '../core/logger.js';
 
 export class SelectMenu extends BaseMixinExt(SelectMenuNeo) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

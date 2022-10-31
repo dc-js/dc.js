@@ -1,9 +1,9 @@
-import { RowChart as RowChartNeo } from '../../charts/row-chart';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { CapMixinExt } from '../base/cap-mixin';
-import { ChartGroupType, ChartParentType } from '../../core/types';
-import { MarginMixinExt } from '../base/margin-mixin';
+import { RowChart as RowChartNeo } from '../../charts/row-chart.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { CapMixinExt } from '../base/cap-mixin.js';
+import { ChartGroupType, ChartParentType } from '../../core/types.js';
+import { MarginMixinExt } from '../base/margin-mixin.js';
 
 export class RowChart extends CapMixinExt(
     ColorMixinExt(MarginMixinExt(BaseMixinExt(RowChartNeo)))

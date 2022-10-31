@@ -81,7 +81,10 @@
     "test": "grunt test"
   },
   "browser": "dist/dc.js",
-  "main": "dist/dc.js",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "type": "module",
   "module": "src/index.js",
   "typings": "index.d.ts"
 }

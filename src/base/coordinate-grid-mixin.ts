@@ -7,24 +7,24 @@ import { zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom';
 import { BrushBehavior, brushX } from 'd3-brush';
 import { Selection } from 'd3-selection';
 
-import { ColorMixin } from './color-mixin';
-import { MarginMixin } from './margin-mixin';
-import { optionalTransition, transition } from '../core/core';
-import { UnitsInteger, UnitsOrdinal } from '../core/units';
-import { constants } from '../core/constants';
-import { add, appendOrSelect, arraysEqual, subtract } from '../core/utils';
-import { logger } from '../core/logger';
-import { events } from '../core/events';
+import { ColorMixin } from './color-mixin.js';
+import { MarginMixin } from './margin-mixin.js';
+import { optionalTransition, transition } from '../core/core.js';
+import { UnitsInteger, UnitsOrdinal } from '../core/units.js';
+import { constants } from '../core/constants.js';
+import { add, appendOrSelect, arraysEqual, subtract } from '../core/utils.js';
+import { logger } from '../core/logger.js';
+import { events } from '../core/events.js';
 import {
     ChartGroupType,
     ChartParentType,
     DCBrushSelection,
     MinimalXYScale,
     SVGGElementSelection,
-} from '../core/types';
-import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf';
-import { OrdinalColors } from './colors/ordinal-colors';
-import { RangedFilter } from '../core/filters/ranged-filter';
+} from '../core/types.js';
+import { ICoordinateGridMixinConf } from './i-coordinate-grid-mixin-conf.js';
+import { OrdinalColors } from './colors/ordinal-colors.js';
+import { RangedFilter } from '../core/filters/ranged-filter.js';
 
 const GRID_LINE_CLASS = 'grid-line';
 const HORIZONTAL_CLASS = 'horizontal';

@@ -19,18 +19,18 @@ import {
 } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 
-import { logger } from '../core/logger';
-import { pluck2, printSingleValue, safeNumber } from '../core/utils';
-import { StackMixin } from '../base/stack-mixin';
-import { transition } from '../core/core';
+import { logger } from '../core/logger.js';
+import { pluck2, printSingleValue, safeNumber } from '../core/utils.js';
+import { StackMixin } from '../base/stack-mixin.js';
+import { transition } from '../core/core.js';
 import {
     BaseAccessor,
     ChartGroupType,
     ChartParentType,
     LegendItem,
     SVGGElementSelection,
-} from '../core/types';
-import { ILineChartConf } from './i-line-chart-conf';
+} from '../core/types.js';
+import { ILineChartConf } from './i-line-chart-conf.js';
 
 const DEFAULT_DOT_RADIUS = 5;
 const TOOLTIP_G_CLASS = 'dc-tooltip';

@@ -1,8 +1,8 @@
-import { PieChart as PieChartNeo } from '../../charts/pie-chart';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { CapMixinExt } from '../base/cap-mixin';
-import { ChartGroupType, ChartParentType } from '../../core/types';
+import { PieChart as PieChartNeo } from '../../charts/pie-chart.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { CapMixinExt } from '../base/cap-mixin.js';
+import { ChartGroupType, ChartParentType } from '../../core/types.js';
 
 export class PieChart extends CapMixinExt(ColorMixinExt(BaseMixinExt(PieChartNeo))) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

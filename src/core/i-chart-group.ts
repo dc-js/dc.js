@@ -1,5 +1,5 @@
-import { IFilterStorage } from './i-filter-storage';
-import { IMinimalChart } from './i-minimal-chart';
+import { IFilterStorage } from './i-filter-storage.js';
+import { IMinimalChart } from './i-minimal-chart.js';
 
 export interface IChartGroup {
     register(chart: IMinimalChart): void;

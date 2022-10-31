@@ -1,7 +1,7 @@
-import { IFilterListenerParams, IFilterStorage, ISerializeOpts } from './i-filter-storage';
-import { IFilter } from './filters/i-filter';
-import { filterFactory } from './filters/filter-factory';
-import { ISerializedFilters } from './i-serialized-filters';
+import { IFilterListenerParams, IFilterStorage, ISerializeOpts } from './i-filter-storage.js';
+import { IFilter } from './filters/i-filter.js';
+import { filterFactory } from './filters/filter-factory.js';
+import { ISerializedFilters } from './i-serialized-filters.js';
 import { Dispatch, dispatch } from 'd3-dispatch';
 
 export class FilterStorage implements IFilterStorage {

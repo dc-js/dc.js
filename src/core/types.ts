@@ -1,6 +1,6 @@
 import { Selection } from 'd3-selection';
-import { BaseMixin } from '../base/base-mixin';
-import { IChartGroup } from './i-chart-group';
+import { BaseMixin } from '../base/base-mixin.js';
+import { IChartGroup } from './i-chart-group.js';
 
 export type ChartParentType = string | BaseMixin | Selection<Element, undefined, Element, unknown>;
 

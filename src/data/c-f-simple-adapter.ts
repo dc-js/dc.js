@@ -1,5 +1,5 @@
-import { BaseAccessor, MinimalCFGroup, ValueAccessor } from '../core/types';
-import { FilterStorageHelper, IFilterStorageConf } from './filter-storage-helper';
+import { BaseAccessor, MinimalCFGroup, ValueAccessor } from '../core/types.js';
+import { FilterStorageHelper, IFilterStorageConf } from './filter-storage-helper.js';
 
 export interface ICFSimpleAdapterConf extends IFilterStorageConf {
     readonly group?: MinimalCFGroup;

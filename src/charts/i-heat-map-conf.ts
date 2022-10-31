@@ -1,6 +1,6 @@
-import { IColorMixinConf } from '../base/i-color-mixin-conf';
-import { IMarginMixinConf } from '../base/i-margin-mixin-conf';
-import { BaseAccessor, CompareFn, HeatMapClickHandler } from '../core/types';
+import { IColorMixinConf } from '../base/i-color-mixin-conf.js';
+import { IMarginMixinConf } from '../base/i-margin-mixin-conf.js';
+import { BaseAccessor, CompareFn, HeatMapClickHandler } from '../core/types.js';
 
 export interface IHeatMapConf extends IColorMixinConf, IMarginMixinConf {
     readonly boxOnClick?: HeatMapClickHandler;

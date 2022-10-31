@@ -4,16 +4,16 @@ import { Arc, arc, DefaultArcObject } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 import { interpolate } from 'd3-interpolate';
 
-import { transition } from '../core/core';
-import { arraysIdentical, toHierarchy } from '../core/utils';
-import { events } from '../core/events';
-import { ColorMixin } from '../base/color-mixin';
-import { BaseMixin } from '../base/base-mixin';
-import { constants } from '../core/constants';
-import { BadArgumentException } from '../core/bad-argument-exception';
-import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types';
-import { ISunburstChartConf, RingSizeSpecs } from './i-sunburst-chart-conf';
-import { HierarchyFilter } from '../core/filters/hierarchy-filter';
+import { transition } from '../core/core.js';
+import { arraysIdentical, toHierarchy } from '../core/utils.js';
+import { events } from '../core/events.js';
+import { ColorMixin } from '../base/color-mixin.js';
+import { BaseMixin } from '../base/base-mixin.js';
+import { constants } from '../core/constants.js';
+import { BadArgumentException } from '../core/bad-argument-exception.js';
+import { ChartGroupType, ChartParentType, LegendItem, SVGGElementSelection } from '../core/types.js';
+import { ISunburstChartConf, RingSizeSpecs } from './i-sunburst-chart-conf.js';
+import { HierarchyFilter } from '../core/filters/hierarchy-filter.js';
 
 const DEFAULT_MIN_ANGLE_FOR_LABEL = 0.5;
 

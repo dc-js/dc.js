@@ -1,14 +1,14 @@
-import { HeatMap as HeatMapNeo } from '../../charts/heat-map';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
+import { HeatMap as HeatMapNeo } from '../../charts/heat-map.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
 import {
     BaseAccessor,
     ChartGroupType,
     ChartParentType,
     CompareFn,
     HeatMapClickHandler,
-} from '../../core/types';
-import { MarginMixinExt } from '../base/margin-mixin';
+} from '../../core/types.js';
+import { MarginMixinExt } from '../base/margin-mixin.js';
 
 export class HeatMap extends ColorMixinExt(MarginMixinExt(BaseMixinExt(HeatMapNeo))) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

@@ -1,8 +1,8 @@
 import { format } from 'd3-format';
 
-import { BaseMixin } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType } from '../core/types';
-import { IDataCountConf } from './i-data-count-conf';
+import { BaseMixin } from '../base/base-mixin.js';
+import { ChartGroupType, ChartParentType } from '../core/types.js';
+import { IDataCountConf } from './i-data-count-conf.js';
 
 // Keeping these here for now, check if any other charts need same entities
 interface CF {

@@ -1,14 +1,14 @@
 // @ts-ignore, TODO, not supported in d3v6
 import { pointer, Selection } from 'd3-selection';
 
-import { BaseMixin } from '../base/base-mixin';
-import { BubbleMixin } from '../base/bubble-mixin';
-import { transition } from '../core/core';
-import { constants } from '../core/constants';
-import { nameToId } from '../core/utils';
-import { ColorMixin } from '../base/color-mixin';
-import { ChartGroupType, ChartParentType, SVGGElementSelection } from '../core/types';
-import { IBubbleOverlayConf } from './i-bubble-overlay-conf';
+import { BaseMixin } from '../base/base-mixin.js';
+import { BubbleMixin } from '../base/bubble-mixin.js';
+import { transition } from '../core/core.js';
+import { constants } from '../core/constants.js';
+import { nameToId } from '../core/utils.js';
+import { ColorMixin } from '../base/color-mixin.js';
+import { ChartGroupType, ChartParentType, SVGGElementSelection } from '../core/types.js';
+import { IBubbleOverlayConf } from './i-bubble-overlay-conf.js';
 
 const BUBBLE_OVERLAY_CLASS = 'bubble-overlay';
 const BUBBLE_NODE_CLASS = 'node';

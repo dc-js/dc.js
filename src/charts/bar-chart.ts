@@ -1,17 +1,17 @@
 import { select, Selection } from 'd3-selection';
 
-import { StackMixin } from '../base/stack-mixin';
-import { transition } from '../core/core';
-import { constants } from '../core/constants';
-import { logger } from '../core/logger';
-import { pluck2, printSingleValue, safeNumber } from '../core/utils';
+import { StackMixin } from '../base/stack-mixin.js';
+import { transition } from '../core/core.js';
+import { constants } from '../core/constants.js';
+import { logger } from '../core/logger.js';
+import { pluck2, printSingleValue, safeNumber } from '../core/utils.js';
 import {
     ChartGroupType,
     ChartParentType,
     DCBrushSelection,
     SVGGElementSelection,
-} from '../core/types';
-import { IBarChartConf } from './i-bar-chart-conf';
+} from '../core/types.js';
+import { IBarChartConf } from './i-bar-chart-conf.js';
 
 const MIN_BAR_WIDTH = 1;
 const DEFAULT_GAP_BETWEEN_BARS = 2;

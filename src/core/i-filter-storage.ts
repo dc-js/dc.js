@@ -1,4 +1,4 @@
-import { ISerializedFilters } from './i-serialized-filters';
+import { ISerializedFilters } from './i-serialized-filters.js';
 
 export interface IFilterListenerParams {
     storageKey: any;

@@ -1,4 +1,4 @@
-import { BaseAccessor } from '../../core/types';
+import { BaseAccessor } from '../../core/types.js';
 
 export class AbstractColorHelper {
     /**

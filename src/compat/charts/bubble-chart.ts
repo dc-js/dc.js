@@ -1,10 +1,10 @@
-import { BubbleChart as BubbleChartNeo } from '../../charts/bubble-chart';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { ChartGroupType, ChartParentType } from '../../core/types';
-import { MarginMixinExt } from '../base/margin-mixin';
-import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
-import { BubbleMixinExt } from '../base/bubble-mixin';
+import { BubbleChart as BubbleChartNeo } from '../../charts/bubble-chart.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { ChartGroupType, ChartParentType } from '../../core/types.js';
+import { MarginMixinExt } from '../base/margin-mixin.js';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin.js';
+import { BubbleMixinExt } from '../base/bubble-mixin.js';
 
 export class BubbleChart extends BubbleMixinExt(
     // @ts-ignore

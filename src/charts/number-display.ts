@@ -2,9 +2,9 @@ import { format } from 'd3-format';
 import { easeQuad } from 'd3-ease';
 import { interpolateNumber } from 'd3-interpolate';
 
-import { BaseMixin } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType, MinimalCFGroup } from '../core/types';
-import { INumberDisplayConf } from './i-number-display-conf';
+import { BaseMixin } from '../base/base-mixin.js';
+import { ChartGroupType, ChartParentType, MinimalCFGroup } from '../core/types.js';
+import { INumberDisplayConf } from './i-number-display-conf.js';
 
 const SPAN_CLASS = 'number-display';
 

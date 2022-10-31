@@ -3,9 +3,9 @@ import { scaleLinear } from 'd3-scale';
 
 import { transition } from '../core/core.js';
 import { events } from '../core/events.js';
-import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/types';
-import { IBubbleMixinConf } from './i-bubble-mixin-conf';
-import { IBaseMixinConf } from './i-base-mixin-conf';
+import { Constructor, MinimalRadiusScale, SVGGElementSelection } from '../core/types.js';
+import { IBubbleMixinConf } from './i-bubble-mixin-conf.js';
+import { IBaseMixinConf } from './i-base-mixin-conf.js';
 
 interface MinimalBase {
     configure(conf: IBaseMixinConf);

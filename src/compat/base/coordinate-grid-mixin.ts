@@ -1,10 +1,10 @@
-import { Constructor, IUnits, RoundFn } from '../../core/types';
-import { BaseMixinExt } from './base-mixin';
-import { CoordinateGridMixin as CoordinateGridMixinNeo } from '../../base/coordinate-grid-mixin';
-import { MarginMixinExt } from './margin-mixin';
-import { ColorMixinExt } from './color-mixin';
+import { Constructor, IUnits, RoundFn } from '../../core/types.js';
+import { BaseMixinExt } from './base-mixin.js';
+import { CoordinateGridMixin as CoordinateGridMixinNeo } from '../../base/coordinate-grid-mixin.js';
+import { MarginMixinExt } from './margin-mixin.js';
+import { ColorMixinExt } from './color-mixin.js';
 import { CountableTimeInterval } from 'd3-time';
-import { logger } from '../core/logger';
+import { logger } from '../core/logger.js';
 
 class Intermediate extends MarginMixinExt(BaseMixinExt(CoordinateGridMixinNeo)) {}
 

@@ -1,7 +1,7 @@
-import { GeoChoroplethChart as GeoChoroplethChartNeo } from '../../charts/geo-choropleth-chart';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { BaseAccessor, ChartGroupType, ChartParentType, IGeoJson } from '../../core/types';
+import { GeoChoroplethChart as GeoChoroplethChartNeo } from '../../charts/geo-choropleth-chart.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { BaseAccessor, ChartGroupType, ChartParentType, IGeoJson } from '../../core/types.js';
 
 export class GeoChoroplethChart extends ColorMixinExt(BaseMixinExt(GeoChoroplethChartNeo)) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {

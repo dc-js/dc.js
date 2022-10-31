@@ -1,9 +1,9 @@
 import { ascending, groups } from 'd3-array';
 import { Selection } from 'd3-selection';
 
-import { BaseMixin } from '../base/base-mixin';
-import { ChartGroupType, ChartParentType, DataTableColumnSpec } from '../core/types';
-import { IDataTableConf } from './i-data-table-conf';
+import { BaseMixin } from '../base/base-mixin.js';
+import { ChartGroupType, ChartParentType, DataTableColumnSpec } from '../core/types.js';
+import { IDataTableConf } from './i-data-table-conf.js';
 
 const LABEL_CSS_CLASS = 'dc-table-label';
 const ROW_CSS_CLASS = 'dc-table-row';

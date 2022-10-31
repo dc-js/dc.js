@@ -1,7 +1,7 @@
-import { FilterStorage } from './filter-storage';
-import { IFilterStorage } from './i-filter-storage';
-import { IChartGroup } from './i-chart-group';
-import { IMinimalChart } from './i-minimal-chart';
+import { FilterStorage } from './filter-storage.js';
+import { IFilterStorage } from './i-filter-storage.js';
+import { IChartGroup } from './i-chart-group.js';
+import { IMinimalChart } from './i-minimal-chart.js';
 
 /**
  * A chart group often corresponds to a set of linked charts.

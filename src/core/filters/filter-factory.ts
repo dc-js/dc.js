@@ -1,8 +1,8 @@
-import { RangedFilter } from './ranged-filter';
-import { RangedTwoDimensionalFilter } from './ranged-two-dimensional-filter';
-import { TwoDimensionalFilter } from './two-dimensional-filter';
-import { HierarchyFilter } from './hierarchy-filter';
-import { IFilter } from './i-filter';
+import { RangedFilter } from './ranged-filter.js';
+import { RangedTwoDimensionalFilter } from './ranged-two-dimensional-filter.js';
+import { TwoDimensionalFilter } from './two-dimensional-filter.js';
+import { HierarchyFilter } from './hierarchy-filter.js';
+import { IFilter } from './i-filter.js';
 
 export const filterFactory: { [k: string]: (entry: any) => IFilter } = {
     HierarchyFilter: entry => new HierarchyFilter(entry),

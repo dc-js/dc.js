@@ -1,8 +1,8 @@
 import { select, Selection } from 'd3-selection';
 
-import { isNumber } from '../core/utils';
-import { constants } from '../core/constants';
-import { LegendItem, LegendTextAccessor, ParentOfLegend } from '../core/types';
+import { isNumber } from '../core/utils.js';
+import { constants } from '../core/constants.js';
+import { LegendItem, LegendTextAccessor, ParentOfLegend } from '../core/types.js';
 
 /**
  * htmlLegend is a attachable widget that can be added to other dc charts to render horizontal/vertical legend

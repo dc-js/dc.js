@@ -1,9 +1,9 @@
 import { ascending, groups } from 'd3-array';
 
-import { CompositeChart } from './composite-chart';
-import { LineChart } from './line-chart';
-import { ChartGroupType, ChartParentType } from '../core/types';
-import { ISeriesChartConf } from './i-series-chart-conf';
+import { CompositeChart } from './composite-chart.js';
+import { LineChart } from './line-chart.js';
+import { ChartGroupType, ChartParentType } from '../core/types.js';
+import { ISeriesChartConf } from './i-series-chart-conf.js';
 
 /**
  * A series chart is a chart that shows multiple series of data overlaid on one chart, where the

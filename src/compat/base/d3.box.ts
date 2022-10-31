@@ -1,1 +1,1 @@
-export * from '../../base/d3.box';
+export * from '../../base/d3.box.js';

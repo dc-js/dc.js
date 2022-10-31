@@ -1,17 +1,17 @@
-export * from './colors/index';
+export * from './colors/index.js';
 
-export * from './d3.box';
+export * from './d3.box.js';
 
-export * from './i-base-mixin-conf';
-export * from './i-bubble-mixin-conf';
-export * from './i-color-mixin-conf';
-export * from './i-coordinate-grid-mixin-conf';
-export * from './i-margin-mixin-conf';
-export * from './i-stack-mixin-conf';
+export * from './i-base-mixin-conf.js';
+export * from './i-bubble-mixin-conf.js';
+export * from './i-color-mixin-conf.js';
+export * from './i-coordinate-grid-mixin-conf.js';
+export * from './i-margin-mixin-conf.js';
+export * from './i-stack-mixin-conf.js';
 
-export * from './base-mixin';
-export * from './bubble-mixin';
-export * from './color-mixin';
-export * from './coordinate-grid-mixin';
-export * from './margin-mixin';
-export * from './stack-mixin';
+export * from './base-mixin.js';
+export * from './bubble-mixin.js';
+export * from './color-mixin.js';
+export * from './coordinate-grid-mixin.js';
+export * from './margin-mixin.js';
+export * from './stack-mixin.js';

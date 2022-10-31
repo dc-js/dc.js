@@ -1,11 +1,11 @@
 import { Stack, stack } from 'd3-shape';
 import { max, min } from 'd3-array';
 
-import { add, subtract } from '../core/utils';
-import { CoordinateGridMixin } from './coordinate-grid-mixin';
-import { ChartGroupType, ChartParentType, LegendItem, TitleAccessor } from '../core/types';
-import { IStackMixinConf } from './i-stack-mixin-conf';
-import { CFMultiAdapter } from '../data/c-f-multi-adapter';
+import { add, subtract } from '../core/utils.js';
+import { CoordinateGridMixin } from './coordinate-grid-mixin.js';
+import { ChartGroupType, ChartParentType, LegendItem, TitleAccessor } from '../core/types.js';
+import { IStackMixinConf } from './i-stack-mixin-conf.js';
+import { CFMultiAdapter } from '../data/c-f-multi-adapter.js';
 
 /**
  * Stack Mixin is an mixin that provides cross-chart support of stackability using d3.stack.

@@ -1,4 +1,4 @@
-import { IColorMixinConf } from '../base/i-color-mixin-conf';
+import { IColorMixinConf } from '../base/i-color-mixin-conf.js';
 
 export interface IPieChartConf extends IColorMixinConf {
     readonly drawPaths?: boolean;

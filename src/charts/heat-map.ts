@@ -1,15 +1,15 @@
 import { ascending } from 'd3-array';
 import { scaleBand } from 'd3-scale';
 
-import { transition } from '../core/core';
-import { logger } from '../core/logger';
-import { events } from '../core/events';
-import { ColorMixin } from '../base/color-mixin';
-import { MarginMixin } from '../base/margin-mixin';
-import { CFGrouping, ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types';
+import { transition } from '../core/core.js';
+import { logger } from '../core/logger.js';
+import { events } from '../core/events.js';
+import { ColorMixin } from '../base/color-mixin.js';
+import { MarginMixin } from '../base/margin-mixin.js';
+import { CFGrouping, ChartGroupType, ChartParentType, MinimalXYScale } from '../core/types.js';
 import { Selection } from 'd3-selection';
-import { IHeatMapConf } from './i-heat-map-conf';
-import { TwoDimensionalFilter } from '../core/filters/two-dimensional-filter';
+import { IHeatMapConf } from './i-heat-map-conf.js';
+import { TwoDimensionalFilter } from '../core/filters/two-dimensional-filter.js';
 
 const DEFAULT_BORDER_RADIUS = 6.75;
 

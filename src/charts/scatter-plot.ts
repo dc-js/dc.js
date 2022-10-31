@@ -2,13 +2,13 @@ import { symbol, Symbol, SymbolType } from 'd3-shape';
 import { select, Selection } from 'd3-selection';
 import { brush } from 'd3-brush';
 
-import { CoordinateGridMixin } from '../base/coordinate-grid-mixin';
-import { optionalTransition, transition } from '../core/core';
-import { constants } from '../core/constants';
-import { events } from '../core/events';
-import { ChartGroupType, ChartParentType, LegendItem } from '../core/types';
-import { IScatterPlotConf } from './i-scatter-plot-conf';
-import { RangedTwoDimensionalFilter } from '../core/filters/ranged-two-dimensional-filter';
+import { CoordinateGridMixin } from '../base/coordinate-grid-mixin.js';
+import { optionalTransition, transition } from '../core/core.js';
+import { constants } from '../core/constants.js';
+import { events } from '../core/events.js';
+import { ChartGroupType, ChartParentType, LegendItem } from '../core/types.js';
+import { IScatterPlotConf } from './i-scatter-plot-conf.js';
+import { RangedTwoDimensionalFilter } from '../core/filters/ranged-two-dimensional-filter.js';
 
 export type SymbolTypeGenerator = (d: any, ...args: any[]) => SymbolType;
 

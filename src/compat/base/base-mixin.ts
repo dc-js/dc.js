@@ -7,9 +7,9 @@ import {
     MinimalCFGroup,
     TitleAccessor,
     ValueAccessor,
-} from '../../core/types';
+} from '../../core/types.js';
 
-import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin.js';
 
 export function BaseMixinExt<TBase extends Constructor<BaseMixinNeo>>(Base: TBase) {
     return class extends Base {

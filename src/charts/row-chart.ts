@@ -2,18 +2,18 @@ import { extent } from 'd3-array';
 import { Axis, axisBottom } from 'd3-axis';
 import { scaleLinear } from 'd3-scale';
 
-import { MarginMixin } from '../base/margin-mixin';
-import { ColorMixin } from '../base/color-mixin';
-import { transition } from '../core/core';
+import { MarginMixin } from '../base/margin-mixin.js';
+import { ColorMixin } from '../base/color-mixin.js';
+import { transition } from '../core/core.js';
 import { Selection } from 'd3-selection';
 import {
     ChartGroupType,
     ChartParentType,
     MinimalXYScale,
     SVGGElementSelection,
-} from '../core/types';
-import { IRowChartConf } from './i-row-chart-conf';
-import { CFDataCapHelper } from '../data/c-f-data-cap-helper';
+} from '../core/types.js';
+import { IRowChartConf } from './i-row-chart-conf.js';
+import { CFDataCapHelper } from '../data/c-f-data-cap-helper.js';
 
 /**
  * Concrete row chart implementation.

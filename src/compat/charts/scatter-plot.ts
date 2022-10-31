@@ -1,9 +1,9 @@
-import { ScatterPlot as ScatterPlotNeo } from '../../charts/scatter-plot';
-import { BaseMixinExt } from '../base/base-mixin';
-import { ColorMixinExt } from '../base/color-mixin';
-import { BaseAccessor, ChartGroupType, ChartParentType } from '../../core/types';
-import { MarginMixinExt } from '../base/margin-mixin';
-import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin';
+import { ScatterPlot as ScatterPlotNeo } from '../../charts/scatter-plot.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { ColorMixinExt } from '../base/color-mixin.js';
+import { BaseAccessor, ChartGroupType, ChartParentType } from '../../core/types.js';
+import { MarginMixinExt } from '../base/margin-mixin.js';
+import { CoordinateGridMixinExt } from '../base/coordinate-grid-mixin.js';
 
 export class ScatterPlot extends CoordinateGridMixinExt(
     ColorMixinExt(MarginMixinExt(BaseMixinExt(ScatterPlotNeo)))

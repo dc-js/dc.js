@@ -1,6 +1,6 @@
-import { CFSimpleAdapter, ICFSimpleAdapterConf } from './c-f-simple-adapter';
+import { CFSimpleAdapter, ICFSimpleAdapterConf } from './c-f-simple-adapter.js';
 import { sum } from 'd3-array';
-import { sortBy } from '../core/utils';
+import { sortBy } from '../core/utils.js';
 
 export interface ICFDataCapHelperConf extends ICFSimpleAdapterConf {
     readonly othersGrouper?: (topItems, restItems) => any;

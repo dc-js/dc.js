@@ -16,7 +16,7 @@ import {
     subtract,
     toHierarchy,
     uniqueId,
-} from '../../core/utils';
+} from '../../core/utils.js';
 
 /**
  * Returns a function that given a string property name, can be used to pluck the property off an object.  A function

@@ -1,4 +1,4 @@
-import { printSingleValue } from './utils';
+import { printSingleValue } from './utils.js';
 
 /**
  * Converts a list of filters into a readable string.

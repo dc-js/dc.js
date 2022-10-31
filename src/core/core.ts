@@ -1,4 +1,4 @@
-import { config } from './config';
+import { config } from './config.js';
 
 /**
  * Start a transition on a selection if transitions are globally enabled

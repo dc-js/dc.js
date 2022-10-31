@@ -1,14 +1,14 @@
 import { geoAlbersUsa, geoPath, GeoPath, GeoProjection } from 'd3-geo';
 import { select, Selection } from 'd3-selection';
 
-import { BaseMixin } from '../base/base-mixin';
-import { ColorMixin } from '../base/color-mixin';
-import { transition } from '../core/core';
-import { logger } from '../core/logger';
-import { events } from '../core/events';
-import { nameToId } from '../core/utils';
-import { ChartGroupType, ChartParentType } from '../core/types';
-import { IGeoChoroplethChartConf } from './i-geo-choropleth-chart-conf';
+import { BaseMixin } from '../base/base-mixin.js';
+import { ColorMixin } from '../base/color-mixin.js';
+import { transition } from '../core/core.js';
+import { logger } from '../core/logger.js';
+import { events } from '../core/events.js';
+import { nameToId } from '../core/utils.js';
+import { ChartGroupType, ChartParentType } from '../core/types.js';
+import { IGeoChoroplethChartConf } from './i-geo-choropleth-chart-conf.js';
 
 /**
  * The geo choropleth chart is designed as an easy way to create a crossfilter driven choropleth map

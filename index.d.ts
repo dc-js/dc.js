@@ -1,1 +1,1 @@
-export * from './dist/esm6/index';
+export * from './dist/esm6/index.d.js';

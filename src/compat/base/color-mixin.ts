@@ -1,8 +1,8 @@
-import { BaseAccessor, ColorAccessor, Constructor } from '../../core/types';
-import { BaseMixinExt } from './base-mixin';
-import { ColorMixin as ColorMixinNeo } from '../../base/color-mixin';
-import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin';
-import { ColorScaleHelper } from '../../base/colors/color-scale-helper';
+import { BaseAccessor, ColorAccessor, Constructor } from '../../core/types.js';
+import { BaseMixinExt } from './base-mixin.js';
+import { ColorMixin as ColorMixinNeo } from '../../base/color-mixin.js';
+import { BaseMixin as BaseMixinNeo } from '../../base/base-mixin.js';
+import { ColorScaleHelper } from '../../base/colors/color-scale-helper.js';
 import { scaleQuantize } from 'd3-scale';
 
 class Intermediate extends BaseMixinExt(ColorMixinNeo(BaseMixinNeo)) {}

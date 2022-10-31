@@ -1,13 +1,13 @@
-import { DataGrid as DataGridNeo } from '../../charts/data-grid';
-import { BaseMixinExt } from '../base/base-mixin';
+import { DataGrid as DataGridNeo } from '../../charts/data-grid.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
 import {
     BaseAccessor,
     ChartGroupType,
     ChartParentType,
     CompareFn,
     GroupingFn,
-} from '../../core/types';
-import { logger } from '../core/logger';
+} from '../../core/types.js';
+import { logger } from '../core/logger.js';
 
 // @ts-ignore, remove after group method is moved here
 export class DataGrid extends BaseMixinExt(DataGridNeo) {

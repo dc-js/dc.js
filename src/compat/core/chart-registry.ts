@@ -1,10 +1,10 @@
-import { chartRegistry } from '../../core/chart-registry';
-import { config } from './config';
-import { IMinimalChart } from '../../core/i-minimal-chart';
+import { chartRegistry } from '../../core/chart-registry.js';
+import { config } from './config.js';
+import { IMinimalChart } from '../../core/i-minimal-chart.js';
 
-export * from '../../core/chart-group';
-export * from '../../core/filter-storage';
-export * from '../../core/chart-registry';
+export * from '../../core/chart-group.js';
+export * from '../../core/filter-storage.js';
+export * from '../../core/chart-registry.js';
 
 /**
  * Add given chart instance to the given group, creating the group if necessary.
@@ -81,4 +81,4 @@ export function redrawAll(group?: string): void {
         config._renderlet(group);
     }
 }
-export { ISerializedFilters } from '../../core/i-serialized-filters';
+export { ISerializedFilters } from '../../core/i-serialized-filters.js';

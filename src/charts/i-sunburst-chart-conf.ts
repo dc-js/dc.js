@@ -1,5 +1,5 @@
-import { IColorMixinConf } from '../base/i-color-mixin-conf';
-import { BaseAccessor } from '../core/types';
+import { IColorMixinConf } from '../base/i-color-mixin-conf.js';
+import { BaseAccessor } from '../core/types.js';
 
 export interface RingSizeSpecs {
     partitionDy: () => number;

@@ -1,1 +1,1 @@
-export * from '../../../base/colors/index';
+export * from '../../../base/colors/index.js';

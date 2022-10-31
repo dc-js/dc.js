@@ -1,6 +1,6 @@
-import { TextFilterWidget as TextFilterWidgetNeo } from '../../charts/text-filter-widget';
-import { BaseMixinExt } from '../base/base-mixin';
-import { BaseAccessor, ChartGroupType, ChartParentType } from '../../core/types';
+import { TextFilterWidget as TextFilterWidgetNeo } from '../../charts/text-filter-widget.js';
+import { BaseMixinExt } from '../base/base-mixin.js';
+import { BaseAccessor, ChartGroupType, ChartParentType } from '../../core/types.js';
 
 export class TextFilterWidget extends BaseMixinExt(TextFilterWidgetNeo) {
     constructor(parent: ChartParentType, chartGroup: ChartGroupType) {
