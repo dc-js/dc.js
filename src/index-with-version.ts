@@ -1,4 +1,4 @@
-// Need rollup-plugin-json for the following magic
-export { version } from '../package.json';
+// This file is generated during the rollup run
+export * from './version.js';
 
 export * from './index.js';

@@ -1,8 +1,13 @@
-import json from '@rollup/plugin-json';
 import license from 'rollup-plugin-license';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
+import fs from 'fs';
+import json5 from 'json5';
 
-const jsonPlugin = json({ include: 'package.json', preferConst: true });
+generateRollupTsConfig();
+generateVersionFile();
+
+const typescriptPlugin = typescript({ tsconfig: './tsconfig-rollup.json' });
+
 const licensePlugin = license({
     sourcemap: true,
     banner: {
@@ -11,6 +16,8 @@ const licensePlugin = license({
         },
     },
 });
+
+export const plugins = [licensePlugin, typescriptPlugin];
 
 export const d3Modules = {
     'd3-array': 'd3',
@@ -42,20 +49,6 @@ export const umdConf = {
     paths: d3Modules,
 };
 
-export const plugins = [
-    jsonPlugin,
-    licensePlugin,
-    typescript({
-        tsconfig: 'tsconfig.json',
-        tsconfigOverride: {
-            compilerOptions: {
-                declaration: false, // Type definitions are generated as part of ESM6 by `tsc`
-                resolveJsonModule: true, // to get info from package.json
-            },
-        },
-    }),
-];
-
 export default [
     {
         input: 'src/index-with-version.ts',
@@ -64,3 +57,29 @@ export default [
         output: [umdConf],
     },
 ];
+
+// Utility functions
+
+/**
+ * Could not figure out howto override the `exclude` option for `@rollup/plugin-typescript`.
+ * So, a round about way to write an updated tsconfig to be used by rollup.
+ */
+function generateRollupTsConfig() {
+    const origTsConfig = json5.parse(fs.readFileSync('./tsconfig.json', 'utf-8'));
+    const tsConfig = {
+        ...origTsConfig,
+        compilerOptions: {
+            ...origTsConfig.compilerOptions,
+            // `declaration` generation will fail for `compat` classes.
+            declaration: false,
+        },
+        // to include `compat` classes
+        exclude: [],
+    };
+    fs.writeFileSync('./tsconfig-rollup.json', JSON.stringify(tsConfig, null, 2), 'utf-8');
+}
+
+function generateVersionFile() {
+    const version = json5.parse(fs.readFileSync('./package.json', 'utf-8')).version;
+    fs.writeFileSync('src/version.ts', `export const version='${version}';\n`, 'utf-8');
+}

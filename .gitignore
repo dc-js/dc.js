@@ -47,3 +47,7 @@ web/
 
 # Igonore, copied from npm modules
 spec/3rd-party/
+
+# Generated files, not to be checked in
+/src/version.ts
+/tsconfig-rollup.json
