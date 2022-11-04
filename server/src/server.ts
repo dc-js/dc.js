@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { creatAdapter, loadAndProcessData } from './data-server.mjs';
-import { dateTimeReviver } from './utils/date-time-reviver.mjs';
+import { creatAdapter, loadAndProcessData } from './data-server.js';
+import { dateTimeReviver } from './utils/date-time-reviver.js';
 
 const app = express();
 const port = 3030;

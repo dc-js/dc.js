@@ -1,8 +1,8 @@
 import crossfilter from 'crossfilter2';
 import fs from 'fs';
 import * as d3 from 'd3';
-import { CFDataCapHelper, CFMultiAdapter, CFSimpleAdapter } from '../../index.js';
-import { FilterStorage } from '../../index.js';
+import { CFDataCapHelper, CFMultiAdapter, CFSimpleAdapter } from 'dc';
+import { FilterStorage } from 'dc';
 
 interface DataElement {
     volume: number;
