@@ -4,6 +4,7 @@ import { terser } from 'rollup-plugin-terser';
 const umdMinConf = Object.assign({}, umdConf, {
     file: 'dist/dc.min.js',
     plugins: [terser()],
+    sourcemap: false,
 });
 
 export default [
