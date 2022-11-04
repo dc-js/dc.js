@@ -19,6 +19,6 @@ export interface IFilterStorage {
     deRegisterFilterListener(storageKey: any, listner: any): void;
     notifyListeners(storageKey: any, filters): void;
     deRegisterAll(): void;
-    serialize(opts: ISerializeOpts): ISerializedFilters[];
+    serialize(opts?: ISerializeOpts): ISerializedFilters[];
     restore(state: object): void;
 }
