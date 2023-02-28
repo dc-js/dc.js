@@ -1,3 +1,9 @@
+## 5.0.0-alpha1
+* Port to typescript.
+* Separate Data concerns.
+* Move examples and documents to a separate GitHub repo.
+* Directly usable as ES6 modules.
+
 ## 4.1.0
 * Compatible with dc@6 while preserving compatibility with dc@5, by Deepak Kumar ([#1749](https://github.com/dc-js/dc.js/pull/1749) / [#1748](https://github.com/dc-js/dc.js/issues/1748))
 
