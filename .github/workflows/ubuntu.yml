@@ -14,4 +14,6 @@ jobs:
         with:
           node-version: '18.x'
       - run: npm ci
-      - run: npx grunt ci
+      - run: npm run build
+      - run: npm run karmaChrome
+      - run: npm run karmaFirefox

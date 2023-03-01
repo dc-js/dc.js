@@ -32,7 +32,7 @@ module.exports = function (config) {
             'dist/dc.js': ['coverage']
         },
         // possible values: 'dots', 'progress'
-        reporters: ['progress', 'dots', 'summary'],
+        reporters: ['dots', 'summary'],
         summaryReporter: {
             // 'failed', 'skipped' or 'all'
             show: 'failed',

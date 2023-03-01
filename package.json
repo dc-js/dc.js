@@ -78,7 +78,14 @@
     "typescript": "^4.8.2"
   },
   "scripts": {
-    "test": "grunt test"
+    "clean": "rm -rf dist",
+    "build": "npm run clean && npm run css && tsc && rollup --config rollup-full.config.js",
+    "css": "sass style/dc.scss:dist/style/dc.css --no-source-map && sass style/dc.scss:dist/style/dc.min.css --no-source-map --style=compressed",
+    "test": "karma start karma.conf.cjs",
+    "karmaFirefox": "karma start karma.conf.cjs --browsers=FirefoxHeadless",
+    "karmaChrome": "karma start karma.conf.cjs --browsers=ChromeNoSandboxHeadless",
+    "karmaSafari": "karma start karma.conf.cjs --browsers=Safari",
+    "karmaEdge": "karma start karma.conf.cjs --browsers=EdgeHeadless"
   },
   "browser": "dist/dc.js",
   "exports": "./dist/esm6/index.js",
