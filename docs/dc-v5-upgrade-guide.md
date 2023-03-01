@@ -6,16 +6,15 @@ This has enabled fixing long-standing issues and enabled clean support for remot
 
 The library is distributed in two variants:
 
-- dc-v5-new - only the newer API, recommended for new projects.
-- dc-v5-compat - v4 compatibility mode, which is quite close to the v4 API. 
+- dc.js — only the newer API, recommended for new projects.
+- dc-compat.js — v4 compatibility mode, which is close to the v4 API. 
   
 In certain cases, however, you would need to upgrade:
 
 - Only UMD bundles are distributed with `compat` option. If you were using ES6 modules, you would need to upgrade.
-- Support for newer features are not guaranteed in the `compat` mode.
+- Support for newer features is not guaranteed in the `compat` mode.
   Mixing of newer APIs with older ones may produce unexpected results.
-- Some APIs are not available in compat mode as well. Notably `filterHandler`, `hasFilterHandler`, `addFilterHandler`
-  and `removeFilterHandler`. If your code relies on any of these you should do a proper upgrade.
+- Some APIs are no longer available. Notably `filterHandler`, `hasFilterHandler`, `addFilterHandler` and `removeFilterHandler`. If your code relies on any of these, you would need to upgrade rewrite using newer features.
   
 Please raise an issue on GitHub if you run into problems not covered here!
 
@@ -31,21 +30,23 @@ Please raise an issue on GitHub if you run into problems not covered here!
 
 ## Chart creation
 
-- function to constructor (pick example from v4 migration guide)
+This was introduced in v4. The older function-based methods were deprecated and now have been removed from v5.
+
+Change `dc.pieChart(parent, chartGroup)` &#10137; `new dc.PieChart(parent, chartGroup)`
 
 ## Key/value pair configuration
 
 Charts now support key/value configuration.
 This should simplify sharing configuration across charts easier.
 
-For every chart there is a corresponding interface that covers list of supported options.
-For example the interface for {@link PieChart} is {@link IPieChartConf}.
+For every chart, there is a corresponding interface that covers the list of supported options.
+For example, the interface for {@link PieChart} is {@link IPieChartConf}.
 The {@link PieChart.configure} and {@link PieChart.conf} will refer to this interface.
 
 To use it:
 
 ```
-// It will be merged 
+// It will be merged with exisiting configuration
 chart.configure({
    minHeight: 250,
    minWidth: 300
