@@ -1,4 +1,4 @@
-/* global appendChartID, loadDateFixture, compareVersions */
+/* global appendChartID, loadDateFixture */
 describe('dc.colorMixin', () => {
     function colorTest(chart, domain, test) {
         chart.colorDomain(domain);
@@ -66,11 +66,7 @@ describe('dc.colorMixin', () => {
             // GIGO: mapping ordinal domain to linear scale is nonsensical
             // d3 pre-5.8: scaled to NaN and corrected to black; 5.8+: scale returns undefined
             chart.linearColors(['#ff0000','#00ff00']);
-            if (compareVersions(d3.version, '5.8') === -1) {
-                expect(colorTest(chart, domain)).toMatchColors(['#000000', '#000000', '#000000', '#000000', '#000000']);
-            } else {
-                expect(colorTest(chart, domain)).toEqual([undefined, undefined, undefined, undefined, undefined]);
-            }
+            expect(colorTest(chart, domain)).toEqual([undefined, undefined, undefined, undefined, undefined]);
         });
     });
     describe('with numeric domain' , () => {
@@ -118,15 +114,8 @@ describe('dc.colorMixin', () => {
             // interpolateHcl (note the adjustment for one changed value for d3 5.1)
             chart.linearColors(['#4575b4','#ffffbf']);
 
-            let changedInD3v51 = 'rgb(88, 198, 186)';
-            // https://github.com/omichelsen/compare-versions
-            if (compareVersions(d3.version, '5.1') === -1) {
-                // d3 is older than v5.1
-                changedInD3v51 = 'rgb(77, 198, 193)';
-            }
-
             expect(colorTest(chart, domain, test))
-                .toMatchColors(['#4773b3', '#4575b4', changedInD3v51, '#ffffbf', '#ffffc0', '#4575b4']);
+                .toMatchColors(['#4773b3', '#4575b4', '#58C6BA', '#ffffbf', '#ffffc0', '#4575b4']);
         });
     });
     describe('calculateColorDomain' , () => {

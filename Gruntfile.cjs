@@ -9,7 +9,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma');
 
     const formatFileList = require('./grunt/format-file-list.cjs')(grunt);
-    const lintableFiles = "'spec/**/*.js' '*.js' 'grunt/*.js' 'web-src/stock.js'";
+    const lintableFiles = "'spec/**/*.js' '*.js' 'web-src/stock.js'";
 
     const sass = require('sass');
 
@@ -430,7 +430,7 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', ['shell:tslint', 'shell:eslint', 'shell:prettier-check']);
     grunt.registerTask('lint-fix', ['shell:tslint-fix', 'shell:eslint-fix', 'shell:prettier']);
 
-    grunt.registerTask('docs', ['shell:typedoc', 'docco']);
+    grunt.registerTask('docs', ['shell:typedoc', 'shell:docco']);
     grunt.registerTask('web', ['build-copy', 'docs', 'gh-pages']);
 
     grunt.registerTask('server', ['connect:server', 'watch:web-sass-docs-tests']);

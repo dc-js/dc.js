@@ -60,7 +60,7 @@ export default [
 
 // Utility functions
 
-/**
+/*
  * Could not figure out howto override the `exclude` option for `@rollup/plugin-typescript`.
  * So, a round about way to write an updated tsconfig to be used by rollup.
  */

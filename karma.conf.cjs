@@ -20,7 +20,8 @@ module.exports = function (config) {
             // Helpers
             'spec/helpers/*.js',
             // JS code dependencies
-            'spec/3rd-party/*.js',
+            'node_modules/d3/dist/d3.js',
+            'node_modules/crossfilter2/crossfilter.js',
             // Code to be tested
             'dist/dc-compat.js',
             // Jasmine spec files
@@ -31,7 +32,7 @@ module.exports = function (config) {
             'dist/dc.js': ['coverage']
         },
         // possible values: 'dots', 'progress'
-        reporters: ['progress', 'summary', 'coverage'],
+        reporters: ['progress', 'dots', 'summary'],
         summaryReporter: {
             // 'failed', 'skipped' or 'all'
             show: 'failed',
@@ -66,6 +67,6 @@ module.exports = function (config) {
         browsers: ['FirefoxHeadless'],
         browserConsoleLogOptions: {level: 'error'},
         singleRun: true,
-        concurrency: Infinity
+        concurrency: 1
     })
 };

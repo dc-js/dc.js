@@ -1,3 +1,2 @@
 # Ignore 3rd party js code
-spec/3rd-party/
-spec/helpers/jasmine-jsreporter.js
+
