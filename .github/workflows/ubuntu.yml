@@ -1,6 +1,6 @@
 name: Ubuntu Test
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   build:
@@ -17,3 +17,4 @@ jobs:
       - run: npm run build
       - run: npm run karmaChrome
       - run: npm run karmaFirefox
+      - run: npm run karmaEdge
