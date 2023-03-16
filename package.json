@@ -67,7 +67,8 @@
     "karmaFirefox": "karma start karma.conf.cjs --browsers=FirefoxHeadless",
     "karmaChrome": "karma start karma.conf.cjs --browsers=ChromeNoSandboxHeadless",
     "karmaSafari": "karma start karma.conf.cjs --browsers=Safari",
-    "karmaEdge": "karma start karma.conf.cjs --browsers=EdgeHeadless"
+    "karmaEdge": "karma start karma.conf.cjs --browsers=EdgeHeadless",
+    "prepublishOnly": "npm run build && npm run css && npm run karmaChrome"
   },
   "browser": "dist/dc.js",
   "exports": "./dist/esm6/index.js",
