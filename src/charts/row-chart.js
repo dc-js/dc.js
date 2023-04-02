@@ -285,7 +285,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
     /**
      * Get or sets the x axis for the row chart instance.
      * See the {@link https://github.com/d3/d3-axis/blob/master/README.md d3.axis}
-     * documention for more information.
+     * documentation for more information.
      * @param {d3.axis} [xAxis]
      * @example
      * // customize x axis tick format

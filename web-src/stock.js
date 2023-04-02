@@ -395,7 +395,7 @@ d3.csv('ndx.csv').then(data => {
         // The `.valueAccessor` will be used for the base layer
         .group(indexAvgByMonthGroup, 'Monthly Index Average')
         .valueAccessor(d => d.value.avg)
-        // Stack additional layers with `.stack`. The first paramenter is a new group.
+        // Stack additional layers with `.stack`. The first parameter is a new group.
         // The second parameter is the series name. The third is a value accessor.
         .stack(monthlyMoveGroup, 'Monthly Index Move', d => d.value)
         // Title can be called by any stack layer.

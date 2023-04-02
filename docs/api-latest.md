@@ -2982,7 +2982,7 @@ Turn on/off Title label rendering (values) using SVG style of text-anchor 'end'.
 ### rowChart.xAxis([xAxis]) ⇒ <code>d3.axis</code> \| [<code>RowChart</code>](#RowChart)
 Get or sets the x axis for the row chart instance.
 See the [d3.axis](https://github.com/d3/d3-axis/blob/master/README.md)
-documention for more information.
+documentation for more information.
 
 **Kind**: instance method of [<code>RowChart</code>](#RowChart)  
 
