@@ -1,0 +1,23 @@
+# This is a basic workflow that is manually triggered
+
+name: Docs refresh
+
+on:
+  push:
+    branches:
+      - dc-v5
+
+jobs:
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Trigger workflow to update Github pages
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Deploy Jekyll site to Pages
+          repo: dc-js/dc-js.github.io
+          ref: master
+          token: ${{ secrets.DOCS_REFRESH_TOKEN }}
