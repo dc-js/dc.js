@@ -111,8 +111,8 @@ export function ColorMixin<TBase extends Constructor<MinimalBase>>(Base: TBase) 
          * chart.scaledColors(scale); // same as chart.colorHelper(new ColorScaleHelper(scale));
          * ```
          *
-         * Depending on type of scale, it will need eaither setting domain for the scale or
-         * compute it se per your data using {@linkcode calculateColorDomain}.
+         * Depending on type of scale, it will need either setting domain for the scale or
+         * compute it as per your data using {@linkcode calculateColorDomain}.
          *
          * @see {@link ColorScaleHelper}
          * @see {@link https://github.com/d3/d3-scale/}
