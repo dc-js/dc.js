@@ -7,31 +7,32 @@
 dc.js
 =====
 
+**WIP: Version 5.0.0-Alpha, stay tuned**
+
 Dimensional charting built to work natively with [crossfilter](http://crossfilter.github.io/crossfilter/)
 rendered using [d3.js](https://d3js.org/). In dc.js, each chart displays an aggregation of some
 attributes through the position, size, and color of its elements, and also presents a dimension
 which can be filtered. When the filter or brush changes, all other charts are updated dynamically,
 using animated transitions.
 
-Check out the [example page](http://dc-js.github.io/dc.js/)
-and its [annotated source](http://dc-js.github.io/dc.js/docs/stock.html) for a quick five minute
-how-to guide. The detailed [API reference is here](http://dc-js.github.io/dc.js/docs/html/)
-([markdown version](https://github.com/dc-js/dc.js/blob/master/docs/api-latest.md)). For
-more examples and hints please visit the [Wiki](https://github.com/dc-js/dc.js/wiki).
+Check out the [example page](http://dc-js.github.io/)
+and its [annotated source](http://dc-js.github.io/docs/stock.html) for a quick five minute
+how-to guide. The detailed [API reference is here](https://dc-js.github.io/api-docs/).
 
 
 Support
 --------------------
-* [Example Site](http://dc-js.github.io/dc.js/)
+* [Example Site](http://dc-js.github.io/)
 * [Changelog](https://github.com/dc-js/dc.js/blob/develop/Changelog.md)
 * [Frequently Asked Questions](https://github.com/dc-js/dc.js/wiki/FAQ) and [Wiki](https://github.com/dc-js/dc.js/wiki)
-* [v4.0 API Reference](http://dc-js.github.io/dc.js/docs/html/) <sup>([markdown](https://github.com/dc-js/dc.js/blob/master/docs/api-latest.md))</sup> <sup>([last - v3.1.9](https://github.com/dc-js/dc.js/blob/master/docs/old-api-docs/api-3.1.9.md))</sup>
+* [v5.0 API Reference](http://dc-js.github.io/docs/html/)
 * [dc.js on StackOverflow](http://stackoverflow.com/questions/tagged/dc.js) - ask questions and get help
 * [User Group](https://groups.google.com/forum/?fromgroups#!forum/dc-js-user-group) ("mailing list") - discussion and longer topics
 * [GitHub Issues](https://github.com/dc-js/dc.js/issues) - bug reports and feature requests
 
 *Please direct questions and support requests to Stack Overflow or the user group. When posting to Stack Overflow, use the* `[dc.js]` *and/or* `[crossfilter]` *tags - other tags are likely to draw unwanted attention.*
 
+[To be updated]
 Get help faster with a working example! Fork these to get started:<br>
 [blank jsFiddle](https://jsfiddle.net/gordonwoodhull/rL82bguk/1) - [example jsFiddle](https://jsfiddle.net/gordonwoodhull/5ztavmjy/2) - [blank bl.ock](https://blockbuilder.org/gordonwoodhull/f6bab3d2f5b34018548207014b4056bf) - [example bl.ock](https://blockbuilder.org/gordonwoodhull/bcf9eaa0bfc2c84373cffac06d5755e5)
 
