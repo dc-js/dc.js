@@ -34,6 +34,7 @@ d3.csv("morley.csv").then(function(experiments) {
     .margins({top: 30, right: 0, bottom: 10, left: 30})
     .x(d3.scaleLinear().domain([6,20]))
     .useTopXAxis(true)
+    .renderVerticalGridLines(true)
     .xAxisLabel("This is the X Axis!")
     .brushOn(false)
     .symbolSize(8)
