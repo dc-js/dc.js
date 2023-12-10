@@ -724,7 +724,7 @@ export class BaseMixin {
                 
         if (onClickFunction) {
             tabElements.on('keydown', d3compat.eventHandler((d, event) => {
-                // trigger only if d is an object undestood by KeyAccessor()
+                // trigger only if d is an object understood by KeyAccessor()
                 if (event.keyCode === 13 && typeof d === 'object') {
                     onClickFunction.call(this, d, ...onClickArgs)
                 } 
