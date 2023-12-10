@@ -322,7 +322,8 @@ export class Legend {
                 .classed('dc-tabbable', this._keyboardAccessible)
                 .attr('x', self._itemHeight + LABEL_GAP)
                 .attr('y', function () {
-                    return self._itemHeight / 2 + (this.clientHeight ? this.clientHeight : 13) / 2 - 2;
+                    const height = this.getBoundingClientRect ? (this.getBoundingClientRect().height) : this.clientHeight
+                    return self._itemHeight / 2 + (height || 13) / 2 - 2;
                 });
 
             if (this._keyboardAccessible) {
