@@ -16,5 +16,5 @@ export interface IBaseMixinConf {
     readonly height?: number;
     readonly minWidth?: number;
     readonly minHeight?: number;
-    readonly beforeResize?: (rect: SizeT) => SizeT;
+    readonly beforeResize?: (rect: SizeT) => void;
 }
