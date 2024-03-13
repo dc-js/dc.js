@@ -7,6 +7,7 @@
 !README.md
 !LICENSE
 !dist/**/*
+!index.d.ts
 
 # ES6 modules
 !src/**/*
