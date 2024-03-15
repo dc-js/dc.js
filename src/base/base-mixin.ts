@@ -59,8 +59,8 @@ export class BaseMixin {
         this.anchor(parent);
 
         this.configure({
-            minWidth: 200,
-            minHeight: 200,
+            minWidth: 25,
+            minHeight: 25,
             useViewBoxResizing: false,
             filterPrinter: printFilters,
             controlsUseVisibility: false,

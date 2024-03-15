@@ -449,11 +449,11 @@ describe('dc.baseMixin', () => {
             });
 
             it('should set the height to at least the default minimum', () => {
-                expect(chart.height()).not.toBeLessThan(200);
+                expect(chart.height()).not.toBeLessThan(25);
             });
 
             it('should set the width to at least the default minimum', () => {
-                expect(chart.width()).not.toBeLessThan(200);
+                expect(chart.width()).not.toBeLessThan(25);
             });
 
             describe('and redrawn', () => {
