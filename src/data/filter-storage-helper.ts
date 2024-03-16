@@ -4,6 +4,7 @@ import { IFilterStorage } from '../core/i-filter-storage.js';
 export interface IFilterStorageConf extends ICFFilterHandlerConf {
     readonly filterStorage?: IFilterStorage;
     readonly chartId?: string;
+    readonly dimName?: string;
     readonly primaryChart?: boolean;
     readonly shareFilters?: boolean;
     readonly onFiltersChanged?: (filters) => void;
@@ -27,8 +28,17 @@ export class FilterStorageHelper extends CFFilterHandler {
 
     public configure(conf: IFilterStorageConf): this {
         super.configure(conf);
+        if ('dimName' in conf) {
+            if (typeof this._conf.dimension === 'object') {
+                this._conf.dimension.name = conf.dimName;
+            }
+        }
         this._ensureListenerRegistered();
         return this;
+    }
+
+    get dimName(): string {
+        return this._conf.dimension?.name || this._conf.chartId;
     }
 
     private _ensureListenerRegistered() {
@@ -53,7 +63,7 @@ export class FilterStorageHelper extends CFFilterHandler {
         this._listenerRegToken = this._conf.filterStorage.registerFilterListener({
             storageKey,
             onFiltersChanged: this._conf.onFiltersChanged,
-            chartId: this._conf.chartId,
+            dimName: this.dimName,
             primaryChart: this._conf.primaryChart,
             applyFilters: filters => this.applyFilters(),
         });

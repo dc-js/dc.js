@@ -18,6 +18,7 @@ export interface MinimalCFDimension {
     // filterAll(): this; // unused
     top(k: number): any[];
     bottom(k: number): any[];
+    name?: string;
 }
 
 export interface CFGrouping {

@@ -1,5 +1,6 @@
 ## 5.0.0-alpha2
-* Change minimum chart size from 200x200to 25x25
+* Change minimum chart size from 200x200to 25x25.
+* Use dimName instead of chartID for FilterStorage.
 
 ## 5.0.0-alpha1
 * Port to typescript.

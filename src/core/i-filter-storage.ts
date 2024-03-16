@@ -3,7 +3,7 @@ import { ISerializedFilters } from './i-serialized-filters.js';
 export interface IFilterListenerParams {
     storageKey: any;
     onFiltersChanged: (filters) => void;
-    chartId: string;
+    dimName: string;
     primaryChart: boolean;
     applyFilters: (filters) => void;
 }

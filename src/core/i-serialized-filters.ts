@@ -1,5 +1,5 @@
 export interface ISerializedFilters {
-    chartId: string;
+    dimName: string;
     filterType: string;
     values: any[];
     storageKey?: any;

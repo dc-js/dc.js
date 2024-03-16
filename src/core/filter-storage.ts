@@ -55,7 +55,7 @@ export class FilterStorage implements IFilterStorage {
                 l.onFiltersChanged(filters);
             });
 
-        const chartIds = listenerChain.map(lsnr => lsnr.chartId);
+        const chartIds = listenerChain.map(lsnr => lsnr.dimName);
         this._filterChangeListener.call('filter-changed', this, {
             chartIds,
             filters: this._filters.get(storageKey),
@@ -108,7 +108,7 @@ export class FilterStorage implements IFilterStorage {
                 if (listener) {
                     const filters = this._filters.get(listener.storageKey);
                     if (filters && filters.length > 0) {
-                        const entry = this._serializeFilters(listener.chartId, filters);
+                        const entry = this._serializeFilters(listener.dimName, filters);
                         if (includeStorageKey) {
                             entry.storageKey = listener.storageKey;
                         }
@@ -127,7 +127,7 @@ export class FilterStorage implements IFilterStorage {
             entries.map(entry => {
                 // Find a listenerChain that has same chartId registered
                 const listenerChain = listenerChains.find((lsnrsChain: IFilterListenerParams[]) =>
-                    lsnrsChain.find(listener => listener.chartId === entry.chartId)
+                    lsnrsChain.find(listener => listener.dimName === entry.dimName)
                 );
 
                 // convert to appropriate dc IFilter objects
@@ -150,10 +150,10 @@ export class FilterStorage implements IFilterStorage {
         }
     }
 
-    private _serializeFilters(chartId: string, filters: any[]): ISerializedFilters {
+    private _serializeFilters(dimName: string, filters: any[]): ISerializedFilters {
         if (typeof filters[0].isFiltered !== 'function') {
             return {
-                chartId,
+                dimName,
                 filterType: 'Simple',
                 values: [...filters], // defensively clone
             };
@@ -161,7 +161,7 @@ export class FilterStorage implements IFilterStorage {
 
         const filtersWithType: IFilter[] = filters;
         return {
-            chartId,
+            dimName,
             filterType: filtersWithType[0].filterType,
             values: filtersWithType.map(f => f.serialize()),
         };
