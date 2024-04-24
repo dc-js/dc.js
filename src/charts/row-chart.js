@@ -46,7 +46,7 @@ export class RowChart extends CapMixin(ColorMixin(MarginMixin)) {
         this._gap = 5;
 
         this._fixedBarHeight = false;
-        this._rowCssClass = 'row';
+        this._rowCssClass = '_row';
         this._titleRowCssClass = 'titlerow';
         this._renderTitleLabel = false;
 
